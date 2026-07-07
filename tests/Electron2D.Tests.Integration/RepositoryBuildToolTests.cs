@@ -9787,6 +9787,57 @@ public sealed class RepositoryBuildToolTests
 
     [Theory]
     [Trait("AuditTier", "Heavy")]
+    [InlineData("dotnet-run", "dotnet run --project eng/Electron2D.Build -- verify audit-contracts", "dotnetrun")]
+    [InlineData("dotnet-build", "dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal", "dotnetbuild")]
+    [InlineData("dotnet-test", "dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~AuditPackage --no-build --no-restore", "dotnettest")]
+    [InlineData("git-diff", "git diff --check", "gitdiff")]
+    public async Task AuditPackageNormalizesPreflightMetadataCommandToConfiguredCommand(
+        string checkName,
+        string configuredCommand,
+        string lossyCommand)
+    {
+        using var fixture = await AuditFixture.CreateAsync($"audit-package-preflight-command-metadata-{checkName}");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that imported preflight metadata keeps command evidence readable.
+        """);
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        fixture.WriteTextFile($"{evidenceRoot}/metadata.json", $$"""
+        {
+          "command": "{{lossyCommand}}",
+          "exitCode": 0
+        }
+        """);
+        fixture.WriteTextFile($"{evidenceRoot}/stdout.txt", "preflight passed before package creation\n");
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    configuredCommand,
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        AssertCommandSucceeded(package, "audit package");
+        var zipPath = fixture.ZipPath(taskId);
+        var commandText = ReadZipEntryText(zipPath, $"evidence/{taskId}-r01/preflight/{checkName}/command.txt");
+        var metadataText = ReadZipEntryText(zipPath, $"evidence/{taskId}-r01/preflight/{checkName}/metadata.json");
+        using var metadata = JsonDocument.Parse(metadataText);
+
+        Assert.Equal(configuredCommand, commandText);
+        Assert.Equal(commandText, metadata.RootElement.GetProperty("command").GetString());
+        Assert.DoesNotContain(lossyCommand, metadataText, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [Trait("AuditTier", "Heavy")]
     [InlineData("dotnet", false)]
     [InlineData("dotnet.exe", false)]
     [InlineData("/usr/bin/dotnet", false)]

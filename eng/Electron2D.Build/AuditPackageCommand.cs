@@ -28,6 +28,7 @@ using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -1254,11 +1255,35 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                         $"preflightChecks entry '{check.Name}' maps multiple evidence files to {archivePath}.");
                 }
 
-                evidence.Add(new EvidenceSourceFile(absolutePath, archivePath));
+                var evidenceSourcePath = string.Equals(relativeEvidencePath, "metadata.json", StringComparison.Ordinal)
+                    ? WriteNormalizedPreflightMetadata(localRoot, absolutePath, check.Command)
+                    : absolutePath;
+                evidence.Add(new EvidenceSourceFile(evidenceSourcePath, archivePath));
             }
         }
 
         return evidence.OrderBy(file => file.ArchivePath, StringComparer.Ordinal).ToArray();
+    }
+
+    private static string WriteNormalizedPreflightMetadata(string localRoot, string sourcePath, string command)
+    {
+        JsonObject metadata;
+        try
+        {
+            metadata = JsonNode.Parse(File.ReadAllText(sourcePath)) as JsonObject
+                ?? throw new JsonException("root value must be an object");
+        }
+        catch (JsonException exception)
+        {
+            throw new AuditPackageFailure(
+                "audit package",
+                "E2D-BUILD-AUDIT-CONFIG-INVALID",
+                $"preflight evidence metadata is not a JSON object: {sourcePath} ({exception.Message}).");
+        }
+
+        metadata["command"] = command;
+        WriteText(localRoot, "metadata.json", metadata.ToJsonString(JsonWriteOptions) + "\n");
+        return Path.Combine(localRoot, "metadata.json");
     }
 
     private static string ToPreflightEvidenceArchivePath(string path, string checkName)
