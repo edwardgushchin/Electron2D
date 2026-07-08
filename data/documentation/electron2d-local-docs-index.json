@@ -393,7 +393,7 @@
       },
       {
         "path": "docs/release-management/audit-package.md",
-        "sha256": "31c0eeb18d6269d46cd4f6e3a78e0e4852c9ce2aa294bf4e3baa607e3be4bf3a"
+        "sha256": "1a1ebf29f85b8ae5181d5c400e1b16c28ad0afdae1388693a2492cc6d8fda1ec"
       },
       {
         "path": "docs/release-management/ci-matrix.md",
@@ -421,7 +421,7 @@
       },
       {
         "path": "docs/releases/0.1-preview.md",
-        "sha256": "8d4ff3b12075825355850f41d9457c2eb511544516e8d766caaace0bef52813a"
+        "sha256": "d251ecd053ce8625c173d4e4db36debd5f7e1331227b3438ddd79f83e50fa79b"
       },
       {
         "path": "docs/rendering/android-mobile-gpu-fallback-policy.md",
@@ -887,7 +887,7 @@
       "path": "data/documentation/local-docs-index/documentation.ndjson",
       "kind": "documentation",
       "count": 159,
-      "sha256": "47dcb8e65e5d0d1fd7fc239373583d31f4592ceafcb2c31754cd5c7aa7fe6fb7"
+      "sha256": "cc5640c71c1c6ec296a05a77722622e92925dd46c29699088b41e962c1ea1604"
     },
     {
       "path": "data/documentation/local-docs-index/examples.ndjson",
@@ -899,7 +899,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "3f9347486c42a0c95d162efdf2589d177edac0f25a987779d7266e0efc727d33",
+    "sourceDigest": "1e5fe9327caf42044e124cd77bb5e18ac8e665a229de5912fdc4522739e2a8de",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."

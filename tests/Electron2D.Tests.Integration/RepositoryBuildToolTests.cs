@@ -9785,6 +9785,1206 @@ public sealed class RepositoryBuildToolTests
             StringComparison.Ordinal);
     }
 
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageSanitizesPreflightEvidenceRepositoryRootAtomically()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-evidence-sanitizer");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that imported preflight evidence remains readable.
+        """);
+        var checkName = "readable-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var nativeRepoChildPath = Path.Combine(fixture.RepositoryRoot, "src", "Program.cs");
+        var slashRepoChildPath = fixture.RepositoryRoot.Replace('\\', '/') + "/docs/release-management/audit-fixture.md";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        ordinary name remains readable
+        native repo path: {{nativeRepoChildPath}}
+        slash repo path: {{slashRepoChildPath}}
+        existing placeholder: <repo>/already-normalized.txt
+        """);
+        fixture.WriteTextFile($"{evidenceRoot}/result.txt", $$"""
+        result path: {{slashRepoChildPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        AssertCommandSucceeded(package, "audit package");
+        var zipPath = fixture.ZipPath(taskId);
+        var output = ReadZipEntryText(zipPath, $"evidence/{taskId}-r01/preflight/{checkName}/output.txt");
+        var result = ReadZipEntryText(zipPath, $"evidence/{taskId}-r01/preflight/{checkName}/result.txt");
+        var expectedNativeSuffix = nativeRepoChildPath[fixture.RepositoryRoot.Length..];
+
+        Assert.Contains("ordinary name remains readable", output, StringComparison.Ordinal);
+        Assert.Contains("<repo>" + expectedNativeSuffix, output, StringComparison.Ordinal);
+        Assert.Contains("<repo>/docs/release-management/audit-fixture.md", output, StringComparison.Ordinal);
+        Assert.Contains("<repo>/docs/release-management/audit-fixture.md", result, StringComparison.Ordinal);
+        Assert.Contains("existing placeholder: <repo>/already-normalized.txt", output, StringComparison.Ordinal);
+        Assert.DoesNotContain(fixture.RepositoryRoot, output, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(fixture.RepositoryRoot.Replace('\\', '/'), output, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("<repo>/n<repo>/a<repo>/m", output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsBrokenPreflightPlaceholderPerCharacterEvidence()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-broken-preflight-placeholder");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that broken preflight sanitizer output is rejected.
+        """);
+        const string checkName = "broken-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", """
+        <repo>/n<repo>/a<repo>/m<repo>/e
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-PREFLIGHT-SANITIZER", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains("placeholder-per-character", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidencePathThatOnlySharesRepositoryRootPrefix()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-sibling-path-prefix");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that sibling machine paths are not hidden by sanitizer prefix matching.
+        """);
+        const string checkName = "sibling-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var siblingNativePath = fixture.RepositoryRoot + " backup" + Path.DirectorySeparatorChar + "logs.txt";
+        var siblingSlashPath = fixture.RepositoryRoot.Replace('\\', '/') + " backup/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        sibling native path: {{siblingNativePath}}
+        sibling slash path: {{siblingSlashPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidencePunctuationSiblingPathPrefix()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-punctuation-sibling-path");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that punctuation after the repo-root prefix does not hide a sibling path.
+        """);
+        const string checkName = "punctuation-sibling-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var siblingNativePath = fixture.RepositoryRoot + ")backup" + Path.DirectorySeparatorChar + "logs.txt";
+        var siblingSlashPath = fixture.RepositoryRoot.Replace('\\', '/') + ")backup/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        sibling native path: {{siblingNativePath}}
+        sibling slash path: {{siblingSlashPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceTraversalSiblingPathPrefix()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-traversal-sibling-path");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that parent traversal after the repo-root prefix does not hide a sibling path.
+        """);
+        const string checkName = "traversal-sibling-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var siblingNativePath = fixture.RepositoryRoot + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "repo backup" + Path.DirectorySeparatorChar + "logs.txt";
+        var siblingSlashPath = fixture.RepositoryRoot.Replace('\\', '/') + "/../repo backup/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        sibling native path: {{siblingNativePath}}
+        sibling slash path: {{siblingSlashPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceTraversalAfterSpacedPathSegment()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-traversal-spaced-segment");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that parent traversal after a path segment with spaces is not hidden.
+        """);
+        const string checkName = "traversal-spaced-segment-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var siblingNativePath = fixture.RepositoryRoot +
+            Path.DirectorySeparatorChar +
+            "dir with space" +
+            Path.DirectorySeparatorChar +
+            ".." +
+            Path.DirectorySeparatorChar +
+            ".." +
+            Path.DirectorySeparatorChar +
+            "repo backup" +
+            Path.DirectorySeparatorChar +
+            "logs.txt";
+        var siblingSlashPath = fixture.RepositoryRoot.Replace('\\', '/') + "/dir with space/../../repo backup/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        sibling native path: {{siblingNativePath}}
+        sibling slash path: {{siblingSlashPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceCaseVariantRepoRootOnCaseSensitivePlatforms()
+    {
+        if (OperatingSystem.IsWindows() || OperatingSystem.IsMacOS())
+        {
+            return;
+        }
+
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-case-variant-root");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that case-variant repo-root text does not hide a non-repository path on case-sensitive platforms.
+        """);
+        const string checkName = "case-variant-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var caseVariantPath = ToggleLastPathSegmentCase(fixture.RepositoryRoot.Replace('\\', '/')) + "/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        case variant path: {{caseVariantPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageSanitizesExactPreflightEvidenceRepositoryRootTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-exact-root-token");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that exact repo-root tokens are normalized without hiding sibling paths.
+        """);
+        const string checkName = "exact-root-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var nativeRepoRoot = fixture.RepositoryRoot;
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var literalChildPath = slashRepoRoot + "/artifacts/output.txt";
+        var escapedSlashRepoRoot = slashRepoRoot.Replace("/", "\\/", StringComparison.Ordinal);
+        var unicodeEscapedSlashRepoRoot = slashRepoRoot.Replace("/", "\\u002F", StringComparison.Ordinal);
+        var escapedSlashChildPath = (slashRepoRoot + "/artifacts/output.txt").Replace("/", "\\/", StringComparison.Ordinal);
+        fixture.WriteTextFile(
+            $"{evidenceRoot}/metadata.json",
+            new JsonObject
+            {
+                ["command"] = "lossycommand",
+                ["workingDirectory"] = nativeRepoRoot,
+                ["repositoryRoot"] = slashRepoRoot
+            }.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) + "\n");
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        quoted native root: "{{nativeRepoRoot}}"
+        quoted slash root: "{{slashRepoRoot}}"
+        compact object root: {"repositoryRoot":"{{slashRepoRoot}}"}
+        compact array root: ["{{slashRepoRoot}}"]
+        compact child path: {"artifact":"{{literalChildPath}}"}
+        compact escaped object root: {"repositoryRoot":"{{escapedSlashRepoRoot}}"}
+        compact unicode object root: {"repositoryRoot":"{{unicodeEscapedSlashRepoRoot}}"}
+        compact escaped child path: {"artifact":"{{escapedSlashChildPath}}"}
+        """);
+        fixture.WriteTextFile($"{evidenceRoot}/result.txt", $$"""
+        result root: "{{slashRepoRoot}}"
+        compact result root: {"repositoryRoot":"{{slashRepoRoot}}"}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        AssertCommandSucceeded(package, "audit package");
+        var zipPath = fixture.ZipPath(taskId);
+        var metadata = ReadZipEntryText(zipPath, $"evidence/{taskId}-r01/preflight/{checkName}/metadata.json");
+        var output = ReadZipEntryText(zipPath, $"evidence/{taskId}-r01/preflight/{checkName}/output.txt");
+        var result = ReadZipEntryText(zipPath, $"evidence/{taskId}-r01/preflight/{checkName}/result.txt");
+
+        Assert.Contains("\"workingDirectory\": \"<repo>\"", metadata, StringComparison.Ordinal);
+        Assert.Contains("\"repositoryRoot\": \"<repo>\"", metadata, StringComparison.Ordinal);
+        Assert.Contains("quoted native root: \"<repo>\"", output, StringComparison.Ordinal);
+        Assert.Contains("quoted slash root: \"<repo>\"", output, StringComparison.Ordinal);
+        Assert.Contains("compact object root: {\"repositoryRoot\":\"<repo>\"}", output, StringComparison.Ordinal);
+        Assert.Contains("compact array root: [\"<repo>\"]", output, StringComparison.Ordinal);
+        Assert.Contains("compact child path: {\"artifact\":\"<repo>/artifacts/output.txt\"}", output, StringComparison.Ordinal);
+        Assert.Contains("compact escaped object root: {\"repositoryRoot\":\"<repo>\"}", output, StringComparison.Ordinal);
+        Assert.Contains("compact unicode object root: {\"repositoryRoot\":\"<repo>\"}", output, StringComparison.Ordinal);
+        Assert.Contains("compact escaped child path: {\"artifact\":\"<repo>/artifacts/output.txt\"}", output, StringComparison.Ordinal);
+        Assert.Contains("result root: \"<repo>\"", result, StringComparison.Ordinal);
+        Assert.Contains("compact result root: {\"repositoryRoot\":\"<repo>\"}", result, StringComparison.Ordinal);
+        Assert.DoesNotContain(nativeRepoRoot, metadata, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(slashRepoRoot, metadata, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(nativeRepoRoot, output, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(slashRepoRoot, output, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(escapedSlashRepoRoot, output, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(unicodeEscapedSlashRepoRoot, output, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(slashRepoRoot, result, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceJsonEscapedRepositoryRootTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-json-escaped-root");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that decoded JSON string values are validated, not only raw substrings.
+        """);
+        const string checkName = "json-escaped-root-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var escapedSlashRepoRoot = slashRepoRoot.Replace("/", "\\/", StringComparison.Ordinal);
+        var unicodeEscapedSlashRepoRoot = slashRepoRoot.Replace("/", "\\u002F", StringComparison.Ordinal);
+        var escapedTraversalPath = (slashRepoRoot + "/../repo backup/logs.txt").Replace("/", "\\/", StringComparison.Ordinal);
+        var doubleQuotedContentPath = "{\"message\":\" \\\"" + escapedSlashRepoRoot + "\\\",\\\"backup\\\":0\"}";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        double quoted string content path: {{doubleQuotedContentPath}}
+        escaped string content path: {"message":" '{{escapedSlashRepoRoot}}','backup':0"}
+        unicode string content path: {"message":" '{{unicodeEscapedSlashRepoRoot}}','backup':0"}
+        escaped traversal path: {"repositoryRoot":"{{escapedTraversalPath}}"}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceEmbeddedJsonSnippetPathTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-embedded-json-snippet");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that compact JSON snippets embedded inside longer path tokens are not hidden.
+        """);
+        const string checkName = "embedded-json-snippet-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var escapedSlashRepoRoot = slashRepoRoot.Replace("/", "\\/", StringComparison.Ordinal);
+        var unicodeEscapedSlashRepoRoot = slashRepoRoot.Replace("/", "\\u002F", StringComparison.Ordinal);
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        embedded object root: /opt/e2d{"repositoryRoot":"{{slashRepoRoot}}"}
+        embedded escaped object root: /opt/e2d{"repositoryRoot":"{{escapedSlashRepoRoot}}"}
+        embedded unicode object root: /opt/e2d{"repositoryRoot":"{{unicodeEscapedSlashRepoRoot}}"}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceUnprotectedJsonSnippetBoundaryPathTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-json-snippet-boundary");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that unprotected JSON snippets do not split raw path-token boundary checks.
+        """);
+        const string checkName = "json-snippet-boundary-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var slashRepoChild = slashRepoRoot + "/logs/result.txt";
+        var traversalAcrossSnippet = slashRepoRoot + "/dir{\"ok\":true}/../../repo backup/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        root before object snippet: {{slashRepoRoot}}{"ok":true}
+        root before array snippet: {{slashRepoRoot}}[0]
+        object snippet before root tail: {"ok":true}{{slashRepoRoot}}
+        object snippet before child tail: {"ok":true}{{slashRepoChild}}
+        array snippet before root tail: [0]{{slashRepoRoot}}
+        traversal across snippet boundary: {{traversalAcrossSnippet}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceQuotedCommaSiblingPathTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-quoted-comma-sibling");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that quoted comma or semicolon sibling paths are not hidden.
+        """);
+        const string checkName = "quoted-comma-sibling-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var quotedCommaSiblingPath = slashRepoRoot + "\",backup/logs.txt";
+        var quotedSemicolonSiblingPath = slashRepoRoot + "\";backup/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        quoted comma sibling path: {{quotedCommaSiblingPath}}
+        quoted semicolon sibling path: {{quotedSemicolonSiblingPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceQuotedStructuralSuffixSiblingPathTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-quoted-structural-sibling");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that quoted structural-looking sibling path tails are not hidden.
+        """);
+        const string checkName = "quoted-structural-sibling-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var quotedBracketSiblingPath = slashRepoRoot + "\",]backup/logs.txt";
+        var quotedDelimiterSiblingPath = slashRepoRoot + "\",\"backup/logs.txt";
+        var quotedBraceSiblingPath = slashRepoRoot + "\";}backup/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        quoted bracket sibling path: {{quotedBracketSiblingPath}}
+        quoted delimiter sibling path: {{quotedDelimiterSiblingPath}}
+        quoted brace sibling path: {{quotedBraceSiblingPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceQuotedStructuralLeafSiblingPathTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-quoted-structural-leaf");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that JSON-looking quoted structural leaf suffixes are not hidden.
+        """);
+        const string checkName = "quoted-structural-leaf-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var quotedKeyLeafPath = slashRepoRoot + "\",\"backup\":0";
+        var quotedKeyValueLeafPath = slashRepoRoot + "\",\"backup\":\"value\"";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        quoted key leaf path: "{{quotedKeyLeafPath}}"
+        quoted key value leaf path: "{{quotedKeyValueLeafPath}}"
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceArrayQuotedStructuralLeafSiblingPathTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-array-structural-leaf");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that array-looking quoted structural leaf suffixes are not hidden.
+        """);
+        const string checkName = "array-structural-leaf-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var arrayQuotedKeyLeafPath = "[\"" + slashRepoRoot + "\",\"backup\":0]";
+        var arrayQuotedKeyValueLeafPath = "[\"" + slashRepoRoot + "\",\"backup\":\"value\"]";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        array quoted key leaf path: {{arrayQuotedKeyLeafPath}}
+        array quoted key value leaf path: {{arrayQuotedKeyValueLeafPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceJsonPrefixStructuralTailTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-json-prefix-tail");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that parseable JSON prefixes do not hide external JSON-looking tails.
+        """);
+        const string checkName = "json-prefix-tail-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var objectPrefixNumericTailPath = "{\"repositoryRoot\":\"" + slashRepoRoot + "\"},\"backup\":0";
+        var objectPrefixStringTailPath = "{\"repositoryRoot\":\"" + slashRepoRoot + "\"},\"backup\":\"value\"";
+        var arrayPrefixNumericTailPath = "[{\"repositoryRoot\":\"" + slashRepoRoot + "\"}],\"backup\":0";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        object prefix numeric tail path: {{objectPrefixNumericTailPath}}
+        object prefix string tail path: {{objectPrefixStringTailPath}}
+        array prefix numeric tail path: {{arrayPrefixNumericTailPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceJsonStringContentQuotedTailTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-json-string-content-tail");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that JSON string content does not turn POSIX quoted tails into safe JSON tokens.
+        """);
+        const string checkName = "json-string-content-tail-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var singleQuotedContentPath = "{\"message\":\" '" + slashRepoRoot + "','backup':0\"}";
+        var backtickContentPath = "{\"message\":\" `" + slashRepoRoot + "`,`backup`:0\"}";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        single quoted content path: {{singleQuotedContentPath}}
+        backtick content path: {{backtickContentPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceQuotedKeyPathTailSiblingPathTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-quoted-key-path-tail");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that quoted-key-looking path tails are not hidden.
+        """);
+        const string checkName = "quoted-key-path-tail-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var quotedKeySlashTailPath = slashRepoRoot + "\",\"backup\":/logs.txt";
+        var quotedKeyNestedSlashTailPath = slashRepoRoot + "\";\"backup\":logs/path.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        quoted key slash tail path: "{{quotedKeySlashTailPath}}"
+        quoted key nested slash tail path: "{{quotedKeyNestedSlashTailPath}}"
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceQuotedKeyValuePathTailSiblingPathTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-quoted-key-value-path-tail");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that quoted-key tails with quoted path-like values are not hidden.
+        """);
+        const string checkName = "quoted-key-value-path-tail-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var quotedKeyQuotedSlashTailPath = slashRepoRoot + "\",\"backup\":\"/logs.txt";
+        var quotedKeyQuotedNestedSlashTailPath = slashRepoRoot + "\";\"backup\":\"logs/path.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        quoted key quoted slash tail path: "{{quotedKeyQuotedSlashTailPath}}"
+        quoted key quoted nested slash tail path: "{{quotedKeyQuotedNestedSlashTailPath}}"
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceQuotedKeyStructuralValuePathTailTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-quoted-key-structural-value");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that quoted-key structural values do not hide path-like tails.
+        """);
+        const string checkName = "quoted-key-structural-value-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var bracketValuePath = slashRepoRoot + "\",\"backup\":[/logs.txt";
+        var braceValuePath = slashRepoRoot + "\",\"backup\":{/logs.txt";
+        var quotedValueSuffixPath = slashRepoRoot + "\",\"backup\":\"value\"/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        bracket value path: "{{bracketValuePath}}"
+        brace value path: "{{braceValuePath}}"
+        quoted value suffix path: "{{quotedValueSuffixPath}}"
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceQuotedKeyStructuralBoundaryPathSuffixTokens()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-quoted-key-boundary-suffix");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that quoted-key structural boundaries do not hide later path suffixes.
+        """);
+        const string checkName = "quoted-key-boundary-suffix-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var commaBoundaryPath = slashRepoRoot + "\",\"backup\":abc,def/logs.txt";
+        var semicolonBoundaryPath = slashRepoRoot + "\";\"backup\":abc;def/logs.txt";
+        var quotedValueCommaBoundaryPath = slashRepoRoot + "\",\"backup\":\"value\",tail/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        comma boundary path: "{{commaBoundaryPath}}"
+        semicolon boundary path: "{{semicolonBoundaryPath}}"
+        quoted value comma boundary path: "{{quotedValueCommaBoundaryPath}}"
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceEmbeddedRepoRootStartBoundary()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-embedded-root-boundary");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that a repo-root occurrence inside a longer path token is not hidden.
+        """);
+        const string checkName = "embedded-root-boundary-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var colonEmbeddedPath = "/e2d-audit-prefix/prefix:" + slashRepoRoot + "/logs.txt";
+        var commaEmbeddedPath = "/e2d-audit-prefix/prefix," + slashRepoRoot + "/logs.txt";
+        var equalsEmbeddedPath = "/e2d-audit-prefix/prefix=" + slashRepoRoot + "/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        colon embedded path: {{colonEmbeddedPath}}
+        comma embedded path: {{commaEmbeddedPath}}
+        equals embedded path: {{equalsEmbeddedPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceOpeningDelimiterEmbeddedRepoRootStartBoundary()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-opening-delimiter-root");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that opening delimiters inside a longer path token do not hide repo-root occurrences.
+        """);
+        const string checkName = "opening-delimiter-root-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var parenthesisEmbeddedPath = "/e2d-audit-prefix/prefix(" + slashRepoRoot + "/logs.txt";
+        var bracketEmbeddedPath = "/e2d-audit-prefix/prefix[" + slashRepoRoot + "/logs.txt";
+        var quoteEmbeddedPath = "/e2d-audit-prefix/prefix\"" + slashRepoRoot + "/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        parenthesis embedded path: {{parenthesisEmbeddedPath}}
+        bracket embedded path: {{bracketEmbeddedPath}}
+        quote embedded path: {{quoteEmbeddedPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceStructuralDelimiterEmbeddedRepoRootStartBoundary()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-structural-delimiter-root");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that structural-looking delimiters inside a longer path token do not hide repo-root occurrences.
+        """);
+        const string checkName = "structural-delimiter-root-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var colonQuoteEmbeddedPath = "/e2d-audit-prefix/prefix:\"" + slashRepoRoot + "/logs.txt";
+        var equalsParenthesisEmbeddedPath = "/e2d-audit-prefix/prefix=(\"" + slashRepoRoot + "/logs.txt";
+        var commaBraceEmbeddedPath = "/e2d-audit-prefix/prefix,{\"" + slashRepoRoot + "/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        colon quote embedded path: {{colonQuoteEmbeddedPath}}
+        equals parenthesis embedded path: {{equalsParenthesisEmbeddedPath}}
+        comma brace embedded path: {{commaBraceEmbeddedPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceWhitespaceStructuralDelimiterEmbeddedRepoRootStartBoundary()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-whitespace-delimiter-root");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that whitespace inside a longer POSIX path token does not hide repo-root occurrences.
+        """);
+        const string checkName = "whitespace-delimiter-root-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var colonQuoteEmbeddedPath = "/e2d-audit-prefix/prefix dir:\"" + slashRepoRoot + "/logs.txt";
+        var equalsParenthesisEmbeddedPath = "/e2d-audit-prefix/prefix dir=(\"" + slashRepoRoot + "/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        colon quote embedded path: {{colonQuoteEmbeddedPath}}
+        equals parenthesis embedded path: {{equalsParenthesisEmbeddedPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceWhitespaceEmbeddedRepoRootStartBoundary()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-whitespace-root-boundary");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that direct whitespace inside a longer POSIX path token does not hide repo-root occurrences.
+        """);
+        const string checkName = "whitespace-root-boundary-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var spaceEmbeddedPath = "/e2d-audit-prefix/prefix " + slashRepoRoot + "/logs.txt";
+        var tabEmbeddedPath = "/e2d-audit-prefix/prefix\t" + slashRepoRoot + "/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        space embedded path: {{spaceEmbeddedPath}}
+        tab embedded path: {{tabEmbeddedPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidencePosixSiblingPathTokens()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-posix-sibling-token");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that POSIX sibling path tokens are not hidden by repo-root replacement.
+        """);
+        const string checkName = "posix-sibling-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var slashRepoRoot = fixture.RepositoryRoot.Replace('\\', '/');
+        var backslashSiblingPath = slashRepoRoot + "\\backup/logs.txt";
+        var quotedPunctuationSiblingPath = slashRepoRoot + "\")backup/logs.txt";
+        var quotedCommaSiblingPath = slashRepoRoot + "\",backup/logs.txt";
+        var quotedSemicolonSiblingPath = slashRepoRoot + "\";backup/logs.txt";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        backslash sibling path: {{backslashSiblingPath}}
+        quoted punctuation sibling path: {{quotedPunctuationSiblingPath}}
+        quoted comma sibling path: {{quotedCommaSiblingPath}}
+        quoted semicolon sibling path: {{quotedSemicolonSiblingPath}}
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsPreflightEvidenceParentTraversalRootToken()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-preflight-parent-token");
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        This file proves that parent traversal at the end of a path token is not hidden.
+        """);
+        const string checkName = "parent-traversal-output";
+        var evidenceRoot = $".temp/audit-evidence/preflight/{checkName}";
+        var nativeParentPath = fixture.RepositoryRoot + Path.DirectorySeparatorChar + "..";
+        var slashParentPath = fixture.RepositoryRoot.Replace('\\', '/') + "/..";
+        fixture.WriteTextFile($"{evidenceRoot}/output.txt", $$"""
+        quoted native parent path: "{{nativeParentPath}}"
+        quoted slash parent path: "{{slashParentPath}}"
+        """);
+        var configPath = fixture.WriteConfig(
+            taskId,
+            archiveOnlyEvidenceGlobs: [],
+            preflightChecks:
+            [
+                new AuditFixturePreflightCheck(
+                    checkName,
+                    "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+                    [$"{evidenceRoot}/**"])
+            ],
+            checks: []);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        Assert.Contains("E2D-BUILD-AUDIT-ABSOLUTE-PATH", package.Stdout, StringComparison.Ordinal);
+        Assert.Contains($"preflight/{checkName}/output.txt", package.Stdout, StringComparison.Ordinal);
+    }
+
+    private static string ToggleLastPathSegmentCase(string path)
+    {
+        var separatorIndex = path.LastIndexOf('/');
+        var prefix = separatorIndex >= 0 ? path[..(separatorIndex + 1)] : string.Empty;
+        var leaf = separatorIndex >= 0 ? path[(separatorIndex + 1)..] : path;
+        var toggled = new string(leaf.Select(character =>
+            char.IsUpper(character)
+                ? char.ToLowerInvariant(character)
+                : char.ToUpperInvariant(character)).ToArray());
+
+        return string.Equals(leaf, toggled, StringComparison.Ordinal)
+            ? prefix + leaf + "-case"
+            : prefix + toggled;
+    }
+
     [Theory]
     [Trait("AuditTier", "Heavy")]
     [InlineData("dotnet-run", "dotnet run --project eng/Electron2D.Build -- verify audit-contracts", "dotnetrun")]
@@ -11163,15 +12363,97 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
-    public async Task AuditPackageAllowsJsonEscapedQuotedTextAfterDriveLikePunctuation()
+    public async Task AuditPackageRejectsJsonEscapedWindowsDrivePathsInArchiveContent()
     {
-        using var fixture = await AuditFixture.CreateAsync("audit-package-json-escaped-punctuation");
+        using var fixture = await AuditFixture.CreateAsync("audit-package-json-escaped-drive-path");
         const string taskId = "T-0001";
-        var escapedQuote = string.Concat("D", ":", "\\", "u0022");
+        var slashEncodedPath = string.Concat("G", "\\u003A", "/local/copied-task.md");
+        var backslashEncodedPath = string.Concat("G", "\\u003A", "\\u005Clocal", "\\u005Ccopied-task.md");
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", $"""
+        # Audit fixture
+
+        Encoded slash drive path: "{slashEncodedPath}"
+        Encoded backslash drive path: "{backslashEncodedPath}"
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-ABSOLUTE-PATH");
+    }
+
+    [Theory]
+    [Trait("AuditTier", "Heavy")]
+    [InlineData("u0022")]
+    [InlineData("u0027")]
+    public async Task AuditPackageRejectsEscapedQuoteLikeWindowsDrivePathsInArchiveContent(string firstSegment)
+    {
+        using var fixture = await AuditFixture.CreateAsync($"audit-package-quote-like-drive-path-{firstSegment}");
+        const string taskId = "T-0001";
+        var literalPath = string.Concat("G", ":", "\\", firstSegment, "\\", "local", "\\", "copied-task.md");
+        var jsonStringPath = JsonSerializer.Serialize(literalPath);
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", $"""
+        # Audit fixture
+
+        Literal drive path with quote-like first segment: {literalPath}
+        JSON drive path with quote-like first segment: {jsonStringPath}
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-ABSOLUTE-PATH");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsEscapedQuoteLikeWindowsDrivePathsWithLaterSeparatorsInArchiveContent()
+    {
+        using var fixture = await AuditFixture.CreateAsync("audit-package-quote-like-drive-path-later-separator");
+        const string taskId = "T-0001";
+        var punctuationPaths = new[]
+        {
+            string.Concat("G", ":", "\\", "u0022", ".", "local", "\\", "copied-task.md"),
+            string.Concat("G", ":", "\\", "u0027", "-", "local", "\\", "copied-task.md"),
+            string.Concat("G", ":", "\\", "u0022", ")", "\\", "local", "\\", "copied-task.md"),
+        };
+        var jsonStringPaths = punctuationPaths
+            .Select(path => JsonSerializer.Serialize(path))
+            .ToArray();
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", $"""
+        # Audit fixture
+
+        Literal drive paths with quote-like punctuation and later separators:
+        {string.Join(Environment.NewLine, punctuationPaths)}
+
+        JSON drive paths with quote-like punctuation and later separators:
+        {string.Join(Environment.NewLine, jsonStringPaths)}
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-ABSOLUTE-PATH");
+    }
+
+    [Theory]
+    [Trait("AuditTier", "Heavy")]
+    [InlineData("u0022")]
+    [InlineData("u0027")]
+    public async Task AuditPackageAllowsJsonEscapedQuotedTextAfterDriveLikePunctuation(string marker)
+    {
+        using var fixture = await AuditFixture.CreateAsync($"audit-package-json-escaped-punctuation-{marker}");
+        const string taskId = "T-0001";
+        var escapedQuote = string.Concat("D", ":", "\\", marker);
+        var jsonEscapedQuote = JsonSerializer.Serialize(escapedQuote);
         fixture.WriteTextFile("docs/release-management/audit-fixture.md", $"""
         # Audit fixture
 
         JSON generated from source documentation may contain strings like `{escapedQuote}` after emoticon-like punctuation.
+        JSON metadata may contain the same non-path value as `{jsonEscapedQuote}`.
         """);
         var configPath = fixture.WriteConfig(taskId);
 
@@ -11993,6 +13275,11 @@ public sealed class RepositoryBuildToolTests
         var redactedConcreteValue = TokenSecretAssignment(string.Concat("<redacted> concrete-value или ", "token", "=<non-placeholder> concrete-value, и убедиться, что packaging/verify завершается с E2D-BUILD-AUDIT-SECRET-DETECTED. Положительный тест с одиночным ", "token", "=<non-placeholder> может остаться, если проект осознанно считает это redacted placeholder."));
         var r60ReviewerExample = TokenSecretAssignment("<redacted> concrete-secret additional-value проходит через тот же путь, что и точная reviewer-фраза.");
         var r60ReviewerVerification = TokenSecretAssignment("<redacted> concrete-secret additional-value или аналогичную строку с reviewer-префиксом и suffix. Packaging/verify должен отказать с E2D-BUILD-AUDIT-SECRET-DETECTED. Отдельный тест должен подтвердить, что точная reviewer-фраза допускается только в previous verdict-файле, если это остаётся частью контракта.");
+        var r17ExactRootTokenPhrase = SecretAssignment(
+            string.Concat("exact-root ", "token"),
+            "код заменит только `/home/user/repo` и получит `{\"message\":\" '<repo>','backup':0\"}`. Но исходный текстовый фрагмент после пробела может быть POSIX absolute path к sibling leaf `/home/user/repo','backup':0`, потому что `'`, `,` и `:` допустимы в POSIX filename segment.",
+            separator: ": ");
+        var r20RawTokenBoundaryLine = string.Concat("* Что не так: sanitizer делит raw preflight text на raw segments и parseable JSON snippets, но raw replacement выполняется на сегментах уже без исходного соседнего символа. Если snippet parseable, но не является защищённым complete JSON ", "token", "-ом, он всё равно становится границей сегментов. Поэтому строка вида `/home/user/repo{\"ok\":true}` при POSIX `repoRoot = /home/user/repo` превращается в `<repo>{\"ok\":true}`: raw segment до `{` заканчивается ровно на repo-root, и `ReplaceRepoRootPathCandidate` принимает конец подстроки как безопасный конец ", "token", "-а. В исходном тексте это не был exact repo-root ", "token", ": `{` является допустимым символом POSIX filename segment-а, а весь путь указывает на sibling leaf `repo{\"ok\":true}`.");
         var reviewerPasswordPlaceholder = SecretAssignment(string.Concat("pass", "word"), "pass", separator: ": ");
         var reviewerPasswordPlaceholderPhrase = string.Concat("`", reviewerPasswordPlaceholder, "` относятся к документационным примерам Godot API, а тестовые Windows paths являются синтетическими fixtures.");
         var reviewerPasswordPlaceholderAuditPhrase = string.Concat("`", reviewerPasswordPlaceholder, "` присутствует только как историческое упоминание в прошлом verdict report.");
@@ -12033,6 +13320,12 @@ public sealed class RepositoryBuildToolTests
         External reviewer quoted a later exact blocker example:
         {r60ReviewerExample}
         {r60ReviewerVerification}
+
+        External reviewer quoted a later exact-root token explanation:
+        {r17ExactRootTokenPhrase}
+
+        External reviewer quoted a later raw token-boundary blocker line:
+        {r20RawTokenBoundaryLine}
 
         External reviewer quoted generated documentation password placeholder phrases:
         {reviewerPasswordPlaceholderPhrase}
@@ -12113,13 +13406,17 @@ public sealed class RepositoryBuildToolTests
         fixture.WriteTextFile(previousVerdictPath, $"""
         VERDICT: NEEDS_FIXES
 
+        BLOCKERS:
+        - B1
+          - Fixture blocker for reviewer placeholder suffix scanner coverage.
+
         External reviewer quoted an unsafe reviewer phrase suffix:
         {reviewerPhraseWithSuffix}
         """);
         var configPath = fixture.WriteConfig(
             taskId,
             previousVerdictChain: [previousVerdictPath],
-            blockerClosureList: ["Fixture closure: check git-status reaches reviewer suffix scan."]);
+            blockerClosureList: [$"{previousVerdictPath} B1 closed by git-status: check git-status reaches reviewer suffix scan."]);
 
         var package = await RunAuditPackageAsync(fixture, taskId, configPath);
 
@@ -12169,11 +13466,16 @@ public sealed class RepositoryBuildToolTests
         using var fixture = await AuditFixture.CreateAsync("audit-package-task-owned-reviewer-placeholder");
         const string taskId = "T-0001";
         var reviewerPhrase = TokenSecretAssignment(string.Concat("<redacted> concrete-secret или ", "token", "=<non-placeholder> concrete-secret считается безопасной."));
+        var r17ExactRootTokenPhrase = SecretAssignment(
+            string.Concat("exact-root ", "token"),
+            "код заменит только `/home/user/repo` и получит `{\"message\":\" '<repo>','backup':0\"}`. Но исходный текстовый фрагмент после пробела может быть POSIX absolute path к sibling leaf `/home/user/repo','backup':0`, потому что `'`, `,` и `:` допустимы в POSIX filename segment.",
+            separator: ": ");
         fixture.WriteTextFile("docs/release-management/audit-fixture.md", $"""
         # Audit fixture
 
         Task-owned files must not use previous-verdict reviewer phrase exceptions:
         {reviewerPhrase}
+        {r17ExactRootTokenPhrase}
         """);
         var configPath = fixture.WriteConfig(taskId);
 
@@ -12388,6 +13690,109 @@ public sealed class RepositoryBuildToolTests
 
         Assert.NotEqual(0, verify.ExitCode);
         AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-ABSOLUTE-PATH");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageVerifyRejectsJsonEscapedWindowsDrivePathsInArchiveContent()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-verify-json-drive-path", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        var slashEncodedPath = string.Concat("G", "\\u003A", "/local/copied-task.md");
+        var backslashEncodedPath = string.Concat("G", "\\u003A", "\\u005Clocal", "\\u005Ccopied-task.md");
+        var evidenceEntry = ReadZipEntryNames(zipPath)
+            .Single(name => name.EndsWith("/checks/result.txt", StringComparison.Ordinal));
+        AddZipEntry(
+            zipPath,
+            evidenceEntry,
+            $"""
+            Encoded slash drive path: "{slashEncodedPath}"
+            Encoded backslash drive path: "{backslashEncodedPath}"
+            """,
+            updateChecksums: true);
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-json-drive-path");
+
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-ABSOLUTE-PATH");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageVerifyRejectsEscapedQuoteLikeWindowsDrivePathsInArchiveContent()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-verify-quote-drive-path", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        var literalQuotePath = string.Concat("G", ":", "\\", "u0022", "\\", "local", "\\", "copied-task.md");
+        var literalSingleQuotePath = string.Concat("G", ":", "\\", "u0027", "\\", "local", "\\", "copied-task.md");
+        var jsonQuotePath = JsonSerializer.Serialize(literalQuotePath);
+        var jsonSingleQuotePath = JsonSerializer.Serialize(literalSingleQuotePath);
+        var evidenceEntry = ReadZipEntryNames(zipPath)
+            .Single(name => name.EndsWith("/checks/result.txt", StringComparison.Ordinal));
+        AddZipEntry(
+            zipPath,
+            evidenceEntry,
+            $"""
+            Literal quote-like drive path: {literalQuotePath}
+            Literal single-quote-like drive path: {literalSingleQuotePath}
+            JSON quote-like drive path: {jsonQuotePath}
+            JSON single-quote-like drive path: {jsonSingleQuotePath}
+            """,
+            updateChecksums: true);
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-quote-drive-path");
+
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-ABSOLUTE-PATH");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageVerifyRejectsEscapedQuoteLikeWindowsDrivePathsWithLaterSeparatorsInArchiveContent()
+    {
+        using var fixture = await CreatePackagedFixtureAsync("audit-package-verify-quote-drive-path-later-separator", "T-0001");
+        var zipPath = fixture.ZipPath("T-0001");
+        var punctuationPaths = new[]
+        {
+            string.Concat("G", ":", "\\", "u0022", ".", "local", "\\", "copied-task.md"),
+            string.Concat("G", ":", "\\", "u0027", "-", "local", "\\", "copied-task.md"),
+            string.Concat("G", ":", "\\", "u0022", ")", "\\", "local", "\\", "copied-task.md"),
+        };
+        var jsonStringPaths = punctuationPaths
+            .Select(path => JsonSerializer.Serialize(path))
+            .ToArray();
+        var evidenceEntry = ReadZipEntryNames(zipPath)
+            .Single(name => name.EndsWith("/checks/result.txt", StringComparison.Ordinal));
+        AddZipEntry(
+            zipPath,
+            evidenceEntry,
+            $"""
+            Literal quote-like drive paths with later separators:
+            {string.Join(Environment.NewLine, punctuationPaths)}
+
+            JSON quote-like drive paths with later separators:
+            {string.Join(Environment.NewLine, jsonStringPaths)}
+            """,
+            updateChecksums: true);
+        using var cleanRepo = await fixture.CreateCleanCloneAsync("verify-quote-drive-path-later-separator");
+
+        var verify = await RunAuditVerifyAsync(fixture, zipPath, cleanRepo.Root);
+
+        Assert.NotEqual(0, verify.ExitCode);
+        AssertDiagnosticCode(verify, "E2D-BUILD-AUDIT-ABSOLUTE-PATH");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Fast")]
+    public void AuditPackageTaskOwnedSourceAvoidsPosixTempPathFixturePrefixes()
+    {
+        var sourcePath = Path.Combine(FindRepositoryRoot(), "tests", "Electron2D.Tests.Integration", "RepositoryBuildToolTests.cs");
+        var source = File.ReadAllText(sourcePath, Encoding.UTF8);
+        var posixTempFixturePrefix = string.Concat("/", "tmp", "/prefix");
+
+        Assert.DoesNotContain(posixTempFixturePrefix, source, StringComparison.Ordinal);
     }
 
     [Fact]

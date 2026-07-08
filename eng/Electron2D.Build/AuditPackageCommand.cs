@@ -27,6 +27,7 @@ using System.Buffers.Binary;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -52,6 +53,15 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         WriteIndented = true
     };
 
+    private static readonly JsonSerializerOptions PreflightMetadataJsonWriteOptions = new(JsonWriteOptions)
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
+    private static readonly JsonSerializerOptions PreflightJsonSnippetWriteOptions = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
+
     private static readonly DateTimeOffset DeterministicZipTimestamp = new(2000, 1, 1, 0, 0, 0, TimeSpan.Zero);
     private static readonly Regex TaskIdPattern = new(@"\bT-\d{4}\b", RegexOptions.CultureInvariant);
     private static readonly Regex SecretValuePattern = new(
@@ -61,8 +71,11 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         @"(?im)-----BEGIN [A-Z ]*PRIVATE\s+KEY-----|-----BEGIN[^\r\n]*PRIVATE\s+KEY|\bBEGIN\s+PRIVATE\s+KEY\b",
         RegexOptions.CultureInvariant);
     private static readonly Regex WindowsDrivePathPattern = new(
-        @"\b[A-Z]:(?:/|\\(?!u0022\b|u0027\b))",
+        @"\b[A-Z]:(?:/|\\)",
         RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+    private static readonly Regex PreflightPlaceholderPerCharacterPattern = new(
+        @"(?:<repo>[/\\][^<\r\n]){3,}",
+        RegexOptions.CultureInvariant);
     private static readonly Regex MarkdownSectionHeadingPattern = new(
         @"^\s*[A-Z][A-Z0-9_]*:\s*$",
         RegexOptions.CultureInvariant);
@@ -145,6 +158,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         "<redacted> concrete-secret additional-value или аналогичную строку с reviewer-префиксом и suffix. Packaging/verify должен отказать с E2D-BUILD-AUDIT-SECRET-DETECTED. Отдельный тест должен подтвердить, что точная reviewer-фраза допускается только в previous verdict-файле, если это остаётся частью контракта",
         "<redacted>; additional-value в любом repo-before text snapshot может быть принята как legacy prose",
         "<redacted>; additional-value, и убедиться, что package verify падает с E2D-BUILD-AUDIT-SECRET-DETECTED. Отдельно сохранить положительный тест только для конкретной старой фразы, которая действительно нужна для прохождения baseline docs snapshot",
+        "код заменит только `/home/user/repo` и получит `{\"message\":\" '<repo>','backup':0\"}`. Но исходный текстовый фрагмент после пробела может быть POSIX absolute path к sibling leaf `/home/user/repo','backup':0`, потому что `'`, `,` и `:` допустимы в POSIX filename segment",
         "pass` относятся к документационным примерам Godot API, а тестовые Windows paths являются синтетическими fixtures",
         "pass` присутствует только как историческое упоминание в прошлом verdict report",
         "pass` присутствует только как историческое упоминание в прошлом verdict report и покрыта заявленной областью `T-0985`",
@@ -163,7 +177,8 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         string.Concat("* `Evidence`: allowlist содержит bare `pass`; previous verdict-файлы получают `allowPreviousVerdictReviewerPhrases: true`; тест доказывает успешную упаковку и verify для previous verdict с `", ReviewerPasswordPlaceholder, "`."),
         string.Concat("* `Fix`: ограничить exception полным историческим контекстом или убрать его; standalone `", ReviewerPasswordPlaceholder, "` должен отклоняться."),
         string.Concat("* Тесты проверены по полным файлам. `ApiManifestTests.cs` покрывает public runtime surface, stable identifiers, projected enum names, virtual method projection, operators, constants, enum values и keyword escaping в manifest. `RepositoryBuildToolTests.cs` покрывает `api fetch-godot`, bad C# snapshots, unsafe class/member projections, generated class packets, `rawMembers`, Windows path masking, keyword parameter escaping, stale Markdown artifacts, Wiki renderer keyword escaping, audit timeout sidecar, previous verdict placeholder boundaries и path scanner regressions. При этом tests также доказывают blocker B1, потому что закрепляют successful package/verify для previous verdict с `", ReviewerPasswordPlaceholder, "`, и не закрывают blocker B2, потому что Wiki renderer static property signature не проверяется."),
-        string.Concat("* Задача остаётся открытой. Несмотря на полные snapshots, синхронизированные generated API artifacts и passing evidence, текущая реализация не проходит приёмку из-за B1 и B2. Для закрытия нужно сузить previous verdict secret-placeholder exception так, чтобы bare `", ReviewerPasswordPlaceholder, "` не проходил как безопасный previous verdict placeholder, и исправить reflection-based Wiki/public API renderer так, чтобы static properties рендерились с `public static`. После исправления нужны targeted regression tests и повторный full current-scope audit по новому ZIP.")
+        string.Concat("* Задача остаётся открытой. Несмотря на полные snapshots, синхронизированные generated API artifacts и passing evidence, текущая реализация не проходит приёмку из-за B1 и B2. Для закрытия нужно сузить previous verdict secret-placeholder exception так, чтобы bare `", ReviewerPasswordPlaceholder, "` не проходил как безопасный previous verdict placeholder, и исправить reflection-based Wiki/public API renderer так, чтобы static properties рендерились с `public static`. После исправления нужны targeted regression tests и повторный full current-scope audit по новому ZIP."),
+        string.Concat("* Что не так: sanitizer делит raw preflight text на raw segments и parseable JSON snippets, но raw replacement выполняется на сегментах уже без исходного соседнего символа. Если snippet parseable, но не является защищённым complete JSON ", "token", "-ом, он всё равно становится границей сегментов. Поэтому строка вида `/home/user/repo{\"ok\":true}` при POSIX `repoRoot = /home/user/repo` превращается в `<repo>{\"ok\":true}`: raw segment до `{` заканчивается ровно на repo-root, и `ReplaceRepoRootPathCandidate` принимает конец подстроки как безопасный конец ", "token", "-а. В исходном тексте это не был exact repo-root ", "token", ": `{` является допустимым символом POSIX filename segment-а, а весь путь указывает на sibling leaf `repo{\"ok\":true}`.")
     ];
     private static readonly string[] LegacyRepoBeforeSecretPlaceholderValues =
     [
@@ -1236,7 +1251,6 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 ValidateEvidenceInputPath(path, config);
                 var absolutePath = Path.Combine(repoRoot, path.Replace('/', Path.DirectorySeparatorChar));
                 ValidateInputFileSize(absolutePath, path, config.MaxFileSize);
-                ValidateSecretPolicy(absolutePath, path, config.SecretScanPolicy);
                 var relativeEvidencePath = ToPreflightEvidenceArchivePath(path, check.Name);
                 if (string.Equals(relativeEvidencePath, "command.txt", StringComparison.Ordinal))
                 {
@@ -1255,9 +1269,14 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                         $"preflightChecks entry '{check.Name}' maps multiple evidence files to {archivePath}.");
                 }
 
-                var evidenceSourcePath = string.Equals(relativeEvidencePath, "metadata.json", StringComparison.Ordinal)
-                    ? WriteNormalizedPreflightMetadata(localRoot, absolutePath, check.Command)
-                    : absolutePath;
+                var evidenceSourcePath = PreparePreflightEvidenceSource(
+                    localRoot,
+                    relativeEvidencePath,
+                    absolutePath,
+                    repoRoot,
+                    check.Command,
+                    archivePath);
+                ValidateSecretPolicy(evidenceSourcePath, archivePath, config.SecretScanPolicy);
                 evidence.Add(new EvidenceSourceFile(evidenceSourcePath, archivePath));
             }
         }
@@ -1265,7 +1284,42 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         return evidence.OrderBy(file => file.ArchivePath, StringComparer.Ordinal).ToArray();
     }
 
-    private static string WriteNormalizedPreflightMetadata(string localRoot, string sourcePath, string command)
+    private static string PreparePreflightEvidenceSource(
+        string localRoot,
+        string relativeEvidencePath,
+        string sourcePath,
+        string repoRoot,
+        string command,
+        string archivePath)
+    {
+        if (string.Equals(relativeEvidencePath, "metadata.json", StringComparison.Ordinal))
+        {
+            return WriteNormalizedPreflightMetadata(localRoot, sourcePath, repoRoot, command, archivePath);
+        }
+
+        var bytes = File.ReadAllBytes(sourcePath);
+        if (!IsTextBytes(bytes))
+        {
+            return sourcePath;
+        }
+
+        var text = Encoding.UTF8.GetString(bytes);
+        var sanitized = SanitizePreflightEvidenceText(text, repoRoot, archivePath);
+        if (string.Equals(text, sanitized, StringComparison.Ordinal))
+        {
+            return sourcePath;
+        }
+
+        WriteText(localRoot, relativeEvidencePath, sanitized);
+        return Path.Combine(localRoot, relativeEvidencePath.Replace('/', Path.DirectorySeparatorChar));
+    }
+
+    private static string WriteNormalizedPreflightMetadata(
+        string localRoot,
+        string sourcePath,
+        string repoRoot,
+        string command,
+        string archivePath)
     {
         JsonObject metadata;
         try
@@ -1282,8 +1336,585 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         }
 
         metadata["command"] = command;
-        WriteText(localRoot, "metadata.json", metadata.ToJsonString(JsonWriteOptions) + "\n");
+        NormalizePreflightMetadataNode(metadata, repoRoot, archivePath);
+        var text = SanitizePreflightEvidenceText(metadata.ToJsonString(PreflightMetadataJsonWriteOptions) + "\n", repoRoot, archivePath);
+        ValidateNoBrokenPreflightPlaceholderText(text, archivePath);
+        WriteText(localRoot, "metadata.json", text);
         return Path.Combine(localRoot, "metadata.json");
+    }
+
+    private static JsonNode? NormalizePreflightMetadataNode(JsonNode? node, string repoRoot, string archivePath)
+    {
+        switch (node)
+        {
+            case JsonObject jsonObject:
+                foreach (var key in jsonObject.Select(property => property.Key).ToArray())
+                {
+                    jsonObject[key] = NormalizePreflightMetadataNode(jsonObject[key], repoRoot, archivePath);
+                }
+
+                return jsonObject;
+
+            case JsonArray jsonArray:
+                for (var index = 0; index < jsonArray.Count; index++)
+                {
+                    jsonArray[index] = NormalizePreflightMetadataNode(jsonArray[index], repoRoot, archivePath);
+                }
+
+                return jsonArray;
+
+            case JsonValue jsonValue when TryGetJsonStringValue(jsonValue, out var value):
+                return JsonValue.Create(SanitizePreflightMetadataStringValue(value, repoRoot, archivePath));
+
+            default:
+                return node;
+        }
+    }
+
+    private static bool TryGetJsonStringValue(JsonValue jsonValue, out string value)
+    {
+        if (jsonValue.TryGetValue<string>(out value!))
+        {
+            return true;
+        }
+
+        if (jsonValue.TryGetValue<JsonElement>(out var element) &&
+            element.ValueKind == JsonValueKind.String)
+        {
+            value = element.GetString() ?? string.Empty;
+            return true;
+        }
+
+        value = string.Empty;
+        return false;
+    }
+
+    private static string SanitizePreflightMetadataStringValue(string value, string repoRoot, string archivePath)
+    {
+        ValidateNoBrokenPreflightPlaceholderText(value, archivePath);
+        var comparison = GetRepoRootPathComparison();
+        foreach (var candidate in GetRepoRootReplacementCandidates(repoRoot))
+        {
+            if (!value.StartsWith(candidate, comparison))
+            {
+                continue;
+            }
+
+            if (!IsRepoRootJsonStringValueBoundary(value, candidate.Length))
+            {
+                continue;
+            }
+
+            return "<repo>" + value[candidate.Length..];
+        }
+
+        ValidateDecodedPreflightStringValueHasNoMachinePath(value, repoRoot, archivePath);
+        return value;
+    }
+
+    private static void ValidateDecodedPreflightStringValueHasNoMachinePath(string value, string repoRoot, string archivePath)
+    {
+        if (ContainsMachineLocalPathValue(value, GetNormalizedMachineLocalPathCandidates(repoRoot, Path.GetTempPath())))
+        {
+            throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-ABSOLUTE-PATH", $"Archive content contains a machine-local path: {archivePath}");
+        }
+    }
+
+    private static bool IsRepoRootJsonStringValueBoundary(string value, int end)
+    {
+        if (end >= value.Length)
+        {
+            return true;
+        }
+
+        return IsRepoRootChildPathSeparator(value[end]) &&
+            !HasParentTraversalSegmentAfterRepoRoot(value, end);
+    }
+
+    private static string SanitizePreflightEvidenceText(string text, string repoRoot, string archivePath)
+    {
+        ValidateNoBrokenPreflightPlaceholderText(text, archivePath);
+        if (string.IsNullOrEmpty(text))
+        {
+            return text;
+        }
+
+        var sanitized = SanitizePreflightEvidenceTextSegments(text, repoRoot, archivePath);
+        ValidateNoBrokenPreflightPlaceholderText(sanitized, archivePath);
+        return sanitized;
+    }
+
+    private static string SanitizePreflightEvidenceTextSegments(string text, string repoRoot, string archivePath)
+    {
+        StringBuilder? builder = null;
+        var lastRawStart = 0;
+        var index = 0;
+        while (index < text.Length)
+        {
+            if (text[index] is not ('{' or '[') ||
+                !TryGetJsonSnippetEnd(text, index, out var snippetEnd) ||
+                !TryParseJsonSnippet(text, index, snippetEnd, out var snippet))
+            {
+                index++;
+                continue;
+            }
+
+            builder ??= new StringBuilder(text.Length);
+            AppendSanitizedRawPreflightSegment(builder, text, lastRawStart, index, repoRoot);
+            if (IsCompleteJsonSnippetToken(text, index, snippetEnd))
+            {
+                NormalizePreflightMetadataNode(snippet, repoRoot, archivePath);
+                builder.Append(snippet?.ToJsonString(PreflightJsonSnippetWriteOptions) ?? "null");
+            }
+            else
+            {
+                builder.Append(text, index, snippetEnd - index);
+            }
+
+            index = snippetEnd;
+            lastRawStart = snippetEnd;
+        }
+
+        if (builder is null)
+        {
+            return ReplaceRepoRootPathCandidates(text, repoRoot, "<repo>");
+        }
+
+        AppendSanitizedRawPreflightSegment(builder, text, lastRawStart, text.Length, repoRoot);
+        return builder.ToString();
+    }
+
+    private static void AppendSanitizedRawPreflightSegment(
+        StringBuilder builder,
+        string text,
+        int start,
+        int end,
+        string repoRoot)
+    {
+        if (end <= start)
+        {
+            return;
+        }
+
+        builder.Append(ReplaceRepoRootPathCandidates(text, start, end, repoRoot, "<repo>"));
+    }
+
+    private static bool TryParseJsonSnippet(string text, int start, int end, out JsonNode? snippet)
+    {
+        try
+        {
+            snippet = JsonNode.Parse(text.Substring(start, end - start), nodeOptions: null, documentOptions: default);
+            return snippet is not null;
+        }
+        catch (JsonException)
+        {
+            snippet = null;
+            return false;
+        }
+    }
+
+    private static bool IsCompleteJsonSnippetToken(string text, int snippetStart, int snippetEnd)
+    {
+        return IsSafeJsonSnippetStartBoundary(text, snippetStart) &&
+            IsCompleteJsonSnippetLine(text, snippetEnd);
+    }
+
+    private static bool IsSafeJsonSnippetStartBoundary(string text, int start)
+    {
+        if (start == 0)
+        {
+            return true;
+        }
+
+        var previous = text[start - 1];
+        if (previous is '\r' or '\n')
+        {
+            return true;
+        }
+
+        if (char.IsWhiteSpace(previous))
+        {
+            return !HasPathSeparatorBeforeCandidateOnCurrentLine(text, start);
+        }
+
+        if (previous is '(' or '[' or '{')
+        {
+            return !HasPathSeparatorBeforeCandidateOnCurrentLine(text, start) &&
+                IsSafeOpeningDelimiterBeforeRepoRoot(text, start - 1);
+        }
+
+        return false;
+    }
+
+    private static bool IsCompleteJsonSnippetLine(string text, int snippetEnd)
+    {
+        var afterSnippet = SkipHorizontalWhitespace(text, snippetEnd);
+        return afterSnippet >= text.Length || text[afterSnippet] is '\r' or '\n';
+    }
+
+    private static void ValidateNoBrokenPreflightPlaceholderText(string text, string archivePath)
+    {
+        if (PreflightPlaceholderPerCharacterPattern.IsMatch(text))
+        {
+            throw new AuditPackageFailure(
+                "audit package",
+                "E2D-BUILD-AUDIT-PREFLIGHT-SANITIZER",
+                $"Preflight evidence contains placeholder-per-character sanitizer output: {archivePath}");
+        }
+    }
+
+    private static string ReplaceRepoRootPathCandidates(string text, string repoRoot, string placeholder)
+    {
+        return ReplaceRepoRootPathCandidates(text, 0, text.Length, repoRoot, placeholder);
+    }
+
+    private static string ReplaceRepoRootPathCandidates(string text, int start, int end, string repoRoot, string placeholder)
+    {
+        var comparison = GetRepoRootPathComparison();
+        var candidates = GetRepoRootReplacementCandidates(repoRoot);
+
+        StringBuilder? builder = null;
+        var lastCopied = start;
+        var index = start;
+        while (index < end)
+        {
+            var replacementLength = FindBoundedRepoRootCandidateLength(text, index, end, candidates, comparison);
+            if (replacementLength == 0)
+            {
+                index++;
+                continue;
+            }
+
+            builder ??= new StringBuilder(end - start);
+            builder.Append(text, lastCopied, index - lastCopied);
+            builder.Append(placeholder);
+            lastCopied = index + replacementLength;
+            index = lastCopied;
+        }
+
+        if (builder is null)
+        {
+            return start == 0 && end == text.Length
+                ? text
+                : text[start..end];
+        }
+
+        builder.Append(text, lastCopied, end - lastCopied);
+        return builder.ToString();
+    }
+
+    private static int FindBoundedRepoRootCandidateLength(
+        string text,
+        int index,
+        int end,
+        string[] candidates,
+        StringComparison comparison)
+    {
+        foreach (var candidate in candidates)
+        {
+            if (candidate.Length == 0 ||
+                index + candidate.Length > end ||
+                string.Compare(text, index, candidate, 0, candidate.Length, comparison) != 0 ||
+                !IsRepoRootPathCandidateBoundary(text, index, index + candidate.Length))
+            {
+                continue;
+            }
+
+            return candidate.Length;
+        }
+
+        return 0;
+    }
+
+    private static string[] GetRepoRootReplacementCandidates(string repoRoot)
+    {
+        var candidates = new HashSet<string>(GetRepoRootPathComparer());
+        var fullRepoRoot = Path.GetFullPath(repoRoot).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        AddRepoRootReplacementCandidate(candidates, fullRepoRoot);
+        AddRepoRootReplacementCandidate(candidates, fullRepoRoot.Replace('\\', '/'));
+        AddRepoRootReplacementCandidate(candidates, fullRepoRoot.Replace("\\", "\\\\", StringComparison.Ordinal));
+        foreach (var candidate in GetNormalizedMachineLocalPathCandidates(repoRoot))
+        {
+            AddRepoRootReplacementCandidate(candidates, candidate);
+        }
+
+        return candidates.OrderByDescending(candidate => candidate.Length).ToArray();
+    }
+
+    private static StringComparer GetRepoRootPathComparer()
+    {
+        return UsesCaseInsensitiveRepoRootPathMatching()
+            ? StringComparer.OrdinalIgnoreCase
+            : StringComparer.Ordinal;
+    }
+
+    private static StringComparison GetRepoRootPathComparison()
+    {
+        return UsesCaseInsensitiveRepoRootPathMatching()
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+    }
+
+    private static bool UsesCaseInsensitiveRepoRootPathMatching()
+    {
+        return OperatingSystem.IsWindows() || OperatingSystem.IsMacOS();
+    }
+
+    private static void AddRepoRootReplacementCandidate(HashSet<string> candidates, string candidate)
+    {
+        if (!string.IsNullOrWhiteSpace(candidate))
+        {
+            candidates.Add(candidate.TrimEnd('/', '\\'));
+        }
+    }
+
+    private static bool IsRepoRootPathCandidateBoundary(string text, int start, int end)
+    {
+        if (!IsRepoRootPathCandidateStartBoundary(text, start))
+        {
+            return false;
+        }
+
+        if (end >= text.Length)
+        {
+            return true;
+        }
+
+        var next = text[end];
+        if (next is '\r' or '\n')
+        {
+            return true;
+        }
+
+        if (IsRepoRootExactTokenEndDelimiter(text, start, end))
+        {
+            return true;
+        }
+
+        if (!IsRepoRootChildPathSeparator(next))
+        {
+            return false;
+        }
+
+        return !HasParentTraversalSegmentAfterRepoRoot(text, end);
+    }
+
+    private static bool IsRepoRootExactTokenEndDelimiter(string text, int start, int end)
+    {
+        var delimiter = text[end];
+        if (delimiter is not ('"' or '\'' or '`'))
+        {
+            return false;
+        }
+
+        if (start == 0 || text[start - 1] != delimiter)
+        {
+            return false;
+        }
+
+        return IsSafeRepoRootExactTokenTail(text, start, end + 1, delimiter);
+    }
+
+    private static bool IsSafeRepoRootExactTokenTail(string text, int start, int index, char delimiter)
+    {
+        index = SkipHorizontalWhitespace(text, index);
+        return index >= text.Length || text[index] is '\r' or '\n';
+    }
+
+    private static bool TryGetJsonSnippetEnd(string text, int start, out int end)
+    {
+        end = start;
+        var opener = text[start];
+        var expected = opener == '{' ? '}' : ']';
+        var stack = new Stack<char>();
+        stack.Push(expected);
+        var inString = false;
+        var escaped = false;
+
+        for (var index = start + 1; index < text.Length; index++)
+        {
+            var current = text[index];
+            if (current is '\r' or '\n')
+            {
+                return false;
+            }
+
+            if (inString)
+            {
+                if (escaped)
+                {
+                    escaped = false;
+                    continue;
+                }
+
+                if (current == '\\')
+                {
+                    escaped = true;
+                    continue;
+                }
+
+                if (current == '"')
+                {
+                    inString = false;
+                }
+
+                continue;
+            }
+
+            if (current == '"')
+            {
+                inString = true;
+                continue;
+            }
+
+            if (current is '{' or '[')
+            {
+                stack.Push(current == '{' ? '}' : ']');
+                continue;
+            }
+
+            if (current is '}' or ']')
+            {
+                if (stack.Count == 0 || stack.Pop() != current)
+                {
+                    return false;
+                }
+
+                if (stack.Count == 0)
+                {
+                    end = index + 1;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static int SkipHorizontalWhitespace(string text, int index)
+    {
+        while (index < text.Length && text[index] is ' ' or '\t')
+        {
+            index++;
+        }
+
+        return index;
+    }
+
+    private static bool HasParentTraversalSegmentAfterRepoRoot(string text, int separatorIndex)
+    {
+        var segmentStart = separatorIndex + 1;
+        while (segmentStart < text.Length)
+        {
+            var current = text[segmentStart];
+            if (current is '\r' or '\n')
+            {
+                return false;
+            }
+
+            var segmentEnd = segmentStart;
+            while (segmentEnd < text.Length &&
+                !IsRepoRootPathSegmentSeparator(text[segmentEnd]) &&
+                text[segmentEnd] is not ('\r' or '\n'))
+            {
+                segmentEnd++;
+            }
+
+            var significantSegmentEnd = segmentEnd;
+            while (significantSegmentEnd > segmentStart &&
+                IsRepoRootPathTokenTerminator(text[significantSegmentEnd - 1]))
+            {
+                significantSegmentEnd--;
+            }
+
+            if (significantSegmentEnd - segmentStart == 2 &&
+                text[segmentStart] == '.' &&
+                text[segmentStart + 1] == '.')
+            {
+                return true;
+            }
+
+            if (segmentEnd >= text.Length ||
+                text[segmentEnd] is '\r' or '\n')
+            {
+                return false;
+            }
+
+            segmentStart = segmentEnd + 1;
+        }
+
+        return false;
+    }
+
+    private static bool IsRepoRootChildPathSeparator(char character)
+    {
+        return OperatingSystem.IsWindows()
+            ? character is '/' or '\\'
+            : character == '/';
+    }
+
+    private static bool IsRepoRootPathSegmentSeparator(char character)
+    {
+        return IsRepoRootChildPathSeparator(character);
+    }
+
+    private static bool IsRepoRootPathTokenTerminator(char character)
+    {
+        return character is '"' or '\'' or '`' or ' ' or '\t' or ',' or ';' or ')' or ']' or '}';
+    }
+
+    private static bool IsRepoRootPathCandidateStartBoundary(string text, int start)
+    {
+        if (start == 0)
+        {
+            return true;
+        }
+
+        var previous = text[start - 1];
+        if (char.IsWhiteSpace(previous))
+        {
+            return !HasPathSeparatorBeforeCandidateOnCurrentLine(text, start);
+        }
+
+        if (previous is '"' or '\'' or '`' or '(' or '[' or '{')
+        {
+            if (HasPathSeparatorBeforeCandidateOnCurrentLine(text, start))
+            {
+                return false;
+            }
+
+            return IsSafeOpeningDelimiterBeforeRepoRoot(text, start - 1);
+        }
+
+        return false;
+    }
+
+    private static bool IsSafeOpeningDelimiterBeforeRepoRoot(string text, int delimiterIndex)
+    {
+        if (delimiterIndex == 0)
+        {
+            return true;
+        }
+
+        var previous = text[delimiterIndex - 1];
+        return char.IsWhiteSpace(previous) ||
+            previous is ':' or '=' or ',' or ';' or '(' or '[' or '{';
+    }
+
+    private static bool HasPathSeparatorBeforeCandidateOnCurrentLine(string text, int start)
+    {
+        var index = start - 1;
+        while (index >= 0 && text[index] is not ('\r' or '\n'))
+        {
+            if (IsRepoRootPathSegmentSeparator(text[index]))
+            {
+                return true;
+            }
+
+            index--;
+        }
+
+        return false;
     }
 
     private static string ToPreflightEvidenceArchivePath(string path, string checkName)
@@ -4326,13 +4957,175 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
     private static void ValidateMachineLocalPathText(string text, string archivePath, string repoRoot)
     {
-        var normalizedText = text.Replace('\\', '/');
-        if (GetNormalizedMachineLocalPathCandidates(repoRoot, Path.GetTempPath())
-                .Any(candidate => normalizedText.Contains(candidate, StringComparison.OrdinalIgnoreCase)) ||
-            WindowsDrivePathPattern.IsMatch(text))
+        var machineLocalPathCandidates = GetNormalizedMachineLocalPathCandidates(repoRoot, Path.GetTempPath());
+        var jsonPathEscapedText = NormalizeJsonPathEscapesForMachinePathScan(text);
+        if (ContainsMachineLocalPathValue(text, machineLocalPathCandidates) ||
+            ContainsMachineLocalPathValue(jsonPathEscapedText, machineLocalPathCandidates) ||
+            ContainsDecodedJsonStringMachineLocalPath(text, machineLocalPathCandidates))
         {
             throw new AuditPackageFailure("audit package", "E2D-BUILD-AUDIT-ABSOLUTE-PATH", $"Archive content contains a machine-local path: {archivePath}");
         }
+    }
+
+    private static bool ContainsMachineLocalPathValue(string value, string[] machineLocalPathCandidates)
+    {
+        var normalizedValue = value.Replace('\\', '/');
+        return machineLocalPathCandidates.Any(candidate => normalizedValue.Contains(candidate, StringComparison.OrdinalIgnoreCase)) ||
+            ContainsWindowsDrivePathValue(value);
+    }
+
+    private static bool ContainsWindowsDrivePathValue(string value)
+    {
+        foreach (Match match in WindowsDrivePathPattern.Matches(value))
+        {
+            if (!IsIsolatedEscapedQuoteLikeDriveValue(value, match.Index, match.Index + match.Length))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool IsIsolatedEscapedQuoteLikeDriveValue(string value, int start, int afterSeparator)
+    {
+        if (afterSeparator <= start || value[afterSeparator - 1] != '\\')
+        {
+            return false;
+        }
+
+        var markerStart = afterSeparator;
+        if (markerStart < value.Length && value[markerStart] == '\\')
+        {
+            markerStart++;
+        }
+
+        return TryGetEscapedQuoteMarkerEnd(value, markerStart, out var markerEnd) &&
+            IsEscapedQuoteLikeDriveTailBoundary(value, markerEnd);
+    }
+
+    private static bool TryGetEscapedQuoteMarkerEnd(string value, int markerStart, out int markerEnd)
+    {
+        markerEnd = markerStart;
+        if (markerStart + 5 > value.Length)
+        {
+            return false;
+        }
+
+        if (value.AsSpan(markerStart, 5).Equals("u0022".AsSpan(), StringComparison.OrdinalIgnoreCase) ||
+            value.AsSpan(markerStart, 5).Equals("u0027".AsSpan(), StringComparison.OrdinalIgnoreCase))
+        {
+            markerEnd = markerStart + 5;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsEscapedQuoteLikeDriveTailBoundary(string value, int markerEnd)
+    {
+        if (markerEnd >= value.Length)
+        {
+            return true;
+        }
+
+        var next = value[markerEnd];
+        if (next is '/' or '\\' ||
+            char.IsLetterOrDigit(next) ||
+            next == '_')
+        {
+            return false;
+        }
+
+        for (var index = markerEnd; index < value.Length; index++)
+        {
+            var current = value[index];
+            if (current is '/' or '\\' ||
+                char.IsLetterOrDigit(current) ||
+                current == '_')
+            {
+                return false;
+            }
+
+            if (char.IsWhiteSpace(current) ||
+                current is '"' or '\'' or '`')
+            {
+                return true;
+            }
+        }
+
+        return true;
+    }
+
+    private static string NormalizeJsonPathEscapesForMachinePathScan(string text)
+    {
+        return Regex.Replace(text.Replace("\\/", "/", StringComparison.Ordinal), @"\\u002[fF]", "/");
+    }
+
+    private static bool ContainsDecodedJsonStringMachineLocalPath(string text, string[] machineLocalPathCandidates)
+    {
+        for (var index = 0; index < text.Length; index++)
+        {
+            if (text[index] != '"' ||
+                !TryReadJsonStringLiteral(text, index, out var value, out var end))
+            {
+                continue;
+            }
+
+            if (ContainsMachineLocalPathValue(value, machineLocalPathCandidates))
+            {
+                return true;
+            }
+
+            index = end - 1;
+        }
+
+        return false;
+    }
+
+    private static bool TryReadJsonStringLiteral(string text, int start, out string value, out int end)
+    {
+        value = string.Empty;
+        end = start + 1;
+        var escaped = false;
+        for (var index = start + 1; index < text.Length; index++)
+        {
+            var current = text[index];
+            if (current is '\r' or '\n')
+            {
+                return false;
+            }
+
+            if (escaped)
+            {
+                escaped = false;
+                continue;
+            }
+
+            if (current == '\\')
+            {
+                escaped = true;
+                continue;
+            }
+
+            if (current != '"')
+            {
+                continue;
+            }
+
+            end = index + 1;
+            try
+            {
+                value = JsonSerializer.Deserialize<string>(text.Substring(start, end - start)) ?? string.Empty;
+                return true;
+            }
+            catch (JsonException)
+            {
+                return false;
+            }
+        }
+
+        return false;
     }
 
     private static string[] GetNormalizedMachineLocalPathCandidates(params string[] paths)
