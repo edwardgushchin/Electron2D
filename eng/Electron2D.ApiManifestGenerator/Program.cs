@@ -37,19 +37,22 @@ var docs = xml.Root?.Element("members")?.Elements("member")
     .Where(item => item.Attribute("name") is not null)
     .ToDictionary(item => item.Attribute("name")!.Value, item => item, StringComparer.Ordinal)
     ?? new Dictionary<string, XElement>(StringComparer.Ordinal);
-var compatibility = CompatibilityTable.Load(arguments.CompatibilityPath);
+var publicApiProfile = ManualApiProfile.Load(arguments.ProfilePath);
 
 var publicTypes = assembly.GetExportedTypes()
     .Where(type => type.Assembly == assembly)
     .OrderBy(type => DisplayName(type), StringComparer.Ordinal)
     .ToArray();
 
-var typeEntries = publicTypes.Select(type => CreateTypeEntry(type, docs, compatibility)).ToArray();
+var typeEntries = publicTypes.Select(type => CreateTypeEntry(type, docs, publicApiProfile)).ToArray();
 var summary = new StatusSummary(
     Supported: typeEntries.Count(type => type.Profile.Status == "supported"),
     Partial: typeEntries.Count(type => type.Profile.Status == "partial"),
     Experimental: typeEntries.Count(type => type.Profile.Status == "experimental"),
-    Planned: typeEntries.Count(type => type.Profile.Status == "planned"));
+    Planned: typeEntries.Count(type => type.Profile.Status == "planned"),
+    Deferred: typeEntries.Count(type => type.Profile.Status == "deferred"),
+    Unsupported: typeEntries.Count(type => type.Profile.Status == "unsupported"),
+    Unapproved: typeEntries.Count(type => type.Profile.Status == "unapproved"));
 
 var manifest = new ApiManifest(
     SchemaVersion: 1,
@@ -60,7 +63,7 @@ var manifest = new ApiManifest(
     GeneratedFrom: new GeneratedFrom(
         CompiledAssembly: RelativePath(arguments.RepositoryRoot, arguments.AssemblyPath),
         XmlDocumentation: RelativePath(arguments.RepositoryRoot, arguments.XmlPath),
-        CompatibilityPage: RelativePath(arguments.RepositoryRoot, arguments.CompatibilityPath)),
+        PublicApiProfile: RelativePath(arguments.RepositoryRoot, arguments.ProfilePath)),
     StrictParitySummary: new StrictParitySummary(
         MissingTypes: 0,
         MissingMembers: 0,
@@ -107,14 +110,13 @@ File.WriteAllText(arguments.OutputPath, json, new UTF8Encoding(encoderShouldEmit
 static ApiTypeEntry CreateTypeEntry(
     Type type,
     IReadOnlyDictionary<string, XElement> docs,
-    CompatibilityTable compatibility)
+    ManualApiProfile publicApiProfile)
 {
     var fullName = DisplayName(type);
     var rawFullName = RawDisplayName(type);
     var typeDocId = TypeId(type);
     var typeDoc = FindDoc(docs, typeDocId);
-    var compatibilityEntry = compatibility.GetRequired(fullName, rawFullName);
-    var profile = CreateProfile(compatibilityEntry);
+    var profile = CreateProfile(publicApiProfile.Find(fullName, rawFullName), fullName);
     var members = GetMembers(type, docs, profile)
         .OrderBy(member => member.Id, StringComparer.Ordinal)
         .ToArray();
@@ -150,16 +152,39 @@ static string EngineVersion(Assembly assembly)
     return assembly.GetName().Version?.ToString() ?? "0.1-preview";
 }
 
-static ApiProfile CreateProfile(CompatibilityEntry entry)
+static ApiProfile CreateProfile(ProfileTypeDecision? entry, string fullName)
 {
-    var status = entry.Status.ToLowerInvariant();
+    if (entry is null)
+    {
+        return new ApiProfile(
+            Name: "Electron2D 0.1-preview",
+            Status: "unapproved",
+            Parity: "not_verified",
+            OutOfProfile: true,
+            GodotReference: ShortTypeName(fullName),
+            Notes: "No manual public API profile decision exists for this exported runtime type.");
+    }
+
+    var status = entry.Decision switch
+    {
+        "approved" => "supported",
+        "deferred" => "deferred",
+        "unsupported" => "unsupported",
+        _ => "unapproved"
+    };
     return new ApiProfile(
         Name: "Electron2D 0.1-preview",
         Status: status,
         Parity: status == "supported" ? "parity_verified" : "not_verified",
         OutOfProfile: status != "supported",
-        GodotReference: entry.Reference,
-        Notes: entry.Notes);
+        GodotReference: entry.GodotReference,
+        Notes: entry.Rationale);
+}
+
+static string ShortTypeName(string fullName)
+{
+    const string prefix = "Electron2D.";
+    return fullName.StartsWith(prefix, StringComparison.Ordinal) ? fullName[prefix.Length..] : fullName;
 }
 
 static IReadOnlyList<ApiMemberEntry> GetMembers(
@@ -862,7 +887,7 @@ public sealed record ApiManifest(
 public sealed record GeneratedFrom(
     string CompiledAssembly,
     string XmlDocumentation,
-    string CompatibilityPage);
+    string PublicApiProfile);
 
 public sealed record StrictParitySummary(
     int MissingTypes,
@@ -876,7 +901,10 @@ public sealed record StatusSummary(
     int Supported,
     int Partial,
     int Experimental,
-    int Planned);
+    int Planned,
+    int Deferred,
+    int Unsupported,
+    int Unapproved);
 
 public sealed record ApiTypeEntry(
     string Id,
@@ -922,77 +950,84 @@ public sealed record ApiProfile(
 
 public sealed record ApiCategory(string Title, Func<Type, bool> Matches);
 
-public sealed record CompatibilityEntry(
-    string Api,
-    string Reference,
-    string Status,
-    string Notes);
+public sealed record ProfileTypeDecision(
+    string FullName,
+    string GodotReference,
+    string Decision,
+    string Rationale);
 
-public sealed class CompatibilityTable
+public sealed class ManualApiProfile
 {
-    private readonly Dictionary<string, CompatibilityEntry> entries;
+    private readonly Dictionary<string, ProfileTypeDecision> entries;
 
-    private CompatibilityTable(Dictionary<string, CompatibilityEntry> entries)
+    private ManualApiProfile(Dictionary<string, ProfileTypeDecision> entries)
     {
         this.entries = entries;
     }
 
-    public static CompatibilityTable Load(string path)
+    public static ManualApiProfile Load(string path)
     {
         if (!File.Exists(path))
         {
-            throw new FileNotFoundException("API compatibility page was not found.", path);
+            throw new FileNotFoundException("Manual public API profile was not found.", path);
         }
 
-        var entries = new Dictionary<string, CompatibilityEntry>(StringComparer.Ordinal);
-        var rowPattern = new Regex(
-            "^\\|\\s*`(?<api>[^`]+)`\\s*\\|\\s*(?<reference>.*?)\\s*\\|\\s*(?<status>Supported|Partial|Experimental|Planned)\\s*\\|\\s*(?<notes>.*?)\\s*\\|\\s*$",
-            RegexOptions.Compiled);
-        foreach (var line in File.ReadLines(path))
+        using var document = JsonDocument.Parse(File.ReadAllText(path, Encoding.UTF8));
+        var root = document.RootElement;
+        if (root.ValueKind != JsonValueKind.Object)
         {
-            var match = rowPattern.Match(line);
-            if (!match.Success)
+            throw new InvalidOperationException("Manual public API profile root must be a JSON object.");
+        }
+
+        if (!root.TryGetProperty("types", out var types) || types.ValueKind != JsonValueKind.Array)
+        {
+            throw new InvalidOperationException("Manual public API profile must contain a types array.");
+        }
+
+        var entries = new Dictionary<string, ProfileTypeDecision>(StringComparer.Ordinal);
+        foreach (var type in types.EnumerateArray())
+        {
+            if (type.ValueKind != JsonValueKind.Object)
             {
-                continue;
+                throw new InvalidOperationException("Manual public API profile type entry must be a JSON object.");
             }
 
-            var api = NormalizeApiName(match.Groups["api"].Value.Trim());
-            entries[api] = new CompatibilityEntry(
-                Api: api,
-                Reference: StripMarkdown(match.Groups["reference"].Value),
-                Status: match.Groups["status"].Value.Trim(),
-                Notes: StripMarkdown(match.Groups["notes"].Value));
+            var fullName = RequiredString(type, "fullName");
+            entries[NormalizeApiName(fullName)] = new ProfileTypeDecision(
+                FullName: fullName,
+                GodotReference: RequiredString(type, "godotReference"),
+                Decision: RequiredString(type, "decision"),
+                Rationale: RequiredString(type, "rationale"));
         }
 
-        return new CompatibilityTable(entries);
+        return new ManualApiProfile(entries);
     }
 
-    public CompatibilityEntry GetRequired(string fullName, string? rawFullName = null)
+    public ProfileTypeDecision? Find(string fullName, string? rawFullName = null)
     {
-        var normalized = NormalizeApiName(fullName);
-        if (entries.TryGetValue(normalized, out var entry))
+        if (entries.TryGetValue(NormalizeApiName(fullName), out var entry))
         {
             return entry;
         }
 
-        if (!string.IsNullOrWhiteSpace(rawFullName))
+        return !string.IsNullOrWhiteSpace(rawFullName) && entries.TryGetValue(NormalizeApiName(rawFullName), out entry)
+            ? entry
+            : null;
+    }
+
+    private static string RequiredString(JsonElement element, string propertyName)
+    {
+        if (element.TryGetProperty(propertyName, out var property) &&
+            property.ValueKind == JsonValueKind.String &&
+            !string.IsNullOrWhiteSpace(property.GetString()))
         {
-            var rawNormalized = NormalizeApiName(rawFullName);
-            if (entries.TryGetValue(rawNormalized, out entry))
-            {
-                return entry;
-            }
+            return property.GetString()!;
         }
 
-        throw new InvalidOperationException("Public type is missing from API-Compatibility.md: " + fullName);
+        throw new InvalidOperationException("Manual public API profile type entry is missing required string property: " + propertyName + ".");
     }
 
     private static string NormalizeApiName(string value) => value.Replace('+', '.');
-
-    private static string StripMarkdown(string value)
-    {
-        return Regex.Replace(value.Replace("`", string.Empty), "\\[([^\\]]+)\\]\\([^)]+\\)", "$1").Trim();
-    }
 }
 
 public sealed class Arguments
@@ -1003,7 +1038,7 @@ public sealed class Arguments
 
     public required string XmlPath { get; init; }
 
-    public required string CompatibilityPath { get; init; }
+    public required string ProfilePath { get; init; }
 
     public required string OutputPath { get; init; }
 
@@ -1026,7 +1061,7 @@ public sealed class Arguments
             RepositoryRoot = Required(values, "repo-root"),
             AssemblyPath = Required(values, "assembly"),
             XmlPath = Required(values, "xml"),
-            CompatibilityPath = Required(values, "compatibility"),
+            ProfilePath = Required(values, "profile"),
             OutputPath = Required(values, "output")
         };
     }

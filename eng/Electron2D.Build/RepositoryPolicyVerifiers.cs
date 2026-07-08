@@ -584,16 +584,148 @@ internal sealed class ProjectTemplateVerifier(string repositoryRoot, JsonDiagnos
     }
 }
 
+internal sealed record ManualApiProfileType(string FullName, string GodotReference, string Decision, string Rationale);
+
+internal sealed record ManualApiProfileDocument(IReadOnlyDictionary<string, ManualApiProfileType> Types);
+
+internal static class ManualApiProfileReader
+{
+    private static readonly HashSet<string> AllowedDecisions = new(StringComparer.Ordinal)
+    {
+        "approved",
+        "deferred",
+        "unsupported"
+    };
+
+    public static ManualApiProfileDocument Read(
+        string repositoryRoot,
+        string profilePath,
+        string command,
+        string step,
+        List<BuildDiagnostic> errors)
+    {
+        if (!File.Exists(profilePath))
+        {
+            errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-MISSING", "Manual public API profile was not found.", ToRepositoryPath(repositoryRoot, profilePath)));
+            return new ManualApiProfileDocument(new Dictionary<string, ManualApiProfileType>(StringComparer.Ordinal));
+        }
+
+        try
+        {
+            using var document = JsonDocument.Parse(File.ReadAllText(profilePath, Encoding.UTF8));
+            var root = document.RootElement;
+            if (root.ValueKind != JsonValueKind.Object)
+            {
+                errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SCHEMA", "Manual public API profile root must be a JSON object.", ToRepositoryPath(repositoryRoot, profilePath)));
+                return new ManualApiProfileDocument(new Dictionary<string, ManualApiProfileType>(StringComparer.Ordinal));
+            }
+
+            if (!ApiManifestCommand.TryGetArray(root, "types", out var types))
+            {
+                errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SCHEMA", "Manual public API profile must contain a types array.", ToRepositoryPath(repositoryRoot, profilePath)));
+                return new ManualApiProfileDocument(new Dictionary<string, ManualApiProfileType>(StringComparer.Ordinal));
+            }
+
+            var entries = new Dictionary<string, ManualApiProfileType>(StringComparer.Ordinal);
+            foreach (var type in types.EnumerateArray())
+            {
+                if (type.ValueKind != JsonValueKind.Object)
+                {
+                    errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SCHEMA", "Manual public API profile type entry must be a JSON object.", ToRepositoryPath(repositoryRoot, profilePath)));
+                    continue;
+                }
+
+                var hasFullName = ApiManifestCommand.TryGetString(type, "fullName", out var fullName);
+                var hasGodotReference = ApiManifestCommand.TryGetString(type, "godotReference", out var godotReference);
+                var hasDecision = ApiManifestCommand.TryGetString(type, "decision", out var decision);
+                var hasRationale = TryGetStringAllowEmpty(type, "rationale", out var rationale);
+                if (!hasFullName || !hasGodotReference || !hasDecision || !hasRationale)
+                {
+                    errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SCHEMA", "Manual public API profile type entry must contain fullName, godotReference, decision and rationale.", ToRepositoryPath(repositoryRoot, profilePath)));
+                    continue;
+                }
+
+                if (!AllowedDecisions.Contains(decision))
+                {
+                    errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-INVALID-DECISION", $"Manual public API profile contains invalid decision for {fullName}: {decision}.", ToRepositoryPath(repositoryRoot, profilePath)));
+                }
+
+                if (string.IsNullOrWhiteSpace(rationale))
+                {
+                    errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-RATIONALE", $"Manual public API profile type entry must include non-empty rationale: {fullName}.", ToRepositoryPath(repositoryRoot, profilePath)));
+                }
+
+                if (!GodotClassPacketExists(repositoryRoot, godotReference))
+                {
+                    errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-GODOT-REFERENCE", $"Manual public API profile type references missing Godot class packet: {godotReference}.", ToRepositoryPath(repositoryRoot, profilePath)));
+                }
+
+                var normalizedFullName = NormalizeApiName(fullName);
+                if (!entries.TryAdd(normalizedFullName, new ManualApiProfileType(fullName, godotReference, decision, rationale)))
+                {
+                    errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-DUPLICATE-TYPE", $"Manual public API profile contains duplicate type: {fullName}.", ToRepositoryPath(repositoryRoot, profilePath)));
+                }
+            }
+
+            return new ManualApiProfileDocument(entries);
+        }
+        catch (JsonException ex)
+        {
+            errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-JSON", $"Manual public API profile is not valid JSON: {ex.Message}.", ToRepositoryPath(repositoryRoot, profilePath)));
+            return new ManualApiProfileDocument(new Dictionary<string, ManualApiProfileType>(StringComparer.Ordinal));
+        }
+    }
+
+    public static string NormalizeApiName(string value) => value.Replace('+', '.');
+
+    private static bool GodotClassPacketExists(string repositoryRoot, string godotReference)
+    {
+        if (string.IsNullOrWhiteSpace(godotReference) ||
+            godotReference.Contains('/') ||
+            godotReference.Contains('\\') ||
+            godotReference.Contains("..", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var path = Path.Combine(repositoryRoot, "data", "api", "godot-4.7", "classes", godotReference + ".api.json");
+        return File.Exists(path);
+    }
+
+    private static bool TryGetStringAllowEmpty(JsonElement element, string propertyName, out string value)
+    {
+        if (element.TryGetProperty(propertyName, out var property) && property.ValueKind == JsonValueKind.String)
+        {
+            value = property.GetString() ?? string.Empty;
+            return true;
+        }
+
+        value = string.Empty;
+        return false;
+    }
+
+    private static string ToRepositoryPath(string repositoryRoot, string path)
+    {
+        return Path.GetRelativePath(repositoryRoot, path).Replace('\\', '/');
+    }
+
+    private static BuildDiagnostic Error(string command, string step, string code, string message, string path)
+    {
+        return new BuildDiagnostic(command, step, "error", code, message, Path: path);
+    }
+}
+
 internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagnosticSink diagnostics, ApiManifestCommand apiManifest)
 {
     private const string ManifestRelativePath = "data/api/electron2d-api-manifest.json";
+    private const string ProfileRelativePath = "data/api/electron2d-public-api-profile.json";
 
     private static readonly string[] RequiredStatuses =
     [
         "Supported",
-        "Partial",
-        "Experimental",
-        "Planned"
+        "Deferred",
+        "Unsupported",
+        "Unapproved"
     ];
 
     private static readonly string[] ForbiddenTypes =
@@ -850,7 +982,12 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
     [
         "## Карта потребителей контракта",
         "Потребитель / задача",
-        "Первое evidence"
+        "Первое evidence",
+        "verify ui-public-api-gate --wiki-path .github/wiki",
+        "`API-UI-and-Text.md`",
+        "`API-Compatibility.md`",
+        "`Type | Status | Decision | Rationale`",
+        "колонки `Status`"
     ];
 
     private static readonly string[] RootContractForbiddenFragments =
@@ -865,11 +1002,13 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
         "согласованном 2D-поднаборе",
         "API вне 2D-профиля",
         "Не 100% всего Godot API.",
-        "100% Godot C# API внутри утверждённого 2D-профиля."
+        "100% Godot C# API внутри утверждённого 2D-профиля.",
+        "расширение этой проверки отдельными UI/Text-правилами остаётся C#-миграционным долгом",
+        "Отдельная командная проверка этого правила должна быть перенесена в C#-инструмент"
     ];
 
     private static readonly Regex CompatibilityRowPattern = new(
-        @"^\|\s*`(?<type>Electron2D\.[^`|]+)`\s*\|(?:[^|]*\|)*\s*(?<status>Supported|Partial|Experimental|Planned)\s*\|",
+        @"^\|\s*`(?<type>Electron2D\.[^`|]+)`\s*\|(?:[^|]*\|)*\s*(?<status>Supported|Deferred|Unsupported|Unapproved|Partial|Experimental|Planned)\s*\|",
         RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
     private static readonly Regex ManualPublicApiListPattern = new(
@@ -906,6 +1045,7 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
         }
 
         var manifestPath = Path.Combine(repositoryRoot, ManifestRelativePath.Replace('/', Path.DirectorySeparatorChar));
+        var profilePath = Path.Combine(repositoryRoot, ProfileRelativePath.Replace('/', Path.DirectorySeparatorChar));
         var manifestShape = apiManifest.VerifyShape(manifestPath, "verify", "verify api-compatibility");
         if (manifestShape != RepositoryBuildExitCodes.Success)
         {
@@ -914,12 +1054,45 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
 
         var compatibilityPath = ResolveCompatibilityPath(parse.WikiPath);
         var errors = new List<BuildDiagnostic>();
+        int failWithErrors()
+        {
+            foreach (var error in errors)
+            {
+                diagnostics.Write(error);
+            }
+
+            return RepositoryBuildExitCodes.Failed;
+        }
+
+        var profile = ManualApiProfileReader.Read(repositoryRoot, profilePath, "verify", "verify api-compatibility", errors);
+        if (errors.Count > 0)
+        {
+            return failWithErrors();
+        }
+
+        var manifestTypes = ReadManifestTypes(manifestPath, errors);
+        if (errors.Count > 0)
+        {
+            return failWithErrors();
+        }
+
+        VerifyForbiddenManifestTypes(manifestTypes, errors);
+        if (errors.Count > 0)
+        {
+            return failWithErrors();
+        }
+
+        VerifyManualProfileGate(profile, manifestTypes, errors, "verify", "verify api-compatibility");
+        if (errors.Count > 0)
+        {
+            return failWithErrors();
+        }
+
         if (!File.Exists(compatibilityPath))
         {
             errors.Add(Error("E2D-BUILD-API-COMPATIBILITY-WIKI-MISSING", "GitHub Wiki compatibility page was not found.", ToRepositoryPath(compatibilityPath)));
         }
 
-        var manifestTypes = ReadManifestTypes(manifestPath, errors);
         if (File.Exists(compatibilityPath))
         {
             VerifyCompatibilityPage(compatibilityPath, manifestTypes, errors);
@@ -985,9 +1158,31 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
         }
     }
 
+    private static void VerifyForbiddenManifestTypes(IReadOnlyList<string> manifestTypes, List<BuildDiagnostic> errors)
+    {
+        var forbidden = new HashSet<string>(ForbiddenTypes, StringComparer.Ordinal);
+        foreach (var typeName in manifestTypes.Order(StringComparer.Ordinal))
+        {
+            if (forbidden.Contains(typeName))
+            {
+                errors.Add(Error("E2D-BUILD-API-COMPATIBILITY-FORBIDDEN-TYPE", $"Forbidden legacy type is exported in API manifest: {typeName}.", ManifestRelativePath));
+            }
+        }
+    }
+
     private void VerifyCompatibilityPage(string compatibilityPath, IReadOnlyList<string> manifestTypes, List<BuildDiagnostic> errors)
     {
         var text = Normalize(File.ReadAllText(compatibilityPath, Encoding.UTF8));
+        if (!text.Contains("Generated by eng/Electron2D.Build update wiki", StringComparison.Ordinal))
+        {
+            errors.Add(Error("E2D-BUILD-API-COMPATIBILITY-GENERATED-MARKER", "Generated API compatibility page is missing the generated marker.", ToRepositoryPath(compatibilityPath)));
+        }
+
+        if (!text.Contains("Generated from `data/api/electron2d-public-api-profile.json`.", StringComparison.Ordinal))
+        {
+            errors.Add(Error("E2D-BUILD-API-COMPATIBILITY-SOURCE", "Generated API compatibility page must identify the manual public API profile as its source.", ToRepositoryPath(compatibilityPath)));
+        }
+
         foreach (var required in new[] { "## Status Legend", "## Current Public Runtime Surface" })
         {
             if (!text.Contains(required, StringComparison.Ordinal))
@@ -1018,7 +1213,7 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
 
             if (!rows.ContainsKey(typeName) && !normalizedRows.Contains(typeName))
             {
-                errors.Add(Error("E2D-BUILD-API-COMPATIBILITY-TYPE-MISSING", $"Public type is missing from GitHub Wiki compatibility table: {typeName}.", ToRepositoryPath(compatibilityPath)));
+                errors.Add(Error("E2D-BUILD-API-COMPATIBILITY-TYPE-MISSING", $"Generated compatibility page is missing public type row: {typeName}.", ToRepositoryPath(compatibilityPath)));
             }
         }
 
@@ -1027,6 +1222,30 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
             if (forbidden.Contains(typeName))
             {
                 errors.Add(Error("E2D-BUILD-API-COMPATIBILITY-FORBIDDEN-TYPE", $"Forbidden legacy type is published in GitHub Wiki compatibility table: {typeName}.", ToRepositoryPath(compatibilityPath)));
+            }
+        }
+    }
+
+    private void VerifyManualProfileGate(
+        ManualApiProfileDocument profile,
+        IReadOnlyList<string> manifestTypes,
+        List<BuildDiagnostic> errors,
+        string command,
+        string step)
+    {
+        foreach (var typeName in manifestTypes.Order(StringComparer.Ordinal))
+        {
+            var normalized = ManualApiProfileReader.NormalizeApiName(typeName);
+            if (!profile.Types.TryGetValue(normalized, out var entry))
+            {
+                errors.Add(new BuildDiagnostic(command, step, "error", "E2D-BUILD-API-PROFILE-UNAPPROVED-EXPORT", $"Exported runtime public type is missing approved manual profile decision: {typeName}.", Path: ProfileRelativePath));
+                return;
+            }
+
+            if (!string.Equals(entry.Decision, "approved", StringComparison.Ordinal))
+            {
+                errors.Add(new BuildDiagnostic(command, step, "error", "E2D-BUILD-API-PROFILE-UNAPPROVED-EXPORT", $"Exported runtime public type is excluded by manual profile decision '{entry.Decision}': {typeName}.", Path: ProfileRelativePath));
+                return;
             }
         }
     }
@@ -1368,6 +1587,7 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
 internal sealed class ApiManifestCommand(string repositoryRoot, JsonDiagnosticSink diagnostics, ProcessRunner processRunner)
 {
     private const string DefaultManifestRelativePath = "data/api/electron2d-api-manifest.json";
+    private const string DefaultProfileRelativePath = "data/api/electron2d-public-api-profile.json";
 
     public async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
     {
@@ -1389,6 +1609,12 @@ internal sealed class ApiManifestCommand(string repositoryRoot, JsonDiagnosticSi
         if (generated != RepositoryBuildExitCodes.Success)
         {
             return generated;
+        }
+
+        var profileGate = VerifyGeneratedManifestProfileGate(expectedPath, parse.Check ? "update api-manifest --check" : "update api-manifest");
+        if (profileGate != RepositoryBuildExitCodes.Success)
+        {
+            return profileGate;
         }
 
         if (parse.Check)
@@ -1465,9 +1691,9 @@ internal sealed class ApiManifestCommand(string repositoryRoot, JsonDiagnosticSi
         var generatorProject = Path.Combine(repositoryRoot, "eng", "Electron2D.ApiManifestGenerator", "Electron2D.ApiManifestGenerator.csproj");
         var xmlPath = Path.Combine(repositoryRoot, ".temp", "api-manifest", "Electron2D.xml");
         var assemblyPath = Path.Combine(repositoryRoot, "src", "Electron2D", "bin", "Debug", "net10.0", "Electron2D.dll");
-        var compatibilityPath = ResolveCompatibilityPath(wikiPath);
+        var profilePath = ResolveRepositoryOrAbsolutePath(DefaultProfileRelativePath);
 
-        foreach (var required in new[] { projectPath, generatorProject, compatibilityPath })
+        foreach (var required in new[] { projectPath, generatorProject, profilePath })
         {
             if (!File.Exists(required))
             {
@@ -1495,7 +1721,7 @@ internal sealed class ApiManifestCommand(string repositoryRoot, JsonDiagnosticSi
             new ProcessRunRequest(
                 "update api-manifest generate",
                 "dotnet",
-                ["run", "--project", generatorProject, "--", "--repo-root", repositoryRoot, "--assembly", assemblyPath, "--xml", xmlPath, "--compatibility", compatibilityPath, "--output", outputPath],
+                ["run", "--project", generatorProject, "--", "--repo-root", repositoryRoot, "--assembly", assemblyPath, "--xml", xmlPath, "--profile", profilePath, "--output", outputPath],
                 repositoryRoot,
                 TimeSpan.FromMinutes(5)),
             cancellationToken).ConfigureAwait(false);
@@ -1506,6 +1732,52 @@ internal sealed class ApiManifestCommand(string repositoryRoot, JsonDiagnosticSi
         }
 
         return RepositoryBuildExitCodes.Success;
+    }
+
+    private int VerifyGeneratedManifestProfileGate(string manifestPath, string step)
+    {
+        var errors = new List<BuildDiagnostic>();
+        var profilePath = ResolveRepositoryOrAbsolutePath(DefaultProfileRelativePath);
+        var profile = ManualApiProfileReader.Read(repositoryRoot, profilePath, "update", step, errors);
+        var manifestTypes = new List<string>();
+        if (File.Exists(manifestPath))
+        {
+            try
+            {
+                using var document = JsonDocument.Parse(File.ReadAllText(manifestPath, Encoding.UTF8));
+                if (TryGetArray(document.RootElement, "types", out var types))
+                {
+                    foreach (var type in types.EnumerateArray())
+                    {
+                        if (TryGetString(type, "fullName", out var fullName))
+                        {
+                            manifestTypes.Add(fullName);
+                        }
+                    }
+                }
+            }
+            catch (JsonException ex)
+            {
+                errors.Add(new BuildDiagnostic("update", step, "error", "E2D-BUILD-API-MANIFEST-INVALID-JSON", $"API manifest is not valid JSON after generation: {ex.Message}.", Path: ToRepositoryPath(manifestPath)));
+            }
+        }
+
+        foreach (var fullName in manifestTypes.Order(StringComparer.Ordinal))
+        {
+            if (!profile.Types.TryGetValue(ManualApiProfileReader.NormalizeApiName(fullName), out var entry) ||
+                !string.Equals(entry.Decision, "approved", StringComparison.Ordinal))
+            {
+                diagnostics.Write(new BuildDiagnostic("update", step, "error", "E2D-BUILD-API-PROFILE-UNAPPROVED-EXPORT", $"Exported runtime public type is not approved by manual public API profile: {fullName}.", Path: DefaultProfileRelativePath));
+                return RepositoryBuildExitCodes.Failed;
+            }
+        }
+
+        foreach (var error in errors)
+        {
+            diagnostics.Write(error);
+        }
+
+        return errors.Count == 0 ? RepositoryBuildExitCodes.Success : RepositoryBuildExitCodes.Failed;
     }
 
     private void WriteProcessFailure(string code, string message, ProcessRunResult process)
@@ -1623,7 +1895,7 @@ internal sealed class ApiManifestCommand(string repositoryRoot, JsonDiagnosticSi
                     wikiPath = args[++i];
                     break;
                 default:
-                    return new ApiManifestArguments(false, check, output, wikiPath, "Expected: update api-manifest [--check] [--output <path>] [--wiki-path <path>].");
+                    return new ApiManifestArguments(false, check, output, wikiPath, "Expected: update api-manifest [--check] [--output <path>].");
             }
         }
 
@@ -1768,7 +2040,6 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
             {
                 RecreateDirectory(wikiRoot);
                 WriteWikiFiles(wikiRoot, render.Pages);
-                CopyCompatibilityPageForTemporaryCheck(wikiRoot);
             }
 
             return VerifyWikiOutput(wikiRoot, render.Pages);
@@ -1930,7 +2201,8 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
             ["_Sidebar.md"] = RenderSidebar(),
             ["_Footer.md"] = RenderFooter(types.Length),
             ["API-by-Category.md"] = RenderManifestApiByCategory(types),
-            ["API-Reference.md"] = RenderManifestApiReference(types)
+            ["API-Reference.md"] = RenderManifestApiReference(types),
+            ["API-Compatibility.md"] = RenderManifestCompatibility(types)
         };
 
         foreach (var category in Categories)
@@ -1985,7 +2257,8 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
             ["_Sidebar.md"] = RenderSidebar(),
             ["_Footer.md"] = RenderFooter(publicTypes.Length),
             ["API-by-Category.md"] = RenderReflectionApiByCategory(context),
-            ["API-Reference.md"] = RenderReflectionApiReference(context)
+            ["API-Reference.md"] = RenderReflectionApiReference(context),
+            ["API-Compatibility.md"] = RenderReflectionCompatibility(context)
         };
 
         foreach (var category in Categories)
@@ -2012,7 +2285,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         builder.AppendLine();
         builder.AppendLine("- [API by Category](API-by-Category) - browse the runtime API by domain.");
         builder.AppendLine("- [Complete API Index](API-Reference) - alphabetical index of every public type.");
-        builder.AppendLine("- [API Compatibility](API-Compatibility) - preview support status and planned surface.");
+        builder.AppendLine("- [API Compatibility](API-Compatibility) - manual profile decisions and generated compatibility status.");
         builder.AppendLine();
         AppendCategoryTable(builder, types);
         return builder.ToString();
@@ -2033,7 +2306,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         builder.AppendLine();
         builder.AppendLine("- [API by Category](API-by-Category) - browse the runtime API by domain.");
         builder.AppendLine("- [Complete API Index](API-Reference) - alphabetical index of every public type.");
-        builder.AppendLine("- [API Compatibility](API-Compatibility) - preview support status and planned surface.");
+        builder.AppendLine("- [API Compatibility](API-Compatibility) - manual profile decisions and generated compatibility status.");
         builder.AppendLine();
         builder.AppendLine("## API documentation");
         builder.AppendLine();
@@ -2059,7 +2332,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         builder.AppendLine();
         builder.AppendLine("The documentation is generated in a stable structure so humans and coding agents can link to the same pages, compare public types, and avoid guessing which preview APIs exist.");
         builder.AppendLine();
-        builder.AppendLine("The compatibility page marks which APIs are supported, partial, experimental, planned or intentionally excluded for this preview release.");
+        builder.AppendLine("The compatibility page marks which APIs are supported, deferred, unsupported or still unapproved by the manual public API profile.");
         return builder.ToString();
     }
 
@@ -2162,6 +2435,17 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         return builder.ToString();
     }
 
+    private static string RenderManifestCompatibility(IReadOnlyList<ApiWikiType> types)
+    {
+        var builder = NewPage("API Compatibility");
+        AppendCompatibilityPageBody(builder, types.Select(type => new ApiWikiCompatibilityRow(
+            type.FullName,
+            StatusLabel(type.Profile.Status),
+            ProfileDecision(type.Profile.Status),
+            type.Profile.Notes)));
+        return builder.ToString();
+    }
+
     private static string RenderReflectionApiReference(WikiReflectionContext context)
     {
         var builder = NewPage("API Reference");
@@ -2189,6 +2473,45 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         }
 
         return builder.ToString();
+    }
+
+    private static string RenderReflectionCompatibility(WikiReflectionContext context)
+    {
+        var builder = NewPage("API Compatibility");
+        AppendCompatibilityPageBody(builder, context.Types.Select(type =>
+        {
+            var profile = context.Profiles[DisplayName(type)];
+            return new ApiWikiCompatibilityRow(
+                DisplayName(type),
+                StatusLabel(profile.Status),
+                ProfileDecision(profile.Status),
+                profile.Notes);
+        }));
+        return builder.ToString();
+    }
+
+    private static void AppendCompatibilityPageBody(StringBuilder builder, IEnumerable<ApiWikiCompatibilityRow> rows)
+    {
+        builder.AppendLine();
+        builder.AppendLine("Generated from `data/api/electron2d-public-api-profile.json`.");
+        builder.AppendLine();
+        builder.AppendLine("## Status Legend");
+        builder.AppendLine();
+        builder.AppendLine("| Status | Meaning |");
+        builder.AppendLine("| --- | --- |");
+        builder.AppendLine("| Supported | Approved by the manual profile and parity verified for the current release. |");
+        builder.AppendLine("| Deferred | Explicitly excluded from the current release and reserved for later decision. |");
+        builder.AppendLine("| Unsupported | Explicitly excluded from the current release. |");
+        builder.AppendLine("| Unapproved | Exported by the runtime assembly without a manual profile decision; this is a failing gate state. |");
+        builder.AppendLine();
+        builder.AppendLine("## Current Public Runtime Surface");
+        builder.AppendLine();
+        builder.AppendLine("| Type | Status | Decision | Rationale |");
+        builder.AppendLine("| --- | --- | --- | --- |");
+        foreach (var row in rows.OrderBy(row => row.FullName, StringComparer.Ordinal))
+        {
+            builder.AppendLine("| `" + EscapeTable(row.FullName) + "` | " + EscapeTable(row.Status) + " | `" + EscapeTable(row.Decision) + "` | " + EscapeTable(row.Rationale) + " |");
+        }
     }
 
     private static string RenderManifestCategoryPage(ApiWikiCategory category, IReadOnlyList<ApiWikiType> types)
@@ -2363,7 +2686,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
             errors.Add(Error("E2D-BUILD-WIKI-COMPATIBILITY-TITLE", "GitHub Wiki compatibility page must not repeat the GitHub page title as a top-level heading.", "API-Compatibility.md"));
         }
 
-        foreach (var required in new[] { "## Status Legend", "## Current Public Runtime Surface", "| Supported |", "| Partial |", "| Experimental |", "| Planned |" })
+        foreach (var required in new[] { GeneratedMarker, "Generated from `data/api/electron2d-public-api-profile.json`.", "## Status Legend", "## Current Public Runtime Surface", "| Supported |", "| Deferred |", "| Unsupported |", "| Unapproved |" })
         {
             if (!text.Contains(required, StringComparison.Ordinal))
             {
@@ -2409,22 +2732,6 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         }
 
         Directory.CreateDirectory(path);
-    }
-
-    private void CopyCompatibilityPageForTemporaryCheck(string wikiRoot)
-    {
-        var source = Path.Combine(repositoryRoot, DefaultWikiRelativePath.Replace('/', Path.DirectorySeparatorChar), "API-Compatibility.md");
-        if (!File.Exists(source))
-        {
-            return;
-        }
-
-        var target = Path.Combine(wikiRoot, "API-Compatibility.md");
-        Directory.CreateDirectory(Path.GetDirectoryName(target)!);
-        if (!string.Equals(Path.GetFullPath(source), Path.GetFullPath(target), StringComparison.OrdinalIgnoreCase))
-        {
-            File.Copy(source, target, overwrite: true);
-        }
     }
 
     private static Dictionary<string, ApiWikiProfile> LoadProfiles(JsonElement manifest)
@@ -3196,7 +3503,21 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
             "partial" => "Partial",
             "experimental" => "Experimental",
             "planned" => "Planned",
+            "deferred" => "Deferred",
+            "unsupported" => "Unsupported",
+            "unapproved" => "Unapproved",
             _ => status
+        };
+    }
+
+    private static string ProfileDecision(string status)
+    {
+        return status switch
+        {
+            "supported" => "approved",
+            "deferred" => "deferred",
+            "unsupported" => "unsupported",
+            _ => "unapproved"
         };
     }
 
@@ -3283,6 +3604,8 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
     private sealed record ApiWikiReflectionMember(string Kind, string DisplayName, string Signature, string XmlId);
 
     private sealed record ApiWikiProfile(string Name, string Status, string Parity, bool OutOfProfile, string GodotReference, string Notes);
+
+    private sealed record ApiWikiCompatibilityRow(string FullName, string Status, string Decision, string Rationale);
 
     private sealed record ApiWikiParameter(string Name, string Type);
 

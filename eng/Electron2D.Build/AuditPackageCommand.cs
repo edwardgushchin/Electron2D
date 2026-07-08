@@ -119,6 +119,9 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         "single final report",
         "no intermediate VERDICT",
         "full current-scope engineering review",
+        "evidence-backed blocker",
+        "blocker disproof",
+        "unsupported concern",
         "FOLLOW_UP_FINDING",
         "OUT_OF_SCOPE_NOTE",
         "ACCEPTED_RISK",
@@ -178,13 +181,24 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         string.Concat("* `Fix`: ограничить exception полным историческим контекстом или убрать его; standalone `", ReviewerPasswordPlaceholder, "` должен отклоняться."),
         string.Concat("* Тесты проверены по полным файлам. `ApiManifestTests.cs` покрывает public runtime surface, stable identifiers, projected enum names, virtual method projection, operators, constants, enum values и keyword escaping в manifest. `RepositoryBuildToolTests.cs` покрывает `api fetch-godot`, bad C# snapshots, unsafe class/member projections, generated class packets, `rawMembers`, Windows path masking, keyword parameter escaping, stale Markdown artifacts, Wiki renderer keyword escaping, audit timeout sidecar, previous verdict placeholder boundaries и path scanner regressions. При этом tests также доказывают blocker B1, потому что закрепляют successful package/verify для previous verdict с `", ReviewerPasswordPlaceholder, "`, и не закрывают blocker B2, потому что Wiki renderer static property signature не проверяется."),
         string.Concat("* Задача остаётся открытой. Несмотря на полные snapshots, синхронизированные generated API artifacts и passing evidence, текущая реализация не проходит приёмку из-за B1 и B2. Для закрытия нужно сузить previous verdict secret-placeholder exception так, чтобы bare `", ReviewerPasswordPlaceholder, "` не проходил как безопасный previous verdict placeholder, и исправить reflection-based Wiki/public API renderer так, чтобы static properties рендерились с `public static`. После исправления нужны targeted regression tests и повторный full current-scope audit по новому ZIP."),
-        string.Concat("* Что не так: sanitizer делит raw preflight text на raw segments и parseable JSON snippets, но raw replacement выполняется на сегментах уже без исходного соседнего символа. Если snippet parseable, но не является защищённым complete JSON ", "token", "-ом, он всё равно становится границей сегментов. Поэтому строка вида `/home/user/repo{\"ok\":true}` при POSIX `repoRoot = /home/user/repo` превращается в `<repo>{\"ok\":true}`: raw segment до `{` заканчивается ровно на repo-root, и `ReplaceRepoRootPathCandidate` принимает конец подстроки как безопасный конец ", "token", "-а. В исходном тексте это не был exact repo-root ", "token", ": `{` является допустимым символом POSIX filename segment-а, а весь путь указывает на sibling leaf `repo{\"ok\":true}`.")
+        string.Concat("* Что не так: sanitizer делит raw preflight text на raw segments и parseable JSON snippets, но raw replacement выполняется на сегментах уже без исходного соседнего символа. Если snippet parseable, но не является защищённым complete JSON ", "token", "-ом, он всё равно становится границей сегментов. Поэтому строка вида `/home/user/repo{\"ok\":true}` при POSIX `repoRoot = /home/user/repo` превращается в `<repo>{\"ok\":true}`: raw segment до `{` заканчивается ровно на repo-root, и `ReplaceRepoRootPathCandidate` принимает конец подстроки как безопасный конец ", "token", "-а. В исходном тексте это не был exact repo-root ", "token", ": `{` является допустимым символом POSIX filename segment-а, а весь путь указывает на sibling leaf `repo{\"ok\":true}`."),
+        string.Concat("* Производительный runtime-path не менялся: проверяемая область относится к release-management/tooling/docs/tests. Секретов, приватных ключей, реальных токенов, паролей или локальных абсолютных путей в проверенных изменениях не найдено; строки `", "password", "=<redacted>`/`", "token", "=<redacted>` являются тестовыми фикстурами."),
+        string.Concat("* Производительный runtime-path не менялся: проверяемая область относится к release-management/tooling/docs/tests/generated artifacts. Секретов, приватных ключей, реальных токенов, паролей, локальных абсолютных путей или конфиденциальных данных в проверенных материалах не найдено; строки `", "token", "=<redacted>` и `", "password", "=<redacted>` являются тестовой фикстурой."),
+        string.Concat("* Runtime hot path не менялся: проверяемая область относится к release-management/tooling/docs/tests/generated artifacts. Реальных секретов, приватных ключей, токенов, паролей, локальных абсолютных путей или конфиденциальных данных в проверенных материалах не найдено; `", "token", "=<redacted>` и `", "password", "=<redacted>` находятся в тестовой/аудиторской фикстуре."),
+        string.Concat("* Runtime hot path не менялся: область относится к release-management/tooling/docs/tests/generated artifacts. Реальных секретов, приватных ключей, токенов, паролей, локальных абсолютных путей или конфиденциальных данных в проверенных материалах не найдено; `", "token", "=<redacted>`, `", "password", "=<redacted>` и `<repo>` являются тестовыми или редактированными audit/evidence строками."),
+        string.Concat("* Runtime hot path не менялся: область относится к release-management/tooling/docs/tests/generated artifacts. Реальных секретов, приватных ключей, токенов, паролей, локальных абсолютных путей или конфиденциальных данных в проверенных материалах не найдено; `", "token", "=<redacted>`, `", "password", "=<redacted>` и `<repo>` находятся в тестовых или редактированных audit/evidence строках."),
+        string.Concat("* Runtime hot path не менялся: область относится к release-management/tooling/docs/tests/generated artifacts. Реальных секретов, приватных ключей, токенов, паролей, локальных абсолютных путей или конфиденциальных данных в проверенных материалах не найдено; `", "token", "=<redacted>`, `", "password", "=<redacted>`, `<repo>` и `/home/user/repo` находятся в тестовых, redacted или сохранённых audit-fixture строках."),
+        string.Concat("* Проверены секреты и локальные данные по `repo-after/`, patch, metadata и evidence. Реальных секретов не найдено. Найденные `", "token", "=<redacted>`, `", "password", "=<redacted>`, `<repo>` и `/home/user/repo` относятся к тестовым fixtures, redacted previous verdict prose или audit sanitizer regression-ам."),
+        string.Concat("* Проверка секретов и локальных данных выполнена по `repo-after/`, patch, metadata и evidence. Найденные `", "token", "=<redacted>`, `", "password", "=<redacted>`, `<repo>`, `/home/user/repo` и synthetic paths находятся только в тестовых fixtures, redacted previous verdict prose или sanitizer/audit regression-контексте."),
+        string.Concat("* Runtime hot path движка не менялся: изменения относятся к release-management/tooling/docs/tests/generated artifacts. Реальных секретов, приватных ключей, токенов, паролей или конфиденциальных локальных путей в проверенных материалах не найдено; обнаруженные `", "token", "=<redacted>`, `", "password", "=<redacted>`, `<repo>`, `/home/user/repo` и synthetic paths находятся в тестовых fixtures, saved audit reports или sanitizer/audit regression-контексте."),
+        string.Concat("* Проверены секреты и локальные данные по `repo-after/`, patch, metadata и evidence. Реальных секретов не найдено; обнаруженные `", "token", "=<redacted>` и `", "password", "=<redacted>` находятся в тестовой fixture для проверки исключения секретов.")
     ];
     private static readonly string[] LegacyRepoBeforeSecretPlaceholderValues =
     [
         "...`, не должны блокировать включение штатного TRX. Если настоящее секретное присваивание или блок приватного ключа попадает в текст результата теста, TRX всё равно отклоняется. Перед записью TRX в архив команда нормализует служебные XML-атрибуты с путями сборки, например `codeBase` и `storage`: путь к локальному корню репозитория заменяется на `<repo-root>`, чтобы архив не раскрывал путь машины. На macOS та же нормализация учитывает системные варианты одного временного пути через `/var` и `/private/var`, потому что test runner может записать один вариант, а проверка репозитория работать с другим",
         string.Concat("...` или `", "password", "=<redacted>` тоже допустимы, когда они описывают защитное правило. Если после такого замещающего маркера в той же обычной строке текста продолжается предложение, сканирование отделяет маркер по границе пунктуации, кавычек, обратных кавычек или пробела. Любое конкретное непустое значение после `secret`, `token`, `password`, `api_key` или `api-key` всё ещё считается потенциальным секретом, в том числе когда после значения продолжается обычный текст")
     ];
+    private static readonly string LegacyElectron2DContextFixtureSecretValue = string.Concat("super-", "secret-", "token");
 
     public async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
     {
@@ -305,6 +319,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         ValidatePatchText(patch.PatchText, $"{options.TaskId}.patch", repoRoot, previousVerdictPaths);
 
         var restoreManifest = await CreateRestoreManifestAsync(repoRoot, config, repoFiles, cancellationToken).ConfigureAwait(false);
+        await VerifyOneLineStubsAsync(repoRoot, config, restoreManifest, "audit package", cancellationToken).ConfigureAwait(false);
         var snapshotArchive = await CreateRepositoryFileSnapshotArchiveAsync(repoRoot, config, repoFiles, cancellationToken).ConfigureAwait(false);
         var normalizedConfigJson = JsonSerializer.Serialize(config, JsonWriteOptions) + "\n";
         var archiveFiles = new Dictionary<string, byte[]>(StringComparer.Ordinal)
@@ -483,7 +498,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         await VerifyRestoredFileSetAsync(options.RepositoryPath, restoreManifest, cancellationToken).ConfigureAwait(false);
         await VerifyRestoredHashesAsync(options.RepositoryPath, restoreManifest, cancellationToken).ConfigureAwait(false);
         await VerifyStaticAuditRequestMatchesRestoredSourceAsync(options.RepositoryPath, entries[StaticAuditRequestArchivePath], cancellationToken).ConfigureAwait(false);
-        await VerifyOneLineStubsAsync(options.RepositoryPath, config, restoreManifest, cancellationToken).ConfigureAwait(false);
+        await VerifyOneLineStubsAsync(options.RepositoryPath, config, restoreManifest, "audit package verify", cancellationToken).ConfigureAwait(false);
 
         if (writeSuccessDiagnostic)
         {
@@ -4713,6 +4728,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         string repoRoot,
         AuditPackageConfiguration config,
         RestoreManifest manifest,
+        string step,
         CancellationToken cancellationToken)
     {
         var allowlist = config.OneLineStubAllowlist.ToHashSet(StringComparer.Ordinal);
@@ -4743,7 +4759,7 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 .Count(line => !string.IsNullOrWhiteSpace(line));
             if (meaningfulLines <= 1)
             {
-                throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-ONE-LINE-STUB", $"New text file looks like a one-line stub: {file.Path}");
+                throw new AuditPackageFailure(step, "E2D-BUILD-AUDIT-ONE-LINE-STUB", $"New text file looks like a one-line stub: {file.Path}");
             }
         }
     }
@@ -5308,8 +5324,14 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
 
     private static bool IsAllowedLegacySecretPlaceholderProse(string normalized, string relativePath)
     {
-        return string.Equals(relativePath, "repo-before/docs/release-management/audit-package.md", StringComparison.Ordinal) &&
-            LegacyRepoBeforeSecretPlaceholderValues.Contains(normalized, StringComparer.OrdinalIgnoreCase);
+        if (string.Equals(relativePath, "repo-before/docs/release-management/audit-package.md", StringComparison.Ordinal) &&
+            LegacyRepoBeforeSecretPlaceholderValues.Contains(normalized, StringComparer.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return string.Equals(relativePath, "repo-before/tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs", StringComparison.Ordinal) &&
+            string.Equals(normalized, LegacyElectron2DContextFixtureSecretValue, StringComparison.OrdinalIgnoreCase);
     }
 
     private static string NormalizeSecretCandidateValue(string value)

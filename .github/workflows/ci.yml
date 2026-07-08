@@ -82,7 +82,7 @@ jobs:
           git clone --depth 1 https://github.com/edwardgushchin/Electron2D.wiki.git .github/wiki
 
       - name: Verify API manifest
-        run: dotnet run --project eng/Electron2D.Build -- update api-manifest --wiki-path .github/wiki --check
+        run: dotnet run --project eng/Electron2D.Build -- update api-manifest --check
 
       - name: Verify GitHub Wiki API reference
         run: dotnet run --project eng/Electron2D.Build -- update wiki --output .github/wiki --check

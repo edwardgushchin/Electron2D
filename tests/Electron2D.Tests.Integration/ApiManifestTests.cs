@@ -35,8 +35,10 @@ public sealed class ApiManifestTests
     {
         var root = FindRepositoryRoot();
         var manifestPath = Path.Combine(root, "data", "api", "electron2d-api-manifest.json");
+        var profilePath = Path.Combine(root, "data", "api", "electron2d-public-api-profile.json");
 
         Assert.True(File.Exists(manifestPath), $"API manifest was not found: {manifestPath}");
+        Assert.True(File.Exists(profilePath), $"Manual public API profile was not found: {profilePath}");
 
         using var document = JsonDocument.Parse(File.ReadAllText(manifestPath));
         var rootElement = document.RootElement;
@@ -48,7 +50,8 @@ public sealed class ApiManifestTests
 
         var generatedFrom = rootElement.GetProperty("generatedFrom");
         Assert.EndsWith("src/Electron2D/bin/Debug/net10.0/Electron2D.dll", generatedFrom.GetProperty("compiledAssembly").GetString(), StringComparison.Ordinal);
-        Assert.EndsWith(".github/wiki/API-Compatibility.md", generatedFrom.GetProperty("compatibilityPage").GetString(), StringComparison.Ordinal);
+        Assert.EndsWith("data/api/electron2d-public-api-profile.json", generatedFrom.GetProperty("publicApiProfile").GetString(), StringComparison.Ordinal);
+        Assert.False(generatedFrom.TryGetProperty("compatibilityPage", out _));
         Assert.EndsWith("Electron2D.xml", generatedFrom.GetProperty("xmlDocumentation").GetString(), StringComparison.Ordinal);
 
         var manifestTypes = rootElement.GetProperty("types")
@@ -97,9 +100,9 @@ public sealed class ApiManifestTests
 
         var control = FindType(rootElement, "Electron2D.Control");
         var profile = control.GetProperty("profile");
-        Assert.Equal("supported", profile.GetProperty("status").GetString());
-        Assert.Equal("parity_verified", profile.GetProperty("parity").GetString());
-        Assert.False(profile.GetProperty("outOfProfile").GetBoolean());
+        Assert.Equal("unapproved", profile.GetProperty("status").GetString());
+        Assert.Equal("not_verified", profile.GetProperty("parity").GetString());
+        Assert.True(profile.GetProperty("outOfProfile").GetBoolean());
 
         var textureRect = FindType(rootElement, "Electron2D.TextureRect");
         var textureRectMembers = textureRect.GetProperty("members").EnumerateArray().ToArray();

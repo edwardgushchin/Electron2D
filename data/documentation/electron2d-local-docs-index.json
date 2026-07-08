@@ -4,7 +4,11 @@
   "generatedFrom": {
     "apiManifest": {
       "path": "data/api/electron2d-api-manifest.json",
-      "sha256": "dd65be5bb2c38e6bdb795d3814d882890ee571da959d4323f8f7ce21cb3089c4"
+      "sha256": "b02180af7d5ba8e2b38fe0254bea88c6456dd1a787e3d59baa55a23bc1d45229"
+    },
+    "apiProfile": {
+      "path": "data/api/electron2d-public-api-profile.json",
+      "sha256": "2460f5b46a17e855463e78654847d83f862ac8b7b89be056ae3ffef2f8674173"
     },
     "documentation": [
       {
@@ -81,7 +85,7 @@
       },
       {
         "path": "docs/documentation/api-manifest.md",
-        "sha256": "6bd5a40c9c626cce222377ed7ed0b1a24301649d0000c13567fe2077eca26064"
+        "sha256": "dc548947dd25470a1032abdb87dbbc7572c0be7bde93f012f5e436d04d63e5c6"
       },
       {
         "path": "docs/documentation/canonical-goal-alignment.md",
@@ -93,11 +97,11 @@
       },
       {
         "path": "docs/documentation/github-wiki-api-reference.md",
-        "sha256": "9f6b0113a70231f718b111a9644081099bb6d38b011056e415377cdd3c85866c"
+        "sha256": "358c578afbec4c5e3308a1af4743a3b77946ae134c370d9e67abcd14b99d6ef0"
       },
       {
         "path": "docs/documentation/local-documentation-pipeline.md",
-        "sha256": "cc1641ff41248b6fb8262511178c429e5a4cf0c7c76df773ad48f3277ee390c5"
+        "sha256": "e2913ef6a297ec3a89d706b193dca97b9ba320b67398dd46e7d66659aad11b63"
       },
       {
         "path": "docs/documentation/public-api-xml-documentation.md",
@@ -389,15 +393,15 @@
       },
       {
         "path": "docs/release-management/api-compatibility.md",
-        "sha256": "e020fce2d318c96fb442daa2beae5c5c6dd70c58969def2ceea537518d3db4b6"
+        "sha256": "6cb94228e7547f3114f137e4aeeb3f3997a88b8eb2354395c82a621b2f037235"
       },
       {
         "path": "docs/release-management/audit-package.md",
-        "sha256": "1a1ebf29f85b8ae5181d5c400e1b16c28ad0afdae1388693a2492cc6d8fda1ec"
+        "sha256": "6e62fe400981fad4c562aa403f67d1d0a48bb04a720faa1f99165e34348466eb"
       },
       {
         "path": "docs/release-management/ci-matrix.md",
-        "sha256": "59bf49060b55f2db6321544a952b9084dd9b059e42c57bb10e75a0877ead2bb8"
+        "sha256": "cec7702f7fbfb62267ee9392f29b98ae7542803866f19c0de9f04386843d7172"
       },
       {
         "path": "docs/release-management/performance-budgets.md",
@@ -421,7 +425,7 @@
       },
       {
         "path": "docs/releases/0.1-preview.md",
-        "sha256": "d251ecd053ce8625c173d4e4db36debd5f7e1331227b3438ddd79f83e50fa79b"
+        "sha256": "cc72400940015efbfa53471fe9e1b6e3b70fb356fb8ffbd633f47d77618bb72c"
       },
       {
         "path": "docs/rendering/android-mobile-gpu-fallback-policy.md",
@@ -473,7 +477,7 @@
       },
       {
         "path": "docs/rendering/texture-resource-baseline.md",
-        "sha256": "782bf56d674860fe76506995fa8ec089d9cf4b40735c9f51a70f1c56ab4eb70c"
+        "sha256": "688e56aa44c8836aab479ddbd0af3cc7021fd28c4b30c15ea35e4bc1c48abbe1"
       },
       {
         "path": "docs/rendering/tilemap-layer-runtime-api.md",
@@ -553,7 +557,7 @@
       },
       {
         "path": "docs/scripting/csharp-script-classes.md",
-        "sha256": "730387d22daca961ae8eb64351ab9a89fbd718b8bcb6ab5b15bad4aeaeded9e1"
+        "sha256": "c2609000d19d70c1475585e033eeffd122811d2dda86fcbe22998f81bcbc405b"
       },
       {
         "path": "docs/scripting/editor-language-services.md",
@@ -695,7 +699,11 @@
   "sources": {
     "apiManifest": {
       "path": "data/api/electron2d-api-manifest.json",
-      "contract": "Public API metadata generated from compiled assembly, XML documentation and GitHub Wiki compatibility table."
+      "contract": "Generated public API metadata derived from compiled assembly, XML documentation and the manual public API profile."
+    },
+    "apiProfile": {
+      "path": "data/api/electron2d-public-api-profile.json",
+      "contract": "Manual source of truth for approved, deferred and unsupported Electron2D public API types."
     },
     "documentation": {
       "paths": [
@@ -887,7 +895,7 @@
       "path": "data/documentation/local-docs-index/documentation.ndjson",
       "kind": "documentation",
       "count": 159,
-      "sha256": "cc5640c71c1c6ec296a05a77722622e92925dd46c29699088b41e962c1ea1604"
+      "sha256": "5772eb46a098410ff27503cec03472f957acf08d6c0fdc2ed2b91d0c1f324cc4"
     },
     {
       "path": "data/documentation/local-docs-index/examples.ndjson",
@@ -899,7 +907,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "1e5fe9327caf42044e124cd77bb5e18ac8e665a229de5912fdc4522739e2a8de",
+    "sourceDigest": "7192c90d4d323fb33e29b03f8558bfacbc9b3591deb705aa42101df4ff20b0ab",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."

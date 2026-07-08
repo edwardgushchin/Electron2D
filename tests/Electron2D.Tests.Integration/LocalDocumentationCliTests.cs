@@ -270,6 +270,25 @@ public sealed class LocalDocumentationCliTests
             """);
         WriteText(
             workspace.Root,
+            "data/api/electron2d-public-api-profile.json",
+            """
+            {
+              "schemaVersion": 1,
+              "release": "0.1-preview",
+              "godotBaseline": "4.7-stable",
+              "approvalAuthority": "project-owner",
+              "types": [
+                {
+                  "fullName": "Electron2D.CharacterBody2D",
+                  "godotReference": "CharacterBody2D",
+                  "decision": "approved",
+                  "rationale": "Fixture owner approved this type."
+                }
+              ]
+            }
+            """);
+        WriteText(
+            workspace.Root,
             "data/documentation/electron2d-doc-examples.json",
             """
             {
@@ -325,7 +344,7 @@ public sealed class LocalDocumentationCliTests
             """
             {"id":"example:platformer-movement","kind":"example","title":"Platformer movement","summary":"Shows platformer movement with CharacterBody2D.","keywords":["movement","platformer"],"sourcePath":"data/documentation/electron2d-doc-examples.json","sourceId":"example:platformer-movement","apiIds":["electron2d://api/type/Electron2D.CharacterBody2D","electron2d://api/member/Electron2D.CharacterBody2D.MoveAndSlide"],"code":"var body = new CharacterBody2D();\nbody.MoveAndSlide();\n","audiences":["human","ai","cli","ide"]}
             """);
-        var sourceDigest = ComputeTextSha256(string.Concat(apiTypes.Sha256, apiMembers.Sha256, documentation.Sha256, examples.Sha256));
+        var sourceDigest = ComputeTextSha256(string.Concat(apiTypes.Sha256, apiMembers.Sha256, documentation.Sha256, examples.Sha256, ComputeNormalizedSha256(Path.Combine(workspace.Root, "data", "api", "electron2d-public-api-profile.json"))));
         WriteText(
             workspace.Root,
             "data/documentation/electron2d-local-docs-index.json",
@@ -337,6 +356,10 @@ public sealed class LocalDocumentationCliTests
                 "apiManifest": {
                   "path": "data/api/electron2d-api-manifest.json",
                   "sha256": "{{ComputeNormalizedSha256(Path.Combine(workspace.Root, "data", "api", "electron2d-api-manifest.json"))}}"
+                },
+                "apiProfile": {
+                  "path": "data/api/electron2d-public-api-profile.json",
+                  "sha256": "{{ComputeNormalizedSha256(Path.Combine(workspace.Root, "data", "api", "electron2d-public-api-profile.json"))}}"
                 },
                 "documentation": [
                   {
@@ -399,6 +422,9 @@ public sealed class LocalDocumentationCliTests
               "sources": {
                 "apiManifest": {
                   "path": "data/api/electron2d-api-manifest.json"
+                },
+                "apiProfile": {
+                  "path": "data/api/electron2d-public-api-profile.json"
                 },
                 "documentation": {
                   "paths": [

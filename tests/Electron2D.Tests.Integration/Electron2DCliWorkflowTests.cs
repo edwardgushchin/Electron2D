@@ -254,7 +254,7 @@ public sealed class Electron2DCliWorkflowTests
         var combinedContext = string.Join(
             "\n",
             expectedFiles.Select(file => File.ReadAllText(Path.Combine(contextRoot, file))));
-        Assert.DoesNotContain("super-secret-token", combinedContext, StringComparison.Ordinal);
+        Assert.DoesNotContain("<redacted>", combinedContext, StringComparison.Ordinal);
         Assert.DoesNotContain(".git", combinedContext, StringComparison.Ordinal);
         Assert.DoesNotContain("TASKS.md", combinedContext, StringComparison.Ordinal);
         Assert.DoesNotContain("dev-diary", combinedContext, StringComparison.Ordinal);
@@ -422,8 +422,10 @@ public sealed class Electron2DCliWorkflowTests
     [Fact]
     public void ApiCompareGodotReturnsManifestBackedParityJsonForProfileType()
     {
-        var result = RunCli(
+        var docsRoot = CreateApiCompareDocsRoot("api-compare-approved", "approved");
+        var result = RunCliWithDocsRoot(
             CliExecutionContext.ForTests(FixedInstant),
+            docsRoot,
             "api",
             "compare-godot",
             "Control",
@@ -456,11 +458,13 @@ public sealed class Electron2DCliWorkflowTests
     [Fact]
     public void ApiCompareGodotRejectsOutOfProfileTypeWithStableDiagnostic()
     {
-        var result = RunCli(
+        var docsRoot = CreateApiCompareDocsRoot("api-compare-deferred", "deferred");
+        var result = RunCliWithDocsRoot(
             CliExecutionContext.ForTests(FixedInstant),
+            docsRoot,
             "api",
             "compare-godot",
-            "CharacterBody2D",
+            "Control",
             "--format",
             "json");
 
@@ -477,7 +481,7 @@ public sealed class Electron2DCliWorkflowTests
         Assert.Equal("api compare-godot", root.GetProperty("command").GetString());
         Assert.Equal("none", root.GetProperty("route").GetString());
         Assert.Equal("out_of_profile", data.GetProperty("result").GetProperty("status").GetString());
-        Assert.Equal("Electron2D.CharacterBody2D", type.GetProperty("fullName").GetString());
+        Assert.Equal("Electron2D.Control", type.GetProperty("fullName").GetString());
         Assert.True(profile.GetProperty("outOfProfile").GetBoolean());
         Assert.Equal("E2D-CLI-0002", diagnostic.GetProperty("code").GetString());
         Assert.Contains("outside the Electron2D 0.1-preview 2D profile", diagnostic.GetProperty("message").GetString(), StringComparison.Ordinal);
@@ -1074,6 +1078,88 @@ public sealed class Electron2DCliWorkflowTests
         return new CliRunResult(exitCode, output.ToString(), error.ToString());
     }
 
+    private static CliRunResult RunCliWithDocsRoot(CliExecutionContext context, string docsRoot, params string[] args)
+    {
+        var previousDocsRoot = Environment.GetEnvironmentVariable("ELECTRON2D_DOCS_ROOT");
+        Environment.SetEnvironmentVariable("ELECTRON2D_DOCS_ROOT", docsRoot);
+        try
+        {
+            return RunCli(context, args);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("ELECTRON2D_DOCS_ROOT", previousDocsRoot);
+        }
+    }
+
+    private static string CreateApiCompareDocsRoot(string name, string decision)
+    {
+        var root = CreateTemporaryDirectory("electron2d-cli-" + name + "-");
+        var isApproved = string.Equals(decision, "approved", StringComparison.Ordinal);
+        var status = isApproved ? "supported" : decision;
+        var parity = isApproved ? "parity_verified" : "not_verified";
+        var outOfProfile = isApproved ? "false" : "true";
+        Directory.CreateDirectory(Path.Combine(root, "data", "api"));
+        Directory.CreateDirectory(Path.Combine(root, "docs", "documentation"));
+        File.WriteAllText(
+            Path.Combine(root, "data", "api", "electron2d-public-api-profile.json"),
+            $$"""
+            {
+              "schemaVersion": 1,
+              "release": "0.1-preview",
+              "godotBaseline": "4.7-stable",
+              "approvalAuthority": "project-owner",
+              "types": [
+                {
+                  "fullName": "Electron2D.Control",
+                  "godotReference": "Control",
+                  "decision": "{{decision}}",
+                  "rationale": "Fixture decision for CLI profile behavior."
+                }
+              ]
+            }
+            """);
+        File.WriteAllText(
+            Path.Combine(root, "data", "api", "electron2d-api-manifest.json"),
+            $$"""
+            {
+              "schemaVersion": 1,
+              "manifestVersion": "0.1-preview",
+              "engineVersion": "0.1-preview",
+              "profileName": "Electron2D 0.1-preview",
+              "godotBaseline": "4.7-stable",
+              "generatedFrom": {
+                "compiledAssembly": "src/Electron2D/bin/Debug/net10.0/Electron2D.dll",
+                "xmlDocumentation": ".temp/api-manifest/Electron2D.xml",
+                "publicApiProfile": "data/api/electron2d-public-api-profile.json"
+              },
+              "strictParitySummary": {
+                "missingTypes": 0,
+                "missingMembers": 0,
+                "signatureMismatches": 0,
+                "inheritanceMismatches": 0,
+                "defaultMismatches": 0,
+                "unexpectedChanges": 0
+              },
+              "types": [
+                {
+                  "id": "electron2d://api/type/Electron2D.Control",
+                  "fullName": "Electron2D.Control",
+                  "name": "Control",
+                  "profile": {
+                    "status": "{{status}}",
+                    "parity": "{{parity}}",
+                    "outOfProfile": {{outOfProfile}},
+                    "godotReference": "Control",
+                    "notes": "Fixture decision for CLI profile behavior."
+                  }
+                }
+              ]
+            }
+            """);
+        return root;
+    }
+
     private static string CreateProjectRoot(string name, string sceneText)
     {
         var root = Path.Combine(Path.GetTempPath(), "Electron2D-CliWorkflowTests", name, Guid.NewGuid().ToString("N"));
@@ -1170,13 +1256,13 @@ public sealed class Electron2DCliWorkflowTests
         }
 
         Directory.CreateDirectory(Path.Combine(root, ".git"));
-        File.WriteAllText(Path.Combine(root, ".git", "config"), "token=super-secret-token");
+        File.WriteAllText(Path.Combine(root, ".git", "config"), "token=<redacted>");
         Directory.CreateDirectory(Path.Combine(root, ".electron2d", "import-cache"));
         File.WriteAllBytes(Path.Combine(root, ".electron2d", "import-cache", "cached-texture.bin"), [1, 2, 3, 4]);
         Directory.CreateDirectory(Path.Combine(root, "dev-diary"));
         Directory.CreateDirectory(Path.Combine(root, "completed-tasks"));
-        File.WriteAllText(Path.Combine(root, "TASKS.md"), "password=super-secret-token");
-        File.WriteAllText(Path.Combine(root, "huge.log"), new string('x', 70 * 1024) + "super-secret-token");
+        File.WriteAllText(Path.Combine(root, "TASKS.md"), "password=<redacted>");
+        File.WriteAllText(Path.Combine(root, "huge.log"), new string('x', 70 * 1024) + "<redacted>");
 
         return root;
     }

@@ -5411,20 +5411,17 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
 
     public async Task AttachTargetWithRecoveryAsync(long tabId, string targetId, CancellationToken cancellationToken)
     {
-        for (var attempt = 0; attempt < 3; attempt++)
-        {
-            try
+        await AuditSubmitCdpRecoveryPolicy.ExecuteAsync(
+            async (_, token) =>
             {
-                await AttachTargetCoreAsync(tabId, targetId, cancellationToken).ConfigureAwait(false);
-                return;
-            }
-            catch (AuditSubmitCodexChromeException ex) when (attempt < 2 && IsRecoverableCdpFailure(ex))
-            {
-                await ReattachCdpAsync(tabId, cancellationToken).ConfigureAwait(false);
-            }
-        }
-
-        throw new InvalidOperationException("Target attach retry loop ended without returning or throwing a protocol error.");
+                await AttachTargetCoreAsync(tabId, targetId, token).ConfigureAwait(false);
+                return true;
+            },
+            (_, token) => ReattachCdpAsync(tabId, token),
+            static ex => ex is AuditSubmitCodexChromeException chromeException && IsRecoverableCdpFailure(chromeException),
+            allowTransientRecovery: true,
+            maxAttempts: 5,
+            cancellationToken).ConfigureAwait(false);
     }
 
     public async Task EnsureTargetAttachedForReadAsync(long tabId, string targetId, CancellationToken cancellationToken)
@@ -5497,19 +5494,13 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
         CancellationToken cancellationToken,
         bool allowTransientRecovery = true)
     {
-        for (var attempt = 0; attempt < 3; attempt++)
-        {
-            try
-            {
-                return await ExecuteCdpCoreAsync(tabId, method, commandParameters, timeout, cancellationToken).ConfigureAwait(false);
-            }
-            catch (AuditSubmitCodexChromeException ex) when (attempt < 2 && allowTransientRecovery && IsRecoverableCdpFailure(ex))
-            {
-                await ReattachCdpAsync(tabId, cancellationToken).ConfigureAwait(false);
-            }
-        }
-
-        throw new InvalidOperationException("CDP retry loop ended without returning or throwing a protocol error.");
+        return await AuditSubmitCdpRecoveryPolicy.ExecuteAsync(
+            (_, token) => ExecuteCdpCoreAsync(tabId, method, commandParameters, timeout, token),
+            (_, token) => ReattachCdpAsync(tabId, token),
+            static ex => ex is AuditSubmitCodexChromeException chromeException && IsRecoverableCdpFailure(chromeException),
+            allowTransientRecovery,
+            maxAttempts: 5,
+            cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<JsonElement> ExecuteCdpCoreAsync(
@@ -5536,28 +5527,26 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
         CancellationToken cancellationToken,
         bool allowTransientRecovery = true)
     {
-        for (var attempt = 0; attempt < 3; attempt++)
-        {
-            try
+        return await AuditSubmitCdpRecoveryPolicy.ExecuteAsync(
+            (_, token) => ExecuteCdpCoreAsync(
+                new Dictionary<string, object?>
+                {
+                    ["tabId"] = tabId,
+                    ["targetId"] = targetId
+                },
+                method,
+                commandParameters,
+                timeout,
+                token),
+            async (_, token) =>
             {
-                return await ExecuteCdpCoreAsync(
-                    new Dictionary<string, object?>
-                    {
-                        ["tabId"] = tabId,
-                        ["targetId"] = targetId
-                    },
-                    method,
-                    commandParameters,
-                    timeout,
-                    cancellationToken).ConfigureAwait(false);
-            }
-            catch (AuditSubmitCodexChromeException ex) when (attempt < 2 && allowTransientRecovery && IsRecoverableCdpFailure(ex))
-            {
-                await EnsureTargetAttachedForReadAsync(tabId, targetId, cancellationToken).ConfigureAwait(false);
-            }
-        }
-
-        throw new InvalidOperationException("Target CDP retry loop ended without returning or throwing a protocol error.");
+                await ReattachCdpAsync(tabId, token).ConfigureAwait(false);
+                await EnsureTargetAttachedForReadAsync(tabId, targetId, token).ConfigureAwait(false);
+            },
+            static ex => ex is AuditSubmitCodexChromeException chromeException && IsRecoverableCdpFailure(chromeException),
+            allowTransientRecovery,
+            maxAttempts: 5,
+            cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<JsonElement> ExecuteCdpCoreAsync(
@@ -5869,9 +5858,16 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
                 await AttachAsync(tabId, cancellationToken).ConfigureAwait(false);
                 await Task.Delay(TimeSpan.FromMilliseconds(500 * (attempt + 1)), cancellationToken).ConfigureAwait(false);
 
-                foreach (var method in new[] { "Page.enable", "Runtime.enable", "DOM.enable" })
+                foreach (var method in new[] { "Runtime.enable", "DOM.enable", "Page.enable" })
                 {
-                    await ExecuteCdpCoreAsync(tabId, method, [], TimeSpan.FromSeconds(45), cancellationToken).ConfigureAwait(false);
+                    try
+                    {
+                        await ExecuteCdpCoreAsync(tabId, method, [], TimeSpan.FromSeconds(5), cancellationToken).ConfigureAwait(false);
+                    }
+                    catch (AuditSubmitCodexChromeException ex) when (IsRecoverableCdpFailure(ex))
+                    {
+                        failures.Add(ex.Message);
+                    }
                 }
 
                 return;
@@ -6204,6 +6200,42 @@ internal readonly record struct AuditSubmitTargetFrameContext(string TargetId, s
 internal readonly record struct AuditSubmitFrameTreeEntry(string FrameId, string Url, string Name, bool IsRoot);
 
 internal readonly record struct AuditSubmitTargetInfoEntry(string TargetId, string Type, string Url, string Title, bool Attached);
+
+internal static class AuditSubmitCdpRecoveryPolicy
+{
+    public static async Task<T> ExecuteAsync<T>(
+        Func<int, CancellationToken, Task<T>> executeAsync,
+        Func<int, CancellationToken, Task> recoverAsync,
+        Func<Exception, bool> isRecoverable,
+        bool allowTransientRecovery,
+        int maxAttempts,
+        CancellationToken cancellationToken)
+    {
+        if (maxAttempts <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(maxAttempts), maxAttempts, "CDP recovery must allow at least one attempt.");
+        }
+
+        if (!allowTransientRecovery)
+        {
+            await recoverAsync(0, cancellationToken).ConfigureAwait(false);
+        }
+
+        for (var attempt = 0; attempt < maxAttempts; attempt++)
+        {
+            try
+            {
+                return await executeAsync(attempt, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (allowTransientRecovery && attempt < maxAttempts - 1 && isRecoverable(ex))
+            {
+                await recoverAsync(attempt + 1, cancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        throw new InvalidOperationException("CDP recovery loop ended without returning or throwing a protocol error.");
+    }
+}
 
 internal sealed class AuditSubmitCodexChromeException(string code, string message) : Exception(message)
 {

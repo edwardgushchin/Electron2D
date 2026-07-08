@@ -38,6 +38,7 @@ internal sealed class LocalDocumentationVerifier(
 {
     private const string IndexRelativePath = "data/documentation/electron2d-local-docs-index.json";
     private const string ApiManifestRelativePath = "data/api/electron2d-api-manifest.json";
+    private const string ApiProfileRelativePath = "data/api/electron2d-public-api-profile.json";
     private const string ExamplesRelativePath = "data/documentation/electron2d-doc-examples.json";
     private const string SqliteCacheRelativePath = "data/documentation/electron2d-local-docs-search.sqlite";
     private const string ApiTypesShardRelativePath = "data/documentation/local-docs-index/api-types.ndjson";
@@ -217,6 +218,7 @@ internal sealed class LocalDocumentationVerifier(
         try
         {
             if (!TryResolveRequiredFile(ApiManifestRelativePath, step, out var apiManifestPath) ||
+                !TryResolveRequiredFile(ApiProfileRelativePath, step, out var apiProfilePath) ||
                 !TryResolveRequiredFile(ExamplesRelativePath, step, out var examplesPath))
             {
                 return false;
@@ -280,6 +282,7 @@ internal sealed class LocalDocumentationVerifier(
             var shards = CreateGeneratedShards(sortedEntries);
             var sourceDigest = ComputeSourceDigest(
                 NewHashRecord(apiManifestPath),
+                NewHashRecord(apiProfilePath),
                 documentationHashRecords,
                 NewHashRecord(examplesPath),
                 shards);
@@ -291,6 +294,7 @@ internal sealed class LocalDocumentationVerifier(
                 ["generatedFrom"] = new JsonObject
                 {
                     ["apiManifest"] = HashRecordJson(NewHashRecord(apiManifestPath)),
+                    ["apiProfile"] = HashRecordJson(NewHashRecord(apiProfilePath)),
                     ["documentation"] = JsonArrayFrom(documentationHashRecords.Select(HashRecordJson)),
                     ["examples"] = HashRecordJson(NewHashRecord(examplesPath))
                 },
@@ -307,7 +311,12 @@ internal sealed class LocalDocumentationVerifier(
                     ["apiManifest"] = new JsonObject
                     {
                         ["path"] = ApiManifestRelativePath,
-                        ["contract"] = "Public API metadata generated from compiled assembly, XML documentation and GitHub Wiki compatibility table."
+                        ["contract"] = "Generated public API metadata derived from compiled assembly, XML documentation and the manual public API profile."
+                    },
+                    ["apiProfile"] = new JsonObject
+                    {
+                        ["path"] = ApiProfileRelativePath,
+                        ["contract"] = "Manual source of truth for approved, deferred and unsupported Electron2D public API types."
                     },
                     ["documentation"] = new JsonObject
                     {
@@ -664,12 +673,14 @@ internal sealed class LocalDocumentationVerifier(
 
     private static string ComputeSourceDigest(
         DocumentationHashRecord apiManifest,
+        DocumentationHashRecord apiProfile,
         IReadOnlyList<DocumentationHashRecord> documentationRecords,
         DocumentationHashRecord examples,
         IReadOnlyList<GeneratedDocumentationShard> shards)
     {
         var builder = new StringBuilder();
         AppendDigestRecord(builder, "apiManifest", apiManifest.Path, apiManifest.Sha256);
+        AppendDigestRecord(builder, "apiProfile", apiProfile.Path, apiProfile.Sha256);
         foreach (var record in documentationRecords.OrderBy(record => record.Path, StringComparer.Ordinal))
         {
             AppendDigestRecord(builder, "documentation", record.Path, record.Sha256);
@@ -1255,6 +1266,7 @@ internal sealed class LocalDocumentationVerifier(
         }
 
         VerifyHashRecord(generatedFrom, "apiManifest", ApiManifestRelativePath, result);
+        VerifyHashRecord(generatedFrom, "apiProfile", ApiProfileRelativePath, result);
         VerifyHashRecord(generatedFrom, "examples", ExamplesRelativePath, result);
 
         if (!generatedFrom.TryGetProperty("documentation", out var documentation) || documentation.ValueKind != JsonValueKind.Array)
@@ -1377,6 +1389,7 @@ internal sealed class LocalDocumentationVerifier(
         }
 
         VerifySourcePath(sources, "apiManifest", "path", ApiManifestRelativePath, result);
+        VerifySourcePath(sources, "apiProfile", "path", ApiProfileRelativePath, result);
         VerifySourcePath(sources, "examples", "path", ExamplesRelativePath, result);
 
         if (sources.TryGetProperty("documentation", out var documentation) &&
@@ -1704,6 +1717,7 @@ internal sealed class LocalDocumentationVerifier(
     {
         if (!TryGetObject(root, "generatedFrom", out var generatedFrom) ||
             !TryReadHashRecord(generatedFrom, "apiManifest", out var apiManifest) ||
+            !TryReadHashRecord(generatedFrom, "apiProfile", out var apiProfile) ||
             !TryReadHashRecord(generatedFrom, "examples", out var examples) ||
             !generatedFrom.TryGetProperty("documentation", out var documentation) ||
             documentation.ValueKind != JsonValueKind.Array ||
@@ -1734,7 +1748,7 @@ internal sealed class LocalDocumentationVerifier(
             }
         }
 
-        return ComputeSourceDigest(apiManifest, documentationRecords, examples, generatedShards);
+        return ComputeSourceDigest(apiManifest, apiProfile, documentationRecords, examples, generatedShards);
     }
 
     private static bool TryReadHashRecord(JsonElement parent, string propertyName, out DocumentationHashRecord record)

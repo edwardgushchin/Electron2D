@@ -18,7 +18,7 @@
 
 ## Назначение
 
-`0.1-preview` поддерживает только C# script classes. Script class - это обычный C# тип в проекте пользователя, который наследуется от `Electron2D.Node` или другого Electron2D node type и компилируется обычной .NET toolchain вместе с проектом игры.
+Electron2D поддерживает только C# script classes как публичный scripting path. Это постоянная политика проекта, а не ограничение `0.1-preview`. Script class - это обычный C# тип в проекте пользователя, который наследуется от `Electron2D.Node` или другого Electron2D node type и компилируется обычной .NET toolchain вместе с проектом игры.
 
 Задача не добавляет GDScript, visual scripting, обязательный Hot Reload, runtime C# compilation, dynamic iOS code load или managed debugger. Встроенная C# IDE описана отдельной спецификацией `editor-script-workflow.md` и обязательна для полного редакторского workflow `0.1-preview`.
 

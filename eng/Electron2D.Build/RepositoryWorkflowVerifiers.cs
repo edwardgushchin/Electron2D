@@ -68,7 +68,7 @@ internal sealed class CiMatrixVerifier(string repositoryRoot, JsonDiagnosticSink
         "dotnet run --project eng/Electron2D.Build -- verify reference-game-assets",
         "dotnet run --project eng/Electron2D.Build -- verify public-api-xml-docs --fail-on-issues",
         "Electron2D.wiki.git",
-        "dotnet run --project eng/Electron2D.Build -- update api-manifest --wiki-path .github/wiki --check",
+        "dotnet run --project eng/Electron2D.Build -- update api-manifest --check",
         "dotnet run --project eng/Electron2D.Build -- update wiki --output .github/wiki --check",
         "dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki",
         "dotnet run --project eng/Electron2D.Build -- verify ui-public-api-gate --wiki-path .github/wiki",
@@ -244,7 +244,9 @@ internal sealed class NoPowerShellWorkflowVerifier(string repositoryRoot, JsonDi
             "release-management exact line",
             "docs/release-management/audit-package.md",
             [
-                "635a7a84eed7c51aebddeb41e5dbf2e888971a212ffb4a80a508a926a3541fce"
+                "635a7a84eed7c51aebddeb41e5dbf2e888971a212ffb4a80a508a926a3541fce",
+                "b0768fb46088545004958685fe1f38b6f37753be007120a06352d4acf7d14a7b",
+                "350bce2366626033efe3ab8dfdff78c4bddd35f9dc09848d090ffbc69ff9d745"
             ]),
         new(
             "release-management exact line",
@@ -263,7 +265,8 @@ internal sealed class NoPowerShellWorkflowVerifier(string repositoryRoot, JsonDi
                 "ba0e1e4091bf718086cfdee3c84ef73af9538d41d9f9bd14cc5932a30679d2d1",
                 "edc532052907c4de9e7000e3e977656b6772702a8ac2cd4c7b6c73003659656e",
                 "ac717611b5c2de31499df4efc25c9036717a3b58329f710456d26ec9f9344fbf",
-                "b6ad253421701556b3185b4b7a83149123f0ce2c343e24da22ce6070e380edfe"
+                "b6ad253421701556b3185b4b7a83149123f0ce2c343e24da22ce6070e380edfe",
+                "8093fc9a6990c5bdc0600ce8ae0cf879fd15d2f98860c6b5869f5099b273d4e3"
             ]),
         new(
             "release-management exact line",
@@ -300,7 +303,12 @@ internal sealed class NoPowerShellWorkflowVerifier(string repositoryRoot, JsonDi
                 "3845473b4de85b4f2a79562ffd165694c1680a5e21174ce8125b73b50b4f1f8f",
                 "f25ab06ca87d6e7c76048e5d0901ec960faf3026d1057c1442840ca9b8ab7f17",
                 "2f57f477a1b8acd13f5f310f86792b12156391f4f268ea939c0951ed60c74766",
-                "4fd7d35931680c3b58e02bbf088083e18891449c8856a1253a58d9b254f137d7"
+                "4fd7d35931680c3b58e02bbf088083e18891449c8856a1253a58d9b254f137d7",
+                "97e25d96ec0601c6befaef2eb521bf087cd0b9f6ba4a696aabbeea6f29541991",
+                "b5815d5e3d76e05b1b66c6b36d3979873d7a9a23a93830214f2d75186d85a299",
+                "ac09fecf1fb30c43da300bd2ef686159bbb295ae69a82b0788f3bf36b4242155",
+                "1d14ea74226703b05936623111daa4f4b25f8dc8cf867ccf3f0ef356c2e61855",
+                "5e88f62faba727aa5acd6597ecb294f3ba64f648f68b72d8f3eb6b2d8bf2d663"
             ])
     ];
 
@@ -3498,7 +3506,7 @@ internal sealed class PublicApiWikiVerifier(string repositoryRoot, JsonDiagnosti
                 var match = Regex.Match(line, @"^\|\s*\[([^\]]+)\]\(([^)]+)\)\s*\|\s*(class|struct|enum|interface|delegate)\s*\|", RegexOptions.CultureInvariant);
                 if (match.Success)
                 {
-                    uiApiNames.Add("Electron2D." + match.Groups[1].Value.Trim().Replace('.', '+'));
+                    uiApiNames.Add(NormalizeWikiApiName(match.Groups[1].Value));
                 }
             }
 
@@ -3510,10 +3518,10 @@ internal sealed class PublicApiWikiVerifier(string repositoryRoot, JsonDiagnosti
             var statusByApi = new Dictionary<string, string>(StringComparer.Ordinal);
             foreach (var line in File.ReadLines(compatibilityPath, Encoding.UTF8))
             {
-                var match = Regex.Match(line, @"^\|\s*`([^`]+)`\s*\|\s*[^|]+\|\s*([A-Za-z]+)\s*\|", RegexOptions.CultureInvariant);
+                var match = Regex.Match(line, @"^\|\s*`([^`]+)`\s*\|\s*(Supported|Deferred|Unsupported|Unapproved|Partial|Experimental|Planned)\s*\|", RegexOptions.CultureInvariant);
                 if (match.Success)
                 {
-                    statusByApi[match.Groups[1].Value.Trim()] = match.Groups[2].Value.Trim();
+                    statusByApi[NormalizeWikiApiName(match.Groups[1].Value)] = match.Groups[2].Value.Trim();
                 }
             }
 
@@ -3531,6 +3539,14 @@ internal sealed class PublicApiWikiVerifier(string repositoryRoot, JsonDiagnosti
         }
 
         return Complete("verify ui-public-api-gate", "E2D-BUILD-UI-PUBLIC-API-GATE-PASSED", "UI public API gate verification passed.", errors);
+    }
+
+    private static string NormalizeWikiApiName(string value)
+    {
+        var normalized = value.Trim().Replace('+', '.');
+        return normalized.StartsWith("Electron2D.", StringComparison.Ordinal)
+            ? normalized
+            : "Electron2D." + normalized;
     }
 
     public async Task<int> VerifyPublicApiDocumentationAsync(string[] args, CancellationToken cancellationToken)
@@ -3596,13 +3612,14 @@ internal sealed class PublicApiWikiVerifier(string repositoryRoot, JsonDiagnosti
             new Dictionary<string, string>(StringComparer.Ordinal)
             {
                 [@"\[Home\]\(Home\) \| \[API by Category\]\(API-by-Category\) \| \[Complete API Index\]\(API-Reference\) \| \[API Compatibility\]\(API-Compatibility\)"] = "complete top navigation.",
+                [@"<!-- Generated by eng/Electron2D\.Build update wiki\. Do not edit by hand\. -->"] = "generated marker.",
+                ["Generated from `data/api/electron2d-public-api-profile.json`."] = "manual profile source.",
                 ["## Status Legend"] = "status legend.",
                 ["## Current Public Runtime Surface"] = "current public API status table.",
-                ["## Planned 2D Surface"] = "planned preview surface table.",
-                [@"\| Supported \| Implemented, tested and documented \|"] = "supported status definition.",
-                [@"\| Partial \| Implemented only for the described subset \|"] = "partial status definition.",
-                [@"\| Experimental \| Implemented but allowed to change before stable release \|"] = "experimental status definition.",
-                [@"\| Planned \| Required by `0\.1\.0 Preview`, not implemented yet \|"] = "planned status definition."
+                [@"\| Supported \| Approved by the manual profile and parity verified for the current release\. \|"] = "supported status definition.",
+                [@"\| Deferred \| Explicitly excluded from the current release and reserved for later decision\. \|"] = "deferred status definition.",
+                [@"\| Unsupported \| Explicitly excluded from the current release\. \|"] = "unsupported status definition.",
+                [@"\| Unapproved \| Exported by the runtime assembly without a manual profile decision; this is a failing gate state\. \|"] = "unapproved status definition."
             },
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
@@ -3665,7 +3682,13 @@ internal sealed class PublicApiWikiVerifier(string repositoryRoot, JsonDiagnosti
             ["SDL_shadercross"] = "backend library name",
             ["Simple DirectMedia"] = "backend library name",
             ["Godot-like"] = "promotional Godot comparison",
-            ["Godot-подоб"] = "promotional Godot comparison"
+            ["Godot-подоб"] = "promotional Godot comparison",
+            ["manual compatibility page"] = "legacy manual compatibility page model",
+            ["ручн(?:ая|ой|ую) compatibility page"] = "legacy manual compatibility page model",
+            ["planned preview surface"] = "legacy planned preview surface model",
+            ["planned surface"] = "legacy planned surface model",
+            ["partial, experimental, planned"] = "legacy compatibility status list",
+            ["class packet для `approved`"] = "manual API profile godotReference validation limited to approved decision"
         };
 
         foreach (var file in Directory.EnumerateFiles(root, "*.md", SearchOption.AllDirectories)

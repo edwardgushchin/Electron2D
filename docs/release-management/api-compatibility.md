@@ -18,16 +18,17 @@
 
 ## Цель
 
-Для `0.1-preview` публичный API Electron2D должен следовать полному контракту совместимости Godot `4.7-stable` для утверждённой публичной поверхности Electron2D. Контракт не задаётся ручным списком классов в Markdown: источник публичной поверхности и ссылок на Godot должен приходить через generated artifacts, которыми владеют задачи `T-0242`, `T-0243`, `T-0244` и `T-0245`.
+Для `0.1-preview` публичный API Electron2D должен следовать полному контракту совместимости Godot `4.7-stable` для утверждённой публичной поверхности Electron2D. После `T-0990` единственный источник решения о том, какие Godot-типы входят в публичный Electron2D API, - ручной JSON-профиль `data/api/electron2d-public-api-profile.json`. Generated artifacts больше не выбирают публичную поверхность: они только проецируют, проверяют и публикуют уже утверждённые решения из профиля.
 
-Корневое правило: каждая публичная сущность, которая входит в публичную поверхность Electron2D, должна совпадать с Godot `4.7-stable` не только по имени, сигнатуре, свойствам, сигналам, enum и constants, но и по наблюдаемому поведению, значениям по умолчанию, ошибкам, жизненному циклу, платформенным ограничениям и ожиданиям разработчика. Исключения допускаются только как явно утверждённые строки `Deferred` или `Unsupported` через `T-0963`.
+Корневое правило: каждая публичная сущность, которая входит в публичную поверхность Electron2D, должна совпадать с Godot `4.7-stable` не только по имени, сигнатуре, свойствам, сигналам, enum и constants, но и по наблюдаемому поведению, значениям по умолчанию, ошибкам, жизненному циклу, платформенным ограничениям и ожиданиям разработчика. Исключения допускаются только как явно утверждённые строки `deferred` или `unsupported` в manual API profile.
 
-Все публичные типы runtime assembly должны быть отражены в compatibility table с одним из статусов:
+Все публичные типы runtime assembly должны быть отражены в ручном профиле как `approved`. Отсутствующая строка означает отсутствие утверждения и должна ломать API-проверки. Профиль допускает только решения:
 
-- `Supported`
-- `Partial`
-- `Experimental`
-- `Planned`
+- `approved` - тип входит в публичный API текущего релиза и обязан иметь полный Godot `4.7-stable` public C# parity;
+- `deferred` - тип не входит в публичный API текущего релиза, но может быть рассмотрен позже;
+- `unsupported` - тип намеренно не входит в публичный API текущего релиза.
+
+`deferred` и `unsupported` не являются допустимыми exported runtime public types. Если runtime assembly экспортирует такой тип, проверка должна падать так же, как для отсутствующей строки.
 
 ## Корневой контракт совместимости Godot 4.7
 
@@ -36,8 +37,8 @@
 - `T-0243` владеет отчётами о расхождениях публичной поверхности и правилами падения проверок.
 - `T-0244` владеет behavior evidence: проверками наблюдаемого поведения, ошибок, жизненного цикла и граничных случаев.
 - `T-0245` владеет per-class ready gate и запрещает принимать public class task без полного evidence или утверждённого исключения.
-- `T-0963` является единственным путём утверждения `Deferred` и `Unsupported`. Такие строки должны быть видны в API/behavior reports и финальном gate `T-0980`.
-- Публичный путь для пользовательских скриптов - C#. GDScript, runtime Godot Script и прямое копирование Godot C# bindings не входят в публичный authoring path без отдельного будущего решения.
+- Manual API profile является единственным путём утверждения `Deferred` и `Unsupported`. Такие строки должны быть видны в API/behavior reports, generated Wiki и финальном gate `T-0980`.
+- Публичный путь для пользовательских скриптов - только C#. GDScript, runtime Godot Script, visual scripting и прямое копирование Godot C# bindings не входят в публичный authoring path.
 - Публичный shader source language - HLSL. Godot Shader Language, GLSL и MSL не являются публичными authoring languages; платформенные результаты создаются внутренними shader/rendering задачами.
 - Обязательные платформенные проверки для `0.1-preview`: Windows/Linux/macOS требуют runtime+editor diagnostics; Android/iOS/WebAssembly browser требуют runtime/export diagnostics без editor surface.
 - `EditorOnly` public/API rows не считаются неподдержанными по умолчанию: они сохраняются как future editor-scope и получают runtime-only diagnostics только там, где editor surface неприменима.
@@ -46,18 +47,43 @@
 
 | Потребитель / задача | Внутренняя возможность | Source of truth | Первое evidence | Ограничение |
 | --- | --- | --- | --- | --- |
-| `T-0242` generated API descriptions | Сгенерированные описания публичной поверхности и ссылки на Godot `4.7-stable` | `data/api/electron2d-api-manifest.json`, GitHub Wiki `API-Compatibility.md` | `update api-manifest --wiki-path .github/wiki --check`, `verify api-compatibility --wiki-path .github/wiki` | Не переписывает public API rows вручную в Markdown. |
-| `T-0243` API diff checks | Отчёты о расхождениях публичной поверхности и fail-closed правила | Generated manifest, Wiki compatibility table, будущие diff reports | `verify api-compatibility --wiki-path .github/wiki` | Любое расхождение получает generated status/evidence, а не ручной waiver. |
+| `T-0990` manual API profile | Ручное утверждение включённых, отложенных и неподдержанных Godot-типов | `data/api/electron2d-public-api-profile.json` | profile verifier, `update api-manifest --check`, `verify api-compatibility --wiki-path .github/wiki` | Агент не добавляет `approved`, `deferred` или `unsupported` без явного решения пользователя. |
+| `T-0242` generated API descriptions | Сгенерированные описания публичной поверхности и ссылки на Godot `4.7-stable` | Manual API profile, Godot packets, `data/api/electron2d-api-manifest.json` | `update api-manifest --check`, `verify api-compatibility --wiki-path .github/wiki` | Не выбирает публичную поверхность и не читает Wiki как источник статусов. |
+| `T-0243` API diff checks | Отчёты о расхождениях публичной поверхности и fail-closed правила | Manual API profile, generated manifest, future diff reports | `verify api-compatibility --wiki-path .github/wiki` | Любое расхождение получает generated status/evidence, а не ручной waiver. |
 | `T-0244` behavior evidence | Проверки наблюдаемого поведения, ошибок, lifecycle и defaults | Behavior test reports и per-type specifications | Первый behavior test/verifier конкретного public class task | Behavior gap не закрывается совпадением сигнатур. |
 | `T-0245` per-class ready gate | Готовность каждого public class task к acceptance | Generated API descriptions, behavior evidence, documentation evidence | Class-ready verifier/focused tests конкретной задачи | Public class не принимается без полного evidence или утверждённого исключения. |
-| `T-0963` exceptions | Утверждение `Deferred`/`Unsupported` строк | Exception registry/report rows | `verify api-compatibility --wiki-path .github/wiki` и будущий exception verifier | Исключение должно быть явно видно в API/behavior reports. |
-| `T-0980` final gate | Финальная проверка root contract перед release | Manifest, Wiki, exception reports, behavior reports | Release gate verifier | `EditorOnly` rows сохраняются как future editor-scope, mobile/web остаются runtime-only. |
-| Build tool `verify api-compatibility` | Локальная fail-closed проверка root contract | Tracked docs, `TASKS.md`, API manifest, Wiki clone | `RepositoryBuildToolTests.VerifyApiCompatibility*` | Запрещает stale profile wording, stale domain links и manual public API lists. |
+| Manual profile exceptions | Утверждение `Deferred`/`Unsupported` строк | `data/api/electron2d-public-api-profile.json` | `verify api-compatibility --wiki-path .github/wiki` | Исключение должно быть явно видно в API/behavior reports и generated Wiki. |
+| `T-0980` final gate | Финальная проверка root contract перед release | Manual API profile, manifest, generated Wiki, exception reports, behavior reports | Release gate verifier | `EditorOnly` rows сохраняются как future editor-scope, mobile/web остаются runtime-only. |
+| Build tool `verify api-compatibility` | Локальная fail-closed проверка root contract | Tracked docs, `TASKS.md`, manual API profile, API manifest, generated Wiki clone | `RepositoryBuildToolTests.VerifyApiCompatibility*` | Запрещает unapproved exported types, stale generated Wiki, stale docs and legacy/component API. |
 | Templates/context packs | Агентские guardrails и project context | `data/templates/electron2d-empty/AGENTS.md`, `src/Electron2D.Cli/ContextPackCli.cs` | Focused API/template tests | Текст ссылается на root contract и generated artifacts, не на ручной список типов. |
+
+## Ручной профиль публичного API
+
+Canonical location ручного профиля:
+
+```text
+data/api/electron2d-public-api-profile.json
+```
+
+Файл является hand-authored JSON, но не является ручным списком members или signatures. Утверждение идёт на уровне типов. Для каждого элемента `types[]` обязательны `fullName`, `godotReference`, `decision` и непустой `rationale`. `fullName` задаёт публичное имя Electron2D, `godotReference` указывает Godot `4.7-stable` class packet, а `decision` принимает только `approved`, `deferred` или `unsupported`.
+
+Первый профиль после `T-0990` намеренно пустой:
+
+```json
+{
+  "schemaVersion": 1,
+  "release": "0.1-preview",
+  "godotBaseline": "4.7-stable",
+  "approvalAuthority": "project-owner",
+  "types": []
+}
+```
+
+Пустой профиль валиден как документ решения, но делает текущую публичную сборку невалидной для API gate: все exported runtime public types считаются неутверждёнными до личного добавления в профиль.
 
 ## GitHub Wiki
 
-Compatibility table должна храниться в GitHub Wiki repository проекта. Репозиторий не должен добавлять локальный сайт, static site generator или отдельный local docs portal ради этой таблицы. Каталог `.github/wiki/` допустим только как игнорируемый локальный клон `Electron2D.wiki.git`.
+Compatibility table должна публиковаться в GitHub Wiki repository проекта как generated Markdown-отчёт из ручного профиля, manifest и текущих generated API artifacts. Она больше не является входом для `electron2d-api-manifest.json` и не должна редактироваться вручную как source-of-truth. Репозиторий не должен добавлять локальный сайт, static site generator или отдельный local docs portal ради этой таблицы. Каталог `.github/wiki/` допустим только как игнорируемый локальный клон `Electron2D.wiki.git`.
 
 Canonical location для текущей задачи:
 
@@ -74,7 +100,7 @@ API-Compatibility.md
 
 - verifier подтверждает `0` exported public types;
 - legacy/component API не существует в public surface;
-- planned Electron2D типы перечислены как `Planned`.
+- planned Electron2D типы не экспортируются как public runtime API до manual `approved` decision.
 
 ## T-0242 generated API packets
 
@@ -124,9 +150,9 @@ Electron2D operator overloads в generated packets также сохраняют
 
 `Electron2D.Editor` нельзя начинать до отдельного UI public API gate. Этот gate считается закрытым только когда все UI-related public API строки в GitHub Wiki `API-Compatibility.md` переведены в `Supported` на основании фактической реализации, тестов, XML documentation, generated Wiki pages, спецификаций и документации реализации.
 
-Запрещено переводить UI rows из `Partial` в `Supported` только ради разблокировки редактора. Если для редактора, Project Manager, Inspector, dock UI, встроенного редактора кода или Agent Workspace panel не хватает публичного UI API, соответствующая задача должна оставаться заблокированной до реализации этого API в runtime.
+Запрещено переводить UI rows из `Deferred`, `Unsupported` или `Unapproved` в `Supported` только ради разблокировки редактора. Если для редактора, Project Manager, Inspector, dock UI, встроенного редактора кода или Agent Workspace panel не хватает публичного UI API, соответствующая задача должна оставаться заблокированной до реализации этого API в runtime.
 
-Список UI/Text rows берётся из generated GitHub Wiki page `API-UI-and-Text.md`. Текущая целевая поверхность `T-0214` для таблицы совместимости — C#-команда `verify api-compatibility --wiki-path .github/wiki`; расширение этой проверки отдельными UI/Text-правилами остаётся C#-миграционным долгом, если проверка должна стать самостоятельной.
+Список UI/Text rows берётся из generated GitHub Wiki page `API-UI-and-Text.md`. Текущая C#-проверка UI/Text gate — `verify ui-public-api-gate --wiki-path .github/wiki`; она читает generated `API-UI-and-Text.md`, сопоставляет строки с generated `API-Compatibility.md` с колонками `Type | Status | Decision | Rationale`, берёт результат из колонки `Status` и требует `Supported` для каждого UI/Text public type.
 
 ## Запрещённый API
 
@@ -149,7 +175,7 @@ Electron2D operator overloads в generated packets также сохраняют
 dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki
 ```
 
-Verifier должен сверить tracked API manifest, который пересоздаётся из compiled runtime, XML documentation и compatibility table, с GitHub Wiki clone и убедиться, что каждый публичный тип отражён в `API-Compatibility.md` с допустимым статусом. Legacy/component API должен запрещаться по public surface, но не публиковаться отдельным списком в Wiki. Для `T-0241` эта же команда дополнительно проверяет root contract: tracked документы и карточка `T-0241` не должны возвращать старый ручной профиль, stale-ссылку на несуществующий документ или обход ownership `T-0242`-`T-0245`.
+Verifier должен сверить ручной профиль, Godot packets, tracked API manifest и generated GitHub Wiki clone. Каждый exported runtime public type должен иметь `approved` строку в `data/api/electron2d-public-api-profile.json`; `deferred`, `unsupported` и отсутствующие строки должны давать fail-fast diagnostic. Legacy/component API должен запрещаться по public surface, но не публиковаться отдельным списком в Wiki. Для `T-0990` эта же команда дополнительно проверяет, что tracked документы и карточки задач не возвращают старую модель, где Wiki table или generated manifest выбирают публичную поверхность.
 
 ## Фактическое состояние, ограничения и проверки
 
@@ -159,34 +185,35 @@ Verifier должен сверить tracked API manifest, который пер
 
 ## Где находится таблица
 
-Compatibility table хранится в GitHub Wiki repository:
+Compatibility table публикуется в GitHub Wiki repository:
 
 ```text
 https://github.com/edwardgushchin/Electron2D.wiki.git
 API-Compatibility.md
 ```
 
-Это не локальный сайт и не generated documentation portal. Основной репозиторий использует `.github/wiki/` только как игнорируемый локальный клон; опубликованный файл находится в GitHub Wiki проекта.
+Это не локальный сайт и не generated documentation portal. Основной репозиторий использует `.github/wiki/` только как игнорируемый локальный клон; опубликованный файл находится в GitHub Wiki проекта. После `T-0990` таблица является generated output из `data/api/electron2d-public-api-profile.json`.
 
 ## Текущий baseline
 
-Текущий baseline публичной поверхности не фиксируется ручным Markdown-списком. Проверяемый источник истины:
+Текущий baseline публичной поверхности не фиксируется ручным Markdown-списком и не выводится из текущей сборки. Проверяемый источник истины:
 
-- `data/api/electron2d-api-manifest.json` - tracked generated snapshot из compiled runtime и XML documentation.
-- GitHub Wiki `API-Compatibility.md` - compatibility table со статусами `Supported`, `Partial`, `Experimental` и `Planned`.
-- Будущие generated descriptions и reports задач `T-0242`, `T-0243`, `T-0244` и `T-0245`.
+- `data/api/electron2d-public-api-profile.json` - hand-authored manual API profile.
+- `data/api/electron2d-api-manifest.json` - tracked generated snapshot из approved profile, compiled runtime и XML documentation.
+- GitHub Wiki `API-Compatibility.md` - generated compatibility report со статусами, полученными из manual profile and current artifacts.
+- Generated descriptions и reports задач `T-0242`, `T-0243`, `T-0244` и `T-0245`.
 
-`verify api-compatibility --wiki-path .github/wiki` сверяет manifest и Wiki и печатает фактическое число public types. Любое добавление нового публичного типа должно появляться через generated artifacts, задачу владельца и соответствующий evidence, а не через ручное перечисление типа в этом документе или `TASKS.md`.
+`verify api-compatibility --wiki-path .github/wiki` сверяет manual profile, manifest и generated Wiki и печатает фактическое число approved/exported public types. Любое добавление нового публичного типа начинается с явного решения пользователя в manual profile, а затем должно иметь generated artifacts, задачу владельца и соответствующий evidence.
 
 GitHub Wiki содержит:
 
-- легенду статусов `Supported`, `Partial`, `Experimental`, `Planned`;
-- planned 2D surface;
+- generated marker и строку источника `data/api/electron2d-public-api-profile.json`;
+- легенду статусов `Supported`, `Deferred`, `Unsupported`, `Unapproved`;
 - текущий public runtime surface.
 
 ## UI gate before Editor
 
-UI public API gate закрывается отдельной проверкой поверх GitHub Wiki: все строки из generated category page `API-UI-and-Text.md` должны соответствовать фактическому runtime API, иметь тесты, XML documentation, generated Wiki pages, спецификацию, документацию реализации и статус `Supported`, а не `Partial`.
+UI public API gate закрывается отдельной проверкой поверх GitHub Wiki: все строки из generated category page `API-UI-and-Text.md` должны соответствовать фактическому runtime API, иметь тесты, XML documentation, generated Wiki pages, спецификацию, документацию реализации и статус `Supported`, а не `Deferred`, `Unsupported` или `Unapproved`.
 
 Если будущая editor-задача требует public UI type, property, method или event, которого ещё нет в runtime, такая editor-задача остаётся заблокированной. Нельзя разблокировать редактор простой заменой статуса в таблице совместимости без реализации и проверок.
 
@@ -194,8 +221,9 @@ UI public API gate закрывается отдельной проверкой 
 
 ```bash
 dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki
+dotnet run --project eng/Electron2D.Build -- verify ui-public-api-gate --wiki-path .github/wiki
 ```
 
-Verifier читает `data/api/electron2d-api-manifest.json`, проверяет его форму, сверяет public type entries с `API-Compatibility.md` в клоне `Electron2D.wiki.git` и запрещает возврат legacy/component типов без публикации отдельного legacy-блока в Wiki. Сам manifest пересоздаётся отдельной командой `update api-manifest --wiki-path .github/wiki --check`, которая строит проверяемый снимок из compiled runtime и XML documentation.
+Verifier читает `data/api/electron2d-public-api-profile.json` и `data/api/electron2d-api-manifest.json`, проверяет их форму, сверяет public type entries с generated `API-Compatibility.md` в клоне `Electron2D.wiki.git` и запрещает возврат legacy/component типов без публикации отдельного legacy-блока в Wiki. Forbidden legacy/component exports проверяются до раннего manual-profile approval gate, поэтому diagnostic `E2D-BUILD-API-COMPATIBILITY-FORBIDDEN-TYPE` не маскируется отсутствием строки `approved` в ручном профиле. Сам manifest пересоздаётся отдельной командой `update api-manifest --check`, которая строит проверяемый снимок из manual profile, compiled runtime и XML documentation.
 
-UI gate остаётся правилом совместимости: generated Wiki category `API-UI-and-Text.md` должна соответствовать `API-Compatibility.md`, а UI/Text public types должны получить статус `Supported` только после фактической реализации и проверок. Отдельная командная проверка этого правила должна быть перенесена в C#-инструмент перед тем, как её объявлять текущим gate.
+`verify ui-public-api-gate --wiki-path .github/wiki` является текущей C#-проверкой этого правила. Команда читает generated Wiki category `API-UI-and-Text.md`, сверяет каждую UI/Text строку с generated `API-Compatibility.md` в формате `Type | Status | Decision | Rationale`, использует значение из колонки `Status` и пропускает gate только когда каждый UI/Text public type имеет статус `Supported`.

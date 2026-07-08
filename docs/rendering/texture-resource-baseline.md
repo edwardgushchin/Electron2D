@@ -42,7 +42,7 @@
 
 ## Контракт публичной поверхности
 
-Публичная texture-domain поверхность задаётся `data/api/electron2d-api-manifest.json`, GitHub Wiki `API-Compatibility.md` и `verify api-compatibility --wiki-path .github/wiki`. Этот документ описывает поведение и ограничения texture resources, но не повторяет полный список public types, properties или methods.
+Публичная texture-domain поверхность утверждается `data/api/electron2d-public-api-profile.json`; `data/api/electron2d-api-manifest.json`, generated Wiki `API-Compatibility.md` и `verify api-compatibility --wiki-path .github/wiki` проверяют и публикуют это решение. Этот документ описывает поведение и ограничения texture resources, но не повторяет полный список public types, properties или methods.
 
 `ImageTexture.LoadFromFile(path)` загружает PNG-файл из filesystem path, читает размеры, alpha channel и RGBA pixels. В `0.1-preview` обязательна поддержка 8-bit PNG color types 2, 4 и 6, indexed palette PNG color type 3 с bit depth 1, 2, 4 или 8, `tRNS` transparency, palette chunks, non-interlaced images и PNG filter types 0-4. JPEG остаётся import-metadata path и не обязан быть runtime texture source для этой задачи.
 
