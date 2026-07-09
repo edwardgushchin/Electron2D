@@ -1985,7 +1985,6 @@ internal static partial class Electron2DCommandLine
         {
             Environment.GetEnvironmentVariable("ANDROID_HOME"),
             Environment.GetEnvironmentVariable("ANDROID_SDK_ROOT"),
-            @"G:\Android\Sdk",
             Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "Android",
@@ -2019,11 +2018,7 @@ internal static partial class Electron2DCommandLine
 
     private static string FindJavaSdkPath()
     {
-        var candidates = new[]
-        {
-            Environment.GetEnvironmentVariable("JAVA_HOME"),
-            @"G:\Dev\jdk17"
-        };
+        var candidates = EnumerateJavaSdkCandidates();
 
         return candidates
             .Where(candidate => !string.IsNullOrWhiteSpace(candidate))
@@ -2031,6 +2026,41 @@ internal static partial class Electron2DCommandLine
             .FirstOrDefault(path => Directory.Exists(path) &&
                 File.Exists(Path.Combine(path, "bin", "java.exe")) &&
                 IsJavaSdk17OrNewer(path)) ?? string.Empty;
+    }
+
+    private static IEnumerable<string?> EnumerateJavaSdkCandidates()
+    {
+        yield return Environment.GetEnvironmentVariable("JAVA_HOME");
+
+        foreach (var root in new[]
+        {
+            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+        })
+        {
+            if (string.IsNullOrWhiteSpace(root) || !Directory.Exists(root))
+            {
+                continue;
+            }
+
+            foreach (var vendorRoot in new[]
+            {
+                Path.Combine(root, "Java"),
+                Path.Combine(root, "Eclipse Adoptium"),
+                Path.Combine(root, "Microsoft")
+            })
+            {
+                if (!Directory.Exists(vendorRoot))
+                {
+                    continue;
+                }
+
+                foreach (var candidate in Directory.EnumerateDirectories(vendorRoot, "*jdk*", SearchOption.TopDirectoryOnly))
+                {
+                    yield return candidate;
+                }
+            }
+        }
     }
 
     private static bool IsJavaSdk17OrNewer(string javaSdkPath)

@@ -318,9 +318,9 @@ Smoke artifact проверяет `install`, `launch`, `render`, `input`, `pause
 `build-android` и `run-android` обнаруживают:
 
 - .NET SDK через существующую SDK probe;
-- Android SDK из `ANDROID_HOME`, `ANDROID_SDK_ROOT`, `G:\Android\Sdk` или стандартной пользовательской папки SDK;
+- Android SDK из `ANDROID_HOME`, `ANDROID_SDK_ROOT` или стандартной пользовательской папки SDK;
 - Android NDK из `ANDROID_NDK_HOME` или первой папки SDK `ndk/**`;
-- JDK 17+ из `JAVA_HOME` или `G:\Dev\jdk17`;
+- JDK 17+ из `JAVA_HOME` или стандартных vendor directories under `ProgramFiles` / `ProgramFilesX86`;
 - `adb` из `--adb-path`, Android SDK `platform-tools` или `PATH`.
 
 Если `JAVA_HOME` указывает на более старый JDK, CLI пропускает его и использует первый найденный путь JDK 17+. Это защищает Android manifest tooling от падения из-за несовместимой версии Java class files.

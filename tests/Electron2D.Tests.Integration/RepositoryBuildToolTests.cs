@@ -12694,6 +12694,35 @@ public sealed class RepositoryBuildToolTests
 
     [Fact]
     [Trait("AuditTier", "Heavy")]
+    public async Task AuditPackageRejectsRemovedWindowsDrivePathsEvenWhenRepoAfterIsClean()
+    {
+        var localPath = string.Concat("G", ":", "\\", "local", "\\", "copied-task.md");
+        using var fixture = await AuditFixture.CreateAsync(
+            "audit-package-removed-windows-drive-path",
+            new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["docs/release-management/audit-fixture.md"] = $"""
+                # Audit fixture
+
+                Old local task copy: {localPath}
+                """
+            });
+        const string taskId = "T-0001";
+        fixture.WriteTextFile("docs/release-management/audit-fixture.md", """
+        # Audit fixture
+
+        Local task copy was removed from current package content.
+        """);
+        var configPath = fixture.WriteConfig(taskId);
+
+        var package = await RunAuditPackageAsync(fixture, taskId, configPath);
+
+        Assert.NotEqual(0, package.ExitCode);
+        AssertDiagnosticCode(package, "E2D-BUILD-AUDIT-ABSOLUTE-PATH");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Heavy")]
     public async Task AuditPackageRejectsJsonEscapedWindowsDrivePathsInArchiveContent()
     {
         using var fixture = await AuditFixture.CreateAsync("audit-package-json-escaped-drive-path");

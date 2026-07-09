@@ -91,7 +91,7 @@ JSON output должен быть stable:
   "command": "workspace transaction",
   "succeeded": true,
   "exitCode": 0,
-  "projectRoot": "C:/Project",
+  "projectRoot": "<project>",
   "route": "activeEditor",
   "message": "Workspace transaction applied.",
   "diagnostics": [],

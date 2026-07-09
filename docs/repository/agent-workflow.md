@@ -107,6 +107,7 @@ Rules:
 ## Checks
 
 - Run the narrowest useful checks first, then broader checks when risk justifies them.
+- Before adding a new test, decide whether it protects a stable product, API, tooling, or process contract for the full project lifecycle. Do not create tests for one-off bookkeeping, wording cleanup, task-board moves, transient audit packaging details, or other low-risk changes when a direct inspection, existing verifier, or documented note is enough.
 - For repeated integration tests, build once and then use focused `--filter`, `--no-build`, and `--no-restore` runs.
 - Do not run the full `RepositoryBuildToolTests` suite until the local docs index has been rebuilt for the current tree with `update docs`.
 - `audit package` must not be the first expensive runner. Build and run focused tests first, then package.
