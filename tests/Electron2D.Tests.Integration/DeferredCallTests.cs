@@ -64,8 +64,8 @@ public sealed class DeferredCallTests
         tree.Root.AddChild(parent);
 
         Assert.Equal(new[] { "Deleting:_Ready", "Sibling:_Ready", "Deleting:_ExitTree" }, events);
-        Assert.False(Electron2D.Object.IsInstanceValid(deleting));
-        Assert.True(Electron2D.Object.IsInstanceValid(sibling));
+        Assert.False(Electron2D.ElectronObject.IsInstanceValid(deleting));
+        Assert.True(Electron2D.ElectronObject.IsInstanceValid(sibling));
         Assert.Equal(1, parent.GetChildCount());
         Assert.Same(sibling, parent.GetChild(0));
     }
@@ -95,9 +95,9 @@ public sealed class DeferredCallTests
                 "Deleting:_ExitTree"
             },
             events);
-        Assert.False(Electron2D.Object.IsInstanceValid(deleting));
-        Assert.False(Electron2D.Object.IsInstanceValid(descendant));
-        Assert.True(Electron2D.Object.IsInstanceValid(sibling));
+        Assert.False(Electron2D.ElectronObject.IsInstanceValid(deleting));
+        Assert.False(Electron2D.ElectronObject.IsInstanceValid(descendant));
+        Assert.True(Electron2D.ElectronObject.IsInstanceValid(sibling));
     }
 
     [Fact]

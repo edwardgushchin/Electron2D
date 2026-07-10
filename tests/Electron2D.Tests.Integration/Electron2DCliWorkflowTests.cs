@@ -420,7 +420,7 @@ public sealed class Electron2DCliWorkflowTests
     }
 
     [Fact]
-    public void ApiCompareGodotReturnsManifestBackedParityJsonForProfileType()
+    public void ApiCompareGodotReturnsProfileApprovalJsonWithoutStrictParityClaim()
     {
         var docsRoot = CreateApiCompareDocsRoot("api-compare-approved", "approved");
         var result = RunCliWithDocsRoot(
@@ -442,17 +442,93 @@ public sealed class Electron2DCliWorkflowTests
 
         Assert.True(root.GetProperty("succeeded").GetBoolean());
         Assert.Equal("api compare-godot", root.GetProperty("command").GetString());
+        Assert.Equal("API type is approved by the Electron2D public API profile.", root.GetProperty("message").GetString());
         Assert.Equal("none", root.GetProperty("route").GetString());
         Assert.Equal("api.compareGodot", data.GetProperty("mode").GetString());
         Assert.Equal("data/api/electron2d-api-manifest.json", data.GetProperty("sourcePath").GetString());
+        Assert.Equal("data/api/electron2d-public-api-profile.json", data.GetProperty("profileSourcePath").GetString());
         Assert.Equal("Electron2D.Control", type.GetProperty("fullName").GetString());
         Assert.Equal("electron2d://api/type/Electron2D.Control", type.GetProperty("id").GetString());
         Assert.Equal("supported", profile.GetProperty("status").GetString());
-        Assert.Equal("parity_verified", profile.GetProperty("parity").GetString());
+        Assert.Equal("profile_approved", profile.GetProperty("parity").GetString());
         Assert.False(profile.GetProperty("outOfProfile").GetBoolean());
-        Assert.Equal("parity_verified", data.GetProperty("result").GetProperty("status").GetString());
+        Assert.Equal("approved", profile.GetProperty("decision").GetString());
+        Assert.True(type.GetProperty("availability").GetProperty("exported").GetBoolean());
+        Assert.Equal("profile_approved", data.GetProperty("result").GetProperty("status").GetString());
         Assert.Equal(0, root.GetProperty("diagnostics").GetArrayLength());
-        AssertParityCountersAreZero(data.GetProperty("strictParity"));
+        Assert.False(data.TryGetProperty("strictParity", out _));
+        var evidence = data.GetProperty("parityEvidence");
+        Assert.Equal("not_verified", evidence.GetProperty("status").GetString());
+        Assert.Contains("manual public API profile", evidence.GetProperty("reason").GetString(), StringComparison.Ordinal);
+
+        var approvedNotExported = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "api",
+            "compare-godot",
+            "AcceptDialog",
+            "--format",
+            "json");
+        Assert.Equal(0, approvedNotExported.ExitCode);
+        using var approvedNotExportedJson = JsonDocument.Parse(approvedNotExported.Output);
+        var approvedNotExportedData = approvedNotExportedJson.RootElement.GetProperty("data");
+        Assert.Equal("profile_approved", approvedNotExportedData.GetProperty("result").GetProperty("status").GetString());
+        Assert.False(approvedNotExportedData.GetProperty("type").GetProperty("availability").GetProperty("exported").GetBoolean());
+
+        foreach (var identity in new[]
+        {
+            new { Query = "ResourceUID", FullName = "Electron2D.ResourceUID", Exported = false },
+            new { Query = "Electron2D.ResourceUID", FullName = "Electron2D.ResourceUID", Exported = false },
+            new { Query = "ResourceUid", FullName = "Electron2D.ResourceUid", Exported = true },
+            new { Query = "Electron2D.ResourceUid", FullName = "Electron2D.ResourceUid", Exported = true },
+            new { Query = "RID", FullName = "Electron2D.RID", Exported = false },
+            new { Query = "Electron2D.RID", FullName = "Electron2D.RID", Exported = false },
+            new { Query = "Rid", FullName = "Electron2D.Rid", Exported = true },
+            new { Query = "Electron2D.Rid", FullName = "Electron2D.Rid", Exported = true }
+        })
+        {
+            var identityResult = RunCli(
+                CliExecutionContext.ForTests(FixedInstant),
+                "api",
+                "compare-godot",
+                identity.Query,
+                "--format",
+                "json");
+            Assert.Equal(0, identityResult.ExitCode);
+            using var identityJson = JsonDocument.Parse(identityResult.Output);
+            var identityType = identityJson.RootElement.GetProperty("data").GetProperty("type");
+            Assert.Equal(identity.FullName, identityType.GetProperty("fullName").GetString());
+            Assert.Equal(identity.Exported, identityType.GetProperty("availability").GetProperty("exported").GetBoolean());
+            if (identity.Exported)
+            {
+                Assert.Equal($"electron2d://api/type/{identity.FullName}", identityType.GetProperty("id").GetString());
+            }
+            else
+            {
+                Assert.Equal(JsonValueKind.Null, identityType.GetProperty("id").ValueKind);
+            }
+        }
+
+        var unsupported = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "api",
+            "compare-godot",
+            "AABB",
+            "--format",
+            "json");
+        Assert.Equal(1, unsupported.ExitCode);
+        using var unsupportedJson = JsonDocument.Parse(unsupported.Output);
+        Assert.Equal("unsupported", unsupportedJson.RootElement.GetProperty("data").GetProperty("result").GetProperty("status").GetString());
+
+        var unknown = RunCli(
+            CliExecutionContext.ForTests(FixedInstant),
+            "api",
+            "compare-godot",
+            "DefinitelyMissingApiType",
+            "--format",
+            "json");
+        Assert.Equal(1, unknown.ExitCode);
+        using var unknownJson = JsonDocument.Parse(unknown.Output);
+        Assert.Equal("type_not_found", unknownJson.RootElement.GetProperty("data").GetProperty("result").GetProperty("status").GetString());
     }
 
     [Fact]
@@ -480,11 +556,12 @@ public sealed class Electron2DCliWorkflowTests
         Assert.False(root.GetProperty("succeeded").GetBoolean());
         Assert.Equal("api compare-godot", root.GetProperty("command").GetString());
         Assert.Equal("none", root.GetProperty("route").GetString());
-        Assert.Equal("out_of_profile", data.GetProperty("result").GetProperty("status").GetString());
+        Assert.Equal("deferred", data.GetProperty("result").GetProperty("status").GetString());
         Assert.Equal("Electron2D.Control", type.GetProperty("fullName").GetString());
         Assert.True(profile.GetProperty("outOfProfile").GetBoolean());
+        Assert.Equal("deferred", profile.GetProperty("decision").GetString());
         Assert.Equal("E2D-CLI-0002", diagnostic.GetProperty("code").GetString());
-        Assert.Contains("outside the Electron2D 0.1-preview 2D profile", diagnostic.GetProperty("message").GetString(), StringComparison.Ordinal);
+        Assert.Contains("manual profile decision 'deferred'", diagnostic.GetProperty("message").GetString(), StringComparison.Ordinal);
         Assert.DoesNotContain("workaround", result.Output, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("alternative", result.Output, StringComparison.OrdinalIgnoreCase);
     }
@@ -1058,16 +1135,6 @@ public sealed class Electron2DCliWorkflowTests
         Assert.Equal("E2D-CLI-0001", diagnostic.GetProperty("code").GetString());
     }
 
-    private static void AssertParityCountersAreZero(JsonElement strictParity)
-    {
-        Assert.Equal(0, strictParity.GetProperty("missingTypes").GetInt32());
-        Assert.Equal(0, strictParity.GetProperty("missingMembers").GetInt32());
-        Assert.Equal(0, strictParity.GetProperty("signatureMismatches").GetInt32());
-        Assert.Equal(0, strictParity.GetProperty("inheritanceMismatches").GetInt32());
-        Assert.Equal(0, strictParity.GetProperty("defaultMismatches").GetInt32());
-        Assert.Equal(0, strictParity.GetProperty("unexpectedChanges").GetInt32());
-    }
-
     private static CliRunResult RunCli(CliExecutionContext context, params string[] args)
     {
         using var output = new StringWriter();
@@ -1097,7 +1164,7 @@ public sealed class Electron2DCliWorkflowTests
         var root = CreateTemporaryDirectory("electron2d-cli-" + name + "-");
         var isApproved = string.Equals(decision, "approved", StringComparison.Ordinal);
         var status = isApproved ? "supported" : decision;
-        var parity = isApproved ? "parity_verified" : "not_verified";
+        var parity = isApproved ? "profile_approved" : "not_verified";
         var outOfProfile = isApproved ? "false" : "true";
         Directory.CreateDirectory(Path.Combine(root, "data", "api"));
         Directory.CreateDirectory(Path.Combine(root, "docs", "documentation"));
@@ -1133,13 +1200,9 @@ public sealed class Electron2DCliWorkflowTests
                 "xmlDocumentation": ".temp/api-manifest/Electron2D.xml",
                 "publicApiProfile": "data/api/electron2d-public-api-profile.json"
               },
-              "strictParitySummary": {
-                "missingTypes": 0,
-                "missingMembers": 0,
-                "signatureMismatches": 0,
-                "inheritanceMismatches": 0,
-                "defaultMismatches": 0,
-                "unexpectedChanges": 0
+              "strictParityEvidence": {
+                "status": "not_verified",
+                "reason": "The manual public API profile records owner-approved scope only; strict Godot 4.7 parity is verified by owning class tasks and final gates."
               },
               "types": [
                 {
@@ -1630,6 +1693,8 @@ public sealed class Electron2DCliWorkflowTests
         var agents = File.ReadAllText(Path.Combine(projectRoot, "AGENTS.md"));
         Assert.Contains("Electron2D 0.1-preview", agents, StringComparison.Ordinal);
         Assert.Contains($"Renderer profile: `{rendererProfile}`", agents, StringComparison.Ordinal);
+        Assert.Contains("The command checks only manual profile approval; it does not prove full Godot 4.7 strict parity, which requires separate parity evidence.", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("strict verifier", agents, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("task_submit_for_acceptance", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("TASKS.md", agents, StringComparison.Ordinal);
 

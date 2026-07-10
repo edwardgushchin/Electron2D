@@ -191,7 +191,10 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         string.Concat("* Проверены секреты и локальные данные по `repo-after/`, patch, metadata и evidence. Реальных секретов не найдено. Найденные `", "token", "=<redacted>`, `", "password", "=<redacted>`, `<repo>` и `/home/user/repo` относятся к тестовым fixtures, redacted previous verdict prose или audit sanitizer regression-ам."),
         string.Concat("* Проверка секретов и локальных данных выполнена по `repo-after/`, patch, metadata и evidence. Найденные `", "token", "=<redacted>`, `", "password", "=<redacted>`, `<repo>`, `/home/user/repo` и synthetic paths находятся только в тестовых fixtures, redacted previous verdict prose или sanitizer/audit regression-контексте."),
         string.Concat("* Runtime hot path движка не менялся: изменения относятся к release-management/tooling/docs/tests/generated artifacts. Реальных секретов, приватных ключей, токенов, паролей или конфиденциальных локальных путей в проверенных материалах не найдено; обнаруженные `", "token", "=<redacted>`, `", "password", "=<redacted>`, `<repo>`, `/home/user/repo` и synthetic paths находятся в тестовых fixtures, saved audit reports или sanitizer/audit regression-контексте."),
-        string.Concat("* Проверены секреты и локальные данные по `repo-after/`, patch, metadata и evidence. Реальных секретов не найдено; обнаруженные `", "token", "=<redacted>` и `", "password", "=<redacted>` находятся в тестовой fixture для проверки исключения секретов.")
+        string.Concat("* Проверены секреты и локальные данные по `repo-after/`, patch, metadata и evidence. Реальных секретов не найдено; обнаруженные `", "token", "=<redacted>` и `", "password", "=<redacted>` находятся в тестовой fixture для проверки исключения секретов."),
+        string.Concat("* По секретам и локальным данным: реальных private keys, tokens, passwords или живых credentials в проверенных repo-after files, patch и evidence не найдено. Найденные `", "token", "=<redacted>`, `", "password", "=<redacted>`, `/home/user/repo`, `<repo>` and removed `", "G", ":\\...` paths находятся в synthetic tests, redacted fixtures, previous verdict prose, repo-before baseline snapshots or removed patch lines. Текущие repo-after CLI/doc files больше не содержат старые literal `", "G", ":\\Android\\Sdk` / `", "G", ":\\Dev\\jdk17` fallback paths."),
+        string.Concat("* Реальных секретов, ключей или credentials не найдено. `", "token", "=<redacted>`, `", "password", "=<redacted>`, `/home/user/repo`, `<repo>` и удалённые `", "G", ":\\...` встречаются только в тестовых fixtures, сохранённых verdict-ах, baseline/удалённых строках или документации защитного сканера."),
+        string.Concat("* Сканирование секретов и локальных данных не выявило действующих credentials. Найденные `/home/user/repo`, `", "G", ":\\...`, `", "token", "=<redacted>` и `", "password", "=<redacted>` относятся к синтетическим security fixtures и дословно сохранённым историческим отчётам.")
     ];
     private static readonly string[] LegacyRepoBeforeSecretPlaceholderValues =
     [
@@ -425,6 +428,11 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
         {
             throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-REPO-MISSING", $"Clean repository path was not found: {options.RepositoryPath}");
         }
+
+        VerifyArchivesAreOutsideRepository(
+            [options.ZipPath, GetOperatorWorkflowSidecarPath(options.ZipPath)],
+            options.RepositoryPath);
+        await VerifyRepositoryIsCleanBeforeMutationAsync(options.RepositoryPath, cancellationToken).ConfigureAwait(false);
 
         using var extractRoot = TemporaryWorkspace.Create("Electron2D-AuditVerify");
         var entries = ExtractAndReadZip(options.ZipPath, extractRoot.Root);
@@ -4429,6 +4437,105 @@ internal sealed class AuditPackageCommand(JsonDiagnosticSink diagnostics)
                 "audit package verify",
                 "E2D-BUILD-AUDIT-REPO-DIRTY",
                 $"Clean repository path has local changes before restore verification. git status --porcelain output:{Environment.NewLine}{status.StandardOutput.TrimEnd()}");
+        }
+    }
+
+    private static void VerifyArchivesAreOutsideRepository(IReadOnlyList<string> archivePaths, string repoRoot)
+    {
+        var lexicalRepositoryPath = Path.GetFullPath(repoRoot)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        var physicalRepositoryPath = ResolvePhysicalPath(repoRoot, "clean repository");
+        var comparison = GetRepoRootPathComparison();
+        foreach (var archivePath in archivePaths)
+        {
+            if (!File.Exists(archivePath))
+            {
+                continue;
+            }
+
+            var lexicalArchivePath = Path.GetFullPath(archivePath);
+            var physicalArchivePath = ResolvePhysicalPath(archivePath, "audit ZIP");
+            if (IsSameOrChildPath(lexicalArchivePath, lexicalRepositoryPath, comparison) ||
+                IsSameOrChildPath(physicalArchivePath, physicalRepositoryPath, comparison))
+            {
+                throw new AuditPackageFailure(
+                    "audit package verify",
+                    "E2D-BUILD-AUDIT-REPO-NOT-ISOLATED",
+                    "Audit ZIP must be physically outside the clean repository passed through --repo; refusing a verification path that could delete its own input or local ignored files through a direct path, symbolic link or junction.");
+            }
+        }
+    }
+
+    private static string ResolvePhysicalPath(string path, string description)
+    {
+        try
+        {
+            var fullPath = Path.GetFullPath(path);
+            var root = Path.GetPathRoot(fullPath);
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                throw new IOException($"{description} path has no filesystem root.");
+            }
+
+            var current = root;
+            var remainder = fullPath[root.Length..];
+            foreach (var segment in remainder.Split(
+                [Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar],
+                StringSplitOptions.RemoveEmptyEntries))
+            {
+                var candidate = Path.Combine(current, segment);
+                FileSystemInfo entry = Directory.Exists(candidate)
+                    ? new DirectoryInfo(candidate)
+                    : File.Exists(candidate)
+                        ? new FileInfo(candidate)
+                        : throw new IOException($"{description} path component does not exist: {segment}.");
+                if ((entry.Attributes & FileAttributes.ReparsePoint) != 0 || entry.LinkTarget is not null)
+                {
+                    entry = entry.ResolveLinkTarget(returnFinalTarget: true)
+                        ?? throw new IOException($"{description} path component could not be resolved: {segment}.");
+                }
+
+                current = Path.GetFullPath(entry.FullName);
+            }
+
+            return current.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or NotSupportedException)
+        {
+            throw new AuditPackageFailure(
+                "audit package verify",
+                "E2D-BUILD-AUDIT-REPO-NOT-ISOLATED",
+                $"Could not physically resolve the {description} path before repository mutation: {exception.Message}");
+        }
+    }
+
+    private static bool IsSameOrChildPath(string path, string parent, StringComparison comparison)
+    {
+        var normalizedPath = Path.GetFullPath(path)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        var normalizedParent = Path.GetFullPath(parent)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        return string.Equals(normalizedPath, normalizedParent, comparison) ||
+            normalizedPath.StartsWith(normalizedParent + Path.DirectorySeparatorChar, comparison);
+    }
+
+    private static async Task VerifyRepositoryIsCleanBeforeMutationAsync(string repoRoot, CancellationToken cancellationToken)
+    {
+        var status = await GitRunner.RunAsync(
+            repoRoot,
+            ["status", "--porcelain", "--untracked-files=all"],
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+        if (status.ExitCode != 0)
+        {
+            throw new AuditPackageFailure("audit package verify", "E2D-BUILD-AUDIT-GIT-FAILED", $"git status failed: {status.StandardError}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(status.StandardOutput))
+        {
+            throw new AuditPackageFailure(
+                "audit package verify",
+                "E2D-BUILD-AUDIT-REPO-DIRTY",
+                $"Clean repository path has local changes before any reset or clean operation; verification refused without modifying the repository. git status --porcelain output:{Environment.NewLine}{status.StandardOutput.TrimEnd()}");
         }
     }
 

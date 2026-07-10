@@ -31,7 +31,7 @@ public sealed class SignalCallableTests
     [Fact]
     public void MultipleSubscribersAreInvokedInConnectionOrder()
     {
-        var emitter = new Electron2D.Object();
+        var emitter = new Electron2D.ElectronObject();
         var calls = new List<string>();
         var receiver = new SignalReceiver(calls);
         emitter.AddUserSignal("hit");
@@ -51,7 +51,7 @@ public sealed class SignalCallableTests
     [Fact]
     public void UntypedCallableReceivesNoArgumentSignal()
     {
-        var emitter = new Electron2D.Object();
+        var emitter = new Electron2D.ElectronObject();
         var calls = new List<string>();
         emitter.AddUserSignal("done");
 
@@ -65,7 +65,7 @@ public sealed class SignalCallableTests
     [Fact]
     public void DisconnectDuringEmissionUsesStableSnapshot()
     {
-        var emitter = new Electron2D.Object();
+        var emitter = new Electron2D.ElectronObject();
         var calls = new List<string>();
         emitter.AddUserSignal("pulse");
         Electron2D.Callable second = default;
@@ -87,7 +87,7 @@ public sealed class SignalCallableTests
     [Fact]
     public void SignalErrorsAreReportedWithoutStoppingOtherCallbacks()
     {
-        var emitter = new Electron2D.Object();
+        var emitter = new Electron2D.ElectronObject();
         var calls = new List<string>();
         emitter.AddUserSignal("boom");
         var throwing = Electron2D.Callable.From(() => throw new InvalidOperationException("boom"));
@@ -107,7 +107,7 @@ public sealed class SignalCallableTests
     [Fact]
     public void MismatchedCallableArgumentsReportFailure()
     {
-        var emitter = new Electron2D.Object();
+        var emitter = new Electron2D.ElectronObject();
         var calls = new List<string>();
         emitter.AddUserSignal("typed");
         emitter.Connect("typed", Electron2D.Callable.From<int>(value => calls.Add(value.ToString())));
@@ -120,10 +120,10 @@ public sealed class SignalCallableTests
     [Fact]
     public void SignalApiDoesNotExposeDotNetEvents()
     {
-        Assert.Empty(typeof(Electron2D.Object).GetEvents());
+        Assert.Empty(typeof(Electron2D.ElectronObject).GetEvents());
     }
 
-    private sealed class SignalReceiver : Electron2D.Object
+    private sealed class SignalReceiver : Electron2D.ElectronObject
     {
         private readonly List<string> _calls;
 

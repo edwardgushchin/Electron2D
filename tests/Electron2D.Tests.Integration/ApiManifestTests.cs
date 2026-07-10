@@ -58,8 +58,8 @@ public sealed class ApiManifestTests
             .EnumerateArray()
             .Select(type => type.GetProperty("fullName").GetString())
             .ToArray();
-        var runtimeTypes = typeof(Electron2D.Object).Assembly.GetExportedTypes()
-            .Where(type => type.Assembly == typeof(Electron2D.Object).Assembly)
+        var runtimeTypes = typeof(Electron2D.ElectronObject).Assembly.GetExportedTypes()
+            .Where(type => type.Assembly == typeof(Electron2D.ElectronObject).Assembly)
             .Select(DisplayName)
             .OrderBy(name => name, StringComparer.Ordinal)
             .ToArray();
@@ -72,23 +72,24 @@ public sealed class ApiManifestTests
     {
         var root = FindRepositoryRoot();
         var manifestPath = Path.Combine(root, "data", "api", "electron2d-api-manifest.json");
+        var profilePath = Path.Combine(root, "data", "api", "electron2d-public-api-profile.json");
 
         Assert.True(File.Exists(manifestPath), $"API manifest was not found: {manifestPath}");
+        Assert.True(File.Exists(profilePath), $"Manual public API profile was not found: {profilePath}");
 
         using var document = JsonDocument.Parse(File.ReadAllText(manifestPath));
+        using var profileDocument = JsonDocument.Parse(File.ReadAllText(profilePath));
         var rootElement = document.RootElement;
+        var profileTypes = profileDocument.RootElement.GetProperty("types").EnumerateArray().ToArray();
 
-        var summary = rootElement.GetProperty("strictParitySummary");
-        Assert.Equal(0, summary.GetProperty("missingTypes").GetInt32());
-        Assert.Equal(0, summary.GetProperty("missingMembers").GetInt32());
-        Assert.Equal(0, summary.GetProperty("signatureMismatches").GetInt32());
-        Assert.Equal(0, summary.GetProperty("inheritanceMismatches").GetInt32());
-        Assert.Equal(0, summary.GetProperty("defaultMismatches").GetInt32());
-        Assert.Equal(0, summary.GetProperty("unexpectedChanges").GetInt32());
+        Assert.False(rootElement.TryGetProperty("strictParitySummary", out _));
+        var evidence = rootElement.GetProperty("strictParityEvidence");
+        Assert.Equal("not_verified", evidence.GetProperty("status").GetString());
+        Assert.Contains("manual public API profile", evidence.GetProperty("reason").GetString(), StringComparison.Ordinal);
 
         var node = FindType(rootElement, "Electron2D.Node");
         Assert.Equal("electron2d://api/type/Electron2D.Node", node.GetProperty("id").GetString());
-        Assert.Equal("Electron2D.Object", node.GetProperty("baseType").GetString());
+        Assert.Equal("Electron2D.ElectronObject", node.GetProperty("baseType").GetString());
         Assert.Contains(node.GetProperty("members").EnumerateArray(), member =>
             member.GetProperty("kind").GetString() == "Property" &&
             member.GetProperty("name").GetString() == "Name" &&
@@ -100,9 +101,152 @@ public sealed class ApiManifestTests
 
         var control = FindType(rootElement, "Electron2D.Control");
         var profile = control.GetProperty("profile");
-        Assert.Equal("unapproved", profile.GetProperty("status").GetString());
-        Assert.Equal("not_verified", profile.GetProperty("parity").GetString());
-        Assert.True(profile.GetProperty("outOfProfile").GetBoolean());
+        Assert.Equal("supported", profile.GetProperty("status").GetString());
+        Assert.Equal("profile_approved", profile.GetProperty("parity").GetString());
+        Assert.False(profile.GetProperty("outOfProfile").GetBoolean());
+
+        foreach (var editorOnlyType in new[]
+        {
+            "Electron2D.EditorFileSystemImportFormatSupportQuery",
+            "Electron2D.EncodedObjectAsID",
+            "Electron2D.EngineDebugger",
+            "Electron2D.EngineProfiler",
+            "Electron2D.ImageFormatLoader",
+            "Electron2D.ImageFormatLoaderExtension",
+            "Electron2D.JSONRPC",
+            "Electron2D.ResourceFormatLoader",
+            "Electron2D.ResourceFormatSaver",
+            "Electron2D.ResourceImporter"
+        })
+        {
+            var decision = profileTypes.Single(type => type.GetProperty("fullName").GetString() == editorOnlyType);
+            Assert.True(decision.GetProperty("editorOnly").GetBoolean(), $"{editorOnlyType} must remain editor-only.");
+        }
+
+        var subsetTypes = new[]
+        {
+            "Electron2D.DisplayServer",
+            "Electron2D.EditorPlugin",
+            "Electron2D.Mesh",
+            "Electron2D.MultiMesh",
+            "Electron2D.ParticleProcessMaterial",
+            "Electron2D.RenderingServer",
+            "Electron2D.RenderingServer.RenderingFeature",
+            "Electron2D.RenderingServer.RenderingProfile",
+            "Electron2D.Shader.Mode",
+            "Electron2D.TextureLayered"
+        };
+        var approvedDecisions = profileTypes
+            .Where(type => type.GetProperty("decision").GetString() == "approved")
+            .ToArray();
+        Assert.Equal(596, approvedDecisions.Length);
+        Assert.All(approvedDecisions, decision =>
+        {
+            var scope = decision.GetProperty("godotApiScope").GetString();
+            Assert.Contains(scope, new[] { "full", "subset" });
+            Assert.Equal(scope == "subset", decision.TryGetProperty("godotApiContract", out _));
+        });
+
+        foreach (var subsetType in subsetTypes)
+        {
+            var decision = profileTypes.Single(type => type.GetProperty("fullName").GetString() == subsetType);
+            Assert.Equal("subset", decision.GetProperty("godotApiScope").GetString());
+            var contract = decision.GetProperty("godotApiContract");
+            Assert.Equal("subset", contract.GetProperty("scope").GetString());
+            Assert.Contains(contract.GetProperty("defaultMemberDecision").GetString(), new[] { "deferred", "unsupported" });
+            Assert.False(string.IsNullOrWhiteSpace(contract.GetProperty("rationale").GetString()));
+        }
+
+        var shaderModeDecision = profileTypes.Single(type => type.GetProperty("fullName").GetString() == "Electron2D.Shader.Mode");
+        var shaderModeValues = shaderModeDecision.GetProperty("godotApiContract").GetProperty("enumValueDecisions").EnumerateArray().ToArray();
+        var expectedShaderModes = new[]
+        {
+            (Name: "MODE_SPATIAL", Value: "0", Decision: "unsupported"),
+            (Name: "MODE_CANVAS_ITEM", Value: "1", Decision: "approved"),
+            (Name: "MODE_PARTICLES", Value: "2", Decision: "approved"),
+            (Name: "MODE_SKY", Value: "3", Decision: "unsupported"),
+            (Name: "MODE_FOG", Value: "4", Decision: "unsupported"),
+            (Name: "MODE_TEXTURE_BLIT", Value: "5", Decision: "approved")
+        };
+        Assert.Equal(expectedShaderModes.Length, shaderModeValues.Length);
+        foreach (var expected in expectedShaderModes)
+        {
+            var value = shaderModeValues.Single(candidate => candidate.GetProperty("name").GetString() == expected.Name);
+            Assert.Equal(expected.Value, value.GetProperty("value").GetString());
+            Assert.Equal(expected.Decision, value.GetProperty("decision").GetString());
+        }
+
+        var generatedShaderModeValues = FindType(rootElement, "Electron2D.Shader.Mode")
+            .GetProperty("godotApiContract")
+            .GetProperty("enumValueDecisions")
+            .EnumerateArray()
+            .ToArray();
+        foreach (var expected in expectedShaderModes)
+        {
+            var value = generatedShaderModeValues.Single(candidate => candidate.GetProperty("name").GetString() == expected.Name);
+            Assert.Equal(expected.Value, value.GetProperty("value").GetString());
+            Assert.Equal(expected.Decision, value.GetProperty("decision").GetString());
+        }
+
+        var renderingServer = FindType(rootElement, "Electron2D.RenderingServer");
+        Assert.Equal("subset", renderingServer.GetProperty("godotApiScope").GetString());
+        Assert.Equal("subset", renderingServer.GetProperty("godotApiContract").GetProperty("scope").GetString());
+        var renderingServerContract = renderingServer.GetProperty("electronApiContract");
+        Assert.Equal("exportedMembers", renderingServerContract.GetProperty("scope").GetString());
+        var renderingServerDecisions = renderingServerContract.GetProperty("memberDecisions").EnumerateArray().ToArray();
+        Assert.Equal(2, renderingServerDecisions.Length);
+        Assert.All(renderingServerDecisions, decision =>
+        {
+            Assert.Equal("approved", decision.GetProperty("decision").GetString());
+            Assert.Equal("electronExtension", decision.GetProperty("compatibility").GetString());
+            Assert.False(decision.TryGetProperty("godotName", out _));
+        });
+
+        foreach (var memberName in new[] { "HasFeature", "CurrentProfile" })
+        {
+            var member = renderingServer.GetProperty("members").EnumerateArray().Single(candidate =>
+                candidate.GetProperty("name").GetString() == memberName);
+            var decision = member.GetProperty("electronApiDecision");
+            Assert.Equal("approved", decision.GetProperty("decision").GetString());
+            Assert.Equal("electronExtension", decision.GetProperty("compatibility").GetString());
+            Assert.Equal("supported", member.GetProperty("profile").GetProperty("status").GetString());
+            Assert.Equal("not_applicable", member.GetProperty("profile").GetProperty("parity").GetString());
+        }
+
+        foreach (var nestedTypeName in new[]
+        {
+            "Electron2D.RenderingServer.RenderingFeature",
+            "Electron2D.RenderingServer.RenderingProfile"
+        })
+        {
+            var nestedType = FindType(rootElement, nestedTypeName);
+            Assert.Equal("subset", nestedType.GetProperty("godotApiScope").GetString());
+            Assert.All(nestedType.GetProperty("members").EnumerateArray(), member =>
+            {
+                Assert.Equal("approved", member.GetProperty("electronApiDecision").GetProperty("decision").GetString());
+                Assert.Equal("electronExtension", member.GetProperty("electronApiDecision").GetProperty("compatibility").GetString());
+                Assert.Equal("not_applicable", member.GetProperty("profile").GetProperty("parity").GetString());
+            });
+        }
+
+        foreach (var subsetType in rootElement.GetProperty("types").EnumerateArray().Where(type =>
+            type.TryGetProperty("godotApiScope", out var scope) && scope.GetString() == "subset"))
+        {
+            var members = subsetType.GetProperty("members").EnumerateArray().ToArray();
+            if (members.Length == 0)
+            {
+                continue;
+            }
+
+            Assert.True(subsetType.TryGetProperty("electronApiContract", out _), $"{subsetType.GetProperty("fullName").GetString()} must classify exported members.");
+            Assert.All(members, member =>
+            {
+                Assert.Equal("approved", member.GetProperty("electronApiDecision").GetProperty("decision").GetString());
+                Assert.Equal("supported", member.GetProperty("profile").GetProperty("status").GetString());
+            });
+        }
+
+        Assert.Equal("full", control.GetProperty("godotApiScope").GetString());
 
         var textureRect = FindType(rootElement, "Electron2D.TextureRect");
         var textureRectMembers = textureRect.GetProperty("members").EnumerateArray().ToArray();
@@ -155,7 +299,7 @@ public sealed class ApiManifestTests
         var tween = FindType(rootElement, "Electron2D.Tween");
         var tweenProperty = tween.GetProperty("members").EnumerateArray()
             .Single(member => member.GetProperty("name").GetString() == "TweenProperty");
-        Assert.Contains("Electron2D.Object @object", tweenProperty.GetProperty("signature").GetString(), StringComparison.Ordinal);
+        Assert.Contains("Electron2D.ElectronObject @object", tweenProperty.GetProperty("signature").GetString(), StringComparison.Ordinal);
 
         AssertMemberValue(stretchModeType.GetProperty("members").EnumerateArray().ToArray(), "EnumValue", "Keep", "2");
     }

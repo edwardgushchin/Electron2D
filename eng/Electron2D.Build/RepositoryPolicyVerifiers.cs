@@ -350,6 +350,10 @@ internal sealed class ProjectTemplateVerifier(string repositoryRoot, JsonDiagnos
 {
     private const string TemplateRelativeRoot = "data/templates/electron2d-empty";
 
+    private static readonly Regex StaleAgentParityCounterPattern = new(
+        @"\b(?:missing\s+types|missing\s+members|signature\s+mismatches|inheritance\s+mismatches|default\s+mismatches|unexpected\s+changes)\s*(?::|=)\s*0\b",
+        RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+
     private static readonly string[] RequiredFiles =
     [
         ".template.config/template.json",
@@ -488,7 +492,17 @@ internal sealed class ProjectTemplateVerifier(string repositoryRoot, JsonDiagnos
         }
 
         var text = File.ReadAllText(path, Encoding.UTF8);
-        foreach (var requiredText in new[] { "Electron2D 0.1-preview", ".NET 10.0.101", "e2d validate", "e2d api compare-godot <type>", "ProjectTaskManager", "task_submit_for_acceptance" })
+        foreach (var requiredText in new[]
+        {
+            "Electron2D 0.1-preview",
+            ".NET 10.0.101",
+            "e2d validate",
+            "e2d api compare-godot <type>",
+            "does not prove full Godot 4.7 strict parity",
+            "separate parity evidence",
+            "ProjectTaskManager",
+            "task_submit_for_acceptance"
+        })
         {
             if (!text.Contains(requiredText, StringComparison.Ordinal))
             {
@@ -496,12 +510,17 @@ internal sealed class ProjectTemplateVerifier(string repositoryRoot, JsonDiagnos
             }
         }
 
-        foreach (var forbidden in new[] { "TASKS.md", "completed-tasks", "dev-diary" })
+        foreach (var forbidden in new[] { "TASKS.md", "completed-tasks", "dev-diary", "strict verifier", "parity verified" })
         {
-            if (text.Contains(forbidden, StringComparison.Ordinal))
+            if (text.Contains(forbidden, StringComparison.OrdinalIgnoreCase))
             {
-                errors.Add(Error("E2D-BUILD-PROJECT-TEMPLATE-AGENTS", "AGENTS.md must not point user projects at repository-local Markdown workflow files.", $"{TemplateRelativeRoot}/AGENTS.md"));
+                errors.Add(Error("E2D-BUILD-PROJECT-TEMPLATE-AGENTS", $"AGENTS.md contains forbidden or obsolete guidance: {forbidden}.", $"{TemplateRelativeRoot}/AGENTS.md"));
             }
+        }
+
+        if (StaleAgentParityCounterPattern.IsMatch(text))
+        {
+            errors.Add(Error("E2D-BUILD-PROJECT-TEMPLATE-AGENTS", "AGENTS.md must not present zero strict-parity counters as evidence from e2d api compare-godot.", $"{TemplateRelativeRoot}/AGENTS.md"));
         }
     }
 
@@ -584,7 +603,28 @@ internal sealed class ProjectTemplateVerifier(string repositoryRoot, JsonDiagnos
     }
 }
 
-internal sealed record ManualApiProfileType(string FullName, string GodotReference, string Decision, string Rationale);
+internal sealed record ManualApiProfileType(
+    string FullName,
+    string GodotReference,
+    string Decision,
+    string Rationale,
+    bool EditorOnly,
+    string? GodotApiScope,
+    bool HasGodotApiContract,
+    ManualElectronApiContract? ElectronApiContract);
+
+internal sealed record ManualElectronApiContract(
+    string DefaultMemberDecision,
+    string Rationale,
+    IReadOnlyDictionary<string, ManualElectronApiMemberDecision> MemberDecisions);
+
+internal sealed record ManualElectronApiMemberDecision(
+    string Kind,
+    string Name,
+    string Decision,
+    string Compatibility,
+    string? GodotName,
+    string Rationale);
 
 internal sealed record ManualApiProfileDocument(IReadOnlyDictionary<string, ManualApiProfileType> Types);
 
@@ -595,6 +635,11 @@ internal static class ManualApiProfileReader
         "approved",
         "deferred",
         "unsupported"
+    };
+    private static readonly HashSet<string> AllowedGodotApiScopes = new(StringComparer.Ordinal)
+    {
+        "full",
+        "subset"
     };
 
     public static ManualApiProfileDocument Read(
@@ -639,9 +684,23 @@ internal static class ManualApiProfileReader
                 var hasGodotReference = ApiManifestCommand.TryGetString(type, "godotReference", out var godotReference);
                 var hasDecision = ApiManifestCommand.TryGetString(type, "decision", out var decision);
                 var hasRationale = TryGetStringAllowEmpty(type, "rationale", out var rationale);
+                var hasValidEditorOnly = TryGetOptionalBool(type, "editorOnly", out var editorOnly);
+                var hasValidGodotApiScope = TryGetOptionalString(type, "godotApiScope", out var godotApiScope);
                 if (!hasFullName || !hasGodotReference || !hasDecision || !hasRationale)
                 {
                     errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SCHEMA", "Manual public API profile type entry must contain fullName, godotReference, decision and rationale.", ToRepositoryPath(repositoryRoot, profilePath)));
+                    continue;
+                }
+
+                if (!hasValidEditorOnly)
+                {
+                    errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SCHEMA", $"Manual public API profile type entry has non-boolean editorOnly: {fullName}.", ToRepositoryPath(repositoryRoot, profilePath)));
+                    continue;
+                }
+
+                if (!hasValidGodotApiScope)
+                {
+                    errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SCHEMA", $"Manual public API profile type entry has non-string godotApiScope: {fullName}.", ToRepositoryPath(repositoryRoot, profilePath)));
                     continue;
                 }
 
@@ -655,13 +714,65 @@ internal static class ManualApiProfileReader
                     errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-RATIONALE", $"Manual public API profile type entry must include non-empty rationale: {fullName}.", ToRepositoryPath(repositoryRoot, profilePath)));
                 }
 
+                if (string.Equals(decision, "approved", StringComparison.Ordinal))
+                {
+                    if (godotApiScope is null || !AllowedGodotApiScopes.Contains(godotApiScope))
+                    {
+                        errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-GODOT-API-SCOPE", $"Approved manual public API profile type must declare godotApiScope=full|subset: {fullName}.", ToRepositoryPath(repositoryRoot, profilePath)));
+                    }
+                }
+                else if (godotApiScope is not null)
+                {
+                    errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-GODOT-API-SCOPE", $"Only approved manual public API profile types may declare godotApiScope: {fullName}.", ToRepositoryPath(repositoryRoot, profilePath)));
+                }
+
                 if (!GodotClassPacketExists(repositoryRoot, godotReference))
                 {
                     errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-GODOT-REFERENCE", $"Manual public API profile type references missing Godot class packet: {godotReference}.", ToRepositoryPath(repositoryRoot, profilePath)));
                 }
 
+                if (string.Equals(decision, "approved", StringComparison.Ordinal) &&
+                    rationale.Contains("editor/tools", StringComparison.OrdinalIgnoreCase) &&
+                    !editorOnly)
+                {
+                    errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-EDITOR-ONLY-RATIONALE", $"Manual public API profile rationale limits an approved type to editor/tools, but editorOnly is not true: {fullName}.", ToRepositoryPath(repositoryRoot, profilePath)));
+                }
+
+                var hasGodotApiContract = TryValidateGodotApiContract(
+                    repositoryRoot,
+                    type,
+                    fullName,
+                    godotReference,
+                    command,
+                    step,
+                    profilePath,
+                    errors);
+                if (string.Equals(godotApiScope, "subset", StringComparison.Ordinal) && !hasGodotApiContract)
+                {
+                    errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SUBSET-CONTRACT", $"Approved godotApiScope=subset type is missing godotApiContract: {fullName}.", ToRepositoryPath(repositoryRoot, profilePath)));
+                }
+
+                if (!string.Equals(godotApiScope, "subset", StringComparison.Ordinal) && hasGodotApiContract)
+                {
+                    errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SUBSET-CONTRACT", $"godotApiContract is allowed only for an approved godotApiScope=subset type: {fullName}.", ToRepositoryPath(repositoryRoot, profilePath)));
+                }
+
+                var electronApiContract = TryValidateElectronApiContract(
+                    repositoryRoot,
+                    type,
+                    fullName,
+                    godotReference,
+                    command,
+                    step,
+                    profilePath,
+                    errors);
+                if (!string.Equals(godotApiScope, "subset", StringComparison.Ordinal) && electronApiContract is not null)
+                {
+                    errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SUBSET-CONTRACT", $"electronApiContract is allowed only for an approved godotApiScope=subset type: {fullName}.", ToRepositoryPath(repositoryRoot, profilePath)));
+                }
+
                 var normalizedFullName = NormalizeApiName(fullName);
-                if (!entries.TryAdd(normalizedFullName, new ManualApiProfileType(fullName, godotReference, decision, rationale)))
+                if (!entries.TryAdd(normalizedFullName, new ManualApiProfileType(fullName, godotReference, decision, rationale, editorOnly, godotApiScope, hasGodotApiContract, electronApiContract)))
                 {
                     errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-DUPLICATE-TYPE", $"Manual public API profile contains duplicate type: {fullName}.", ToRepositoryPath(repositoryRoot, profilePath)));
                 }
@@ -692,6 +803,269 @@ internal static class ManualApiProfileReader
         return File.Exists(path);
     }
 
+    private static bool TryValidateGodotApiContract(
+        string repositoryRoot,
+        JsonElement type,
+        string fullName,
+        string godotReference,
+        string command,
+        string step,
+        string profilePath,
+        List<BuildDiagnostic> errors)
+    {
+        if (!type.TryGetProperty("godotApiContract", out var contract))
+        {
+            return false;
+        }
+
+        var repositoryPath = ToRepositoryPath(repositoryRoot, profilePath);
+        if (contract.ValueKind != JsonValueKind.Object ||
+            !ApiManifestCommand.TryGetString(contract, "scope", out var scope) ||
+            !ApiManifestCommand.TryGetString(contract, "defaultMemberDecision", out var defaultDecision) ||
+            !TryGetStringAllowEmpty(contract, "rationale", out var rationale) ||
+            !ApiManifestCommand.TryGetArray(contract, "memberDecisions", out var memberDecisions) ||
+            !ApiManifestCommand.TryGetArray(contract, "enumValueDecisions", out var enumValueDecisions))
+        {
+            errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SUBSET-CONTRACT", $"godotApiContract must contain scope, defaultMemberDecision, rationale, memberDecisions and enumValueDecisions: {fullName}.", repositoryPath));
+            return true;
+        }
+
+        if (!string.Equals(scope, "subset", StringComparison.Ordinal) ||
+            defaultDecision is not ("deferred" or "unsupported") ||
+            string.IsNullOrWhiteSpace(rationale))
+        {
+            errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SUBSET-CONTRACT", $"godotApiContract must use scope=subset, a deferred/unsupported default and a non-empty rationale: {fullName}.", repositoryPath));
+        }
+
+        var packetPath = Path.Combine(repositoryRoot, "data", "api", "godot-4.7", "classes", godotReference + ".api.json");
+        using var packet = File.Exists(packetPath)
+            ? JsonDocument.Parse(File.ReadAllText(packetPath, Encoding.UTF8))
+            : null;
+        var memberNames = packet is null ||
+            !packet.RootElement.TryGetProperty("members", out var membersElement) ||
+            membersElement.ValueKind != JsonValueKind.Array
+            ? []
+            : membersElement.EnumerateArray()
+                .Select(member => ApiManifestCommand.TryGetString(member, "godotName", out var name) ? name : string.Empty)
+                .Where(name => name.Length > 0)
+                .ToArray();
+        var selectors = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var memberDecision in memberDecisions.EnumerateArray())
+        {
+            if (memberDecision.ValueKind != JsonValueKind.Object ||
+                !ApiManifestCommand.TryGetString(memberDecision, "selector", out var selector) ||
+                !ApiManifestCommand.TryGetString(memberDecision, "decision", out var memberDecisionValue) ||
+                !TryGetStringAllowEmpty(memberDecision, "rationale", out var memberRationale) ||
+                !AllowedDecisions.Contains(memberDecisionValue) ||
+                string.IsNullOrWhiteSpace(memberRationale) ||
+                !selectors.Add(selector) ||
+                (memberNames.Length > 0 && !memberNames.Any(name => MatchesGodotMemberSelector(name, selector))))
+            {
+                errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SUBSET-CONTRACT", $"godotApiContract contains an invalid or unmatched member decision: {fullName}.", repositoryPath));
+            }
+        }
+
+        var packetEnums = packet is null || !packet.RootElement.TryGetProperty("enums", out var enumsElement) || enumsElement.ValueKind != JsonValueKind.Array
+            ? []
+            : enumsElement.EnumerateArray().ToArray();
+        var enumDecisionKeys = new HashSet<string>(StringComparer.Ordinal);
+        var coveredEnumNames = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var enumDecision in enumValueDecisions.EnumerateArray())
+        {
+            var enumName = string.Empty;
+            var valueName = string.Empty;
+            var numericValue = string.Empty;
+            var enumDecisionValue = string.Empty;
+            var enumRationale = string.Empty;
+            var valid = enumDecision.ValueKind == JsonValueKind.Object &&
+                ApiManifestCommand.TryGetString(enumDecision, "enum", out enumName) &&
+                ApiManifestCommand.TryGetString(enumDecision, "name", out valueName) &&
+                ApiManifestCommand.TryGetString(enumDecision, "value", out numericValue) &&
+                ApiManifestCommand.TryGetString(enumDecision, "decision", out enumDecisionValue) &&
+                TryGetStringAllowEmpty(enumDecision, "rationale", out enumRationale) &&
+                AllowedDecisions.Contains(enumDecisionValue) &&
+                !string.IsNullOrWhiteSpace(enumRationale) &&
+                enumDecisionKeys.Add(enumName + "\n" + valueName) &&
+                GodotEnumValueMatches(packetEnums, enumName, valueName, numericValue);
+            if (!valid)
+            {
+                errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SUBSET-CONTRACT", $"godotApiContract contains an invalid or unmatched enum value decision: {fullName}.", repositoryPath));
+                continue;
+            }
+
+            coveredEnumNames.Add(enumName);
+        }
+
+        foreach (var enumName in coveredEnumNames)
+        {
+            var packetEnum = packetEnums.Single(item => ApiManifestCommand.TryGetString(item, "name", out var name) && string.Equals(name, enumName, StringComparison.Ordinal));
+            var missing = packetEnum.GetProperty("values").EnumerateArray()
+                .Select(value => ApiManifestCommand.TryGetString(value, "name", out var name) ? name : string.Empty)
+                .Where(name => name.Length > 0 && !enumDecisionKeys.Contains(enumName + "\n" + name))
+                .ToArray();
+            if (missing.Length > 0)
+            {
+                errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SUBSET-CONTRACT", $"godotApiContract does not classify every value of {godotReference}.{enumName}: {string.Join(", ", missing)}.", repositoryPath));
+            }
+        }
+
+        return true;
+    }
+
+    private static ManualElectronApiContract? TryValidateElectronApiContract(
+        string repositoryRoot,
+        JsonElement type,
+        string fullName,
+        string godotReference,
+        string command,
+        string step,
+        string profilePath,
+        List<BuildDiagnostic> errors)
+    {
+        if (!type.TryGetProperty("electronApiContract", out var contract))
+        {
+            return null;
+        }
+
+        var repositoryPath = ToRepositoryPath(repositoryRoot, profilePath);
+        if (contract.ValueKind != JsonValueKind.Object ||
+            !ApiManifestCommand.TryGetString(contract, "scope", out var scope) ||
+            !ApiManifestCommand.TryGetString(contract, "defaultMemberDecision", out var defaultDecision) ||
+            !TryGetStringAllowEmpty(contract, "rationale", out var rationale) ||
+            !ApiManifestCommand.TryGetArray(contract, "memberDecisions", out var memberDecisions))
+        {
+            errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SUBSET-CONTRACT", $"electronApiContract must contain scope, defaultMemberDecision, rationale and memberDecisions: {fullName}.", repositoryPath));
+            return new ManualElectronApiContract("unsupported", string.Empty, new Dictionary<string, ManualElectronApiMemberDecision>(StringComparer.Ordinal));
+        }
+
+        if (!string.Equals(scope, "exportedMembers", StringComparison.Ordinal) ||
+            defaultDecision is not ("deferred" or "unsupported") ||
+            string.IsNullOrWhiteSpace(rationale))
+        {
+            errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SUBSET-CONTRACT", $"electronApiContract must use scope=exportedMembers, a deferred/unsupported default and a non-empty rationale: {fullName}.", repositoryPath));
+        }
+
+        var packetPath = Path.Combine(repositoryRoot, "data", "api", "godot-4.7", "classes", godotReference + ".api.json");
+        using var packet = File.Exists(packetPath)
+            ? JsonDocument.Parse(File.ReadAllText(packetPath, Encoding.UTF8))
+            : null;
+        var decisions = new Dictionary<string, ManualElectronApiMemberDecision>(StringComparer.Ordinal);
+        foreach (var memberDecision in memberDecisions.EnumerateArray())
+        {
+            var kind = string.Empty;
+            var name = string.Empty;
+            var decision = string.Empty;
+            var compatibility = string.Empty;
+            var memberRationale = string.Empty;
+            string? godotName = null;
+            var hasGodotName = memberDecision.ValueKind == JsonValueKind.Object &&
+                TryGetOptionalString(memberDecision, "godotName", out godotName);
+            var valid = memberDecision.ValueKind == JsonValueKind.Object &&
+                ApiManifestCommand.TryGetString(memberDecision, "kind", out kind) &&
+                ApiManifestCommand.TryGetString(memberDecision, "name", out name) &&
+                ApiManifestCommand.TryGetString(memberDecision, "decision", out decision) &&
+                ApiManifestCommand.TryGetString(memberDecision, "compatibility", out compatibility) &&
+                TryGetStringAllowEmpty(memberDecision, "rationale", out memberRationale) &&
+                hasGodotName &&
+                AllowedDecisions.Contains(decision) &&
+                compatibility is "godotMember" or "godotEnumValue" or "electronExtension" &&
+                !string.IsNullOrWhiteSpace(memberRationale) &&
+                (string.Equals(compatibility, "electronExtension", StringComparison.Ordinal) == (godotName is null)) &&
+                IsApprovedGodotMapping(type, packet?.RootElement, compatibility, godotName);
+            var key = kind + "\n" + name;
+            if (!valid || !decisions.TryAdd(key, new ManualElectronApiMemberDecision(kind, name, decision, compatibility, godotName, memberRationale)))
+            {
+                errors.Add(Error(command, step, "E2D-BUILD-API-PROFILE-SUBSET-CONTRACT", $"electronApiContract contains an invalid, unmapped or duplicate member decision: {fullName}.{name}.", repositoryPath));
+            }
+        }
+
+        return new ManualElectronApiContract(defaultDecision, rationale, decisions);
+    }
+
+    private static bool IsApprovedGodotMapping(
+        JsonElement type,
+        JsonElement? packet,
+        string compatibility,
+        string? godotName)
+    {
+        if (string.Equals(compatibility, "electronExtension", StringComparison.Ordinal))
+        {
+            return godotName is null;
+        }
+
+        if (packet is null || godotName is null ||
+            !type.TryGetProperty("godotApiContract", out var godotContract))
+        {
+            return false;
+        }
+
+        if (string.Equals(compatibility, "godotMember", StringComparison.Ordinal))
+        {
+            var exists = packet.Value.TryGetProperty("members", out var members) &&
+                members.ValueKind == JsonValueKind.Array &&
+                members.EnumerateArray().Any(member =>
+                    ApiManifestCommand.TryGetString(member, "godotName", out var name) &&
+                    string.Equals(name, godotName, StringComparison.Ordinal));
+            var approved = godotContract.TryGetProperty("memberDecisions", out var sourceDecisions) &&
+                sourceDecisions.ValueKind == JsonValueKind.Array &&
+                sourceDecisions.EnumerateArray().Any(sourceDecision =>
+                    ApiManifestCommand.TryGetString(sourceDecision, "selector", out var selector) &&
+                    ApiManifestCommand.TryGetString(sourceDecision, "decision", out var decision) &&
+                    string.Equals(decision, "approved", StringComparison.Ordinal) &&
+                    MatchesGodotMemberSelector(godotName, selector));
+            return exists && approved;
+        }
+
+        var separator = godotName.IndexOf('.', StringComparison.Ordinal);
+        if (separator <= 0 || separator == godotName.Length - 1)
+        {
+            return false;
+        }
+
+        var enumName = godotName[..separator];
+        var valueName = godotName[(separator + 1)..];
+        var existsEnumValue = packet.Value.TryGetProperty("enums", out var enums) &&
+            enums.ValueKind == JsonValueKind.Array &&
+            enums.EnumerateArray().Any(item =>
+                ApiManifestCommand.TryGetString(item, "name", out var currentEnum) &&
+                string.Equals(currentEnum, enumName, StringComparison.Ordinal) &&
+                item.TryGetProperty("values", out var values) &&
+                values.ValueKind == JsonValueKind.Array &&
+                values.EnumerateArray().Any(value =>
+                    ApiManifestCommand.TryGetString(value, "name", out var currentValue) &&
+                    string.Equals(currentValue, valueName, StringComparison.Ordinal)));
+        var approvedEnumValue = godotContract.TryGetProperty("enumValueDecisions", out var enumDecisions) &&
+            enumDecisions.ValueKind == JsonValueKind.Array &&
+            enumDecisions.EnumerateArray().Any(sourceDecision =>
+                ApiManifestCommand.TryGetString(sourceDecision, "enum", out var currentEnum) &&
+                ApiManifestCommand.TryGetString(sourceDecision, "name", out var currentValue) &&
+                ApiManifestCommand.TryGetString(sourceDecision, "decision", out var decision) &&
+                string.Equals(currentEnum, enumName, StringComparison.Ordinal) &&
+                string.Equals(currentValue, valueName, StringComparison.Ordinal) &&
+                string.Equals(decision, "approved", StringComparison.Ordinal));
+        return existsEnumValue && approvedEnumValue;
+    }
+
+    private static bool MatchesGodotMemberSelector(string name, string selector)
+    {
+        var pattern = "^" + Regex.Escape(selector).Replace("\\*", ".*", StringComparison.Ordinal) + "$";
+        return Regex.IsMatch(name, pattern, RegexOptions.CultureInvariant);
+    }
+
+    private static bool GodotEnumValueMatches(JsonElement[] packetEnums, string enumName, string valueName, string numericValue)
+    {
+        return packetEnums.Any(item =>
+            ApiManifestCommand.TryGetString(item, "name", out var name) &&
+            string.Equals(name, enumName, StringComparison.Ordinal) &&
+            item.TryGetProperty("values", out var values) &&
+            values.ValueKind == JsonValueKind.Array &&
+            values.EnumerateArray().Any(value =>
+                ApiManifestCommand.TryGetString(value, "name", out var currentValue) &&
+                string.Equals(currentValue, valueName, StringComparison.Ordinal) &&
+                ApiManifestCommand.TryGetString(value, "value", out var currentNumericValue) &&
+                string.Equals(currentNumericValue, numericValue, StringComparison.Ordinal)));
+    }
+
     private static bool TryGetStringAllowEmpty(JsonElement element, string propertyName, out string value)
     {
         if (element.TryGetProperty(propertyName, out var property) && property.ValueKind == JsonValueKind.String)
@@ -701,6 +1075,48 @@ internal static class ManualApiProfileReader
         }
 
         value = string.Empty;
+        return false;
+    }
+
+    private static bool TryGetOptionalBool(JsonElement element, string propertyName, out bool value)
+    {
+        if (!element.TryGetProperty(propertyName, out var property))
+        {
+            value = false;
+            return true;
+        }
+
+        if (property.ValueKind == JsonValueKind.True)
+        {
+            value = true;
+            return true;
+        }
+
+        if (property.ValueKind == JsonValueKind.False)
+        {
+            value = false;
+            return true;
+        }
+
+        value = false;
+        return false;
+    }
+
+    private static bool TryGetOptionalString(JsonElement element, string propertyName, out string? value)
+    {
+        if (!element.TryGetProperty(propertyName, out var property))
+        {
+            value = null;
+            return true;
+        }
+
+        if (property.ValueKind == JsonValueKind.String)
+        {
+            value = property.GetString();
+            return !string.IsNullOrWhiteSpace(value);
+        }
+
+        value = null;
         return false;
     }
 
@@ -751,6 +1167,71 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
         "docs/releases/0.1-preview.md"
     ];
 
+    private static readonly string[] ApiCompareGodotContractPaths =
+    [
+        "docs/architecture/agent-native-workflow.md",
+        "docs/documentation/api-manifest.md",
+        "docs/documentation/github-wiki-api-reference.md",
+        "docs/cli/e2d-cli.md",
+        "docs/releases/0.1-preview.md"
+    ];
+
+    private static readonly (string Path, string[] Required, string[] Forbidden)[] CurrentRootObjectDocumentationContracts =
+    [
+        (
+            "docs/core-types/variant.md",
+            ["Electron2D.ElectronObject", "`ElectronObject?`"],
+            ["Electron2D.Object", "`Object?`"]),
+        (
+            "docs/object-model/base-object-lifetime.md",
+            ["Electron2D.ElectronObject", "`ElectronObject`"],
+            ["Electron2D.Object"]),
+        (
+            "docs/documentation/github-wiki-api-reference.md",
+            ["`ElectronObject.md`"],
+            ["`Object.md`"])
+    ];
+
+    private static readonly string[] StaleApiCompareGodotStrictParityFragments =
+    [
+        "Status: Supported / Parity verified",
+        "является строгим verifier-ом",
+        "strict verifier",
+        "missing types: 0",
+        "missing members: 0",
+        "signature mismatches: 0",
+        "inheritance mismatches: 0",
+        "default mismatches: 0",
+        "unexpected changes: 0"
+    ];
+
+    private static readonly Regex[] StaleApiCompareGodotStrictParityPatterns =
+    [
+        new(@"\bmissing\s+types\s*(?::|=)\s*0\b", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase),
+        new(@"\bmissing\s+members\s*(?::|=)\s*0\b", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase),
+        new(@"\bsignature\s+mismatches\s*(?::|=)\s*0\b", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase),
+        new(@"\binheritance\s+mismatches\s*(?::|=)\s*0\b", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase),
+        new(@"\bdefault\s+mismatches\s*(?::|=)\s*0\b", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase),
+        new(@"\bunexpected\s+changes\s*(?::|=)\s*0\b", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
+    ];
+
+    private static readonly string[] StaleApiCompareGodotLookupContractFragments =
+    [
+        "не перечитывает manual profile напрямую",
+        "не перечитывает его напрямую",
+        "полный отчёт `api compare-godot`",
+        "полном CLI compatibility report"
+    ];
+
+    private static readonly string[] FilledProfileForbiddenEmptyProfileFragments =
+    [
+        "Начальный профиль пустой",
+        "Для пустого профиля",
+        "до утверждения первых типов",
+        "могут намеренно падать на текущей сборке",
+        "ожидаемый profile-gate failure"
+    ];
+
     private static readonly string[] ManualPublicApiListPaths =
     [
         "TASKS.md",
@@ -781,6 +1262,20 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
         "docs/documentation/github-wiki-api-reference.md",
         "docs/releases/0.1-preview.md"
     ];
+
+    private static readonly string[] ElectronExtensionContractPaths =
+    [
+        "docs/release-management/AUDIT-REQUEST.md",
+        "docs/release-management/api-compatibility.md",
+        "docs/architecture/engine-platform-stack.md",
+        "docs/documentation/api-manifest.md",
+        "docs/releases/0.1-preview.md"
+    ];
+
+    private const string ElectronExtensionContractFragment =
+        "Намеренно отсутствующий или несовместимый Godot member обязан иметь явное `Deferred`/`Unsupported` решение. " +
+        "Отдельный Electron2D-specific public extension допустим только при точном owner-approved member/value решении `electronExtension`, рабочем поведении и `parity = not_applicable`; " +
+        "такой extension нельзя выдавать за совпадающий Godot member или использовать для молчаливого замещения отсутствующего Godot API.";
 
     private static readonly string[] ManualPublicApiListContextFragments =
     [
@@ -970,7 +1465,7 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
         "`T-0243`",
         "`T-0244`",
         "`T-0245`",
-        "`T-0963`",
+        "manual API profile",
         "C#",
         "HLSL",
         "Windows/Linux/macOS",
@@ -1083,6 +1578,7 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
         }
 
         VerifyManualProfileGate(profile, manifestTypes, errors, "verify", "verify api-compatibility");
+        VerifySubsetExportedMemberGate(profile, errors, "verify", "verify api-compatibility");
         if (errors.Count > 0)
         {
             return failWithErrors();
@@ -1108,7 +1604,7 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
             errors.Add(Error("E2D-BUILD-API-COMPATIBILITY-LOCAL-SITE", "Local generated site directory is not allowed for the GitHub Wiki table.", "site"));
         }
 
-        VerifyRootPublicApiContract(manifestTypes, errors);
+        VerifyRootPublicApiContract(profile, manifestTypes, errors);
 
         foreach (var error in errors)
         {
@@ -1247,10 +1743,131 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
                 errors.Add(new BuildDiagnostic(command, step, "error", "E2D-BUILD-API-PROFILE-UNAPPROVED-EXPORT", $"Exported runtime public type is excluded by manual profile decision '{entry.Decision}': {typeName}.", Path: ProfileRelativePath));
                 return;
             }
+
+            if (entry.EditorOnly)
+            {
+                errors.Add(new BuildDiagnostic(command, step, "error", "E2D-BUILD-API-PROFILE-EDITOR-ONLY-EXPORT", $"Exported runtime public type is marked editorOnly in manual profile and must not be part of exported game runtime API: {typeName}.", Path: ProfileRelativePath));
+                return;
+            }
         }
     }
 
-    private void VerifyRootPublicApiContract(IReadOnlyList<string> manifestTypes, List<BuildDiagnostic> errors)
+    private void VerifySubsetExportedMemberGate(
+        ManualApiProfileDocument profile,
+        List<BuildDiagnostic> errors,
+        string command,
+        string step)
+    {
+        var manifestPath = Path.Combine(repositoryRoot, ManifestRelativePath.Replace('/', Path.DirectorySeparatorChar));
+        try
+        {
+            using var document = JsonDocument.Parse(File.ReadAllText(manifestPath, Encoding.UTF8));
+            if (!ApiManifestCommand.TryGetArray(document.RootElement, "types", out var types))
+            {
+                return;
+            }
+
+            foreach (var type in types.EnumerateArray())
+            {
+                if (!ApiManifestCommand.TryGetString(type, "fullName", out var fullName) ||
+                    !profile.Types.TryGetValue(ManualApiProfileReader.NormalizeApiName(fullName), out var profileType) ||
+                    !string.Equals(profileType.GodotApiScope, "subset", StringComparison.Ordinal) ||
+                    !ApiManifestCommand.TryGetArray(type, "members", out var members))
+                {
+                    continue;
+                }
+
+                foreach (var member in members.EnumerateArray())
+                {
+                    if (!ApiManifestCommand.TryGetString(member, "kind", out var kind) ||
+                        !ApiManifestCommand.TryGetString(member, "name", out var name))
+                    {
+                        continue;
+                    }
+
+                    var key = kind + "\n" + name;
+                    ManualElectronApiMemberDecision? decision = null;
+                    var hasApprovedDecision = profileType.ElectronApiContract is not null &&
+                        profileType.ElectronApiContract.MemberDecisions.TryGetValue(key, out decision) &&
+                        string.Equals(decision.Decision, "approved", StringComparison.Ordinal);
+                    if (!hasApprovedDecision)
+                    {
+                        errors.Add(new BuildDiagnostic(
+                            command,
+                            step,
+                            "error",
+                            "E2D-BUILD-API-PROFILE-SUBSET-EXPORTED-MEMBER",
+                            $"Exported subset member is not explicitly approved by electronApiContract: {fullName}.{name} ({kind}).",
+                            Path: ProfileRelativePath));
+                        continue;
+                    }
+
+                    if (!ManifestMemberDecisionMatches(member, decision!))
+                    {
+                        errors.Add(new BuildDiagnostic(
+                            command,
+                            step,
+                            "error",
+                            "E2D-BUILD-API-PROFILE-SUBSET-EXPORTED-MEMBER",
+                            $"Generated manifest member decision does not match electronApiContract: {fullName}.{name} ({kind}).",
+                            Path: ManifestRelativePath));
+                    }
+                }
+            }
+        }
+        catch (JsonException ex)
+        {
+            errors.Add(new BuildDiagnostic(command, step, "error", "E2D-BUILD-API-COMPATIBILITY-MANIFEST-JSON", $"API manifest subset member decisions could not be read: {ex.Message}", Path: ManifestRelativePath));
+        }
+    }
+
+    private static bool ManifestMemberDecisionMatches(JsonElement member, ManualElectronApiMemberDecision expected)
+    {
+        if (!member.TryGetProperty("electronApiDecision", out var actual) ||
+            actual.ValueKind != JsonValueKind.Object ||
+            !ApiManifestCommand.TryGetString(actual, "kind", out var kind) ||
+            !ApiManifestCommand.TryGetString(actual, "name", out var name) ||
+            !ApiManifestCommand.TryGetString(actual, "decision", out var decision) ||
+            !ApiManifestCommand.TryGetString(actual, "compatibility", out var compatibility) ||
+            !TryGetOptionalStringValue(actual, "godotName", out var godotName) ||
+            !member.TryGetProperty("profile", out var memberProfile) ||
+            !ApiManifestCommand.TryGetString(memberProfile, "status", out var status) ||
+            !ApiManifestCommand.TryGetString(memberProfile, "parity", out var parity))
+        {
+            return false;
+        }
+
+        var expectedParity = string.Equals(expected.Compatibility, "electronExtension", StringComparison.Ordinal)
+            ? "not_applicable"
+            : "profile_approved";
+        return string.Equals(kind, expected.Kind, StringComparison.Ordinal) &&
+            string.Equals(name, expected.Name, StringComparison.Ordinal) &&
+            string.Equals(decision, expected.Decision, StringComparison.Ordinal) &&
+            string.Equals(compatibility, expected.Compatibility, StringComparison.Ordinal) &&
+            string.Equals(godotName, expected.GodotName, StringComparison.Ordinal) &&
+            string.Equals(status, "supported", StringComparison.Ordinal) &&
+            string.Equals(parity, expectedParity, StringComparison.Ordinal);
+    }
+
+    private static bool TryGetOptionalStringValue(JsonElement element, string propertyName, out string? value)
+    {
+        if (!element.TryGetProperty(propertyName, out var property))
+        {
+            value = null;
+            return true;
+        }
+
+        if (property.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(property.GetString()))
+        {
+            value = property.GetString();
+            return true;
+        }
+
+        value = null;
+        return false;
+    }
+
+    private void VerifyRootPublicApiContract(ManualApiProfileDocument profile, IReadOnlyList<string> manifestTypes, List<BuildDiagnostic> errors)
     {
         var combined = new StringBuilder();
         foreach (var relativePath in RootContractPaths)
@@ -1290,7 +1907,133 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
 
         VerifyNoManualPublicApiLists(manifestTypes, errors);
         VerifyNoUnapprovedWaiverStatuses(errors);
+        VerifyElectronExtensionContract(errors);
+        VerifyApiCompareGodotProfileApprovalContract(errors);
+        VerifyCurrentRootObjectDocumentationContract(errors);
+        VerifyFilledManualProfileDocumentation(profile, manifestTypes, errors);
         VerifyDomainDocumentConsumerMap(errors);
+    }
+
+    private void VerifyCurrentRootObjectDocumentationContract(List<BuildDiagnostic> errors)
+    {
+        foreach (var contract in CurrentRootObjectDocumentationContracts)
+        {
+            var relativePath = contract.Path;
+            var path = Path.Combine(repositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(path))
+            {
+                continue;
+            }
+
+            var text = Normalize(File.ReadAllText(path, Encoding.UTF8));
+            foreach (var required in contract.Required)
+            {
+                if (text.Contains(required, StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                errors.Add(Error(
+                    "E2D-BUILD-API-COMPATIBILITY-STALE-ROOT-OBJECT-NAME",
+                    $"Current Electron2D domain documentation is missing the required ElectronObject fragment: {required}.",
+                    relativePath));
+            }
+
+            foreach (var forbidden in contract.Forbidden)
+            {
+                if (text.Contains(forbidden, StringComparison.Ordinal))
+                {
+                    errors.Add(Error(
+                        "E2D-BUILD-API-COMPATIBILITY-STALE-ROOT-OBJECT-NAME",
+                        $"Current Electron2D domain documentation contains an obsolete engine-root fragment: {forbidden}.",
+                        relativePath));
+                }
+            }
+        }
+    }
+
+    private void VerifyApiCompareGodotProfileApprovalContract(List<BuildDiagnostic> errors)
+    {
+        foreach (var relativePath in ApiCompareGodotContractPaths)
+        {
+            var path = Path.Combine(repositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(path))
+            {
+                continue;
+            }
+
+            var text = Normalize(File.ReadAllText(path, Encoding.UTF8));
+            if (!text.Contains("api compare-godot", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            foreach (var forbidden in StaleApiCompareGodotStrictParityFragments)
+            {
+                if (text.Contains(forbidden, StringComparison.Ordinal))
+                {
+                    errors.Add(Error(
+                        "E2D-BUILD-API-COMPATIBILITY-STALE-PARITY-CLAIM",
+                        $"Current api compare-godot documentation must describe profile approval with not_verified parity evidence, not a strict parity proof: {forbidden}.",
+                        relativePath));
+                    break;
+                }
+            }
+
+            foreach (var forbidden in StaleApiCompareGodotStrictParityPatterns)
+            {
+                if (forbidden.IsMatch(text))
+                {
+                    errors.Add(Error(
+                        "E2D-BUILD-API-COMPATIBILITY-STALE-PARITY-CLAIM",
+                        $"Current api compare-godot documentation must describe profile approval with not_verified parity evidence, not strict parity counters matched by pattern: {forbidden}.",
+                        relativePath));
+                    break;
+                }
+            }
+
+            foreach (var forbidden in StaleApiCompareGodotLookupContractFragments)
+            {
+                if (!text.Contains(forbidden, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                errors.Add(Error(
+                    "E2D-BUILD-API-COMPATIBILITY-STALE-LOOKUP-CONTRACT",
+                    $"Current api compare-godot documentation must describe a single-type lookup that reads the manual profile directly and uses the manifest only for runtime availability and parity evidence: {forbidden}.",
+                    relativePath));
+                break;
+            }
+        }
+    }
+
+    private void VerifyFilledManualProfileDocumentation(ManualApiProfileDocument profile, IReadOnlyList<string> manifestTypes, List<BuildDiagnostic> errors)
+    {
+        if (profile.Types.Count == 0 && manifestTypes.Count == 0)
+        {
+            return;
+        }
+
+        const string RelativePath = "docs/documentation/api-manifest.md";
+        var path = Path.Combine(repositoryRoot, RelativePath.Replace('/', Path.DirectorySeparatorChar));
+        if (!File.Exists(path))
+        {
+            return;
+        }
+
+        var text = Normalize(File.ReadAllText(path, Encoding.UTF8));
+        foreach (var forbidden in FilledProfileForbiddenEmptyProfileFragments)
+        {
+            if (text.Contains(forbidden, StringComparison.Ordinal))
+            {
+                errors.Add(Error(
+                    "E2D-BUILD-API-COMPATIBILITY-STALE-EMPTY-PROFILE",
+                    $"API manifest documentation still describes an empty current profile even though the profile or manifest is populated: {forbidden}.",
+                    RelativePath));
+                return;
+            }
+        }
     }
 
     private void VerifyNoUnapprovedWaiverStatuses(List<BuildDiagnostic> errors)
@@ -1308,9 +2051,32 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
             {
                 errors.Add(Error(
                     "E2D-BUILD-API-COMPATIBILITY-CONTRACT-WAIVER-STATUS",
-                    $"Root public API contract must use explicit Deferred/Unsupported exceptions through T-0963 instead of an unapproved waiver status: {relativePath}.",
+                    $"Root public API contract must use explicit Deferred/Unsupported manual profile decisions instead of an unapproved waiver status: {relativePath}.",
                     relativePath));
             }
+        }
+    }
+
+    private void VerifyElectronExtensionContract(List<BuildDiagnostic> errors)
+    {
+        foreach (var relativePath in ElectronExtensionContractPaths)
+        {
+            var path = Path.Combine(repositoryRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(path))
+            {
+                continue;
+            }
+
+            var text = Normalize(File.ReadAllText(path, Encoding.UTF8));
+            if (text.Contains(ElectronExtensionContractFragment, StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            errors.Add(Error(
+                "E2D-BUILD-API-COMPATIBILITY-EXTENSION-CONTRACT",
+                $"Root public API document must preserve the owner-approved Electron2D extension contract: {relativePath}.",
+                relativePath));
         }
     }
 
@@ -1770,6 +2536,12 @@ internal sealed class ApiManifestCommand(string repositoryRoot, JsonDiagnosticSi
                 diagnostics.Write(new BuildDiagnostic("update", step, "error", "E2D-BUILD-API-PROFILE-UNAPPROVED-EXPORT", $"Exported runtime public type is not approved by manual public API profile: {fullName}.", Path: DefaultProfileRelativePath));
                 return RepositoryBuildExitCodes.Failed;
             }
+
+            if (entry.EditorOnly)
+            {
+                diagnostics.Write(new BuildDiagnostic("update", step, "error", "E2D-BUILD-API-PROFILE-EDITOR-ONLY-EXPORT", $"Exported runtime public type is marked editorOnly by manual public API profile: {fullName}.", Path: DefaultProfileRelativePath));
+                return RepositoryBuildExitCodes.Failed;
+            }
         }
 
         foreach (var error in errors)
@@ -1946,8 +2718,8 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         new(
             "API-Core.md",
             "Core",
-            "Object lifetime, identity, names, callable values and low-level result types.",
-            type => Named(type, "Object", "RefCounted", "Callable", "Error", "ConnectFlags", "Rid", "StringName")),
+            "ElectronObject lifetime, identity, names, callable values and low-level result types.",
+            type => Named(type, "ElectronObject", "Object", "RefCounted", "Callable", "Error", "ConnectFlags", "Rid", "StringName")),
         new(
             "API-Scene-Tree.md",
             "Scene Tree",
@@ -2190,6 +2962,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
 
     private static Dictionary<string, string> RenderManifestPages(JsonElement manifest)
     {
+        var strictParityEvidenceStatus = ReadStrictParityEvidenceStatus(manifest);
         var types = manifest.GetProperty("types")
             .EnumerateArray()
             .Select(ApiWikiType.FromManifest)
@@ -2212,7 +2985,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
 
         foreach (var type in types)
         {
-            pages[TypePageName(type.Name)] = RenderManifestTypePage(type);
+            pages[TypePageName(type.Name)] = RenderManifestTypePage(type, strictParityEvidenceStatus);
         }
 
         return NormalizePages(pages);
@@ -2220,6 +2993,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
 
     private static Dictionary<string, string> RenderReflectionPages(JsonElement manifest, string assemblyPath, string xmlPath)
     {
+        var strictParityEvidenceStatus = ReadStrictParityEvidenceStatus(manifest);
         var profiles = LoadProfiles(manifest);
         var assembly = Assembly.LoadFrom(assemblyPath);
         var xml = XDocument.Load(xmlPath);
@@ -2250,7 +3024,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
             throw new InvalidOperationException("Public types are missing API categories: " + string.Join(", ", uncategorizedTypes));
         }
 
-        var context = new WikiReflectionContext(publicTypes, docs, profiles);
+        var context = new WikiReflectionContext(publicTypes, docs, profiles, strictParityEvidenceStatus);
         var pages = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["Home.md"] = RenderReflectionHome(context),
@@ -2357,7 +3131,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         builder.AppendLine();
         builder.AppendLine("## Common API");
         builder.AppendLine();
-        builder.AppendLine("- [Object](Object)");
+        builder.AppendLine("- [ElectronObject](ElectronObject)");
         builder.AppendLine("- [Node](Node)");
         builder.AppendLine("- [Node2D](Node2D)");
         builder.AppendLine("- [SceneTree](SceneTree)");
@@ -2499,7 +3273,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         builder.AppendLine();
         builder.AppendLine("| Status | Meaning |");
         builder.AppendLine("| --- | --- |");
-        builder.AppendLine("| Supported | Approved by the manual profile and parity verified for the current release. |");
+        builder.AppendLine("| Supported | Approved by the manual profile for the current runtime surface; full parity evidence is tracked by the owning class tasks. |");
         builder.AppendLine("| Deferred | Explicitly excluded from the current release and reserved for later decision. |");
         builder.AppendLine("| Unsupported | Explicitly excluded from the current release. |");
         builder.AppendLine("| Unapproved | Exported by the runtime assembly without a manual profile decision; this is a failing gate state. |");
@@ -2560,7 +3334,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         return builder.ToString();
     }
 
-    private static string RenderManifestTypePage(ApiWikiType type)
+    private static string RenderManifestTypePage(ApiWikiType type, string strictParityEvidenceStatus)
     {
         var category = Categories.First(category => string.Equals(category.Title, type.Category, StringComparison.Ordinal));
         var members = OrderedMembers(type.Members).ToArray();
@@ -2582,7 +3356,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         builder.AppendLine("```csharp");
         builder.AppendLine(TypeDeclaration(type));
         builder.AppendLine("```");
-        AppendCompatibilityBlock(builder, type.Profile);
+        AppendCompatibilityBlock(builder, type.Profile, strictParityEvidenceStatus);
 
         if (members.Length > 0)
         {
@@ -2644,7 +3418,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         builder.AppendLine("```csharp");
         builder.AppendLine(TypeDeclaration(type));
         builder.AppendLine("```");
-        AppendCompatibilityBlock(builder, context.Profiles[DisplayName(type)]);
+        AppendCompatibilityBlock(builder, context.Profiles[DisplayName(type)], context.StrictParityEvidenceStatus);
         AppendOptionalDocBlock(builder, context, "Remarks", typeDoc?.Element("remarks"));
         AppendOptionalDocBlock(builder, context, "Thread Safety", typeDoc?.Element("threadsafety"));
         AppendOptionalDocBlock(builder, context, "Since", typeDoc?.Element("since"));
@@ -2761,7 +3535,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         }
     }
 
-    private static void AppendCompatibilityBlock(StringBuilder builder, ApiWikiProfile profile)
+    private static void AppendCompatibilityBlock(StringBuilder builder, ApiWikiProfile profile, string strictParityEvidenceStatus)
     {
         builder.AppendLine();
         builder.AppendLine("## Godot 4.7 C# profile compatibility");
@@ -2769,8 +3543,10 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
         builder.AppendLine("```text");
         builder.AppendLine("Profile: " + profile.Name);
         builder.AppendLine("Status: " + StatusLabel(profile.Status) + " / " + ParityLabel(profile.Parity));
+        builder.AppendLine("Parity evidence: " + strictParityEvidenceStatus);
         builder.AppendLine("Out of profile: " + (profile.OutOfProfile ? "yes" : "no"));
         builder.AppendLine("Godot reference: " + profile.GodotReference);
+        builder.AppendLine("Editor only: " + (profile.EditorOnly ? "yes" : "no"));
         builder.AppendLine("```");
         if (!string.IsNullOrWhiteSpace(profile.Notes))
         {
@@ -3525,7 +4301,7 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
     {
         return parity switch
         {
-            "parity_verified" => "Parity verified",
+            "profile_approved" => "Profile approved",
             "not_verified" => "Not verified",
             _ => parity
         };
@@ -3582,7 +4358,20 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
             RequiredString(profile, "parity"),
             profile.GetProperty("outOfProfile").GetBoolean(),
             RequiredString(profile, "godotReference"),
+            OptionalBool(profile, "editorOnly"),
             RequiredString(profile, "notes"));
+    }
+
+    private static string ReadStrictParityEvidenceStatus(JsonElement manifest)
+    {
+        return manifest.TryGetProperty("strictParityEvidence", out var evidence) && evidence.ValueKind == JsonValueKind.Object
+            ? RequiredString(evidence, "status")
+            : string.Empty;
+    }
+
+    private static bool OptionalBool(JsonElement element, string propertyName)
+    {
+        return element.TryGetProperty(propertyName, out var property) && property.ValueKind == JsonValueKind.True;
     }
 
     private static string RequiredString(JsonElement element, string propertyName)
@@ -3599,11 +4388,12 @@ internal sealed class ApiWikiCommand(string repositoryRoot, JsonDiagnosticSink d
     private sealed record WikiReflectionContext(
         IReadOnlyList<Type> Types,
         IReadOnlyDictionary<string, XElement> Docs,
-        IReadOnlyDictionary<string, ApiWikiProfile> Profiles);
+        IReadOnlyDictionary<string, ApiWikiProfile> Profiles,
+        string StrictParityEvidenceStatus);
 
     private sealed record ApiWikiReflectionMember(string Kind, string DisplayName, string Signature, string XmlId);
 
-    private sealed record ApiWikiProfile(string Name, string Status, string Parity, bool OutOfProfile, string GodotReference, string Notes);
+    private sealed record ApiWikiProfile(string Name, string Status, string Parity, bool OutOfProfile, string GodotReference, bool EditorOnly, string Notes);
 
     private sealed record ApiWikiCompatibilityRow(string FullName, string Status, string Decision, string Rationale);
 

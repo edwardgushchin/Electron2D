@@ -36,7 +36,7 @@ public sealed class NodeHierarchyOwnershipTests
         Assert.Null(nodeType.GetProperty("Parent"));
         Assert.NotNull(nodeType.GetMethod("GetParent", Type.EmptyTypes));
         Assert.NotNull(nodeType.GetProperty("Owner"));
-        Assert.NotNull(typeof(Electron2D.Object).GetMethod("IsQueuedForDeletion", Type.EmptyTypes));
+        Assert.NotNull(typeof(Electron2D.ElectronObject).GetMethod("IsQueuedForDeletion", Type.EmptyTypes));
     }
 
     [Fact]
@@ -105,7 +105,7 @@ public sealed class NodeHierarchyOwnershipTests
 
         tree.Root.RemoveChild(parent);
 
-        Assert.True(Electron2D.Object.IsInstanceValid(parent));
+        Assert.True(Electron2D.ElectronObject.IsInstanceValid(parent));
         Assert.Null(parent.GetParent());
         Assert.Null(child.Owner);
         Assert.Same(child, grandchild.Owner);
@@ -168,9 +168,9 @@ public sealed class NodeHierarchyOwnershipTests
                 "Deleting:_ExitTree"
             },
             events);
-        Assert.False(Electron2D.Object.IsInstanceValid(deleting));
-        Assert.False(Electron2D.Object.IsInstanceValid(descendant));
-        Assert.True(Electron2D.Object.IsInstanceValid(sibling));
+        Assert.False(Electron2D.ElectronObject.IsInstanceValid(deleting));
+        Assert.False(Electron2D.ElectronObject.IsInstanceValid(descendant));
+        Assert.True(Electron2D.ElectronObject.IsInstanceValid(sibling));
         Assert.Same(sibling, tree.Root.GetChild(0));
         Assert.Equal(1, tree.Root.GetChildCount());
     }

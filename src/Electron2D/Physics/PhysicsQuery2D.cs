@@ -49,7 +49,7 @@ internal static class PhysicsQuery2D
 
     public static bool IsValidCollisionObject(CollisionObject2D collisionObject)
     {
-        return Object.IsInstanceValid(collisionObject) &&
+        return ElectronObject.IsInstanceValid(collisionObject) &&
             collisionObject.IsInsideTree() &&
             !collisionObject.IsQueuedForDeletion();
     }
@@ -270,7 +270,7 @@ internal static class PhysicsQuery2D
 
     private static bool IsValidTileMapLayer(TileMapLayer tileMapLayer)
     {
-        return Object.IsInstanceValid(tileMapLayer) &&
+        return ElectronObject.IsInstanceValid(tileMapLayer) &&
             tileMapLayer.IsInsideTree() &&
             !tileMapLayer.IsQueuedForDeletion();
     }
@@ -349,7 +349,7 @@ internal readonly record struct PhysicsQueryShape(
     bool IsBody,
     bool IsStaticBody,
     Vector2 ColliderVelocity,
-    Object? ShapeObject,
+    ElectronObject? ShapeObject,
     Shape2D? ShapeResource,
     bool OneWayCollision,
     float OneWayCollisionMargin,

@@ -434,7 +434,7 @@ public class Tween : RefCounted
     {
         EnsureValid();
         ArgumentNullException.ThrowIfNull(node);
-        if (!Object.IsInstanceValid(node))
+        if (!ElectronObject.IsInstanceValid(node))
         {
             throw new InvalidOperationException("Bound node must be a valid instance.");
         }
@@ -447,7 +447,7 @@ public class Tween : RefCounted
     /// Adds a property tweener to this tween.
     /// </summary>
     ///
-    /// <param name="object">The object that owns the property.</param>
+    /// <param name="object">The ElectronObject that owns the property.</param>
     /// <param name="property">The property path to write.</param>
     /// <param name="finalVal">The final value to assign when the tweener completes.</param>
     /// <param name="duration">The non-negative duration in seconds.</param>
@@ -488,7 +488,7 @@ public class Tween : RefCounted
     /// <seealso cref="PropertyTweener"/>
     /// <seealso cref="TweenInterval"/>
     /// <seealso cref="TweenCallback"/>
-    public PropertyTweener TweenProperty(Object @object, NodePath property, Variant finalVal, double duration)
+    public PropertyTweener TweenProperty(ElectronObject @object, NodePath property, Variant finalVal, double duration)
     {
         EnsureValid();
         ArgumentNullException.ThrowIfNull(@object);
@@ -1185,7 +1185,7 @@ public class Tween : RefCounted
 
     private bool HasProcessableBinding()
     {
-        return _boundNode is null || (Object.IsInstanceValid(_boundNode) && _boundNode.IsInsideTree());
+        return _boundNode is null || (ElectronObject.IsInstanceValid(_boundNode) && _boundNode.IsInsideTree());
     }
 
     private void Invalidate(bool emitFinished, bool clearTweeners)
@@ -1641,7 +1641,7 @@ public abstract class Tweener : RefCounted
 /// <seealso cref="Tween.TweenProperty"/>
 public sealed class PropertyTweener : Tweener
 {
-    private readonly Object _target;
+    private readonly ElectronObject _target;
     private readonly string[] _propertyNames;
     private readonly Variant _finalValue;
     private readonly double _duration;
@@ -1655,7 +1655,7 @@ public sealed class PropertyTweener : Tweener
 
     internal PropertyTweener(
         Tween owner,
-        Object target,
+        ElectronObject target,
         string[] propertyNames,
         Variant finalValue,
         double duration,
@@ -1808,11 +1808,11 @@ public sealed class PropertyTweener : Tweener
     {
         if (_started)
         {
-            return Object.IsInstanceValid(_target);
+            return ElectronObject.IsInstanceValid(_target);
         }
 
         _started = true;
-        if (!Object.IsInstanceValid(_target) ||
+        if (!ElectronObject.IsInstanceValid(_target) ||
             !Tween.TryGetMemberPath(_target, _propertyNames, 0, out _initialValue))
         {
             return false;

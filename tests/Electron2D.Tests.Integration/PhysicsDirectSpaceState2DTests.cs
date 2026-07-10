@@ -177,9 +177,9 @@ public sealed class PhysicsDirectSpaceState2DTests
         return Assert.IsType<VariantDictionary>(array.ToArray()[index].Obj);
     }
 
-    private static Electron2D.Object? GetObject(VariantDictionary dictionary, string key)
+    private static Electron2D.ElectronObject? GetObject(VariantDictionary dictionary, string key)
     {
-        return Assert.IsAssignableFrom<Electron2D.Object>(dictionary[Electron2D.Variant.CreateFrom(key)].Obj);
+        return Assert.IsAssignableFrom<Electron2D.ElectronObject>(dictionary[Electron2D.Variant.CreateFrom(key)].Obj);
     }
 
     private static Electron2D.Rid GetRid(VariantDictionary dictionary, string key)

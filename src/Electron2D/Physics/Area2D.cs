@@ -392,6 +392,6 @@ public class Area2D : CollisionObject2D
 
     private static bool IsValidOverlapNode(Node2D node)
     {
-        return Object.IsInstanceValid(node) && node.IsInsideTree() && !node.IsQueuedForDeletion();
+        return ElectronObject.IsInstanceValid(node) && node.IsInsideTree() && !node.IsQueuedForDeletion();
     }
 }

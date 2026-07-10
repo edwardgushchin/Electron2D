@@ -241,15 +241,24 @@ internal static partial class Electron2DCommandLine
                     CliRoute.None,
                     "API comparison requires a single type name.",
                     CreateCliDiagnostic("E2D-CLI-0002", "Usage: e2d api compare-godot <type> --format json."),
-                    BuildApiCompareData(type: null, options.Values.Count > 1 ? options.Values[1] : null, "invalid_query", null)),
+                    BuildApiCompareData(
+                        type: null,
+                        profileDecision: null,
+                        query: options.Values.Count > 1 ? options.Values[1] : null,
+                        resultStatus: "invalid_query",
+                        manifest: null)),
                 output,
                 error);
         }
 
         var query = options.Values[1];
         var manifest = LoadApiManifest();
-        var type = FindApiManifestType(manifest, query);
-        if (type is null)
+        var manualProfile = LoadManualApiProfile();
+        var profileDecision = FindManualApiProfileType(manualProfile, query);
+        var type = profileDecision is null
+            ? null
+            : FindApiManifestType(manifest, Value(profileDecision, "fullName"));
+        if (profileDecision is null)
         {
             return WriteResult(
                 CliResult.Failure(
@@ -257,29 +266,28 @@ internal static partial class Electron2DCommandLine
                     options,
                     NormalizeProjectRoot(options.ProjectRoot),
                     CliRoute.None,
-                    $"API type was not found in the manifest: {query}.",
-                    CreateCliDiagnostic("E2D-CLI-0002", $"API type was not found in the manifest: {query}."),
-                    BuildApiCompareData(type: null, query, "type_not_found", manifest)),
+                    $"API type was not found in the manual public API profile: {query}.",
+                    CreateCliDiagnostic("E2D-CLI-0002", $"API type was not found in the manual public API profile: {query}."),
+                    BuildApiCompareData(type: null, profileDecision: null, query, "type_not_found", manifest)),
                 output,
                 error);
         }
 
-        var profile = type["profile"]?.AsObject()
-            ?? throw new CommandLineException($"API manifest type '{Value(type, "fullName")}' is missing `profile`.");
-        var outOfProfile = profile["outOfProfile"]?.GetValue<bool>() ?? true;
-        var resultStatus = outOfProfile ? "out_of_profile" : "parity_verified";
-        var data = BuildApiCompareData(type, query, resultStatus, manifest);
+        var decision = Value(profileDecision, "decision");
+        var outOfProfile = !string.Equals(decision, "approved", StringComparison.Ordinal);
+        var resultStatus = outOfProfile ? decision : "profile_approved";
+        var data = BuildApiCompareData(type, profileDecision, query, resultStatus, manifest);
         if (outOfProfile)
         {
-            var fullName = Value(type, "fullName");
+            var fullName = Value(profileDecision, "fullName");
             return WriteResult(
                 CliResult.Failure(
                     "api compare-godot",
                     options,
                     NormalizeProjectRoot(options.ProjectRoot),
                     CliRoute.None,
-                    "API type is outside the Electron2D 0.1-preview 2D profile.",
-                    CreateCliDiagnostic("E2D-CLI-0002", $"API type '{fullName}' is outside the Electron2D 0.1-preview 2D profile."),
+                    $"API type has manual profile decision '{decision}' and is outside the current public API surface.",
+                    CreateCliDiagnostic("E2D-CLI-0002", $"API type '{fullName}' has manual profile decision '{decision}' and is outside the current public API surface."),
                     data),
                 output,
                 error);
@@ -291,7 +299,9 @@ internal static partial class Electron2DCommandLine
                 options,
                 NormalizeProjectRoot(options.ProjectRoot),
                 CliRoute.None,
-                "API parity verified.",
+                type is null
+                    ? "API type is approved by the Electron2D public API profile but is not exported by the current runtime surface."
+                    : "API type is approved by the Electron2D public API profile.",
                 changedFiles: [],
                 dirtyDocuments: [],
                 operation: null,
@@ -1445,50 +1455,111 @@ internal static partial class Electron2DCommandLine
             ?? throw new CommandLineException("API manifest root must be a JSON object.");
     }
 
-    private static JsonObject? FindApiManifestType(JsonObject manifest, string query)
+    private static JsonObject LoadManualApiProfile()
     {
-        var normalized = NormalizeApiTypeQuery(query);
+        var repositoryRoot = FindRepositoryRoot();
+        var profilePath = Path.Combine(repositoryRoot, LocalDocumentationStore.PublicApiProfilePath.Replace('/', Path.DirectorySeparatorChar));
+        if (!File.Exists(profilePath))
+        {
+            throw new FileNotFoundException($"Manual public API profile was not found: {profilePath}");
+        }
+
+        return JsonNode.Parse(File.ReadAllText(profilePath))?.AsObject()
+            ?? throw new CommandLineException("Manual public API profile root must be a JSON object.");
+    }
+
+    private static JsonObject? FindApiManifestType(JsonObject manifest, string fullName)
+    {
         var types = manifest["types"]?.AsArray()
             ?? throw new CommandLineException("API manifest is missing `types`.");
         return types
             .OfType<JsonObject>()
-            .FirstOrDefault(type =>
-                string.Equals(Value(type, "fullName"), normalized, StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(Value(type, "name"), normalized, StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(Value(type, "fullName"), "Electron2D." + normalized, StringComparison.OrdinalIgnoreCase));
+            .SingleOrDefault(type => string.Equals(Value(type, "fullName"), fullName, StringComparison.Ordinal));
     }
 
-    private static JsonObject BuildApiCompareData(JsonObject? type, string? query, string resultStatus, JsonObject? manifest)
+    private static JsonObject? FindManualApiProfileType(JsonObject profile, string query)
+    {
+        var normalized = NormalizeApiTypeQuery(query);
+        var types = profile["types"]?.AsArray()
+            ?? throw new CommandLineException("Manual public API profile is missing `types`.");
+        var candidates = types
+            .OfType<JsonObject>()
+            .Select(type =>
+            {
+                var fullName = Value(type, "fullName");
+                var shortName = fullName.StartsWith("Electron2D.", StringComparison.Ordinal)
+                    ? fullName["Electron2D.".Length..]
+                    : fullName;
+                return new { Type = type, ShortName = shortName };
+            })
+            .ToArray();
+        var exactMatches = candidates
+            .Where(candidate => string.Equals(candidate.ShortName, normalized, StringComparison.Ordinal))
+            .Select(candidate => candidate.Type)
+            .ToArray();
+        if (exactMatches.Length > 0)
+        {
+            return exactMatches.Length == 1 ? exactMatches[0] : null;
+        }
+
+        var caseInsensitiveMatches = candidates
+            .Where(candidate => string.Equals(candidate.ShortName, normalized, StringComparison.OrdinalIgnoreCase))
+            .Select(candidate => candidate.Type)
+            .ToArray();
+        return caseInsensitiveMatches.Length == 1 ? caseInsensitiveMatches[0] : null;
+    }
+
+    private static JsonObject BuildApiCompareData(
+        JsonObject? type,
+        JsonObject? profileDecision,
+        string? query,
+        string resultStatus,
+        JsonObject? manifest)
     {
         return new JsonObject
         {
             ["mode"] = "api.compareGodot",
             ["sourcePath"] = LocalDocumentationStore.ApiManifestPath,
+            ["profileSourcePath"] = LocalDocumentationStore.PublicApiProfilePath,
             ["query"] = query,
-            ["type"] = type is null ? null : BuildApiTypeSummary(type),
+            ["type"] = profileDecision is null ? null : BuildApiTypeSummary(type, profileDecision),
             ["result"] = new JsonObject
             {
                 ["status"] = resultStatus
             },
-            ["strictParity"] = manifest is null
-                ? new JsonObject()
-                : CloneObject(manifest["strictParitySummary"], "API manifest is missing `strictParitySummary`.")
+            ["parityEvidence"] = manifest is null
+                ? new JsonObject
+                {
+                    ["status"] = "not_available",
+                    ["reason"] = "API manifest was not loaded."
+                }
+                : CloneObject(manifest["strictParityEvidence"], "API manifest is missing `strictParityEvidence`.")
         };
     }
 
-    private static JsonObject BuildApiTypeSummary(JsonObject type)
+    private static JsonObject BuildApiTypeSummary(JsonObject? type, JsonObject profileDecision)
     {
-        var profile = type["profile"]?.AsObject()
-            ?? throw new CommandLineException($"API manifest type '{Value(type, "fullName")}' is missing `profile`.");
+        var manifestProfile = type?["profile"]?.AsObject();
+        var decision = Value(profileDecision, "decision");
+        var approved = string.Equals(decision, "approved", StringComparison.Ordinal);
         return new JsonObject
         {
-            ["fullName"] = Value(type, "fullName"),
-            ["id"] = Value(type, "id"),
+            ["fullName"] = Value(profileDecision, "fullName"),
+            ["id"] = type is null ? null : Value(type, "id"),
+            ["availability"] = new JsonObject
+            {
+                ["exported"] = type is not null,
+                ["status"] = type is null ? "not_exported" : "exported"
+            },
             ["profile"] = new JsonObject
             {
-                ["status"] = Value(profile, "status"),
-                ["parity"] = Value(profile, "parity"),
-                ["outOfProfile"] = profile["outOfProfile"]?.GetValue<bool>() ?? true
+                ["decision"] = decision,
+                ["status"] = manifestProfile is null ? (approved ? "approved_not_exported" : decision) : Value(manifestProfile, "status"),
+                ["parity"] = manifestProfile is null ? "not_verified" : Value(manifestProfile, "parity"),
+                ["outOfProfile"] = !approved,
+                ["editorOnly"] = profileDecision["editorOnly"]?.GetValue<bool>() ?? false,
+                ["godotReference"] = Value(profileDecision, "godotReference"),
+                ["rationale"] = Value(profileDecision, "rationale")
             }
         };
     }

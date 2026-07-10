@@ -218,7 +218,7 @@ public class CanvasItem : Node
     /// Gets the 2D world associated with this canvas item.
     /// </summary>
     /// <returns>
-    /// A <see cref="World2D" /> object whose direct space state can query the
+    /// A <see cref="World2D" /> ElectronObject whose direct space state can query the
     /// current <see cref="SceneTree" />, or an empty world when this item is not
     /// inside a tree.
     /// </returns>

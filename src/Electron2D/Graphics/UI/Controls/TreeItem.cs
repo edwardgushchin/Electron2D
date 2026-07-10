@@ -50,7 +50,7 @@ namespace Electron2D;
 /// </since>
 ///
 /// <seealso cref="Tree"/>
-public class TreeItem : Object
+public class TreeItem : ElectronObject
 {
     private readonly List<TreeItem> children = new();
     private readonly Dictionary<int, TreeItemCell> cells = new();

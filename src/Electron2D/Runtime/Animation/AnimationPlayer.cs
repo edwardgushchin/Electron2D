@@ -1251,7 +1251,7 @@ public sealed class AnimationPlayer : Node, ISceneTreeLifecycleHandler
             return true;
         }
 
-        if (typeof(Object).IsAssignableFrom(targetType) && value.VariantType == Variant.Type.Object)
+        if (typeof(ElectronObject).IsAssignableFrom(targetType) && value.VariantType == Variant.Type.Object)
         {
             converted = value.AsObject();
             return converted is null || targetType.IsInstanceOfType(converted);

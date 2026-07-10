@@ -27,7 +27,7 @@ using System.Threading;
 namespace Electron2D;
 
 /// <summary>
-/// Represents the object type.
+/// Represents the Electron2D root ElectronObject type.
 /// </summary>
 ///
 /// <remarks>
@@ -42,11 +42,11 @@ namespace Electron2D;
 /// This API is available since Electron2D 0.1-preview.
 /// </since>
 ///
-public class Object
+public class ElectronObject
 {
 
     /// <summary>
-    /// Initializes a new instance of the Object type.
+    /// Initializes a new instance of the ElectronObject type.
     /// </summary>
     ///
     /// <remarks>
@@ -61,9 +61,9 @@ public class Object
     /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
-    /// <seealso cref="Object" />
+    /// <seealso cref="ElectronObject" />
     ///
-    public Object()
+    public ElectronObject()
     {
     }
 
@@ -96,7 +96,7 @@ public class Object
     /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
-    /// <seealso cref="Object" />
+    /// <seealso cref="ElectronObject" />
     ///
     public ulong GetInstanceId()
     {
@@ -119,7 +119,7 @@ public class Object
     /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
-    /// <seealso cref="Object" />
+    /// <seealso cref="ElectronObject" />
     ///
     public void Free()
     {
@@ -165,9 +165,9 @@ public class Object
     /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
-    /// <seealso cref="Object" />
+    /// <seealso cref="ElectronObject" />
     ///
-    public static bool IsInstanceValid(Object? instance)
+    public static bool IsInstanceValid(ElectronObject? instance)
     {
         return instance is not null && !instance._freed;
     }
@@ -192,7 +192,7 @@ public class Object
     /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
-    /// <seealso cref="Object" />
+    /// <seealso cref="ElectronObject" />
     ///
     public bool IsQueuedForDeletion()
     {
@@ -219,7 +219,7 @@ public class Object
     /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
-    /// <seealso cref="Object" />
+    /// <seealso cref="ElectronObject" />
     ///
     public void AddUserSignal(string signal)
     {
@@ -251,7 +251,7 @@ public class Object
     /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
-    /// <seealso cref="Object" />
+    /// <seealso cref="ElectronObject" />
     ///
     public bool HasSignal(string signal)
     {
@@ -291,7 +291,7 @@ public class Object
     /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
-    /// <seealso cref="Object" />
+    /// <seealso cref="ElectronObject" />
     ///
     public Error Connect(string signal, Callable callable, ConnectFlags flags = ConnectFlags.None)
     {
@@ -353,7 +353,7 @@ public class Object
     /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
-    /// <seealso cref="Object" />
+    /// <seealso cref="ElectronObject" />
     ///
     public void Disconnect(string signal, Callable callable)
     {
@@ -411,7 +411,7 @@ public class Object
     /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
-    /// <seealso cref="Object" />
+    /// <seealso cref="ElectronObject" />
     ///
     public bool IsConnected(string signal, Callable callable)
     {
@@ -449,7 +449,7 @@ public class Object
     /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
-    /// <seealso cref="Object" />
+    /// <seealso cref="ElectronObject" />
     ///
     public Error EmitSignal(string signal, params object?[] args)
     {
@@ -510,7 +510,7 @@ public class Object
     /// This API is available since Electron2D 0.1-preview.
     /// </since>
     ///
-    /// <seealso cref="Object" />
+    /// <seealso cref="ElectronObject" />
     ///
     public object? CallDeferred(string method, params object?[] args)
     {

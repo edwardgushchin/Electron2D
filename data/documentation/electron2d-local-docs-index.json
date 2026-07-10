@@ -4,11 +4,11 @@
   "generatedFrom": {
     "apiManifest": {
       "path": "data/api/electron2d-api-manifest.json",
-      "sha256": "b02180af7d5ba8e2b38fe0254bea88c6456dd1a787e3d59baa55a23bc1d45229"
+      "sha256": "669cb6493d2c4f41cc3a054463fde27c78e80371ce530c3f48b045fe10b1a91c"
     },
     "apiProfile": {
       "path": "data/api/electron2d-public-api-profile.json",
-      "sha256": "2460f5b46a17e855463e78654847d83f862ac8b7b89be056ae3ffef2f8674173"
+      "sha256": "2ce729569c1592e524650a4fa145ac2f067faadcb7a387ee627a87b3af4cf19f"
     },
     "documentation": [
       {
@@ -29,11 +29,11 @@
       },
       {
         "path": "docs/architecture/agent-native-workflow.md",
-        "sha256": "ccf33b6c27cc78ca23d0d8cff32fe5961b6d5c915e186dba05e87a5eb9aba4c9"
+        "sha256": "b5a45dc070077b09efaea5a27051da01acc975e93a410698aee5b6adf10efa3e"
       },
       {
         "path": "docs/architecture/engine-platform-stack.md",
-        "sha256": "a7b9dc40613441997abb740a4538752276b7c862b23871dcf27bafcfa213a0d3"
+        "sha256": "422f936f04df5478417038d1fe9f57ad2135f55d234564ceea651da85edd962d"
       },
       {
         "path": "docs/architecture/source-domain-layout.md",
@@ -53,7 +53,7 @@
       },
       {
         "path": "docs/cli/e2d-cli.md",
-        "sha256": "b2775fb77db080d99492a51a12138a539e1f89b1b171a7f445d22aedb0351d46"
+        "sha256": "6a6fa38111868f7440e9f9b97eb2ec959921d96dfe50faa0c0745a1ae3721437"
       },
       {
         "path": "docs/core-types/2d-math-baseline.md",
@@ -73,7 +73,7 @@
       },
       {
         "path": "docs/core-types/variant.md",
-        "sha256": "5ebd7ec92e50b782e67029333b36dad48ff2c867289c12e9b93e4299e4caf07a"
+        "sha256": "6aa14cf2e11f23b100edc34300308b81babe84004c2d0f9f9616edac595aa7cf"
       },
       {
         "path": "docs/diagnostics/diagnostics-adapters.md",
@@ -85,7 +85,7 @@
       },
       {
         "path": "docs/documentation/api-manifest.md",
-        "sha256": "dc548947dd25470a1032abdb87dbbc7572c0be7bde93f012f5e436d04d63e5c6"
+        "sha256": "ede67aa81192c85244079cd847f5b55bd0a7470aaa34318b177b736cfd19c9a4"
       },
       {
         "path": "docs/documentation/canonical-goal-alignment.md",
@@ -97,7 +97,7 @@
       },
       {
         "path": "docs/documentation/github-wiki-api-reference.md",
-        "sha256": "358c578afbec4c5e3308a1af4743a3b77946ae134c370d9e67abcd14b99d6ef0"
+        "sha256": "7f178944eff1d0651bc959039e939fbc0d2ddfb64adf806e7f1c1947fe2b55e2"
       },
       {
         "path": "docs/documentation/local-documentation-pipeline.md",
@@ -201,7 +201,7 @@
       },
       {
         "path": "docs/export/android-arm64-export.md",
-        "sha256": "483e62f1121648497a81b519731ae4fad04af786e997a1d40f725321a5382a19"
+        "sha256": "957749f6334a02678f8a26613d65b255efe1f42c8651130a6e2501e6cc404cb8"
       },
       {
         "path": "docs/export/export-guide.md",
@@ -257,7 +257,7 @@
       },
       {
         "path": "docs/object-model/base-object-lifetime.md",
-        "sha256": "0b72d9e5c664e701a53fdcde77551234269b659bf5a67284e6fbb3e976064857"
+        "sha256": "14a0abd9365518984461fdb04e423b6365b44ae31720ffa6de95b4d429a494ea"
       },
       {
         "path": "docs/object-model/deferred-calls-safe-traversal.md",
@@ -389,15 +389,15 @@
       },
       {
         "path": "docs/release-management/AUDIT-REQUEST.md",
-        "sha256": "38add255ffb3856952bdd738dbd19b2d032cb452a72ae2c29956613c4b94f816"
+        "sha256": "c37d989752ea224a9325325f78006f114c7ac040300f26be51bfe55ac3feb417"
       },
       {
         "path": "docs/release-management/api-compatibility.md",
-        "sha256": "6cb94228e7547f3114f137e4aeeb3f3997a88b8eb2354395c82a621b2f037235"
+        "sha256": "23b6451e528b157502b8fa8425365cdfa64667ded33035881a3421809caf2d6e"
       },
       {
         "path": "docs/release-management/audit-package.md",
-        "sha256": "6e62fe400981fad4c562aa403f67d1d0a48bb04a720faa1f99165e34348466eb"
+        "sha256": "88dcf15f5ba4064164615552c111ea420a674b3c934c52c89863d9b74823bc92"
       },
       {
         "path": "docs/release-management/ci-matrix.md",
@@ -409,7 +409,7 @@
       },
       {
         "path": "docs/release-management/project-template.md",
-        "sha256": "75c97d504fdf072ad527efc050f309919bc1d8c75645c20f05830762ddc56ab2"
+        "sha256": "18d3d0cf14545e169810be04ac9c68576ff5c9812868907d5298d818ec55072d"
       },
       {
         "path": "docs/release-management/release-metadata.md",
@@ -425,7 +425,7 @@
       },
       {
         "path": "docs/releases/0.1-preview.md",
-        "sha256": "cc72400940015efbfa53471fe9e1b6e3b70fb356fb8ffbd633f47d77618bb72c"
+        "sha256": "e9f14555e3ad24d16d80114a955ac6552512b8b7138fb25a7632ae4a807f0a8f"
       },
       {
         "path": "docs/rendering/android-mobile-gpu-fallback-policy.md",
@@ -457,7 +457,7 @@
       },
       {
         "path": "docs/rendering/rendering-server.md",
-        "sha256": "353df3a552d6a66244b68134364b14f59f4d37d26ef8adfe56d79fdda92ab6b3"
+        "sha256": "c3dcf755e7057d2c6b7dfb21acf1fbccf136978c5c0e95731ef7009098b2f8c2"
       },
       {
         "path": "docs/rendering/sdl-gpu-lifecycle.md",
@@ -489,7 +489,7 @@
       },
       {
         "path": "docs/repository/agent-workflow.md",
-        "sha256": "8325de3de45902599794a1c68be69f620fa1222f1314539f0e4c400f58503a7e"
+        "sha256": "e424dd9205c1e5354f86158b4fce0ba4805c3d736d44eb2d256e2454113d705b"
       },
       {
         "path": "docs/repository/license-policy.md",
@@ -565,7 +565,7 @@
       },
       {
         "path": "docs/scripting/editor-script-workflow.md",
-        "sha256": "17fe8bafaf650770f5e63d29d38dfe3c7a41b7e1082ebef286ac82c419ddb433"
+        "sha256": "afe3b2fcb1e13ff1c2afd92e7748349bbea1a41d1d477f4d5a167b2ddcb7e31e"
       },
       {
         "path": "docs/scripting/managed-debug-adapter-selection.md",
@@ -883,19 +883,19 @@
       "path": "data/documentation/local-docs-index/api-types.ndjson",
       "kind": "api-type",
       "count": 175,
-      "sha256": "096e149896c7cc8d586f0ce6e24829b0e787a202bd441dc4981e2e06f5d62bcb"
+      "sha256": "daedd52c7e006fbcfe4c73a6b9ee836e5af3ca199fa08107acd95f90f6702e5a"
     },
     {
       "path": "data/documentation/local-docs-index/api-members.ndjson",
       "kind": "api-member",
       "count": 1778,
-      "sha256": "85807e646b8d2ea71ff6a7fe4b573fb6714e149196957a0e5796b7893e03c682"
+      "sha256": "ff2106a9223407d8e62d7b24441df6d48677db321ebe0b0bcbccf927768d26db"
     },
     {
       "path": "data/documentation/local-docs-index/documentation.ndjson",
       "kind": "documentation",
       "count": 159,
-      "sha256": "5772eb46a098410ff27503cec03472f957acf08d6c0fdc2ed2b91d0c1f324cc4"
+      "sha256": "03e3aaaed01eb024387226d4aae73eccd24f0d9468d8bda6898dcaafe9344f25"
     },
     {
       "path": "data/documentation/local-docs-index/examples.ndjson",
@@ -907,7 +907,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "7192c90d4d323fb33e29b03f8558bfacbc9b3591deb705aa42101df4ff20b0ab",
+    "sourceDigest": "912ad80dc4dd980c301c946e8b04df2dc9f001746cb7f594da5d059314189fd7",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."

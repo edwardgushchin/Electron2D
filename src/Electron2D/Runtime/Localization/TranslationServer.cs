@@ -34,7 +34,7 @@ namespace Electron2D;
 /// <para>
 /// The translation server stores in-memory <see cref="Translation"/> resources
 /// and resolves messages for the current locale. It is the backing service for
-/// <see cref="Object.Tr(string, string)" />.
+/// <see cref="ElectronObject.Tr(string, string)" />.
 /// </para>
 /// <para>
 /// The 0.1-preview lookup policy checks the exact locale, the base language,
@@ -322,7 +322,7 @@ public static class TranslationServer
     /// This method is available since Electron2D 0.1-preview.
     /// </since>
     ///
-    /// <seealso cref="Object.Tr(string, string)" />
+    /// <seealso cref="ElectronObject.Tr(string, string)" />
     public static string Translate(string message, string context = "")
     {
         ArgumentNullException.ThrowIfNull(message);

@@ -43,7 +43,7 @@ namespace Electron2D;
 ///
 /// <para>
 /// Electron2D 0.1-preview intentionally supports a closed preview set:
-/// primitive values, 2D math types, identity handles, <see cref="Object"/>
+/// primitive values, 2D math types, identity handles, <see cref="ElectronObject"/>
 /// instances, <see cref="Callable"/>, and Electron2D collections. 3D types,
 /// packed arrays, <c>Signal</c>, editor-only values, and arbitrary CLR objects
 /// are not part of this release contract.
@@ -294,7 +294,7 @@ public readonly struct Variant : IEquatable<Variant>
         Rid = 13,
 
         /// <summary>
-        /// Represents an <see cref="Electron2D.Object"/> or derived instance.
+        /// Represents an <see cref="Electron2D.ElectronObject"/> or derived instance.
         /// </summary>
         /// <remarks>
         /// Use this value with APIs that accept Type.
@@ -464,7 +464,7 @@ public readonly struct Variant : IEquatable<Variant>
             Callable callableValue => new Variant(Type.Callable, callableValue),
             VariantDictionary dictionaryValue => new Variant(Type.Dictionary, dictionaryValue),
             VariantArray arrayValue => new Variant(Type.Array, arrayValue),
-            Object objectValue => new Variant(Type.Object, objectValue),
+            ElectronObject objectValue => new Variant(Type.Object, objectValue),
             _ => throw new ArgumentException(
                 $"Type '{value.GetType().FullName}' is not supported by Electron2D.Variant 0.1-preview.",
                 nameof(value))
@@ -691,7 +691,7 @@ public readonly struct Variant : IEquatable<Variant>
             return (T)(object)AsArray();
         }
 
-        if (typeof(Object).IsAssignableFrom(targetType))
+        if (typeof(ElectronObject).IsAssignableFrom(targetType))
         {
             var value = AsObject();
             if (value is T typedObject)
@@ -700,7 +700,7 @@ public readonly struct Variant : IEquatable<Variant>
             }
 
             throw new InvalidCastException(
-                $"Variant stores Object value of type '{value?.GetType().FullName ?? "<null>"}', not '{targetType.FullName}'.");
+                $"Variant stores ElectronObject value of type '{value?.GetType().FullName ?? "<null>"}', not '{targetType.FullName}'.");
         }
 
         throw new ArgumentException(
@@ -1082,10 +1082,10 @@ public readonly struct Variant : IEquatable<Variant>
     }
 
     /// <summary>
-    /// Reads the stored object reference.
+    /// Reads the stored ElectronObject reference.
     /// </summary>
     ///
-    /// <returns>The stored <see cref="Electron2D.Object"/> or derived instance.</returns>
+    /// <returns>The stored <see cref="Electron2D.ElectronObject"/> or derived instance.</returns>
     ///
     /// <exception cref="InvalidCastException">Thrown when this variant is not <see cref="Type.Object"/>.</exception>
     /// <remarks>
@@ -1102,9 +1102,9 @@ public readonly struct Variant : IEquatable<Variant>
     ///
     /// <seealso cref="Variant" />
     ///
-    public Object? AsObject()
+    public ElectronObject? AsObject()
     {
-        return Expect<Object>(Type.Object);
+        return Expect<ElectronObject?>(Type.Object);
     }
 
     /// <summary>
@@ -1222,10 +1222,10 @@ public readonly struct Variant : IEquatable<Variant>
     }
 
     /// <summary>
-    /// Tests whether an object is an equal Variant.
+    /// Tests whether a CLR object is an equal Variant.
     /// </summary>
     ///
-    /// <param name="obj">The object to compare with this value.</param>
+    /// <param name="obj">The CLR object to compare with this value.</param>
     ///
     /// <returns><c>true</c> when <paramref name="obj"/> is an equal Variant; otherwise, <c>false</c>.</returns>
     /// <remarks>
@@ -2024,7 +2024,7 @@ public readonly struct Variant : IEquatable<Variant>
     }
 
     /// <summary>
-    /// Converts an object reference to a Variant.
+    /// Converts an ElectronObject reference to a Variant.
     /// </summary>
     /// <remarks>
     /// The conversion follows the validation rules of the source and target types.
@@ -2048,7 +2048,7 @@ public readonly struct Variant : IEquatable<Variant>
     ///
     /// <seealso cref="Variant" />
     ///
-    public static implicit operator Variant(Object? value)
+    public static implicit operator Variant(ElectronObject? value)
     {
         return CreateFrom(value);
     }

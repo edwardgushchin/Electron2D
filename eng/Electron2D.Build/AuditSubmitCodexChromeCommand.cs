@@ -23,6 +23,7 @@
     SOFTWARE.
 */
 using System.Buffers.Binary;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO.Pipes;
 using System.Runtime.InteropServices;
@@ -49,6 +50,8 @@ internal sealed class AuditSubmitCodexChromeAutomation
         string repoRoot,
         string zipPath,
         string message,
+        Action<long> onTabCreated,
+        Action<string> onConversationCreated,
         CancellationToken cancellationToken)
     {
         try
@@ -56,42 +59,30 @@ internal sealed class AuditSubmitCodexChromeAutomation
             using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(options.TimeoutMinutes));
             using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
             await using var browser = await AuditSubmitCodexChromeClient.ConnectAsync(options, linked.Token).ConfigureAwait(false);
-            var downloadsDirectory = CreateDownloadsDirectory(repoRoot);
-            var tabId = await browser.CreateTabAsync(linked.Token).ConfigureAwait(false);
-            var completed = false;
-            try
-            {
-                var downloadDirectoryConfigured = await PrepareProjectForPromptSubmissionAsync(
-                    new AuditSubmitProjectPreparationDriver(browser, tabId, downloadsDirectory),
-                    options.ProjectUrl,
-                    TimeSpan.FromMinutes(options.LoginTimeoutMinutes),
-                    linked.Token).ConfigureAwait(false);
-                var ignoredDeepResearchTargetIds = options.DeepResearch
-                    ? await SnapshotDeepResearchTargetIdsAsync(browser, tabId, linked.Token).ConfigureAwait(false)
-                    : new HashSet<string>(StringComparer.Ordinal);
-                var messageCountBeforeSend = await SubmitPromptAsync(
-                    new AuditSubmitPromptSubmissionDriver(browser, tabId),
-                    [zipPath],
-                    message,
-                    options.DeepResearch,
-                    linked.Token).ConfigureAwait(false);
-                await WaitForConversationMessagesAsync(browser, tabId, messageCountBeforeSend + 1, TimeSpan.FromMinutes(2), linked.Token).ConfigureAwait(false);
-                var conversationUrl = await WaitForConcreteConversationUrlAsync(browser, tabId, TimeSpan.FromSeconds(30), linked.Token).ConfigureAwait(false);
-                await WriteConversationUrlSidecarAsync(repoRoot, zipPath, conversationUrl, options.ControlAudit, linked.Token).ConfigureAwait(false);
-
-                var report = options.DeepResearch
-                    ? await WaitForReportAsync(browser, tabId, options, downloadsDirectory, includeUserDownloadsFallback: !downloadDirectoryConfigured, ignoredDeepResearchTargetIds, linked.Token).ConfigureAwait(false)
-                    : await WaitForOrdinaryChatReportAsync(browser, tabId, options, messageCountBeforeSend, linked.Token).ConfigureAwait(false);
-                completed = true;
-                return report;
-            }
-            finally
-            {
-                if (completed || !options.KeepTabOpenOnError)
+            return await RunOwnedTabOperationAsync(
+                new AuditSubmitOwnedTabDriver(browser),
+                onTabCreated,
+                async tabId =>
                 {
-                    await browser.FinalizeTabsAsync(CancellationToken.None).ConfigureAwait(false);
-                }
-            }
+                    await PrepareProjectForPromptSubmissionAsync(
+                        new AuditSubmitProjectPreparationDriver(browser, tabId),
+                        options.ProjectUrl,
+                        TimeSpan.FromMinutes(options.LoginTimeoutMinutes),
+                        linked.Token).ConfigureAwait(false);
+                    var messageCountBeforeSend = await SubmitPromptAsync(
+                        new AuditSubmitPromptSubmissionDriver(browser, tabId),
+                        [zipPath],
+                        message,
+                        linked.Token).ConfigureAwait(false);
+                    await WaitForConversationMessagesAsync(browser, tabId, messageCountBeforeSend + 1, TimeSpan.FromMinutes(2), linked.Token).ConfigureAwait(false);
+                    var conversationUrl = await WaitForConcreteConversationUrlAsync(browser, tabId, TimeSpan.FromSeconds(30), linked.Token).ConfigureAwait(false);
+                    await WriteConversationUrlSidecarAsync(repoRoot, zipPath, conversationUrl, options.ControlAudit, linked.Token).ConfigureAwait(false);
+                    onConversationCreated(conversationUrl);
+
+                    var report = await WaitForOrdinaryChatReportAsync(browser, tabId, options, messageCountBeforeSend, linked.Token).ConfigureAwait(false);
+                    return report;
+                },
+                linked.Token).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
@@ -138,38 +129,32 @@ internal sealed class AuditSubmitCodexChromeAutomation
             using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
             await using var browser = await AuditSubmitCodexChromeClient.ConnectAsync(options, linked.Token).ConfigureAwait(false);
             var downloadsDirectory = CreateDownloadsDirectory(repoRoot);
-            var tabId = await browser.CreateTabAsync(linked.Token).ConfigureAwait(false);
-            var completed = false;
-            try
-            {
-                await InitializeTabAsync(browser, tabId, linked.Token).ConfigureAwait(false);
-                _ = await ConfigureDownloadsAsync(browser, tabId, downloadsDirectory, linked.Token).ConfigureAwait(false);
-                var ignoredDeepResearchTargetIds = new HashSet<string>(StringComparer.Ordinal);
-                await NavigateAsync(browser, tabId, options.ProjectUrl, linked.Token).ConfigureAwait(false);
-                await BringTabToFrontBestEffortAsync(browser, tabId, linked.Token).ConfigureAwait(false);
-                await WaitForReportHydrationAsync(linked.Token).ConfigureAwait(false);
-                await ScrollConversationToBottomAsync(browser, tabId, linked.Token).ConfigureAwait(false);
-                await WaitForReportHydrationAsync(linked.Token).ConfigureAwait(false);
-                _ = await WaitForDeepResearchFrameContentAsync(browser, tabId, TimeSpan.FromSeconds(90), linked.Token).ConfigureAwait(false);
-
-                var report = await DownloadReadyReportAsync(
-                    browser,
-                    tabId,
-                    options,
-                    downloadsDirectory,
-                    includeUserDownloadsFallback: true,
-                    ignoredDeepResearchTargetIds,
-                    linked.Token).ConfigureAwait(false);
-                completed = true;
-                return report;
-            }
-            finally
-            {
-                if (completed || !options.KeepTabOpenOnError)
+            return await RunOwnedTabOperationAsync(
+                new AuditSubmitOwnedTabDriver(browser),
+                onTabCreated: null,
+                async tabId =>
                 {
-                    await browser.FinalizeTabsAsync(CancellationToken.None).ConfigureAwait(false);
-                }
-            }
+                    await InitializeTabAsync(browser, tabId, linked.Token).ConfigureAwait(false);
+                    _ = await ConfigureDownloadsAsync(browser, tabId, downloadsDirectory, linked.Token).ConfigureAwait(false);
+                    var ignoredDeepResearchTargetIds = new HashSet<string>(StringComparer.Ordinal);
+                    await NavigateAsync(browser, tabId, options.ProjectUrl, linked.Token).ConfigureAwait(false);
+                    await BringTabToFrontBestEffortAsync(browser, tabId, linked.Token).ConfigureAwait(false);
+                    await WaitForReportHydrationAsync(linked.Token).ConfigureAwait(false);
+                    await ScrollConversationToBottomAsync(browser, tabId, linked.Token).ConfigureAwait(false);
+                    await WaitForReportHydrationAsync(linked.Token).ConfigureAwait(false);
+                    _ = await WaitForDeepResearchFrameContentAsync(browser, tabId, TimeSpan.FromSeconds(90), linked.Token).ConfigureAwait(false);
+
+                    var report = await DownloadReadyReportAsync(
+                        browser,
+                        tabId,
+                        options,
+                        downloadsDirectory,
+                        includeUserDownloadsFallback: true,
+                        ignoredDeepResearchTargetIds,
+                        linked.Token).ConfigureAwait(false);
+                    return report;
+                },
+                linked.Token).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
@@ -198,6 +183,44 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 "audit submit",
                 "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-PROTOCOL",
                 $"Codex Chrome Extension response was invalid JSON: {ex.Message}");
+        }
+    }
+
+    private static async Task<string> RunOwnedTabOperationAsync(
+        IAuditSubmitOwnedTabDriver driver,
+        Action<long>? onTabCreated,
+        Func<long, Task<string>> operation,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var tabId = await driver.CreateTabAsync(cancellationToken).ConfigureAwait(false);
+            onTabCreated?.Invoke(tabId);
+            return await operation(tabId).ConfigureAwait(false);
+        }
+        finally
+        {
+            await driver.FinalizeTabsAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+    }
+
+    private interface IAuditSubmitOwnedTabDriver
+    {
+        Task<long> CreateTabAsync(CancellationToken cancellationToken);
+
+        Task FinalizeTabsAsync(CancellationToken cancellationToken);
+    }
+
+    private sealed class AuditSubmitOwnedTabDriver(AuditSubmitCodexChromeClient browser) : IAuditSubmitOwnedTabDriver
+    {
+        public Task<long> CreateTabAsync(CancellationToken cancellationToken)
+        {
+            return browser.CreateTabAsync(cancellationToken);
+        }
+
+        public Task FinalizeTabsAsync(CancellationToken cancellationToken)
+        {
+            return browser.FinalizeTabsAsync(cancellationToken);
         }
     }
 
@@ -254,10 +277,9 @@ internal sealed class AuditSubmitCodexChromeAutomation
         CancellationToken cancellationToken)
     {
         var dumpDirectory = ResolveDomDumpDirectory(repoRoot, options);
-        var tabId = await driver.CreateTabAsync(cancellationToken).ConfigureAwait(false);
-        var completed = false;
         try
         {
+            var tabId = await driver.CreateTabAsync(cancellationToken).ConfigureAwait(false);
             await driver.InitializeTabAsync(tabId, cancellationToken).ConfigureAwait(false);
             await driver.NavigateAsync(tabId, options.ProjectUrl, cancellationToken).ConfigureAwait(false);
             await driver.BringTabToFrontAsync(tabId, cancellationToken).ConfigureAwait(false);
@@ -269,24 +291,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
             await WriteJsonFileAsync(Path.Combine(dumpDirectory, "frame-tree.json"), frameTree, cancellationToken).ConfigureAwait(false);
             var targetInfo = await driver.ExecuteCdpAsync(tabId, "Target.getTargets", EmptyObject(), TimeSpan.FromSeconds(15), cancellationToken).ConfigureAwait(false);
             await WriteJsonFileAsync(Path.Combine(dumpDirectory, "target-info.json"), targetInfo, cancellationToken).ConfigureAwait(false);
-            try
-            {
-                var selectedState = await driver.EvaluateAsync(tabId, DeepResearchSelectedExpression, TimeSpan.FromSeconds(15), cancellationToken).ConfigureAwait(false);
-                await WriteJsonFileAsync(Path.Combine(dumpDirectory, "deep-research-selected-result.json"), selectedState, cancellationToken).ConfigureAwait(false);
-            }
-            catch (AuditSubmitCodexChromeException)
-            {
-            }
-
-            try
-            {
-                var selectedDiagnostics = await driver.EvaluateAsync(tabId, DeepResearchSelectedDiagnosticsExpression, TimeSpan.FromSeconds(15), cancellationToken).ConfigureAwait(false);
-                await WriteJsonFileAsync(Path.Combine(dumpDirectory, "deep-research-selected-diagnostics.json"), selectedDiagnostics, cancellationToken).ConfigureAwait(false);
-            }
-            catch (AuditSubmitCodexChromeException)
-            {
-            }
-
             JsonElement? accessibilityTree = null;
             try
             {
@@ -353,15 +357,11 @@ internal sealed class AuditSubmitCodexChromeAutomation
 
             var summary = string.Join(Environment.NewLine, summaries);
             await File.WriteAllTextAsync(Path.Combine(dumpDirectory, "summary.txt"), summary + Environment.NewLine, Encoding.UTF8, cancellationToken).ConfigureAwait(false);
-            completed = true;
             return summary;
         }
         finally
         {
-            if (completed || !options.KeepTabOpenOnError)
-            {
-                await driver.FinalizeTabsAsync(CancellationToken.None).ConfigureAwait(false);
-            }
+            await driver.FinalizeTabsAsync(CancellationToken.None).ConfigureAwait(false);
         }
     }
 
@@ -472,31 +472,25 @@ internal sealed class AuditSubmitCodexChromeAutomation
         await browser.ExecuteCdpAsync(tabId, "Page.enable", EmptyObject(), UiActionTimeout, cancellationToken).ConfigureAwait(false);
         await browser.ExecuteCdpAsync(tabId, "Runtime.enable", EmptyObject(), UiActionTimeout, cancellationToken).ConfigureAwait(false);
         await browser.ExecuteCdpAsync(tabId, "DOM.enable", EmptyObject(), UiActionTimeout, cancellationToken).ConfigureAwait(false);
-        await InstallClipboardWriteCapturePreloadBestEffortAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
+        await InstallClipboardWriteCapturePreloadAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
         await EnableOopifAutoAttachAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
     }
 
-    private static async Task InstallClipboardWriteCapturePreloadBestEffortAsync(
+    private static async Task InstallClipboardWriteCapturePreloadAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            await browser.ExecuteCdpAsync(
-                tabId,
-                "Page.addScriptToEvaluateOnNewDocument",
-                new Dictionary<string, object?>
-                {
-                    ["source"] = ClipboardWriteCapturePreloadExpression
-                },
-                TimeSpan.FromSeconds(10),
-                cancellationToken,
-                allowTransientRecovery: false).ConfigureAwait(false);
-        }
-        catch (Exception ex) when (ex is AuditSubmitCodexChromeException or JsonException)
-        {
-        }
+        await browser.ExecuteCdpAsync(
+            tabId,
+            "Page.addScriptToEvaluateOnNewDocument",
+            new Dictionary<string, object?>
+            {
+                ["source"] = ClipboardWriteCapturePreloadExpression
+            },
+            TimeSpan.FromSeconds(10),
+            cancellationToken,
+            allowTransientRecovery: false).ConfigureAwait(false);
     }
 
     private static async Task EnableOopifAutoAttachAsync(
@@ -1064,192 +1058,22 @@ internal sealed class AuditSubmitCodexChromeAutomation
             "ChatGPT composer did not become available before the login timeout.");
     }
 
-    private static async Task EnableDeepResearchAsync(
-        AuditSubmitCodexChromeClient browser,
-        long tabId,
-        CancellationToken cancellationToken)
-    {
-        await EnableDeepResearchAsync(
-            new AuditSubmitDeepResearchSelectionDriver(browser, tabId),
-            cancellationToken).ConfigureAwait(false);
-    }
-
-    private static async Task EnableDeepResearchAsync(
-        IAuditSubmitDeepResearchSelectionDriver driver,
-        CancellationToken cancellationToken)
-    {
-        var selectedThroughMenu = false;
-        var deadline = driver.UtcNow + TimeSpan.FromSeconds(20);
-        var menuOpenRetrySuppressedUntil = DateTimeOffset.MinValue;
-        while (driver.UtcNow < deadline)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (await driver.IsSelectedAsync(cancellationToken).ConfigureAwait(false))
-            {
-                return;
-            }
-
-            if (await driver.TryClickOpenItemAsync(cancellationToken).ConfigureAwait(false))
-            {
-                selectedThroughMenu = true;
-                await driver.DelayAsync(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
-                continue;
-            }
-
-            if (await driver.IsComposerMenuOpenAsync(cancellationToken).ConfigureAwait(false))
-            {
-                await driver.DelayAsync(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
-                continue;
-            }
-
-            if (await driver.IsComposerMenuExpandedAsync(cancellationToken).ConfigureAwait(false))
-            {
-                await driver.DelayAsync(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
-                continue;
-            }
-
-            if (driver.UtcNow < menuOpenRetrySuppressedUntil)
-            {
-                await driver.DelayAsync(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
-                continue;
-            }
-
-            if (!await driver.TryOpenMenuAsync(cancellationToken).ConfigureAwait(false))
-            {
-                await driver.DelayAsync(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
-                continue;
-            }
-
-            menuOpenRetrySuppressedUntil = driver.UtcNow + TimeSpan.FromSeconds(3);
-            await driver.DelayAsync(TimeSpan.FromMilliseconds(750), cancellationToken).ConfigureAwait(false);
-
-            if (await driver.TryClickMenuItemAsync(cancellationToken).ConfigureAwait(false))
-            {
-                selectedThroughMenu = true;
-            }
-
-            await driver.DelayAsync(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
-        }
-
-        if (selectedThroughMenu &&
-            await driver.IsSelectedAsync(cancellationToken).ConfigureAwait(false))
-        {
-            return;
-        }
-
-        throw new AuditSubmitCodexChromeException(
-            "E2D-BUILD-AUDIT-SUBMIT-DEEP-RESEARCH-MISSING",
-            "Could not select the Deep Research control from the ChatGPT composer plus menu.");
-    }
-
-    private interface IAuditSubmitDeepResearchSelectionDriver
-    {
-        DateTimeOffset UtcNow { get; }
-
-        Task<bool> IsSelectedAsync(CancellationToken cancellationToken);
-
-        Task<bool> TryClickOpenItemAsync(CancellationToken cancellationToken);
-
-        Task<bool> IsComposerMenuOpenAsync(CancellationToken cancellationToken);
-
-        Task<bool> IsComposerMenuExpandedAsync(CancellationToken cancellationToken);
-
-        Task<bool> TryOpenMenuAsync(CancellationToken cancellationToken);
-
-        Task<bool> TryClickMenuItemAsync(CancellationToken cancellationToken);
-
-        Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken);
-    }
-
-    private sealed class AuditSubmitDeepResearchSelectionDriver(
-        AuditSubmitCodexChromeClient browser,
-        long tabId) : IAuditSubmitDeepResearchSelectionDriver
-    {
-        public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
-
-        public async Task<bool> IsSelectedAsync(CancellationToken cancellationToken)
-        {
-            return await browser.EvaluateBoolAsync(tabId, DeepResearchSelectedExpression, UiActionTimeout, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task<bool> TryClickOpenItemAsync(CancellationToken cancellationToken)
-        {
-            return await TryClickPointAsync(DeepResearchItemPointExpression, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task<bool> IsComposerMenuOpenAsync(CancellationToken cancellationToken)
-        {
-            return await browser.EvaluateBoolAsync(tabId, DeepResearchComposerMenuOpenExpression, UiActionTimeout, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task<bool> IsComposerMenuExpandedAsync(CancellationToken cancellationToken)
-        {
-            return await browser.EvaluateBoolAsync(tabId, DeepResearchComposerMenuExpandedExpression, UiActionTimeout, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task<bool> TryOpenMenuAsync(CancellationToken cancellationToken)
-        {
-            return await TryClickPointAsync(DeepResearchMenuPointExpression, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task<bool> TryClickMenuItemAsync(CancellationToken cancellationToken)
-        {
-            return await TryClickPointAsync(DeepResearchItemPointExpression, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken)
-        {
-            await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
-        }
-
-        private async Task<bool> TryClickPointAsync(string expression, CancellationToken cancellationToken)
-        {
-            var point = await browser.EvaluatePointAsync(tabId, expression, UiActionTimeout, cancellationToken, allowTransientRecovery: false).ConfigureAwait(false);
-            if (point is null)
-            {
-                return false;
-            }
-
-            await browser.ClickAtAsync(tabId, point.Value, cancellationToken).ConfigureAwait(false);
-            return true;
-        }
-    }
-
-    private static async Task RequireDeepResearchSelectedAsync(
-        AuditSubmitCodexChromeClient browser,
-        long tabId,
-        CancellationToken cancellationToken)
-    {
-        if (await browser.EvaluateBoolAsync(tabId, DeepResearchSelectedExpression, UiActionTimeout, cancellationToken).ConfigureAwait(false))
-        {
-            return;
-        }
-
-        throw new AuditSubmitCodexChromeException(
-            "E2D-BUILD-AUDIT-SUBMIT-DEEP-RESEARCH-MISSING",
-            "Deep Research was not selected in the composer immediately before sending the audit ZIP.");
-    }
-
-    private static async Task<bool> PrepareProjectForPromptSubmissionAsync(
+    private static async Task PrepareProjectForPromptSubmissionAsync(
         IAuditSubmitProjectPreparationDriver driver,
         string projectUrl,
         TimeSpan loginTimeout,
         CancellationToken cancellationToken)
     {
         await driver.InitializeTabAsync(cancellationToken).ConfigureAwait(false);
-        var downloadDirectoryConfigured = await driver.ConfigureDownloadsAsync(cancellationToken).ConfigureAwait(false);
         await driver.NavigateAsync(projectUrl, cancellationToken).ConfigureAwait(false);
         await driver.BringTabToFrontBestEffortAsync(cancellationToken).ConfigureAwait(false);
         await driver.WaitForComposerAsync(loginTimeout, cancellationToken).ConfigureAwait(false);
         await driver.WaitForReportHydrationAsync(cancellationToken).ConfigureAwait(false);
-        return downloadDirectoryConfigured;
     }
 
     private interface IAuditSubmitProjectPreparationDriver
     {
         Task InitializeTabAsync(CancellationToken cancellationToken);
-
-        Task<bool> ConfigureDownloadsAsync(CancellationToken cancellationToken);
 
         Task NavigateAsync(string projectUrl, CancellationToken cancellationToken);
 
@@ -1262,17 +1086,11 @@ internal sealed class AuditSubmitCodexChromeAutomation
 
     private sealed class AuditSubmitProjectPreparationDriver(
         AuditSubmitCodexChromeClient browser,
-        long tabId,
-        string downloadsDirectory) : IAuditSubmitProjectPreparationDriver
+        long tabId) : IAuditSubmitProjectPreparationDriver
     {
         public async Task InitializeTabAsync(CancellationToken cancellationToken)
         {
             await AuditSubmitCodexChromeAutomation.InitializeTabAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task<bool> ConfigureDownloadsAsync(CancellationToken cancellationToken)
-        {
-            return await AuditSubmitCodexChromeAutomation.ConfigureDownloadsAsync(browser, tabId, downloadsDirectory, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task NavigateAsync(string projectUrl, CancellationToken cancellationToken)
@@ -1300,23 +1118,17 @@ internal sealed class AuditSubmitCodexChromeAutomation
         IAuditSubmitPromptSubmissionDriver driver,
         string[] zipPaths,
         string message,
-        bool deepResearch,
         CancellationToken cancellationToken)
     {
-        await driver.AttachFilesAsync(zipPaths, cancellationToken).ConfigureAwait(false);
-        if (deepResearch)
+        if (string.IsNullOrWhiteSpace(message))
         {
-            await driver.EnableDeepResearchAsync(cancellationToken).ConfigureAwait(false);
+            await driver.ClearPromptAsync(cancellationToken).ConfigureAwait(false);
         }
 
+        await driver.AttachFilesAsync(zipPaths, message, cancellationToken).ConfigureAwait(false);
         if (!string.IsNullOrWhiteSpace(message))
         {
             await driver.FillPromptAsync(message, cancellationToken).ConfigureAwait(false);
-        }
-
-        if (deepResearch)
-        {
-            await driver.RequireDeepResearchSelectedAsync(cancellationToken).ConfigureAwait(false);
         }
 
         await driver.RequirePromptPayloadReadyAsync(message, zipPaths, cancellationToken).ConfigureAwait(false);
@@ -1327,13 +1139,11 @@ internal sealed class AuditSubmitCodexChromeAutomation
 
     private interface IAuditSubmitPromptSubmissionDriver
     {
-        Task AttachFilesAsync(string[] paths, CancellationToken cancellationToken);
+        Task ClearPromptAsync(CancellationToken cancellationToken);
+
+        Task AttachFilesAsync(string[] paths, string message, CancellationToken cancellationToken);
 
         Task FillPromptAsync(string message, CancellationToken cancellationToken);
-
-        Task EnableDeepResearchAsync(CancellationToken cancellationToken);
-
-        Task RequireDeepResearchSelectedAsync(CancellationToken cancellationToken);
 
         Task RequirePromptPayloadReadyAsync(string message, string[] paths, CancellationToken cancellationToken);
 
@@ -1346,24 +1156,24 @@ internal sealed class AuditSubmitCodexChromeAutomation
         AuditSubmitCodexChromeClient browser,
         long tabId) : IAuditSubmitPromptSubmissionDriver
     {
-        public async Task AttachFilesAsync(string[] paths, CancellationToken cancellationToken)
+        public async Task ClearPromptAsync(CancellationToken cancellationToken)
         {
-            await AuditSubmitCodexChromeAutomation.AttachFilesAsync(browser, tabId, paths, cancellationToken).ConfigureAwait(false);
+            await AuditSubmitCodexChromeAutomation.ClearPromptAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task AttachFilesAsync(string[] paths, string message, CancellationToken cancellationToken)
+        {
+            await AuditSubmitCodexChromeAutomation.AttachFilesAsync(
+                browser,
+                tabId,
+                paths,
+                message,
+                cancellationToken).ConfigureAwait(false);
         }
 
         public async Task FillPromptAsync(string message, CancellationToken cancellationToken)
         {
             await AuditSubmitCodexChromeAutomation.FillPromptAsync(browser, tabId, message, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task EnableDeepResearchAsync(CancellationToken cancellationToken)
-        {
-            await AuditSubmitCodexChromeAutomation.EnableDeepResearchAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task RequireDeepResearchSelectedAsync(CancellationToken cancellationToken)
-        {
-            await AuditSubmitCodexChromeAutomation.RequireDeepResearchSelectedAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task RequirePromptPayloadReadyAsync(string message, string[] paths, CancellationToken cancellationToken)
@@ -1453,8 +1263,10 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 $"promptHasExpectedMessage={ReadProperty(status, "promptHasExpectedMessage")}",
                 $"promptIsEmpty={ReadProperty(status, "promptIsEmpty")}",
                 $"expectedFileCount={ReadProperty(status, "expectedFileCount")}",
+                $"selectedFileCount={ReadProperty(status, "selectedFileCount")}",
                 $"filenameMatchCount={ReadProperty(status, "filenameMatchCount")}",
-                $"attachmentRootCount={ReadProperty(status, "attachmentRootCount")}"
+                $"attachmentRootCount={ReadProperty(status, "attachmentRootCount")}",
+                $"allAttachmentRootCount={ReadProperty(status, "allAttachmentRootCount")}"
             ]);
     }
 
@@ -1462,41 +1274,266 @@ internal sealed class AuditSubmitCodexChromeAutomation
         AuditSubmitCodexChromeClient browser,
         long tabId,
         string[] paths,
+        string message,
         CancellationToken cancellationToken)
     {
-        var backendNodeId = await QueryFileInputBackendNodeIdAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
-        if (backendNodeId is null)
+        await AttachFilesAsync(
+            new AuditSubmitAttachmentUploadDriver(browser, tabId),
+            paths,
+            message,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private static async Task AttachFilesAsync(
+        IAuditSubmitAttachmentUploadDriver driver,
+        string[] paths,
+        string message,
+        CancellationToken cancellationToken)
+    {
+        var expectedFileNames = paths.Select(path => Path.GetFileName(path)!).ToArray();
+        var composerState = await driver.InspectComposerUploadStateAsync(
+            message,
+            expectedFileNames,
+            cancellationToken).ConfigureAwait(false);
+        if (composerState.Disposition == AuditSubmitComposerUploadDisposition.Ready)
         {
-            _ = await browser.EvaluateBoolAsync(tabId, AttachmentClickExpression, UiActionTimeout, cancellationToken, allowTransientRecovery: false).ConfigureAwait(false);
-            await Task.Delay(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
-            backendNodeId = await QueryFileInputBackendNodeIdAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
+            return;
         }
 
-        if (backendNodeId is null)
+        if (composerState.Disposition != AuditSubmitComposerUploadDisposition.UploadAllowed)
+        {
+            throw new AuditSubmitCodexChromeException(
+                "E2D-BUILD-AUDIT-SUBMIT-COMPOSER-STATE",
+                $"The ChatGPT composer is not safe for a new audit ZIP upload: {composerState.Reason}.");
+        }
+
+        var attachmentInput = await driver.QueryFileInputBackendNodeIdAsync(cancellationToken).ConfigureAwait(false);
+        if (attachmentInput is null)
         {
             throw new AuditSubmitCodexChromeException(
                 "E2D-BUILD-AUDIT-SUBMIT-ATTACHMENT-MISSING",
-                "Could not find the file attachment input in the ChatGPT composer.");
+                "Could not find exactly one file attachment input in the ChatGPT composer.");
         }
 
-        await browser.ExecuteCdpAsync(
-            tabId,
-            "DOM.setFileInputFiles",
-            new Dictionary<string, object?>
-            {
-                ["backendNodeId"] = backendNodeId.Value,
-                ["files"] = paths
-            },
-            TimeSpan.FromMinutes(2),
+        await driver.SetFileInputFilesAsync(
+            attachmentInput.Value.BackendNodeId,
+            paths,
             cancellationToken).ConfigureAwait(false);
-        await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken).ConfigureAwait(false);
+        var committed = await driver.CommitAttachmentInputAsync(
+            attachmentInput.Value.MarkerToken,
+            expectedFileNames,
+            cancellationToken).ConfigureAwait(false);
+        if (!committed)
+        {
+            throw new AuditSubmitCodexChromeException(
+                "E2D-BUILD-AUDIT-SUBMIT-ATTACHMENT-MISSING",
+                "The selected ChatGPT composer input did not retain exactly the expected audit ZIP.");
+        }
+
+        await driver.WaitForAttachmentChipAsync(
+            expectedFileNames,
+            message,
+            cancellationToken).ConfigureAwait(false);
     }
 
-    private static async Task<long?> QueryFileInputBackendNodeIdAsync(
+    private static async Task<AuditSubmitComposerUploadState> InspectComposerUploadStateAsync(
+        AuditSubmitCodexChromeClient browser,
+        long tabId,
+        string message,
+        string[] expectedFileNames,
+        CancellationToken cancellationToken)
+    {
+        var fileNamesJson = JsonSerializer.Serialize(expectedFileNames);
+        var statuses = new List<JsonElement>();
+        foreach (var candidateMessage in new[] { message, string.Empty }.Distinct(StringComparer.Ordinal))
+        {
+            var status = await browser.EvaluateAsync(
+                    tabId,
+                    PromptPayloadStatusExpression(JsonSerializer.Serialize(candidateMessage), fileNamesJson),
+                    UiActionTimeout,
+                    cancellationToken,
+                    allowTransientRecovery: false).ConfigureAwait(false);
+            statuses.Add(status);
+            if (PromptPayloadStatusReady(status))
+            {
+                return new AuditSubmitComposerUploadState(AuditSubmitComposerUploadDisposition.Ready, "expected payload is already attached");
+            }
+        }
+
+        var allowedStatus = statuses.FirstOrDefault(status =>
+            (PromptPayloadStatusBool(status, "promptIsEmpty") ||
+             PromptPayloadStatusBool(status, "promptHasExpectedMessage")) &&
+            status.TryGetProperty("selectedFileCount", out _));
+        if (allowedStatus.ValueKind != JsonValueKind.Object)
+        {
+            return new AuditSubmitComposerUploadState(
+                AuditSubmitComposerUploadDisposition.Rejected,
+                statuses.Count == 0 ? "composer state is unavailable" : DescribePromptPayloadStatus(statuses[0]));
+        }
+
+        var reason = PromptPayloadStatusString(allowedStatus, "reason");
+        if (string.Equals(reason, "prompt-missing", StringComparison.Ordinal) ||
+            string.Equals(reason, "unexpected-file-count", StringComparison.Ordinal))
+        {
+            return new AuditSubmitComposerUploadState(
+                AuditSubmitComposerUploadDisposition.Rejected,
+                DescribePromptPayloadStatus(allowedStatus));
+        }
+
+        if (PromptPayloadStatusInt32(allowedStatus, "selectedFileCount") > 0 ||
+            PromptPayloadStatusInt32(allowedStatus, "allAttachmentRootCount") > 0 ||
+            PromptPayloadStatusInt32(allowedStatus, "nearbyArchiveRootCount") > 0)
+        {
+            return new AuditSubmitComposerUploadState(
+                AuditSubmitComposerUploadDisposition.Rejected,
+                $"foreign or ambiguous attachment state; {DescribePromptPayloadStatus(allowedStatus)}");
+        }
+
+        return new AuditSubmitComposerUploadState(
+            AuditSubmitComposerUploadDisposition.UploadAllowed,
+            DescribePromptPayloadStatus(allowedStatus));
+    }
+
+    private static bool PromptPayloadStatusBool(JsonElement status, string name)
+    {
+        return status.ValueKind == JsonValueKind.Object &&
+            status.TryGetProperty(name, out var value) &&
+            value.ValueKind == JsonValueKind.True;
+    }
+
+    private static int PromptPayloadStatusInt32(JsonElement status, string name)
+    {
+        return status.ValueKind == JsonValueKind.Object &&
+            status.TryGetProperty(name, out var value) &&
+            value.ValueKind == JsonValueKind.Number &&
+            value.TryGetInt32(out var result)
+                ? result
+                : 0;
+    }
+
+    private static string PromptPayloadStatusString(JsonElement status, string name)
+    {
+        return status.ValueKind == JsonValueKind.Object &&
+            status.TryGetProperty(name, out var value) &&
+            value.ValueKind == JsonValueKind.String
+                ? value.GetString() ?? string.Empty
+                : string.Empty;
+    }
+
+    private enum AuditSubmitComposerUploadDisposition
+    {
+        Ready,
+        UploadAllowed,
+        Rejected
+    }
+
+    private readonly record struct AuditSubmitComposerUploadState(
+        AuditSubmitComposerUploadDisposition Disposition,
+        string Reason);
+
+    private interface IAuditSubmitAttachmentUploadDriver
+    {
+        Task<AuditSubmitComposerUploadState> InspectComposerUploadStateAsync(
+            string message,
+            string[] expectedFileNames,
+            CancellationToken cancellationToken);
+
+        Task<AuditSubmitAttachmentInputTarget?> QueryFileInputBackendNodeIdAsync(CancellationToken cancellationToken);
+
+        Task SetFileInputFilesAsync(long backendNodeId, string[] paths, CancellationToken cancellationToken);
+
+        Task<bool> CommitAttachmentInputAsync(
+            string markerToken,
+            string[] expectedFileNames,
+            CancellationToken cancellationToken);
+
+        Task WaitForAttachmentChipAsync(string[] expectedFileNames, string message, CancellationToken cancellationToken);
+    }
+
+    private sealed class AuditSubmitAttachmentUploadDriver(
+        AuditSubmitCodexChromeClient browser,
+        long tabId) : IAuditSubmitAttachmentUploadDriver
+    {
+        public async Task<AuditSubmitComposerUploadState> InspectComposerUploadStateAsync(
+            string message,
+            string[] expectedFileNames,
+            CancellationToken cancellationToken)
+        {
+            return await AuditSubmitCodexChromeAutomation.InspectComposerUploadStateAsync(
+                browser,
+                tabId,
+                message,
+                expectedFileNames,
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<AuditSubmitAttachmentInputTarget?> QueryFileInputBackendNodeIdAsync(CancellationToken cancellationToken)
+        {
+            return await AuditSubmitCodexChromeAutomation.QueryFileInputBackendNodeIdAsync(
+                browser,
+                tabId,
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task SetFileInputFilesAsync(long backendNodeId, string[] paths, CancellationToken cancellationToken)
+        {
+            await browser.ExecuteCdpAsync(
+                tabId,
+                "DOM.setFileInputFiles",
+                new Dictionary<string, object?>
+                {
+                    ["backendNodeId"] = backendNodeId,
+                    ["files"] = paths
+                },
+                TimeSpan.FromMinutes(2),
+                cancellationToken,
+                allowTransientRecovery: false).ConfigureAwait(false);
+        }
+
+        public async Task<bool> CommitAttachmentInputAsync(
+            string markerToken,
+            string[] expectedFileNames,
+            CancellationToken cancellationToken)
+        {
+            return await AuditSubmitCodexChromeAutomation.CommitAttachmentInputAsync(
+                browser,
+                tabId,
+                markerToken,
+                expectedFileNames,
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task WaitForAttachmentChipAsync(
+            string[] expectedFileNames,
+            string message,
+            CancellationToken cancellationToken)
+        {
+            await AuditSubmitCodexChromeAutomation.WaitForAttachmentChipAsync(
+                browser,
+                tabId,
+                expectedFileNames,
+                message,
+                cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private static async Task<AuditSubmitAttachmentInputTarget?> QueryFileInputBackendNodeIdAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
         CancellationToken cancellationToken)
     {
+        var markerToken = Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture);
+        var selected = await browser.EvaluateBoolAsync(
+            tabId,
+            AttachmentInputSelectionExpression(markerToken),
+            UiActionTimeout,
+            cancellationToken,
+            allowTransientRecovery: false).ConfigureAwait(false);
+        if (!selected)
+        {
+            return null;
+        }
+
         var document = await browser.ExecuteCdpAsync(
             tabId,
             "DOM.getDocument",
@@ -1514,7 +1551,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
             new Dictionary<string, object?>
             {
                 ["nodeId"] = rootNodeIdElement.GetInt64(),
-                ["selector"] = "input[type=\"file\"]"
+                ["selector"] = $"[{AttachmentInputMarkerAttribute}=\"{markerToken}\"]"
             },
             UiActionTimeout,
             cancellationToken).ConfigureAwait(false);
@@ -1530,8 +1567,61 @@ internal sealed class AuditSubmitCodexChromeAutomation
             UiActionTimeout,
             cancellationToken).ConfigureAwait(false);
         return node.TryGetProperty("node", out var described) && described.TryGetProperty("backendNodeId", out var backendNodeId)
-            ? backendNodeId.GetInt64()
+            ? new AuditSubmitAttachmentInputTarget(backendNodeId.GetInt64(), markerToken)
             : null;
+    }
+
+    private static async Task<bool> CommitAttachmentInputAsync(
+        AuditSubmitCodexChromeClient browser,
+        long tabId,
+        string markerToken,
+        string[] expectedFileNames,
+        CancellationToken cancellationToken)
+    {
+        return await browser.EvaluateBoolAsync(
+            tabId,
+            AttachmentInputCommitExpression(markerToken, expectedFileNames),
+            UiActionTimeout,
+            cancellationToken,
+            allowTransientRecovery: false).ConfigureAwait(false);
+    }
+
+    private static async Task WaitForAttachmentChipAsync(
+        AuditSubmitCodexChromeClient browser,
+        long tabId,
+        string[] expectedFileNames,
+        string message,
+        CancellationToken cancellationToken)
+    {
+        var fileNamesJson = JsonSerializer.Serialize(expectedFileNames);
+        var expressions = new[] { message, string.Empty }
+            .Distinct(StringComparer.Ordinal)
+            .Select(candidateMessage => PromptPayloadReadyExpression(
+                JsonSerializer.Serialize(candidateMessage),
+                fileNamesJson))
+            .ToArray();
+        var deadline = DateTimeOffset.UtcNow + TimeSpan.FromSeconds(90);
+        while (DateTimeOffset.UtcNow < deadline)
+        {
+            foreach (var expression in expressions)
+            {
+                if (await browser.EvaluateBoolAsync(
+                        tabId,
+                        expression,
+                        UiActionTimeout,
+                        cancellationToken,
+                        allowTransientRecovery: false).ConfigureAwait(false))
+                {
+                    return;
+                }
+            }
+
+            await Task.Delay(TimeSpan.FromMilliseconds(500), cancellationToken).ConfigureAwait(false);
+        }
+
+        throw new AuditSubmitCodexChromeException(
+            "E2D-BUILD-AUDIT-SUBMIT-ATTACHMENT-MISSING",
+            "The ChatGPT composer did not publish the selected audit ZIP attachment with either an empty or exact current prompt draft.");
     }
 
     private static async Task FillPromptAsync(
@@ -1547,6 +1637,26 @@ internal sealed class AuditSubmitCodexChromeAutomation
             throw new AuditSubmitCodexChromeException(
                 "E2D-BUILD-AUDIT-SUBMIT-PROMPT-MISSING",
                 "Could not find the prompt input in the ChatGPT composer.");
+        }
+    }
+
+    private static async Task ClearPromptAsync(
+        AuditSubmitCodexChromeClient browser,
+        long tabId,
+        CancellationToken cancellationToken)
+    {
+        var expression = FillPromptExpression(JsonSerializer.Serialize(string.Empty));
+        var cleared = await browser.EvaluateBoolAsync(
+            tabId,
+            expression,
+            UiActionTimeout,
+            cancellationToken,
+            allowTransientRecovery: false).ConfigureAwait(false);
+        if (!cleared)
+        {
+            throw new AuditSubmitCodexChromeException(
+                "E2D-BUILD-AUDIT-SUBMIT-PROMPT-MISSING",
+                "Could not clear the restored prompt draft before a ZIP-only reuse submission.");
         }
     }
 
@@ -1570,47 +1680,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
         throw new AuditSubmitCodexChromeException(
             "E2D-BUILD-AUDIT-SUBMIT-SEND-MISSING",
             "Could not find an enabled send button in the ChatGPT composer.");
-    }
-
-    private static async Task<string> WaitForReportAsync(
-        AuditSubmitCodexChromeClient browser,
-        long tabId,
-        AuditSubmitOptions options,
-        string downloadsDirectory,
-        bool includeUserDownloadsFallback,
-        IReadOnlySet<string> ignoredDeepResearchTargetIds,
-        CancellationToken cancellationToken)
-    {
-        var delay = TimeSpan.FromSeconds(options.PollSeconds);
-        while (true)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            _ = await DismissRateLimitDialogAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
-            var decision = await CapturePollingDecisionAsync(browser, tabId, downloadsDirectory, includeUserDownloadsFallback, ignoredDeepResearchTargetIds, cancellationToken).ConfigureAwait(false);
-            if (decision.Action == AuditSubmitPollingAction.ReturnReport && decision.Report is not null)
-            {
-                return decision.Report;
-            }
-
-            if (options.DownloadReportOnly && decision.Action == AuditSubmitPollingAction.Reload)
-            {
-                throw new AuditSubmitCodexChromeException(
-                    "E2D-BUILD-AUDIT-SUBMIT-REPORT-EXPORT-MISSING",
-                    "The ready report page did not expose a unique Deep Research export button or Markdown blob. Inspect DOM diagnostics or the live user-visible Chrome state.");
-            }
-
-            await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
-            if (options.DownloadReportOnly)
-            {
-                continue;
-            }
-
-            await browser.ExecuteCdpAsync(tabId, "Page.reload", EmptyObject(), UiActionTimeout, cancellationToken).ConfigureAwait(false);
-            await WaitForPageReadyAsync(browser, tabId, UiActionTimeout, cancellationToken).ConfigureAwait(false);
-            await WaitForConversationMessagesAsync(browser, tabId, minimumMessageCount: 1, timeout: TimeSpan.FromMinutes(1), cancellationToken: cancellationToken).ConfigureAwait(false);
-            await WaitForReportHydrationAsync(cancellationToken).ConfigureAwait(false);
-            _ = await DismissRateLimitDialogAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
-        }
     }
 
     private static async Task<string> DownloadReadyReportAsync(
@@ -1703,7 +1772,8 @@ internal sealed class AuditSubmitCodexChromeAutomation
             var extraction = AuditSubmitReportExtractor.Extract(candidates, generationComplete: true);
             return extraction.Ready ? extraction.Report : null;
         }
-        catch (AuditSubmitCodexChromeException ex) when (IsTransientOrdinaryCopyFailure(ex))
+        catch (AuditSubmitCodexChromeException ex) when (
+            string.Equals(ex.Code, "E2D-BUILD-AUDIT-SUBMIT-ORDINARY-COPY-UNAVAILABLE", StringComparison.Ordinal))
         {
             return null;
         }
@@ -1747,69 +1817,61 @@ internal sealed class AuditSubmitCodexChromeAutomation
     {
         var delay = TimeSpan.FromSeconds(pollSeconds);
         var minimumMessageCount = messageCountBeforeSend + 2;
-        var validReportStability = new AuditSubmitReportStabilityTracker(() => driver.UtcNow);
-        string? lastInvalidCandidate = null;
-        string? lastInvalidReason = null;
-        DateTimeOffset lastInvalidCandidateFirstSeenUtc = default;
-        var invalidCandidateStableAge = TimeSpan.FromSeconds(30);
-        string? lastOrdinaryCopyFailure = null;
-        DateTimeOffset lastOrdinaryCopyFailureFirstSeenUtc = default;
         var ordinaryCopyButtonMissing = false;
+        var copySurfaceReloaded = false;
         DateTimeOffset ordinaryCopyButtonMissingFirstSeenUtc = default;
         while (true)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var isGenerating = await driver.IsGeneratingAsync(cancellationToken).ConfigureAwait(false);
+            bool isGenerating;
+            try
+            {
+                isGenerating = await driver.IsGeneratingAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (AuditSubmitCodexChromeException ex) when (AuditSubmitCodexChromeClient.IsRecoverableCdpFailure(ex))
+            {
+                await driver.DelayAsync(delay, cancellationToken).ConfigureAwait(false);
+                continue;
+            }
+
             string? clipboardMarkdown = null;
             if (!isGenerating)
             {
-                try
+                var copyResult = await driver.CopyLatestAssistantMessageMarkdownAsync(minimumMessageCount, cancellationToken).ConfigureAwait(false);
+                if (copyResult.Status == AuditSubmitOrdinaryCopyStatus.CopiedMarkdown &&
+                    !string.IsNullOrWhiteSpace(copyResult.Markdown))
                 {
-                    var copyResult = await driver.CopyLatestAssistantMessageMarkdownAsync(minimumMessageCount, cancellationToken).ConfigureAwait(false);
-                    lastOrdinaryCopyFailure = null;
-                    lastOrdinaryCopyFailureFirstSeenUtc = default;
-                    if (copyResult.Status == AuditSubmitOrdinaryCopyStatus.CopiedMarkdown &&
-                        !string.IsNullOrWhiteSpace(copyResult.Markdown))
-                    {
-                        clipboardMarkdown = copyResult.Markdown;
-                        ordinaryCopyButtonMissing = false;
-                        ordinaryCopyButtonMissingFirstSeenUtc = default;
-                    }
-                    else if (copyResult.Status == AuditSubmitOrdinaryCopyStatus.CopyActionUnavailable)
-                    {
-                        if (!ordinaryCopyButtonMissing)
-                        {
-                            ordinaryCopyButtonMissing = true;
-                            ordinaryCopyButtonMissingFirstSeenUtc = driver.UtcNow;
-                        }
-                        else if (driver.UtcNow - ordinaryCopyButtonMissingFirstSeenUtc >= OrdinaryCopyFailureStableAge)
-                        {
-                            throw new AuditSubmitCodexChromeException(
-                                "E2D-BUILD-AUDIT-SUBMIT-ORDINARY-COPY-UNAVAILABLE",
-                                "The ordinary ChatGPT assistant response copy button was not available after generation completed.");
-                        }
-                    }
-                    else
-                    {
-                        ordinaryCopyButtonMissing = false;
-                        ordinaryCopyButtonMissingFirstSeenUtc = default;
-                    }
-                }
-                catch (AuditSubmitCodexChromeException ex) when (IsTransientOrdinaryCopyFailure(ex))
-                {
+                    clipboardMarkdown = copyResult.Markdown;
                     ordinaryCopyButtonMissing = false;
                     ordinaryCopyButtonMissingFirstSeenUtc = default;
-                    if (!string.Equals(lastOrdinaryCopyFailure, ex.Message, StringComparison.Ordinal))
+                }
+                else if (copyResult.Status == AuditSubmitOrdinaryCopyStatus.CopyActionUnavailable)
+                {
+                    if (!copySurfaceReloaded)
                     {
-                        lastOrdinaryCopyFailure = ex.Message;
-                        lastOrdinaryCopyFailureFirstSeenUtc = driver.UtcNow;
+                        await driver.ReloadConversationAsync(minimumMessageCount, cancellationToken).ConfigureAwait(false);
+                        copySurfaceReloaded = true;
+                        ordinaryCopyButtonMissing = false;
+                        ordinaryCopyButtonMissingFirstSeenUtc = default;
+                        continue;
                     }
-                    else if (driver.UtcNow - lastOrdinaryCopyFailureFirstSeenUtc >= OrdinaryCopyFailureStableAge)
+
+                    if (!ordinaryCopyButtonMissing)
+                    {
+                        ordinaryCopyButtonMissing = true;
+                        ordinaryCopyButtonMissingFirstSeenUtc = driver.UtcNow;
+                    }
+                    else if (driver.UtcNow - ordinaryCopyButtonMissingFirstSeenUtc >= OrdinaryCopyFailureStableAge)
                     {
                         throw new AuditSubmitCodexChromeException(
                             "E2D-BUILD-AUDIT-SUBMIT-ORDINARY-COPY-UNAVAILABLE",
-                            $"The ordinary ChatGPT response copy action repeatedly failed before a valid Markdown report could be read: {ex.Message}");
+                            "The ordinary ChatGPT assistant response copy button was not available after generation completed.");
                     }
+                }
+                else
+                {
+                    ordinaryCopyButtonMissing = false;
+                    ordinaryCopyButtonMissingFirstSeenUtc = default;
                 }
             }
             else
@@ -1827,55 +1889,18 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 var extraction = AuditSubmitReportExtractor.Extract(candidates, generationComplete: !isGenerating);
                 if (extraction.Ready && extraction.Report is not null)
                 {
-                    var decision = validReportStability.Decide(candidates, isGenerating);
-                    if (decision.Action == AuditSubmitPollingAction.ReturnReport && decision.Report is not null)
-                    {
-                        return decision.Report;
-                    }
+                    return extraction.Report;
                 }
-                else if (!isGenerating)
-                {
-                    var candidateText = candidates[0].Text;
-                    if (!string.Equals(lastInvalidCandidate, candidateText, StringComparison.Ordinal))
-                    {
-                        lastInvalidCandidate = candidateText;
-                        lastInvalidReason = extraction.FailureReason;
-                        lastInvalidCandidateFirstSeenUtc = driver.UtcNow;
-                    }
-                    else if (driver.UtcNow - lastInvalidCandidateFirstSeenUtc >= invalidCandidateStableAge)
-                    {
-                        throw new AuditSubmitCodexChromeException(
-                            "E2D-BUILD-AUDIT-SUBMIT-REPORT-INVALID",
-                            string.IsNullOrWhiteSpace(lastInvalidReason)
-                                ? "The ordinary ChatGPT assistant response copied from the response action does not match the strict final report contract."
-                                : $"The ordinary ChatGPT assistant response copied from the response action does not match the strict final report contract: {lastInvalidReason}");
-                    }
-                }
-            }
-            else
-            {
-                lastInvalidCandidate = null;
-                lastInvalidReason = null;
-                lastInvalidCandidateFirstSeenUtc = default;
+
+                throw new AuditSubmitCodexChromeException(
+                    "E2D-BUILD-AUDIT-SUBMIT-REPORT-INVALID",
+                    string.IsNullOrWhiteSpace(extraction.FailureReason)
+                        ? "The copied ordinary ChatGPT assistant response does not match the strict final report contract."
+                        : $"The copied ordinary ChatGPT assistant response does not match the strict final report contract: {extraction.FailureReason}");
             }
 
             await driver.DelayAsync(delay, cancellationToken).ConfigureAwait(false);
         }
-    }
-
-    private static bool IsTransientOrdinaryCopyFailure(AuditSubmitCodexChromeException exception)
-    {
-        return string.Equals(exception.Code, "E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-PROTOCOL", StringComparison.Ordinal) &&
-            IsRecoverableOrdinaryCopyFailureMessage(exception.Message);
-    }
-
-    private static bool IsRecoverableOrdinaryCopyFailureMessage(string message)
-    {
-        return message.Contains("Debugger unattached", StringComparison.OrdinalIgnoreCase) ||
-            message.Contains("Debugger is not attached", StringComparison.OrdinalIgnoreCase) ||
-            message.Contains("Timed out", StringComparison.OrdinalIgnoreCase) ||
-            message.Contains("Cannot find context", StringComparison.OrdinalIgnoreCase) ||
-            message.Contains("Target closed", StringComparison.OrdinalIgnoreCase);
     }
 
     private interface IAuditSubmitOrdinaryReportDriver
@@ -1885,6 +1910,8 @@ internal sealed class AuditSubmitCodexChromeAutomation
         Task<bool> IsGeneratingAsync(CancellationToken cancellationToken);
 
         Task<AuditSubmitOrdinaryCopyResult> CopyLatestAssistantMessageMarkdownAsync(int minimumMessageCount, CancellationToken cancellationToken);
+
+        Task ReloadConversationAsync(int minimumMessageCount, CancellationToken cancellationToken);
 
         Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken);
     }
@@ -1940,6 +1967,25 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 cancellationToken).ConfigureAwait(false);
         }
 
+        public async Task ReloadConversationAsync(int minimumMessageCount, CancellationToken cancellationToken)
+        {
+            await browser.ExecuteCdpAsync(
+                tabId,
+                "Page.reload",
+                new Dictionary<string, object?>(),
+                UiActionTimeout,
+                cancellationToken).ConfigureAwait(false);
+            await WaitForPageReadyAsync(browser, tabId, UiActionTimeout, cancellationToken).ConfigureAwait(false);
+            await WaitForConversationMessagesAsync(
+                browser,
+                tabId,
+                minimumMessageCount,
+                TimeSpan.FromMinutes(2),
+                cancellationToken).ConfigureAwait(false);
+            await WaitForReportHydrationAsync(cancellationToken).ConfigureAwait(false);
+            await ScrollConversationToBottomAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
+        }
+
         public async Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken)
         {
             await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
@@ -1952,13 +1998,20 @@ internal sealed class AuditSubmitCodexChromeAutomation
         int minimumMessageCount,
         CancellationToken cancellationToken)
     {
-        var buttonStateValue = await browser.EvaluateAsync(
-            tabId,
-            LastAssistantCopyButtonStateExpression(minimumMessageCount),
-            UiActionTimeout,
-            cancellationToken,
-            allowTransientRecovery: false).ConfigureAwait(false);
-        var buttonState = ReadAssistantCopyButtonState(buttonStateValue);
+        return await CopyLatestAssistantMessageMarkdownAsync(
+            new AuditSubmitOrdinaryCopyDriver(browser, tabId),
+            minimumMessageCount,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private static async Task<AuditSubmitOrdinaryCopyResult> CopyLatestAssistantMessageMarkdownAsync(
+        IAuditSubmitOrdinaryCopyDriver driver,
+        int minimumMessageCount,
+        CancellationToken cancellationToken)
+    {
+        await driver.RequireCaptureAsync(cancellationToken).ConfigureAwait(false);
+        await driver.ResetCaptureAsync(cancellationToken).ConfigureAwait(false);
+        var buttonState = await driver.ReadButtonStateAsync(minimumMessageCount, cancellationToken).ConfigureAwait(false);
         if (buttonState.Status == AuditSubmitAssistantCopyButtonStatus.NoCurrentAssistantYet)
         {
             return AuditSubmitOrdinaryCopyResult.NoCurrentAssistantYet();
@@ -1969,44 +2022,100 @@ internal sealed class AuditSubmitCodexChromeAutomation
             return AuditSubmitOrdinaryCopyResult.CopyActionUnavailable();
         }
 
-        var clipboardSentinel = CreateClipboardSentinel();
-        var sentinelInstalled = SystemClipboardTextAccess.TrySetText(clipboardSentinel);
-        await GrantClipboardReadPermissionBestEffortAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
-        await InstallClipboardWriteCaptureBestEffortAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
-        await ResetClipboardWriteCaptureBestEffortAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
-        await browser.ClickAtAsync(tabId, buttonState.Point.Value, cancellationToken).ConfigureAwait(false);
-        await Task.Delay(ClipboardSettleDelay, cancellationToken).ConfigureAwait(false);
-        var systemClipboardText = await ReadSystemClipboardTextAfterCopyAsync(
-            clipboardSentinel,
-            sentinelInstalled,
+        var clipboardSequence = driver.GetClipboardSequenceNumber();
+        await driver.ClickAsync(buttonState.Point.Value, cancellationToken).ConfigureAwait(false);
+        await driver.DelayAsync(ClipboardSettleDelay, cancellationToken).ConfigureAwait(false);
+        var systemClipboardText = await driver.ReadSystemClipboardTextAsync(
+            clipboardSequence,
             cancellationToken).ConfigureAwait(false);
         if (!string.IsNullOrWhiteSpace(systemClipboardText))
         {
             return AuditSubmitOrdinaryCopyResult.CopiedMarkdown(systemClipboardText);
         }
 
-        if (await ClickLatestAssistantCopyButtonDomBestEffortAsync(browser, tabId, minimumMessageCount, cancellationToken).ConfigureAwait(false))
+        var clipboardText = await driver.ReadCapturedClipboardTextAsync(cancellationToken).ConfigureAwait(false);
+        if (string.IsNullOrWhiteSpace(clipboardText))
         {
-            await Task.Delay(ClipboardSettleDelay, cancellationToken).ConfigureAwait(false);
-            systemClipboardText = await ReadSystemClipboardTextAfterCopyAsync(
-                clipboardSentinel,
-                sentinelInstalled,
-                cancellationToken).ConfigureAwait(false);
-            if (!string.IsNullOrWhiteSpace(systemClipboardText))
-            {
-                return AuditSubmitOrdinaryCopyResult.CopiedMarkdown(systemClipboardText);
-            }
+            throw new AuditSubmitCodexChromeException(
+                "E2D-BUILD-AUDIT-SUBMIT-ORDINARY-COPY-UNAVAILABLE",
+                "The single ordinary ChatGPT response copy action did not produce Markdown.");
         }
 
-        await GrantClipboardReadPermissionBestEffortAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
-        var clipboardText = await ReadClipboardTextAsync(
-            browser,
-            tabId,
-            sentinelInstalled ? clipboardSentinel : null,
-            cancellationToken).ConfigureAwait(false);
-        return string.IsNullOrWhiteSpace(clipboardText)
-            ? AuditSubmitOrdinaryCopyResult.CopyActionUnavailable()
-            : AuditSubmitOrdinaryCopyResult.CopiedMarkdown(clipboardText);
+        return AuditSubmitOrdinaryCopyResult.CopiedMarkdown(clipboardText);
+    }
+
+    private interface IAuditSubmitOrdinaryCopyDriver
+    {
+        Task RequireCaptureAsync(CancellationToken cancellationToken);
+
+        Task ResetCaptureAsync(CancellationToken cancellationToken);
+
+        Task<AuditSubmitAssistantCopyButtonState> ReadButtonStateAsync(int minimumMessageCount, CancellationToken cancellationToken);
+
+        uint? GetClipboardSequenceNumber();
+
+        Task ClickAsync(AuditSubmitDomPoint point, CancellationToken cancellationToken);
+
+        Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken);
+
+        Task<string?> ReadSystemClipboardTextAsync(uint? previousSequenceNumber, CancellationToken cancellationToken);
+
+        Task<string> ReadCapturedClipboardTextAsync(CancellationToken cancellationToken);
+    }
+
+    private sealed class AuditSubmitOrdinaryCopyDriver(
+        AuditSubmitCodexChromeClient browser,
+        long tabId) : IAuditSubmitOrdinaryCopyDriver
+    {
+        public Task RequireCaptureAsync(CancellationToken cancellationToken)
+        {
+            return RequireClipboardWriteCaptureAsync(browser, tabId, cancellationToken);
+        }
+
+        public Task ResetCaptureAsync(CancellationToken cancellationToken)
+        {
+            return ResetClipboardWriteCaptureAsync(browser, tabId, cancellationToken);
+        }
+
+        public async Task<AuditSubmitAssistantCopyButtonState> ReadButtonStateAsync(
+            int minimumMessageCount,
+            CancellationToken cancellationToken)
+        {
+            var value = await browser.EvaluateAsync(
+                tabId,
+                LastAssistantCopyButtonStateExpression(minimumMessageCount),
+                UiActionTimeout,
+                cancellationToken,
+                allowTransientRecovery: false).ConfigureAwait(false);
+            return ReadAssistantCopyButtonState(value);
+        }
+
+        public uint? GetClipboardSequenceNumber()
+        {
+            return SystemClipboardTextAccess.TryGetSequenceNumber();
+        }
+
+        public Task ClickAsync(AuditSubmitDomPoint point, CancellationToken cancellationToken)
+        {
+            return browser.ClickAtAsync(tabId, point, cancellationToken);
+        }
+
+        public Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken)
+        {
+            return Task.Delay(delay, cancellationToken);
+        }
+
+        public Task<string?> ReadSystemClipboardTextAsync(
+            uint? previousSequenceNumber,
+            CancellationToken cancellationToken)
+        {
+            return ReadSystemClipboardTextAfterCopyAsync(previousSequenceNumber, cancellationToken);
+        }
+
+        public Task<string> ReadCapturedClipboardTextAsync(CancellationToken cancellationToken)
+        {
+            return AuditSubmitCodexChromeAutomation.ReadCapturedClipboardTextAsync(browser, tabId, cancellationToken);
+        }
     }
 
     private static AuditSubmitAssistantCopyButtonState ReadAssistantCopyButtonState(JsonElement value)
@@ -2039,17 +2148,11 @@ internal sealed class AuditSubmitCodexChromeAutomation
         return true;
     }
 
-    private static string CreateClipboardSentinel()
-    {
-        return $"E2D-AUDIT-SUBMIT-CLIPBOARD-SENTINEL-{Guid.NewGuid():N}";
-    }
-
     private static async Task<string?> ReadSystemClipboardTextAfterCopyAsync(
-        string sentinel,
-        bool sentinelInstalled,
+        uint? previousSequenceNumber,
         CancellationToken cancellationToken)
     {
-        if (!sentinelInstalled)
+        if (previousSequenceNumber is null)
         {
             return null;
         }
@@ -2058,10 +2161,15 @@ internal sealed class AuditSubmitCodexChromeAutomation
         while (DateTimeOffset.UtcNow < deadline)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var text = SystemClipboardTextAccess.TryGetText();
-            if (CanAcceptSystemClipboardText(text, sentinel, sentinelInstalled))
+            var currentSequenceNumber = SystemClipboardTextAccess.TryGetSequenceNumber();
+            if (currentSequenceNumber is not null &&
+                currentSequenceNumber != previousSequenceNumber)
             {
-                return text;
+                var text = SystemClipboardTextAccess.TryGetText();
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    return text;
+                }
             }
 
             await Task.Delay(ClipboardSettleDelay, cancellationToken).ConfigureAwait(false);
@@ -2070,174 +2178,64 @@ internal sealed class AuditSubmitCodexChromeAutomation
         return null;
     }
 
-    private static bool CanAcceptSystemClipboardText(string? text, string sentinel, bool sentinelInstalled)
-    {
-        return sentinelInstalled &&
-            !string.IsNullOrWhiteSpace(text) &&
-            !string.Equals(text, sentinel, StringComparison.Ordinal);
-    }
-
-    private static async Task<bool> ClickLatestAssistantCopyButtonDomBestEffortAsync(
-        AuditSubmitCodexChromeClient browser,
-        long tabId,
-        int minimumMessageCount,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            return await browser.EvaluateBoolAsync(
-                tabId,
-                LastAssistantCopyButtonClickExpression(minimumMessageCount),
-                TimeSpan.FromSeconds(10),
-                cancellationToken,
-                allowTransientRecovery: false).ConfigureAwait(false);
-        }
-        catch (Exception ex) when (ex is AuditSubmitCodexChromeException or JsonException)
-        {
-            return false;
-        }
-    }
-
-    private static async Task InstallClipboardWriteCaptureBestEffortAsync(
+    private static async Task RequireClipboardWriteCaptureAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
         CancellationToken cancellationToken)
     {
-        try
+        var ready = await browser.EvaluateBoolAsync(
+            tabId,
+            ClipboardWriteCaptureInstallExpression,
+            TimeSpan.FromSeconds(10),
+            cancellationToken,
+            allowTransientRecovery: false).ConfigureAwait(false);
+        if (!ready)
         {
-            _ = await browser.EvaluateBoolAsync(
-                tabId,
-                ClipboardWriteCaptureInstallExpression,
-                TimeSpan.FromSeconds(10),
-                cancellationToken,
-                allowTransientRecovery: false).ConfigureAwait(false);
-        }
-        catch (Exception ex) when (ex is AuditSubmitCodexChromeException or JsonException)
-        {
+            throw new AuditSubmitCodexChromeException(
+                "E2D-BUILD-AUDIT-SUBMIT-ORDINARY-COPY-UNAVAILABLE",
+                "The source-scoped clipboard capture was not ready before the single ordinary copy action.");
         }
     }
 
-    private static async Task ResetClipboardWriteCaptureBestEffortAsync(
+    private static async Task ResetClipboardWriteCaptureAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
         CancellationToken cancellationToken)
     {
-        try
+        var reset = await browser.EvaluateBoolAsync(
+            tabId,
+            ClipboardWriteCaptureResetExpression,
+            TimeSpan.FromSeconds(10),
+            cancellationToken,
+            allowTransientRecovery: false).ConfigureAwait(false);
+        if (!reset)
         {
-            _ = await browser.EvaluateBoolAsync(
-                tabId,
-                ClipboardWriteCaptureResetExpression,
-                TimeSpan.FromSeconds(10),
-                cancellationToken,
-                allowTransientRecovery: false).ConfigureAwait(false);
-        }
-        catch (Exception ex) when (ex is AuditSubmitCodexChromeException or JsonException)
-        {
+            throw new AuditSubmitCodexChromeException(
+                "E2D-BUILD-AUDIT-SUBMIT-ORDINARY-COPY-UNAVAILABLE",
+                "The source-scoped clipboard capture could not be reset before the single ordinary copy action.");
         }
     }
 
-    private static async Task GrantClipboardReadPermissionBestEffortAsync(
+    private static async Task<string> ReadCapturedClipboardTextAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            var origin = await browser.EvaluateAsync(
-                tabId,
-                "(() => location.origin)()",
-                TimeSpan.FromSeconds(10),
-                cancellationToken).ConfigureAwait(false);
-            if (origin.ValueKind != JsonValueKind.String ||
-                string.IsNullOrWhiteSpace(origin.GetString()))
-            {
-                return;
-            }
-
-            await browser.ExecuteCdpAsync(
-                tabId,
-                "Browser.grantPermissions",
-                new Dictionary<string, object?>
-                {
-                    ["origin"] = origin.GetString(),
-                    ["permissions"] = new[] { "clipboardReadWrite", "clipboardSanitizedWrite" }
-                },
-                TimeSpan.FromSeconds(10),
-                cancellationToken).ConfigureAwait(false);
-        }
-        catch (Exception ex) when (ex is AuditSubmitCodexChromeException or JsonException)
-        {
-        }
-    }
-
-    private static async Task<string> ReadClipboardTextAsync(
-        AuditSubmitCodexChromeClient browser,
-        long tabId,
-        string? staleClipboardText,
-        CancellationToken cancellationToken)
-    {
-        var readValue = default(JsonElement);
-        if (CanTrustBrowserClipboardReadText(staleClipboardText))
-        {
-            readValue = await browser.EvaluateAsync(
-                tabId,
-                ClipboardReadTextExpression,
-                TimeSpan.FromSeconds(10),
-                cancellationToken,
-                allowTransientRecovery: false).ConfigureAwait(false);
-            if (TryReadClipboardResult(readValue, staleClipboardText, out var clipboardText, out _))
-            {
-                return clipboardText;
-            }
-        }
-
         var captured = await browser.EvaluateAsync(
             tabId,
             ClipboardCapturedWriteTextExpression,
             TimeSpan.FromSeconds(10),
             cancellationToken,
             allowTransientRecovery: false).ConfigureAwait(false);
-        if (TrySelectClipboardText(readValue, captured, staleClipboardText, out var capturedText, out var readClipboardError, out var capturedError))
+        if (TryReadClipboardResult(captured, staleClipboardText: null, out var capturedText, out var capturedError))
         {
             return capturedText;
         }
 
         throw new AuditSubmitCodexChromeException(
             "E2D-BUILD-AUDIT-SUBMIT-CLIPBOARD-UNAVAILABLE",
-            "The ordinary ChatGPT response copy action completed, but clipboard Markdown could not be read. " +
-            $"navigator.clipboard.readText(): {readClipboardError}; captured copy action Markdown: {capturedError}");
-    }
-
-    private static bool CanTrustBrowserClipboardReadText(string? staleClipboardText)
-    {
-        return !string.IsNullOrEmpty(staleClipboardText);
-    }
-
-    private static bool TrySelectClipboardText(
-        JsonElement browserReadValue,
-        JsonElement capturedWriteValue,
-        string? staleClipboardText,
-        out string text,
-        out string readClipboardError,
-        out string capturedError)
-    {
-        text = string.Empty;
-        readClipboardError = string.IsNullOrEmpty(staleClipboardText)
-            ? "system clipboard sentinel was not installed; navigator.clipboard.readText cannot prove the current copy action."
-            : string.Empty;
-        if (CanTrustBrowserClipboardReadText(staleClipboardText) &&
-            TryReadClipboardResult(browserReadValue, staleClipboardText, out text, out readClipboardError))
-        {
-            capturedError = string.Empty;
-            return true;
-        }
-
-        if (TryReadClipboardResult(capturedWriteValue, staleClipboardText, out text, out capturedError))
-        {
-            return true;
-        }
-
-        return false;
+            "The ordinary ChatGPT response copy action completed, but source-scoped captured Markdown was unavailable. " +
+            $"Captured copy action Markdown: {capturedError}");
     }
 
     private static bool TryReadClipboardResult(JsonElement value, string? staleClipboardText, out string text, out string error)
@@ -3090,15 +3088,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
             WaitForNewerTarget: false);
     }
 
-    private static async Task<HashSet<string>> SnapshotDeepResearchTargetIdsAsync(
-        AuditSubmitCodexChromeClient browser,
-        long tabId,
-        CancellationToken cancellationToken)
-    {
-        var targets = await ReadDeepResearchTargetsAsync(browser, tabId, cancellationToken).ConfigureAwait(false);
-        return targets.Select(static target => target.TargetId).ToHashSet(StringComparer.Ordinal);
-    }
-
     private static async Task<IReadOnlyList<AuditSubmitTargetInfoEntry>> ReadDeepResearchTargetsAsync(
         AuditSubmitCodexChromeClient browser,
         long tabId,
@@ -3889,392 +3878,99 @@ internal sealed class AuditSubmitCodexChromeAutomation
         })()
         """;
 
-    private const string DeepResearchSelectedExpression =
-        """
-        (() => {
-          const normalize = (text) => (text || '').replace(/\s+/g, ' ').trim().toLowerCase();
-          const visible = (element) => {
-            const style = getComputedStyle(element);
-            const rect = element.getBoundingClientRect();
-            return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
-          };
-          const prompt = Array
-            .from(document.querySelectorAll('#prompt-textarea,[data-testid="composer-text-input"],textarea,[contenteditable="true"][role="textbox"],[contenteditable="true"]'))
-            .find(visible);
-          if (!prompt) return false;
-          const connectorId = 'connector:connector_openai_deep_research';
-          const connectorMetadataSelectors = [
-            '[data-id="connector:connector_openai_deep_research"]',
-            '[data-system-hint-type="connector:connector_openai_deep_research"]',
-            '[data-keyword="Глубокое исследование"]',
-            '[data-keyword="Deep Research"]'
-          ].join(',');
-          const inlineConnectorSelectors = [
-            '[data-id="connector:connector_openai_deep_research"][data-inline-selection-pill]',
-            '[data-system-hint-type="connector:connector_openai_deep_research"][data-inline-selection-pill]',
-            '[data-keyword="Глубокое исследование"][data-inline-selection-pill]',
-            '[data-keyword="Deep Research"][data-inline-selection-pill]'
-          ].join(',');
-          const promptRect = prompt.getBoundingClientRect();
-          const nearPrompt = (element) => {
-            const rect = element.getBoundingClientRect();
-            const horizontallyNearPrompt = rect.right >= promptRect.left - 120 &&
-              rect.left <= promptRect.right + 120;
-            const verticallyNearPrompt = rect.bottom >= promptRect.top - 240 &&
-              rect.top <= promptRect.bottom + 240;
-            return horizontallyNearPrompt && verticallyNearPrompt;
-          };
-          const isHistoryOrMessage = (element) =>
-            element.closest('[data-message-author-role]') !== null ||
-            element.closest('[data-testid^="project-conversation"]') !== null ||
-            element.closest('a[href]') !== null;
-          const isMenuOrPlainButton = (element) => {
-            const role = element.getAttribute('role') || '';
-            return role === 'menuitem' ||
-              role === 'option' ||
-              role === 'button' ||
-              element.tagName === 'BUTTON' ||
-              element.closest('button,[role="button"],[role="menuitem"],[role="option"],[role="menu"],[role="listbox"],[data-radix-popper-content-wrapper],.__menu-item,[data-fill][tabindex]') !== null;
-          };
-          const isCompactDeepResearchPill = (element) => {
-            const rect = element.getBoundingClientRect();
-            const text = normalize(element.innerText || element.textContent || '');
-            return rect.width > 0 &&
-              rect.width <= 520 &&
-              rect.height > 0 &&
-              rect.height <= 96 &&
-              (text === 'глубокое исследование' || text === 'deep research');
-          };
-          const hasConnectorMetadata = (element) => {
-            const isSelectionPill = element.getAttribute('data-inline-selection-pill') !== null;
-            const directConnector = element.getAttribute('data-id') === connectorId ||
-              element.getAttribute('data-system-hint-type') === connectorId ||
-              element.getAttribute('data-keyword') === 'Глубокое исследование' ||
-              element.getAttribute('data-keyword') === 'Deep Research';
-            const nestedConnector = typeof element.querySelectorAll === 'function' &&
-              Array.from(element.querySelectorAll(connectorMetadataSelectors)).some(visible);
-            if (isMenuOrPlainButton(element)) return false;
-            if (isSelectionPill && (directConnector || nestedConnector)) return true;
-            if (directConnector) return true;
-            return nestedConnector && isCompactDeepResearchPill(element);
-          };
-          return Array
-            .from(document.querySelectorAll(`button,[role="button"],div,span,${connectorMetadataSelectors},${inlineConnectorSelectors}`))
-            .filter((element) => element !== prompt && visible(element) && nearPrompt(element) && !isHistoryOrMessage(element))
-            .some(hasConnectorMetadata);
-        })()
-        """;
+    private const string AttachmentInputMarkerAttribute = "data-electron2d-audit-attachment-input";
 
-    private const string DeepResearchSelectedDiagnosticsExpression =
-        """
+    private static string AttachmentInputSelectionExpression(string markerToken)
+    {
+        var markerAttributeJson = JsonSerializer.Serialize(AttachmentInputMarkerAttribute);
+        var markerTokenJson = JsonSerializer.Serialize(markerToken);
+        return $$"""
         (() => {
-          const visible = (element) => {
-            const style = getComputedStyle(element);
-            const rect = element.getBoundingClientRect();
-            return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
+          const markerAttribute = {{markerAttributeJson}};
+          const markerToken = {{markerTokenJson}};
+          const registryKey = '__electron2dAuditAttachmentInputs';
+          const previousRegistry = globalThis[registryKey];
+          if (previousRegistry instanceof Map) {
+            for (const previousInput of previousRegistry.values()) {
+              previousInput?.removeAttribute?.(markerAttribute);
+            }
+          }
+          const registry = new Map();
+          globalThis[registryKey] = registry;
+          const imageExtensions = new Set([
+            '.apng', '.avif', '.bmp', '.gif', '.heic', '.heif', '.ico',
+            '.jfif', '.jpeg', '.jpg', '.png', '.svg', '.tif', '.tiff', '.webp'
+          ]);
+          const isAuditFileInput = (element) => {
+            if (!(element instanceof HTMLInputElement) || element.type !== 'file') return false;
+            const acceptTokens = String(element.accept || element.getAttribute('accept') || '')
+              .split(',')
+              .map((token) => token.trim().toLowerCase())
+              .filter(Boolean);
+            const imageOnly = acceptTokens.length > 0 && acceptTokens.every((token) =>
+              token.startsWith('image/') || imageExtensions.has(token));
+            return !imageOnly;
           };
-          const textOf = (element) => ((element.innerText || element.textContent || '').replace(/\s+/g, ' ').trim()).slice(0, 240);
-          const attr = (element, name) => element.getAttribute(name);
-          const rectOf = (element) => {
-            const rect = element.getBoundingClientRect();
-            return {
-              left: Math.round(rect.left),
-              top: Math.round(rect.top),
-              right: Math.round(rect.right),
-              bottom: Math.round(rect.bottom),
-              width: Math.round(rect.width),
-              height: Math.round(rect.height)
-            };
-          };
-          const prompts = Array
-            .from(document.querySelectorAll('#prompt-textarea,[data-testid="composer-text-input"],textarea,[contenteditable="true"][role="textbox"],[contenteditable="true"]'))
-            .filter(visible);
-          const prompt = prompts[0] || null;
-          const connectorId = 'connector:connector_openai_deep_research';
-          const connectorMetadataSelectors = [
-            '[data-id="connector:connector_openai_deep_research"]',
-            '[data-system-hint-type="connector:connector_openai_deep_research"]',
-            '[data-keyword="Глубокое исследование"]',
-            '[data-keyword="Deep Research"]'
-          ].join(',');
-          const inlineConnectorSelectors = [
-            '[data-id="connector:connector_openai_deep_research"][data-inline-selection-pill]',
-            '[data-system-hint-type="connector:connector_openai_deep_research"][data-inline-selection-pill]',
-            '[data-keyword="Глубокое исследование"][data-inline-selection-pill]',
-            '[data-keyword="Deep Research"][data-inline-selection-pill]'
-          ].join(',');
-          const promptRect = prompt ? prompt.getBoundingClientRect() : null;
-          const nearPrompt = (element) => {
-            if (!promptRect) return false;
-            const rect = element.getBoundingClientRect();
-            const horizontallyNearPrompt = rect.right >= promptRect.left - 120 &&
-              rect.left <= promptRect.right + 120;
-            const verticallyNearPrompt = rect.bottom >= promptRect.top - 240 &&
-              rect.top <= promptRect.bottom + 240;
-            return horizontallyNearPrompt && verticallyNearPrompt;
-          };
-          const isHistoryOrMessage = (element) =>
-            element.closest('[data-message-author-role]') !== null ||
-            element.closest('[data-testid^="project-conversation"]') !== null ||
-            element.closest('a[href]') !== null;
-          const isMenuOrPlainButton = (element) => {
-            const role = element.getAttribute('role') || '';
-            return role === 'menuitem' ||
-              role === 'option' ||
-              role === 'button' ||
-              element.tagName === 'BUTTON' ||
-              element.closest('button,[role="button"],[role="menuitem"],[role="option"],[role="menu"],[role="listbox"],[data-radix-popper-content-wrapper],.__menu-item,[data-fill][tabindex]') !== null;
-          };
-          const isCompactDeepResearchPill = (element) => {
-            const rect = element.getBoundingClientRect();
-            const text = textOf(element).toLowerCase();
-            return rect.width > 0 &&
-              rect.width <= 520 &&
-              rect.height > 0 &&
-              rect.height <= 96 &&
-              (text === 'глубокое исследование' || text === 'deep research');
-          };
-          const hasDirectConnector = (element) =>
-            element.getAttribute('data-id') === connectorId ||
-            element.getAttribute('data-system-hint-type') === connectorId ||
-            element.getAttribute('data-keyword') === 'Глубокое исследование' ||
-            element.getAttribute('data-keyword') === 'Deep Research';
-          const nestedConnectors = (element) => typeof element.querySelectorAll === 'function'
-            ? Array.from(element.querySelectorAll(connectorMetadataSelectors)).filter(visible)
+          const exact = document.querySelector('#upload-files');
+          const promptSelectors = [
+            '#prompt-textarea',
+            '[data-testid="composer-text-input"]',
+            'textarea',
+            '[contenteditable="true"][role="textbox"]'
+          ];
+          const prompt = promptSelectors
+            .map((selector) => document.querySelector(selector))
+            .find((element) => element?.closest('form'));
+          const composer = prompt?.closest('form');
+          const fallbackInputs = composer
+            ? Array.from(composer.querySelectorAll('input[type="file"]')).filter(isAuditFileInput)
             : [];
-          const acceptedByCurrentRule = (element) => {
-            const isSelectionPill = element.getAttribute('data-inline-selection-pill') !== null;
-            const directConnector = hasDirectConnector(element);
-            const nestedConnector = nestedConnectors(element).length > 0;
-            if (isMenuOrPlainButton(element)) return false;
-            if (isSelectionPill && (directConnector || nestedConnector)) return true;
-            if (directConnector) return true;
-            return nestedConnector && isCompactDeepResearchPill(element);
-          };
-          const candidates = Array
-            .from(document.querySelectorAll(`button,[role="button"],div,span,${connectorMetadataSelectors},${inlineConnectorSelectors}`))
-            .filter((element) =>
-              element === prompt ||
-              hasDirectConnector(element) ||
-              nestedConnectors(element).length > 0 ||
-              /глубокое исследование|deep research|отслеживание/i.test(textOf(element)) ||
-              nearPrompt(element))
-            .slice(0, 120)
-            .map((element, index) => ({
-              index,
-              tagName: element.tagName,
-              role: attr(element, 'role'),
-              dataId: attr(element, 'data-id'),
-              dataSystemHintType: attr(element, 'data-system-hint-type'),
-              dataKeyword: attr(element, 'data-keyword'),
-              dataInlineSelectionPill: attr(element, 'data-inline-selection-pill'),
-              dataTestId: attr(element, 'data-testid'),
-              ariaLabel: attr(element, 'aria-label'),
-              text: textOf(element),
-              visible: visible(element),
-              rect: rectOf(element),
-              isPrompt: element === prompt,
-              nearPrompt: nearPrompt(element),
-              isHistoryOrMessage: isHistoryOrMessage(element),
-              isMenuOrPlainButton: isMenuOrPlainButton(element),
-              isCompactDeepResearchPill: isCompactDeepResearchPill(element),
-              directConnector: hasDirectConnector(element),
-              nestedConnectorCount: nestedConnectors(element).length,
-              acceptedByCurrentRule: element !== prompt && visible(element) && nearPrompt(element) && !isHistoryOrMessage(element) && acceptedByCurrentRule(element)
-            }));
-          return {
-            url: location.href,
-            title: document.title,
-            readyState: document.readyState,
-            promptCount: prompts.length,
-            prompts: prompts.slice(0, 10).map((element, index) => ({
-              index,
-              tagName: element.tagName,
-              role: attr(element, 'role'),
-              dataTestId: attr(element, 'data-testid'),
-              text: textOf(element),
-              rect: rectOf(element)
-            })),
-            acceptedCandidateCount: candidates.filter((entry) => entry.acceptedByCurrentRule).length,
-            candidates
-          };
-        })()
-        """;
+          const candidates = isAuditFileInput(exact)
+            ? [exact]
+            : fallbackInputs;
+          if (candidates.length !== 1) return false;
+          const input = candidates[0];
 
-    private const string DeepResearchMenuPointExpression =
-        """
-        (() => {
-          const visible = (element) => {
-            const style = getComputedStyle(element);
-            const rect = element.getBoundingClientRect();
-            return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
-          };
-          const button = Array
-            .from(document.querySelectorAll('button[data-testid="composer-plus-btn"]'))
-            .find((element) => visible(element) && !element.disabled && element.getAttribute('aria-disabled') !== 'true');
-          if (!button) return false;
-          button.scrollIntoView({ block: 'center', inline: 'center' });
-          const rect = button.getBoundingClientRect();
-          return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-        })()
-        """;
-
-    private const string DeepResearchComposerMenuOpenExpression =
-        """
-        (() => {
-          const visible = (element) => {
-            const style = getComputedStyle(element);
-            const rect = element.getBoundingClientRect();
-            return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
-          };
-          const plus = Array
-            .from(document.querySelectorAll('button[data-testid="composer-plus-btn"]'))
-            .find((element) => visible(element) && !element.disabled && element.getAttribute('aria-disabled') !== 'true');
-          if (!plus) return false;
-          const plusRect = plus.getBoundingClientRect();
-          const inComposerMenu = (element) => {
-            const rect = element.getBoundingClientRect();
-            const horizontallyNearPlus = rect.x >= plusRect.x - 160 &&
-              rect.x <= plusRect.x + 980;
-            const belowComposer = rect.y >= plusRect.bottom - 20 &&
-              rect.y <= plusRect.bottom + 560;
-            const aboveComposer = rect.bottom >= plusRect.top - 560 &&
-              rect.bottom <= plusRect.top + 20;
-            return horizontallyNearPlus && (belowComposer || aboveComposer);
-          };
-          const isHistoryOrMessage = (element) =>
-            element.closest('[data-message-author-role]') !== null ||
-            element.closest('[data-testid^="project-conversation"]') !== null ||
-            element.closest('a[href]') !== null;
-          const menuLikeSelector = [
-            '[role="menu"]',
-            '[role="listbox"]',
-            '[data-radix-popper-content-wrapper]',
-            '.__menu-item',
-            '[data-fill][tabindex]'
-          ].join(',');
-          const hasMenuRow = (element) =>
-            element.matches('.__menu-item,[data-fill][tabindex],[role="menuitem"],[role="option"],[role="button"]') ||
-            (typeof element.querySelector === 'function' &&
-              element.querySelector('.__menu-item,[data-fill][tabindex],[role="menuitem"],[role="option"],[role="button"]') !== null);
-          return Array
-            .from(document.querySelectorAll(menuLikeSelector))
-            .filter((element) => visible(element) && inComposerMenu(element) && !isHistoryOrMessage(element))
-            .some(hasMenuRow);
-        })()
-        """;
-
-    private const string DeepResearchComposerMenuExpandedExpression =
-        """
-        (() => {
-          const visible = (element) => {
-            const style = getComputedStyle(element);
-            const rect = element.getBoundingClientRect();
-            return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
-          };
-          const plus = Array
-            .from(document.querySelectorAll('button[data-testid="composer-plus-btn"]'))
-            .find((element) => visible(element) && !element.disabled && element.getAttribute('aria-disabled') !== 'true');
-          return plus?.getAttribute('aria-expanded') === 'true';
-        })()
-        """;
-
-    private const string DeepResearchItemPointExpression =
-        """
-        (() => {
-          const normalize = (text) => (text || '').replace(/\s+/g, ' ').trim().toLowerCase();
-          const visible = (element) => {
-            const style = getComputedStyle(element);
-            const rect = element.getBoundingClientRect();
-            return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
-          };
-          const plus = Array
-            .from(document.querySelectorAll('button[data-testid="composer-plus-btn"]'))
-            .find((element) => visible(element) && !element.disabled && element.getAttribute('aria-disabled') !== 'true');
-          const plusRect = plus?.getBoundingClientRect();
-          const labels = ['глубокое исследование', 'deep research'];
-          const connectorId = 'connector:connector_openai_deep_research';
-          const interactiveSelector = 'button,[role="menuitem"],[role="option"],[role="button"],.__menu-item,[data-fill][tabindex]';
-          const connectorSelectors = [
-            '[data-id="connector:connector_openai_deep_research"]',
-            '[data-system-hint-type="connector:connector_openai_deep_research"]',
-            '[data-keyword="Глубокое исследование"]',
-            '[data-keyword="Deep Research"]'
-          ].join(',');
-          const inComposerMenu = (element) => {
-            if (!plusRect) return true;
-            const rect = element.getBoundingClientRect();
-            const horizontallyNearPlus = rect.x >= plusRect.x - 80 &&
-              rect.x <= plusRect.x + 900;
-            const belowComposer = rect.y >= plusRect.bottom - 12 &&
-              rect.y <= plusRect.bottom + 520;
-            const aboveComposer = rect.bottom >= plusRect.top - 520 &&
-              rect.bottom <= plusRect.top + 12;
-            return horizontallyNearPlus && (belowComposer || aboveComposer);
-          };
-          const isHistoryOrMessage = (element) =>
-            element.closest('[data-message-author-role]') !== null ||
-            element.closest('[data-testid^="project-conversation"]') !== null ||
-            element.closest('a[href]') !== null;
-          const hasConnectorMetadata = (element) => {
-            const keyword = normalize(element.getAttribute('data-keyword') || '');
-            return element.getAttribute('data-id') === connectorId ||
-              element.getAttribute('data-system-hint-type') === connectorId ||
-              labels.includes(keyword) ||
-              (typeof element.querySelector === 'function' && element.querySelector(connectorSelectors) !== null);
-          };
-          const isInteractive = (element) => {
-            const role = element.getAttribute('role') || '';
-            return element.tagName === 'BUTTON' ||
-              role === 'menuitem' ||
-              role === 'option' ||
-              role === 'button' ||
-              element.closest('.__menu-item,[data-fill][tabindex]') === element;
-          };
-          const candidates = Array
-            .from(document.querySelectorAll(`button,[role="menuitem"],[role="option"],[role="button"],.__menu-item,[data-fill][tabindex],div,span,${connectorSelectors}`))
-            .filter((element) => visible(element) && inComposerMenu(element) && !isHistoryOrMessage(element));
-          const matches = candidates.filter((element) => {
-            if (hasConnectorMetadata(element)) return true;
-            const text = normalize(`${element.getAttribute('aria-label') || ''}\n${element.innerText || element.textContent || ''}`);
-            return labels.some((label) => text === label || text.startsWith(`${label} `));
-          });
-          const target = matches
-            .map((element) => element.closest(interactiveSelector) || element)
-            .filter((element, index, elements) => elements.indexOf(element) === index)
-            .map((element) => ({ element, rect: element.getBoundingClientRect(), interactive: isInteractive(element) }))
-            .filter((entry) => entry.interactive || entry.rect.width >= 250)
-            .sort((left, right) =>
-              Number(right.interactive) - Number(left.interactive) ||
-              (right.rect.width * right.rect.height) - (left.rect.width * left.rect.height))
-            .map((entry) => entry.element)[0] || matches[0];
-          if (!target) return false;
-          const clickable = target.closest(interactiveSelector) || target;
-          clickable.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-          const rect = clickable.getBoundingClientRect();
-          return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-        })()
-        """;
-
-    private const string AttachmentClickExpression =
-        """
-        (() => {
-          const visible = (element) => {
-            const style = getComputedStyle(element);
-            const rect = element.getBoundingClientRect();
-            return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
-          };
-          const needles = ['attach', 'upload', 'прикреп', 'загруз'];
-          const candidates = Array.from(document.querySelectorAll('button,label,[role="button"]'));
-          const match = candidates.find((element) => {
-            const text = `${element.getAttribute('aria-label') || ''}\n${element.innerText || element.textContent || ''}`.toLowerCase();
-            return visible(element) && needles.some((needle) => text.includes(needle));
-          });
-          if (!match) return false;
-          match.click();
+          for (const previous of document.querySelectorAll(`[${markerAttribute}]`)) {
+            previous.removeAttribute(markerAttribute);
+          }
+          input.setAttribute(markerAttribute, markerToken);
+          registry.set(markerToken, input);
           return true;
         })()
         """;
+    }
+
+    private static string AttachmentInputCommitExpression(string markerToken, string[] expectedFileNames)
+    {
+        var markerTokenJson = JsonSerializer.Serialize(markerToken);
+        var expectedFileNamesJson = JsonSerializer.Serialize(expectedFileNames);
+        return $$"""
+        (() => {
+          const markerToken = {{markerTokenJson}};
+          const expectedFileNames = {{expectedFileNamesJson}};
+          const registry = globalThis.__electron2dAuditAttachmentInputs;
+          const input = registry instanceof Map ? registry.get(markerToken) : null;
+          const cleanup = () => {
+            input?.removeAttribute?.({{JsonSerializer.Serialize(AttachmentInputMarkerAttribute)}});
+            registry?.delete?.(markerToken);
+          };
+          if (!(input instanceof HTMLInputElement) || input.type !== 'file' || !input.isConnected) {
+            cleanup();
+            return false;
+          }
+          const actualFileNames = Array.from(input.files || [], (file) => file.name);
+          if (actualFileNames.length !== expectedFileNames.length ||
+              actualFileNames.some((name, index) => name !== expectedFileNames[index])) {
+            cleanup();
+            return false;
+          }
+
+          cleanup();
+          return true;
+        })()
+        """;
+    }
 
     private static string FillPromptExpression(string messageJson)
     {
@@ -4296,19 +3992,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
           const element = selectors.flatMap((selector) => Array.from(document.querySelectorAll(selector))).find(visible);
           if (!element) return false;
           element.focus();
-          const deepResearchPill = element.querySelector('[data-id="connector:connector_openai_deep_research"],[data-system-hint-type="connector:connector_openai_deep_research"],[data-keyword="Глубокое исследование"],[data-keyword="Deep Research"]');
-          if (deepResearchPill && element.isContentEditable) {
-            const selection = window.getSelection();
-            if (!selection) return false;
-            const range = document.createRange();
-            range.selectNodeContents(element);
-            range.collapse(false);
-            selection.removeAllRanges();
-            selection.addRange(range);
-            document.execCommand('insertText', false, message);
-            element.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText', data: message }));
-            return true;
-          }
           if (element instanceof HTMLTextAreaElement || element instanceof HTMLInputElement) {
             const setter = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(element), 'value')?.set;
             setter ? setter.call(element, message) : element.value = message;
@@ -4340,10 +4023,9 @@ internal sealed class AuditSubmitCodexChromeAutomation
         (() => {
           const message = {{messageJson}};
           const fileNames = {{fileNamesJson}};
-          const normalize = (value) => String(value || '').replace(/\s+/g, ' ').trim().toLowerCase();
-          const withoutDeepResearchPrefix = (value) => normalize(value)
-            .replace(/^@?\s*(глубокое исследование|deep research)\s*/, '')
-            .trim();
+          const normalizePrompt = (value) => String(value || '').replace(/\s+/g, ' ').trim();
+          const normalizeFileName = (value) => String(value || '').trim();
+          const normalizeMetadata = (value) => String(value || '').replace(/\s+/g, ' ').trim().toLowerCase();
           const visible = (element) => {
             const style = getComputedStyle(element);
             const rect = element.getBoundingClientRect();
@@ -4370,17 +4052,15 @@ internal sealed class AuditSubmitCodexChromeAutomation
             };
           }
 
-          const expectedMessage = normalize(message);
-          const expectedMessageWithoutToolPrefix = withoutDeepResearchPrefix(message);
-          const expectedMessageVariants = Array
-            .from(new Set([expectedMessage, expectedMessageWithoutToolPrefix]))
-            .filter(Boolean);
+          const expectedMessage = normalizePrompt(message);
           const promptText = typeof prompt.value === 'string'
             ? prompt.value
-            : `${prompt.innerText || ''}\n${prompt.textContent || ''}`;
-          const normalizedPromptText = normalize(promptText);
-          const expectsMessage = expectedMessageVariants.length > 0;
-          const promptHasExpectedMessage = expectedMessageVariants.some((variant) => normalizedPromptText.includes(variant));
+            : (typeof prompt.innerText === 'string' && prompt.innerText.length > 0
+              ? prompt.innerText
+              : (prompt.textContent || ''));
+          const normalizedPromptText = normalizePrompt(promptText);
+          const expectsMessage = expectedMessage.length > 0;
+          const promptHasExpectedMessage = expectsMessage && normalizedPromptText === expectedMessage;
           const promptIsEmpty = normalizedPromptText.length === 0;
           if (!expectsMessage && !promptIsEmpty) {
             return {
@@ -4409,7 +4089,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
           }
 
           const expectedFiles = Array.isArray(fileNames)
-            ? fileNames.map(normalize).filter(Boolean)
+            ? fileNames.map(normalizeFileName).filter(Boolean)
             : [];
           if (expectedFiles.length !== 1) {
             return {
@@ -4424,6 +4104,19 @@ internal sealed class AuditSubmitCodexChromeAutomation
             };
           }
 
+          const composerRoot = prompt.closest('form') || prompt.parentElement?.parentElement || prompt.parentElement;
+          const composerFileInputs = composerRoot && typeof composerRoot.querySelectorAll === 'function'
+            ? Array.from(composerRoot.querySelectorAll('input[type="file"]'))
+            : [];
+          const selectedFileCount = composerFileInputs.reduce(
+            (count, input) => count + Array.from(input.files || []).length,
+            0);
+          const inputFilesMatch = composerFileInputs.some((input) => {
+            const selectedFiles = Array.from(input.files || [], (file) => normalizeFileName(file.name));
+            return selectedFiles.length === expectedFiles.length &&
+              selectedFiles.every((fileName, index) => fileName === expectedFiles[index]);
+          });
+
           const promptRect = prompt.getBoundingClientRect();
           const nearPrompt = (element) => {
             const rect = element.getBoundingClientRect();
@@ -4437,7 +4130,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
             element.closest('[data-message-author-role]') !== null ||
             element.closest('[data-testid^="project-conversation"]') !== null ||
             element.closest('a[href]') !== null;
-          const textOf = (element) => normalize([
+          const textOf = (element) => normalizeMetadata([
             element.getAttribute('class') || '',
             element.getAttribute('data-testid') || '',
             element.getAttribute('data-test-id') || '',
@@ -4448,7 +4141,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
             element.innerText || '',
             element.textContent || ''
           ].join('\n'));
-          const metadataOf = (element) => normalize([
+          const metadataOf = (element) => normalizeMetadata([
             element.getAttribute('class') || '',
             element.getAttribute('data-testid') || '',
             element.getAttribute('data-test-id') || '',
@@ -4485,49 +4178,87 @@ internal sealed class AuditSubmitCodexChromeAutomation
             (typeof element.querySelectorAll === 'function' &&
               Array.from(element.querySelectorAll('button,[role="button"],[aria-label],[title]'))
                 .some((child) => removalWords.some((word) => metadataOf(child).includes(word))));
+          const archiveTypeWords = ['zip-архив', 'zip архив', 'zip archive', 'zip file', 'application/zip'];
+          const candidateElements = Array
+            .from(document.querySelectorAll('button,[role="button"],div,span,li,[aria-label],[title],[data-testid]'))
+            .filter((element) => {
+              if (element === prompt || prompt.contains(element)) return false;
+              return visible(element) && nearPrompt(element) && !isHistoryOrMessage(element);
+            });
+          const fileNameValuesOf = (element) => [
+            element.getAttribute('data-file-name') || '',
+            element.getAttribute('data-filename') || '',
+            element.getAttribute('aria-label') || '',
+            element.getAttribute('title') || '',
+            element.innerText || '',
+            element.textContent || ''
+          ].map(normalizeFileName).filter(Boolean);
+          const hasFileNameEvidence = (element) =>
+            fileNameValuesOf(element).some((value) => /^[^\\/\r\n]+\.[a-z0-9]{1,16}$/i.test(value)) ||
+            /(?:^|\s)[^\s\\/]+\.[a-z0-9]{1,16}(?:\s|$)/i.test(textOf(element));
+          const filenameMatches = candidateElements.filter((element) =>
+            expectedFiles.some((fileName) => fileNameValuesOf(element).some((value) => value === fileName)));
+          const archiveFilenameMatches = candidateElements.filter((element) =>
+            fileNameValuesOf(element).some((value) => /^[^\\/\r\n]+\.zip$/i.test(value)));
+          const hasUploadedArchiveEvidence = (element) => {
+            const text = textOf(element);
+            return archiveFilenameMatches.some((match) => element === match || element.contains(match)) &&
+              archiveTypeWords.some((word) => text.includes(word));
+          };
           const attachmentRootFor = (element) => {
             let current = element;
             for (let depth = 0; current && depth < 5; depth++) {
-              if (current !== prompt && !prompt.contains(current) && hasAttachmentMetadata(current)) {
+              if (current !== prompt && !prompt.contains(current) &&
+                  (hasAttachmentMetadata(current) || hasUploadedArchiveEvidence(current))) {
                 return current;
               }
 
               current = current.parentElement;
             }
 
-            return null;
+            return inputFilesMatch ? element : null;
           };
-          const filenameMatches = Array
-            .from(document.querySelectorAll('button,[role="button"],div,span,li,[aria-label],[title],[data-testid]'))
-            .filter((element) => {
-              if (element === prompt || prompt.contains(element)) return false;
-              if (!visible(element) || !nearPrompt(element) || isHistoryOrMessage(element)) return false;
-              const text = textOf(element);
-              return expectedFiles.some((fileName) => text.includes(fileName));
-            });
-          const candidates = filenameMatches
-            .map((element) => attachmentRootFor(element))
-            .filter(Boolean)
-            .filter((element) => {
-              if (!visible(element) || !nearPrompt(element) || isHistoryOrMessage(element)) return false;
-              const rect = element.getBoundingClientRect();
-              return rect.height > 0 &&
-                rect.height <= 180 &&
-                rect.width > 0 &&
-                rect.width <= Math.max(promptRect.width + 240, 520);
-            });
-          const uniqueCandidates = Array.from(new Set(candidates));
-          const roots = uniqueCandidates.filter((element) =>
-            !candidates.some((candidate) => candidate !== element && candidate.contains(element)));
+          const rootsFor = (matches) => {
+            const candidates = matches
+              .map((element) => attachmentRootFor(element))
+              .filter(Boolean)
+              .filter((element) => {
+                if (!visible(element) || !nearPrompt(element) || isHistoryOrMessage(element)) return false;
+                const rect = element.getBoundingClientRect();
+                return rect.height > 0 &&
+                  rect.height <= 180 &&
+                  rect.width > 0 &&
+                  rect.width <= Math.max(promptRect.width + 240, 520);
+              });
+            const uniqueCandidates = Array.from(new Set(candidates));
+            return uniqueCandidates.filter((element) =>
+              !uniqueCandidates.some((candidate) => candidate !== element && candidate.contains(element)));
+          };
+          const roots = rootsFor(filenameMatches);
+          const archiveRoots = rootsFor(archiveFilenameMatches);
+          const allAttachmentRoots = rootsFor(candidateElements.filter((element) =>
+            hasFileNameEvidence(element) &&
+            (hasAttachmentMetadata(element) || hasUploadedArchiveEvidence(element))));
+          const ready = roots.length === 1 &&
+            archiveRoots.length === 1 &&
+            roots[0] === archiveRoots[0];
           return {
-            ready: roots.length === 1,
-            reason: roots.length === 1 ? 'ready' : (roots.length === 0 ? 'attachment-root-missing' : 'attachment-root-ambiguous'),
+            ready,
+            reason: ready
+              ? 'ready'
+              : (roots.length === 0
+                ? 'attachment-root-missing'
+                : (archiveRoots.length !== 1 ? 'attachment-root-ambiguous' : 'attachment-root-mismatch')),
             promptFound: true,
             promptHasExpectedMessage: !expectsMessage || promptHasExpectedMessage,
             promptIsEmpty,
             expectedFileCount: expectedFiles.length,
+            inputFilesMatch,
+            selectedFileCount,
             filenameMatchCount: filenameMatches.length,
-            attachmentRootCount: roots.length
+            attachmentRootCount: roots.length,
+            nearbyArchiveRootCount: archiveRoots.length,
+            allAttachmentRootCount: allAttachmentRoots.length
           };
         })()
         """;
@@ -4567,12 +4298,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
         return LastAssistantCopyButtonExpression(minimumMessageCount, "return null;", "return null;", resultScript);
     }
 
-    private static string LastAssistantCopyButtonClickExpression(int minimumMessageCount)
-    {
-        const string resultScript = "button.click(); return true;";
-        return LastAssistantCopyButtonExpression(minimumMessageCount, "return false;", "return false;", resultScript);
-    }
-
     private static string LastAssistantCopyButtonStateExpression(int minimumMessageCount)
     {
         const string resultScript = "const rect = button.getBoundingClientRect(); return { status: 'copy-button-ready', x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };";
@@ -4604,12 +4329,8 @@ internal sealed class AuditSubmitCodexChromeAutomation
           const normalize = (value) => String(value || '').replace(/\s+/g, ' ').trim().toLowerCase();
           const isCopyButton = (element) => {
             if (!element || element.tagName?.toLowerCase() !== 'button') return false;
-            if (element.getAttribute('data-testid') !== 'copy-turn-action-button') return false;
-            const label = normalize(`${element.getAttribute('aria-label') || ''}\n${element.getAttribute('title') || ''}\n${element.innerText || element.textContent || ''}`);
-            return label.includes('копировать') || label.includes('copy');
+            return element.getAttribute('data-testid') === 'copy-turn-action-button';
           };
-          const follows = (left, right) =>
-            !!(left.compareDocumentPosition(right) & Node.DOCUMENT_POSITION_FOLLOWING);
           const messages = Array
             .from(document.querySelectorAll('[data-message-author-role="user"],[data-message-author-role="assistant"]'))
             .filter(visible);
@@ -4626,29 +4347,35 @@ internal sealed class AuditSubmitCodexChromeAutomation
           }
 
           const assistant = assistantEntry.element;
-          const nextMessage = messages.slice(assistantEntry.index + 1)[0] || null;
-          const turnRoots = [
-            assistant,
-            assistant.closest('article'),
-            assistant.closest('[data-testid*="conversation-turn"]'),
-            assistant.closest('[data-message-id]'),
-            assistant.parentElement,
-            assistant.parentElement?.parentElement
-          ].filter(Boolean);
-          const rootButtons = turnRoots.flatMap((root) => Array.from(root.querySelectorAll('button[data-testid="copy-turn-action-button"]')));
-          const pageButtons = Array.from(document.querySelectorAll('button[data-testid="copy-turn-action-button"]'));
-          const candidates = Array.from(new Set([...rootButtons, ...pageButtons]))
-            .filter((button) => visible(button) && isCopyButton(button))
-            .filter((button) =>
-              assistant.contains(button) ||
-              (
-                follows(assistant, button) &&
-                (!nextMessage || follows(button, nextMessage))
-              ));
-          const button = candidates[candidates.length - 1] || null;
-          if (!button) {
+          const assistantTurn = assistant.closest('[data-turn="assistant"]') ||
+            assistant.closest('[data-testid^="conversation-turn-"]') ||
+            assistant.closest('[data-testid*="conversation-turn"]') ||
+            assistant.closest('article');
+          if (!assistantTurn) {
             {{copyButtonMissingResultScript}}
           }
+
+          const ownedAssistants = Array
+            .from(assistantTurn.querySelectorAll('[data-message-author-role="assistant"]'))
+            .filter(visible);
+          if (ownedAssistants.length !== 1 || ownedAssistants[0] !== assistant) {
+            {{copyButtonMissingResultScript}}
+          }
+
+          const candidates = Array
+            .from(assistantTurn.querySelectorAll('button[data-testid="copy-turn-action-button"]'))
+            .filter((button) => visible(button) && isCopyButton(button))
+            .filter((button) => {
+              const owner = button.closest('[data-turn="assistant"]') ||
+                button.closest('[data-testid^="conversation-turn-"]') ||
+                button.closest('[data-testid*="conversation-turn"]') ||
+                button.closest('article');
+              return owner === assistantTurn;
+            });
+          if (candidates.length !== 1) {
+            {{copyButtonMissingResultScript}}
+          }
+          const button = candidates[0];
 
           try {
             window.__electron2dAuditCopyContext = {
@@ -4668,27 +4395,6 @@ internal sealed class AuditSubmitCodexChromeAutomation
         """;
     }
 
-    private const string ClipboardReadTextExpression =
-        """
-        (async () => {
-          if (!navigator.clipboard || typeof navigator.clipboard.readText !== 'function') {
-            return { ok: false, error: 'navigator.clipboard.readText is unavailable' };
-          }
-
-          try {
-            const timeout = new Promise((resolve) => {
-              setTimeout(() => resolve({ ok: false, error: 'navigator.clipboard.readText timed out' }), 1500);
-            });
-            const read = navigator.clipboard.readText()
-              .then((text) => ({ ok: true, text }))
-              .catch((error) => ({ ok: false, error: String(error && (error.message || error)) }));
-            return await Promise.race([read, timeout]);
-          } catch (error) {
-            return { ok: false, error: String(error && (error.message || error)) };
-          }
-        })()
-        """;
-
     private const string ClipboardWriteCapturePreloadExpression =
         """
         (() => {
@@ -4698,10 +4404,10 @@ internal sealed class AuditSubmitCodexChromeAutomation
             current.text = null;
             current.error = null;
             current.pending = null;
-            return true;
+            return current.captureReady === true;
           }
 
-          const state = { installed: true, text: null, error: null, pending: null, dataTransferSetDataPatched: false };
+          const state = { installed: true, captureReady: false, text: null, error: null, pending: null, dataTransferSetDataPatched: false };
           Object.defineProperty(window, key, {
             configurable: true,
             enumerable: false,
@@ -4812,6 +4518,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
                 state.error = 'navigator.clipboard is unavailable and DataTransfer.setData could not be patched';
               }
 
+              state.captureReady = patched;
               return patched;
             }
 
@@ -4846,6 +4553,7 @@ internal sealed class AuditSubmitCodexChromeAutomation
               state.error = 'navigator.clipboard.writeText/write could not be patched before page scripts';
             }
 
+            state.captureReady = patched;
             return patched;
           } catch (error) {
             state.error = String(error && (error.message || error));
@@ -4875,13 +4583,18 @@ internal sealed class AuditSubmitCodexChromeAutomation
     private const string ClipboardWriteCaptureInstallExpression =
         """
         (() => {
+          const preload = window.__electron2dAuditClipboardPreloadCapture;
+          if (!preload || !preload.installed || preload.captureReady !== true) {
+            return false;
+          }
+
           const key = '__electron2dAuditClipboardWriteCapture';
           const current = window[key];
           if (current && current.installed && current.copyEventInstalled) {
             current.text = null;
             current.error = null;
             current.pending = null;
-            return true;
+            return Boolean(current.dataTransferSetDataPatched || current.originalWriteText || current.originalWrite);
           }
 
           const canCaptureClipboardApi = navigator.clipboard &&
@@ -5171,7 +4884,9 @@ internal sealed class AuditSubmitCodexChromeAutomation
               };
             }
 
-            return true;
+            return Boolean(
+              state.copyEventInstalled &&
+              (state.dataTransferSetDataPatched || originalWriteText || originalWrite));
           } catch (error) {
             return false;
           }
@@ -5470,20 +5185,16 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
     {
         if (!stream.IsConnected)
         {
-            return;
+            throw new AuditSubmitCodexChromeException(
+                "E2D-BUILD-AUDIT-SUBMIT-TAB-FINALIZATION",
+                "Codex Chrome Extension pipe disconnected before the owned audit tab could be finalized.");
         }
 
-        try
-        {
-            await RequestAsync(
-                "finalizeTabs",
-                new Dictionary<string, object?> { ["keep"] = Array.Empty<object>() },
-                TimeSpan.FromSeconds(10),
-                cancellationToken).ConfigureAwait(false);
-        }
-        catch (Exception ex) when (ex is IOException or TimeoutException or AuditSubmitCodexChromeException or JsonException or OperationCanceledException)
-            {
-            }
+        await RequestAsync(
+            "finalizeTabs",
+            new Dictionary<string, object?> { ["keep"] = Array.Empty<object>() },
+            TimeSpan.FromSeconds(10),
+            cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<JsonElement> ExecuteCdpAsync(
@@ -5858,11 +5569,13 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
                 await AttachAsync(tabId, cancellationToken).ConfigureAwait(false);
                 await Task.Delay(TimeSpan.FromMilliseconds(500 * (attempt + 1)), cancellationToken).ConfigureAwait(false);
 
+                var successfulDomainEnableCount = 0;
                 foreach (var method in new[] { "Runtime.enable", "DOM.enable", "Page.enable" })
                 {
                     try
                     {
                         await ExecuteCdpCoreAsync(tabId, method, [], TimeSpan.FromSeconds(5), cancellationToken).ConfigureAwait(false);
+                        successfulDomainEnableCount++;
                     }
                     catch (AuditSubmitCodexChromeException ex) when (IsRecoverableCdpFailure(ex))
                     {
@@ -5870,7 +5583,10 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
                     }
                 }
 
-                return;
+                if (successfulDomainEnableCount > 0)
+                {
+                    return;
+                }
             }
             catch (AuditSubmitCodexChromeException ex) when (IsRecoverableCdpFailure(ex))
             {
@@ -5895,7 +5611,7 @@ internal sealed class AuditSubmitCodexChromeClient : IAsyncDisposable
         }
     }
 
-    private static bool IsRecoverableCdpFailure(AuditSubmitCodexChromeException exception)
+    internal static bool IsRecoverableCdpFailure(AuditSubmitCodexChromeException exception)
     {
         return exception.Message.Contains("Debugger unattached", StringComparison.OrdinalIgnoreCase) ||
             exception.Message.Contains("Debugger is not attached", StringComparison.OrdinalIgnoreCase) ||
@@ -6178,6 +5894,8 @@ internal readonly record struct AuditSubmitDomPoint(double X, double Y);
 
 internal readonly record struct AuditSubmitDomRect(double X, double Y, double Width, double Height);
 
+internal readonly record struct AuditSubmitAttachmentInputTarget(long BackendNodeId, string MarkerToken);
+
 internal readonly record struct AuditSubmitDeepResearchFrame(int ContextId, AuditSubmitDomRect Rect);
 
 internal readonly record struct AuditSubmitReportCandidateResult(bool SurfaceSelected, AuditSubmitReportCandidate[] Candidates)
@@ -6245,7 +5963,17 @@ internal sealed class AuditSubmitCodexChromeException(string code, string messag
 internal static class SystemClipboardTextAccess
 {
     private const uint CfUnicodeText = 13;
-    private const uint GmemMoveable = 0x0002;
+
+    public static uint? TryGetSequenceNumber()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return null;
+        }
+
+        var sequenceNumber = GetClipboardSequenceNumber();
+        return sequenceNumber == 0 ? null : sequenceNumber;
+    }
 
     public static string? TryGetText()
     {
@@ -6293,67 +6021,6 @@ internal static class SystemClipboardTextAccess
         }
     }
 
-    public static bool TrySetText(string text)
-    {
-        if (!OperatingSystem.IsWindows())
-        {
-            return false;
-        }
-
-        if (!TryOpenClipboard())
-        {
-            return false;
-        }
-
-        IntPtr handle = IntPtr.Zero;
-        try
-        {
-            if (!EmptyClipboard())
-            {
-                return false;
-            }
-
-            var bytes = Encoding.Unicode.GetBytes(text + '\0');
-            handle = GlobalAlloc(GmemMoveable, (UIntPtr)bytes.Length);
-            if (handle == IntPtr.Zero)
-            {
-                return false;
-            }
-
-            var pointer = GlobalLock(handle);
-            if (pointer == IntPtr.Zero)
-            {
-                return false;
-            }
-
-            try
-            {
-                Marshal.Copy(bytes, 0, pointer, bytes.Length);
-            }
-            finally
-            {
-                _ = GlobalUnlock(handle);
-            }
-
-            if (SetClipboardData(CfUnicodeText, handle) == IntPtr.Zero)
-            {
-                return false;
-            }
-
-            handle = IntPtr.Zero;
-            return true;
-        }
-        finally
-        {
-            if (handle != IntPtr.Zero)
-            {
-                _ = GlobalFree(handle);
-            }
-
-            _ = CloseClipboard();
-        }
-    }
-
     private static bool TryOpenClipboard()
     {
         for (var attempt = 0; attempt < 10; attempt++)
@@ -6373,13 +6040,12 @@ internal static class SystemClipboardTextAccess
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool OpenClipboard(IntPtr hWndNewOwner);
 
-    [DllImport("user32.dll", SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool CloseClipboard();
+    [DllImport("user32.dll")]
+    private static extern uint GetClipboardSequenceNumber();
 
     [DllImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool EmptyClipboard();
+    private static extern bool CloseClipboard();
 
     [DllImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -6388,12 +6054,6 @@ internal static class SystemClipboardTextAccess
     [DllImport("user32.dll", SetLastError = true)]
     private static extern IntPtr GetClipboardData(uint uFormat);
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern IntPtr SetClipboardData(uint uFormat, IntPtr hMem);
-
-    [DllImport("kernel32.dll", SetLastError = true)]
-    private static extern IntPtr GlobalAlloc(uint uFlags, UIntPtr dwBytes);
-
     [DllImport("kernel32.dll", SetLastError = true)]
     private static extern IntPtr GlobalLock(IntPtr hMem);
 
@@ -6401,6 +6061,4 @@ internal static class SystemClipboardTextAccess
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool GlobalUnlock(IntPtr hMem);
 
-    [DllImport("kernel32.dll", SetLastError = true)]
-    private static extern IntPtr GlobalFree(IntPtr hMem);
 }

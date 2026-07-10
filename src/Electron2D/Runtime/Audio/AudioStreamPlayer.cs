@@ -624,7 +624,7 @@ public class AudioStreamPlayer : Node, ISceneTreeLifecycleHandler
     }
 
     /// <summary>
-    /// Releases voices owned by this player before object lifetime ends.
+    /// Releases voices owned by this player before ElectronObject lifetime ends.
     /// </summary>
     ///
     /// <remarks>
@@ -633,7 +633,7 @@ public class AudioStreamPlayer : Node, ISceneTreeLifecycleHandler
     /// </remarks>
     ///
     /// <threadsafety>
-    /// This method is not synchronized. It is called by the object lifetime
+    /// This method is not synchronized. It is called by the ElectronObject lifetime
     /// owner on the main scene thread.
     /// </threadsafety>
     ///

@@ -140,7 +140,7 @@ public sealed class PhysicsNodeLifecycleTests
 
             tree.PhysicsFrame(1d / 60d);
 
-            Assert.False(Electron2D.Object.IsInstanceValid(body));
+            Assert.False(Electron2D.ElectronObject.IsInstanceValid(body));
             Assert.Equal(0, Electron2D.PhysicsServer2D.GetProcessInfo(Electron2D.PhysicsServer2D.ProcessInfo.ActiveObjects));
             Assert.DoesNotContain(rid, backend.LiveRids);
         }

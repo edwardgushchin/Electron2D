@@ -36,13 +36,7 @@ internal sealed class StandardRenderingBackend : RenderingBackend
         RenderingServer.RenderingFeature.Primitives,
         RenderingServer.RenderingFeature.Camera,
         RenderingServer.RenderingFeature.Clipping,
-        RenderingServer.RenderingFeature.StandardBlendModes,
-        RenderingServer.RenderingFeature.RenderTargets,
-        RenderingServer.RenderingFeature.CustomShaders,
-        RenderingServer.RenderingFeature.ShaderMaterial,
-        RenderingServer.RenderingFeature.MultiPass,
-        RenderingServer.RenderingFeature.AdvancedBlending,
-        RenderingServer.RenderingFeature.PostProcessing
+        RenderingServer.RenderingFeature.StandardBlendModes
     };
 
     public StandardRenderingBackend()

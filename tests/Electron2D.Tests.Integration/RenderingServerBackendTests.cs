@@ -29,6 +29,20 @@ namespace Electron2D.Tests.Integration;
 public sealed class RenderingServerBackendTests
 {
     [Fact]
+    public void RenderingServerDefaultsToCompatibilityProfile()
+    {
+        Assert.Equal(
+            Electron2D.RenderingServer.RenderingProfile.Compatibility,
+            Electron2D.RenderingServer.CurrentProfile);
+
+        Assert.True(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.Sprites));
+        Assert.True(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.Text));
+        Assert.True(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.StandardBlendModes));
+        Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.CustomShaders));
+        Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.PostProcessing));
+    }
+
+    [Fact]
     public void RenderingServerSwitchesBetweenInternalBackends()
     {
         Electron2D.RenderingServer.SetBackend(new Electron2D.StandardRenderingBackend());
@@ -39,8 +53,12 @@ public sealed class RenderingServerBackendTests
                 Electron2D.RenderingServer.RenderingProfile.Standard,
                 Electron2D.RenderingServer.CurrentProfile);
             Assert.True(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.Sprites));
-            Assert.True(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.CustomShaders));
-            Assert.True(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.RenderTargets));
+            Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.RenderTargets));
+            Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.CustomShaders));
+            Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.ShaderMaterial));
+            Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.MultiPass));
+            Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.AdvancedBlending));
+            Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.PostProcessing));
 
             Electron2D.RenderingServer.SetBackend(new Electron2D.CompatibilityRenderingBackend());
 

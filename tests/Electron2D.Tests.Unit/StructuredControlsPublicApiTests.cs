@@ -34,7 +34,7 @@ public sealed class StructuredControlsPublicApiTests
     {
         Assert.True(typeof(Electron2D.Control).IsAssignableFrom(typeof(Electron2D.ItemList)));
         Assert.True(typeof(Electron2D.Control).IsAssignableFrom(typeof(Electron2D.Tree)));
-        Assert.True(typeof(Electron2D.Object).IsAssignableFrom(typeof(Electron2D.TreeItem)));
+        Assert.True(typeof(Electron2D.ElectronObject).IsAssignableFrom(typeof(Electron2D.TreeItem)));
         Assert.True(typeof(Electron2D.Control).IsAssignableFrom(typeof(Electron2D.PopupMenu)));
         Assert.True(typeof(Electron2D.Container).IsAssignableFrom(typeof(Electron2D.TabContainer)));
 

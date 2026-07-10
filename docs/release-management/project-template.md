@@ -79,6 +79,7 @@ data/templates/electron2d-empty/
 - текущую версию Electron2D и требуемую версию .NET;
 - выбранный renderer profile;
 - команды `e2d validate`, `dotnet build`, `dotnet test`, `e2d run`, `e2d export` и `e2d api compare-godot <type>`;
+- явную границу `e2d api compare-godot`: команда проверяет только решение manual profile и не доказывает полную Godot 4.7 strict parity, для которой требуется отдельное parity evidence;
 - структуру проекта: `project.e2d.json`, `scenes/`, `Scripts/`, `.electron2d/tasks/`, `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/user/`;
 - запрет редактировать `.electron2d/import-cache/` и другие generated/local-only каталоги вручную;
 - правило сохранять stable UID и проверять проект через `e2d validate`;
@@ -185,7 +186,7 @@ data/templates/electron2d-empty/
 
 ## AI-ready файлы
 
-`AGENTS.md` в пользовательском проекте описывает версию Electron2D, .NET SDK, выбранный renderer profile, команды `e2d validate`, `dotnet build`, `dotnet test`, `e2d run`, `e2d export`, `e2d api compare-godot <type>`, структуру проекта, правила stable UID и запрет ручной правки generated/local-only каталогов.
+`AGENTS.md` в пользовательском проекте описывает версию Electron2D, .NET SDK, выбранный renderer profile, команды `e2d validate`, `dotnet build`, `dotnet test`, `e2d run`, `e2d export`, `e2d api compare-godot <type>`, структуру проекта, правила stable UID и запрет ручной правки generated/local-only каталогов. Инструкция обязана явно говорить, что `e2d api compare-godot` подтверждает только решение manual profile и не доказывает полную Godot 4.7 strict parity без отдельного parity evidence.
 
 Шаблон не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/`. Для пользовательских задач используется `ProjectTaskManager`: начальная доска хранится в `.electron2d/tasks/board.e2tasks`, стартовая задача — в `.electron2d/tasks/welcome.e2task`.
 

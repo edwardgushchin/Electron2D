@@ -102,11 +102,11 @@ public sealed class PackedSceneTests
         Assert.Equal(Electron2D.Error.Ok, tree.ChangeSceneToPacked(secondScene));
         Assert.Null(tree.CurrentScene);
         Assert.Equal(0, tree.Root.GetChildCount());
-        Assert.True(Electron2D.Object.IsInstanceValid(firstInstance));
+        Assert.True(Electron2D.ElectronObject.IsInstanceValid(firstInstance));
 
         tree.ProcessFrame(0.0d);
 
-        Assert.False(Electron2D.Object.IsInstanceValid(firstInstance));
+        Assert.False(Electron2D.ElectronObject.IsInstanceValid(firstInstance));
         var secondInstance = Assert.IsType<Electron2D.Node>(tree.CurrentScene);
         Assert.Equal("Second", secondInstance.Name);
         Assert.Same(secondInstance, tree.Root.GetChild(0));

@@ -58,13 +58,13 @@ internal static class ShaderMaterialParameterValidator
 
     private static void ValidateObjectParameter(string parameterName, Variant value)
     {
-        if (value.AsObject() is Texture2D texture && Object.IsInstanceValid(texture))
+        if (value.AsObject() is Texture2D texture && ElectronObject.IsInstanceValid(texture))
         {
             return;
         }
 
         throw new ArgumentException(
-            $"Shader parameter '{parameterName}' can store Object values only when they are valid Texture2D sampler resources.",
+            $"Shader parameter '{parameterName}' can store ElectronObject values only when they are valid Texture2D sampler resources.",
             nameof(value));
     }
 }

@@ -276,11 +276,11 @@ public sealed class LeakVerificationTests
 
             if (previous is not null)
             {
-                Assert.False(Electron2D.Object.IsInstanceValid(previous));
+                Assert.False(Electron2D.ElectronObject.IsInstanceValid(previous));
             }
 
             var current = Assert.IsType<Electron2D.Node>(tree.CurrentScene);
-            Assert.True(Electron2D.Object.IsInstanceValid(current));
+            Assert.True(Electron2D.ElectronObject.IsInstanceValid(current));
             Assert.Equal(1, tree.Root.GetChildCount());
             previous = current;
         }
@@ -289,7 +289,7 @@ public sealed class LeakVerificationTests
         tree.Root.RemoveChild(finalScene);
         finalScene.Free();
         Assert.Equal(0, tree.Root.GetChildCount());
-        Assert.False(Electron2D.Object.IsInstanceValid(finalScene));
+        Assert.False(Electron2D.ElectronObject.IsInstanceValid(finalScene));
     }
 
     private static Electron2D.PackedScene PackScene(string name)

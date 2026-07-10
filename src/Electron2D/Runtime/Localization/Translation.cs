@@ -33,7 +33,7 @@ namespace Electron2D;
 /// A translation resource maps a source message key and optional context to a
 /// translated message for <see cref="Locale" />. Register translation resources
 /// with <see cref="TranslationServer.AddTranslation" /> so
-/// <see cref="Object.Tr(string, string)" /> and
+/// <see cref="ElectronObject.Tr(string, string)" /> and
 /// <see cref="TranslationServer.Translate" /> can resolve them.
 /// </para>
 /// <para>

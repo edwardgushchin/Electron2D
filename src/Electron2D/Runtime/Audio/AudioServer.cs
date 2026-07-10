@@ -1279,7 +1279,7 @@ public static class AudioServer
 
     private static void ValidateStream(AudioStream stream)
     {
-        if (!Object.IsInstanceValid(stream))
+        if (!ElectronObject.IsInstanceValid(stream))
         {
             throw new InvalidOperationException("Audio stream instance was freed.");
         }

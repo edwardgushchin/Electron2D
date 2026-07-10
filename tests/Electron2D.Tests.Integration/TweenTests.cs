@@ -136,6 +136,31 @@ public sealed class TweenTests
     }
 
     [Fact]
+    public void TweenPropertyUpdatesNestedClrObjectPath()
+    {
+        var tree = new Electron2D.SceneTree();
+        var target = new NestedTweenTarget { Name = "Target" };
+
+        try
+        {
+            tree.Root.AddChild(target);
+
+            var tween = tree.CreateTween();
+            tween.TweenProperty(target, "State:Alpha", 6f, 1d);
+
+            tree.ProcessFrame(0.5d);
+            Assert.Equal(4f, target.State.Alpha);
+
+            tree.ProcessFrame(0.5d);
+            Assert.Equal(6f, target.State.Alpha);
+        }
+        finally
+        {
+            tree.Root.Free();
+        }
+    }
+
+    [Fact]
     public void CompletionCallbacksSignalsAndStepSignalsRunAfterSequence()
     {
         var tree = new Electron2D.SceneTree();
@@ -203,5 +228,15 @@ public sealed class TweenTests
         {
             tree.Root.Free();
         }
+    }
+
+    private sealed class NestedTweenTarget : Electron2D.Node2D
+    {
+        public NestedTweenState State { get; set; } = new();
+    }
+
+    private sealed class NestedTweenState
+    {
+        public float Alpha { get; set; } = 2f;
     }
 }

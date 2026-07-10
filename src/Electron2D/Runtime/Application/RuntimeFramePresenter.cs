@@ -434,13 +434,17 @@ internal sealed class RuntimeFramePresenter : IRuntimeFramePresenter
     {
         try
         {
-            return gpuFactory(window, presentationSize, presentationSettings);
+            var presenter = gpuFactory(window, presentationSize, presentationSettings);
+            RenderingServer.SetBackend(new StandardRenderingBackend());
+            return presenter;
         }
         catch (GpuPresenterUnavailableException exception)
         {
             usedFallbackPresenter = true;
             fallbackReason = exception.Message;
-            return fallbackFactory(window, presentationSize, presentationSettings);
+            var presenter = fallbackFactory(window, presentationSize, presentationSettings);
+            RenderingServer.SetBackend(new CompatibilityRenderingBackend());
+            return presenter;
         }
     }
 
@@ -450,6 +454,7 @@ internal sealed class RuntimeFramePresenter : IRuntimeFramePresenter
         usedFallbackPresenter = true;
         fallbackReason = exception.Message;
         activePresenter = fallbackFactory(window, presentationSize, presentationSettings);
+        RenderingServer.SetBackend(new CompatibilityRenderingBackend());
     }
 
     private int presentedFrames;

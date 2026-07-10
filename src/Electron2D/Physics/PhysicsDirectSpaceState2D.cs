@@ -45,7 +45,7 @@ namespace Electron2D;
 /// <since>
 /// This type is available since Electron2D 0.1-preview.
 /// </since>
-public sealed class PhysicsDirectSpaceState2D : Object
+public sealed class PhysicsDirectSpaceState2D : ElectronObject
 {
     private readonly Node? root;
 

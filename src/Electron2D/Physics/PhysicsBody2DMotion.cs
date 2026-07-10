@@ -116,7 +116,7 @@ internal static class PhysicsBody2DMotion
 
     private static bool TrySweepAgainstTarget(
         Rect2 movingBounds,
-        Object? localShape,
+        ElectronObject? localShape,
         Vector2 motion,
         PhysicsQueryShape targetShape,
         float safeMargin,
@@ -262,7 +262,7 @@ internal static class PhysicsBody2DMotion
         float Fraction,
         Vector2 Position,
         Vector2 Normal,
-        Object? LocalShape,
+        ElectronObject? LocalShape,
         PhysicsQueryShape TargetShape)
     {
         public static MotionHit None { get; } = new(

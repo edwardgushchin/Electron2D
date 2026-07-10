@@ -14,7 +14,7 @@
 
 ## Назначение
 
-`Variant` должен стать Electron2D контейнером значения для динамических runtime API Electron2D `0.1-preview`: сигналов, deferred calls, будущей базы свойств, scene/resource serialization и Agent-native cross-platform 2D game engine tooling. Публичный C# API `Variant`, входящий в утверждённую публичную поверхность, должен совпадать с Godot `4.7-stable` .NET/C# API. Значения и типы, которые не закрыты полным evidence, должны быть явно отражены в API manifest, проверках совместимости и, если нужно, в утверждённых строках `Deferred`/`Unsupported` через `T-0963`.
+`Variant` должен стать Electron2D контейнером значения для динамических runtime API Electron2D `0.1-preview`: сигналов, deferred calls, будущей базы свойств, scene/resource serialization и Agent-native cross-platform 2D game engine tooling. Публичный C# API `Variant`, входящий в утверждённую публичную поверхность, должен совпадать с Godot `4.7-stable` .NET/C# API. Значения и типы, которые не закрыты полным evidence, должны быть явно отражены в API manifest, проверках совместимости и, если нужно, в утверждённых строках `Deferred`/`Unsupported` в manual public API profile.
 
 ## Источники поведения
 
@@ -47,7 +47,7 @@ Godot C# использует `Variant` как `struct`, где `default`/пус
 - `Dictionary`;
 - `Array`.
 
-`Resource` и `Node` хранятся как `Object`, потому что они наследуются от `Electron2D.Object`. Перечисления хранятся как `Int`, как в Godot C#.
+`Resource` и `Node` хранятся как `Object`, потому что они наследуются от `Electron2D.ElectronObject`. Здесь `Object` означает категорию `Variant.Type.Object`, а не обычный CLR `object`. Перечисления хранятся как `Int`, как в Godot C#.
 
 В `0.1-preview` намеренно не входят:
 
@@ -55,7 +55,7 @@ Godot C# использует `Variant` как `struct`, где `default`/пус
 - `Signal`, пока в публичном API нет отдельного Electron2D `Signal`;
 - packed arrays;
 - editor-only значения;
-- произвольные CLR-объекты, не наследующиеся от `Electron2D.Object`.
+- произвольные CLR-объекты, не наследующиеся от `Electron2D.ElectronObject`.
 
 ## Контракт публичной поверхности
 
@@ -142,7 +142,7 @@ Godot C# использует `Variant` как `struct`, где `default`/пус
 - `string?`;
 - `Vector2`, `Vector2I`, `Rect2`, `Rect2I`, `Transform2D`, `Color`;
 - `StringName`, `NodePath`, `Rid`, `Callable`;
-- `Object?` и наследники, включая `Resource` и `Node`;
+- `ElectronObject?` и наследники, включая `Resource` и `Node`;
 - `Electron2D.Collections.Array?`;
 - `Electron2D.Collections.Dictionary?`.
 

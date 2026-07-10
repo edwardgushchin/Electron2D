@@ -191,7 +191,7 @@ public class Label : Control
     /// <param name="delta">The elapsed frame time in seconds.</param>
     ///
     /// <remarks>
-    /// Labels draw <see cref="Text" /> through <see cref="Object.Tr(string, string)" />.
+    /// Labels draw <see cref="Text" /> through <see cref="ElectronObject.Tr(string, string)" />.
     /// This callback observes locale and translation registry changes so cached
     /// draw commands are refreshed on the next processed frame.
     /// </remarks>

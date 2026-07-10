@@ -40,7 +40,7 @@ namespace Electron2D;
 /// This API is available since Electron2D 0.1-preview.
 /// </since>
 ///
-public class Node : Object
+public class Node : ElectronObject
 {
 
     /// <summary>

@@ -31,8 +31,8 @@ public sealed class BaseObjectLifetimeTests
     [Fact]
     public void ObjectInstanceIdsAreStableUniqueAndNonZero()
     {
-        var first = new Electron2D.Object();
-        var second = new Electron2D.Object();
+        var first = new Electron2D.ElectronObject();
+        var second = new Electron2D.ElectronObject();
         var firstId = first.GetInstanceId();
 
         first.Free();
@@ -45,13 +45,13 @@ public sealed class BaseObjectLifetimeTests
     [Fact]
     public void ObjectFreeIsIdempotentAndInvalidatesInstance()
     {
-        var value = new Electron2D.Object();
+        var value = new Electron2D.ElectronObject();
 
         value.Free();
         value.Free();
 
-        Assert.False(Electron2D.Object.IsInstanceValid(value));
-        Assert.False(Electron2D.Object.IsInstanceValid(null));
+        Assert.False(Electron2D.ElectronObject.IsInstanceValid(value));
+        Assert.False(Electron2D.ElectronObject.IsInstanceValid(null));
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public sealed class BaseObjectLifetimeTests
         Assert.True(value.Unreference());
 
         Assert.Equal(0, value.GetReferenceCount());
-        Assert.False(Electron2D.Object.IsInstanceValid(value));
+        Assert.False(Electron2D.ElectronObject.IsInstanceValid(value));
         Assert.False(value.Reference());
     }
 

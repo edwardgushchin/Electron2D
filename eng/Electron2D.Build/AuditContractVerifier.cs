@@ -255,10 +255,13 @@ internal sealed class AuditContractVerifier(string repositoryRoot, JsonDiagnosti
                 "archiveOnlyEvidenceGlobs",
                 "preflightChecks[].evidenceGlobs",
                 "checks[].trxGlobs",
-                "`--reuse-conversation`",
+                "Агент не выбирает route",
+                "submit-attempt-rNN.json",
+                "Тот же ZIP и тот же `rNN` повторно не отправляются",
                 "прикрепляет только основной ZIP",
                 "не вставляет в composer текст `AUDIT-REQUEST.md`",
-                "Явный `--message` вместе с `--reuse-conversation` отклоняется"
+                "Явный `--message` для автоматически выведенного reuse отклоняется",
+                "При любом исходе команда в `finally` закрывает только вкладку, созданную текущим запуском"
             ]);
     }
 

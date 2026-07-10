@@ -122,6 +122,50 @@ public sealed class AnimationPlayerTracksTests
     }
 
     [Fact]
+    public void AnimationPlayerAppliesNestedStructAndClrObjectValueTracks()
+    {
+        var tree = new Electron2D.SceneTree();
+        var target = new NestedAnimationTarget { Name = "Target" };
+        var player = new Electron2D.AnimationPlayer { Name = "Player" };
+        var library = new Electron2D.AnimationLibrary();
+        var animation = new Electron2D.Animation { Length = 1d };
+
+        try
+        {
+            var positionXTrack = animation.AddTrack(Electron2D.Animation.TrackTypeEnum.Value);
+            animation.TrackSetPath(positionXTrack, "Target:Position:X");
+            animation.TrackInsertKey(positionXTrack, 0d, 0f);
+            animation.TrackInsertKey(positionXTrack, 1d, 10f);
+
+            var alphaTrack = animation.AddTrack(Electron2D.Animation.TrackTypeEnum.Value);
+            animation.TrackSetPath(alphaTrack, "Target:State:Alpha");
+            animation.TrackInsertKey(alphaTrack, 0d, 2f);
+            animation.TrackInsertKey(alphaTrack, 1d, 6f);
+
+            Assert.Equal(Electron2D.Error.Ok, library.AddAnimation("nested", animation));
+            Assert.Equal(Electron2D.Error.Ok, player.AddAnimationLibrary("", library));
+
+            tree.Root.AddChild(target);
+            tree.Root.AddChild(player);
+
+            player.Play("nested");
+            tree.ProcessFrame(0.5d);
+
+            Assert.Equal(5f, target.Position.X);
+            Assert.Equal(4f, target.State.Alpha);
+
+            tree.ProcessFrame(0.5d);
+
+            Assert.Equal(10f, target.Position.X);
+            Assert.Equal(6f, target.State.Alpha);
+        }
+        finally
+        {
+            tree.Root.Free();
+        }
+    }
+
+    [Fact]
     public void AnimationPlayerCallsMethodTracksOnceQueuesPlaybackAndEmitsCompletionSignal()
     {
         var tree = new Electron2D.SceneTree();
@@ -184,5 +228,15 @@ public sealed class AnimationPlayerTracksTests
         {
             Calls.Add(value);
         }
+    }
+
+    private sealed class NestedAnimationTarget : Electron2D.Node2D
+    {
+        public NestedAnimationState State { get; set; } = new();
+    }
+
+    private sealed class NestedAnimationState
+    {
+        public float Alpha { get; set; } = 2f;
     }
 }

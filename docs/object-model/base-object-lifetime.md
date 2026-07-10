@@ -1,4 +1,4 @@
-# Базовые типы `Object`, `RefCounted`, `Resource`
+# Базовые типы `ElectronObject`, `RefCounted`, `Resource`
 
 Обновлено: 2026-06-23.
 
@@ -24,17 +24,17 @@
 
 Минимальный public surface задачи:
 
-- `Electron2D.Object`
+- `Electron2D.ElectronObject`
 - `Electron2D.RefCounted`
 - `Electron2D.Resource`
 
-## `Object`
+## `ElectronObject`
 
-`Object` должен:
+`ElectronObject` должен:
 
 - выдавать стабильный ненулевой instance id через `GetInstanceId()`;
 - иметь idempotent `Free()`;
-- поддерживать `Object.IsInstanceValid(Object? instance)`;
+- поддерживать `ElectronObject.IsInstanceValid(ElectronObject? instance)`;
 - запрещать работу с освобождённым объектом внутри наследников через protected проверку;
 - не реализовывать `IComponent`, `IDisposable` или Unity-like component API.
 
@@ -42,7 +42,7 @@
 
 `RefCounted` должен:
 
-- наследоваться от `Object`;
+- наследоваться от `ElectronObject`;
 - начинаться с reference count `1`;
 - поддерживать `Reference()`, `Unreference()` и `GetReferenceCount()`;
 - освобождаться при переходе счётчика ссылок к `0`;
@@ -84,18 +84,18 @@
 
 Текущий runtime экспортирует:
 
-- `Electron2D.Object`
+- `Electron2D.ElectronObject`
 - `Electron2D.RefCounted`
 - `Electron2D.Resource`
 
-## `Object`
+## `ElectronObject`
 
-`Object` предоставляет:
+`ElectronObject` предоставляет:
 
 - `GetInstanceId()`;
 - `Free()`;
 - `IsQueuedForDeletion()`;
-- `Object.IsInstanceValid(Object? instance)`.
+- `ElectronObject.IsInstanceValid(ElectronObject? instance)`.
 
 `Free()` idempotent. После `Free()` объект считается invalid, но `GetInstanceId()` остаётся стабильным.
 
@@ -103,7 +103,7 @@
 
 ## `RefCounted`
 
-`RefCounted` наследуется от `Object`, стартует с reference count `1` и предоставляет:
+`RefCounted` наследуется от `ElectronObject`, стартует с reference count `1` и предоставляет:
 
 - `Reference()`;
 - `Unreference()`;
@@ -126,6 +126,6 @@
 ## Ограничения текущего baseline
 
 - Реализован только минимальный subset, нужный для старта object model.
-- `Object` пока не содержит metadata API: `StringName` и `Variant` уже есть, но сами metadata методы будут вводиться отдельной задачей с тестами.
+- `ElectronObject` пока не содержит metadata API: `StringName` и `Variant` уже есть, но сами metadata методы будут вводиться отдельной задачей с тестами.
 - Базовый `Resource` пока не возвращает `Rid`: `Rid` уже есть, но конкретные server-backed ресурсы появятся вместе с rendering/physics/audio/text servers.
 - Public API не реализует `IDisposable`, чтобы не добавлять .NET-specific метод `Dispose()` в Electron2D surface.

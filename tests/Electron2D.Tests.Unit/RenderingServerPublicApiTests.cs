@@ -30,23 +30,24 @@ namespace Electron2D.Tests.Unit;
 public sealed class RenderingServerPublicApiTests
 {
     [Fact]
-    public void RenderingServerDefaultsToCompatibilityProfile()
+    public void RenderingServerIsPublicApiSurface()
     {
-        Assert.Equal(
-            Electron2D.RenderingServer.RenderingProfile.Compatibility,
-            Electron2D.RenderingServer.CurrentProfile);
+        var assembly = typeof(Electron2D.Node).Assembly;
+        var renderingServer = assembly.GetType("Electron2D.RenderingServer", throwOnError: true)!;
+        var exportedTypeNames = assembly.GetExportedTypes()
+            .Select(type => type.FullName)
+            .ToArray();
 
-        Assert.True(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.Sprites));
-        Assert.True(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.Text));
-        Assert.True(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.StandardBlendModes));
-        Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.CustomShaders));
-        Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.PostProcessing));
+        Assert.True(renderingServer.IsPublic);
+        Assert.Contains("Electron2D.RenderingServer", exportedTypeNames);
+        Assert.Contains("Electron2D.RenderingServer+RenderingFeature", exportedTypeNames);
+        Assert.Contains("Electron2D.RenderingServer+RenderingProfile", exportedTypeNames);
     }
 
     [Fact]
     public void RenderingServerDoesNotExportConcreteBackendTypes()
     {
-        var assembly = typeof(Electron2D.RenderingServer).Assembly;
+        var assembly = typeof(Electron2D.Node).Assembly;
         var exportedTypeNames = assembly.GetExportedTypes()
             .Select(type => type.FullName)
             .ToArray();

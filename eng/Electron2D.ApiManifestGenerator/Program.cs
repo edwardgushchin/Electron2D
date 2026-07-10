@@ -64,13 +64,9 @@ var manifest = new ApiManifest(
         CompiledAssembly: RelativePath(arguments.RepositoryRoot, arguments.AssemblyPath),
         XmlDocumentation: RelativePath(arguments.RepositoryRoot, arguments.XmlPath),
         PublicApiProfile: RelativePath(arguments.RepositoryRoot, arguments.ProfilePath)),
-    StrictParitySummary: new StrictParitySummary(
-        MissingTypes: 0,
-        MissingMembers: 0,
-        SignatureMismatches: 0,
-        InheritanceMismatches: 0,
-        DefaultMismatches: 0,
-        UnexpectedChanges: 0),
+    StrictParityEvidence: new StrictParityEvidence(
+        Status: "not_verified",
+        Reason: "The manual public API profile records owner-approved scope only; strict Godot 4.7 parity is verified by owning class tasks and final gates."),
     StatusSummary: summary,
     SupportedVariantTypes:
     [
@@ -116,8 +112,9 @@ static ApiTypeEntry CreateTypeEntry(
     var rawFullName = RawDisplayName(type);
     var typeDocId = TypeId(type);
     var typeDoc = FindDoc(docs, typeDocId);
-    var profile = CreateProfile(publicApiProfile.Find(fullName, rawFullName), fullName);
-    var members = GetMembers(type, docs, profile)
+    var profileDecision = publicApiProfile.Find(fullName, rawFullName);
+    var profile = CreateProfile(profileDecision, fullName);
+    var members = GetMembers(type, docs, profile, profileDecision)
         .OrderBy(member => member.Id, StringComparer.Ordinal)
         .ToArray();
 
@@ -137,6 +134,9 @@ static ApiTypeEntry CreateTypeEntry(
         Summary: PlainSummary(typeDoc),
         Category: CategoryFor(type),
         Profile: profile,
+        GodotApiScope: profileDecision?.GodotApiScope,
+        GodotApiContract: profileDecision?.GodotApiContract,
+        ElectronApiContract: profileDecision?.ElectronApiContract,
         Members: members);
 }
 
@@ -162,6 +162,7 @@ static ApiProfile CreateProfile(ProfileTypeDecision? entry, string fullName)
             Parity: "not_verified",
             OutOfProfile: true,
             GodotReference: ShortTypeName(fullName),
+            EditorOnly: false,
             Notes: "No manual public API profile decision exists for this exported runtime type.");
     }
 
@@ -175,9 +176,10 @@ static ApiProfile CreateProfile(ProfileTypeDecision? entry, string fullName)
     return new ApiProfile(
         Name: "Electron2D 0.1-preview",
         Status: status,
-        Parity: status == "supported" ? "parity_verified" : "not_verified",
+        Parity: status == "supported" ? "profile_approved" : "not_verified",
         OutOfProfile: status != "supported",
         GodotReference: entry.GodotReference,
+        EditorOnly: entry.EditorOnly,
         Notes: entry.Rationale);
 }
 
@@ -190,7 +192,8 @@ static string ShortTypeName(string fullName)
 static IReadOnlyList<ApiMemberEntry> GetMembers(
     Type type,
     IReadOnlyDictionary<string, XElement> docs,
-    ApiProfile profile)
+    ApiProfile profile,
+    ProfileTypeDecision? profileDecision)
 {
     const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
     var members = new List<ApiMemberEntry>();
@@ -204,6 +207,7 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
         var xmlDocId = "F:" + XmlTypeName(type) + "." + field.Name;
         var doc = FindDoc(docs, xmlDocId);
         var fieldName = ProjectMemberName(field.Name);
+        var memberProfile = ResolveMemberProfile(profile, profileDecision, kind, fieldName);
         members.Add(new ApiMemberEntry(
             Id: MemberId(type, kind, fieldName),
             DeclaringType: DisplayName(type),
@@ -215,7 +219,8 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
             Parameters: [],
             XmlDocId: xmlDocId,
             Summary: PlainSummary(doc),
-            Profile: profile));
+            Profile: memberProfile.Profile,
+            ElectronApiDecision: memberProfile.Decision));
     }
 
     foreach (var property in type.GetProperties(flags).OrderBy(property => property.Name, StringComparer.Ordinal))
@@ -223,6 +228,7 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
         var xmlDocId = "P:" + XmlTypeName(type) + "." + property.Name;
         var doc = FindDoc(docs, xmlDocId);
         var propertyName = ProjectMemberName(property.Name);
+        var memberProfile = ResolveMemberProfile(profile, profileDecision, "Property", propertyName);
         members.Add(new ApiMemberEntry(
             Id: MemberId(type, "Property", propertyName),
             DeclaringType: DisplayName(type),
@@ -234,7 +240,8 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
             Parameters: property.GetIndexParameters().Select(CreateParameter).ToArray(),
             XmlDocId: xmlDocId,
             Summary: PlainSummary(doc),
-            Profile: profile));
+            Profile: memberProfile.Profile,
+            ElectronApiDecision: memberProfile.Decision));
     }
 
     foreach (var eventInfo in type.GetEvents(flags).OrderBy(item => item.Name, StringComparer.Ordinal))
@@ -242,6 +249,7 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
         var xmlDocId = "E:" + XmlTypeName(type) + "." + eventInfo.Name;
         var doc = FindDoc(docs, xmlDocId);
         var eventName = ProjectMemberName(eventInfo.Name);
+        var memberProfile = ResolveMemberProfile(profile, profileDecision, "Event", eventName);
         members.Add(new ApiMemberEntry(
             Id: MemberId(type, "Event", eventName),
             DeclaringType: DisplayName(type),
@@ -253,17 +261,20 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
             Parameters: [],
             XmlDocId: xmlDocId,
             Summary: PlainSummary(doc),
-            Profile: profile));
+            Profile: memberProfile.Profile,
+            ElectronApiDecision: memberProfile.Decision));
     }
 
     foreach (var constructor in type.GetConstructors(flags).OrderBy(ConstructorDisplayName, StringComparer.Ordinal))
     {
         var xmlDocId = MethodId(type, constructor, "#ctor");
         var doc = FindDoc(docs, xmlDocId);
+        var constructorName = ShortDisplayName(type).Split('.').Last();
+        var memberProfile = ResolveMemberProfile(profile, profileDecision, "Constructor", constructorName);
         members.Add(new ApiMemberEntry(
             Id: MemberId(type, "Constructor", ConstructorDisplayName(constructor)),
             DeclaringType: DisplayName(type),
-            Name: ShortDisplayName(type).Split('.').Last(),
+            Name: constructorName,
             Kind: "Constructor",
             Signature: ConstructorSignature(type, constructor),
             ReturnType: null,
@@ -271,7 +282,8 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
             Parameters: constructor.GetParameters().Select(CreateParameter).ToArray(),
             XmlDocId: xmlDocId,
             Summary: PlainSummary(doc),
-            Profile: profile));
+            Profile: memberProfile.Profile,
+            ElectronApiDecision: memberProfile.Decision));
     }
 
     foreach (var method in type.GetMethods(flags)
@@ -282,6 +294,7 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
         var xmlDocId = MethodId(type, method, method.Name);
         var doc = FindDoc(docs, xmlDocId);
         var methodName = ProjectMemberName(method.Name);
+        var memberProfile = ResolveMemberProfile(profile, profileDecision, kind, methodName);
         members.Add(new ApiMemberEntry(
             Id: MemberId(type, kind, MethodDisplayName(method)),
             DeclaringType: DisplayName(type),
@@ -293,10 +306,57 @@ static IReadOnlyList<ApiMemberEntry> GetMembers(
             Parameters: method.GetParameters().Select(CreateParameter).ToArray(),
             XmlDocId: xmlDocId,
             Summary: PlainSummary(doc),
-            Profile: profile));
+            Profile: memberProfile.Profile,
+            ElectronApiDecision: memberProfile.Decision));
     }
 
     return members;
+}
+
+static ResolvedMemberProfile ResolveMemberProfile(
+    ApiProfile typeProfile,
+    ProfileTypeDecision? typeDecision,
+    string kind,
+    string name)
+{
+    if (typeDecision is null || !string.Equals(typeDecision.GodotApiScope, "subset", StringComparison.Ordinal))
+    {
+        return new ResolvedMemberProfile(typeProfile, null);
+    }
+
+    var contract = typeDecision.ElectronApiContract;
+    var decision = contract?.MemberDecisions.SingleOrDefault(candidate =>
+        string.Equals(candidate.Kind, kind, StringComparison.Ordinal) &&
+        string.Equals(candidate.Name, name, StringComparison.Ordinal));
+    decision ??= new ElectronApiMemberDecision(
+        Kind: kind,
+        Name: name,
+        Decision: contract?.DefaultMemberDecision ?? typeDecision.GodotApiContract?.DefaultMemberDecision ?? "unsupported",
+        Compatibility: "unclassified",
+        GodotName: null,
+        Rationale: contract?.Rationale ?? "Exported subset member has no explicit electronApiContract decision.");
+
+    var status = decision.Decision switch
+    {
+        "approved" => "supported",
+        "deferred" => "deferred",
+        "unsupported" => "unsupported",
+        _ => "unapproved"
+    };
+    var parity = status == "supported"
+        ? string.Equals(decision.Compatibility, "electronExtension", StringComparison.Ordinal)
+            ? "not_applicable"
+            : "profile_approved"
+        : "not_verified";
+    var profile = new ApiProfile(
+        Name: typeProfile.Name,
+        Status: status,
+        Parity: parity,
+        OutOfProfile: status != "supported",
+        GodotReference: typeProfile.GodotReference,
+        EditorOnly: typeProfile.EditorOnly,
+        Notes: decision.Rationale);
+    return new ResolvedMemberProfile(profile, decision);
 }
 
 static ApiParameterEntry CreateParameter(ParameterInfo parameter)
@@ -423,7 +483,7 @@ static string CategoryFor(Type type)
 
 static IReadOnlyList<ApiCategory> ApiCategories() =>
 [
-    new ApiCategory("Core", type => Named(type, "Object", "RefCounted", "Callable", "Error", "ConnectFlags", "Rid", "StringName")),
+    new ApiCategory("Core", type => Named(type, "ElectronObject", "Object", "RefCounted", "Callable", "Error", "ConnectFlags", "Rid", "StringName")),
     new ApiCategory("Scene Tree", type => Named(type, "Node", "Node2D", "NodePath", "PackedScene", "ProcessMode", "SceneTree")),
     new ApiCategory("Resources", type => Named(type, "Resource", "ResourceUid")),
     new ApiCategory("Math and Data", type => Named(type, "Mathf", "Vector2", "Vector2I", "Rect2", "Rect2I", "Transform2D", "Color", "RandomNumberGenerator", "Variant") ||
@@ -879,7 +939,7 @@ public sealed record ApiManifest(
     string ProfileName,
     string GodotBaseline,
     GeneratedFrom GeneratedFrom,
-    StrictParitySummary StrictParitySummary,
+    StrictParityEvidence StrictParityEvidence,
     StatusSummary StatusSummary,
     IReadOnlyList<string> SupportedVariantTypes,
     IReadOnlyList<ApiTypeEntry> Types);
@@ -889,13 +949,9 @@ public sealed record GeneratedFrom(
     string XmlDocumentation,
     string PublicApiProfile);
 
-public sealed record StrictParitySummary(
-    int MissingTypes,
-    int MissingMembers,
-    int SignatureMismatches,
-    int InheritanceMismatches,
-    int DefaultMismatches,
-    int UnexpectedChanges);
+public sealed record StrictParityEvidence(
+    string Status,
+    string Reason);
 
 public sealed record StatusSummary(
     int Supported,
@@ -918,6 +974,9 @@ public sealed record ApiTypeEntry(
     string Summary,
     string Category,
     ApiProfile Profile,
+    string? GodotApiScope,
+    GodotApiContract? GodotApiContract,
+    ElectronApiContract? ElectronApiContract,
     IReadOnlyList<ApiMemberEntry> Members);
 
 public sealed record ApiMemberEntry(
@@ -931,7 +990,8 @@ public sealed record ApiMemberEntry(
     IReadOnlyList<ApiParameterEntry> Parameters,
     string XmlDocId,
     string Summary,
-    ApiProfile Profile);
+    ApiProfile Profile,
+    ElectronApiMemberDecision? ElectronApiDecision);
 
 public sealed record ApiParameterEntry(
     string Name,
@@ -946,6 +1006,7 @@ public sealed record ApiProfile(
     string Parity,
     bool OutOfProfile,
     string GodotReference,
+    bool EditorOnly,
     string Notes);
 
 public sealed record ApiCategory(string Title, Func<Type, bool> Matches);
@@ -954,7 +1015,48 @@ public sealed record ProfileTypeDecision(
     string FullName,
     string GodotReference,
     string Decision,
+    string Rationale,
+    bool EditorOnly,
+    string? GodotApiScope,
+    GodotApiContract? GodotApiContract,
+    ElectronApiContract? ElectronApiContract);
+
+public sealed record GodotApiContract(
+    string Scope,
+    string DefaultMemberDecision,
+    string Rationale,
+    IReadOnlyList<GodotApiMemberDecision> MemberDecisions,
+    IReadOnlyList<GodotApiEnumValueDecision> EnumValueDecisions);
+
+public sealed record GodotApiMemberDecision(
+    string Selector,
+    string Decision,
     string Rationale);
+
+public sealed record GodotApiEnumValueDecision(
+    string Enum,
+    string Name,
+    string Value,
+    string Decision,
+    string Rationale);
+
+public sealed record ElectronApiContract(
+    string Scope,
+    string DefaultMemberDecision,
+    string Rationale,
+    IReadOnlyList<ElectronApiMemberDecision> MemberDecisions);
+
+public sealed record ElectronApiMemberDecision(
+    string Kind,
+    string Name,
+    string Decision,
+    string Compatibility,
+    string? GodotName,
+    string Rationale);
+
+public sealed record ResolvedMemberProfile(
+    ApiProfile Profile,
+    ElectronApiMemberDecision? Decision);
 
 public sealed class ManualApiProfile
 {
@@ -993,11 +1095,41 @@ public sealed class ManualApiProfile
             }
 
             var fullName = RequiredString(type, "fullName");
+            var decision = RequiredString(type, "decision");
+            var godotApiScope = OptionalString(type, "godotApiScope");
+            var godotApiContract = OptionalGodotApiContract(type);
+            var electronApiContract = OptionalElectronApiContract(type);
+            if (string.Equals(decision, "approved", StringComparison.Ordinal))
+            {
+                if (godotApiScope is not ("full" or "subset"))
+                {
+                    throw new InvalidOperationException("Approved manual public API profile type entry must declare godotApiScope=full|subset: " + fullName + ".");
+                }
+
+                if (string.Equals(godotApiScope, "subset", StringComparison.Ordinal) != (godotApiContract is not null))
+                {
+                    throw new InvalidOperationException("Manual public API subset scope and godotApiContract must be declared together: " + fullName + ".");
+                }
+
+                if (!string.Equals(godotApiScope, "subset", StringComparison.Ordinal) && electronApiContract is not null)
+                {
+                    throw new InvalidOperationException("electronApiContract is allowed only for a manual public API subset type: " + fullName + ".");
+                }
+            }
+            else if (godotApiScope is not null || godotApiContract is not null || electronApiContract is not null)
+            {
+                throw new InvalidOperationException("Only approved manual public API profile types may declare Godot or Electron API contracts: " + fullName + ".");
+            }
+
             entries[NormalizeApiName(fullName)] = new ProfileTypeDecision(
                 FullName: fullName,
                 GodotReference: RequiredString(type, "godotReference"),
-                Decision: RequiredString(type, "decision"),
-                Rationale: RequiredString(type, "rationale"));
+                Decision: decision,
+                Rationale: RequiredString(type, "rationale"),
+                EditorOnly: OptionalBool(type, "editorOnly"),
+                GodotApiScope: godotApiScope,
+                GodotApiContract: godotApiContract,
+                ElectronApiContract: electronApiContract);
         }
 
         return new ManualApiProfile(entries);
@@ -1025,6 +1157,145 @@ public sealed class ManualApiProfile
         }
 
         throw new InvalidOperationException("Manual public API profile type entry is missing required string property: " + propertyName + ".");
+    }
+
+    private static bool OptionalBool(JsonElement element, string propertyName)
+    {
+        if (!element.TryGetProperty(propertyName, out var property))
+        {
+            return false;
+        }
+
+        return property.ValueKind switch
+        {
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            _ => throw new InvalidOperationException("Manual public API profile type entry property must be boolean when present: " + propertyName + ".")
+        };
+    }
+
+    private static string? OptionalString(JsonElement element, string propertyName)
+    {
+        if (!element.TryGetProperty(propertyName, out var property))
+        {
+            return null;
+        }
+
+        if (property.ValueKind != JsonValueKind.String || string.IsNullOrWhiteSpace(property.GetString()))
+        {
+            throw new InvalidOperationException("Manual public API profile type entry property must be a non-empty string when present: " + propertyName + ".");
+        }
+
+        return property.GetString();
+    }
+
+    private static GodotApiContract? OptionalGodotApiContract(JsonElement type)
+    {
+        if (!type.TryGetProperty("godotApiContract", out var contract))
+        {
+            return null;
+        }
+
+        if (contract.ValueKind != JsonValueKind.Object)
+        {
+            throw new InvalidOperationException("Manual public API profile type entry property godotApiContract must be an object when present.");
+        }
+
+        return new GodotApiContract(
+            Scope: RequiredString(contract, "scope"),
+            DefaultMemberDecision: RequiredString(contract, "defaultMemberDecision"),
+            Rationale: RequiredString(contract, "rationale"),
+            MemberDecisions: ReadMemberDecisions(contract),
+            EnumValueDecisions: ReadEnumValueDecisions(contract));
+    }
+
+    private static ElectronApiContract? OptionalElectronApiContract(JsonElement type)
+    {
+        if (!type.TryGetProperty("electronApiContract", out var contract))
+        {
+            return null;
+        }
+
+        if (contract.ValueKind != JsonValueKind.Object)
+        {
+            throw new InvalidOperationException("Manual public API profile type entry property electronApiContract must be an object when present.");
+        }
+
+        var scope = RequiredString(contract, "scope");
+        var defaultDecision = RequiredString(contract, "defaultMemberDecision");
+        if (!string.Equals(scope, "exportedMembers", StringComparison.Ordinal) ||
+            defaultDecision is not ("deferred" or "unsupported"))
+        {
+            throw new InvalidOperationException("electronApiContract must use scope=exportedMembers and a deferred/unsupported default.");
+        }
+
+        if (!contract.TryGetProperty("memberDecisions", out var decisions) || decisions.ValueKind != JsonValueKind.Array)
+        {
+            throw new InvalidOperationException("electronApiContract must contain a memberDecisions array.");
+        }
+
+        var keys = new HashSet<string>(StringComparer.Ordinal);
+        var memberDecisions = decisions.EnumerateArray().Select(decision =>
+        {
+            var kind = RequiredString(decision, "kind");
+            var name = RequiredString(decision, "name");
+            var memberDecision = RequiredString(decision, "decision");
+            var compatibility = RequiredString(decision, "compatibility");
+            var godotName = OptionalString(decision, "godotName");
+            if (memberDecision is not ("approved" or "deferred" or "unsupported") ||
+                compatibility is not ("godotMember" or "godotEnumValue" or "electronExtension") ||
+                !keys.Add(kind + "\n" + name) ||
+                (string.Equals(compatibility, "electronExtension", StringComparison.Ordinal) == (godotName is not null)))
+            {
+                throw new InvalidOperationException("electronApiContract contains an invalid or duplicate member decision: " + kind + " " + name + ".");
+            }
+
+            return new ElectronApiMemberDecision(
+                Kind: kind,
+                Name: name,
+                Decision: memberDecision,
+                Compatibility: compatibility,
+                GodotName: godotName,
+                Rationale: RequiredString(decision, "rationale"));
+        }).ToArray();
+
+        return new ElectronApiContract(
+            Scope: scope,
+            DefaultMemberDecision: defaultDecision,
+            Rationale: RequiredString(contract, "rationale"),
+            MemberDecisions: memberDecisions);
+    }
+
+    private static IReadOnlyList<GodotApiMemberDecision> ReadMemberDecisions(JsonElement contract)
+    {
+        if (!contract.TryGetProperty("memberDecisions", out var decisions) || decisions.ValueKind != JsonValueKind.Array)
+        {
+            throw new InvalidOperationException("Manual public API subset contract must contain a memberDecisions array.");
+        }
+
+        return decisions.EnumerateArray()
+            .Select(decision => new GodotApiMemberDecision(
+                Selector: RequiredString(decision, "selector"),
+                Decision: RequiredString(decision, "decision"),
+                Rationale: RequiredString(decision, "rationale")))
+            .ToArray();
+    }
+
+    private static IReadOnlyList<GodotApiEnumValueDecision> ReadEnumValueDecisions(JsonElement contract)
+    {
+        if (!contract.TryGetProperty("enumValueDecisions", out var decisions) || decisions.ValueKind != JsonValueKind.Array)
+        {
+            throw new InvalidOperationException("Manual public API subset contract must contain an enumValueDecisions array.");
+        }
+
+        return decisions.EnumerateArray()
+            .Select(decision => new GodotApiEnumValueDecision(
+                Enum: RequiredString(decision, "enum"),
+                Name: RequiredString(decision, "name"),
+                Value: RequiredString(decision, "value"),
+                Decision: RequiredString(decision, "decision"),
+                Rationale: RequiredString(decision, "rationale")))
+            .ToArray();
     }
 
     private static string NormalizeApiName(string value) => value.Replace('+', '.');

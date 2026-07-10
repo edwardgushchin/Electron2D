@@ -68,7 +68,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     }
 
     private bool colliding;
-    private Object? collider;
+    private ElectronObject? collider;
     private Rid colliderRid;
     private int colliderShape;
     private Vector2 collisionPoint;
@@ -301,7 +301,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     }
 
     /// <summary>
-    /// Gets the object hit by the raycast.
+    /// Gets the ElectronObject hit by the raycast.
     /// </summary>
     /// <returns><c>null</c> until the query backend is implemented.</returns>
     ///
@@ -318,14 +318,14 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
     ///
     /// <seealso cref="RayCast2D" />
     ///
-    public Object? GetCollider()
+    public ElectronObject? GetCollider()
     {
         ThrowIfFreed();
         return collider;
     }
 
     /// <summary>
-    /// Gets the RID of the object hit by the raycast.
+    /// Gets the RID of the ElectronObject hit by the raycast.
     /// </summary>
     /// <returns>The default empty <see cref="Rid" /> until the query backend is implemented.</returns>
     ///
@@ -461,7 +461,7 @@ public class RayCast2D : Node2D, ISceneTreeLifecycleHandler
         }
 
         colliding = true;
-        collider = result[Variant.CreateFrom("collider")].Obj as Object;
+        collider = result[Variant.CreateFrom("collider")].Obj as ElectronObject;
         colliderRid = result[Variant.CreateFrom("rid")].Obj is Rid rid ? rid : default;
         colliderShape = result[Variant.CreateFrom("shape")].Obj is long shapeIndex ? checked((int)shapeIndex) : 0;
         collisionPoint = result[Variant.CreateFrom("position")].Obj is Vector2 point ? point : Vector2.Zero;

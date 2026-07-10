@@ -342,6 +342,7 @@ internal static partial class Electron2DCommandLine
 internal sealed class LocalDocumentationStore
 {
     public const string ApiManifestPath = "data/api/electron2d-api-manifest.json";
+    public const string PublicApiProfilePath = "data/api/electron2d-public-api-profile.json";
     public const string IndexPath = "data/documentation/electron2d-local-docs-index.json";
     public const string SqliteCachePath = "data/documentation/electron2d-local-docs-search.sqlite";
 

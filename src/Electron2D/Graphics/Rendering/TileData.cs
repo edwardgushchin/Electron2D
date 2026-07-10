@@ -46,7 +46,7 @@ namespace Electron2D;
 ///
 /// <seealso cref="TileSetAtlasSource"/>
 /// <seealso cref="TileMapLayer"/>
-public sealed class TileData : Object
+public sealed class TileData : ElectronObject
 {
     private readonly Dictionary<int, List<CollisionPolygon>> collisionLayers = new();
     private Color modulate = Color.White;

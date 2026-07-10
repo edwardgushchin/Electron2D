@@ -52,12 +52,12 @@ public class KinematicCollision2D : RefCounted
         Vector2 normal,
         Vector2 travel,
         Vector2 remainder,
-        Object? collider,
+        ElectronObject? collider,
         Rid colliderRid,
-        Object? colliderShape,
+        ElectronObject? colliderShape,
         int colliderShapeIndex,
         Vector2 colliderVelocity,
-        Object? localShape,
+        ElectronObject? localShape,
         float depth)
     {
         Position = position;
@@ -81,17 +81,17 @@ public class KinematicCollision2D : RefCounted
 
     private Vector2 Remainder { get; }
 
-    private Object? Collider { get; }
+    private ElectronObject? Collider { get; }
 
     private Rid ColliderRid { get; }
 
-    private Object? ColliderShape { get; }
+    private ElectronObject? ColliderShape { get; }
 
     private int ColliderShapeIndex { get; }
 
     private Vector2 ColliderVelocity { get; }
 
-    private Object? LocalShape { get; }
+    private ElectronObject? LocalShape { get; }
 
     private float Depth { get; }
 
@@ -129,7 +129,7 @@ public class KinematicCollision2D : RefCounted
     }
 
     /// <summary>
-    /// Gets the object collided with by the moving body.
+    /// Gets the ElectronObject collided with by the moving body.
     /// </summary>
     /// <returns>The collider object, or <c>null</c> when the collision has no collider.</returns>
     ///
@@ -150,20 +150,20 @@ public class KinematicCollision2D : RefCounted
     ///
     /// <seealso cref="GetColliderRid"/>
     /// <seealso cref="GetColliderShape"/>
-    public Object? GetCollider()
+    public ElectronObject? GetCollider()
     {
         ThrowIfFreed();
         return Collider;
     }
 
     /// <summary>
-    /// Gets the instance ID of the object collided with by the moving body.
+    /// Gets the instance ID of the ElectronObject collided with by the moving body.
     /// </summary>
     /// <returns>The collider instance ID, or <c>0</c> when the collision has no collider.</returns>
     ///
     /// <remarks>
     /// <para>
-    /// The value matches <see cref="Object.GetInstanceId"/> for the object
+    /// The value matches <see cref="ElectronObject.GetInstanceId"/> for the object
     /// returned by <see cref="GetCollider"/>.
     /// </para>
     /// </remarks>
@@ -211,13 +211,13 @@ public class KinematicCollision2D : RefCounted
     }
 
     /// <summary>
-    /// Gets the collider shape object involved in the collision.
+    /// Gets the collider shape ElectronObject involved in the collision.
     /// </summary>
     /// <returns>The collider shape object, or <c>null</c> when unavailable.</returns>
     ///
     /// <remarks>
     /// <para>
-    /// The returned object is the <see cref="CollisionShape2D"/> that provided
+    /// The returned ElectronObject is the <see cref="CollisionShape2D"/> that provided
     /// the target bounds for the sweep.
     /// </para>
     /// </remarks>
@@ -231,7 +231,7 @@ public class KinematicCollision2D : RefCounted
     /// </since>
     ///
     /// <seealso cref="GetColliderShapeIndex"/>
-    public Object? GetColliderShape()
+    public ElectronObject? GetColliderShape()
     {
         ThrowIfFreed();
         return ColliderShape;
@@ -319,13 +319,13 @@ public class KinematicCollision2D : RefCounted
     }
 
     /// <summary>
-    /// Gets the moving body's local shape object involved in the collision.
+    /// Gets the moving body's local shape ElectronObject involved in the collision.
     /// </summary>
     /// <returns>The local shape object, or <c>null</c> when unavailable.</returns>
     ///
     /// <remarks>
     /// <para>
-    /// The returned object is the moving body's <see cref="CollisionShape2D"/>
+    /// The returned ElectronObject is the moving body's <see cref="CollisionShape2D"/>
     /// used for the sweep.
     /// </para>
     /// </remarks>
@@ -339,7 +339,7 @@ public class KinematicCollision2D : RefCounted
     /// </since>
     ///
     /// <seealso cref="GetColliderShape"/>
-    public Object? GetLocalShape()
+    public ElectronObject? GetLocalShape()
     {
         ThrowIfFreed();
         return LocalShape;

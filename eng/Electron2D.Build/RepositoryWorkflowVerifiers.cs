@@ -3616,7 +3616,7 @@ internal sealed class PublicApiWikiVerifier(string repositoryRoot, JsonDiagnosti
                 ["Generated from `data/api/electron2d-public-api-profile.json`."] = "manual profile source.",
                 ["## Status Legend"] = "status legend.",
                 ["## Current Public Runtime Surface"] = "current public API status table.",
-                [@"\| Supported \| Approved by the manual profile and parity verified for the current release\. \|"] = "supported status definition.",
+                [@"\| Supported \| Approved by the manual profile for the current runtime surface; full parity evidence is tracked by the owning class tasks\. \|"] = "supported status definition.",
                 [@"\| Deferred \| Explicitly excluded from the current release and reserved for later decision\. \|"] = "deferred status definition.",
                 [@"\| Unsupported \| Explicitly excluded from the current release\. \|"] = "unsupported status definition.",
                 [@"\| Unapproved \| Exported by the runtime assembly without a manual profile decision; this is a failing gate state\. \|"] = "unapproved status definition."

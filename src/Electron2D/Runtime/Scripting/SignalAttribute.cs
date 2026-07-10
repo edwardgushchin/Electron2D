@@ -26,15 +26,15 @@ namespace Electron2D;
 
 /// <summary>
 /// Marks a script delegate declaration as a signal that can be registered on an
-/// Electron2D object and emitted through <see cref="Object.EmitSignal(string, object?[])"/>.
+/// Electron2D ElectronObject and emitted through <see cref="ElectronObject.EmitSignal(string, object?[])"/>.
 /// </summary>
 /// <remarks>
 /// <para>
 /// Use this attribute on delegate declarations inside C# script classes. The
 /// delegate describes the signal payload for tooling and generated metadata.
 /// Runtime emission still uses the existing signal API:
-/// <see cref="Object.AddUserSignal(string)"/>, <see cref="Object.Connect(string, Callable, ConnectFlags)"/>
-/// and <see cref="Object.EmitSignal(string, object?[])"/>.
+/// <see cref="ElectronObject.AddUserSignal(string)"/>, <see cref="ElectronObject.Connect(string, Callable, ConnectFlags)"/>
+/// and <see cref="ElectronObject.EmitSignal(string, object?[])"/>.
 /// </para>
 /// <para>
 /// Electron2D 0.1-preview does not expose .NET events as script signals and

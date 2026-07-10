@@ -115,8 +115,8 @@ public sealed class FixedPhysicsStepAndRigidBodyMotionTests
 
         Assert.Equal(1, deleting.PhysicsCalls);
         Assert.Equal(2, sibling.PhysicsCalls);
-        Assert.False(Electron2D.Object.IsInstanceValid(deleting));
-        Assert.True(Electron2D.Object.IsInstanceValid(sibling));
+        Assert.False(Electron2D.ElectronObject.IsInstanceValid(deleting));
+        Assert.True(Electron2D.ElectronObject.IsInstanceValid(sibling));
     }
 
     [Fact]

@@ -66,7 +66,7 @@
 - gutter drawing;
 - mouse hit testing по строке и колонке.
 
-Если эти типы входят в обязательную публичную поверхность `0.1-preview`, они должны пройти обычный parity gate как `Supported / Parity verified` либо получить утверждённую строку `Deferred`/`Unsupported` через `T-0963`, а не реализовываться только для Editor приватным путём.
+Если эти типы входят в обязательную публичную поверхность `0.1-preview`, они должны иметь `Supported`/`profile_approved` в manual profile либо получить утверждённую строку `Deferred`/`Unsupported` в `data/api/electron2d-public-api-profile.json`, а не реализовываться только для Editor приватным путём. Полная strict parity остаётся отдельным evidence-контрактом.
 
 ## CodeDocument и ProjectWorkspace
 

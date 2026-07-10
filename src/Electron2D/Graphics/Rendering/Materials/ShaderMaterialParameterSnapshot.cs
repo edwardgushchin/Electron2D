@@ -98,7 +98,7 @@ internal sealed class ShaderMaterialParameterSnapshot
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentNullException.ThrowIfNull(texture);
 
-        if (!Object.IsInstanceValid(texture))
+        if (!ElectronObject.IsInstanceValid(texture))
         {
             throw new ArgumentException("Texture sampler parameter must reference a valid Texture2D.", nameof(texture));
         }

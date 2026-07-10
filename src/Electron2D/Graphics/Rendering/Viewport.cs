@@ -316,7 +316,7 @@ public class Viewport : Node
     {
         ThrowIfFreed();
         return hoveredControl is not null &&
-            Object.IsInstanceValid(hoveredControl) &&
+            ElectronObject.IsInstanceValid(hoveredControl) &&
             hoveredControl.IsVisibleInTree()
             ? hoveredControl
             : null;
@@ -478,7 +478,7 @@ public class Viewport : Node
             return null;
         }
 
-        if (!Object.IsInstanceValid(focusedControl) ||
+        if (!ElectronObject.IsInstanceValid(focusedControl) ||
             !focusedControl.CanReceiveFocus(this))
         {
             focusedControl = null;

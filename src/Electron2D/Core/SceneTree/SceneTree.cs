@@ -42,7 +42,7 @@ namespace Electron2D;
 /// This API is available since Electron2D 0.1-preview.
 /// </since>
 ///
-public class SceneTree : Object
+public class SceneTree : ElectronObject
 {
     internal const double FixedPhysicsStep = 1d / 60d;
     private const double PhysicsStepEpsilon = 0.000000000001d;
@@ -655,7 +655,7 @@ public class SceneTree : Object
 
             foreach (var node in queuedNodes)
             {
-                if (Object.IsInstanceValid(node))
+                if (ElectronObject.IsInstanceValid(node))
                 {
                     node.Free();
                 }

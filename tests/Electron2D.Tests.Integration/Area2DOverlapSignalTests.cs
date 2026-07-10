@@ -167,7 +167,7 @@ public sealed class Area2DOverlapSignalTests
             {
                 events.Add($"body_entered:{entered.Name}");
                 entered.QueueFree();
-                events.Add($"valid_inside_signal:{Electron2D.Object.IsInstanceValid(entered)}");
+                events.Add($"valid_inside_signal:{Electron2D.ElectronObject.IsInstanceValid(entered)}");
             }));
         sensor.Connect("body_exited", Electron2D.Callable.From<Electron2D.Node2D>(
             exited => events.Add($"body_exited:{exited.Name}")));
@@ -178,7 +178,7 @@ public sealed class Area2DOverlapSignalTests
         tree.PhysicsFrame(1d / 60d);
 
         Assert.Equal(["body_entered:Body", "valid_inside_signal:True"], events);
-        Assert.False(Electron2D.Object.IsInstanceValid(body));
+        Assert.False(Electron2D.ElectronObject.IsInstanceValid(body));
 
         tree.PhysicsFrame(1d / 60d);
 

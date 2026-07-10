@@ -100,7 +100,7 @@ public class PackedScene : Resource
             return Error.InvalidParameter;
         }
 
-        if (!Object.IsInstanceValid(path))
+        if (!ElectronObject.IsInstanceValid(path))
         {
             return Error.InvalidParameter;
         }

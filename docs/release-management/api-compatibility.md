@@ -20,15 +20,15 @@
 
 Для `0.1-preview` публичный API Electron2D должен следовать полному контракту совместимости Godot `4.7-stable` для утверждённой публичной поверхности Electron2D. После `T-0990` единственный источник решения о том, какие Godot-типы входят в публичный Electron2D API, - ручной JSON-профиль `data/api/electron2d-public-api-profile.json`. Generated artifacts больше не выбирают публичную поверхность: они только проецируют, проверяют и публикуют уже утверждённые решения из профиля.
 
-Корневое правило: каждая публичная сущность, которая входит в публичную поверхность Electron2D, должна совпадать с Godot `4.7-stable` не только по имени, сигнатуре, свойствам, сигналам, enum и constants, но и по наблюдаемому поведению, значениям по умолчанию, ошибкам, жизненному циклу, платформенным ограничениям и ожиданиям разработчика. Исключения допускаются только как явно утверждённые строки `deferred` или `unsupported` в manual API profile.
+Корневое целевое правило: каждая публичная сущность, которая входит в финально принятую публичную поверхность Electron2D, должна совпадать с Godot `4.7-stable` не только по имени, сигнатуре, свойствам, сигналам, enum и constants, но и по наблюдаемому поведению, значениям по умолчанию, ошибкам, жизненному циклу, платформенным ограничениям и ожиданиям разработчика. Manual API profile фиксирует owner decision о допустимой поверхности, но `approved` не является автоматическим доказательством полного parity; поведенческий evidence остаётся за owning class tasks and final gates. Намеренно отсутствующий или несовместимый Godot member обязан иметь явное `Deferred`/`Unsupported` решение. Отдельный Electron2D-specific public extension допустим только при точном owner-approved member/value решении `electronExtension`, рабочем поведении и `parity = not_applicable`; такой extension нельзя выдавать за совпадающий Godot member или использовать для молчаливого замещения отсутствующего Godot API. Каждая `approved` строка обязана структурно выбрать `godotApiScope = full|subset`. Для `full` subset-контракт запрещён; для `subset` обязателен `godotApiContract` с `scope = subset`, fail-closed `defaultMemberDecision` и явными Godot member/enum value decisions. Если subset-тип уже экспортирован, `electronApiContract` отдельно классифицирует каждый его фактический public member как точное `godotMember`, `godotEnumValue` или отдельный owner-approved `electronExtension`. Отсутствие такого решения не означает неявное одобрение Electron2D или Godot API.
 
 Все публичные типы runtime assembly должны быть отражены в ручном профиле как `approved`. Отсутствующая строка означает отсутствие утверждения и должна ломать API-проверки. Профиль допускает только решения:
 
-- `approved` - тип входит в публичный API текущего релиза и обязан иметь полный Godot `4.7-stable` public C# parity;
+- `approved` - тип утверждён владельцем для публичной runtime/editor поверхности текущего релиза; full Godot `4.7-stable` public C# parity должен доказываться owning class tasks and final gates before acceptance;
 - `deferred` - тип не входит в публичный API текущего релиза, но может быть рассмотрен позже;
 - `unsupported` - тип намеренно не входит в публичный API текущего релиза.
 
-`deferred` и `unsupported` не являются допустимыми exported runtime public types. Если runtime assembly экспортирует такой тип, проверка должна падать так же, как для отсутствующей строки.
+`deferred`, `unsupported` и `approved` строки с `editorOnly: true` не являются допустимыми exported game runtime public types. Если runtime assembly экспортирует такой тип, проверка должна падать так же, как для отсутствующей строки.
 
 ## Корневой контракт совместимости Godot 4.7
 
@@ -65,7 +65,9 @@ Canonical location ручного профиля:
 data/api/electron2d-public-api-profile.json
 ```
 
-Файл является hand-authored JSON, но не является ручным списком members или signatures. Утверждение идёт на уровне типов. Для каждого элемента `types[]` обязательны `fullName`, `godotReference`, `decision` и непустой `rationale`. `fullName` задаёт публичное имя Electron2D, `godotReference` указывает Godot `4.7-stable` class packet, а `decision` принимает только `approved`, `deferred` или `unsupported`.
+Файл является hand-authored JSON schema version `2`. Для каждого элемента `types[]` обязательны `fullName`, `godotReference`, `decision` и непустой `rationale`. `fullName` задаёт публичное имя Electron2D, `godotReference` указывает Godot `4.7-stable` class packet, а `decision` принимает только `approved`, `deferred` или `unsupported`. Каждая `approved` строка дополнительно обязана иметь `godotApiScope = full|subset`; у `deferred`/`unsupported` это поле запрещено. Необязательный boolean `editorOnly` помечает тип как доступный только editor/tools API: такая строка может быть `approved` для редактора Electron2D, но не разрешает экспорт типа из game runtime assembly. `godotApiContract` разрешён только при `godotApiScope = subset`: `defaultMemberDecision` обязан быть `deferred` или `unsupported`, `memberDecisions[]` использует Godot member selectors, а `enumValueDecisions[]` перечисляет точные Godot enum/value names и числовые `value`. Любой перечисленный enum покрывается полностью, а каждое значение обязано совпадать с закреплённым Godot packet.
+
+Для уже экспортированного `godotApiScope = subset` типа обязателен `electronApiContract` с `scope = exportedMembers`, fail-closed `defaultMemberDecision` и точными `memberDecisions[]`. Каждая строка задаёт `kind`, публичное C# `name`, `decision`, `compatibility` и непустой `rationale`. `compatibility = godotMember` требует точный `godotName`, существующий в packet и одобренный `godotApiContract.memberDecisions`; `godotEnumValue` требует точный `<Enum>.<Value>`, одобренный `godotApiContract.enumValueDecisions`; `electronExtension` запрещает `godotName` и явно говорит, что член является отдельным утверждённым Electron2D API с `parity = not_applicable`, а не Godot parity claim. Каждый фактически экспортированный член subset-типа должен иметь точное `approved` решение; default, `deferred` и `unsupported` приводят к fail-closed ошибке verifier-а.
 
 Первый профиль после `T-0990` намеренно пустой:
 
@@ -175,7 +177,7 @@ Electron2D operator overloads в generated packets также сохраняют
 dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki
 ```
 
-Verifier должен сверить ручной профиль, Godot packets, tracked API manifest и generated GitHub Wiki clone. Каждый exported runtime public type должен иметь `approved` строку в `data/api/electron2d-public-api-profile.json`; `deferred`, `unsupported` и отсутствующие строки должны давать fail-fast diagnostic. Legacy/component API должен запрещаться по public surface, но не публиковаться отдельным списком в Wiki. Для `T-0990` эта же команда дополнительно проверяет, что tracked документы и карточки задач не возвращают старую модель, где Wiki table или generated manifest выбирают публичную поверхность.
+Verifier должен сверить ручной профиль, Godot packets, tracked API manifest и generated GitHub Wiki clone. Каждый exported runtime public type должен иметь `approved` строку в `data/api/electron2d-public-api-profile.json` без `editorOnly: true`; `deferred`, `unsupported`, `editorOnly` и отсутствующие строки должны давать fail-fast diagnostic. Legacy/component API должен запрещаться по public surface, но не публиковаться отдельным списком в Wiki. Для `T-0990` эта же команда дополнительно проверяет, что tracked документы и карточки задач не возвращают старую модель, где Wiki table или generated manifest выбирают публичную поверхность.
 
 ## Фактическое состояние, ограничения и проверки
 

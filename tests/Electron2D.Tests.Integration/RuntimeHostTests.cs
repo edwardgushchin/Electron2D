@@ -80,7 +80,7 @@ public sealed class RuntimeHostTests
     [Fact]
     public void RuntimeHostDoesNotExportOutOfProfileApplicationApi()
     {
-        var exportedTypeNames = typeof(Electron2D.Object).Assembly.GetExportedTypes()
+        var exportedTypeNames = typeof(Electron2D.ElectronObject).Assembly.GetExportedTypes()
             .Select(type => type.FullName)
             .ToArray();
 
@@ -1554,6 +1554,35 @@ public sealed class RuntimeHostTests
     [Fact]
     public void RuntimeFramePresenterUsesSdlRendererFallbackWhenGpuPresenterCreationFails()
     {
+        var standard = new FakeRuntimeFramePresenter(CreateSchedulerDiagnostics());
+        using (var standardPresenter = new Electron2D.RuntimeFramePresenter(
+            new IntPtr(1),
+            new Electron2D.Vector2I(16, 16),
+            (_, _) => standard,
+            (_, _) => throw new InvalidOperationException("Unexpected fallback presenter creation.")))
+        {
+            var standardResult = Electron2D.RuntimeHost.Run(
+                new Electron2D.SceneTree(),
+                new Electron2D.RuntimeHostOptions
+                {
+                    WindowSize = new Electron2D.Vector2I(16, 16),
+                    FrameLimit = 1
+                },
+                new Electron2D.RuntimeHostLoopDriver(standardPresenter));
+
+            Assert.True(standardResult.Succeeded, standardResult.DiagnosticMessage);
+            Assert.Equal(Electron2D.RenderingServer.RenderingProfile.Standard, Electron2D.RenderingServer.CurrentProfile);
+            Assert.True(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.Sprites));
+            Assert.True(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.Text));
+            Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.RenderTargets));
+            Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.CustomShaders));
+            Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.ShaderMaterial));
+            Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.MultiPass));
+            Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.AdvancedBlending));
+            Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.PostProcessing));
+            Assert.Equal(1, standard.PresentCalls);
+        }
+
         var fallback = new FakeRuntimeFramePresenter(new Electron2D.RuntimeFrameDiagnostics(
             "RenderingServer",
             "SDL_Renderer",
@@ -1579,21 +1608,34 @@ public sealed class RuntimeHostTests
             (_, _) => throw new Electron2D.GpuPresenterUnavailableException("GPU unavailable for test."),
             (_, _) => fallback);
 
-        var presentedFrame = presenter.Present(
-            new Electron2D.CanvasItemRenderPlan(
-                Array.Empty<Electron2D.CanvasItemRenderCommand>(),
-                Array.Empty<Electron2D.CanvasItemRenderBatch>()),
-            new Electron2D.Vector2I(16, 16),
-            Electron2D.Color.Black,
-            captureFrame: false);
+        var fallbackResult = Electron2D.RuntimeHost.Run(
+            new Electron2D.SceneTree(),
+            new Electron2D.RuntimeHostOptions
+            {
+                WindowSize = new Electron2D.Vector2I(16, 16),
+                FrameLimit = 1
+            },
+            new Electron2D.RuntimeHostLoopDriver(presenter));
 
-        var diagnostics = presentedFrame.Diagnostics;
-        Assert.Equal("RenderingServer", diagnostics.RenderSource);
-        Assert.Equal("SDL_Renderer", diagnostics.PresentationBackend);
-        Assert.True(diagnostics.UsedFallbackPresenter);
-        Assert.Contains("GPU unavailable for test.", diagnostics.FallbackReason, StringComparison.Ordinal);
+        Assert.True(fallbackResult.Succeeded, fallbackResult.DiagnosticMessage);
+        Assert.Equal(Electron2D.RenderingServer.RenderingProfile.Compatibility, Electron2D.RenderingServer.CurrentProfile);
+        Assert.False(Electron2D.RenderingServer.HasFeature(Electron2D.RenderingServer.RenderingFeature.CustomShaders));
+        Assert.Equal("RenderingServer", GetResultProperty<string>(fallbackResult, "RenderSource"));
+        Assert.Equal("SDL_Renderer", GetResultProperty<string>(fallbackResult, "PresentationBackend"));
+        Assert.True(GetResultProperty<bool>(fallbackResult, "UsedFallbackPresenter"));
+        Assert.Contains("GPU unavailable for test.", GetResultProperty<string>(fallbackResult, "FallbackReason"), StringComparison.Ordinal);
         Assert.Equal(1, fallback.PresentCalls);
-        Assert.Null(presentedFrame.Screenshot);
+        Assert.Null(fallbackResult.ScreenshotPath);
+
+        var renderingDocument = File.ReadAllText(Path.Combine(FindRepositoryRoot(), "docs", "rendering", "rendering-server.md"));
+        Assert.Contains("До создания production `RuntimeFramePresenter` публичный `RenderingServer` использует исходный профиль `Compatibility`.", renderingDocument, StringComparison.Ordinal);
+        Assert.Contains("Успешный выбор `SDL_GPU` переключает публичный профиль на `Standard`.", renderingDocument, StringComparison.Ordinal);
+        Assert.Contains("Выбор или runtime-переход на `SDL_Renderer` устанавливает `Compatibility`.", renderingDocument, StringComparison.Ordinal);
+        Assert.Contains("Текущий production `Standard` включает тот же подтверждённый набор features, что и `Compatibility`.", renderingDocument, StringComparison.Ordinal);
+        Assert.Contains("`RenderTargets`, `CustomShaders`, `ShaderMaterial`, `MultiPass`, `AdvancedBlending` и `PostProcessing` возвращают `false`", renderingDocument, StringComparison.Ordinal);
+        Assert.DoesNotContain("`Standard` включает все `Compatibility` features и дополнительно", renderingDocument, StringComparison.Ordinal);
+        Assert.DoesNotContain("включает standard-only features", renderingDocument, StringComparison.Ordinal);
+        Assert.DoesNotContain("внутри этого профиля", renderingDocument, StringComparison.Ordinal);
     }
 
     [Theory]

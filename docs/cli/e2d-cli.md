@@ -312,17 +312,17 @@ e2d docs example "platformer movement" --format json
 
 ### `api compare-godot`
 
-`api compare-godot` проверяет один публичный тип по canonical API manifest:
+`api compare-godot` проверяет один Godot-compatible тип по canonical manual profile и отдельно сообщает его текущую runtime availability:
 
 ```powershell
 e2d api compare-godot Control --format json
 ```
 
-Команда читает `data/api/electron2d-api-manifest.json`, не открывает `ProjectWorkspace` и возвращает общий JSON envelope с `route = none`. В `data` находятся `mode = api.compareGodot`, `sourcePath`, краткое описание `type`, `result.status` и `strictParity`.
+Команда читает все решения из `data/api/electron2d-public-api-profile.json`, а `data/api/electron2d-api-manifest.json` использует для текущего exported runtime surface и `strictParityEvidence`. Короткое или полное имя сначала сопоставляется с profile row точным регистрозависимым C#-именем; регистронезависимое сопоставление используется только при единственном результате. Exported manifest row затем выбирается по точному `fullName` разрешённого profile row. Поэтому разные идентичности вроде `ResourceUID`/`ResourceUid` и `RID`/`Rid` не смешиваются. Команда не открывает `ProjectWorkspace` и возвращает общий JSON envelope с `route = none`. В `data` находятся `mode = api.compareGodot`, `sourcePath`, `profileSourcePath`, краткое описание `type`, `type.profile.decision`, `type.availability`, `result.status` и `parityEvidence`.
 
-Для типа внутри утверждённого `0.1-preview` 2D-профиля `result.status = parity_verified`, `succeeded = true`, `exitCode = 0`, а счётчики `missingTypes`, `missingMembers`, `signatureMismatches`, `inheritanceMismatches`, `defaultMismatches` и `unexpectedChanges` равны `0`.
+Для строки `approved` внутри утверждённого `0.1-preview` 2D-профиля `result.status = profile_approved`, `succeeded = true`, `exitCode = 0`, а `parityEvidence.status = not_verified` до отдельного доказательства полного strict parity с Godot `4.7-stable`. `type.availability.exported` отличает уже доступный runtime type от profile-approved, но ещё не реализованного типа.
 
-Для типа вне утверждённого профиля команда завершается fail-closed: `succeeded = false`, `exitCode = 1`, `data.result.status = out_of_profile`, diagnostics содержит `E2D-CLI-0002`. Output не предлагает alternative API или workaround, чтобы агент не обходил границы строгого profile contract.
+Для строк `deferred` и `unsupported` команда завершается fail-closed: `succeeded = false`, `exitCode = 1`, `data.result.status` сохраняет точное решение, diagnostics содержит `E2D-CLI-0002`. Неизвестное имя возвращает `type_not_found`. Output не предлагает alternative API или workaround, чтобы агент не обходил границы profile contract.
 
 ### `project validate`
 

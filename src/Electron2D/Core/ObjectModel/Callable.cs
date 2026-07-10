@@ -44,7 +44,7 @@ namespace Electron2D;
 ///
 public readonly struct Callable : IEquatable<Callable>
 {
-    private readonly Object? _target;
+    private readonly ElectronObject? _target;
     private readonly string? _method;
     private readonly Delegate? _delegate;
 
@@ -74,7 +74,7 @@ public readonly struct Callable : IEquatable<Callable>
     ///
     /// <seealso cref="Callable" />
     ///
-    public Callable(Object target, string method)
+    public Callable(ElectronObject target, string method)
     {
         ArgumentNullException.ThrowIfNull(target);
         ArgumentException.ThrowIfNullOrWhiteSpace(method);
@@ -187,7 +187,7 @@ public readonly struct Callable : IEquatable<Callable>
     }
 
     /// <summary>
-    /// Gets the object value.
+    /// Gets the ElectronObject value.
     /// </summary>
     ///
     /// <remarks>
@@ -195,7 +195,7 @@ public readonly struct Callable : IEquatable<Callable>
     /// </remarks>
     ///
     /// <returns>
-    /// The current object value.
+    /// The current ElectronObject value.
     /// </returns>
     ///
     /// <threadsafety>
@@ -208,7 +208,7 @@ public readonly struct Callable : IEquatable<Callable>
     ///
     /// <seealso cref="Callable" />
     ///
-    public Object? GetObject()
+    public ElectronObject? GetObject()
     {
         return _target;
     }
@@ -489,7 +489,7 @@ public readonly struct Callable : IEquatable<Callable>
             return TryCallDelegate(args, out result, out exception);
         }
 
-        if (_target is null || !Object.IsInstanceValid(_target) || _method is null)
+        if (_target is null || !ElectronObject.IsInstanceValid(_target) || _method is null)
         {
             return Error.Failed;
         }

@@ -115,7 +115,7 @@ public enum ConnectFlags
     ///
     ReferenceCounted = 8,
     /// <summary>
-    /// Identifies the append source object value.
+    /// Identifies the append source ElectronObject value.
     /// </summary>
     ///
     /// <remarks>

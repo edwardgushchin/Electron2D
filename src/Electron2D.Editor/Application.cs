@@ -36,7 +36,7 @@ internal sealed class Application
         var runtimeShell = CreateRuntimeShell(ShellLayout.CreateDefault());
 
         return new StartupResult(
-            typeof(Electron2D.Object).Assembly.GetName().Name ?? "Electron2D",
+            typeof(Electron2D.ElectronObject).Assembly.GetName().Name ?? "Electron2D",
             runtimeShell.Tree.Root.Name,
             runtimeShell.Viewport.Size,
             runtimeShell.Shell.GetType().FullName ?? runtimeShell.Shell.GetType().Name,
