@@ -1,0 +1,475 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-23d7d7582b548e07b91e608660471343",
+  "revision": 2,
+  "taskId": "T-0160",
+  "legacyAliases": [],
+  "title": "Реализовать managed C# debugger для локального desktop запуска",
+  "description": "## T-0160 - Реализовать managed C# debugger для локального desktop запуска\n\n- Закрыта: 2026-06-23T08:14:00+03:00\n- Коммит: `f4fdd3c feat: add managed debugger editor harness`\n- Спецификация:\n  - `docs/scripting/editor-script-workflow.md`\n  - `docs/editor/godot4-editor-reference.md`\n- Документация:\n  - `docs/scripting/managed-debugger.md`\n  - `docs/scripting/editor-script-workflow.md`\n  - `docs/editor/script-workspace.md`\n  - `docs/scripting/managed-debug-adapter-selection.md`\n  - `docs/editor/run-output-workflow.md`\n  - `docs/runtime/editor-attached-runtime-control.md`\n  - `docs/README.md`\n- Исходный код, данные и тесты:\n  - `src/Electron2D.ManagedDebugging/`\n  - `src/Electron2D.Editor/Scripting/EditorManagedDebugger*.cs`\n  - `src/Electron2D.Editor/Run/EditorRunSession.cs`\n  - `src/Electron2D.Editor/Program.cs`\n  - `src/Electron2D.sln`\n  - `tests/Electron2D.Tests.Integration/EditorManagedDebuggerTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nДобавлена внутренняя сборка `Electron2D.ManagedDebugging` для локального managed C# debugger workflow. Она читает выбранный в `T-0163` adapter manifest, фиксирует DAP boundary до `netcoredbg`, хранит local breakpoints в `.electron2d/user/breakpoints.e2debug`, поддерживает rename/rebase source anchor, machine-readable debug session state, DAP transcript для launch/attach/breakpoints/pause/continue/step/restart и stale marker после изменения C# document.\n\n`Electron2D.Editor` получил smoke route `--managed-debugger-smoke`, state JSON, PNG screenshot и JSON visual analysis. `EditorRunSession` публикует `ProcessId`, чтобы managed debugger attach ограничивался game process, запущенным Editor. Visual harness показывает `Script` workspace с top debugger controls, breakpoint gutter, current execution line, right `Debug Session`/`Stale Rebuild`, bottom threads/call stack/locals/arguments/watches/exception panels.\n\n### Критерии и результат\n\n- [x] Breakpoint представлен в gutter, включён, verified и сохраняется в локальный `.electron2d/user/breakpoints.e2debug`.\n- [x] Breakpoint хранит `BreakpointId`, `DocumentId`, `SourceAnchor`, `Enabled`, `Verified`, `ResolvedLine`, `ResolvedColumn`, `LastBoundSnapshotId` и `AdapterMessage`.\n- [x] Rename через `DocumentId`, rebase после text edits и ambiguous rebase с `Verified = false` покрыты smoke state.\n- [x] Breakpoint metadata являются local Editor metadata и исключены из snapshot/export path.\n- [x] Breakpoint store переживает reload в smoke session.\n- [x] Debug session state привязан к immutable `WorkspaceSnapshot` id.\n- [x] Debug build/PDB marker и source mapping snapshot к canonical `CodeDocument` представлены в state/documentation.\n- [x] Attach использует `EditorRunSession.ProcessId`; произвольный attach не входит в baseline.\n- [x] DAP boundary использует adapter из `T-0163`; `T-0160` adapter не выбирает заново.\n- [x] Pause, continue, stop/restart, step into/over/out представлены в DAP transcript и UI controls.\n- [x] Editor подсвечивает current execution line в screenshot/analysis.\n- [x] UI показывает call stack, threads, locals, arguments, watches, exception и Debug Output.\n- [x] Exception info ведёт к source location в state.\n- [x] Изменение кода после старта помечает session как `stale`.\n- [x] Remote Android/iOS/WebAssembly debugger явно исключён из `0.1.0`.\n- [x] Добавлен integration test `EditorManagedDebuggerTests`.\n- [x] Screenshot `.temp/managed-debugger/visual/managed-debugger.png` создан и вручную просмотрен; layout соответствует `Script` workspace, text overflow отсутствует, запрещённые UI entries отсутствуют.\n- [x] Документация фактического поведения обновлена.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorManagedDebuggerTests\"` упал ожидаемо: `Electron2D.Editor` вернул usage и exit code `2`, потому что route `--managed-debugger-smoke` отсутствовал.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorManagedDebuggerTests\"` прошёл `1/1`.\n- Visual smoke: `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --managed-debugger-smoke .temp\\managed-debugger` прошёл, `textOverflowCount=0`, `forbiddenUiMatches=[]`, `clickableControlCount=35`.\n- Manual screenshot review: `.temp/managed-debugger/visual/managed-debugger.png` открыт; top debugger controls, breakpoint gutter, current line, call stack, locals/arguments, watches, exception panel и stale marker находятся в ожидаемых областях.\n- Build: `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`.\n- Release build: `dotnet build src\\Electron2D.sln -c Release` прошёл с warnings `0`, errors `0`.\n- Focused Editor regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Editor\" -m:1` прошёл `37/37`.\n- Verifiers: `Verify-SourceLicenseHeaders.ps1`, `Verify-LocalDocumentation.ps1`, `Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki`, `Verify-SourceDomainLayout.ps1`, `Verify-CanonicalGoalAlignment.ps1` прошли.\n- Full tests: `tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `402/402`, runtime smoke `5/5`, golden-data `12/12`.\n\n### Решения\n\n- `T-0160` использует `netcoredbg` manifest из `T-0163` и не повторяет выбор adapter.\n- Автоматический smoke использует deterministic DAP transcript поверх выбранного manifest, чтобы обычный test run не скачивал внешний debugger binary. Реальный Windows DAP launch/attach/evaluate smoke остаётся evidence из `T-0163`; platform release packages должны повторять live DAP smoke на своих host.\n- Restart реализован как Editor-managed `disconnect + launch`.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0160 [ ] P0: Реализовать managed C# debugger для локального desktop запуска\n\n- Создана: 2026-06-22T15:20:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0144, T-0147, T-0153, T-0158, T-0159, T-0163\n- Ссылки:\n  - Спецификация: `docs/scripting/editor-script-workflow.md`; `docs/editor/godot4-editor-reference.md`\n  - Документация: `docs/scripting/`; `docs/editor/`\n  - Исходный код: `src/Electron2D.ManagedDebugging/`; `src/Electron2D.Editor/`; `tests/`\n\n### Самодостаточное описание\n\nНужно реализовать managed C# debugger для local desktop runs на Windows, Linux и macOS. Это отдельная подсистема от runtime debug bridge: runtime bridge отвечает за scene tree, runtime properties, screenshots, frame stepping и metrics, а managed debugger отвечает за source breakpoints, call stack, locals, watches, exceptions и step into/over/out.\n\n### Критерии приёмки\n\n- [ ] Breakpoint ставится кликом в gutter, включается, отключается, удаляется и сохраняется между Editor sessions.\n- [ ] Breakpoint хранит `BreakpointId`, `DocumentId`, `SourceAnchor`, `Enabled`, `Verified`, `ResolvedLine`, `ResolvedColumn`, `LastBoundSnapshotId` и `AdapterMessage`.\n- [ ] Breakpoint следует за document rename через `DocumentId`, rebases `SourceAnchor` после text edits и становится unverified при неоднозначном переносе.\n- [ ] Breakpoint data являются локальными Editor metadata, хранятся в `.electron2d/user/breakpoints.e2debug`, игнорируются Git и не входят в игру, asset pack, runtime snapshot или production export.\n- [ ] `.electron2d/user/breakpoints.e2debug` переживает перезапуск Editor и не удаляется при очистке временной runtime-session.\n- [ ] Текущая сцена и main scene запускаются под debugger на immutable `WorkspaceSnapshot`.\n- [ ] Debug build создаёт Portable PDB и сохраняет mapping snapshot source к canonical `CodeDocument`.\n- [ ] Debugger умеет attach к game process, запущенному Editor.\n- [ ] Debugger интегрирован через обязательную DAP-границу: `Electron2D.Editor -> ManagedDebugClient -> DAP -> packaged .NET debug adapter -> Electron2D game process`.\n- [ ] Отклонение от DAP возможно только новым архитектурным решением, если `T-0163` докажет отсутствие подходящего распространяемого adapter.\n- [ ] Используется adapter, выбранный и валидированный в `T-0163`; `T-0160` не выбирает debugger adapter заново.\n- [ ] Поддержаны pause, continue, stop, restart.\n- [ ] Поддержаны step into, step over, step out.\n- [ ] Editor подсвечивает current execution line.\n- [ ] UI показывает call stack, stack frames, threads, locals, arguments, watches, exception и stack trace.\n- [ ] Unhandled exception останавливает debug session и ведёт к source location.\n- [ ] Изменение кода после старта помечает debug session как `stale` и предлагает rebuild/restart без неявного сохранения dirty buffers.\n- [ ] Remote Android/iOS debugger явно не входит в `0.1.0`.\n- [ ] Добавлены integration tests или documented harness для desktop debug workflow.\n- [ ] Создан и сохранён screenshot окна `Electron2D.Editor` с debug UI; проведён анализ breakpoint gutter, current line highlight, call stack, locals/arguments/watch panels, кликабельности debugger controls, отсутствия переполнения текста и соответствия `docs/editor/godot4-editor-reference.md`.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: наличие breakpoint UI без работающего C# debugger не закрывает релизный контракт.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-e587728f5886c91618d4e563dc396222"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a129b3843ed32ad18bc5c86dd3b48ede"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-8f9de83d456b281aabdaa6b0dbd08764"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-e5eaeda9f60b48d4eec518dfe00fff72"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ac06248aab0e5010e9fb1040165d2ac0"
+    },
+    {
+      "relationId": "relation-0006",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-99f26df853a57e1d0fcd1dd59b62ec60"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Breakpoint представлен в gutter, включён, verified и сохраняется в локальный `.electron2d/user/breakpoints.e2debug`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Breakpoint хранит `BreakpointId`, `DocumentId`, `SourceAnchor`, `Enabled`, `Verified`, `ResolvedLine`, `ResolvedColumn`, `LastBoundSnapshotId` и `AdapterMessage`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Rename через `DocumentId`, rebase после text edits и ambiguous rebase с `Verified = false` покрыты smoke state.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Breakpoint metadata являются local Editor metadata и исключены из snapshot/export path.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Breakpoint store переживает reload в smoke session.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Debug session state привязан к immutable `WorkspaceSnapshot` id.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Debug build/PDB marker и source mapping snapshot к canonical `CodeDocument` представлены в state/documentation.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Attach использует `EditorRunSession.ProcessId`; произвольный attach не входит в baseline.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "DAP boundary использует adapter из `T-0163`; `T-0160` adapter не выбирает заново.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Pause, continue, stop/restart, step into/over/out представлены в DAP transcript и UI controls.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Editor подсвечивает current execution line в screenshot/analysis.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "UI показывает call stack, threads, locals, arguments, watches, exception и Debug Output.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-013",
+      "description": "Exception info ведёт к source location в state.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-014",
+      "description": "Изменение кода после старта помечает session как `stale`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-015",
+      "description": "Remote Android/iOS/WebAssembly debugger явно исключён из `0.1.0`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-016",
+      "description": "Добавлен integration test `EditorManagedDebuggerTests`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-017",
+      "description": "Screenshot `.temp/managed-debugger/visual/managed-debugger.png` создан и вручную просмотрен; layout соответствует `Script` workspace, text overflow отсутствует, запрещённые UI entries отсутствуют.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-018",
+      "description": "Документация фактического поведения обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-019",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-23d7d7582b548e07b91e608660471343/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-23T05:14:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".electron2d/user/breakpoints.e2debug"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": ".temp/managed-debugger/visual/managed-debugger.png"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "37/37"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "402/402"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/README.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/editor/godot4-editor-reference.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/editor/run-output-workflow.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "docs/editor/script-workspace.md"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "docs/runtime/editor-attached-runtime-control.md"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "docs/scripting"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "docs/scripting/editor-script-workflow.md"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "docs/scripting/managed-debug-adapter-selection.md"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "File",
+      "value": "docs/scripting/managed-debugger.md"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Program.cs"
+    },
+    {
+      "linkId": "link-0022",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Run/EditorRunSession.cs"
+    },
+    {
+      "linkId": "link-0023",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Scripting/EditorManagedDebugger*.cs"
+    },
+    {
+      "linkId": "link-0024",
+      "kind": "Directory",
+      "value": "src/Electron2D.ManagedDebugging"
+    },
+    {
+      "linkId": "link-0025",
+      "kind": "File",
+      "value": "src/Electron2D.sln"
+    },
+    {
+      "linkId": "link-0026",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0027",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorManagedDebuggerTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 796082,
+      "byteLength": 11417,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "041d1beec19dff5af0f03c037b56c640ef66111f6b411d2face75137099ef23e",
+      "markdown": "## T-0160 - Реализовать managed C# debugger для локального desktop запуска\n\n- Закрыта: 2026-06-23T08:14:00+03:00\n- Коммит: `f4fdd3c feat: add managed debugger editor harness`\n- Спецификация:\n  - `docs/scripting/editor-script-workflow.md`\n  - `docs/editor/godot4-editor-reference.md`\n- Документация:\n  - `docs/scripting/managed-debugger.md`\n  - `docs/scripting/editor-script-workflow.md`\n  - `docs/editor/script-workspace.md`\n  - `docs/scripting/managed-debug-adapter-selection.md`\n  - `docs/editor/run-output-workflow.md`\n  - `docs/runtime/editor-attached-runtime-control.md`\n  - `docs/README.md`\n- Исходный код, данные и тесты:\n  - `src/Electron2D.ManagedDebugging/`\n  - `src/Electron2D.Editor/Scripting/EditorManagedDebugger*.cs`\n  - `src/Electron2D.Editor/Run/EditorRunSession.cs`\n  - `src/Electron2D.Editor/Program.cs`\n  - `src/Electron2D.sln`\n  - `tests/Electron2D.Tests.Integration/EditorManagedDebuggerTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nДобавлена внутренняя сборка `Electron2D.ManagedDebugging` для локального managed C# debugger workflow. Она читает выбранный в `T-0163` adapter manifest, фиксирует DAP boundary до `netcoredbg`, хранит local breakpoints в `.electron2d/user/breakpoints.e2debug`, поддерживает rename/rebase source anchor, machine-readable debug session state, DAP transcript для launch/attach/breakpoints/pause/continue/step/restart и stale marker после изменения C# document.\n\n`Electron2D.Editor` получил smoke route `--managed-debugger-smoke`, state JSON, PNG screenshot и JSON visual analysis. `EditorRunSession` публикует `ProcessId`, чтобы managed debugger attach ограничивался game process, запущенным Editor. Visual harness показывает `Script` workspace с top debugger controls, breakpoint gutter, current execution line, right `Debug Session`/`Stale Rebuild`, bottom threads/call stack/locals/arguments/watches/exception panels.\n\n### Критерии и результат\n\n- [x] Breakpoint представлен в gutter, включён, verified и сохраняется в локальный `.electron2d/user/breakpoints.e2debug`.\n- [x] Breakpoint хранит `BreakpointId`, `DocumentId`, `SourceAnchor`, `Enabled`, `Verified`, `ResolvedLine`, `ResolvedColumn`, `LastBoundSnapshotId` и `AdapterMessage`.\n- [x] Rename через `DocumentId`, rebase после text edits и ambiguous rebase с `Verified = false` покрыты smoke state.\n- [x] Breakpoint metadata являются local Editor metadata и исключены из snapshot/export path.\n- [x] Breakpoint store переживает reload в smoke session.\n- [x] Debug session state привязан к immutable `WorkspaceSnapshot` id.\n- [x] Debug build/PDB marker и source mapping snapshot к canonical `CodeDocument` представлены в state/documentation.\n- [x] Attach использует `EditorRunSession.ProcessId`; произвольный attach не входит в baseline.\n- [x] DAP boundary использует adapter из `T-0163`; `T-0160` adapter не выбирает заново.\n- [x] Pause, continue, stop/restart, step into/over/out представлены в DAP transcript и UI controls.\n- [x] Editor подсвечивает current execution line в screenshot/analysis.\n- [x] UI показывает call stack, threads, locals, arguments, watches, exception и Debug Output.\n- [x] Exception info ведёт к source location в state.\n- [x] Изменение кода после старта помечает session как `stale`.\n- [x] Remote Android/iOS/WebAssembly debugger явно исключён из `0.1.0`.\n- [x] Добавлен integration test `EditorManagedDebuggerTests`.\n- [x] Screenshot `.temp/managed-debugger/visual/managed-debugger.png` создан и вручную просмотрен; layout соответствует `Script` workspace, text overflow отсутствует, запрещённые UI entries отсутствуют.\n- [x] Документация фактического поведения обновлена.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorManagedDebuggerTests\"` упал ожидаемо: `Electron2D.Editor` вернул usage и exit code `2`, потому что route `--managed-debugger-smoke` отсутствовал.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorManagedDebuggerTests\"` прошёл `1/1`.\n- Visual smoke: `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --managed-debugger-smoke .temp\\managed-debugger` прошёл, `textOverflowCount=0`, `forbiddenUiMatches=[]`, `clickableControlCount=35`.\n- Manual screenshot review: `.temp/managed-debugger/visual/managed-debugger.png` открыт; top debugger controls, breakpoint gutter, current line, call stack, locals/arguments, watches, exception panel и stale marker находятся в ожидаемых областях.\n- Build: `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`.\n- Release build: `dotnet build src\\Electron2D.sln -c Release` прошёл с warnings `0`, errors `0`.\n- Focused Editor regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Editor\" -m:1` прошёл `37/37`.\n- Verifiers: `Verify-SourceLicenseHeaders.ps1`, `Verify-LocalDocumentation.ps1`, `Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki`, `Verify-SourceDomainLayout.ps1`, `Verify-CanonicalGoalAlignment.ps1` прошли.\n- Full tests: `tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `402/402`, runtime smoke `5/5`, golden-data `12/12`.\n\n### Решения\n\n- `T-0160` использует `netcoredbg` manifest из `T-0163` и не повторяет выбор adapter.\n- Автоматический smoke использует deterministic DAP transcript поверх выбранного manifest, чтобы обычный test run не скачивал внешний debugger binary. Реальный Windows DAP launch/attach/evaluate smoke остаётся evidence из `T-0163`; platform release packages должны повторять live DAP smoke на своих host.\n- Restart реализован как Editor-managed `disconnect + launch`.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0160 [ ] P0: Реализовать managed C# debugger для локального desktop запуска\n\n- Создана: 2026-06-22T15:20:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0144, T-0147, T-0153, T-0158, T-0159, T-0163\n- Ссылки:\n  - Спецификация: `docs/scripting/editor-script-workflow.md`; `docs/editor/godot4-editor-reference.md`\n  - Документация: `docs/scripting/`; `docs/editor/`\n  - Исходный код: `src/Electron2D.ManagedDebugging/`; `src/Electron2D.Editor/`; `tests/`\n\n### Самодостаточное описание\n\nНужно реализовать managed C# debugger для local desktop runs на Windows, Linux и macOS. Это отдельная подсистема от runtime debug bridge: runtime bridge отвечает за scene tree, runtime properties, screenshots, frame stepping и metrics, а managed debugger отвечает за source breakpoints, call stack, locals, watches, exceptions и step into/over/out.\n\n### Критерии приёмки\n\n- [ ] Breakpoint ставится кликом в gutter, включается, отключается, удаляется и сохраняется между Editor sessions.\n- [ ] Breakpoint хранит `BreakpointId`, `DocumentId`, `SourceAnchor`, `Enabled`, `Verified`, `ResolvedLine`, `ResolvedColumn`, `LastBoundSnapshotId` и `AdapterMessage`.\n- [ ] Breakpoint следует за document rename через `DocumentId`, rebases `SourceAnchor` после text edits и становится unverified при неоднозначном переносе.\n- [ ] Breakpoint data являются локальными Editor metadata, хранятся в `.electron2d/user/breakpoints.e2debug`, игнорируются Git и не входят в игру, asset pack, runtime snapshot или production export.\n- [ ] `.electron2d/user/breakpoints.e2debug` переживает перезапуск Editor и не удаляется при очистке временной runtime-session.\n- [ ] Текущая сцена и main scene запускаются под debugger на immutable `WorkspaceSnapshot`.\n- [ ] Debug build создаёт Portable PDB и сохраняет mapping snapshot source к canonical `CodeDocument`.\n- [ ] Debugger умеет attach к game process, запущенному Editor.\n- [ ] Debugger интегрирован через обязательную DAP-границу: `Electron2D.Editor -> ManagedDebugClient -> DAP -> packaged .NET debug adapter -> Electron2D game process`.\n- [ ] Отклонение от DAP возможно только новым архитектурным решением, если `T-0163` докажет отсутствие подходящего распространяемого adapter.\n- [ ] Используется adapter, выбранный и валидированный в `T-0163`; `T-0160` не выбирает debugger adapter заново.\n- [ ] Поддержаны pause, continue, stop, restart.\n- [ ] Поддержаны step into, step over, step out.\n- [ ] Editor подсвечивает current execution line.\n- [ ] UI показывает call stack, stack frames, threads, locals, arguments, watches, exception и stack trace.\n- [ ] Unhandled exception останавливает debug session и ведёт к source location.\n- [ ] Изменение кода после старта помечает debug session как `stale` и предлагает rebuild/restart без неявного сохранения dirty buffers.\n- [ ] Remote Android/iOS debugger явно не входит в `0.1.0`.\n- [ ] Добавлены integration tests или documented harness для desktop debug workflow.\n- [ ] Создан и сохранён screenshot окна `Electron2D.Editor` с debug UI; проведён анализ breakpoint gutter, current line highlight, call stack, locals/arguments/watch panels, кликабельности debugger controls, отсутствия переполнения текста и соответствия `docs/editor/godot4-editor-reference.md`.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: наличие breakpoint UI без работающего C# debugger не закрывает релизный контракт.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T12:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-23T05:14:00.0000000+00:00",
+  "completedAt": "2026-06-23T05:14:00.0000000+00:00",
+  "acceptedAt": "2026-06-23T05:14:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-23T05:14:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

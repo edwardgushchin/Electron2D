@@ -46,7 +46,7 @@ internal enum AgentWorkspaceChangedObjectKind
 
 internal enum AgentWorkspaceActionKind
 {
-    SendToAwaitingAcceptance,
+    SubmitForAcceptance,
     CancelOperation,
     StopRuntime,
     GroupedUndo
@@ -183,7 +183,7 @@ internal sealed class AgentWorkspacePanel
                 artifacts),
             [
                 new AgentWorkspaceAction(
-                    AgentWorkspaceActionKind.SendToAwaitingAcceptance,
+                    AgentWorkspaceActionKind.SubmitForAcceptance,
                     "Send Review",
                     Enabled: true,
                     Clickable: true),
@@ -279,8 +279,8 @@ internal sealed class AgentWorkspacePanelSnapshot
         "suggestedFixes"
     ];
 
-    public bool AwaitingAcceptanceActionAvailable =>
-        Actions.Any(action => action.Kind == AgentWorkspaceActionKind.SendToAwaitingAcceptance && action.Enabled);
+    public bool SubmitForAcceptanceActionAvailable =>
+        Actions.Any(action => action.Kind == AgentWorkspaceActionKind.SubmitForAcceptance && action.Enabled);
 
     public bool DoneActionAvailable =>
         Actions.Any(action => string.Equals(action.Label, "Done", StringComparison.OrdinalIgnoreCase) && action.Enabled);

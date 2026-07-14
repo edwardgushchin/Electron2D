@@ -1,0 +1,133 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-f802fcb577b04c0e89a91b9540f22f26",
+  "revision": 9,
+  "taskId": "T-1158",
+  "legacyAliases": [],
+  "title": "Стабилизировать UX загрузки task details в VS Code",
+  "description": "## Контекст\n\nПри открытии задачи из VS Code sidebar сначала показывается compact snapshot как будто это готовое содержимое: modal имеет малую высоту, пустые секции criteria/activity/attachments и доступные actions. После `tasks get` окно резко увеличивается и полностью перестраивается. Это создаёт визуальный скачок и вводит пользователя в заблуждение.\n\n## Критерии приёмки\n\n- Modal открывается мгновенно в окончательной стабильной геометрии и не меняет размер после hydration.\n- До full task snapshot показывается отдельное доступное loading/skeleton-состояние, а не недостоверно пустые секции и actions.\n- Заголовок и Windows-подобная кнопка закрытия доступны сразу; loading state имеет `aria-busy` и понятный status text.\n- После hydration skeleton атомарно заменяется полным содержимым без закрытия/reopen modal и без скачка scroll container.\n- Повторное открытие уже hydrated задачи использует безопасный session cache для мгновенного full render с последующим canonical refresh.\n- Stale details response не заменяет текущую выбранную задачу.\n- Domain document, unit/layout и Extension Host tests, typecheck, VSIX package/install синхронизированы.\n\n## Execution contract\n\nМенять только VS Code presentation/cache/tests, доменный документ, task evidence и append-only diary. Не менять TaskManager lifecycle, CLI storage contract или `.e2task` вручную.",
+  "status": "Review",
+  "acceptanceState": "InternalReview",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0011",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "stable-details-loading",
+      "description": "Task details открывается в стабильном modal с доступным skeleton/loading state, атомарно гидратируется без геометрического скачка и безопасно использует session cache при повторном открытии.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-448fea1ccc9b499dbb55c36ef2f705b9",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T11:30:47.9317514+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Ready."
+      }
+    },
+    {
+      "activityEntryId": "activity-98f07152a6a746b595e29b557eeb269f",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T11:30:49.6065797+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to InProgress."
+      }
+    },
+    {
+      "activityEntryId": "activity-253f4596b92545f4b51340cb69294b27",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T11:39:26.7516254+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Review."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-11T11:30:29.8825074+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "activity-315f751898444777b6c2dfc4450d7a6a",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T11:39:22.8961892+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Реализация и проверки: uncached selection показывает stable-height modal с aria-busy/status skeleton без преждевременных actions и пустых секций; hydration заменяет его полными details. Panel-scoped cache мгновенно рендерит повторно открытую задачу и параллельно обновляет canonical snapshot; stale response отбрасывается, revisions остаются fail-closed. Initial error показывает inline alert/retry, cached refresh failure сохраняет содержимое. RED 27/31; GREEN unit 31/31; typecheck; Extension Host Insiders exit 0; VSIX 9 файлов, 20,54 KB установлен в stable VS Code; docs update/check/verify, licenses 664 и git diff --check прошли. Автоматическая Windows UI-проверка заблокирована внешним bootstrap os error 3."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

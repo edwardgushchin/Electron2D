@@ -1,0 +1,315 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-bafe0f9701ba8f6f41f278128c34f2cb",
+  "revision": 2,
+  "taskId": "T-0126",
+  "legacyAliases": [],
+  "title": "Зафиксировать reproducibility через `global.json`, lock file и `e2d doctor`",
+  "description": "# T-0126: Зафиксировать reproducibility через `global.json`, lock file и `e2d doctor`\n\n- Статус: завершена\n- Завершена: 2026-06-22T23:35:30+03:00\n- Приоритет: P0\n- Коммит: `822efb5`\n\n## Ссылки\n\n- Спецификация: `docs/project-system/reproducibility-lock-and-doctor.md`; `docs/architecture/agent-native-workflow.md`; `docs/release-management/project-template.md`; `docs/cli/e2d-cli.md`\n- Документация: `docs/project-system/reproducibility-lock-and-doctor.md`; `docs/release-management/project-template.md`; `docs/cli/e2d-cli.md`; `docs/diagnostics/diagnostics-core.md`\n- Исходный код: `data/templates/electron2d-empty/global.json`; `data/templates/electron2d-empty/electron2d.lock.json`; `schemas/project-system/electron2d-lock.schema.json`; `src/Electron2D.ProjectSystem/Documents/ProjectReproducibilityLockVerifier.cs`; `src/Electron2D.Cli/CliGeneralCommands.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/ReproducibilityLockDoctorTests.cs`\n\n## Итог\n\n- В шаблон `electron2d-empty` добавлены `global.json` и `electron2d.lock.json`.\n- Опубликована schema `schemas/project-system/electron2d-lock.schema.json`.\n- Добавлен `ProjectReproducibilityLockVerifier` — внутренний проверяющий механизм, который подтверждает наличие/форму reproducibility files, совпадение `global.json`, lock metadata и `.csproj` package reference, а также запрещает секретные поля и локальные абсолютные пути в lock-файле.\n- Добавлен diagnostic code `E2D-DOCTOR-0001` для missing, malformed или inconsistent reproducibility baseline.\n- `e2d doctor --project <path> --format json` возвращает общий CLI envelope с `route = \"none\"`, пустыми `changedFiles`/`dirtyDocuments`, `data.mode = \"doctor.environment\"` и checks для `.NET SDK`, Electron2D, native runtime, Android SDK/NDK, Xcode, export templates, graphics capabilities и signing.\n- Signing check читает только references из `export_presets.e2export.json`, не читает значения environment variables и не раскрывает secret values или private paths.\n- Implementation documentation и local documentation index обновлены.\n\n## Критерии приёмки\n\n- [x] Новый проект получает `global.json` и `electron2d.lock.json`.\n- [x] Lock file имеет schema и verifier.\n- [x] `e2d doctor --format json` проверяет .NET SDK, Electron2D, native runtime, Android SDK/NDK, Xcode, export templates и graphics capabilities.\n- [x] Signing configuration проверяется без чтения секретных значений в output.\n- [x] `e2d doctor` безопасно работает рядом с активной Editor-сессией и не меняет проектное состояние.\n- [x] Документация воспроизводимости обновлена.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~ReproducibilityLockDoctorTests` упал ожидаемо: 5 tests failed из-за отсутствующих template files/schema/verifier и реализации `doctor`.\n- Повторная красная фаза после cleanup warnings: тот же focused run упал ожидаемо без compiler warnings.\n- Green focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~ReproducibilityLockDoctorTests` прошёл `5/5`.\n- Focused regression phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ReproducibilityLockDoctorTests|FullyQualifiedName~Electron2DCliWorkflowTests|FullyQualifiedName~DiagnosticsCoreTests|FullyQualifiedName~DiagnosticsAdapterTests|FullyQualifiedName~ProjectTextFormatTests|FullyQualifiedName~ExportPresetTests\"` прошёл `33/33`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-LocalDocumentationIndex.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл, сборка внутри verifier: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для tracked source files; новые C# файлы содержат MIT header и будут повторно проверены после staging.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `366/366`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CanonicalGoalAlignment.ps1` прошёл.\n- `git diff --check` прошёл без whitespace errors, только с предупреждениями о будущей LF/CRLF-нормализации.\n\n## Решения\n\n- `doctor` возвращает `route = none`, потому что команда не должна открывать workspace или становиться вторым владельцем проекта рядом с active Editor.\n- Missing Android SDK/NDK и Xcode дают status `missing`, но не ломают diagnostic report: mobile/export readiness закрывается отдельными platform gates.\n- Missing или malformed reproducibility files дают summary `blocked` и `E2D-DOCTOR-0001`, но команда остаётся read-only report и не мутирует проект.\n- Signing references вида `env:NAME` показываются как references, а значения environment variables не читаются.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0126 [ ] P0: Зафиксировать reproducibility через `global.json`, lock file и `e2d doctor`\n\n- Создана: 2026-06-21T00:17:01+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0116, T-0117\n- Ссылки:\n  - Спецификация: `docs/architecture/agent-native-workflow.md`; `docs/project-system/`\n  - Документация: `docs/project-system/`\n  - Исходный код: `data/templates/`; `src/Electron2D.Cli/`; `src/Electron2D.ProjectSystem/`; `tests/`\n\n### Самодостаточное описание\n\nПроект должен фиксировать Electron2D version, .NET SDK range, NuGet dependencies, native package versions, asset importer versions, renderer profile, physics backend version и serialization schema version. Минимальные файлы: `global.json` и `electron2d.lock.json`. `e2d doctor --format json` проверяет локальное окружение без раскрытия секретов.\n\n`e2d doctor` также должен корректно работать при открытом Editor: проверка окружения не должна блокировать живую сессию и не должна читать signing secrets.\n\n### Критерии приёмки\n\n- [ ] Новый проект получает `global.json` и `electron2d.lock.json`.\n- [ ] Lock file имеет schema и verifier.\n- [ ] `e2d doctor --format json` проверяет .NET SDK, Electron2D, native runtime, Android SDK/NDK, Xcode, export templates и graphics capabilities.\n- [ ] Signing configuration проверяется без чтения секретных значений в output.\n- [ ] `e2d doctor` безопасно работает рядом с активной Editor-сессией и не меняет проектное состояние.\n- [ ] Документация воспроизводимости обновлена.\n\n### Заметки агента\n\nСоздано из Agent-native cross-platform 2D game engine архитектурного файла: локальная сборка, CI и AI-агент должны видеть одно и то же окружение.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все Agent-native cross-platform 2D game engine задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:03:00+03:00 - Уточнение пользователя: reproducibility остаётся частью Agent-native cross-platform 2D game engine контура, но проверки окружения не должны становиться вторым владельцем открытого проекта.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-87432465f9ca500ace92dd670ec79481"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-094d5d511494804413645297336db440"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Новый проект получает `global.json` и `electron2d.lock.json`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-bafe0f9701ba8f6f41f278128c34f2cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Lock file имеет schema и verifier.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-bafe0f9701ba8f6f41f278128c34f2cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`e2d doctor --format json` проверяет .NET SDK, Electron2D, native runtime, Android SDK/NDK, Xcode, export templates и graphics capabilities.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-bafe0f9701ba8f6f41f278128c34f2cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Signing configuration проверяется без чтения секретных значений в output.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-bafe0f9701ba8f6f41f278128c34f2cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`e2d doctor` безопасно работает рядом с активной Editor-сессией и не меняет проектное состояние.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-bafe0f9701ba8f6f41f278128c34f2cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Документация воспроизводимости обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-bafe0f9701ba8f6f41f278128c34f2cb/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T07:24:54.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Блокер пользователя: все Agent-native cross-platform 2D game engine задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:03:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: reproducibility остаётся частью Agent-native cross-platform 2D game engine контура, но проверки окружения не должны становиться вторым владельцем открытого проекта."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:05:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T20:35:30.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "33/33"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "366/366"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "data/templates"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "data/templates/electron2d-empty/electron2d.lock.json"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "data/templates/electron2d-empty/global.json"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/architecture/agent-native-workflow.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/diagnostics/diagnostics-core.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "Directory",
+      "value": "docs/project-system"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/project-system/reproducibility-lock-and-doctor.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "docs/release-management/project-template.md"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "schemas/project-system/electron2d-lock.schema.json"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "src/Electron2D.Cli"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/CliGeneralCommands.cs"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "Directory",
+      "value": "src/Electron2D.ProjectSystem"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Documents/ProjectReproducibilityLockVerifier.cs"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ReproducibilityLockDoctorTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 686665,
+      "byteLength": 9528,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "faa4ae78bd54a6740196cab82c84a084c4d63481a313be3c10032a1a70803e57",
+      "markdown": "# T-0126: Зафиксировать reproducibility через `global.json`, lock file и `e2d doctor`\n\n- Статус: завершена\n- Завершена: 2026-06-22T23:35:30+03:00\n- Приоритет: P0\n- Коммит: `822efb5`\n\n## Ссылки\n\n- Спецификация: `docs/project-system/reproducibility-lock-and-doctor.md`; `docs/architecture/agent-native-workflow.md`; `docs/release-management/project-template.md`; `docs/cli/e2d-cli.md`\n- Документация: `docs/project-system/reproducibility-lock-and-doctor.md`; `docs/release-management/project-template.md`; `docs/cli/e2d-cli.md`; `docs/diagnostics/diagnostics-core.md`\n- Исходный код: `data/templates/electron2d-empty/global.json`; `data/templates/electron2d-empty/electron2d.lock.json`; `schemas/project-system/electron2d-lock.schema.json`; `src/Electron2D.ProjectSystem/Documents/ProjectReproducibilityLockVerifier.cs`; `src/Electron2D.Cli/CliGeneralCommands.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/ReproducibilityLockDoctorTests.cs`\n\n## Итог\n\n- В шаблон `electron2d-empty` добавлены `global.json` и `electron2d.lock.json`.\n- Опубликована schema `schemas/project-system/electron2d-lock.schema.json`.\n- Добавлен `ProjectReproducibilityLockVerifier` — внутренний проверяющий механизм, который подтверждает наличие/форму reproducibility files, совпадение `global.json`, lock metadata и `.csproj` package reference, а также запрещает секретные поля и локальные абсолютные пути в lock-файле.\n- Добавлен diagnostic code `E2D-DOCTOR-0001` для missing, malformed или inconsistent reproducibility baseline.\n- `e2d doctor --project <path> --format json` возвращает общий CLI envelope с `route = \"none\"`, пустыми `changedFiles`/`dirtyDocuments`, `data.mode = \"doctor.environment\"` и checks для `.NET SDK`, Electron2D, native runtime, Android SDK/NDK, Xcode, export templates, graphics capabilities и signing.\n- Signing check читает только references из `export_presets.e2export.json`, не читает значения environment variables и не раскрывает secret values или private paths.\n- Implementation documentation и local documentation index обновлены.\n\n## Критерии приёмки\n\n- [x] Новый проект получает `global.json` и `electron2d.lock.json`.\n- [x] Lock file имеет schema и verifier.\n- [x] `e2d doctor --format json` проверяет .NET SDK, Electron2D, native runtime, Android SDK/NDK, Xcode, export templates и graphics capabilities.\n- [x] Signing configuration проверяется без чтения секретных значений в output.\n- [x] `e2d doctor` безопасно работает рядом с активной Editor-сессией и не меняет проектное состояние.\n- [x] Документация воспроизводимости обновлена.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~ReproducibilityLockDoctorTests` упал ожидаемо: 5 tests failed из-за отсутствующих template files/schema/verifier и реализации `doctor`.\n- Повторная красная фаза после cleanup warnings: тот же focused run упал ожидаемо без compiler warnings.\n- Green focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~ReproducibilityLockDoctorTests` прошёл `5/5`.\n- Focused regression phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ReproducibilityLockDoctorTests|FullyQualifiedName~Electron2DCliWorkflowTests|FullyQualifiedName~DiagnosticsCoreTests|FullyQualifiedName~DiagnosticsAdapterTests|FullyQualifiedName~ProjectTextFormatTests|FullyQualifiedName~ExportPresetTests\"` прошёл `33/33`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-LocalDocumentationIndex.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл, сборка внутри verifier: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для tracked source files; новые C# файлы содержат MIT header и будут повторно проверены после staging.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `366/366`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CanonicalGoalAlignment.ps1` прошёл.\n- `git diff --check` прошёл без whitespace errors, только с предупреждениями о будущей LF/CRLF-нормализации.\n\n## Решения\n\n- `doctor` возвращает `route = none`, потому что команда не должна открывать workspace или становиться вторым владельцем проекта рядом с active Editor.\n- Missing Android SDK/NDK и Xcode дают status `missing`, но не ломают diagnostic report: mobile/export readiness закрывается отдельными platform gates.\n- Missing или malformed reproducibility files дают summary `blocked` и `E2D-DOCTOR-0001`, но команда остаётся read-only report и не мутирует проект.\n- Signing references вида `env:NAME` показываются как references, а значения environment variables не читаются.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0126 [ ] P0: Зафиксировать reproducibility через `global.json`, lock file и `e2d doctor`\n\n- Создана: 2026-06-21T00:17:01+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0116, T-0117\n- Ссылки:\n  - Спецификация: `docs/architecture/agent-native-workflow.md`; `docs/project-system/`\n  - Документация: `docs/project-system/`\n  - Исходный код: `data/templates/`; `src/Electron2D.Cli/`; `src/Electron2D.ProjectSystem/`; `tests/`\n\n### Самодостаточное описание\n\nПроект должен фиксировать Electron2D version, .NET SDK range, NuGet dependencies, native package versions, asset importer versions, renderer profile, physics backend version и serialization schema version. Минимальные файлы: `global.json` и `electron2d.lock.json`. `e2d doctor --format json` проверяет локальное окружение без раскрытия секретов.\n\n`e2d doctor` также должен корректно работать при открытом Editor: проверка окружения не должна блокировать живую сессию и не должна читать signing secrets.\n\n### Критерии приёмки\n\n- [ ] Новый проект получает `global.json` и `electron2d.lock.json`.\n- [ ] Lock file имеет schema и verifier.\n- [ ] `e2d doctor --format json` проверяет .NET SDK, Electron2D, native runtime, Android SDK/NDK, Xcode, export templates и graphics capabilities.\n- [ ] Signing configuration проверяется без чтения секретных значений в output.\n- [ ] `e2d doctor` безопасно работает рядом с активной Editor-сессией и не меняет проектное состояние.\n- [ ] Документация воспроизводимости обновлена.\n\n### Заметки агента\n\nСоздано из Agent-native cross-platform 2D game engine архитектурного файла: локальная сборка, CI и AI-агент должны видеть одно и то же окружение.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все Agent-native cross-platform 2D game engine задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:03:00+03:00 - Уточнение пользователя: reproducibility остаётся частью Agent-native cross-platform 2D game engine контура, но проверки окружения не должны становиться вторым владельцем открытого проекта.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T21:17:01.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T20:35:30.0000000+00:00",
+  "completedAt": "2026-06-22T20:35:30.0000000+00:00",
+  "acceptedAt": "2026-06-22T20:35:30.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T20:35:30.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

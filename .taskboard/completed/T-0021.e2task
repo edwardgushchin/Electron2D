@@ -1,0 +1,105 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-f65981cb0abdd6171f7a0f024d53b291",
+  "revision": 2,
+  "taskId": "T-0021",
+  "legacyAliases": [],
+  "title": "Реализовать стабильную serialization round-trip для `Variant` и базовых типов",
+  "description": "# T-0021 [x] P0: Реализовать стабильную serialization round-trip для `Variant` и базовых типов\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T01:51:00+03:00\n- Статус: завершена\n- Коммит: `T-0021: реализовать Variant serialization`\n\n## Итог\n\nРеализован internal runtime serializer `VariantTextSerializer` для стабильного canonical JSON round-trip сериализуемого подмножества `Variant`. Публичный API не расширялся: serializer нужен будущему scene/resource pipeline и покрыт integration tests через `InternalsVisibleTo`.\n\n## Проверенное поведение\n\n- Exact JSON зафиксирован для `Nil`, `Bool`, `Int`, `Float` и `String`.\n- Exact JSON зафиксирован для `Vector2`, `Vector2I`, `Rect2`, `Rect2I`, `Transform2D`, `Color`, `StringName` и `NodePath`.\n- Nested `Array` сериализуется как JSON array of serialized Variant objects.\n- `Dictionary` сериализуется как sorted entries `{\"key\":Variant,\"value\":Variant}` с ordinal sort по canonical JSON ключа.\n- Повторная сериализация результата `Deserialize()` возвращает тот же canonical JSON.\n- `Rid`, `Object` и `Callable` дают понятную `InvalidOperationException` при `Serialize()`.\n- Malformed JSON, missing `type`, unknown `type` и runtime-only `type` в тексте дают `FormatException`.\n- Public API compatibility baseline остался `25` публичных типов.\n\n## Документация\n\n- Добавлена спецификация `docs/core-types/variant-serialization.md`.\n- Добавлена справка `docs/core-types/variant-serialization.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены `README.md`, `CHANGELOG.md`, `RELEASE-NOTES.md` и связанные core/object-model ограничения.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` ожидаемо упал на отсутствующем `Electron2D.VariantTextSerializer`.\n- Green-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 42 теста.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 70 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 25.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` после staging - прошло, 57 tracked source files.\n- `git diff --cached --check` - прошло.\n\n## Заметки агента\n\n`Object`, `Resource`, `Node`, `Callable` и `Rid` остаются допустимыми runtime `Variant`, но не входят в stable portable data format `0.1.0 Preview`. File-level object/resource references должны появиться отдельной задачей вместе с resource pipeline.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0020"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-20T22:51:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/core-types/variant-serialization.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 61241,
+      "byteLength": 3599,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "3a2a2b297fdaeb14d947eed5554ffc96ef64ac30431b4edabf02eef22e71442c",
+      "markdown": "# T-0021 [x] P0: Реализовать стабильную serialization round-trip для `Variant` и базовых типов\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T01:51:00+03:00\n- Статус: завершена\n- Коммит: `T-0021: реализовать Variant serialization`\n\n## Итог\n\nРеализован internal runtime serializer `VariantTextSerializer` для стабильного canonical JSON round-trip сериализуемого подмножества `Variant`. Публичный API не расширялся: serializer нужен будущему scene/resource pipeline и покрыт integration tests через `InternalsVisibleTo`.\n\n## Проверенное поведение\n\n- Exact JSON зафиксирован для `Nil`, `Bool`, `Int`, `Float` и `String`.\n- Exact JSON зафиксирован для `Vector2`, `Vector2I`, `Rect2`, `Rect2I`, `Transform2D`, `Color`, `StringName` и `NodePath`.\n- Nested `Array` сериализуется как JSON array of serialized Variant objects.\n- `Dictionary` сериализуется как sorted entries `{\"key\":Variant,\"value\":Variant}` с ordinal sort по canonical JSON ключа.\n- Повторная сериализация результата `Deserialize()` возвращает тот же canonical JSON.\n- `Rid`, `Object` и `Callable` дают понятную `InvalidOperationException` при `Serialize()`.\n- Malformed JSON, missing `type`, unknown `type` и runtime-only `type` в тексте дают `FormatException`.\n- Public API compatibility baseline остался `25` публичных типов.\n\n## Документация\n\n- Добавлена спецификация `docs/core-types/variant-serialization.md`.\n- Добавлена справка `docs/core-types/variant-serialization.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены `README.md`, `CHANGELOG.md`, `RELEASE-NOTES.md` и связанные core/object-model ограничения.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` ожидаемо упал на отсутствующем `Electron2D.VariantTextSerializer`.\n- Green-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 42 теста.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 70 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 25.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` после staging - прошло, 57 tracked source files.\n- `git diff --cached --check` - прошло.\n\n## Заметки агента\n\n`Object`, `Resource`, `Node`, `Callable` и `Rid` остаются допустимыми runtime `Variant`, но не входят в stable portable data format `0.1.0 Preview`. File-level object/resource references должны появиться отдельной задачей вместе с resource pipeline.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-20T22:51:00.0000000+00:00",
+  "completedAt": "2026-06-20T22:51:00.0000000+00:00",
+  "acceptedAt": "2026-06-20T22:51:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-20T22:51:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -1,0 +1,229 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-6fa7d2bc25702ed1522f79fb235ac6e4",
+  "revision": 2,
+  "taskId": "T-0146",
+  "legacyAliases": [],
+  "title": "Ввести Diagnostics.Core для ошибок, предупреждений и suggested fixes",
+  "description": "# T-0146: Ввести Diagnostics.Core для ошибок, предупреждений и suggested fixes\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: `95c7748`\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0146 [ ] P0: Ввести Diagnostics.Core для ошибок, предупреждений и suggested fixes\n\n- Создана: 2026-06-22T11:24:00+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0016\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/diagnostics/`\n  - Документация: `docs/diagnostics/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D.Tooling/`; `tests/`\n\n### Самодостаточное описание\n\nНужно создать базовую модель structured diagnostics до Tooling/CLI/MCP: stable error code registry, severity, category, message, file/line/column, scene UID, node path, resource UID, related locations, suggested fix и documentation URI.\n\n### Критерии приёмки\n\n- [x] Создан stable error code registry.\n- [x] Diagnostics model не зависит от CLI, MCP или Editor UI.\n- [x] Suggested fixes представлены как безопасные structured actions.\n- [x] Добавлены tests на обязательные поля, стабильность кодов и serialization.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: Diagnostics.Core должен идти до `ProjectWorkspace`, Tooling, CLI, Import и Build; SARIF и adapters остаются в `T-0123`.\n\n2026-06-22T18:02:00+03:00 - Взято в работу после `T-0117`: задача является первой доступной P0 вне Editor implementation queue. Перед production-кодом нужно создать проверяемую спецификацию diagnostics core, добавить красные focused tests и только затем реализовать общий internal model.\n\n2026-06-22T18:15:00+03:00 - Реализовано и готово к human acceptance. Добавлены спецификация `docs/diagnostics/diagnostics-core.md`, implementation documentation `docs/diagnostics/diagnostics-core.md`, focused tests `DiagnosticsCoreTests` и internal model `src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs`.\n\nПроверки: красный focused test сначала упал на отсутствующих Diagnostics.Core типах; затем прошли `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~DiagnosticsCoreTests`, `git diff --check` с предупреждениями только о будущей LF/CRLF-нормализации Git, `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1`, `dotnet build src\\Electron2D.sln`, `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1`, `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` и `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1`.\n\nCommit: `95c7748 feat: add diagnostics core`.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-6a591c5cb0d3c196bad5be3ad362c389"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создан stable error code registry.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6fa7d2bc25702ed1522f79fb235ac6e4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Diagnostics model не зависит от CLI, MCP или Editor UI.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6fa7d2bc25702ed1522f79fb235ac6e4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Suggested fixes представлены как безопасные structured actions.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6fa7d2bc25702ed1522f79fb235ac6e4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Добавлены tests на обязательные поля, стабильность кодов и serialization.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6fa7d2bc25702ed1522f79fb235ac6e4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Документация фактического поведения обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6fa7d2bc25702ed1522f79fb235ac6e4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Команда проверки задокументирована.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6fa7d2bc25702ed1522f79fb235ac6e4/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T15:02:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Взято в работу после `T-0117`: задача является первой доступной P0 вне Editor implementation queue. Перед production-кодом нужно создать проверяемую спецификацию diagnostics core, добавить красные focused tests и только затем реализовать общий internal model."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T15:15:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Реализовано и готово к human acceptance. Добавлены спецификация `docs/diagnostics/diagnostics-core.md`, implementation documentation `docs/diagnostics/diagnostics-core.md`, focused tests `DiagnosticsCoreTests` и internal model `src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs`."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T18:14:16.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/architecture/ai-friendly-workflow.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "docs/diagnostics"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/diagnostics/diagnostics-core.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "src/Electron2D.Tooling"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 551322,
+      "byteLength": 4049,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "7ea8a3ebc239bfea8ee15e09e8376c765f9e0ab2e4fd89654e6e3db91930fa52",
+      "markdown": "# T-0146: Ввести Diagnostics.Core для ошибок, предупреждений и suggested fixes\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: `95c7748`\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0146 [ ] P0: Ввести Diagnostics.Core для ошибок, предупреждений и suggested fixes\n\n- Создана: 2026-06-22T11:24:00+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0016\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/diagnostics/`\n  - Документация: `docs/diagnostics/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D.Tooling/`; `tests/`\n\n### Самодостаточное описание\n\nНужно создать базовую модель structured diagnostics до Tooling/CLI/MCP: stable error code registry, severity, category, message, file/line/column, scene UID, node path, resource UID, related locations, suggested fix и documentation URI.\n\n### Критерии приёмки\n\n- [x] Создан stable error code registry.\n- [x] Diagnostics model не зависит от CLI, MCP или Editor UI.\n- [x] Suggested fixes представлены как безопасные structured actions.\n- [x] Добавлены tests на обязательные поля, стабильность кодов и serialization.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: Diagnostics.Core должен идти до `ProjectWorkspace`, Tooling, CLI, Import и Build; SARIF и adapters остаются в `T-0123`.\n\n2026-06-22T18:02:00+03:00 - Взято в работу после `T-0117`: задача является первой доступной P0 вне Editor implementation queue. Перед production-кодом нужно создать проверяемую спецификацию diagnostics core, добавить красные focused tests и только затем реализовать общий internal model.\n\n2026-06-22T18:15:00+03:00 - Реализовано и готово к human acceptance. Добавлены спецификация `docs/diagnostics/diagnostics-core.md`, implementation documentation `docs/diagnostics/diagnostics-core.md`, focused tests `DiagnosticsCoreTests` и internal model `src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs`.\n\nПроверки: красный focused test сначала упал на отсутствующих Diagnostics.Core типах; затем прошли `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~DiagnosticsCoreTests`, `git diff --check` с предупреждениями только о будущей LF/CRLF-нормализации Git, `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1`, `dotnet build src\\Electron2D.sln`, `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1`, `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` и `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1`.\n\nCommit: `95c7748 feat: add diagnostics core`.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T08:24:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "completedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -1,0 +1,283 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-3bbb28bfba56372a4d59aeba67285fd1",
+  "revision": 2,
+  "taskId": "T-0111",
+  "legacyAliases": [],
+  "title": "Подготовить cross-platform release packaging и draft GitHub Release workflow",
+  "description": "## T-0111 [ ] P0: Подготовить cross-platform release packaging и draft GitHub Release workflow\n\n- Создана: 2026-06-20T22:13:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0209, T-0210, T-0110\n- Ссылки:\n  - Upstream commit: нет\n  - Спецификация: `docs/release-management/release-packaging.md`; `docs/releases/0.1-preview.md`; `docs/release-management/`\n  - Документация: `docs/release-management/release-packaging.md`; `docs/release-management/ci-matrix.md`\n  - Будущий исходный код: `.github/workflows/release.yml`; `eng/Electron2D.Build/`\n  - Будущая проверка: `eng/Electron2D.Build -- release verify`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0111.\n  - blocker artifact `data/quality/blockers/T-0111.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/release-management/release-packaging.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0111.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0111.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЗадача относится к домену «Release engineering». Нужно подготовить cross-platform packaging и controlled GitHub Release draft workflow для `0.1-preview`, но не называть репозиторий production-ready до прохождения настоящего release gate `T-0104`.\n\nРеализация должна использовать единый C# repository tool `eng/Electron2D.Build`, а не PowerShell scripts. GitHub Release publication запрещена без отдельной явной команды пользователя; автоматизация по умолчанию должна поддерживать safe rehearsal/draft-only режим.\n\n`T-0111` покрывает desktop GitHub Release artifacts для Windows/Linux/macOS. Android/iOS/Web export artifacts, runtime-only packaging и platform smoke/soak gates остаются обязательным `0.1-preview` scope, но закрываются отдельными export/platform задачами и проверяются финальным release gate.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Создана спецификация cross-platform release packaging без PowerShell-контракта.\n- [ ] Artifact matrix явно перечисляет OS/architecture targets: Windows, Linux, macOS и поддерживаемые архитектуры для каждого desktop artifact.\n- [ ] C# repository tool умеет собирать release artifacts для всех поддерживаемых desktop OS/architecture targets.\n- [ ] Release artifacts включают библиотеку, редактор и developer tools, если они реализованы к моменту release candidate.\n- [ ] Каждый artifact имеет предсказуемое имя с версией, OS, architecture и checksum.\n- [ ] GitHub Actions использует C# repository tool и может подготовить GitHub Release draft для tag/version только в режиме, который не публикует релиз без отдельной явной команды пользователя.\n- [ ] Добавлен C# dry-run/rehearsal проверка, который проверяет структуру артефактов без публикации релиза.\n- [ ] Документация release process описывает prerequisites, tag policy, rollback, artifact matrix и ручные проверки.\n- [ ] В tracked repository нет новых PowerShell release scripts или `pwsh` workflow steps для этой задачи.\n- [ ] Команда локальной проверки или CI dry-run задокументирована как `dotnet run --project eng/Electron2D.Build -- release verify`.\n\n### Подзадачи\n\n- [ ] Определить release artifact matrix для Windows/Linux/macOS и архитектур.\n- [ ] Добавить packaging commands в `eng/Electron2D.Build`.\n- [ ] Добавить GitHub Actions workflow для release build и controlled GitHub Release publication, где публикация требует отдельного ручного разрешения.\n- [ ] Добавить checksum generation и artifact manifest.\n- [ ] Добавить release dry-run проверка на C#.\n- [ ] Обновить README, release documentation и local release drafts после C# tooling.\n\n### Заметки агента\n\nСоздано по запросу пользователя: финальный релиз должен собираться в GitHub Actions, упаковываться под поддерживаемые desktop платформы/архитектуры и готовиться как GitHub Release под версию. Важное ограничение пользователя от 2026-06-20: не публиковать GitHub Release без отдельной явной команды.\n\n2026-06-22T10:29:30+03:00 - Блокер пользователя: выполнять эту задачу только в самом конце 0.1-preview, после завершения runtime, editor, export, documentation и release-ready checks.\n\n2026-06-23T16:41:00+03:00 - Повторная проверка по запросу пользователя: `T-0111` всё ещё зависит от незакрытых `T-0104` и `T-0110`, поэтому не готова к выполнению без изменения dependency graph.\n\n2026-06-24T13:55:00+03:00 - Rejected 2026-06-24T14:32: PowerShell-based packaging/проверка/workflow не принимаются. Состояние возвращено в `blocked`, все `[x]` сняты, зависимость перенесена на C# automation tasks `T-0209` и `T-0210`.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0037"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-98749962e539a8e430b17c7dbc4cfa6a"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-65e36e22a9b501e75db661fbaea6b616"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-589771244653947a36b8d49064cd93a2"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создана спецификация cross-platform release packaging без PowerShell-контракта.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Artifact matrix явно перечисляет OS/architecture targets: Windows, Linux, macOS и поддерживаемые архитектуры для каждого desktop artifact.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "C# repository tool умеет собирать release artifacts для всех поддерживаемых desktop OS/architecture targets.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Release artifacts включают библиотеку, редактор и developer tools, если они реализованы к моменту release candidate.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Каждый artifact имеет предсказуемое имя с версией, OS, architecture и checksum.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "GitHub Actions использует C# repository tool и может подготовить GitHub Release draft для tag/version только в режиме, который не публикует релиз без отдельной явной команды пользователя.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Добавлен C# dry-run/rehearsal проверка, который проверяет структуру артефактов без публикации релиза.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Документация release process описывает prerequisites, tag policy, rollback, artifact matrix и ручные проверки.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "В tracked repository нет новых PowerShell release scripts или `pwsh` workflow steps для этой задачи.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Команда локальной проверки или CI dry-run задокументирована как `dotnet run --project eng/Electron2D.Build -- release verify`.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T07:29:30.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Блокер пользователя: выполнять эту задачу только в самом конце 0.1-preview, после завершения runtime, editor, export, documentation и release-ready checks."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T13:41:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Повторная проверка по запросу пользователя: `T-0111` всё ещё зависит от незакрытых `T-0104` и `T-0110`, поэтому не готова к выполнению без изменения dependency graph."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T10:55:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Rejected 2026-06-24T14:32: PowerShell-based packaging/проверка/workflow не принимаются. Состояние возвращено в `blocked`, все `[x]` сняты, зависимость перенесена на C# automation tasks `T-0209` и `T-0210`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/workflows/release.yml"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/dev-diary"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/quality/blockers/T-0111.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "docs/release-management"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/release-management/ci-matrix.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/release-management/release-packaging.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/releases/0.1-preview.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "eng/Electron2D.Build"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "eng/Electron2D.Build -- release verify"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "eng/Electron2D.Build"
+    }
+  ],
+  "executionContract": {
+    "taskType": "blocked-environment",
+    "readyToStart": [
+      "только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.",
+      "перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate."
+    ],
+    "stopConditions": [
+      "dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.",
+      "требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.",
+      "задача просит audit package без отдельной blocker-report задачи."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` blocker/current evidence notes for T-0111.",
+      "blocker artifact `data/quality/blockers/T-0111.md`, если нужен отдельный отчёт.",
+      "дневник `data/dev-diary/` и связанный доменный документ docs/release-management/release-packaging.md только для уточнения blocker-а."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.",
+      "unrelated task statuses, dependency graph or release scope."
+    ],
+    "requiredOutputs": [
+      "blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.",
+      "blocker artifact `data/quality/blockers/T-0111.md` when diagnostics need a durable file.",
+      "diary entry with exact commands or host checks that proved the block."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- release verify",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 72794,
+      "byteLength": 10131,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "83b813ec8a33bab180a23cb88c7abe74b7eb93ef1577f2b48669ef44efdfcdd9",
+      "markdown": "## T-0111 [ ] P0: Подготовить cross-platform release packaging и draft GitHub Release workflow\n\n- Создана: 2026-06-20T22:13:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0209, T-0210, T-0110\n- Ссылки:\n  - Upstream commit: нет\n  - Спецификация: `docs/release-management/release-packaging.md`; `docs/releases/0.1-preview.md`; `docs/release-management/`\n  - Документация: `docs/release-management/release-packaging.md`; `docs/release-management/ci-matrix.md`\n  - Будущий исходный код: `.github/workflows/release.yml`; `eng/Electron2D.Build/`\n  - Будущая проверка: `eng/Electron2D.Build -- release verify`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0111.\n  - blocker artifact `data/quality/blockers/T-0111.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/release-management/release-packaging.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0111.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0111.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЗадача относится к домену «Release engineering». Нужно подготовить cross-platform packaging и controlled GitHub Release draft workflow для `0.1-preview`, но не называть репозиторий production-ready до прохождения настоящего release gate `T-0104`.\n\nРеализация должна использовать единый C# repository tool `eng/Electron2D.Build`, а не PowerShell scripts. GitHub Release publication запрещена без отдельной явной команды пользователя; автоматизация по умолчанию должна поддерживать safe rehearsal/draft-only режим.\n\n`T-0111` покрывает desktop GitHub Release artifacts для Windows/Linux/macOS. Android/iOS/Web export artifacts, runtime-only packaging и platform smoke/soak gates остаются обязательным `0.1-preview` scope, но закрываются отдельными export/platform задачами и проверяются финальным release gate.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Создана спецификация cross-platform release packaging без PowerShell-контракта.\n- [ ] Artifact matrix явно перечисляет OS/architecture targets: Windows, Linux, macOS и поддерживаемые архитектуры для каждого desktop artifact.\n- [ ] C# repository tool умеет собирать release artifacts для всех поддерживаемых desktop OS/architecture targets.\n- [ ] Release artifacts включают библиотеку, редактор и developer tools, если они реализованы к моменту release candidate.\n- [ ] Каждый artifact имеет предсказуемое имя с версией, OS, architecture и checksum.\n- [ ] GitHub Actions использует C# repository tool и может подготовить GitHub Release draft для tag/version только в режиме, который не публикует релиз без отдельной явной команды пользователя.\n- [ ] Добавлен C# dry-run/rehearsal проверка, который проверяет структуру артефактов без публикации релиза.\n- [ ] Документация release process описывает prerequisites, tag policy, rollback, artifact matrix и ручные проверки.\n- [ ] В tracked repository нет новых PowerShell release scripts или `pwsh` workflow steps для этой задачи.\n- [ ] Команда локальной проверки или CI dry-run задокументирована как `dotnet run --project eng/Electron2D.Build -- release verify`.\n\n### Подзадачи\n\n- [ ] Определить release artifact matrix для Windows/Linux/macOS и архитектур.\n- [ ] Добавить packaging commands в `eng/Electron2D.Build`.\n- [ ] Добавить GitHub Actions workflow для release build и controlled GitHub Release publication, где публикация требует отдельного ручного разрешения.\n- [ ] Добавить checksum generation и artifact manifest.\n- [ ] Добавить release dry-run проверка на C#.\n- [ ] Обновить README, release documentation и local release drafts после C# tooling.\n\n### Заметки агента\n\nСоздано по запросу пользователя: финальный релиз должен собираться в GitHub Actions, упаковываться под поддерживаемые desktop платформы/архитектуры и готовиться как GitHub Release под версию. Важное ограничение пользователя от 2026-06-20: не публиковать GitHub Release без отдельной явной команды.\n\n2026-06-22T10:29:30+03:00 - Блокер пользователя: выполнять эту задачу только в самом конце 0.1-preview, после завершения runtime, editor, export, documentation и release-ready checks.\n\n2026-06-23T16:41:00+03:00 - Повторная проверка по запросу пользователя: `T-0111` всё ещё зависит от незакрытых `T-0104` и `T-0110`, поэтому не готова к выполнению без изменения dependency graph.\n\n2026-06-24T13:55:00+03:00 - Rejected 2026-06-24T14:32: PowerShell-based packaging/проверка/workflow не принимаются. Состояние возвращено в `blocked`, все `[x]` сняты, зависимость перенесена на C# automation tasks `T-0209` и `T-0210`.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T19:13:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

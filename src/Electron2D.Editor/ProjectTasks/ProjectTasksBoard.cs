@@ -159,12 +159,10 @@ internal sealed class ProjectTasksBoard
     {
         var statuses = new[]
         {
-            ProjectTaskStatus.Backlog,
             ProjectTaskStatus.Ready,
             ProjectTaskStatus.InProgress,
             ProjectTaskStatus.Blocked,
             ProjectTaskStatus.Review,
-            ProjectTaskStatus.AwaitingAcceptance,
             ProjectTaskStatus.Done,
             ProjectTaskStatus.Cancelled
         };
@@ -182,7 +180,6 @@ internal sealed class ProjectTasksBoard
         return status switch
         {
             ProjectTaskStatus.InProgress => "In Progress",
-            ProjectTaskStatus.AwaitingAcceptance => "Awaiting Acceptance",
             _ => status.ToString()
         };
     }
@@ -278,7 +275,7 @@ internal sealed class ProjectTasksBoardSnapshot
 
     public IReadOnlyList<string> DependencyBlockingReasons => BlockingReasons(TaskBlockingReason.Dependency);
 
-    public string ReviewStatesDiffer => "Review|Awaiting Acceptance";
+    public string ReviewStatesDiffer => "Review:Open|Review:Submitted";
 
     private IReadOnlyList<string> BlockingReasons(TaskBlockingReason reason)
     {

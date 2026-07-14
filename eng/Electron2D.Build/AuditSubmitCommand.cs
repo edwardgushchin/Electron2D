@@ -1248,7 +1248,8 @@ internal sealed class AuditSubmitCommand
 
     private static bool IsControlAuditProcessHistoryPath(string relativePath)
     {
-        return string.Equals(relativePath, "TASKS.md", StringComparison.Ordinal) ||
+        return relativePath.StartsWith(".taskboard/", StringComparison.Ordinal) ||
+            string.Equals(relativePath, "TASKS.md", StringComparison.Ordinal) ||
             relativePath.StartsWith("data/dev-diary/", StringComparison.Ordinal);
     }
 

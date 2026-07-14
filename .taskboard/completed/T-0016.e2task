@@ -1,0 +1,105 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-6a591c5cb0d3c196bad5be3ad362c389",
+  "revision": 2,
+  "taskId": "T-0016",
+  "legacyAliases": [],
+  "title": "Ввести централизованную обработку ошибок пользовательского кода и runtime diagnostics",
+  "description": "# T-0016 [x] P1: Ввести централизованную обработку ошибок пользовательского кода и runtime diagnostics\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-20T23:49:00+03:00\n- Статус: завершена\n- Коммит: `T-0016: централизовать runtime diagnostics`\n\n## Итог\n\nРеализована внутренняя основа diagnostics без нового публичного API:\n\n- `SceneTreeDiagnostic` хранит node context, callback, failure kind, exception, message и stack trace.\n- `RuntimeUserCodeFailureKind` различает lifecycle, group call, deferred call и signal emission failures.\n- Lifecycle callbacks, group calls, deferred calls и signal callbacks используют единую recover policy.\n- Deferred queue переведена на per-`SceneTree` хранение, чтобы несколько `SceneTree` не перемешивали deferred calls.\n\n## Проверенное поведение\n\n- Lifecycle exception сохраняет diagnostic и traversal siblings продолжается.\n- Deferred call exception сохраняет diagnostic и queue продолжает drain.\n- Signal callback exception сохраняет diagnostic, `EmitSignal()` возвращает `Error.Failed` и вызывает следующие callbacks.\n- Diagnostic содержит message и stack trace исходного user exception.\n- Публичная поверхность runtime не изменилась: diagnostics остаётся внутренним механизмом.\n\n## Документация\n\n- Спецификация: `docs/object-model/runtime-diagnostics.md`.\n- Справка: `docs/object-model/runtime-diagnostics.md`.\n- Обновлены docs index, lifecycle, deferred, signal и group documentation.\n- Обновлены changelog и release notes.\n\n## Отличия и будущие задачи\n\n- Публичный диагностический API, уровни важности сообщений, панель вывода редактора и местоположение ошибки в исходном коде остаются будущими задачами.\n- Signature mismatch без исходного user exception возвращает `Error.Failed`, но не обязан создавать diagnostic со stack trace.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` упал на отсутствующих diagnostics fields/kind.\n- Green narrow: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 36 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 44 теста.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 11.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n\n## Заметки агента\n\nЗадача выполнена через spec -> red tests -> минимальную внутреннюю runtime-реализацию -> документацию фактического поведения. Публичный API не расширялся, чтобы не добавлять временные diagnostics-типы вне целевой модели.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-20T20:49:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/object-model/runtime-diagnostics.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 42222,
+      "byteLength": 3780,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "eb6356581d74283b723623b98250107dac1bff244af77e7267ed6314630cccf1",
+      "markdown": "# T-0016 [x] P1: Ввести централизованную обработку ошибок пользовательского кода и runtime diagnostics\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-20T23:49:00+03:00\n- Статус: завершена\n- Коммит: `T-0016: централизовать runtime diagnostics`\n\n## Итог\n\nРеализована внутренняя основа diagnostics без нового публичного API:\n\n- `SceneTreeDiagnostic` хранит node context, callback, failure kind, exception, message и stack trace.\n- `RuntimeUserCodeFailureKind` различает lifecycle, group call, deferred call и signal emission failures.\n- Lifecycle callbacks, group calls, deferred calls и signal callbacks используют единую recover policy.\n- Deferred queue переведена на per-`SceneTree` хранение, чтобы несколько `SceneTree` не перемешивали deferred calls.\n\n## Проверенное поведение\n\n- Lifecycle exception сохраняет diagnostic и traversal siblings продолжается.\n- Deferred call exception сохраняет diagnostic и queue продолжает drain.\n- Signal callback exception сохраняет diagnostic, `EmitSignal()` возвращает `Error.Failed` и вызывает следующие callbacks.\n- Diagnostic содержит message и stack trace исходного user exception.\n- Публичная поверхность runtime не изменилась: diagnostics остаётся внутренним механизмом.\n\n## Документация\n\n- Спецификация: `docs/object-model/runtime-diagnostics.md`.\n- Справка: `docs/object-model/runtime-diagnostics.md`.\n- Обновлены docs index, lifecycle, deferred, signal и group documentation.\n- Обновлены changelog и release notes.\n\n## Отличия и будущие задачи\n\n- Публичный диагностический API, уровни важности сообщений, панель вывода редактора и местоположение ошибки в исходном коде остаются будущими задачами.\n- Signature mismatch без исходного user exception возвращает `Error.Failed`, но не обязан создавать diagnostic со stack trace.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` упал на отсутствующих diagnostics fields/kind.\n- Green narrow: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 36 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 44 теста.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 11.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n\n## Заметки агента\n\nЗадача выполнена через spec -> red tests -> минимальную внутреннюю runtime-реализацию -> документацию фактического поведения. Публичный API не расширялся, чтобы не добавлять временные diagnostics-типы вне целевой модели.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-20T20:49:00.0000000+00:00",
+  "completedAt": "2026-06-20T20:49:00.0000000+00:00",
+  "acceptedAt": "2026-06-20T20:49:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-20T20:49:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

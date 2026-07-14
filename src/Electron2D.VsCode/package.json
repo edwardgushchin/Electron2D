@@ -1,0 +1,97 @@
+{
+  "name": "electron2d-taskboard",
+  "displayName": "%extension.displayName%",
+  "description": "%extension.description%",
+  "version": "0.1.0",
+  "private": true,
+  "publisher": "electron2d",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EduardGushchin/Electron2D.git"
+  },
+  "engines": {
+    "node": ">=24",
+    "vscode": "^1.125.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "%capability.untrusted%"
+    },
+    "virtualWorkspaces": {
+      "supported": false,
+      "description": "%capability.virtual%"
+    }
+  },
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onCommand:electron2d.openTaskBoard",
+    "onView:electron2d.taskBoardLauncher",
+    "workspaceContains:.taskboard/board.e2tasks"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "electron2d.openTaskBoard",
+        "title": "%command.openTaskBoard%",
+        "category": "%command.category%"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "electron2d-taskboard",
+          "title": "%viewContainer.title%",
+          "icon": "media/taskboard.svg"
+        }
+      ]
+    },
+    "views": {
+      "electron2d-taskboard": [
+        {
+          "id": "electron2d.taskBoardLauncher",
+          "name": "%view.name%"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "%configuration.title%",
+      "properties": {
+        "electron2d.taskboard.cliPath": {
+          "type": "string",
+          "default": "",
+          "scope": "window",
+          "description": "%configuration.cliPath.description%"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "clean": "node ./scripts/clean.mjs",
+    "typecheck": "tsc --noEmit",
+    "test:unit": "tsx --test test/unit/*.test.ts",
+    "test:extension": "npm run bundle && node ./dist/test/runTest.js",
+    "bundle": "node ./scripts/build.mjs",
+    "package:vsix": "npm run bundle && node ./scripts/prepare-package.mjs && vsce package --no-dependencies --out ./artifacts/electron2d-taskboard.vsix"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "@types/vscode": "1.125.0",
+    "@vscode/test-electron": "3.0.0",
+    "@vscode/vsce": "3.9.2",
+    "esbuild": "0.28.1",
+    "tsx": "4.23.0",
+    "typescript": "7.0.2"
+  },
+  "dependencies": {
+    "@opencode-ai/sdk": "1.17.7",
+    "markdown-it": "^14.3.0"
+  }
+}

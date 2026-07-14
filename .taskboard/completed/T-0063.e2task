@@ -1,0 +1,165 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-d6efd884d8ce5de1a21bb16a4fcd7652",
+  "revision": 2,
+  "taskId": "T-0063",
+  "legacyAliases": [],
+  "title": "Реализовать `SpriteFrames` и `AnimatedSprite2D`",
+  "description": "# T-0063: Реализовать `SpriteFrames` и `AnimatedSprite2D`\n\n- Статус: завершена\n- Завершена: 2026-06-21T11:58:00+03:00\n- Приоритет: P0\n- Зависимости: T-0026, T-0035\n- Домен: Анимация\n\n## Исходная цель\n\nРеализовать runtime baseline для `SpriteFrames` и `AnimatedSprite2D`, чтобы `0.1.0 Preview` поддерживал frame timing, loop, autoplay и реакцию на изменение `SpriteFrames` resource.\n\n## Что сделано\n\n- Добавлен публичный `SpriteFrames : Resource`.\n- Добавлен публичный `SpriteFrames.LoopModeEnum` со значениями `None`, `Linear`, `Pingpong`.\n- `SpriteFrames` поддерживает named animations, stable sorted names, add/remove/rename/duplicate, clear/clear all, frame insert/replace/remove, frame duration, animation speed и loop helpers.\n- Добавлен публичный `AnimatedSprite2D : Node2D`.\n- `AnimatedSprite2D` поддерживает `SpriteFrames`, `Animation`, `Autoplay`, `Frame`, `FrameProgress`, `SpeedScale`, `Centered`, `Offset`, `FlipH`, `FlipV`.\n- Реализованы `Play()`, `PlayBackwards()`, `Pause()`, `Stop()`, `IsPlaying()`, `GetPlayingSpeed()`, `SetFrameAndProgress()`, `GetRect()` и `IsPixelOpaque()`.\n- `_Ready()` запускает `Autoplay`, а `_Process(delta)` продвигает кадры перед draw traversal.\n- `CanvasSubmissionContext` отправляет текущий frame texture для `AnimatedSprite2D`.\n- Замена texture через `SpriteFrames.SetFrame()` видна в следующем canvas submission без пересоздания node.\n- `Sprite2D` XML summary обновлён: frame-based animation теперь ведёт через `AnimatedSprite2D` и `SpriteFrames`.\n- Добавлены specification, implementation documentation, Wiki/API compatibility rows и public type guard updates.\n\n## Важные решения\n\n- `AnimatedSprite2D` наследуется от `Node2D`, а не от `Sprite2D`, чтобы public API не получал прямые свойства `Texture`/`Region*`.\n- `GetPlayingSpeed()` возвращает `SpeedScale * customSpeed` с учётом текущего pingpong direction; animation FPS учитывается отдельно при расчёте продвижения frame.\n- `SpriteFrames.GetAnimationNames()` возвращает `StringName[]`, потому что packed string arrays ещё не входят в текущий public baseline.\n\n## Изменённые файлы\n\n- `src/Electron2D/Runtime/Animation/SpriteFrames.cs`\n- `src/Electron2D/Runtime/Animation/AnimatedSprite2D.cs`\n- `src/Electron2D/Graphics/Rendering/CanvasSubmissionContext.cs`\n- `src/Electron2D/Graphics/Rendering/Sprite2D.cs`\n- `tests/Electron2D.Tests.Integration/SpriteFramesAnimatedSprite2DTests.cs`\n- `tests/Electron2D.Tests.Unit/CleanRuntimeBaselineTests.cs`\n- `docs/animation/spriteframes-animatedsprite2d.md`\n- `docs/animation/spriteframes-animatedsprite2d.md`\n- `docs/README.md`\n- `docs/README.md`\n- `docs/releases/0.1.0-preview.md`\n- `docs/release-management/api-compatibility.md`\n- `.github/wiki/API-Compatibility.md`\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SpriteFramesAnimatedSprite2DTests\"` ожидаемо упал на compile errors из-за отсутствующего `Electron2D.SpriteFrames`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SpriteFramesAnimatedSprite2DTests\"` прошёл: `4` passed.\n- Public type guard: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~CleanRuntimeBaselineTests\"` прошёл: `1` passed.\n- API compatibility: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` прошёл, public types `93`.\n- Full runner: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `60`, integration `163`, runtime smoke `5`, golden data `11`.\n- Whitespace: `git diff --check` прошёл; Git вывел только предупреждения о будущей нормализации переносов строк под Windows.\n- License headers: `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл по текущим tracked source files; новые source-файлы будут повторно проверены после staging.\n- AOT metadata: `powershell -ExecutionPolicy Bypass -File tools\\Verify-AotMetadataSafety.ps1` прошёл; остались прежние trim warnings в `Callable`, `SceneTree` и `PackedScene`.\n- Documentation wording: поиск по затронутым файлам не нашёл запрещённых публичных формулировок.\n\n## Ограничения\n\n- Editor UI для редактирования `SpriteFrames` остаётся задачей editor-домена.\n- `Animation`, `AnimationLibrary`, `AnimationPlayer`, `Tween`, property tracks, method call tracks и timeline остаются следующими задачами анимационного домена.\n- `GetAnimationNames()` временно использует `StringName[]`, пока packed string arrays не входят в public baseline.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-bba6920a7cb709e3d5c84fa076ea516f"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5f7a11a5bd080c65aa3c6be67b08140b"
+    }
+  ],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T08:58:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/wiki/API-Compatibility.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/README.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/animation/spriteframes-animatedsprite2d.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/CanvasSubmissionContext.cs"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/Sprite2D.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Animation/AnimatedSprite2D.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Animation/SpriteFrames.cs"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/SpriteFramesAnimatedSprite2DTests.cs"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Unit/CleanRuntimeBaselineTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 228756,
+      "byteLength": 5510,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "b5a69b6bf7dbc2a57ac079229da8b80b0c3365a3a876e9fb66c9a9fe9932997d",
+      "markdown": "# T-0063: Реализовать `SpriteFrames` и `AnimatedSprite2D`\n\n- Статус: завершена\n- Завершена: 2026-06-21T11:58:00+03:00\n- Приоритет: P0\n- Зависимости: T-0026, T-0035\n- Домен: Анимация\n\n## Исходная цель\n\nРеализовать runtime baseline для `SpriteFrames` и `AnimatedSprite2D`, чтобы `0.1.0 Preview` поддерживал frame timing, loop, autoplay и реакцию на изменение `SpriteFrames` resource.\n\n## Что сделано\n\n- Добавлен публичный `SpriteFrames : Resource`.\n- Добавлен публичный `SpriteFrames.LoopModeEnum` со значениями `None`, `Linear`, `Pingpong`.\n- `SpriteFrames` поддерживает named animations, stable sorted names, add/remove/rename/duplicate, clear/clear all, frame insert/replace/remove, frame duration, animation speed и loop helpers.\n- Добавлен публичный `AnimatedSprite2D : Node2D`.\n- `AnimatedSprite2D` поддерживает `SpriteFrames`, `Animation`, `Autoplay`, `Frame`, `FrameProgress`, `SpeedScale`, `Centered`, `Offset`, `FlipH`, `FlipV`.\n- Реализованы `Play()`, `PlayBackwards()`, `Pause()`, `Stop()`, `IsPlaying()`, `GetPlayingSpeed()`, `SetFrameAndProgress()`, `GetRect()` и `IsPixelOpaque()`.\n- `_Ready()` запускает `Autoplay`, а `_Process(delta)` продвигает кадры перед draw traversal.\n- `CanvasSubmissionContext` отправляет текущий frame texture для `AnimatedSprite2D`.\n- Замена texture через `SpriteFrames.SetFrame()` видна в следующем canvas submission без пересоздания node.\n- `Sprite2D` XML summary обновлён: frame-based animation теперь ведёт через `AnimatedSprite2D` и `SpriteFrames`.\n- Добавлены specification, implementation documentation, Wiki/API compatibility rows и public type guard updates.\n\n## Важные решения\n\n- `AnimatedSprite2D` наследуется от `Node2D`, а не от `Sprite2D`, чтобы public API не получал прямые свойства `Texture`/`Region*`.\n- `GetPlayingSpeed()` возвращает `SpeedScale * customSpeed` с учётом текущего pingpong direction; animation FPS учитывается отдельно при расчёте продвижения frame.\n- `SpriteFrames.GetAnimationNames()` возвращает `StringName[]`, потому что packed string arrays ещё не входят в текущий public baseline.\n\n## Изменённые файлы\n\n- `src/Electron2D/Runtime/Animation/SpriteFrames.cs`\n- `src/Electron2D/Runtime/Animation/AnimatedSprite2D.cs`\n- `src/Electron2D/Graphics/Rendering/CanvasSubmissionContext.cs`\n- `src/Electron2D/Graphics/Rendering/Sprite2D.cs`\n- `tests/Electron2D.Tests.Integration/SpriteFramesAnimatedSprite2DTests.cs`\n- `tests/Electron2D.Tests.Unit/CleanRuntimeBaselineTests.cs`\n- `docs/animation/spriteframes-animatedsprite2d.md`\n- `docs/animation/spriteframes-animatedsprite2d.md`\n- `docs/README.md`\n- `docs/README.md`\n- `docs/releases/0.1.0-preview.md`\n- `docs/release-management/api-compatibility.md`\n- `.github/wiki/API-Compatibility.md`\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SpriteFramesAnimatedSprite2DTests\"` ожидаемо упал на compile errors из-за отсутствующего `Electron2D.SpriteFrames`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SpriteFramesAnimatedSprite2DTests\"` прошёл: `4` passed.\n- Public type guard: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~CleanRuntimeBaselineTests\"` прошёл: `1` passed.\n- API compatibility: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` прошёл, public types `93`.\n- Full runner: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `60`, integration `163`, runtime smoke `5`, golden data `11`.\n- Whitespace: `git diff --check` прошёл; Git вывел только предупреждения о будущей нормализации переносов строк под Windows.\n- License headers: `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл по текущим tracked source files; новые source-файлы будут повторно проверены после staging.\n- AOT metadata: `powershell -ExecutionPolicy Bypass -File tools\\Verify-AotMetadataSafety.ps1` прошёл; остались прежние trim warnings в `Callable`, `SceneTree` и `PackedScene`.\n- Documentation wording: поиск по затронутым файлам не нашёл запрещённых публичных формулировок.\n\n## Ограничения\n\n- Editor UI для редактирования `SpriteFrames` остаётся задачей editor-домена.\n- `Animation`, `AnimationLibrary`, `AnimationPlayer`, `Tween`, property tracks, method call tracks и timeline остаются следующими задачами анимационного домена.\n- `GetAnimationNames()` временно использует `StringName[]`, пока packed string arrays не входят в public baseline.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-21T08:58:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T08:58:00.0000000+00:00",
+  "completedAt": "2026-06-21T08:58:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T08:58:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T08:58:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

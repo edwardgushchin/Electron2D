@@ -281,7 +281,6 @@ internal static class ProjectTasksBoardVisualHarness
         return status switch
         {
             ProjectTaskStatus.InProgress => "In Prog",
-            ProjectTaskStatus.AwaitingAcceptance => "Awaiting",
             _ => ProjectTasksBoard.DisplayStatus(status)
         };
     }

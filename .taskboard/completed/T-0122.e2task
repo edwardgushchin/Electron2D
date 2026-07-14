@@ -1,0 +1,306 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-802fa83981e1f024ea342a3cd404632e",
+  "revision": 2,
+  "taskId": "T-0122",
+  "legacyAliases": [],
+  "title": "Реализовать scene tests и visual regression tests для игр",
+  "description": "# T-0122: Реализовать scene tests и visual regression tests для игр\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:58:00+03:00\n- Приоритет: P0\n- Коммит: `138e842`\n\n## Ссылки\n\n- Спецификация: `docs/testing/scene-visual-testing.md`; `docs/architecture/ai-friendly-workflow.md`; `docs/cli/e2d-cli.md`\n- Документация: `docs/testing/scene-visual-testing.md`; `docs/cli/e2d-cli.md`; `docs/diagnostics/diagnostics-core.md`\n- Исходный код: `src/Electron2D.Testing/`; `src/Electron2D.Cli/`; `src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/Electron2DSceneVisualTestingTests.cs`\n- Схемы: `schemas/testing/*.schema.json`\n\n## Итог\n\n- Создан project `Electron2D.Testing` и добавлен в solution.\n- Добавлен scene-test manifest contract `Electron2D.SceneTestSuite` версии `1`.\n- Scene runner загружает scene JSON, строит simple scene path по `name`/`parent`, проверяет node type и `properties.<name>.value`, а также детерминированно продвигает кадры без ожидания wall-clock.\n- Visual tests создают deterministic PNG screenshot, сравнивают его с reference image по tolerance и пишут pixel-diff artifact.\n- `e2d test --format json` запускает scene tests при найденном `tests/electron2d.scene-tests.json` или явном `--manifest`; `e2d test --format jsonl` без manifest сохранил queued job mode.\n- Artifacts содержат `result.json`, `diagnostics.json`, `events.jsonl`, screenshots, pixel-diff output и snapshot identity fields.\n- Опубликованы JSON Schema Draft 2020-12 files для suite, result, diagnostics и event stream.\n- В `DiagnosticCodeRegistry` добавлены `E2D-TEST-0001` для scene assertions и `E2D-TEST-0002` для visual comparison.\n- Implementation documentation и local documentation index обновлены.\n\n## Критерии приёмки\n\n- [x] Создан test framework package/project.\n- [x] Scene tests могут загрузить scene JSON, найти node и продвинуть кадры.\n- [x] Visual tests могут сравнить frame capture с reference image с tolerance.\n- [x] `e2d test --format json` запускает project tests и возвращает structured diagnostics.\n- [x] Test artifacts содержат progress events, diagnostics, screenshots, pixel-diff output и snapshot identity, пригодные для будущего Editor/Agent Workspace отображения.\n- [x] Добавлены sample tests для минимального проекта.\n- [x] Документация testing workflow обновлена.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DSceneVisualTestingTests` упал ожидаемо: отсутствовали завершённый `Electron2D.Testing` project и CLI-маршрут scene tests.\n- Green focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DSceneVisualTestingTests` прошёл `6/6`.\n- Focused regression phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Electron2DSceneVisualTestingTests|FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests|FullyQualifiedName~Electron2DCliWorkflowTests\"` прошёл `22/22`.\n- `git diff --check` прошёл без whitespace errors, только с предупреждениями о будущей нормализации LF/CRLF.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для `544` tracked source files.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `351/351`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл.\n\n## Решения\n\n- Первая реализация deterministic и не запускает пользовательский C# runtime process, physics, script lifecycle или настоящий rendering backend; она фиксирует machine-readable artifact contract для будущих настоящих test workers и Editor-панелей.\n- Scene-test CLI branch включается только для `--format json` и manifest, чтобы не ломать existing queued job JSONL mode.\n- Pixel-diff output создаётся уже сейчас, но сравнение пока byte-level against deterministic PNG, пока полноценный renderer подключается отдельными задачами.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0122 [ ] P0: Реализовать scene tests и visual regression tests для игр\n\n- Создана: 2026-06-21T00:17:01+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0121\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/testing/`\n  - Документация: `docs/testing/`\n  - Исходный код: `src/Electron2D.Testing/`; `tests/`\n\n### Самодостаточное описание\n\nНужен встроенный testing framework для проектов Electron2D: scene tests, visual tests, fixed seed, fixed timestep, advance frame/physics frame, Input Map simulation, node lookup, property read, signal wait, screenshot, pixel-diff, timeout и leak checks.\n\nЭта задача закрывает core testing framework и machine-readable artifacts. Отображение прогресса, diagnostics и visual diff в Editor или Agent Workspace подключается отдельными Editor/UI-задачами поверх этих artifacts.\n\n### Критерии приёмки\n\n- [ ] Создан test framework package/project.\n- [ ] Scene tests могут загрузить `.e2scene`, найти node и продвинуть кадры.\n- [ ] Visual tests могут сравнить frame capture с reference image с tolerance.\n- [ ] `e2d test --format json` запускает project tests и возвращает structured diagnostics.\n- [ ] Test artifacts содержат progress events, diagnostics, screenshots, pixel-diff output и snapshot identity, пригодные для будущего Editor/Agent Workspace отображения.\n- [ ] Добавлены sample tests для минимального проекта.\n- [ ] Документация testing workflow обновлена.\n\n### Заметки агента\n\nСоздано из AI-friendly архитектурного файла: AI-friendly приёмка требует проверять поведение игры автоматически.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:02:00+03:00 - Уточнение пользователя: тесты должны быть видны в Editor, чтобы человек мог наблюдать за проверкой, которую запускает AI.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-1959002fea1eeebdb9f08c6ed22aca4a"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создан test framework package/project.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-802fa83981e1f024ea342a3cd404632e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Scene tests могут загрузить scene JSON, найти node и продвинуть кадры.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-802fa83981e1f024ea342a3cd404632e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Visual tests могут сравнить frame capture с reference image с tolerance.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-802fa83981e1f024ea342a3cd404632e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`e2d test --format json` запускает project tests и возвращает structured diagnostics.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-802fa83981e1f024ea342a3cd404632e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Test artifacts содержат progress events, diagnostics, screenshots, pixel-diff output и snapshot identity, пригодные для будущего Editor/Agent Workspace отображения.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-802fa83981e1f024ea342a3cd404632e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Добавлены sample tests для минимального проекта.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-802fa83981e1f024ea342a3cd404632e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Документация testing workflow обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-802fa83981e1f024ea342a3cd404632e/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T07:24:54.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:02:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: тесты должны быть видны в Editor, чтобы человек мог наблюдать за проверкой, которую запускает AI."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:05:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T18:58:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "22/22"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "351/351"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "6/6"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/architecture/ai-friendly-workflow.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/diagnostics/diagnostics-core.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "docs/testing"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/testing/scene-visual-testing.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "schemas/testing/*.schema.json"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "Directory",
+      "value": "src/Electron2D.Cli"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "Directory",
+      "value": "src/Electron2D.Testing"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DSceneVisualTestingTests.cs"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "tests/electron2d.scene-tests.json"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 696193,
+      "byteLength": 8236,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "b12fee4947557d36c9cfc0a5aeea906249d95eaf80985a82ec51caf62cc1c10a",
+      "markdown": "# T-0122: Реализовать scene tests и visual regression tests для игр\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:58:00+03:00\n- Приоритет: P0\n- Коммит: `138e842`\n\n## Ссылки\n\n- Спецификация: `docs/testing/scene-visual-testing.md`; `docs/architecture/ai-friendly-workflow.md`; `docs/cli/e2d-cli.md`\n- Документация: `docs/testing/scene-visual-testing.md`; `docs/cli/e2d-cli.md`; `docs/diagnostics/diagnostics-core.md`\n- Исходный код: `src/Electron2D.Testing/`; `src/Electron2D.Cli/`; `src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/Electron2DSceneVisualTestingTests.cs`\n- Схемы: `schemas/testing/*.schema.json`\n\n## Итог\n\n- Создан project `Electron2D.Testing` и добавлен в solution.\n- Добавлен scene-test manifest contract `Electron2D.SceneTestSuite` версии `1`.\n- Scene runner загружает scene JSON, строит simple scene path по `name`/`parent`, проверяет node type и `properties.<name>.value`, а также детерминированно продвигает кадры без ожидания wall-clock.\n- Visual tests создают deterministic PNG screenshot, сравнивают его с reference image по tolerance и пишут pixel-diff artifact.\n- `e2d test --format json` запускает scene tests при найденном `tests/electron2d.scene-tests.json` или явном `--manifest`; `e2d test --format jsonl` без manifest сохранил queued job mode.\n- Artifacts содержат `result.json`, `diagnostics.json`, `events.jsonl`, screenshots, pixel-diff output и snapshot identity fields.\n- Опубликованы JSON Schema Draft 2020-12 files для suite, result, diagnostics и event stream.\n- В `DiagnosticCodeRegistry` добавлены `E2D-TEST-0001` для scene assertions и `E2D-TEST-0002` для visual comparison.\n- Implementation documentation и local documentation index обновлены.\n\n## Критерии приёмки\n\n- [x] Создан test framework package/project.\n- [x] Scene tests могут загрузить scene JSON, найти node и продвинуть кадры.\n- [x] Visual tests могут сравнить frame capture с reference image с tolerance.\n- [x] `e2d test --format json` запускает project tests и возвращает structured diagnostics.\n- [x] Test artifacts содержат progress events, diagnostics, screenshots, pixel-diff output и snapshot identity, пригодные для будущего Editor/Agent Workspace отображения.\n- [x] Добавлены sample tests для минимального проекта.\n- [x] Документация testing workflow обновлена.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DSceneVisualTestingTests` упал ожидаемо: отсутствовали завершённый `Electron2D.Testing` project и CLI-маршрут scene tests.\n- Green focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DSceneVisualTestingTests` прошёл `6/6`.\n- Focused regression phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Electron2DSceneVisualTestingTests|FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests|FullyQualifiedName~Electron2DCliWorkflowTests\"` прошёл `22/22`.\n- `git diff --check` прошёл без whitespace errors, только с предупреждениями о будущей нормализации LF/CRLF.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для `544` tracked source files.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `351/351`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл.\n\n## Решения\n\n- Первая реализация deterministic и не запускает пользовательский C# runtime process, physics, script lifecycle или настоящий rendering backend; она фиксирует machine-readable artifact contract для будущих настоящих test workers и Editor-панелей.\n- Scene-test CLI branch включается только для `--format json` и manifest, чтобы не ломать existing queued job JSONL mode.\n- Pixel-diff output создаётся уже сейчас, но сравнение пока byte-level against deterministic PNG, пока полноценный renderer подключается отдельными задачами.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0122 [ ] P0: Реализовать scene tests и visual regression tests для игр\n\n- Создана: 2026-06-21T00:17:01+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0121\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/testing/`\n  - Документация: `docs/testing/`\n  - Исходный код: `src/Electron2D.Testing/`; `tests/`\n\n### Самодостаточное описание\n\nНужен встроенный testing framework для проектов Electron2D: scene tests, visual tests, fixed seed, fixed timestep, advance frame/physics frame, Input Map simulation, node lookup, property read, signal wait, screenshot, pixel-diff, timeout и leak checks.\n\nЭта задача закрывает core testing framework и machine-readable artifacts. Отображение прогресса, diagnostics и visual diff в Editor или Agent Workspace подключается отдельными Editor/UI-задачами поверх этих artifacts.\n\n### Критерии приёмки\n\n- [ ] Создан test framework package/project.\n- [ ] Scene tests могут загрузить `.e2scene`, найти node и продвинуть кадры.\n- [ ] Visual tests могут сравнить frame capture с reference image с tolerance.\n- [ ] `e2d test --format json` запускает project tests и возвращает structured diagnostics.\n- [ ] Test artifacts содержат progress events, diagnostics, screenshots, pixel-diff output и snapshot identity, пригодные для будущего Editor/Agent Workspace отображения.\n- [ ] Добавлены sample tests для минимального проекта.\n- [ ] Документация testing workflow обновлена.\n\n### Заметки агента\n\nСоздано из AI-friendly архитектурного файла: AI-friendly приёмка требует проверять поведение игры автоматически.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:02:00+03:00 - Уточнение пользователя: тесты должны быть видны в Editor, чтобы человек мог наблюдать за проверкой, которую запускает AI.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T21:17:01.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T18:58:00.0000000+00:00",
+  "completedAt": "2026-06-22T18:58:00.0000000+00:00",
+  "acceptedAt": "2026-06-22T18:58:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T18:58:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

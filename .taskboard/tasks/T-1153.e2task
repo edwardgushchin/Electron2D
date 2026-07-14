@@ -1,0 +1,133 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-fb40815609c949fc8ea87b7177cfac48",
+  "revision": 9,
+  "taskId": "T-1153",
+  "legacyAliases": [],
+  "title": "Показывать задачи строками в VS Code sidebar",
+  "description": "## Контекст\n\nActivity Bar container Electron2D Task Board сейчас содержит пустой служебный TreeView. В левой панели должен отображаться настоящий построчный список задач из canonical `.taskboard`, а не пустая область.\n\n## Критерии приёмки\n\n- TreeView показывает каждую активную задачу отдельной строкой с taskId и title.\n- Справа у строки видны status и priority; tooltip содержит полный title и metadata.\n- Строки упорядочены по каноническому порядку статусов, placement rank и taskId.\n- Клик по строке открывает/reveal доску и показывает выбранную задачу.\n- File watchers обновляют TreeView после изменений board/task files через CLI.\n- Loading, empty и CLI error состояния отображаются в sidebar без прямого чтения или записи `.e2task`.\n- Unit regression, Extension Host, typecheck и VSIX packaging/install проходят.\n\n## Execution contract\n\nМенять VS Code extension, связанный domain document, task evidence и append-only diary. Task data читать и изменять только через e2d CLI.",
+  "status": "Review",
+  "acceptanceState": "InternalReview",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "sidebar-task-rows",
+      "description": "Sidebar lists active tasks as live rows and opens the selected task in the board.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-b8381e11f4484a9fb501df7649bb4837",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T09:52:08.4690797+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Ready."
+      }
+    },
+    {
+      "activityEntryId": "activity-07c3f69aa5924b8d819a378f34c78d28",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T09:52:09.3215497+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to InProgress."
+      }
+    },
+    {
+      "activityEntryId": "activity-889b03b2c7d446f38dab051c0231d375",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T10:01:24.5783658+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Review."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-11T09:51:57.9907652+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "activity-874899724ab74b5c8d67139c38486090",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T10:01:22.7682992+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Пустой Activity Bar provider заменён live TreeView из compact e2d tasks board. Строка содержит taskId · title, status · priority, tooltip и status icon; archived tasks исключаются, порядок status/rank/id. Watchers обновляют список, выбранный workspace кэшируется. Клик вызывает electron2d.openTaskFromSidebar и показывает modal details. RED 22/23 → GREEN 23/23; typecheck GREEN. Extension Host создал T-0001, дождался sidebar row и подтвердил selected task, exit 0. VSIX 9 files/17.25 KB установлен в stable VS Code 0.1.0. Docs update/check/verify и licenses GREEN. Pixel-level проверка заблокирована Windows control os error 3."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

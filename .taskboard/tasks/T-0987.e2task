@@ -1,0 +1,203 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-e5d167c34c5a3fff5ab58fd4f3f9dcfc",
+  "revision": 2,
+  "taskId": "T-0987",
+  "legacyAliases": [],
+  "title": "Сопоставить reflection `op_*` operators с C# operator symbols в API diff",
+  "description": "## T-0987 [ ] P1: Сопоставить reflection `op_*` operators с C# operator symbols в API diff\n\n- Создана: 2026-07-07T01:14:03+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `tooling`\n- Scheduling tier: `next`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Источник follow-up: `docs/verdicts/release-management/t-0242-audit-r11.md`\n  - Generated packets: `data/api/godot-4.7/classes/*.api.json`; `data/api/electron2d/classes/*.api.json`\n  - Будущий потребитель: `T-0243`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - `T-0242` generated packets accepted and available as source input.\n  - API diff/matrix domain document names the operator semantic normalization contract.\n- Stop conditions:\n  - the change would rename Electron2D generated packet operator entries from reflection/ABI `op_*` form to Godot-style source names.\n  - the change would duplicate operator data in parent packets or create another generated source of truth.\n- May change:\n  - API diff/matrix tooling and tests that normalize operator identities.\n  - domain documentation for operator comparison policy.\n  - generated matrix/diff reports owned by `T-0243`.\n- Must not change:\n  - Electron2D generated packet canonical operator names such as `op_Addition`, `op_Division`, `op_Equality`.\n  - runtime public API names merely to satisfy raw packet-name comparison.\n- Required outputs:\n  - semantic normalization layer that compares Godot source-style `operator +`, `operator /`, `operator ==` with Electron2D reflection names `op_Addition`, `op_Division`, `op_Equality`.\n  - normalized operator identity includes declaring type, symbol or conversion kind, arity, return type, parameter types and source/target types for conversions.\n  - diff report shows both source forms and normalized identity.\n- Required commands:\n  - focused operator normalization tests.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`\n  - relevant API matrix/docs checks for the owning implementation.\n  - `git diff --check`\n- External audit:\n  - required only when included in a later audit-managed API diff/package scope.\n\n### Самодостаточное описание\n\nPrimary r11 audit for `T-0242` accepted generated packets but created a follow-up for future strict API diff: Electron2D packets intentionally keep reflection/ABI operator overload names (`op_Addition`, `op_Division`, `op_UnaryNegation`, `op_Equality`) as canonical local representation, while Godot-side packets use source-style names (`operator +`, `operator /`, `operator -`, `operator ==`). The user confirmed that Electron2D packet names must not be rewritten just to match Godot. `T-0243` must compare these entries through a semantic normalization layer instead of raw `name`.\n\n### Критерии приёмки\n\n- [ ] Tests cover `Vector2.op_Addition`, `Vector2.op_Division`, `Vector2.op_UnaryNegation` and `Color.op_Equality`.\n- [ ] Matrix/diff does not report missing/extra operators solely because one side uses `operator +` and the other uses `op_Addition`.\n- [ ] Parameter type, return type or operator symbol mismatch still appears in the diff report.\n- [ ] Diff output includes both original forms and normalized identity, for example `Godot: Vector2.operator +`, `Electron2D: Vector2.op_Addition`, `normalized: operator +(Vector2, Vector2): Vector2`.\n- [ ] `verify audit-followups` passes with the closure note from `T-0242` r11.\n\n### Подзадачи\n\n- [ ] Add RED tests around operator semantic normalization.\n- [ ] Implement the smallest normalization map for C# reflection operator names and source-style operator symbols.\n- [ ] Include arity, normalized return type and normalized parameter types in identity.\n- [ ] Update domain documentation and generated matrix outputs.\n- [ ] Run focused operator tests and required docs/audit checks.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0242-audit-r11.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0987\n  - rationale: Primary `T-0242` r11 classifies operator raw-name mapping as future `T-0243` API diff policy, not a blocker for generated packet creation. The user confirmed that Electron2D-side packets preserve reflection/ABI `op_*` representation and that cross-shape comparison belongs to semantic normalization.\n\n### Заметки агента\n\n2026-07-07T01:14:03+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0242-audit-r11.md`; пользователь подтвердил, что Electron2D generated packets не переименовывают `op_*` entries, а `T-0987` владеет future operator semantic normalization для `T-0243`.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0014",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Tests cover `Vector2.op_Addition`, `Vector2.op_Division`, `Vector2.op_UnaryNegation` and `Color.op_Equality`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Matrix/diff does not report missing/extra operators solely because one side uses `operator +` and the other uses `op_Addition`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Parameter type, return type or operator symbol mismatch still appears in the diff report.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Diff output includes both original forms and normalized identity, for example `Godot: Vector2.operator +`, `Electron2D: Vector2.op_Addition`, `normalized: operator +(Vector2, Vector2): Vector2`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`verify audit-followups` passes with the closure note from `T-0242` r11.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T22:14:03.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0242-audit-r11.md`; пользователь подтвердил, что Electron2D generated packets не переименовывают `op_*` entries, а `T-0987` владеет future operator semantic normalization для `T-0243`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required only when included in a later audit-managed API diff/package scope."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "data/api/electron2d/classes/*.api.json"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/api/godot-4.7/classes/*.api.json"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0242-audit-r11.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "operator "
+    }
+  ],
+  "executionContract": {
+    "taskType": "tooling",
+    "readyToStart": [
+      "`T-0242` generated packets accepted and available as source input.",
+      "API diff/matrix domain document names the operator semantic normalization contract."
+    ],
+    "stopConditions": [
+      "the change would rename Electron2D generated packet operator entries from reflection/ABI `op_*` form to Godot-style source names.",
+      "the change would duplicate operator data in parent packets or create another generated source of truth."
+    ],
+    "allowedChanges": [
+      "API diff/matrix tooling and tests that normalize operator identities.",
+      "domain documentation for operator comparison policy.",
+      "generated matrix/diff reports owned by `T-0243`."
+    ],
+    "forbiddenChanges": [
+      "Electron2D generated packet canonical operator names such as `op_Addition`, `op_Division`, `op_Equality`.",
+      "runtime public API names merely to satisfy raw packet-name comparison."
+    ],
+    "requiredOutputs": [
+      "semantic normalization layer that compares Godot source-style `operator +`, `operator /`, `operator ==` with Electron2D reflection names `op_Addition`, `op_Division`, `op_Equality`.",
+      "normalized operator identity includes declaring type, symbol or conversion kind, arity, return type, parameter types and source/target types for conversions.",
+      "diff report shows both source forms and normalized identity."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "focused operator normalization tests.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "relevant API matrix/docs checks for the owning implementation.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required only when included in a later audit-managed API diff/package scope.",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 402930,
+      "byteLength": 4939,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "0ecb97b4268319f84e4009dd6e8323f7b6f02dd2d287ddda4a710fa02c108fe2",
+      "markdown": "## T-0987 [ ] P1: Сопоставить reflection `op_*` operators с C# operator symbols в API diff\n\n- Создана: 2026-07-07T01:14:03+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `tooling`\n- Scheduling tier: `next`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Источник follow-up: `docs/verdicts/release-management/t-0242-audit-r11.md`\n  - Generated packets: `data/api/godot-4.7/classes/*.api.json`; `data/api/electron2d/classes/*.api.json`\n  - Будущий потребитель: `T-0243`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - `T-0242` generated packets accepted and available as source input.\n  - API diff/matrix domain document names the operator semantic normalization contract.\n- Stop conditions:\n  - the change would rename Electron2D generated packet operator entries from reflection/ABI `op_*` form to Godot-style source names.\n  - the change would duplicate operator data in parent packets or create another generated source of truth.\n- May change:\n  - API diff/matrix tooling and tests that normalize operator identities.\n  - domain documentation for operator comparison policy.\n  - generated matrix/diff reports owned by `T-0243`.\n- Must not change:\n  - Electron2D generated packet canonical operator names such as `op_Addition`, `op_Division`, `op_Equality`.\n  - runtime public API names merely to satisfy raw packet-name comparison.\n- Required outputs:\n  - semantic normalization layer that compares Godot source-style `operator +`, `operator /`, `operator ==` with Electron2D reflection names `op_Addition`, `op_Division`, `op_Equality`.\n  - normalized operator identity includes declaring type, symbol or conversion kind, arity, return type, parameter types and source/target types for conversions.\n  - diff report shows both source forms and normalized identity.\n- Required commands:\n  - focused operator normalization tests.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`\n  - relevant API matrix/docs checks for the owning implementation.\n  - `git diff --check`\n- External audit:\n  - required only when included in a later audit-managed API diff/package scope.\n\n### Самодостаточное описание\n\nPrimary r11 audit for `T-0242` accepted generated packets but created a follow-up for future strict API diff: Electron2D packets intentionally keep reflection/ABI operator overload names (`op_Addition`, `op_Division`, `op_UnaryNegation`, `op_Equality`) as canonical local representation, while Godot-side packets use source-style names (`operator +`, `operator /`, `operator -`, `operator ==`). The user confirmed that Electron2D packet names must not be rewritten just to match Godot. `T-0243` must compare these entries through a semantic normalization layer instead of raw `name`.\n\n### Критерии приёмки\n\n- [ ] Tests cover `Vector2.op_Addition`, `Vector2.op_Division`, `Vector2.op_UnaryNegation` and `Color.op_Equality`.\n- [ ] Matrix/diff does not report missing/extra operators solely because one side uses `operator +` and the other uses `op_Addition`.\n- [ ] Parameter type, return type or operator symbol mismatch still appears in the diff report.\n- [ ] Diff output includes both original forms and normalized identity, for example `Godot: Vector2.operator +`, `Electron2D: Vector2.op_Addition`, `normalized: operator +(Vector2, Vector2): Vector2`.\n- [ ] `verify audit-followups` passes with the closure note from `T-0242` r11.\n\n### Подзадачи\n\n- [ ] Add RED tests around operator semantic normalization.\n- [ ] Implement the smallest normalization map for C# reflection operator names and source-style operator symbols.\n- [ ] Include arity, normalized return type and normalized parameter types in identity.\n- [ ] Update domain documentation and generated matrix outputs.\n- [ ] Run focused operator tests and required docs/audit checks.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0242-audit-r11.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0987\n  - rationale: Primary `T-0242` r11 classifies operator raw-name mapping as future `T-0243` API diff policy, not a blocker for generated packet creation. The user confirmed that Electron2D-side packets preserve reflection/ABI `op_*` representation and that cross-shape comparison belongs to semantic normalization.\n\n### Заметки агента\n\n2026-07-07T01:14:03+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0242-audit-r11.md`; пользователь подтвердил, что Electron2D generated packets не переименовывают `op_*` entries, а `T-0987` владеет future operator semantic normalization для `T-0243`.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-06T22:14:03.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

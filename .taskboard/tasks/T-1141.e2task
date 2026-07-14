@@ -1,0 +1,220 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-764e4d8c883ec4b3c7dcf13a26e24f31",
+  "revision": 2,
+  "taskId": "T-1141",
+  "legacyAliases": [],
+  "title": "Завершить переименование файла ElectronObject и исправить XML-навигацию корневого типа",
+  "description": "## T-1141 [ ] P3: Завершить переименование файла ElectronObject и исправить XML-навигацию корневого типа\n\n- Создана: 2026-07-10T18:30:38+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-1137\n- Ссылки:\n  - Доменный документ: `docs/object-model/base-object-lifetime.md`\n  - Исходник: `src/Electron2D/Core/ObjectModel/Object.cs`\n  - Сгенерированные потребители: `data/api/electron2d-api-manifest.json`; `.github/wiki/`\n  - Проверки: `tests/Electron2D.Tests.Unit/BaseObjectLifetimeTests.cs`; `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`\n  - Источник finding-а: `docs/verdicts/release-management/t-1137-audit-control-r33.md`, `FOLLOW_UP_FINDING F1`\n\n### Execution contract\n\n- Task type: source-layout and XML-documentation cleanup without runtime behavior change.\n- Ready-to-start:\n  - task state is `open`;\n  - `T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;\n  - no other task is `in progress`.\n- Stop conditions:\n  - rename would change the public type name, namespace, binary signature or object lifetime behavior;\n  - XML cleanup expands into unrelated root-object API implementation;\n  - generated output cannot be synchronized by existing repository generators.\n- May change:\n  - filename/path of the existing `ElectronObject` implementation;\n  - stale XML `cref` entries owned by that implementation;\n  - existing focused tests/verifiers and generated API documentation affected by the rename.\n- Must not change:\n  - `ElectronObject` runtime semantics or public signatures;\n  - manual public API profile decisions;\n  - unrelated `System.Object`/CLR `object` references.\n- Required outputs:\n  - implementation file named `ElectronObject.cs`;\n  - XML references that resolve to `ElectronObject`, not CLR `Object` accidentally;\n  - synchronized generated manifest/Wiki/local documentation with unchanged runtime API identity.\n- Required commands:\n  - `dotnet build src/Electron2D/Electron2D.csproj --no-restore -v:minimal`\n  - existing focused root-object tests\n  - `dotnet run --project eng/Electron2D.Build -- update api-manifest --check`\n  - `dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- verify public-api-xml-docs`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: not required by default; require it only if the work changes public signatures or runtime behavior.\n\n### Internal substrate acceptance contract\n\n- Input boundary: current `ElectronObject` implementation and its XML member references.\n- Resolution invariant: engine-root references resolve to `ElectronObject`; ordinary CLR `object`/`System.Object` remain unchanged.\n- Failure policy: unresolved or ambiguous XML references fail the existing documentation verifier rather than being silently emitted.\n- Consumer boundary: compiler XML, API manifest, local documentation and Wiki agree on the `ElectronObject` identity.\n- Regression boundary: no runtime lifetime, signal, metadata or script-attachment behavior changes.\n\n### Самодостаточное описание\n\nПосле публичного переименования Godot `Object` в `ElectronObject` реализация всё ещё находится в файле `Object.cs`, а XML-комментарий `ElectronObject.ToString` содержит `<seealso cref=\"Object\" />`, который может вести к CLR `System.Object`. Задача завершает только source-layout/XML-навигацию и не повторяет профильную работу `T-1137`.\n\n### Критерии приёмки\n\n- [ ] Файл реализации называется `ElectronObject.cs`, тип и публичные сигнатуры не изменены.\n- [ ] Устаревшие или неоднозначные XML `cref` корневого engine-типа исправлены, CLR `object` не переименован механически.\n- [ ] Existing root-object tests, XML documentation verifier and generated API/Wiki checks pass.\n- [ ] Доменный документ и generated consumers синхронизированы без нового API scope.\n\n### Подзадачи\n\n- [ ] Уточнить точный список stale filename/XML references.\n- [ ] Выполнить узкий rename и XML cleanup.\n- [ ] Перегенерировать документацию и запустить обязательные проверки.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: r33 зафиксировал точный stale filename и XML `cref`.\n- Ещё отсутствует: отдельная реализация cleanup после принятия `T-1137`.\n- Принято аудитом: отсутствует; r33 классифицировал finding как неблокирующий follow-up.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r33.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-1141\n  - rationale: Source-layout/XML cleanup не меняет profile/runtime scope `T-1137` и вынесен в отдельную zero-context P3-задачу.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r35.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-1141\n  - rationale: r35 повторно подтвердил тот же stale filename/XML `cref`; существующая T-1141 уже владеет точным source-layout/documentation cleanup.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r36.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-1141\n  - rationale: r36 повторяет тот же source filename/XML `cref` finding и прямо указывает существующую T-1141 как владельца cleanup.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r37.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-1141\n  - rationale: r37 повторяет тот же stale filename/XML `cref`; T-1141 уже владеет узким source-layout/documentation cleanup.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r38.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-1141\n  - rationale: r38 повторяет тот же stale filename/XML `cref`; T-1141 остаётся единственным владельцем cleanup.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P3",
+  "tagIds": [
+    "tag-0012",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-94ca0395565920c2776d3693d2df82fe"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Файл реализации называется `ElectronObject.cs`, тип и публичные сигнатуры не изменены.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Устаревшие или неоднозначные XML `cref` корневого engine-типа исправлены, CLR `object` не переименован механически.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Existing root-object tests, XML documentation verifier and generated API/Wiki checks pass.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Доменный документ и generated consumers синхронизированы без нового API scope.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required by default; require it only if the work changes public signatures or runtime behavior."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": ".github/wiki"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "<seealso cref=\"Object\" />"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/object-model/base-object-lifetime.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-1137-audit-control-r33.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/RepositoryPolicyVerifiers.cs"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "src/Electron2D/Core/ObjectModel/Object.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Unit/BaseObjectLifetimeTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "source-layout and XML-documentation cleanup without runtime behavior change.",
+    "readyToStart": [
+      "task state is `open`;",
+      "`T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;",
+      "no other task is `in progress`."
+    ],
+    "stopConditions": [
+      "rename would change the public type name, namespace, binary signature or object lifetime behavior;",
+      "XML cleanup expands into unrelated root-object API implementation;",
+      "generated output cannot be synchronized by existing repository generators."
+    ],
+    "allowedChanges": [
+      "filename/path of the existing `ElectronObject` implementation;",
+      "stale XML `cref` entries owned by that implementation;",
+      "existing focused tests/verifiers and generated API documentation affected by the rename."
+    ],
+    "forbiddenChanges": [
+      "`ElectronObject` runtime semantics or public signatures;",
+      "manual public API profile decisions;",
+      "unrelated `System.Object`/CLR `object` references."
+    ],
+    "requiredOutputs": [
+      "implementation file named `ElectronObject.cs`;",
+      "XML references that resolve to `ElectronObject`, not CLR `Object` accidentally;",
+      "synchronized generated manifest/Wiki/local documentation with unchanged runtime API identity."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet build src/Electron2D/Electron2D.csproj --no-restore -v:minimal`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "existing focused root-object tests",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update api-manifest --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify public-api-xml-docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 15464538,
+      "byteLength": 6959,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "b72fb0a3584f0f6de8d79f5064452a6c8342e5b1efac0c7eb7fbc2dad4163ae8",
+      "markdown": "## T-1141 [ ] P3: Завершить переименование файла ElectronObject и исправить XML-навигацию корневого типа\n\n- Создана: 2026-07-10T18:30:38+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-1137\n- Ссылки:\n  - Доменный документ: `docs/object-model/base-object-lifetime.md`\n  - Исходник: `src/Electron2D/Core/ObjectModel/Object.cs`\n  - Сгенерированные потребители: `data/api/electron2d-api-manifest.json`; `.github/wiki/`\n  - Проверки: `tests/Electron2D.Tests.Unit/BaseObjectLifetimeTests.cs`; `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`\n  - Источник finding-а: `docs/verdicts/release-management/t-1137-audit-control-r33.md`, `FOLLOW_UP_FINDING F1`\n\n### Execution contract\n\n- Task type: source-layout and XML-documentation cleanup without runtime behavior change.\n- Ready-to-start:\n  - task state is `open`;\n  - `T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;\n  - no other task is `in progress`.\n- Stop conditions:\n  - rename would change the public type name, namespace, binary signature or object lifetime behavior;\n  - XML cleanup expands into unrelated root-object API implementation;\n  - generated output cannot be synchronized by existing repository generators.\n- May change:\n  - filename/path of the existing `ElectronObject` implementation;\n  - stale XML `cref` entries owned by that implementation;\n  - existing focused tests/verifiers and generated API documentation affected by the rename.\n- Must not change:\n  - `ElectronObject` runtime semantics or public signatures;\n  - manual public API profile decisions;\n  - unrelated `System.Object`/CLR `object` references.\n- Required outputs:\n  - implementation file named `ElectronObject.cs`;\n  - XML references that resolve to `ElectronObject`, not CLR `Object` accidentally;\n  - synchronized generated manifest/Wiki/local documentation with unchanged runtime API identity.\n- Required commands:\n  - `dotnet build src/Electron2D/Electron2D.csproj --no-restore -v:minimal`\n  - existing focused root-object tests\n  - `dotnet run --project eng/Electron2D.Build -- update api-manifest --check`\n  - `dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- verify public-api-xml-docs`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: not required by default; require it only if the work changes public signatures or runtime behavior.\n\n### Internal substrate acceptance contract\n\n- Input boundary: current `ElectronObject` implementation and its XML member references.\n- Resolution invariant: engine-root references resolve to `ElectronObject`; ordinary CLR `object`/`System.Object` remain unchanged.\n- Failure policy: unresolved or ambiguous XML references fail the existing documentation verifier rather than being silently emitted.\n- Consumer boundary: compiler XML, API manifest, local documentation and Wiki agree on the `ElectronObject` identity.\n- Regression boundary: no runtime lifetime, signal, metadata or script-attachment behavior changes.\n\n### Самодостаточное описание\n\nПосле публичного переименования Godot `Object` в `ElectronObject` реализация всё ещё находится в файле `Object.cs`, а XML-комментарий `ElectronObject.ToString` содержит `<seealso cref=\"Object\" />`, который может вести к CLR `System.Object`. Задача завершает только source-layout/XML-навигацию и не повторяет профильную работу `T-1137`.\n\n### Критерии приёмки\n\n- [ ] Файл реализации называется `ElectronObject.cs`, тип и публичные сигнатуры не изменены.\n- [ ] Устаревшие или неоднозначные XML `cref` корневого engine-типа исправлены, CLR `object` не переименован механически.\n- [ ] Existing root-object tests, XML documentation verifier and generated API/Wiki checks pass.\n- [ ] Доменный документ и generated consumers синхронизированы без нового API scope.\n\n### Подзадачи\n\n- [ ] Уточнить точный список stale filename/XML references.\n- [ ] Выполнить узкий rename и XML cleanup.\n- [ ] Перегенерировать документацию и запустить обязательные проверки.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: r33 зафиксировал точный stale filename и XML `cref`.\n- Ещё отсутствует: отдельная реализация cleanup после принятия `T-1137`.\n- Принято аудитом: отсутствует; r33 классифицировал finding как неблокирующий follow-up.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r33.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-1141\n  - rationale: Source-layout/XML cleanup не меняет profile/runtime scope `T-1137` и вынесен в отдельную zero-context P3-задачу.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r35.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-1141\n  - rationale: r35 повторно подтвердил тот же stale filename/XML `cref`; существующая T-1141 уже владеет точным source-layout/documentation cleanup.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r36.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-1141\n  - rationale: r36 повторяет тот же source filename/XML `cref` finding и прямо указывает существующую T-1141 как владельца cleanup.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r37.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-1141\n  - rationale: r37 повторяет тот же stale filename/XML `cref`; T-1141 уже владеет узким source-layout/documentation cleanup.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r38.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-1141\n  - rationale: r38 повторяет тот же stale filename/XML `cref`; T-1141 остаётся единственным владельцем cleanup.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-10T15:30:38.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

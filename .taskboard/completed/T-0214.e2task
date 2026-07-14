@@ -1,0 +1,324 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-91879f66776584cb850b7cf6b7331634",
+  "revision": 2,
+  "taskId": "T-0214",
+  "legacyAliases": [],
+  "title": "Перенести API, Wiki, проверки лицензий и манифестов на C#",
+  "description": "## T-0214 [x] P0: Перенести API, Wiki, проверки лицензий и манифестов на C#\n\n- Создана: 2026-06-24T14:52:00+03:00\n- Завершена: 2026-06-28T00:41:59+03:00\n- Принята внешним аудитом: 2026-06-28T00:41:59+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний acceptance audit r05 принял задачу без blocker-ов.\n- Приоритет: P0\n- Зависимости: T-0207\n- Ссылки:\n  - Доменные документы: `docs/release-management/api-compatibility.md`; `docs/documentation/local-documentation-pipeline.md`; `docs/release-management/audit-package.md`; `docs/release-management/AUDIT-REQUEST.md`\n  - Внешние аудиты: `docs/verdicts/release-management/t-0214-audit-r01.md`; `docs/verdicts/release-management/t-0214-audit-r02.md`; `docs/verdicts/release-management/t-0214-audit-r03.md`; `docs/verdicts/release-management/t-0214-audit-r04.md`; `docs/verdicts/release-management/t-0214-audit-r04-scope-challenge.md`; `docs/verdicts/release-management/t-0214-audit-r05.md`\n  - Исходный код: `eng/Electron2D.Build/Program.cs`; `eng/Electron2D.Build/LocalDocumentationVerifier.cs`; `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`; `eng/Electron2D.Build/AuditPackageCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n\n### Самодостаточное описание\n\nAPI/Wiki/license/manifest verifier-ы перенесены на C#-поверхность внутреннего build tool `eng\\Electron2D.Build`. Целевая поверхность включает команды `update wiki`, `update api-manifest`, `verify api-compatibility`, `verify licenses`, `verify manifests`, `verify release-metadata` и `verify project-template`; старые PowerShell-скрипты не описываются как совместимый нижний слой для этой задачи.\n\nВ ходе аудитов дополнительно закрыты дефекты проверяемости: `update wiki --check` без явного `--output` проверяет сгенерированный Wiki output, Wiki pages сверяются по детерминированному содержимому, manifest verifier отклоняет JSON с корнем не-object, `TASKS.md` попадает во внешний аудит только как архивное доказательство, а не как применяемый patch, и контракт audit package явно фиксирует внешний baseline checkout и границу `previousVerdictChain`.\n\n### Критерии и результат\n\n- [x] До кода обновлены доменные документы о проверках API, Wiki, лицензий и манифестов.\n- [x] Сначала падающие тесты зафиксировали манифест API, вывод Wiki, форму манифестов и правила заголовков лицензий.\n- [x] `dotnet run --project eng\\Electron2D.Build -- update wiki --check` проверяет манифест API и вывод Wiki.\n- [x] Заголовки лицензий и манифесты проверяются C#-командами без PowerShell как целевой поверхности.\n- [x] Тексты задач `T-0167`, `T-0168`, `T-0169`, `T-0173`, `T-0174`, `T-0175` больше не требуют PowerShell-команды как целевой проверки.\n- [x] После реализации точечные тесты и C#-команды проверки проходят.\n- [x] Внешние аудиты r01-r04 и r04 scope challenge вернули blocker-ы, все blocker-ы закрыты; внешний аудит r05 вернул `VERDICT: ACCEPT`.\n\n### Проверки\n\n- [x] Focused `RepositoryBuildToolTests` по T-0214 прошёл: 40/40.\n- [x] Static request tests прошли: 18/18.\n- [x] Новые guard tests для external baseline input и `previousVerdictChain` прошли: 3/3.\n- [x] `dotnet run --project eng\\Electron2D.Build -- verify docs` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build -- update docs --check` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: 686 tracked source files.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-Tasks.ps1` прошёл.\n- [x] `git diff --check` прошёл.\n- [x] Внешний аудит `docs/verdicts/release-management/t-0214-audit-r05.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-27T19:20:00+03:00 - Внешний аудит r01 вернул `VERDICT: NEEDS_FIXES` с blocker-ами по состоянию задачи, ложному успеху `update wiki --check`, недостаточной проверке Wiki content и JSON manifest root.\n\n2026-06-27T21:12:00+03:00 - Внешний аудит r02 вернул `VERDICT: NEEDS_FIXES`: состояние задачи в evidence было несогласованным, а доменные документы всё ещё представляли старые PowerShell-команды как активную поверхность.\n\n2026-06-27T21:49:00+03:00 - Внешний аудит r03 вернул `VERDICT: NEEDS_FIXES`: `TASKS.md` попал в repo-owned patch и внёс чужую task definition `T-0092` в release-management scope.\n\n2026-06-27T22:55:00+03:00 - Внешний аудит r04 вернул `VERDICT: NEEDS_FIXES`: аудитор потребовал baseline snapshot внутри архива и независимый historical anchoring previous verdict files.\n\n2026-06-27T23:20:00+03:00 - Scope challenge по r04 B1-B2 вернул `VERDICT: NEEDS_FIXES`; следующий worker формализовал external baseline input и границу `previousVerdictChain` в tracked contract/tests.\n\n2026-06-28T00:41:59+03:00 - Внешний аудит r05 через режим «Глубокое исследование» вернул `VERDICT: ACCEPT`; T-0214 удалена из активного `TASKS.md`, перенесена в этот архив, а roadmap переключён на `T-0215` и затем `T-0208`.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c7ddf12eae78cbfd5bc1f098cd3317f1"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "До кода обновлены доменные документы о проверках API, Wiki, лицензий и манифестов.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-91879f66776584cb850b7cf6b7331634/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Сначала падающие тесты зафиксировали манифест API, вывод Wiki, форму манифестов и правила заголовков лицензий.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-91879f66776584cb850b7cf6b7331634/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`dotnet run --project eng\\Electron2D.Build -- update wiki --check` проверяет манифест API и вывод Wiki.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-91879f66776584cb850b7cf6b7331634/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Заголовки лицензий и манифесты проверяются C#-командами без PowerShell как целевой поверхности.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-91879f66776584cb850b7cf6b7331634/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Тексты задач `T-0167`, `T-0168`, `T-0169`, `T-0173`, `T-0174`, `T-0175` больше не требуют PowerShell-команды как целевой проверки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-91879f66776584cb850b7cf6b7331634/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "После реализации точечные тесты и C#-команды проверки проходят.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-91879f66776584cb850b7cf6b7331634/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Внешние аудиты r01-r04 и r04 scope challenge вернули blocker-ы, все blocker-ы закрыты; внешний аудит r05 вернул `VERDICT: ACCEPT`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-91879f66776584cb850b7cf6b7331634/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-27T16:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r01 вернул `VERDICT: NEEDS_FIXES` с blocker-ами по состоянию задачи, ложному успеху `update wiki --check`, недостаточной проверке Wiki content и JSON manifest root."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-27T18:12:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r02 вернул `VERDICT: NEEDS_FIXES`: состояние задачи в evidence было несогласованным, а доменные документы всё ещё представляли старые PowerShell-команды как активную поверхность."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-27T18:49:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r03 вернул `VERDICT: NEEDS_FIXES`: `TASKS.md` попал в repo-owned patch и внёс чужую task definition `T-0092` в release-management scope."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-27T19:55:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r04 вернул `VERDICT: NEEDS_FIXES`: аудитор потребовал baseline snapshot внутри архива и независимый historical anchoring previous verdict files."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-27T20:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Scope challenge по r04 B1-B2 вернул `VERDICT: NEEDS_FIXES`; следующий worker формализовал external baseline input и границу `previousVerdictChain` в tracked contract/tests."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0006",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-27T21:41:59.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r05 через режим «Глубокое исследование» вернул `VERDICT: ACCEPT`; T-0214 удалена из активного `TASKS.md`, перенесена в этот архив, а roadmap переключён на `T-0215` и затем `T-0208`."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-27T21:41:59.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/documentation/local-documentation-pipeline.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/release-management/AUDIT-REQUEST.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0214-audit-r01.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0214-audit-r02.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0214-audit-r03.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0214-audit-r04-scope-challenge.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0214-audit-r04.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0214-audit-r05.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/AuditPackageCommand.cs"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/LocalDocumentationVerifier.cs"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/Program.cs"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/RepositoryPolicyVerifiers.cs"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 999280,
+      "byteLength": 6376,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "766ca324b3eb672e1bca5bc55172f64802cb9aa5fb1c2a2c93300f4962f3ecc3",
+      "markdown": "## T-0214 [x] P0: Перенести API, Wiki, проверки лицензий и манифестов на C#\n\n- Создана: 2026-06-24T14:52:00+03:00\n- Завершена: 2026-06-28T00:41:59+03:00\n- Принята внешним аудитом: 2026-06-28T00:41:59+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний acceptance audit r05 принял задачу без blocker-ов.\n- Приоритет: P0\n- Зависимости: T-0207\n- Ссылки:\n  - Доменные документы: `docs/release-management/api-compatibility.md`; `docs/documentation/local-documentation-pipeline.md`; `docs/release-management/audit-package.md`; `docs/release-management/AUDIT-REQUEST.md`\n  - Внешние аудиты: `docs/verdicts/release-management/t-0214-audit-r01.md`; `docs/verdicts/release-management/t-0214-audit-r02.md`; `docs/verdicts/release-management/t-0214-audit-r03.md`; `docs/verdicts/release-management/t-0214-audit-r04.md`; `docs/verdicts/release-management/t-0214-audit-r04-scope-challenge.md`; `docs/verdicts/release-management/t-0214-audit-r05.md`\n  - Исходный код: `eng/Electron2D.Build/Program.cs`; `eng/Electron2D.Build/LocalDocumentationVerifier.cs`; `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`; `eng/Electron2D.Build/AuditPackageCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n\n### Самодостаточное описание\n\nAPI/Wiki/license/manifest verifier-ы перенесены на C#-поверхность внутреннего build tool `eng\\Electron2D.Build`. Целевая поверхность включает команды `update wiki`, `update api-manifest`, `verify api-compatibility`, `verify licenses`, `verify manifests`, `verify release-metadata` и `verify project-template`; старые PowerShell-скрипты не описываются как совместимый нижний слой для этой задачи.\n\nВ ходе аудитов дополнительно закрыты дефекты проверяемости: `update wiki --check` без явного `--output` проверяет сгенерированный Wiki output, Wiki pages сверяются по детерминированному содержимому, manifest verifier отклоняет JSON с корнем не-object, `TASKS.md` попадает во внешний аудит только как архивное доказательство, а не как применяемый patch, и контракт audit package явно фиксирует внешний baseline checkout и границу `previousVerdictChain`.\n\n### Критерии и результат\n\n- [x] До кода обновлены доменные документы о проверках API, Wiki, лицензий и манифестов.\n- [x] Сначала падающие тесты зафиксировали манифест API, вывод Wiki, форму манифестов и правила заголовков лицензий.\n- [x] `dotnet run --project eng\\Electron2D.Build -- update wiki --check` проверяет манифест API и вывод Wiki.\n- [x] Заголовки лицензий и манифесты проверяются C#-командами без PowerShell как целевой поверхности.\n- [x] Тексты задач `T-0167`, `T-0168`, `T-0169`, `T-0173`, `T-0174`, `T-0175` больше не требуют PowerShell-команды как целевой проверки.\n- [x] После реализации точечные тесты и C#-команды проверки проходят.\n- [x] Внешние аудиты r01-r04 и r04 scope challenge вернули blocker-ы, все blocker-ы закрыты; внешний аудит r05 вернул `VERDICT: ACCEPT`.\n\n### Проверки\n\n- [x] Focused `RepositoryBuildToolTests` по T-0214 прошёл: 40/40.\n- [x] Static request tests прошли: 18/18.\n- [x] Новые guard tests для external baseline input и `previousVerdictChain` прошли: 3/3.\n- [x] `dotnet run --project eng\\Electron2D.Build -- verify docs` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build -- update docs --check` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: 686 tracked source files.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-Tasks.ps1` прошёл.\n- [x] `git diff --check` прошёл.\n- [x] Внешний аудит `docs/verdicts/release-management/t-0214-audit-r05.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-27T19:20:00+03:00 - Внешний аудит r01 вернул `VERDICT: NEEDS_FIXES` с blocker-ами по состоянию задачи, ложному успеху `update wiki --check`, недостаточной проверке Wiki content и JSON manifest root.\n\n2026-06-27T21:12:00+03:00 - Внешний аудит r02 вернул `VERDICT: NEEDS_FIXES`: состояние задачи в evidence было несогласованным, а доменные документы всё ещё представляли старые PowerShell-команды как активную поверхность.\n\n2026-06-27T21:49:00+03:00 - Внешний аудит r03 вернул `VERDICT: NEEDS_FIXES`: `TASKS.md` попал в repo-owned patch и внёс чужую task definition `T-0092` в release-management scope.\n\n2026-06-27T22:55:00+03:00 - Внешний аудит r04 вернул `VERDICT: NEEDS_FIXES`: аудитор потребовал baseline snapshot внутри архива и независимый historical anchoring previous verdict files.\n\n2026-06-27T23:20:00+03:00 - Scope challenge по r04 B1-B2 вернул `VERDICT: NEEDS_FIXES`; следующий worker формализовал external baseline input и границу `previousVerdictChain` в tracked contract/tests.\n\n2026-06-28T00:41:59+03:00 - Внешний аудит r05 через режим «Глубокое исследование» вернул `VERDICT: ACCEPT`; T-0214 удалена из активного `TASKS.md`, перенесена в этот архив, а roadmap переключён на `T-0215` и затем `T-0208`.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-24T11:52:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-27T21:41:59.0000000+00:00",
+  "completedAt": "2026-06-27T21:41:59.0000000+00:00",
+  "acceptedAt": "2026-06-27T21:41:59.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-27T21:41:59.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

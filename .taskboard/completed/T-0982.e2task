@@ -1,0 +1,264 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-89c3dfec73b8ec9735a4ef63299e2c9b",
+  "revision": 2,
+  "taskId": "T-0982",
+  "legacyAliases": [],
+  "title": "Исправить sanitizer preflight evidence placeholder",
+  "description": "## T-0982 [x] P2: Исправить sanitizer preflight evidence placeholder\n\n- Создана: 2026-07-06T02:35:00+03:00\n- Завершена: 2026-07-08T12:18:27+03:00\n- Принята внешним аудитом: 2026-07-08T12:17:19+03:00, primary/control `VERDICT: ACCEPT`\n- Архивная причина: primary r23 и clean-control r23 приняли исправление preflight evidence sanitizer-а, структурную JSON/raw-token модель, unified machine-local path classifier, Windows escaped-quote drive handling и POSIX fixture guard без blocker-ов; actionable `RISKS_AND_NOTES` отсутствуют.\n- Приоритет: P2\n- Зависимости: T-0241\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходный код: `eng/Electron2D.Build/AuditPackageCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Generated docs index: `data/documentation/electron2d-local-docs-index.json`\n  - Источник: `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0241-audit-r07.md`\n  - Финальный primary audit: `docs/verdicts/release-management/t-0982-audit-r23.md`\n  - Финальный clean-control audit: `docs/verdicts/release-management/t-0982-audit-control-r23.md`\n\n### Самодостаточное описание\n\n`T-0982` закрыла follow-up из primary audit `T-0241` r07: новые audit packages больше не создают нечитаемую preflight evidence с посимвольными `<repo>` placeholder-ами и не скрывают sibling/traversal/machine-local paths через локальные эвристики.\n\nИтоговый sanitizer нормализует `metadata.json` структурно через JSON parser, защищает complete compact JSON snippets только при доказанных границах token-а, проверяет raw replacement на координатах исходного полного текста и применяет один machine-local classifier к decoded/raw/path-like значениям. Финальная проверка архива ловит literal paths, reversible JSON slash encodings, decoded JSON string literals and Windows drive absolute paths. Escaped-quote-like Windows drive values разрешены только как isolated punctuation-like values без дальнейшего path continuation. POSIX boundary fixtures используют synthetic non-temp prefix, а source guard защищает task-owned test source от повторного внесения POSIX temp fixture marker-а.\n\n### Критерии и результат\n\n- [x] `docs/release-management/audit-package.md` документирует sanitizer rule для readable preflight evidence, structural JSON normalization, raw token boundaries and machine-local path validation.\n- [x] Focused tests prove ordinary text remains readable and repo-root paths become `<repo>` atomically.\n- [x] Regression coverage rejects placeholder-per-character evidence, sibling prefixes, traversal, raw JSON-looking tails, decoded JSON path encodings, Windows drive paths and POSIX temp fixture regressions.\n- [x] `verify audit-followups` passes with closure notes for `T-0241` r07 and r18 follow-up.\n- [x] Primary r23 and clean-control r23 saved `VERDICT: ACCEPT`; control note `INFO_NOTE I1` is non-actionable.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0241-audit-r07.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-existing\n- target: T-0982\n- rationale: Primary `T-0241` r07 accepted the parent API compatibility task and classified the preflight evidence sanitizer placeholder-per-character issue as a separate P2 release-management/audit-package follow-up. `T-0982` closed the issue with atomic repo-root replacement, structural JSON/raw-token sanitizer coverage, saved primary r23 `VERDICT: ACCEPT` and saved clean-control r23 `VERDICT: ACCEPT`.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0982-audit-r18.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-existing\n- target: T-0982\n- rationale: r18 identified dead private helpers from the old exact-root tail parser. `T-0982` closed the finding by removing `IsSafeAfterExactRootListSeparator`, `IsSafeAfterStructuralTokenDelimiter`, `IsStructuredQuotedKeyTail`, `IsSafeQuotedValueTail`, `HasPathSeparatorBeforeStructuralBoundary`, `IsExactRootInsideCompleteParsableJsonSnippet` and `JsonSnippetContainsExactStringToken`; dead-tail-helper search, build, focused sanitizer tests, `audit-loop-stabilization-r23`, primary r23 and clean-control r23 verified the removal.\n\n### Проверки\n\n- [x] `dotnet build eng\\Electron2D.Build\\Electron2D.Build.csproj --no-restore -v:minimal` passed, warnings `0`.\n- [x] Focused sanitizer suite passed `28/28`.\n- [x] Machine-local classifier package/verify set passed `12/12`.\n- [x] POSIX temp source guard passed `1/1`.\n- [x] Previous-verdict reviewer scanner set passed `5/5`.\n- [x] `audit-loop-stabilization-r23` passed `46/46`.\n- [x] POSIX temp literal scan found no task-owned fixture literals.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build --no-restore -- verify audit-contracts` passed Fast `12/12`.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build --no-restore -- update docs --check` passed.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build --no-restore -- verify docs` passed.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build --no-restore -- verify audit-followups` passed for `32` actionable findings across `175` saved reports before primary r23.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build --no-restore -- verify licenses` passed for `664` source files.\n- [x] `git diff --check` passed.\n- [x] Primary `audit package --force` r23 created `.temp/audit/T-0982-r23/T-0982-audit-r23.zip`; operator workflow sidecar passed `audit-package-message` and `audit-package-verify`.\n- [x] Clean-control `audit package --force` r23 created `.temp/audit/T-0982-control-r23/T-0982-audit-r23.zip`; operator workflow sidecar passed `audit-package-message` and `audit-package-verify`.\n- [x] `audit submit --reuse-conversation` saved primary `docs/verdicts/release-management/t-0982-audit-r23.md` with `VERDICT: ACCEPT`.\n- [x] `audit submit --control-audit` saved clean-control `docs/verdicts/release-management/t-0982-audit-control-r23.md` with `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-07-06T02:35:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0241-audit-r07.md`.\n\n2026-07-07T13:52:00+03:00 - Ready-to-start gate пройден: `T-0982` была в `open`, зависимость `T-0241` принята и закрыта saved primary/control `ACCEPT`, внешний blocker отсутствовал.\n\n2026-07-08T12:17:19+03:00 - Primary r23 and clean-control r23 сохранены как `VERDICT: ACCEPT`; control `INFO_NOTE I1` является non-actionable, поэтому дополнительных follow-up closure notes не требуется.\n\n### Архивное закрытие\n\n- 2026-07-08T12:18:27+03:00 - T-0982 удалена из активного `TASKS.md`, перенесена в июльский архив, release notes обновлены, временные audit artifacts задачи подлежат удалению перед финальными проверками и commit.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P2",
+  "tagIds": [
+    "tag-0010"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`docs/release-management/audit-package.md` документирует sanitizer rule для readable preflight evidence, structural JSON normalization, raw token boundaries and machine-local path validation.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-89c3dfec73b8ec9735a4ef63299e2c9b/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Focused tests prove ordinary text remains readable and repo-root paths become `<repo>` atomically.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-89c3dfec73b8ec9735a4ef63299e2c9b/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Regression coverage rejects placeholder-per-character evidence, sibling prefixes, traversal, raw JSON-looking tails, decoded JSON path encodings, Windows drive paths and POSIX temp fixture regressions.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-89c3dfec73b8ec9735a4ef63299e2c9b/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`verify audit-followups` passes with closure notes for `T-0241` r07 and r18 follow-up.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-89c3dfec73b8ec9735a4ef63299e2c9b/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Primary r23 and clean-control r23 saved `VERDICT: ACCEPT`; control note `INFO_NOTE I1` is non-actionable.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-89c3dfec73b8ec9735a4ef63299e2c9b/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T23:35:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0241-audit-r07.md`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-07T10:52:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Ready-to-start gate пройден: `T-0982` была в `open`, зависимость `T-0241` принята и закрыта saved primary/control `ACCEPT`, внешний blocker отсутствовал."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-08T09:17:19.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r23 and clean-control r23 сохранены как `VERDICT: ACCEPT`; control `INFO_NOTE I1` является non-actionable, поэтому дополнительных follow-up closure notes не требуется."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-07-08T09:18:27.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".temp/audit/T-0982-control-r23/T-0982-audit-r23.zip"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": ".temp/audit/T-0982-r23/T-0982-audit-r23.zip"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "28/28"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "46/46"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0241-audit-r07.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0982-audit-control-r23.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0982-audit-r23.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/AuditPackageCommand.cs"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/07 Июль.md",
+      "byteOffset": 469491,
+      "byteLength": 7586,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "1cfb6e69c0d3e7ff78b9b98ff951891e2c28fed3bba3b2ef2b5e5095128273c0",
+      "markdown": "## T-0982 [x] P2: Исправить sanitizer preflight evidence placeholder\n\n- Создана: 2026-07-06T02:35:00+03:00\n- Завершена: 2026-07-08T12:18:27+03:00\n- Принята внешним аудитом: 2026-07-08T12:17:19+03:00, primary/control `VERDICT: ACCEPT`\n- Архивная причина: primary r23 и clean-control r23 приняли исправление preflight evidence sanitizer-а, структурную JSON/raw-token модель, unified machine-local path classifier, Windows escaped-quote drive handling и POSIX fixture guard без blocker-ов; actionable `RISKS_AND_NOTES` отсутствуют.\n- Приоритет: P2\n- Зависимости: T-0241\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходный код: `eng/Electron2D.Build/AuditPackageCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Generated docs index: `data/documentation/electron2d-local-docs-index.json`\n  - Источник: `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0241-audit-r07.md`\n  - Финальный primary audit: `docs/verdicts/release-management/t-0982-audit-r23.md`\n  - Финальный clean-control audit: `docs/verdicts/release-management/t-0982-audit-control-r23.md`\n\n### Самодостаточное описание\n\n`T-0982` закрыла follow-up из primary audit `T-0241` r07: новые audit packages больше не создают нечитаемую preflight evidence с посимвольными `<repo>` placeholder-ами и не скрывают sibling/traversal/machine-local paths через локальные эвристики.\n\nИтоговый sanitizer нормализует `metadata.json` структурно через JSON parser, защищает complete compact JSON snippets только при доказанных границах token-а, проверяет raw replacement на координатах исходного полного текста и применяет один machine-local classifier к decoded/raw/path-like значениям. Финальная проверка архива ловит literal paths, reversible JSON slash encodings, decoded JSON string literals and Windows drive absolute paths. Escaped-quote-like Windows drive values разрешены только как isolated punctuation-like values без дальнейшего path continuation. POSIX boundary fixtures используют synthetic non-temp prefix, а source guard защищает task-owned test source от повторного внесения POSIX temp fixture marker-а.\n\n### Критерии и результат\n\n- [x] `docs/release-management/audit-package.md` документирует sanitizer rule для readable preflight evidence, structural JSON normalization, raw token boundaries and machine-local path validation.\n- [x] Focused tests prove ordinary text remains readable and repo-root paths become `<repo>` atomically.\n- [x] Regression coverage rejects placeholder-per-character evidence, sibling prefixes, traversal, raw JSON-looking tails, decoded JSON path encodings, Windows drive paths and POSIX temp fixture regressions.\n- [x] `verify audit-followups` passes with closure notes for `T-0241` r07 and r18 follow-up.\n- [x] Primary r23 and clean-control r23 saved `VERDICT: ACCEPT`; control note `INFO_NOTE I1` is non-actionable.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0241-audit-r07.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-existing\n- target: T-0982\n- rationale: Primary `T-0241` r07 accepted the parent API compatibility task and classified the preflight evidence sanitizer placeholder-per-character issue as a separate P2 release-management/audit-package follow-up. `T-0982` closed the issue with atomic repo-root replacement, structural JSON/raw-token sanitizer coverage, saved primary r23 `VERDICT: ACCEPT` and saved clean-control r23 `VERDICT: ACCEPT`.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0982-audit-r18.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-existing\n- target: T-0982\n- rationale: r18 identified dead private helpers from the old exact-root tail parser. `T-0982` closed the finding by removing `IsSafeAfterExactRootListSeparator`, `IsSafeAfterStructuralTokenDelimiter`, `IsStructuredQuotedKeyTail`, `IsSafeQuotedValueTail`, `HasPathSeparatorBeforeStructuralBoundary`, `IsExactRootInsideCompleteParsableJsonSnippet` and `JsonSnippetContainsExactStringToken`; dead-tail-helper search, build, focused sanitizer tests, `audit-loop-stabilization-r23`, primary r23 and clean-control r23 verified the removal.\n\n### Проверки\n\n- [x] `dotnet build eng\\Electron2D.Build\\Electron2D.Build.csproj --no-restore -v:minimal` passed, warnings `0`.\n- [x] Focused sanitizer suite passed `28/28`.\n- [x] Machine-local classifier package/verify set passed `12/12`.\n- [x] POSIX temp source guard passed `1/1`.\n- [x] Previous-verdict reviewer scanner set passed `5/5`.\n- [x] `audit-loop-stabilization-r23` passed `46/46`.\n- [x] POSIX temp literal scan found no task-owned fixture literals.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build --no-restore -- verify audit-contracts` passed Fast `12/12`.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build --no-restore -- update docs --check` passed.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build --no-restore -- verify docs` passed.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build --no-restore -- verify audit-followups` passed for `32` actionable findings across `175` saved reports before primary r23.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build --no-restore -- verify licenses` passed for `664` source files.\n- [x] `git diff --check` passed.\n- [x] Primary `audit package --force` r23 created `.temp/audit/T-0982-r23/T-0982-audit-r23.zip`; operator workflow sidecar passed `audit-package-message` and `audit-package-verify`.\n- [x] Clean-control `audit package --force` r23 created `.temp/audit/T-0982-control-r23/T-0982-audit-r23.zip`; operator workflow sidecar passed `audit-package-message` and `audit-package-verify`.\n- [x] `audit submit --reuse-conversation` saved primary `docs/verdicts/release-management/t-0982-audit-r23.md` with `VERDICT: ACCEPT`.\n- [x] `audit submit --control-audit` saved clean-control `docs/verdicts/release-management/t-0982-audit-control-r23.md` with `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-07-06T02:35:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0241-audit-r07.md`.\n\n2026-07-07T13:52:00+03:00 - Ready-to-start gate пройден: `T-0982` была в `open`, зависимость `T-0241` принята и закрыта saved primary/control `ACCEPT`, внешний blocker отсутствовал.\n\n2026-07-08T12:17:19+03:00 - Primary r23 and clean-control r23 сохранены как `VERDICT: ACCEPT`; control `INFO_NOTE I1` является non-actionable, поэтому дополнительных follow-up closure notes не требуется.\n\n### Архивное закрытие\n\n- 2026-07-08T12:18:27+03:00 - T-0982 удалена из активного `TASKS.md`, перенесена в июльский архив, release notes обновлены, временные audit artifacts задачи подлежат удалению перед финальными проверками и commit.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T23:35:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-07-08T09:18:27.0000000+00:00",
+  "completedAt": "2026-07-08T09:18:27.0000000+00:00",
+  "acceptedAt": "2026-07-08T09:18:27.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-07-08T09:18:27.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

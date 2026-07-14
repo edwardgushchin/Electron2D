@@ -1,0 +1,114 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-bdd8fa6d823a70859789c000c9f2f4af",
+  "revision": 2,
+  "taskId": "T-0024",
+  "legacyAliases": [],
+  "title": "Реализовать CanvasItem sorting, z-index, visibility, modulate и batching",
+  "description": "# T-0024 [x] P0: Реализовать CanvasItem sorting, z-index, visibility, modulate и batching\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T02:38:13+03:00\n- Статус: завершена\n- Коммит: `T-0024: реализовать CanvasItem render queue baseline`\n\n## Итог\n\nВведён internal CanvasItem render queue baseline без расширения публичного целевого API. Runtime получил deterministic сортировку canvas item commands, visibility filtering, effective modulate и contiguous batching с измеримым `DrawCallCount`.\n\n## Проверенное поведение\n\n- Public `CanvasItem`, `Node2D`, `Sprite2D` и `CanvasLayer` не добавлены; они остаются задачей `T-0026`.\n- `CanvasItemRenderQueue` фильтрует invisible commands.\n- Команды сортируются по layer, z-index, y-sort position, tree order и insertion order.\n- Y-sort не пробивает z-index: item с меньшим z-index рисуется раньше.\n- `CanvasItemRenderCommand.EffectiveModulate` вычисляется как `Modulate * SelfModulate`.\n- Adjacent compatible commands с одинаковым `CanvasItemBatchKey` объединяются в один batch.\n- Одинаковые batch keys, разделённые ordering barrier, остаются разными batches.\n- `CanvasItemRenderPlan.DrawCallCount` равен количеству batches и даёт измеримый критерий batching.\n- Public API compatibility baseline остался `28` публичных типов: новые CanvasItem queue-типы internal.\n\n## Документация\n\n- Добавлена спецификация `docs/rendering/canvas-item-render-queue.md`.\n- Добавлена справка `docs/rendering/canvas-item-render-queue.md`.\n- Обновлены `docs/README.md`, `docs/README.md`, `docs/rendering/rendering-server.md` и `docs/rendering/rendering-server.md`.\n- Обновлены `README.md`, `CHANGELOG.md` и `RELEASE-NOTES.md`.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` ожидаемо упал на отсутствующих internal CanvasItem render queue types.\n- Green-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 57 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit 28, integration 57, runtime smoke 2, golden data 1.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 28.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n- `git diff --check` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` после staging - прошло, 82 tracked source files.\n\n## Заметки агента\n\nBatching не переупорядочивает commands ради уменьшения draw calls. Draw order остаётся первичным правилом; future public nodes должны передавать в queue уже вычисленные inherited visibility/modulate значения.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-20T23:38:13.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/README.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/rendering/canvas-item-render-queue.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/rendering/rendering-server.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 72366,
+      "byteLength": 3642,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "9a149b9e7afef16c256fcfa1b2843477e49f8452fa8a2614ec9beebe55fcce4e",
+      "markdown": "# T-0024 [x] P0: Реализовать CanvasItem sorting, z-index, visibility, modulate и batching\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T02:38:13+03:00\n- Статус: завершена\n- Коммит: `T-0024: реализовать CanvasItem render queue baseline`\n\n## Итог\n\nВведён internal CanvasItem render queue baseline без расширения публичного целевого API. Runtime получил deterministic сортировку canvas item commands, visibility filtering, effective modulate и contiguous batching с измеримым `DrawCallCount`.\n\n## Проверенное поведение\n\n- Public `CanvasItem`, `Node2D`, `Sprite2D` и `CanvasLayer` не добавлены; они остаются задачей `T-0026`.\n- `CanvasItemRenderQueue` фильтрует invisible commands.\n- Команды сортируются по layer, z-index, y-sort position, tree order и insertion order.\n- Y-sort не пробивает z-index: item с меньшим z-index рисуется раньше.\n- `CanvasItemRenderCommand.EffectiveModulate` вычисляется как `Modulate * SelfModulate`.\n- Adjacent compatible commands с одинаковым `CanvasItemBatchKey` объединяются в один batch.\n- Одинаковые batch keys, разделённые ordering barrier, остаются разными batches.\n- `CanvasItemRenderPlan.DrawCallCount` равен количеству batches и даёт измеримый критерий batching.\n- Public API compatibility baseline остался `28` публичных типов: новые CanvasItem queue-типы internal.\n\n## Документация\n\n- Добавлена спецификация `docs/rendering/canvas-item-render-queue.md`.\n- Добавлена справка `docs/rendering/canvas-item-render-queue.md`.\n- Обновлены `docs/README.md`, `docs/README.md`, `docs/rendering/rendering-server.md` и `docs/rendering/rendering-server.md`.\n- Обновлены `README.md`, `CHANGELOG.md` и `RELEASE-NOTES.md`.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` ожидаемо упал на отсутствующих internal CanvasItem render queue types.\n- Green-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 57 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit 28, integration 57, runtime smoke 2, golden data 1.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 28.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n- `git diff --check` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` после staging - прошло, 82 tracked source files.\n\n## Заметки агента\n\nBatching не переупорядочивает commands ради уменьшения draw calls. Draw order остаётся первичным правилом; future public nodes должны передавать в queue уже вычисленные inherited visibility/modulate значения.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-20T23:38:13.0000000+00:00",
+  "completedAt": "2026-06-20T23:38:13.0000000+00:00",
+  "acceptedAt": "2026-06-20T23:38:13.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-20T23:38:13.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

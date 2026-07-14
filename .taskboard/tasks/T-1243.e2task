@@ -1,0 +1,527 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-ef0d820cc4464ea9b1a1c0292c5a72bb",
+  "revision": 2,
+  "taskId": "T-1243",
+  "legacyAliases": [],
+  "title": "Синхронизировать счётчик блокеров карточки с актуальными причинами блокировки",
+  "description": "Счётчик рядом с красным значком на карточке VS Code Task Board сейчас показывает общее число зависимостей через `task.dependencies.length || 1`. Поэтому после завершения одной из зависимостей она перестаёт быть текущим блокером, но цифра на карточке не уменьшается. На пользовательском примере T-1198 карточка продолжала показывать `4`, хотя список незавершённых блокеров уже стал короче.\n\nНужно перенести вычисление количества активных причин блокировки в каноническую compact/full проекцию taskboard и передавать его в VS Code как отдельное поле `activeBlockerCount`. В число входят каждая незавершённая или отменённая dependency и каждый explicit blocker со `state=Active`; завершённые зависимости и resolved blockers не учитываются. Webview должен использовать только это поле, обновлять значение после штатного watcher/command refresh и больше не подменять отсутствие данных общим числом зависимостей или искусственной единицей.\n\nДоменный контракт должен заменить сохранённое в T-1221 правило `task.dependencies.length || 1` на актуальную семантику. Канонические статусы, readiness, dependency graph и правила переходов не меняются: исправляется только проекция и отображение уже вычисленных причин блокировки.",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0002",
+    "tag-0003",
+    "tag-0009",
+    "tag-0017",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "assignee": null,
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "canonical-active-blocker-count",
+      "description": "Compact и full taskboard snapshots содержат `activeBlockerCount`, равный сумме незавершённых или отменённых зависимостей и explicit blockers со `state=Active`; завершённые зависимости и resolved blockers в число не входят.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "card-uses-canonical-count",
+      "description": "Красный индикатор заблокированной карточки показывает `activeBlockerCount` и не использует `task.dependencies.length`, `|| 1` или другой клиентский fallback; tooltip и доступное имя остаются локализованными.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "count-shrinks-after-refresh",
+      "description": "После каждого штатного watcher/command refresh завершение зависимостей или разрешение explicit blocker уменьшает число без перезапуска панели; регрессия на четырёх зависимостях подтверждает последовательность `4 → 3 → 2 → 1 → 0` и возврат Ready-задачи из колонки «Заблокировано» при снятии последней причины.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "mixed-blocker-semantics",
+      "description": "Тесты покрывают смешанные причины: незавершённые, отменённые и завершённые зависимости, несколько active/resolved explicit blockers и явно заблокированную задачу; цифра совпадает с актуальным списком активных причин во всех случаях.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "lifecycle-unchanged",
+      "description": "Исправление не меняет canonical status, `boardStatus`, readiness, dependency relations, blocker lifecycle и порядок карточек; существующий SVG, цвет темы и геометрия footer сохраняются.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "regression-and-real-window-proof",
+      "description": "Доменный документ, C# integration tests и VS Code unit/Extension Host tests зафиксировали новую семантику; typecheck, VSIX package, docs/license verifiers и проверенный FFmpeg-снимок реального окна VS Code проходят.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "lastActivitySequence": 0,
+  "activity": [],
+  "auditRuns": [],
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "workspaceChanges": {
+    "baseRevision": null,
+    "currentRevision": null,
+    "files": []
+  },
+  "links": [
+    {
+      "linkId": "link-blocker-count-editor-contract",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-blocker-count-task-contract",
+      "kind": "File",
+      "value": "docs/project-system/project-task-manager.md"
+    },
+    {
+      "linkId": "link-blocker-count-cli",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/ProjectTasksCli.cs"
+    },
+    {
+      "linkId": "link-blocker-count-v3-store",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Tasks/TaskBoardV3DiskStore.cs"
+    },
+    {
+      "linkId": "link-blocker-count-vscode-model",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/model.ts"
+    },
+    {
+      "linkId": "link-blocker-count-webview",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "link-blocker-count-cli-tests",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+    },
+    {
+      "linkId": "link-blocker-count-layout-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+    }
+  ],
+  "executionContract": {
+    "taskType": "исправление рассинхронизации счётчика блокеров карточки VS Code Task Board",
+    "readyToStart": [
+      "Пользовательский сценарий воспроизведён на T-1198: общее число dependency relations остаётся равным четырём, хотя число незавершённых зависимостей уменьшается.",
+      "Текущий webview явно использует `task.dependencies.length || 1`, а compact snapshot не содержит отдельного количества активных причин блокировки.",
+      "Перед production-кодом доменные документы фиксируют точную семантику `activeBlockerCount`, после чего добавляются RED regression tests."
+    ],
+    "stopConditions": [
+      "Для исправления требуется изменить канонические правила status, readiness, dependency graph или blocker lifecycle вместо добавления вычисляемой проекции.",
+      "Нельзя однозначно сопоставить цифру с текущим списком активных причин без изменения публичного taskboard snapshot contract.",
+      "Реальный watcher refresh не воспроизводит обновление карточки и требует отдельного продуктового решения по доставке snapshot."
+    ],
+    "allowedChanges": [
+      "Проекция активных причин блокировки в Project Tasks CLI/ProjectSystem, типизированная VS Code model, card renderer, связанные тесты и два доменных документа.",
+      "Generated docs index, VSIX/runtime outputs, task activity/evidence, FFmpeg-артефакт и append-only дневник.",
+      "path:docs/editor/project-tasks-board.md",
+      "path:docs/project-system/project-task-manager.md",
+      "path:src/Electron2D.Cli/ProjectTasksCli.cs",
+      "path:src/Electron2D.ProjectSystem/Tasks/ProjectTasks.cs",
+      "path:src/Electron2D.ProjectSystem/Tasks/TaskBoardV3DiskStore.cs",
+      "path:src/Electron2D.VsCode/src/model.ts",
+      "path:src/Electron2D.VsCode/src/webview.ts",
+      "path:src/Electron2D.VsCode/src/localization.ts",
+      "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+      "path:src/Electron2D.VsCode/test/suite/index.ts",
+      "path:tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs",
+      "path:tests/Electron2D.Tests.Integration/ProjectTaskManagerTests.cs",
+      "path:src/Electron2D.VsCode/dist/**",
+      "path:src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix",
+      "path:src/Electron2D.VsCode/.vscode-test/**",
+      "path:data/documentation/**",
+      "path:data/dev-diary/**",
+      "path:.taskboard/**",
+      "path:.temp/taskboard-blocker-count-*.png"
+    ],
+    "forbiddenChanges": [
+      "Изменение canonical status, `boardStatus`, readiness, dependency relations, explicit blocker lifecycle или правил размещения по колонкам.",
+      "Подсчёт общего количества dependency relations, искусственный fallback `|| 1`, клиентский кэш счётчика или отдельный polling/timer.",
+      "Прямое редактирование `.taskboard`, использование Unicode/icon font вместо существующего SVG или несвязанный рефакторинг Task Board."
+    ],
+    "requiredOutputs": [
+      "Документированная вычисляемая проекция `activeBlockerCount` для compact и full taskboard snapshot.",
+      "Карточка, чей счётчик уменьшается вместе с актуальным списком активных причин после штатного refresh.",
+      "RED/GREEN integration и unit regressions для dependency и explicit blocker combinations.",
+      "Зелёные typecheck, Extension Host, VSIX, docs/license checks и проверенный FFmpeg-снимок реального окна VS Code."
+    ],
+    "commands": [
+      {
+        "commandId": "cmd-blocker-count-integration",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "test",
+          "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+          "--filter",
+          "FullyQualifiedName~Electron2DCliWorkflowTests|FullyQualifiedName~ProjectTaskManagerTests",
+          "--no-restore",
+          "-v:minimal"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 900,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-blocker-count-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-blocker-count-typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-blocker-count-extension-host",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:extension"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 900,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "ExternalEffect"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-blocker-count-vsix",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-blocker-count-docs-update",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "run",
+          "--project",
+          "eng/Electron2D.Build",
+          "--",
+          "update",
+          "docs"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-blocker-count-docs-check",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "run",
+          "--project",
+          "eng/Electron2D.Build",
+          "--",
+          "update",
+          "docs",
+          "--check"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-blocker-count-docs-verify",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "run",
+          "--project",
+          "eng/Electron2D.Build",
+          "--",
+          "verify",
+          "docs"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-blocker-count-licenses",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "run",
+          "--project",
+          "eng/Electron2D.Build",
+          "--",
+          "verify",
+          "licenses"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-blocker-count-capture",
+        "kind": "Process",
+        "executable": "python",
+        "arguments": [
+          "eng/tools/capture_window.py",
+          "--title",
+          "Visual Studio Code",
+          "--output",
+          ".temp/taskboard-blocker-count-real.png"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "ExternalEffect"
+        ],
+        "confirmation": "HumanRequired"
+      },
+      {
+        "commandId": "cmd-blocker-count-taskboard",
+        "kind": "Process",
+        "executable": "e2d",
+        "arguments": [
+          "tasks",
+          "verify",
+          "--project",
+          ".",
+          "--format",
+          "json"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-blocker-count-whitespace",
+        "kind": "Process",
+        "executable": "git",
+        "arguments": [
+          "diff",
+          "--check"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 120,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [
+    {
+      "attachmentId": "A-0001",
+      "displayName": "codex-clipboard-f0cd6224-fad9-4126-a590-8bae7d25bc16.png",
+      "relativePath": ".taskboard/attachments/task-ef0d820cc4464ea9b1a1c0292c5a72bb/A-0001/20076c4fd6da062100dcd04c34aa2c0f98255cc9127bb4540dbe13eb67751158.png",
+      "mediaType": "image/png",
+      "byteLength": 13611,
+      "sha256": "20076c4fd6da062100dcd04c34aa2c0f98255cc9127bb4540dbe13eb67751158",
+      "addedAt": "2026-07-14T14:28:26.8679748+00:00",
+      "addedBy": "cli",
+      "derivatives": [
+        {
+          "derivativeId": "derivative-extractedtext",
+          "kind": "ExtractedText",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "20076c4fd6da062100dcd04c34aa2c0f98255cc9127bb4540dbe13eb67751158",
+          "extractor": null,
+          "createdAt": "2026-07-14T14:28:26.8679748+00:00"
+        },
+        {
+          "derivativeId": "derivative-ocr",
+          "kind": "Ocr",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "20076c4fd6da062100dcd04c34aa2c0f98255cc9127bb4540dbe13eb67751158",
+          "extractor": null,
+          "createdAt": "2026-07-14T14:28:26.8679748+00:00"
+        },
+        {
+          "derivativeId": "derivative-preview",
+          "kind": "Preview",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "20076c4fd6da062100dcd04c34aa2c0f98255cc9127bb4540dbe13eb67751158",
+          "extractor": null,
+          "createdAt": "2026-07-14T14:28:26.8679748+00:00"
+        }
+      ]
+    }
+  ],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-14T14:27:41.8600192+00:00",
+  "updatedAt": "2026-07-14T14:28:26.8679748+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null
+}

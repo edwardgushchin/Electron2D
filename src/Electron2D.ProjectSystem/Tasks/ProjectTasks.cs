@@ -24,6 +24,8 @@
 */
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -31,12 +33,10 @@ namespace Electron2D.ProjectSystem;
 
 internal enum ProjectTaskStatus
 {
-    Backlog,
     Ready,
     InProgress,
     Blocked,
     Review,
-    AwaitingAcceptance,
     Done,
     Cancelled
 }
@@ -84,6 +84,106 @@ internal enum TaskActivityKind
     StatusChange,
     AgentSummary,
     AcceptanceResult
+}
+
+internal enum TaskBoardGroupKind
+{
+    Epoch,
+    Milestone
+}
+
+internal sealed class TaskExecutionContract
+{
+    public string TaskType { get; set; } = "general";
+
+    public List<string> ReadyToStart { get; } = [];
+
+    public List<string> StopConditions { get; } = [];
+
+    public List<string> AllowedChanges { get; } = [];
+
+    public List<string> ForbiddenChanges { get; } = [];
+
+    public List<string> RequiredOutputs { get; } = [];
+
+    public List<string> RequiredCommands { get; } = [];
+
+    public string ExternalAudit { get; set; } = "not-required";
+}
+
+internal sealed class TaskAttachment
+{
+    public string AttachmentId { get; set; } = string.Empty;
+
+    public string DisplayName { get; set; } = string.Empty;
+
+    public string RelativePath { get; set; } = string.Empty;
+
+    public string MediaType { get; set; } = "application/octet-stream";
+
+    public long ByteLength { get; set; }
+
+    public string Sha256 { get; set; } = string.Empty;
+
+    public DateTimeOffset AddedAt { get; set; }
+
+    public string AddedBy { get; set; } = string.Empty;
+}
+
+internal static class TaskAttachmentPreview
+{
+    public static bool IsRasterMediaType(string mediaType)
+    {
+        return mediaType.ToLowerInvariant() is
+            "image/png" or "image/jpeg" or "image/gif" or "image/webp" or "image/bmp";
+    }
+
+    public static TaskAttachment? Resolve(ProjectTask task)
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        if (task.PreviewAttachmentId is not null)
+        {
+            var selected = task.Attachments.SingleOrDefault(attachment =>
+                string.Equals(attachment.AttachmentId, task.PreviewAttachmentId, StringComparison.Ordinal));
+            if (selected is null)
+            {
+                throw new InvalidOperationException(
+                    $"Preview attachment '{task.PreviewAttachmentId}' was not found on task '{task.TaskId}'.");
+            }
+
+            if (!IsRasterMediaType(selected.MediaType))
+            {
+                throw new InvalidOperationException(
+                    $"Attachment '{selected.AttachmentId}' is not a supported raster preview.");
+            }
+
+            return selected;
+        }
+
+        return task.Attachments
+            .Where(attachment => IsRasterMediaType(attachment.MediaType))
+            .OrderBy(attachment => attachment.AttachmentId, StringComparer.Ordinal)
+            .FirstOrDefault();
+    }
+}
+
+internal sealed class LegacySourceFragment
+{
+    public string SourcePath { get; set; } = string.Empty;
+
+    public long ByteOffset { get; set; }
+
+    public long ByteLength { get; set; }
+
+    public string Encoding { get; set; } = "utf-8";
+
+    public bool HasBom { get; set; }
+
+    public string LineEnding { get; set; } = "lf";
+
+    public string Sha256 { get; set; } = string.Empty;
+
+    public string Markdown { get; set; } = string.Empty;
 }
 
 internal sealed class AcceptanceCriterion
@@ -150,7 +250,11 @@ internal sealed class TaskActivityEntry
 
 internal sealed class ProjectTask
 {
+    public string TaskUid { get; set; } = string.Empty;
+
     public string TaskId { get; set; } = string.Empty;
+
+    public List<string> LegacyAliases { get; } = [];
 
     public string Title { get; set; } = string.Empty;
 
@@ -167,6 +271,8 @@ internal sealed class ProjectTask
     public string Rank { get; set; } = string.Empty;
 
     public List<string> Labels { get; } = [];
+
+    public DateOnly? Deadline { get; set; }
 
     public string? Assignee { get; set; }
 
@@ -191,6 +297,16 @@ internal sealed class ProjectTask
     public List<string> LinkedArtifacts { get; } = [];
 
     public List<string> LinkedScenesResourcesAndNodes { get; } = [];
+
+    public TaskExecutionContract ExecutionContract { get; } = new();
+
+    public List<TaskAttachment> Attachments { get; } = [];
+
+    public string? PreviewAttachmentId { get; set; }
+
+    public List<LegacySourceFragment> LegacySourceFragments { get; } = [];
+
+    public long Revision { get; set; } = 1;
 
     public DateTimeOffset CreatedAt { get; set; }
 
@@ -222,11 +338,161 @@ internal sealed class TaskBoard
 
         BoardId = boardId;
         Columns = columns.ToArray();
+        Revision = 1;
+        Groups = [];
+        Placements = Columns
+            .SelectMany(column => column.TaskIds)
+            .Select((taskId, index) => new TaskBoardPlacement(taskId, groupId: null, ((index + 1) * 1000).ToString("D8", CultureInfo.InvariantCulture)))
+            .ToArray();
+    }
+
+    public TaskBoard(
+        string boardId,
+        long revision,
+        IEnumerable<TaskBoardGroup> groups,
+        IEnumerable<TaskBoardPlacement> placements)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(boardId);
+        ArgumentOutOfRangeException.ThrowIfLessThan(revision, 1);
+        ArgumentNullException.ThrowIfNull(groups);
+        ArgumentNullException.ThrowIfNull(placements);
+
+        BoardId = boardId;
+        Revision = revision;
+        Groups = groups.ToArray();
+        Placements = placements.ToArray();
+        Columns = [];
     }
 
     public string BoardId { get; }
 
+    public long Revision { get; }
+
     public IReadOnlyList<TaskBoardColumn> Columns { get; }
+
+    public IReadOnlyList<TaskBoardGroup> Groups { get; }
+
+    public IReadOnlyList<TaskBoardPlacement> Placements { get; }
+
+    public List<TaskBoardTag> Tags { get; } = [];
+
+    public TaskBoardIdPolicy IdPolicy { get; } = new();
+
+    public TaskBoardAttachmentPolicy AttachmentPolicy { get; } = new();
+
+    public TaskBoardMigrationMetadata Migration { get; } = new();
+}
+
+internal enum TaskBoardTagColor
+{
+    Gray,
+    Blue,
+    Green,
+    Yellow,
+    Orange,
+    Red,
+    Purple
+}
+
+internal sealed class TaskBoardTag
+{
+    public TaskBoardTag(string tagId, string name, TaskBoardTagColor color)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        TagId = tagId;
+        Name = name;
+        Color = color;
+    }
+
+    public string TagId { get; }
+
+    public string Name { get; }
+
+    public TaskBoardTagColor Color { get; }
+}
+
+internal sealed class TaskBoardIdPolicy
+{
+    public string Prefix { get; set; } = "T-";
+
+    public int Padding { get; set; } = 4;
+
+    public long NextNumber { get; set; } = 1;
+}
+
+internal sealed class TaskBoardAttachmentPolicy
+{
+    public long PerFileByteLimit { get; set; } = 25L * 1024 * 1024;
+
+    public long BoardByteLimit { get; set; } = 250L * 1024 * 1024;
+}
+
+internal sealed class TaskBoardMigrationMetadata
+{
+    public string? ReportSha256 { get; set; }
+
+    public bool Finalized { get; set; }
+
+    public SortedDictionary<string, string> SourceDigests { get; } = new(StringComparer.Ordinal);
+
+    public List<string> Diagnostics { get; } = [];
+
+    public List<LegacySourceFragment> LegacySourceFragments { get; } = [];
+}
+
+internal sealed class TaskBoardGroup
+{
+    public TaskBoardGroup(
+        string groupId,
+        TaskBoardGroupKind kind,
+        string title,
+        string description,
+        string? parentGroupId,
+        string rank)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(groupId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
+        ArgumentException.ThrowIfNullOrWhiteSpace(rank);
+
+        GroupId = groupId;
+        Kind = kind;
+        Title = title;
+        Description = description;
+        ParentGroupId = parentGroupId;
+        Rank = rank;
+    }
+
+    public string GroupId { get; }
+
+    public TaskBoardGroupKind Kind { get; }
+
+    public string Title { get; }
+
+    public string Description { get; }
+
+    public string? ParentGroupId { get; }
+
+    public string Rank { get; }
+}
+
+internal sealed class TaskBoardPlacement
+{
+    public TaskBoardPlacement(string taskId, string? groupId, string rank)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(taskId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(rank);
+
+        TaskId = taskId;
+        GroupId = groupId;
+        Rank = rank;
+    }
+
+    public string TaskId { get; }
+
+    public string? GroupId { get; }
+
+    public string Rank { get; }
 }
 
 internal sealed class TaskBoardColumn
@@ -246,12 +512,28 @@ internal sealed class TaskBoardColumn
 
 internal static class ProjectTaskStorage
 {
-    public const string BoardDocumentPath = ".electron2d/tasks/board.e2tasks";
+    public const int CurrentVersion = 2;
+
+    public const string RootDirectory = ".taskboard";
+
+    public const string ActiveTasksDirectory = ".taskboard/tasks";
+
+    public const string CompletedTasksDirectory = ".taskboard/completed";
+
+    public const string AttachmentsDirectory = ".taskboard/attachments";
+
+    public const string BoardDocumentPath = ".taskboard/board.e2tasks";
 
     public static string GetTaskDocumentPath(string taskId)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(taskId);
-        return $".electron2d/tasks/{taskId}.e2task";
+        return $"{ActiveTasksDirectory}/{taskId}.e2task";
+    }
+
+    public static string GetCompletedTaskDocumentPath(string taskId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(taskId);
+        return $"{CompletedTasksDirectory}/{taskId}.e2task";
     }
 }
 
@@ -259,7 +541,8 @@ internal static class ProjectTaskSerializer
 {
     private static readonly JsonSerializerOptions IndentedOptions = new()
     {
-        WriteIndented = true
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
     public static string Serialize(ProjectTask task)
@@ -270,15 +553,16 @@ internal static class ProjectTaskSerializer
         var root = new JsonObject
         {
             ["format"] = "Electron2D.TaskFile",
-            ["version"] = 1,
+            ["version"] = ProjectTaskStorage.CurrentVersion,
+            ["taskUid"] = string.IsNullOrWhiteSpace(task.TaskUid) ? task.TaskId : task.TaskUid,
+            ["revision"] = Math.Max(task.Revision, 1),
             ["taskId"] = task.TaskId,
+            ["legacyAliases"] = WriteStringArray(task.LegacyAliases),
             ["title"] = task.Title,
             ["description"] = task.Description,
             ["status"] = task.Status.ToString(),
-            ["readiness"] = task.Readiness.ToString(),
-            ["blockingReasons"] = WriteEnumArray(task.BlockingReasons),
+            ["manualBlockingReasons"] = WriteEnumArray(task.BlockingReasons.Where(reason => reason != TaskBlockingReason.Dependency)),
             ["priority"] = task.Priority,
-            ["rank"] = task.Rank,
             ["labels"] = WriteStringArray(task.Labels),
             ["assignee"] = task.Assignee,
             ["createdBy"] = task.CreatedBy,
@@ -292,6 +576,9 @@ internal static class ProjectTaskSerializer
             ["linkedDiagnostics"] = WriteStringArray(task.LinkedDiagnostics),
             ["linkedArtifacts"] = WriteStringArray(task.LinkedArtifacts),
             ["linkedScenesResourcesAndNodes"] = WriteStringArray(task.LinkedScenesResourcesAndNodes),
+            ["executionContract"] = WriteExecutionContract(task.ExecutionContract),
+            ["attachments"] = WriteAttachments(task.Attachments),
+            ["legacySourceFragments"] = WriteLegacySourceFragments(task.LegacySourceFragments),
             ["createdAt"] = WriteDate(task.CreatedAt),
             ["updatedAt"] = WriteDate(task.UpdatedAt),
             ["submittedAt"] = WriteNullableDate(task.SubmittedAt),
@@ -304,7 +591,17 @@ internal static class ProjectTaskSerializer
             ["cancellationReason"] = task.CancellationReason
         };
 
-        return root.ToJsonString(IndentedOptions).ReplaceLineEndings("\n") + "\n";
+        if (task.Deadline is not null)
+        {
+            root["deadline"] = task.Deadline.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        }
+
+        if (task.PreviewAttachmentId is not null)
+        {
+            root["previewAttachmentId"] = task.PreviewAttachmentId;
+        }
+
+        return FormatJson(root);
     }
 
     public static ProjectTask DeserializeTask(string path, string text)
@@ -320,20 +617,27 @@ internal static class ProjectTaskSerializer
         }
 
         var version = ReadInt32(root, "version", "Task document version");
-        if (version != 1)
+        if (version != ProjectTaskStorage.CurrentVersion)
         {
             throw new FormatException($"Task document version '{version}' is not supported.");
         }
 
+        var legacyAwaitingAcceptance = string.Equals(
+            ReadString(root, "status", "Task status"),
+            "AwaitingAcceptance",
+            StringComparison.Ordinal);
         var task = new ProjectTask
         {
+            TaskUid = ReadString(root, "taskUid", "Task UID"),
+            Revision = ReadInt64(root, "revision", "Task revision"),
             TaskId = ReadString(root, "taskId", "Task id"),
             Title = ReadString(root, "title", "Task title"),
-            Description = ReadString(root, "description", "Task description"),
-            Status = ReadEnum<ProjectTaskStatus>(root, "status", "Task status"),
-            Readiness = ReadEnum<TaskReadiness>(root, "readiness", "Task readiness"),
+            Description = ReadRequiredText(root, "description", "Task description"),
+            Status = ReadTaskStatus(root),
             Priority = ReadString(root, "priority", "Task priority"),
-            Rank = ReadString(root, "rank", "Task rank"),
+            Deadline = ReadOptionalDateOnly(root, "deadline", "Task deadline"),
+            PreviewAttachmentId = ReadOptionalString(root, "previewAttachmentId"),
+            Rank = "1000",
             Assignee = ReadOptionalString(root, "assignee"),
             CreatedBy = ReadString(root, "createdBy", "Task creator"),
             ParentTaskId = ReadOptionalString(root, "parentTaskId"),
@@ -343,12 +647,15 @@ internal static class ProjectTaskSerializer
             CompletedAt = ReadOptionalDate(root, "completedAt", "Task completed time"),
             AcceptedAt = ReadOptionalDate(root, "acceptedAt", "Task accepted time"),
             AcceptedBy = ReadOptionalString(root, "acceptedBy"),
-            AcceptanceState = ReadEnum<ProjectTaskAcceptanceState>(root, "acceptanceState", "Task acceptance state"),
+            AcceptanceState = legacyAwaitingAcceptance
+                ? ProjectTaskAcceptanceState.Submitted
+                : ReadEnum<ProjectTaskAcceptanceState>(root, "acceptanceState", "Task acceptance state"),
             ArchivedAt = ReadOptionalDate(root, "archivedAt", "Task archived time"),
             ArchivedBy = ReadOptionalString(root, "archivedBy"),
             CancellationReason = ReadOptionalString(root, "cancellationReason")
         };
-        task.BlockingReasons.AddRange(ReadEnumArray<TaskBlockingReason>(root, "blockingReasons", "Task blocking reasons"));
+        task.LegacyAliases.AddRange(ReadStringArray(root, "legacyAliases", "Task legacy aliases"));
+        task.BlockingReasons.AddRange(ReadEnumArray<TaskBlockingReason>(root, "manualBlockingReasons", "Task manual blocking reasons"));
         task.Labels.AddRange(ReadStringArray(root, "labels", "Task labels"));
         task.Dependencies.AddRange(ReadStringArray(root, "dependencies", "Task dependencies"));
         task.AcceptanceCriteria.AddRange(ReadAcceptanceCriteria(root));
@@ -362,10 +669,16 @@ internal static class ProjectTaskSerializer
             root,
             "linkedScenesResourcesAndNodes",
             "Task linked scenes, resources and nodes"));
+        CopyExecutionContract(ReadExecutionContract(root), task.ExecutionContract);
+        task.Attachments.AddRange(ReadAttachments(root));
+        task.LegacySourceFragments.AddRange(ReadLegacySourceFragments(root));
+        ValidateTask(task);
 
         var expectedPath = ProjectTaskStorage.GetTaskDocumentPath(task.TaskId);
+        var expectedCompletedPath = ProjectTaskStorage.GetCompletedTaskDocumentPath(task.TaskId);
         var normalizedPath = ProjectDocumentPaths.NormalizeRelativePath(path);
-        if (!string.Equals(expectedPath, normalizedPath, StringComparison.Ordinal))
+        if (!string.Equals(expectedPath, normalizedPath, StringComparison.Ordinal) &&
+            !string.Equals(expectedCompletedPath, normalizedPath, StringComparison.Ordinal))
         {
             throw new FormatException($"Task document path '{normalizedPath}' does not match task id '{task.TaskId}'.");
         }
@@ -377,25 +690,139 @@ internal static class ProjectTaskSerializer
     {
         ArgumentNullException.ThrowIfNull(board);
 
-        var columns = new JsonArray();
-        foreach (var column in board.Columns)
+        var groups = new JsonArray();
+        foreach (var group in board.Groups.OrderBy(group => group.Rank, StringComparer.Ordinal).ThenBy(group => group.GroupId, StringComparer.Ordinal))
         {
-            columns.Add((JsonNode)new JsonObject
+            groups.Add((JsonNode)new JsonObject
             {
-                ["status"] = column.Status.ToString(),
-                ["taskIds"] = WriteStringArray(column.TaskIds)
+                ["groupId"] = group.GroupId,
+                ["kind"] = group.Kind.ToString(),
+                ["title"] = group.Title,
+                ["description"] = group.Description,
+                ["parentGroupId"] = group.ParentGroupId,
+                ["rank"] = group.Rank
+            });
+        }
+
+        var placements = new JsonArray();
+        foreach (var placement in board.Placements.OrderBy(placement => placement.Rank, StringComparer.Ordinal).ThenBy(placement => placement.TaskId, StringComparer.Ordinal))
+        {
+            placements.Add((JsonNode)new JsonObject
+            {
+                ["taskId"] = placement.TaskId,
+                ["groupId"] = placement.GroupId,
+                ["rank"] = placement.Rank
+            });
+        }
+
+        var tags = new JsonArray();
+        foreach (var tag in board.Tags.OrderBy(tag => tag.Name, StringComparer.OrdinalIgnoreCase).ThenBy(tag => tag.TagId, StringComparer.Ordinal))
+        {
+            tags.Add((JsonNode)new JsonObject
+            {
+                ["tagId"] = tag.TagId,
+                ["name"] = tag.Name,
+                ["color"] = tag.Color.ToString()
             });
         }
 
         var root = new JsonObject
         {
             ["format"] = "Electron2D.TaskBoard",
-            ["version"] = 1,
+            ["version"] = ProjectTaskStorage.CurrentVersion,
             ["boardId"] = board.BoardId,
-            ["columns"] = columns
+            ["revision"] = board.Revision,
+            ["idPolicy"] = new JsonObject
+            {
+                ["prefix"] = board.IdPolicy.Prefix,
+                ["padding"] = board.IdPolicy.Padding,
+                ["nextNumber"] = board.IdPolicy.NextNumber
+            },
+            ["attachmentPolicy"] = new JsonObject
+            {
+                ["perFileByteLimit"] = board.AttachmentPolicy.PerFileByteLimit,
+                ["boardByteLimit"] = board.AttachmentPolicy.BoardByteLimit
+            },
+            ["migration"] = WriteBoardMigration(board.Migration),
+            ["tags"] = tags,
+            ["groups"] = groups,
+            ["placements"] = placements
         };
 
-        return root.ToJsonString(IndentedOptions).ReplaceLineEndings("\n") + "\n";
+        return FormatJson(root);
+    }
+
+    private static string FormatJson(JsonNode root)
+    {
+        var json = root.ToJsonString(IndentedOptions).ReplaceLineEndings("\n");
+        var readable = new StringBuilder(json.Length);
+        var insideString = false;
+        for (var index = 0; index < json.Length; index++)
+        {
+            var character = json[index];
+            if (character == '"')
+            {
+                insideString = !insideString;
+                readable.Append(character);
+                continue;
+            }
+
+            if (!insideString || character != '\\')
+            {
+                readable.Append(character);
+                continue;
+            }
+
+            if (TryReadUnicodeEscape(json, index, out var codeUnit))
+            {
+                if (char.IsHighSurrogate(codeUnit) &&
+                    TryReadUnicodeEscape(json, index + 6, out var lowSurrogate) &&
+                    char.IsLowSurrogate(lowSurrogate))
+                {
+                    readable.Append(codeUnit);
+                    readable.Append(lowSurrogate);
+                    index += 11;
+                    continue;
+                }
+
+                if (!char.IsSurrogate(codeUnit) &&
+                    !char.IsControl(codeUnit) &&
+                    codeUnit is not ('"' or '\\'))
+                {
+                    readable.Append(codeUnit);
+                    index += 5;
+                    continue;
+                }
+            }
+
+            readable.Append(character);
+            if (index + 1 < json.Length)
+            {
+                readable.Append(json[++index]);
+            }
+        }
+
+        return readable.Append('\n').ToString();
+    }
+
+    private static bool TryReadUnicodeEscape(string json, int index, out char codeUnit)
+    {
+        codeUnit = default;
+        if (index < 0 ||
+            index + 5 >= json.Length ||
+            json[index] != '\\' ||
+            json[index + 1] != 'u' ||
+            !ushort.TryParse(
+                json.AsSpan(index + 2, 4),
+                NumberStyles.HexNumber,
+                CultureInfo.InvariantCulture,
+                out var value))
+        {
+            return false;
+        }
+
+        codeUnit = (char)value;
+        return true;
     }
 
     public static TaskBoard DeserializeBoard(string path, string text)
@@ -414,21 +841,59 @@ internal static class ProjectTaskSerializer
         }
 
         var version = ReadInt32(root, "version", "Task board version");
-        if (version != 1)
+        if (version != ProjectTaskStorage.CurrentVersion)
         {
             throw new FormatException($"Task board version '{version}' is not supported.");
         }
 
-        var columns = new List<TaskBoardColumn>();
-        foreach (var node in ReadArray(root, "columns", "Task board columns"))
+        var groups = new List<TaskBoardGroup>();
+        foreach (var node in ReadArray(root, "groups", "Task board groups"))
         {
-            var column = ExpectObject(node, "Task board column");
-            columns.Add(new TaskBoardColumn(
-                ReadEnum<ProjectTaskStatus>(column, "status", "Task board column status"),
-                ReadStringArray(column, "taskIds", "Task board column task ids")));
+            var group = ExpectObject(node, "Task board group");
+            groups.Add(new TaskBoardGroup(
+                ReadString(group, "groupId", "Task board group id"),
+                ReadEnum<TaskBoardGroupKind>(group, "kind", "Task board group kind"),
+                ReadString(group, "title", "Task board group title"),
+                ReadRequiredText(group, "description", "Task board group description"),
+                ReadOptionalString(group, "parentGroupId"),
+                ReadString(group, "rank", "Task board group rank")));
         }
 
-        return new TaskBoard(ReadString(root, "boardId", "Task board id"), columns);
+        var placements = new List<TaskBoardPlacement>();
+        foreach (var node in ReadArray(root, "placements", "Task board placements"))
+        {
+            var placement = ExpectObject(node, "Task board placement");
+            placements.Add(new TaskBoardPlacement(
+                ReadString(placement, "taskId", "Task board placement task id"),
+                ReadOptionalString(placement, "groupId"),
+                ReadString(placement, "rank", "Task board placement rank")));
+        }
+
+        var board = new TaskBoard(
+            ReadString(root, "boardId", "Task board id"),
+            ReadInt64(root, "revision", "Task board revision"),
+            groups,
+            placements);
+        if (root.TryGetPropertyValue("tags", out var tagsNode) && tagsNode is JsonArray tags)
+        {
+            foreach (var node in tags)
+            {
+                var tag = ExpectObject(node, "Task board tag");
+                board.Tags.Add(new TaskBoardTag(
+                    ReadString(tag, "tagId", "Task board tag id"),
+                    ReadString(tag, "name", "Task board tag name"),
+                    ReadEnum<TaskBoardTagColor>(tag, "color", "Task board tag color")));
+            }
+        }
+        var idPolicy = ExpectObject(root["idPolicy"], "Task board id policy");
+        board.IdPolicy.Prefix = ReadString(idPolicy, "prefix", "Task board id prefix");
+        board.IdPolicy.Padding = ReadInt32(idPolicy, "padding", "Task board id padding");
+        board.IdPolicy.NextNumber = ReadInt64(idPolicy, "nextNumber", "Task board next id number");
+        var attachmentPolicy = ExpectObject(root["attachmentPolicy"], "Task board attachment policy");
+        board.AttachmentPolicy.PerFileByteLimit = ReadInt64(attachmentPolicy, "perFileByteLimit", "Task board per-file attachment limit");
+        board.AttachmentPolicy.BoardByteLimit = ReadInt64(attachmentPolicy, "boardByteLimit", "Task board attachment limit");
+        ReadBoardMigration(ExpectObject(root["migration"], "Task board migration metadata"), board.Migration);
+        return board;
     }
 
     private static void ValidateTask(ProjectTask task)
@@ -437,7 +902,8 @@ internal static class ProjectTaskSerializer
         ArgumentException.ThrowIfNullOrWhiteSpace(task.Title);
         ArgumentException.ThrowIfNullOrWhiteSpace(task.CreatedBy);
         ArgumentException.ThrowIfNullOrWhiteSpace(task.Priority);
-        ArgumentException.ThrowIfNullOrWhiteSpace(task.Rank);
+        ArgumentOutOfRangeException.ThrowIfLessThan(task.Revision, 1);
+        _ = TaskAttachmentPreview.Resolve(task);
     }
 
     private static JsonArray WriteStringArray(IEnumerable<string> values)
@@ -499,6 +965,94 @@ internal static class ProjectTaskSerializer
         return array;
     }
 
+    private static JsonObject WriteExecutionContract(TaskExecutionContract contract)
+    {
+        return new JsonObject
+        {
+            ["taskType"] = contract.TaskType,
+            ["readyToStart"] = WriteOrderedStringArray(contract.ReadyToStart),
+            ["stopConditions"] = WriteOrderedStringArray(contract.StopConditions),
+            ["allowedChanges"] = WriteOrderedStringArray(contract.AllowedChanges),
+            ["forbiddenChanges"] = WriteOrderedStringArray(contract.ForbiddenChanges),
+            ["requiredOutputs"] = WriteOrderedStringArray(contract.RequiredOutputs),
+            ["requiredCommands"] = WriteOrderedStringArray(contract.RequiredCommands),
+            ["externalAudit"] = contract.ExternalAudit
+        };
+    }
+
+    private static JsonArray WriteAttachments(IEnumerable<TaskAttachment> attachments)
+    {
+        var array = new JsonArray();
+        foreach (var attachment in attachments.OrderBy(attachment => attachment.AttachmentId, StringComparer.Ordinal))
+        {
+            array.Add((JsonNode)new JsonObject
+            {
+                ["attachmentId"] = attachment.AttachmentId,
+                ["displayName"] = attachment.DisplayName,
+                ["relativePath"] = attachment.RelativePath,
+                ["mediaType"] = attachment.MediaType,
+                ["byteLength"] = attachment.ByteLength,
+                ["sha256"] = attachment.Sha256,
+                ["addedAt"] = WriteDate(attachment.AddedAt),
+                ["addedBy"] = attachment.AddedBy
+            });
+        }
+
+        return array;
+    }
+
+    private static JsonArray WriteLegacySourceFragments(IEnumerable<LegacySourceFragment> fragments)
+    {
+        var array = new JsonArray();
+        foreach (var fragment in fragments
+            .OrderBy(fragment => fragment.SourcePath, StringComparer.Ordinal)
+            .ThenBy(fragment => fragment.ByteOffset))
+        {
+            array.Add((JsonNode)new JsonObject
+            {
+                ["sourcePath"] = fragment.SourcePath,
+                ["byteOffset"] = fragment.ByteOffset,
+                ["byteLength"] = fragment.ByteLength,
+                ["encoding"] = fragment.Encoding,
+                ["hasBom"] = fragment.HasBom,
+                ["lineEnding"] = fragment.LineEnding,
+                ["sha256"] = fragment.Sha256,
+                ["markdown"] = fragment.Markdown
+            });
+        }
+
+        return array;
+    }
+
+    private static JsonObject WriteBoardMigration(TaskBoardMigrationMetadata migration)
+    {
+        var sourceDigests = new JsonObject();
+        foreach (var pair in migration.SourceDigests)
+        {
+            sourceDigests[pair.Key] = pair.Value;
+        }
+
+        return new JsonObject
+        {
+            ["reportSha256"] = migration.ReportSha256,
+            ["finalized"] = migration.Finalized,
+            ["sourceDigests"] = sourceDigests,
+            ["diagnostics"] = WriteOrderedStringArray(migration.Diagnostics),
+            ["legacySourceFragments"] = WriteLegacySourceFragments(migration.LegacySourceFragments)
+        };
+    }
+
+    private static JsonArray WriteOrderedStringArray(IEnumerable<string> values)
+    {
+        var array = new JsonArray();
+        foreach (var value in values)
+        {
+            array.Add(value);
+        }
+
+        return array;
+    }
+
     private static string WriteDate(DateTimeOffset value)
     {
         return value.ToUniversalTime().ToString("O", CultureInfo.InvariantCulture);
@@ -547,6 +1101,18 @@ internal static class ProjectTaskSerializer
         throw new FormatException($"{description} must be a non-empty JSON string.");
     }
 
+    private static string ReadRequiredText(JsonObject root, string name, string description)
+    {
+        if (root.TryGetPropertyValue(name, out var node) &&
+            node is JsonValue jsonValue &&
+            jsonValue.TryGetValue<string>(out var value))
+        {
+            return value;
+        }
+
+        throw new FormatException($"{description} must be a JSON string.");
+    }
+
     private static string? ReadOptionalString(JsonObject root, string name)
     {
         if (!root.TryGetPropertyValue(name, out var node) || node is null || node.GetValueKind() == JsonValueKind.Null)
@@ -569,6 +1135,30 @@ internal static class ProjectTaskSerializer
         throw new FormatException($"{description} must be a JSON integer.");
     }
 
+    private static long ReadInt64(JsonObject root, string name, string description)
+    {
+        if (root.TryGetPropertyValue(name, out var node) &&
+            node is JsonValue jsonValue &&
+            jsonValue.TryGetValue<long>(out var value))
+        {
+            return value;
+        }
+
+        throw new FormatException($"{description} must be a JSON integer.");
+    }
+
+    private static bool ReadBoolean(JsonObject root, string name, string description)
+    {
+        if (root.TryGetPropertyValue(name, out var node) &&
+            node is JsonValue jsonValue &&
+            jsonValue.TryGetValue<bool>(out var value))
+        {
+            return value;
+        }
+
+        throw new FormatException($"{description} must be a JSON boolean.");
+    }
+
     private static T ReadEnum<T>(JsonObject root, string name, string description)
         where T : struct, Enum
     {
@@ -576,6 +1166,24 @@ internal static class ProjectTaskSerializer
         return Enum.TryParse<T>(text, ignoreCase: false, out var value)
             ? value
             : throw new FormatException($"{description} value '{text}' is not supported.");
+    }
+
+    private static ProjectTaskStatus ReadTaskStatus(JsonObject root)
+    {
+        var text = ReadString(root, "status", "Task status");
+        if (string.Equals(text, "Backlog", StringComparison.Ordinal))
+        {
+            return ProjectTaskStatus.Ready;
+        }
+
+        if (string.Equals(text, "AwaitingAcceptance", StringComparison.Ordinal))
+        {
+            return ProjectTaskStatus.Review;
+        }
+
+        return Enum.TryParse<ProjectTaskStatus>(text, ignoreCase: false, out var value)
+            ? value
+            : throw new FormatException($"Task status value '{text}' is not supported.");
     }
 
     private static DateTimeOffset ReadDate(JsonObject root, string name, string description)
@@ -597,6 +1205,19 @@ internal static class ProjectTaskSerializer
         return DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var parsed)
             ? parsed
             : throw new FormatException($"{description} must be an ISO 8601 timestamp.");
+    }
+
+    private static DateOnly? ReadOptionalDateOnly(JsonObject root, string name, string description)
+    {
+        var value = ReadOptionalString(root, name);
+        if (value is null)
+        {
+            return null;
+        }
+
+        return DateOnly.TryParseExact(value, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed)
+            ? parsed
+            : throw new FormatException($"{description} must be an ISO 8601 calendar date.");
     }
 
     private static IReadOnlyList<string> ReadStringArray(JsonObject root, string name, string description)
@@ -656,6 +1277,94 @@ internal static class ProjectTaskSerializer
                     ReadString(activity, "payload", "Activity payload"));
             })
             .ToArray();
+    }
+
+    private static TaskExecutionContract ReadExecutionContract(JsonObject root)
+    {
+        var value = root.TryGetPropertyValue("executionContract", out var node)
+            ? ExpectObject(node, "Task execution contract")
+            : throw new FormatException("Task execution contract must be a JSON object.");
+        var contract = new TaskExecutionContract
+        {
+            TaskType = ReadString(value, "taskType", "Task execution contract task type"),
+            ExternalAudit = ReadString(value, "externalAudit", "Task execution contract external audit")
+        };
+        contract.ReadyToStart.AddRange(ReadStringArray(value, "readyToStart", "Task execution contract ready-to-start rules"));
+        contract.StopConditions.AddRange(ReadStringArray(value, "stopConditions", "Task execution contract stop conditions"));
+        contract.AllowedChanges.AddRange(ReadStringArray(value, "allowedChanges", "Task execution contract allowed changes"));
+        contract.ForbiddenChanges.AddRange(ReadStringArray(value, "forbiddenChanges", "Task execution contract forbidden changes"));
+        contract.RequiredOutputs.AddRange(ReadStringArray(value, "requiredOutputs", "Task execution contract required outputs"));
+        contract.RequiredCommands.AddRange(ReadStringArray(value, "requiredCommands", "Task execution contract required commands"));
+        return contract;
+    }
+
+    private static void CopyExecutionContract(TaskExecutionContract source, TaskExecutionContract destination)
+    {
+        destination.TaskType = source.TaskType;
+        destination.ExternalAudit = source.ExternalAudit;
+        destination.ReadyToStart.AddRange(source.ReadyToStart);
+        destination.StopConditions.AddRange(source.StopConditions);
+        destination.AllowedChanges.AddRange(source.AllowedChanges);
+        destination.ForbiddenChanges.AddRange(source.ForbiddenChanges);
+        destination.RequiredOutputs.AddRange(source.RequiredOutputs);
+        destination.RequiredCommands.AddRange(source.RequiredCommands);
+    }
+
+    private static IReadOnlyList<TaskAttachment> ReadAttachments(JsonObject root)
+    {
+        return ReadArray(root, "attachments", "Task attachments")
+            .Select(node =>
+            {
+                var attachment = ExpectObject(node, "Task attachment");
+                return new TaskAttachment
+                {
+                    AttachmentId = ReadString(attachment, "attachmentId", "Task attachment id"),
+                    DisplayName = ReadString(attachment, "displayName", "Task attachment display name"),
+                    RelativePath = ReadString(attachment, "relativePath", "Task attachment relative path"),
+                    MediaType = ReadString(attachment, "mediaType", "Task attachment media type"),
+                    ByteLength = ReadInt64(attachment, "byteLength", "Task attachment byte length"),
+                    Sha256 = ReadString(attachment, "sha256", "Task attachment SHA-256"),
+                    AddedAt = ReadDate(attachment, "addedAt", "Task attachment added time"),
+                    AddedBy = ReadString(attachment, "addedBy", "Task attachment actor")
+                };
+            })
+            .ToArray();
+    }
+
+    private static IReadOnlyList<LegacySourceFragment> ReadLegacySourceFragments(JsonObject root)
+    {
+        return ReadArray(root, "legacySourceFragments", "Task legacy source fragments")
+            .Select(node =>
+            {
+                var fragment = ExpectObject(node, "Task legacy source fragment");
+                return new LegacySourceFragment
+                {
+                    SourcePath = ReadString(fragment, "sourcePath", "Legacy source path"),
+                    ByteOffset = ReadInt64(fragment, "byteOffset", "Legacy source byte offset"),
+                    ByteLength = ReadInt64(fragment, "byteLength", "Legacy source byte length"),
+                    Encoding = ReadString(fragment, "encoding", "Legacy source encoding"),
+                    HasBom = ReadBoolean(fragment, "hasBom", "Legacy source BOM flag"),
+                    LineEnding = ReadString(fragment, "lineEnding", "Legacy source line ending"),
+                    Sha256 = ReadString(fragment, "sha256", "Legacy source SHA-256"),
+                    Markdown = ReadString(fragment, "markdown", "Legacy source Markdown")
+                };
+            })
+            .ToArray();
+    }
+
+    private static void ReadBoardMigration(JsonObject root, TaskBoardMigrationMetadata migration)
+    {
+        migration.ReportSha256 = ReadOptionalString(root, "reportSha256");
+        migration.Finalized = ReadBoolean(root, "finalized", "Task board migration finalized flag");
+        var sourceDigests = ExpectObject(root["sourceDigests"], "Task board migration source digests");
+        foreach (var pair in sourceDigests.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+        {
+            migration.SourceDigests[pair.Key] = pair.Value?.GetValue<string>() ??
+                throw new FormatException($"Task board source digest '{pair.Key}' must be a string.");
+        }
+
+        migration.Diagnostics.AddRange(ReadStringArray(root, "diagnostics", "Task board migration diagnostics"));
+        migration.LegacySourceFragments.AddRange(ReadLegacySourceFragments(root));
     }
 }
 
@@ -953,6 +1662,14 @@ internal static class TaskDependencyGraph
             throw new ArgumentException($"Task '{taskId}' was not found.", nameof(taskId));
         }
 
+        if (!taskById.ContainsKey(dependencyTaskId))
+        {
+            return new TaskDependencyGraphResult(
+                succeeded: false,
+                task,
+                [TaskDiagnostic("E2D-TASK-0003", $"Dependency task '{dependencyTaskId}' was not found.")]);
+        }
+
         if (WouldCreateCycle(taskById, taskId, dependencyTaskId))
         {
             return new TaskDependencyGraphResult(
@@ -1012,6 +1729,20 @@ internal static class TaskDependencyGraph
         }
 
         return new TaskDependencyGraphResult(diagnostics.Count == 0, refreshed, diagnostics);
+    }
+
+    public static ProjectTaskStatus ResolveBoardStatus(ProjectTask task, IEnumerable<ProjectTask> dependencies)
+    {
+        var refreshed = RefreshReadiness(task, dependencies).Task;
+        if (refreshed.Status != ProjectTaskStatus.Ready)
+        {
+            return refreshed.Status;
+        }
+
+        return refreshed.Readiness != TaskReadiness.Ready ||
+            refreshed.BlockingReasons.Any(reason => reason != TaskBlockingReason.Dependency)
+                ? ProjectTaskStatus.Blocked
+                : ProjectTaskStatus.Ready;
     }
 
     internal static ProjectTask CloneTask(ProjectTask task)
@@ -1097,7 +1828,12 @@ internal sealed class ProjectTaskManager
         }
 
         var updated = TaskDependencyGraph.CloneTask(task);
-        ApplyStatusUpdate(updated, request.TargetStatus, request.Context, payload: $"Status changed to {request.TargetStatus}.");
+        var isSubmission = task.Status == ProjectTaskStatus.Review && request.TargetStatus == ProjectTaskStatus.Review;
+        ApplyStatusUpdate(
+            updated,
+            request.TargetStatus,
+            request.Context,
+            payload: isSubmission ? "Submitted for human acceptance." : $"Status changed to {request.TargetStatus}.");
         return ApplyTask(
             updated,
             request.ExpectedRevision,
@@ -1112,14 +1848,15 @@ internal sealed class ProjectTaskManager
         ArgumentNullException.ThrowIfNull(request);
 
         var task = GetTask(request.TaskId);
-        if (task.Status != ProjectTaskStatus.AwaitingAcceptance ||
+        if (task.Status != ProjectTaskStatus.Review ||
+            task.AcceptanceState != ProjectTaskAcceptanceState.Submitted ||
             !request.Context.HasCapability(OperationCapability.TaskRequestChanges) ||
             request.Context.PrincipalKind != PrincipalKind.Human)
         {
             return ProjectTaskMutationResult.Rejected(
                 task,
                 request.OperationId,
-                TaskDiagnostic("E2D-TASK-0002", "Request changes requires awaiting acceptance and a trusted human context."),
+                TaskDiagnostic("E2D-TASK-0002", "Request changes requires a submitted Review task and a trusted human context."),
                 workspace);
         }
 
@@ -1153,12 +1890,12 @@ internal sealed class ProjectTaskManager
                 workspace);
         }
 
-        if (request.TargetStatus is not (ProjectTaskStatus.Backlog or ProjectTaskStatus.Ready or ProjectTaskStatus.InProgress))
+        if (request.TargetStatus is not (ProjectTaskStatus.Ready or ProjectTaskStatus.InProgress))
         {
             return ProjectTaskMutationResult.Rejected(
                 task,
                 request.OperationId,
-                TaskDiagnostic("E2D-TASK-0002", "Reopen target status must be Backlog, Ready or InProgress."),
+                TaskDiagnostic("E2D-TASK-0002", "Reopen target status must be Ready or InProgress."),
                 workspace);
         }
 
@@ -1259,24 +1996,42 @@ internal sealed class ProjectTaskManager
         ProjectTaskStatus targetStatus,
         OperationContext context)
     {
+        var isSubmission = task.Status == ProjectTaskStatus.Review && targetStatus == ProjectTaskStatus.Review;
+        if (isSubmission)
+        {
+            if (task.AcceptanceState == ProjectTaskAcceptanceState.Submitted)
+            {
+                return TaskDiagnostic("E2D-TASK-0002", "Task is already submitted for human acceptance.");
+            }
+
+            return context.HasCapability(OperationCapability.TaskSubmitForAcceptance)
+                ? null
+                : TaskDiagnostic("E2D-TASK-0002", "Submitting a task for acceptance requires TaskSubmitForAcceptance capability.");
+        }
+
         if (!IsTransitionAllowed(task.Status, targetStatus))
         {
             return TaskDiagnostic("E2D-TASK-0002", $"Task status transition '{task.Status}' -> '{targetStatus}' is not allowed.");
         }
 
-        if (targetStatus == ProjectTaskStatus.AwaitingAcceptance &&
-            !context.HasCapability(OperationCapability.TaskSubmitForAcceptance))
+        if (task.Status == ProjectTaskStatus.Review &&
+            task.AcceptanceState == ProjectTaskAcceptanceState.Submitted &&
+            targetStatus is not (ProjectTaskStatus.Done or ProjectTaskStatus.InProgress))
         {
-            return TaskDiagnostic("E2D-TASK-0002", "Submitting a task for acceptance requires TaskSubmitForAcceptance capability.");
+            return TaskDiagnostic("E2D-TASK-0002", "A submitted Review task requires a human acceptance decision.");
         }
 
         if (targetStatus == ProjectTaskStatus.Done &&
-            (!context.HasCapability(OperationCapability.TaskAccept) || context.PrincipalKind != PrincipalKind.Human))
+            (task.Status != ProjectTaskStatus.Review ||
+             task.AcceptanceState != ProjectTaskAcceptanceState.Submitted ||
+             !context.HasCapability(OperationCapability.TaskAccept) ||
+             context.PrincipalKind != PrincipalKind.Human))
         {
             return TaskDiagnostic("E2D-TASK-0002", "Accepting a task requires trusted human TaskAccept capability.");
         }
 
-        if (task.Status == ProjectTaskStatus.AwaitingAcceptance &&
+        if (task.Status == ProjectTaskStatus.Review &&
+            task.AcceptanceState == ProjectTaskAcceptanceState.Submitted &&
             targetStatus == ProjectTaskStatus.InProgress &&
             (!context.HasCapability(OperationCapability.TaskRequestChanges) || context.PrincipalKind != PrincipalKind.Human))
         {
@@ -1292,9 +2047,11 @@ internal sealed class ProjectTaskManager
         OperationContext context,
         string payload)
     {
+        var previousStatus = task.Status;
+        var previousAcceptanceState = task.AcceptanceState;
         task.Status = targetStatus;
         task.UpdatedAt = DateTimeOffset.UtcNow;
-        if (targetStatus == ProjectTaskStatus.AwaitingAcceptance)
+        if (previousStatus == ProjectTaskStatus.Review && targetStatus == ProjectTaskStatus.Review)
         {
             task.SubmittedAt = task.UpdatedAt;
             task.AcceptanceState = ProjectTaskAcceptanceState.Submitted;
@@ -1306,7 +2063,11 @@ internal sealed class ProjectTaskManager
             task.AcceptedBy = context.PrincipalId;
             task.AcceptanceState = ProjectTaskAcceptanceState.Accepted;
         }
-        else if (targetStatus == ProjectTaskStatus.InProgress && task.AcceptanceState == ProjectTaskAcceptanceState.Submitted)
+        else if (targetStatus == ProjectTaskStatus.Review)
+        {
+            task.AcceptanceState = ProjectTaskAcceptanceState.Open;
+        }
+        else if (targetStatus == ProjectTaskStatus.InProgress && previousAcceptanceState == ProjectTaskAcceptanceState.Submitted)
         {
             task.AcceptanceState = ProjectTaskAcceptanceState.ChangesRequested;
         }
@@ -1323,12 +2084,10 @@ internal sealed class ProjectTaskManager
     {
         return current switch
         {
-            ProjectTaskStatus.Backlog => target is ProjectTaskStatus.Ready or ProjectTaskStatus.Cancelled,
-            ProjectTaskStatus.Ready => target is ProjectTaskStatus.Backlog or ProjectTaskStatus.InProgress or ProjectTaskStatus.Blocked or ProjectTaskStatus.Cancelled,
+            ProjectTaskStatus.Ready => target is ProjectTaskStatus.InProgress or ProjectTaskStatus.Blocked or ProjectTaskStatus.Cancelled,
             ProjectTaskStatus.InProgress => target is ProjectTaskStatus.Ready or ProjectTaskStatus.Blocked or ProjectTaskStatus.Review or ProjectTaskStatus.Cancelled,
             ProjectTaskStatus.Blocked => target is ProjectTaskStatus.Ready or ProjectTaskStatus.InProgress or ProjectTaskStatus.Cancelled,
-            ProjectTaskStatus.Review => target is ProjectTaskStatus.InProgress or ProjectTaskStatus.AwaitingAcceptance or ProjectTaskStatus.Blocked,
-            ProjectTaskStatus.AwaitingAcceptance => target is ProjectTaskStatus.InProgress or ProjectTaskStatus.Done,
+            ProjectTaskStatus.Review => target is ProjectTaskStatus.InProgress or ProjectTaskStatus.Blocked or ProjectTaskStatus.Done,
             _ => false
         };
     }

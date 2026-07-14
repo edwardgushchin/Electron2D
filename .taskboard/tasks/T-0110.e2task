@@ -1,0 +1,504 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-98749962e539a8e430b17c7dbc4cfa6a",
+  "revision": 2,
+  "taskId": "T-0110",
+  "legacyAliases": [],
+  "title": "Переписать публичный README как страницу продукта",
+  "description": "## T-0110 [ ] P0: Переписать публичный README как страницу продукта\n\n- Создана: 2026-06-20T22:10:06+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0212, T-0213\n- Ссылки:\n  - Upstream commit: нет\n  - Доменный документ: `docs/documentation/repository-readme.md`\n  - Референсы:\n    - `https://github.com/EggyStudio/3DEngine`\n    - `https://github.com/godotengine/godot`\n    - `https://github.com/sjoerdev/concrete`\n    - `https://github.com/edwardgushchin/SDL3-CS`\n  - Исходный код: `README.md`; `CODE_OF_CONDUCT.md`; `LICENSE`\n  - Будущая проверка: `eng/Electron2D.Build -- verify readme`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0110.\n  - blocker artifact `data/quality/blockers/T-0110.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/documentation/repository-readme.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0110.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0110.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЗадача относится к домену «Project presentation». Корневой `README.md` должен быть публичной страницей продукта, а не отчётом агента о внутренних проверках. Целевой формат берёт структуру SDL3-CS: центрированный hero, аккуратные badges, верхняя навигация, просьба поставить звезду, emoji-акценты и человеческие разделы About, Features, Platforms, Installation, Quick Start, Documentation, Examples, Feedback, Contributors и License.\n\nREADME должен полностью перейти на английский язык, объяснять Electron2D как cross-platform 2D game engine for .NET и не раскрывать локальную систему задач, release gate, проверка scripts, PowerShell-команды или внутренние baseline-формулировки.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Hero и badges центрированы как в reference README.\n- [ ] README содержит SDL3-CS-style emoji accents: star callout и emoji-prefixed section headings со стабильными anchors.\n- [ ] Tagline отображается ровно один раз: он встроен в SVG и не повторяется отдельным `<h3>`.\n- [ ] Оставлен только один version badge; status badge, task badges и внутренние task IDs отсутствуют.\n- [ ] Отсутствует отдельный раздел Status.\n- [ ] В README отсутствуют `C#-first`, `baseline`, `release gate`, `TASKS.md`, `PowerShell`, `.ps1`, `pwsh` и Roadmap.\n- [ ] About объясняет продукт двумя конкретными предложениями для внешнего читателя и не использует agent-only формулировки.\n- [ ] Features описывают пользовательские возможности, а не названия типов или внутренних подсистем.\n- [ ] Первым пунктом Features стоит `Agent-native workflow` с понятным объяснением editor/shared project model, диагностические сообщения и undo history.\n- [ ] Features содержит `Trello-style task board` для совместной работы через колонки, карточки, assignees, labels, review states и editor-visible project context.\n- [ ] Platforms оформлен как таблица `Platform / Editor / Runtime` с emoji-состояниями `✅ Done`, `\uD83D\uDD53 Planned`, `❌ Not planned`: Windows, Linux и macOS имеют Editor и Runtime `Done`, Android имеет Runtime `Done` и Editor `Not planned`, iOS и Web имеют Runtime `Planned` и Editor `Not planned`.\n- [ ] Quick Start запускает Editor обычными `dotnet` командами, а не репозиторная проверка.\n- [ ] Documentation содержит только ссылку на `https://github.com/edwardgushchin/Electron2D/wiki`.\n- [ ] Examples содержит только `Platformer`.\n- [ ] Название `Platformer` ведёт на GitHub-каталог `https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer` после `T-0212`.\n- [ ] Feedback содержит реальные ссылки на GitHub Issues и Pull Requests.\n- [ ] Contributors содержит ссылку на contributors graph.\n- [ ] README полностью на английском языке.\n- [ ] Rendered GitHub preview или локальный preview artifact проверен визуально.\n- [ ] проверка README на C# из `T-0213` выполнен и подтвердил этот README contract.\n\n### Текущее подтверждение (`Current evidence`)\n\nЭто подтверждение отражает локальную историю задачи и не является внешней приёмкой, audit acceptance или разрешением обходить состояние `blocked`. Перед закрытием `T-0110` агент должен заново проверить критерии, зависимости `T-0212`/`T-0213`, preview artifact и актуальные команды.\n\n- Выполнено локально (`Done locally`):\n  - Hero и badges были приведены к центрированному виду как в reference README.\n  - README получил SDL3-CS-style emoji accents: star callout и emoji-prefixed section headings со стабильными anchors.\n  - Tagline был оставлен в одном отображаемом месте: встроен в SVG без отдельного `<h3>`.\n  - Status badge, task badges и внутренние task IDs были удалены; оставлен один version badge.\n  - Отдельный раздел Status был удалён.\n  - Из README были убраны `C#-first`, `baseline`, `release gate`, `TASKS.md`, `PowerShell`, `.ps1`, `pwsh` и Roadmap.\n  - About был переписан как два предложения для внешнего читателя без agent-only формулировок.\n  - Features были переписаны как пользовательские возможности, а не названия типов или внутренних подсистем.\n  - Первым пунктом Features был поставлен `Agent-native workflow` с объяснением editor/shared project model, diagnostic messages и undo history.\n  - Features получили `Trello-style task board` для совместной работы через колонки, карточки, assignees, labels, review states и editor-visible project context.\n  - Platforms была оформлена как таблица `Platform / Editor / Runtime` со статусами Windows, Linux, macOS, Android, iOS и Web.\n  - Quick Start был переведён на обычные `dotnet` команды запуска Editor.\n  - Documentation был сведён к ссылке на `https://github.com/edwardgushchin/Electron2D/wiki`.\n  - Examples был сведён к видимому имени `Platformer`.\n  - Feedback получил реальные ссылки на GitHub Issues и Pull Requests.\n  - Contributors получил ссылку на contributors graph.\n  - README был переписан на английский язык.\n  - Доменный документ `docs/documentation/repository-readme.md` был переписан под публичный README contract.\n  - `README.md` был переписан в продуктовой структуре.\n- Ещё отсутствует (`Still missing`):\n  - Ссылка `Platformer` должна вести на `https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer` после `T-0212`.\n  - Нужен rendered GitHub preview или локальный preview artifact с визуальной проверкой.\n  - Нужна C# проверка README из `T-0213`, подтверждающая этот README contract.\n  - Нужно повторно сверить все локально выполненные пункты перед финальной приёмкой, потому что задача остаётся `blocked`.\n- Принято аудитом (`Accepted by audit`):\n  - primary: не зафиксировано в этой задаче.\n  - control: не зафиксировано в этой задаче.\n\n### Подзадачи\n\n- [ ] Переписать `docs/documentation/repository-readme.md` под публичный README contract.\n- [ ] Переписать `README.md` в продуктовой структуре.\n- [ ] Выполнить проверка README на C#, реализованный в `T-0213`, и подтвердить успешный результат.\n- [ ] Визуально проверить rendered README preview.\n\n### Заметки агента\n\nСоздано по запросу пользователя: итоговый README должен выглядеть как сильные reference-проекты и взять из них лучшие идеи, включая блоки feedback/contributions, contributors и license.\n\n2026-06-22T10:29:30+03:00 - Блокер пользователя: выполнять эту задачу только в самом конце 0.1-preview, после завершения runtime, editor, export, documentation и release-ready checks.\n\n2026-06-23T16:41:00+03:00 - Повторная проверка по запросу пользователя: `T-0110` всё ещё зависит от незакрытой `T-0104`, поэтому не готова к выполнению без изменения dependency graph.\n\n2026-06-24T13:55:00+03:00 - Rejected 2026-06-24T14:32: README выглядел как внутренний отчёт агента, использовал task IDs, release gate, baseline, PowerShell проверка commands и UI-heavy example. Все `[x]` сняты, состояние возвращено в `open`, новый контракт требует C# проверка и удаления UI-heavy references.\n\n2026-06-24T14:52:00+03:00 - Историческая README-only правка после повторного review: дублированный `<h3>` запрещён, tagline должен отображаться ровно один раз, Quick Start добавлен отдельным разделом. Удаление iOS/WebAssembly из публичной README Platforms не является решением по runtime/export или releaseVerificationTargets; актуальная релизная матрица задаётся `docs/releases/0.1-preview.md`. `T-0110` больше не зависит от удаления UI-heavy project; для принятия README остаются C# проверка, визуальный preview и ссылка на `examples/platformer` после `T-0212`.\n\n2026-06-24T15:05:00+03:00 - Контракт уточнён: `data/templates/electron2d-empty` удалён из публичных examples и остаётся внутренним шаблоном Project Manager. `T-0110` зависит от `T-0212` и `T-0213`, а не от всей tracking-задачи `T-0208`.\n\n2026-06-24T15:43:00+03:00 - README Features дополнен публичной фичей `Trello-style task board`: доска задач для совместной работы через колонки, карточки, assignees, labels, review states и editor-visible project context.\n\n2026-06-24T15:50:00+03:00 - README Platforms уточнён: Linux и macOS считаются Editor и runtime targets, Android остаётся runtime target, iOS добавлена как future runtime target без включения в обязательный `0.1-preview` gate.\n\n2026-06-24T15:55:00+03:00 - README Examples уточнён: видимое имя примера `Platformer` ведёт на текущий GitHub-каталог `examples/reference-platformer`; старое имя не показывается в тексте. `T-0110` больше не зависит от `T-0212`, потому что физическое переименование каталога остаётся отдельной задачей.\n\n2026-06-24T15:59:00+03:00 - Решение пользователя уточнено: `reference-platformer` нельзя оставлять даже в URL README. Ссылка `Platformer` теперь указывает на будущий GitHub-каталог `examples/platformer`, а `T-0110` снова зависит от `T-0212`.\n\n2026-06-24T15:53:00+03:00 - README дополнен SDL3-CS-style emoji accents: добавлена просьба `⭐ Star us on GitHub - it motivates us a lot!`, публичные section headings получили emoji, а навигация сохранена через явные HTML anchors.\n\n2026-06-24T15:57:00+03:00 - README Platforms заменён на таблицу `Platform / Editor / Runtime` с emoji-состояниями `✅ Done`, `\uD83D\uDD53 Planned`, `❌ Not planned`: Linux и macOS отмечены как Editor+Runtime, Android как Runtime-only, iOS и Web как planned Runtime-only. Отдельная строка Legend не используется.\n\n2026-06-24T18:09:00+03:00 - README Features уточнён: `Cross-platform runtime` теперь прямо указывает, что iOS и Web являются future runtime targets; таблица Platforms уже содержит Web как planned Runtime-only.\n\n2026-06-24T18:16:00+03:00 - Выполнен commit `44f42cb5 docs: update future runtime targets` и push в `origin/main`: README и доменный контракт теперь синхронно указывают iOS и Web как planned future runtime targets.\n\n2026-06-24T22:12:00+03:00 - После отказа пользователя принять `T-0224` README возвращён к действующему контракту `T-0110`: таблица Platforms снова имеет только столбцы `Platform / Editor / Runtime`, статусы `✅ Done`, `\uD83D\uDD53 Planned`, `❌ Not planned`, iOS остаётся запланированной платформой запуска, а Web является обязательным runtime-only target `0.1-preview`; публичный README может показывать отдельный marketing status, но task-план не выводит Web из релизной матрицы. Релизная проверка Windows/Linux/macOS/Android/iOS/WebAssembly browser фиксируется в `docs/releases/0.1-preview.md` и не выносится отдельным столбцом в публичный README.\n\n2026-06-24T22:36:00+03:00 - После повторного отказа принять `T-0224` README Examples синхронизирован с текущим статусом Platformer: описание больше не называет пример завершённой игрой и теперь использует формулировку `A 2D platformer example built with Electron2D.`. Это сохраняет контракт `T-0110` и не называет Platformer завершённой приёмочной игрой до `T-0222`, `T-0223` и `T-0225`.\n\n2026-06-24T22:49:00+03:00 - После повторного отказа принять `T-0224` в доменном документе README убрана нормативная коллизия: iOS и Web больше не описаны как исключённые из обязательной релизной проверки `0.1-preview`. Документ теперь разделяет публичный README-статус и релизный набор `releaseVerificationTargets`, который задаётся в `docs/releases/0.1-preview.md`.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0012"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c7acbbea62663eb1d415212ee8352ed0"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-1581f8a5eb77ad9478e2d4008c9969bc"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Hero и badges центрированы как в reference README.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "README содержит SDL3-CS-style emoji accents: star callout и emoji-prefixed section headings со стабильными anchors.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Tagline отображается ровно один раз: он встроен в SVG и не повторяется отдельным `<h3>`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Оставлен только один version badge; status badge, task badges и внутренние task IDs отсутствуют.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Отсутствует отдельный раздел Status.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "В README отсутствуют `C#-first`, `baseline`, `release gate`, `TASKS.md`, `PowerShell`, `.ps1`, `pwsh` и Roadmap.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "About объясняет продукт двумя конкретными предложениями для внешнего читателя и не использует agent-only формулировки.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Features описывают пользовательские возможности, а не названия типов или внутренних подсистем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Первым пунктом Features стоит `Agent-native workflow` с понятным объяснением editor/shared project model, диагностические сообщения и undo history.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Features содержит `Trello-style task board` для совместной работы через колонки, карточки, assignees, labels, review states и editor-visible project context.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Platforms оформлен как таблица `Platform / Editor / Runtime` с emoji-состояниями `✅ Done`, `\uD83D\uDD53 Planned`, `❌ Not planned`: Windows, Linux и macOS имеют Editor и Runtime `Done`, Android имеет Runtime `Done` и Editor `Not planned`, iOS и Web имеют Runtime `Planned` и Editor `Not planned`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Quick Start запускает Editor обычными `dotnet` командами, а не репозиторная проверка.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-013",
+      "description": "Documentation содержит только ссылку на `https://github.com/edwardgushchin/Electron2D/wiki`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-014",
+      "description": "Examples содержит только `Platformer`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-015",
+      "description": "Название `Platformer` ведёт на GitHub-каталог `https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer` после `T-0212`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-016",
+      "description": "Feedback содержит реальные ссылки на GitHub Issues и Pull Requests.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-017",
+      "description": "Contributors содержит ссылку на contributors graph.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-018",
+      "description": "README полностью на английском языке.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-019",
+      "description": "Rendered GitHub preview или локальный preview artifact проверен визуально.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-020",
+      "description": "проверка README на C# из `T-0213` выполнен и подтвердил этот README contract.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T07:29:30.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Блокер пользователя: выполнять эту задачу только в самом конце 0.1-preview, после завершения runtime, editor, export, documentation и release-ready checks."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T13:41:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Повторная проверка по запросу пользователя: `T-0110` всё ещё зависит от незакрытой `T-0104`, поэтому не готова к выполнению без изменения dependency graph."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T10:55:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Rejected 2026-06-24T14:32: README выглядел как внутренний отчёт агента, использовал task IDs, release gate, baseline, PowerShell проверка commands и UI-heavy example. Все `[x]` сняты, состояние возвращено в `open`, новый контракт требует C# проверка и удаления UI-heavy references."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T11:52:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Историческая README-only правка после повторного review: дублированный `<h3>` запрещён, tagline должен отображаться ровно один раз, Quick Start добавлен отдельным разделом. Удаление iOS/WebAssembly из публичной README Platforms не является решением по runtime/export или releaseVerificationTargets; актуальная релизная матрица задаётся `docs/releases/0.1-preview.md`. `T-0110` больше не зависит от удаления UI-heavy project; для принятия README остаются C# проверка, визуальный preview и ссылка на `examples/platformer` после `T-0212`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T12:05:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Контракт уточнён: `data/templates/electron2d-empty` удалён из публичных examples и остаётся внутренним шаблоном Project Manager. `T-0110` зависит от `T-0212` и `T-0213`, а не от всей tracking-задачи `T-0208`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0006",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T12:43:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "README Features дополнен публичной фичей `Trello-style task board`: доска задач для совместной работы через колонки, карточки, assignees, labels, review states и editor-visible project context."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0007",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T12:50:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "README Platforms уточнён: Linux и macOS считаются Editor и runtime targets, Android остаётся runtime target, iOS добавлена как future runtime target без включения в обязательный `0.1-preview` gate."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0010",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T12:53:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "README дополнен SDL3-CS-style emoji accents: добавлена просьба `⭐ Star us on GitHub - it motivates us a lot!`, публичные section headings получили emoji, а навигация сохранена через явные HTML anchors."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0008",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T12:55:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "README Examples уточнён: видимое имя примера `Platformer` ведёт на текущий GitHub-каталог `examples/reference-platformer`; старое имя не показывается в тексте. `T-0110` больше не зависит от `T-0212`, потому что физическое переименование каталога остаётся отдельной задачей."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0011",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T12:57:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "README Platforms заменён на таблицу `Platform / Editor / Runtime` с emoji-состояниями `✅ Done`, `\uD83D\uDD53 Planned`, `❌ Not planned`: Linux и macOS отмечены как Editor+Runtime, Android как Runtime-only, iOS и Web как planned Runtime-only. Отдельная строка Legend не используется."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0009",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T12:59:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Решение пользователя уточнено: `reference-platformer` нельзя оставлять даже в URL README. Ссылка `Platformer` теперь указывает на будущий GitHub-каталог `examples/platformer`, а `T-0110` снова зависит от `T-0212`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0012",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T15:09:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "README Features уточнён: `Cross-platform runtime` теперь прямо указывает, что iOS и Web являются future runtime targets; таблица Platforms уже содержит Web как planned Runtime-only."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0013",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T15:16:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Выполнен commit `44f42cb5 docs: update future runtime targets` и push в `origin/main`: README и доменный контракт теперь синхронно указывают iOS и Web как planned future runtime targets."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0014",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T19:12:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "После отказа пользователя принять `T-0224` README возвращён к действующему контракту `T-0110`: таблица Platforms снова имеет только столбцы `Platform / Editor / Runtime`, статусы `✅ Done`, `\uD83D\uDD53 Planned`, `❌ Not planned`, iOS остаётся запланированной платформой запуска, а Web является обязательным runtime-only target `0.1-preview`; публичный README может показывать отдельный marketing status, но task-план не выводит Web из релизной матрицы. Релизная проверка Windows/Linux/macOS/Android/iOS/WebAssembly browser фиксируется в `docs/releases/0.1-preview.md` и не выносится отдельным столбцом в публичный README."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0015",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T19:36:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "После повторного отказа принять `T-0224` README Examples синхронизирован с текущим статусом Platformer: описание больше не называет пример завершённой игрой и теперь использует формулировку `A 2D platformer example built with Electron2D.`. Это сохраняет контракт `T-0110` и не называет Platformer завершённой приёмочной игрой до `T-0222`, `T-0223` и `T-0225`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0016",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T19:49:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "После повторного отказа принять `T-0224` в доменном документе README убрана нормативная коллизия: iOS и Web больше не описаны как исключённые из обязательной релизной проверки `0.1-preview`. Документ теперь разделяет публичный README-статус и релизный набор `releaseVerificationTargets`, который задаётся в `docs/releases/0.1-preview.md`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "Platform / Editor / Runtime"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/dev-diary"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/quality/blockers/T-0110.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "data/templates/electron2d-empty"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/documentation/repository-readme.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/releases/0.1-preview.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "eng/Electron2D.Build -- verify readme"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "examples/platformer"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "examples/reference-platformer"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Uri",
+      "value": "https://github.com/EggyStudio/3DEngine"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Uri",
+      "value": "https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "Uri",
+      "value": "https://github.com/edwardgushchin/Electron2D/wiki"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "Uri",
+      "value": "https://github.com/edwardgushchin/SDL3-CS"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "Uri",
+      "value": "https://github.com/godotengine/godot"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "Uri",
+      "value": "https://github.com/sjoerdev/concrete"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "origin/main"
+    }
+  ],
+  "executionContract": {
+    "taskType": "blocked-environment",
+    "readyToStart": [
+      "только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.",
+      "перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate."
+    ],
+    "stopConditions": [
+      "dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.",
+      "требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.",
+      "задача просит audit package без отдельной blocker-report задачи."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` blocker/current evidence notes for T-0110.",
+      "blocker artifact `data/quality/blockers/T-0110.md`, если нужен отдельный отчёт.",
+      "дневник `data/dev-diary/` и связанный доменный документ docs/documentation/repository-readme.md только для уточнения blocker-а."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.",
+      "unrelated task statuses, dependency graph or release scope."
+    ],
+    "requiredOutputs": [
+      "blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.",
+      "blocker artifact `data/quality/blockers/T-0110.md` when diagnostics need a durable file.",
+      "diary entry with exact commands or host checks that proved the block."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 52192,
+      "byteLength": 20602,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "95da6e313566d38b4c0a756b064544ca61434cd0b360963ee731b20cf4b28af6",
+      "markdown": "## T-0110 [ ] P0: Переписать публичный README как страницу продукта\n\n- Создана: 2026-06-20T22:10:06+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0212, T-0213\n- Ссылки:\n  - Upstream commit: нет\n  - Доменный документ: `docs/documentation/repository-readme.md`\n  - Референсы:\n    - `https://github.com/EggyStudio/3DEngine`\n    - `https://github.com/godotengine/godot`\n    - `https://github.com/sjoerdev/concrete`\n    - `https://github.com/edwardgushchin/SDL3-CS`\n  - Исходный код: `README.md`; `CODE_OF_CONDUCT.md`; `LICENSE`\n  - Будущая проверка: `eng/Electron2D.Build -- verify readme`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0110.\n  - blocker artifact `data/quality/blockers/T-0110.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/documentation/repository-readme.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0110.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0110.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЗадача относится к домену «Project presentation». Корневой `README.md` должен быть публичной страницей продукта, а не отчётом агента о внутренних проверках. Целевой формат берёт структуру SDL3-CS: центрированный hero, аккуратные badges, верхняя навигация, просьба поставить звезду, emoji-акценты и человеческие разделы About, Features, Platforms, Installation, Quick Start, Documentation, Examples, Feedback, Contributors и License.\n\nREADME должен полностью перейти на английский язык, объяснять Electron2D как cross-platform 2D game engine for .NET и не раскрывать локальную систему задач, release gate, проверка scripts, PowerShell-команды или внутренние baseline-формулировки.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Hero и badges центрированы как в reference README.\n- [ ] README содержит SDL3-CS-style emoji accents: star callout и emoji-prefixed section headings со стабильными anchors.\n- [ ] Tagline отображается ровно один раз: он встроен в SVG и не повторяется отдельным `<h3>`.\n- [ ] Оставлен только один version badge; status badge, task badges и внутренние task IDs отсутствуют.\n- [ ] Отсутствует отдельный раздел Status.\n- [ ] В README отсутствуют `C#-first`, `baseline`, `release gate`, `TASKS.md`, `PowerShell`, `.ps1`, `pwsh` и Roadmap.\n- [ ] About объясняет продукт двумя конкретными предложениями для внешнего читателя и не использует agent-only формулировки.\n- [ ] Features описывают пользовательские возможности, а не названия типов или внутренних подсистем.\n- [ ] Первым пунктом Features стоит `Agent-native workflow` с понятным объяснением editor/shared project model, диагностические сообщения и undo history.\n- [ ] Features содержит `Trello-style task board` для совместной работы через колонки, карточки, assignees, labels, review states и editor-visible project context.\n- [ ] Platforms оформлен как таблица `Platform / Editor / Runtime` с emoji-состояниями `✅ Done`, `\uD83D\uDD53 Planned`, `❌ Not planned`: Windows, Linux и macOS имеют Editor и Runtime `Done`, Android имеет Runtime `Done` и Editor `Not planned`, iOS и Web имеют Runtime `Planned` и Editor `Not planned`.\n- [ ] Quick Start запускает Editor обычными `dotnet` командами, а не репозиторная проверка.\n- [ ] Documentation содержит только ссылку на `https://github.com/edwardgushchin/Electron2D/wiki`.\n- [ ] Examples содержит только `Platformer`.\n- [ ] Название `Platformer` ведёт на GitHub-каталог `https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer` после `T-0212`.\n- [ ] Feedback содержит реальные ссылки на GitHub Issues и Pull Requests.\n- [ ] Contributors содержит ссылку на contributors graph.\n- [ ] README полностью на английском языке.\n- [ ] Rendered GitHub preview или локальный preview artifact проверен визуально.\n- [ ] проверка README на C# из `T-0213` выполнен и подтвердил этот README contract.\n\n### Текущее подтверждение (`Current evidence`)\n\nЭто подтверждение отражает локальную историю задачи и не является внешней приёмкой, audit acceptance или разрешением обходить состояние `blocked`. Перед закрытием `T-0110` агент должен заново проверить критерии, зависимости `T-0212`/`T-0213`, preview artifact и актуальные команды.\n\n- Выполнено локально (`Done locally`):\n  - Hero и badges были приведены к центрированному виду как в reference README.\n  - README получил SDL3-CS-style emoji accents: star callout и emoji-prefixed section headings со стабильными anchors.\n  - Tagline был оставлен в одном отображаемом месте: встроен в SVG без отдельного `<h3>`.\n  - Status badge, task badges и внутренние task IDs были удалены; оставлен один version badge.\n  - Отдельный раздел Status был удалён.\n  - Из README были убраны `C#-first`, `baseline`, `release gate`, `TASKS.md`, `PowerShell`, `.ps1`, `pwsh` и Roadmap.\n  - About был переписан как два предложения для внешнего читателя без agent-only формулировок.\n  - Features были переписаны как пользовательские возможности, а не названия типов или внутренних подсистем.\n  - Первым пунктом Features был поставлен `Agent-native workflow` с объяснением editor/shared project model, diagnostic messages и undo history.\n  - Features получили `Trello-style task board` для совместной работы через колонки, карточки, assignees, labels, review states и editor-visible project context.\n  - Platforms была оформлена как таблица `Platform / Editor / Runtime` со статусами Windows, Linux, macOS, Android, iOS и Web.\n  - Quick Start был переведён на обычные `dotnet` команды запуска Editor.\n  - Documentation был сведён к ссылке на `https://github.com/edwardgushchin/Electron2D/wiki`.\n  - Examples был сведён к видимому имени `Platformer`.\n  - Feedback получил реальные ссылки на GitHub Issues и Pull Requests.\n  - Contributors получил ссылку на contributors graph.\n  - README был переписан на английский язык.\n  - Доменный документ `docs/documentation/repository-readme.md` был переписан под публичный README contract.\n  - `README.md` был переписан в продуктовой структуре.\n- Ещё отсутствует (`Still missing`):\n  - Ссылка `Platformer` должна вести на `https://github.com/edwardgushchin/Electron2D/tree/main/examples/platformer` после `T-0212`.\n  - Нужен rendered GitHub preview или локальный preview artifact с визуальной проверкой.\n  - Нужна C# проверка README из `T-0213`, подтверждающая этот README contract.\n  - Нужно повторно сверить все локально выполненные пункты перед финальной приёмкой, потому что задача остаётся `blocked`.\n- Принято аудитом (`Accepted by audit`):\n  - primary: не зафиксировано в этой задаче.\n  - control: не зафиксировано в этой задаче.\n\n### Подзадачи\n\n- [ ] Переписать `docs/documentation/repository-readme.md` под публичный README contract.\n- [ ] Переписать `README.md` в продуктовой структуре.\n- [ ] Выполнить проверка README на C#, реализованный в `T-0213`, и подтвердить успешный результат.\n- [ ] Визуально проверить rendered README preview.\n\n### Заметки агента\n\nСоздано по запросу пользователя: итоговый README должен выглядеть как сильные reference-проекты и взять из них лучшие идеи, включая блоки feedback/contributions, contributors и license.\n\n2026-06-22T10:29:30+03:00 - Блокер пользователя: выполнять эту задачу только в самом конце 0.1-preview, после завершения runtime, editor, export, documentation и release-ready checks.\n\n2026-06-23T16:41:00+03:00 - Повторная проверка по запросу пользователя: `T-0110` всё ещё зависит от незакрытой `T-0104`, поэтому не готова к выполнению без изменения dependency graph.\n\n2026-06-24T13:55:00+03:00 - Rejected 2026-06-24T14:32: README выглядел как внутренний отчёт агента, использовал task IDs, release gate, baseline, PowerShell проверка commands и UI-heavy example. Все `[x]` сняты, состояние возвращено в `open`, новый контракт требует C# проверка и удаления UI-heavy references.\n\n2026-06-24T14:52:00+03:00 - Историческая README-only правка после повторного review: дублированный `<h3>` запрещён, tagline должен отображаться ровно один раз, Quick Start добавлен отдельным разделом. Удаление iOS/WebAssembly из публичной README Platforms не является решением по runtime/export или releaseVerificationTargets; актуальная релизная матрица задаётся `docs/releases/0.1-preview.md`. `T-0110` больше не зависит от удаления UI-heavy project; для принятия README остаются C# проверка, визуальный preview и ссылка на `examples/platformer` после `T-0212`.\n\n2026-06-24T15:05:00+03:00 - Контракт уточнён: `data/templates/electron2d-empty` удалён из публичных examples и остаётся внутренним шаблоном Project Manager. `T-0110` зависит от `T-0212` и `T-0213`, а не от всей tracking-задачи `T-0208`.\n\n2026-06-24T15:43:00+03:00 - README Features дополнен публичной фичей `Trello-style task board`: доска задач для совместной работы через колонки, карточки, assignees, labels, review states и editor-visible project context.\n\n2026-06-24T15:50:00+03:00 - README Platforms уточнён: Linux и macOS считаются Editor и runtime targets, Android остаётся runtime target, iOS добавлена как future runtime target без включения в обязательный `0.1-preview` gate.\n\n2026-06-24T15:55:00+03:00 - README Examples уточнён: видимое имя примера `Platformer` ведёт на текущий GitHub-каталог `examples/reference-platformer`; старое имя не показывается в тексте. `T-0110` больше не зависит от `T-0212`, потому что физическое переименование каталога остаётся отдельной задачей.\n\n2026-06-24T15:59:00+03:00 - Решение пользователя уточнено: `reference-platformer` нельзя оставлять даже в URL README. Ссылка `Platformer` теперь указывает на будущий GitHub-каталог `examples/platformer`, а `T-0110` снова зависит от `T-0212`.\n\n2026-06-24T15:53:00+03:00 - README дополнен SDL3-CS-style emoji accents: добавлена просьба `⭐ Star us on GitHub - it motivates us a lot!`, публичные section headings получили emoji, а навигация сохранена через явные HTML anchors.\n\n2026-06-24T15:57:00+03:00 - README Platforms заменён на таблицу `Platform / Editor / Runtime` с emoji-состояниями `✅ Done`, `\uD83D\uDD53 Planned`, `❌ Not planned`: Linux и macOS отмечены как Editor+Runtime, Android как Runtime-only, iOS и Web как planned Runtime-only. Отдельная строка Legend не используется.\n\n2026-06-24T18:09:00+03:00 - README Features уточнён: `Cross-platform runtime` теперь прямо указывает, что iOS и Web являются future runtime targets; таблица Platforms уже содержит Web как planned Runtime-only.\n\n2026-06-24T18:16:00+03:00 - Выполнен commit `44f42cb5 docs: update future runtime targets` и push в `origin/main`: README и доменный контракт теперь синхронно указывают iOS и Web как planned future runtime targets.\n\n2026-06-24T22:12:00+03:00 - После отказа пользователя принять `T-0224` README возвращён к действующему контракту `T-0110`: таблица Platforms снова имеет только столбцы `Platform / Editor / Runtime`, статусы `✅ Done`, `\uD83D\uDD53 Planned`, `❌ Not planned`, iOS остаётся запланированной платформой запуска, а Web является обязательным runtime-only target `0.1-preview`; публичный README может показывать отдельный marketing status, но task-план не выводит Web из релизной матрицы. Релизная проверка Windows/Linux/macOS/Android/iOS/WebAssembly browser фиксируется в `docs/releases/0.1-preview.md` и не выносится отдельным столбцом в публичный README.\n\n2026-06-24T22:36:00+03:00 - После повторного отказа принять `T-0224` README Examples синхронизирован с текущим статусом Platformer: описание больше не называет пример завершённой игрой и теперь использует формулировку `A 2D platformer example built with Electron2D.`. Это сохраняет контракт `T-0110` и не называет Platformer завершённой приёмочной игрой до `T-0222`, `T-0223` и `T-0225`.\n\n2026-06-24T22:49:00+03:00 - После повторного отказа принять `T-0224` в доменном документе README убрана нормативная коллизия: iOS и Web больше не описаны как исключённые из обязательной релизной проверки `0.1-preview`. Документ теперь разделяет публичный README-статус и релизный набор `releaseVerificationTargets`, который задаётся в `docs/releases/0.1-preview.md`.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T19:10:06.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

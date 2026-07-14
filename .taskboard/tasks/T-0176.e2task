@@ -1,0 +1,265 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-cda46fb5c886cd60ac437bf29693a930",
+  "revision": 2,
+  "taskId": "T-0176",
+  "legacyAliases": [],
+  "title": "Основа UI A - тема по умолчанию, шрифты и иконки",
+  "description": "## T-0176 [ ] P0: Основа UI A - тема по умолчанию, шрифты и иконки\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0171\n- Ссылки:\n  - Доменный документ: `docs/ui/theme-tooltips.md`; `docs/resources/font-import.md`; `docs/resources/texture-image-import.md`; `docs/editor/editor-project-shell.md`\n  - Исходный код: `src/Electron2D/Graphics/UI/Theme.cs`; `src/Electron2D/Graphics/UI/Control.cs`; `src/Electron2D/Graphics/UI/Label.cs`; `src/Electron2D/Graphics/UI/Controls/Button.cs`; `src/Electron2D.Editor/`\n  - Тесты: `tests/Electron2D.Tests.Integration/FontImportTests.cs`; `tests/Electron2D.Tests.Integration/BasicControlInteractionTests.cs`; `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/ui/theme-tooltips.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/ui/theme-tooltips.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЦель - закрыть первый gate основы UI: базовые runtime controls и будущие desktop controls должны получать тему, шрифт и icon lookup через общий механизм, без локальной настройки в `Electron2D.Editor`. Текущий локальный `ShellFont` в `src/Electron2D.Editor/Application.cs` является обходом отсутствующего API шрифта по умолчанию и должен исчезнуть после появления общей фабрики темы и шрифта по умолчанию.\n\nОжидаемый результат: runtime имеет глобальную тему по умолчанию, anti-aliased UI font, отдельный monospace font для code/terminal, state style resources, базовый icon resource pipeline, glyph/icon caching и fallback-правила, которые работают для игр, отладочных панелей и редактора. Зелёный/красный цвет остаётся семантическим для run/stop actions, а не постоянным фоном больших панелей.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ обновлён до кода: тема и шрифт по умолчанию, monospace font объём, icons, style resources, cache behavior, font asset licensing и fallback glyph rules описаны как runtime UI contract.\n- [ ] Добавлены сначала падающие tests для поиска темы/шрифта по умолчанию, anti-aliased text availability, icon lookup, state style resources, кириллицы, fallback glyphs и отсутствия editor-local font workaround.\n- [ ] Runtime поставляет воспроизводимый UI font asset с документированной лицензией; текст на латинице и кириллице не зависит от случайно установленного системного шрифта.\n- [ ] Fallback glyph lookup показывает отсутствующие символы предсказуемо и не ломает layout при русском UI.\n- [ ] `Electron2D.Editor` больше не создаёт локальный `ShellFont` для стартового shell: текст видимых controls берётся через runtime theme/font path.\n- [ ] `Button`, `Label`, базовые test controls и editor shell получают применимые normal/hover/pressed/focused/disabled/selected resources из общей темы; конкретные desktop controls подтверждают это в `T-0194`-`T-0197`.\n- [ ] Icon resource pipeline поддерживает 16 px toolbar icons, severity icons и node/resource/script type icons без editor-only drawing.\n- [ ] Glyph/icon caching не пересоздаёт ресурсы при неизменном UI.\n- [ ] Focused UI/theme tests, editor smoke, local проверка документации и проверка лицензий исходников проходят.\n\n### Подзадачи\n\n- [ ] Специфицировать фабрику темы/шрифта по умолчанию и fallback lookup.\n- [ ] Добавить minimal UI font, monospace font boundary, лицензию font asset и проверки латиницы/кириллицы.\n- [ ] Реализовать state style resources и icon lookup/cache.\n- [ ] Убрать editor-local font workaround из shell path.\n- [ ] Проверить editor real-window smoke на читаемость текста.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача выделена из `T-0172` как первый обязательный gate перед дальнейшим видимым Editor UI.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": "task-6e1088ab0e5bff54d81278aab3c7ac54",
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ee12f004f6e22d73d20dce15f4947609"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ обновлён до кода: тема и шрифт по умолчанию, monospace font объём, icons, style resources, cache behavior, font asset licensing и fallback glyph rules описаны как runtime UI contract.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Добавлены сначала падающие tests для поиска темы/шрифта по умолчанию, anti-aliased text availability, icon lookup, state style resources, кириллицы, fallback glyphs и отсутствия editor-local font workaround.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Runtime поставляет воспроизводимый UI font asset с документированной лицензией; текст на латинице и кириллице не зависит от случайно установленного системного шрифта.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Fallback glyph lookup показывает отсутствующие символы предсказуемо и не ломает layout при русском UI.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`Electron2D.Editor` больше не создаёт локальный `ShellFont` для стартового shell: текст видимых controls берётся через runtime theme/font path.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "`Button`, `Label`, базовые test controls и editor shell получают применимые normal/hover/pressed/focused/disabled/selected resources из общей темы; конкретные desktop controls подтверждают это в `T-0194`-`T-0197`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Icon resource pipeline поддерживает 16 px toolbar icons, severity icons и node/resource/script type icons без editor-only drawing.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Glyph/icon caching не пересоздаёт ресурсы при неизменном UI.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Focused UI/theme tests, editor smoke, local проверка документации и проверка лицензий исходников проходят.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача выделена из `T-0172` как первый обязательный gate перед дальнейшим видимым Editor UI."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate unless task criteria explicitly require primary/control audit"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/editor/editor-project-shell.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/resources/font-import.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/resources/texture-image-import.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/ui/theme-tooltips.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Application.cs"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/UI/Control.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/UI/Controls/Button.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/UI/Label.cs"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/UI/Theme.cs"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/BasicControlInteractionTests.cs"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/FontImportTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tooling",
+    "readyToStart": [
+      "task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/ui/theme-tooltips.md describes the tool or policy contract.",
+      "add RED verifier/test coverage before changing implementation when tooling behavior changes."
+    ],
+    "stopConditions": [
+      "the change would define public API surface manually or close behavior owned by a public class task.",
+      "missing dependency, platform prerequisite or generated input prevents deterministic verifier output."
+    ],
+    "allowedChanges": [
+      "tooling, verifier, generated-report plumbing and docs named by this task.",
+      "tests under `tests/` that prove the tooling contract.",
+      "`TASKS.md` notes and diary evidence."
+    ],
+    "forbiddenChanges": [
+      "production runtime behavior outside this tooling contract.",
+      "generated artifacts by hand when a generator/verifier owns them.",
+      "unrelated task statuses or release scope."
+    ],
+    "requiredOutputs": [
+      "docs/ui/theme-tooltips.md",
+      "focused verifier/test evidence named by the task.",
+      "synchronized generated docs/index artifacts when docs are changed."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 106739,
+      "byteLength": 8046,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "f66b3e1996115d91c8cee513f6c26605a7a34324e70eee50b7a0f6350529446b",
+      "markdown": "## T-0176 [ ] P0: Основа UI A - тема по умолчанию, шрифты и иконки\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0171\n- Ссылки:\n  - Доменный документ: `docs/ui/theme-tooltips.md`; `docs/resources/font-import.md`; `docs/resources/texture-image-import.md`; `docs/editor/editor-project-shell.md`\n  - Исходный код: `src/Electron2D/Graphics/UI/Theme.cs`; `src/Electron2D/Graphics/UI/Control.cs`; `src/Electron2D/Graphics/UI/Label.cs`; `src/Electron2D/Graphics/UI/Controls/Button.cs`; `src/Electron2D.Editor/`\n  - Тесты: `tests/Electron2D.Tests.Integration/FontImportTests.cs`; `tests/Electron2D.Tests.Integration/BasicControlInteractionTests.cs`; `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/ui/theme-tooltips.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/ui/theme-tooltips.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЦель - закрыть первый gate основы UI: базовые runtime controls и будущие desktop controls должны получать тему, шрифт и icon lookup через общий механизм, без локальной настройки в `Electron2D.Editor`. Текущий локальный `ShellFont` в `src/Electron2D.Editor/Application.cs` является обходом отсутствующего API шрифта по умолчанию и должен исчезнуть после появления общей фабрики темы и шрифта по умолчанию.\n\nОжидаемый результат: runtime имеет глобальную тему по умолчанию, anti-aliased UI font, отдельный monospace font для code/terminal, state style resources, базовый icon resource pipeline, glyph/icon caching и fallback-правила, которые работают для игр, отладочных панелей и редактора. Зелёный/красный цвет остаётся семантическим для run/stop actions, а не постоянным фоном больших панелей.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ обновлён до кода: тема и шрифт по умолчанию, monospace font объём, icons, style resources, cache behavior, font asset licensing и fallback glyph rules описаны как runtime UI contract.\n- [ ] Добавлены сначала падающие tests для поиска темы/шрифта по умолчанию, anti-aliased text availability, icon lookup, state style resources, кириллицы, fallback glyphs и отсутствия editor-local font workaround.\n- [ ] Runtime поставляет воспроизводимый UI font asset с документированной лицензией; текст на латинице и кириллице не зависит от случайно установленного системного шрифта.\n- [ ] Fallback glyph lookup показывает отсутствующие символы предсказуемо и не ломает layout при русском UI.\n- [ ] `Electron2D.Editor` больше не создаёт локальный `ShellFont` для стартового shell: текст видимых controls берётся через runtime theme/font path.\n- [ ] `Button`, `Label`, базовые test controls и editor shell получают применимые normal/hover/pressed/focused/disabled/selected resources из общей темы; конкретные desktop controls подтверждают это в `T-0194`-`T-0197`.\n- [ ] Icon resource pipeline поддерживает 16 px toolbar icons, severity icons и node/resource/script type icons без editor-only drawing.\n- [ ] Glyph/icon caching не пересоздаёт ресурсы при неизменном UI.\n- [ ] Focused UI/theme tests, editor smoke, local проверка документации и проверка лицензий исходников проходят.\n\n### Подзадачи\n\n- [ ] Специфицировать фабрику темы/шрифта по умолчанию и fallback lookup.\n- [ ] Добавить minimal UI font, monospace font boundary, лицензию font asset и проверки латиницы/кириллицы.\n- [ ] Реализовать state style resources и icon lookup/cache.\n- [ ] Убрать editor-local font workaround из shell path.\n- [ ] Проверить editor real-window smoke на читаемость текста.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача выделена из `T-0172` как первый обязательный gate перед дальнейшим видимым Editor UI.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

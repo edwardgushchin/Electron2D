@@ -1,0 +1,375 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-6949c0b7025f2242f5d1970fab378d7b",
+  "revision": 2,
+  "taskId": "T-1003",
+  "legacyAliases": [],
+  "title": "Привести `ShaderGlobalsOverride` к полному публичному API Godot 4.7",
+  "description": "## T-1003 [ ] P0: Привести `ShaderGlobalsOverride` к полному публичному API Godot 4.7\n\n- Создана: 2026-07-09T01:49:26+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `leaf-public-api`\n- Scheduling tier: `later`\n- Зависимости: T-0241, T-0242, T-0243, T-0245, T-0254, T-0321, T-0247, T-0966, T-0967, T-0968, T-0969, T-0970, T-0971, T-0972, T-0975\n- Ссылки:\n  - Доменный документ: `docs/rendering/godot-47-shader-globals-override.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `Дополнительные runtime/editor публичные узлы`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/rendering/godot-47-shader-globals-override.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/rendering/godot-47-shader-globals-override.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к группе `Rendering`. Цель - реализовать `ShaderGlobalsOverride` как полноценную публичную сущность API Electron2D 0.1-preview, совместимую с Godot 4.7 публичным C# API из сгенерированных описаний `T-0242` и поведением, проверенным через `T-0244`.\n\nПублично объект должен работать как соответствующий класс Godot 4.7 для C#. Внутренние зависимости и запреты описаны в разделах «Что входит в задачу», «Что не входит в задачу» и «Связь с внутренними слоями»; эта задача не забирает на себя соседние классы и посторонние внутренние возможности.\n\nОжидаемый результат: `ShaderGlobalsOverride` не должен быть витриной, временной заглушкой или пустой реализацией. Задача закрывается только если сгенерированные описания, проверки, разделы «На что обратить особое внимание», «Связь с внутренними слоями» и «Подтверждение поведения» доказывают совпадение с Godot.\n\n### Источники и сгенерированные описания API\n\n- Версия Godot: `4.7-stable`.\n- Официальная справка Godot по классу: `https://docs.godotengine.org/en/4.7/classes/class_shaderglobalsoverride.html`.\n- XML-описание класса в исходном коде Godot: `https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/ShaderGlobalsOverride.xml`.\n- Доменный документ: `docs/rendering/godot-47-shader-globals-override.md`.\n- Сгенерированное описание API Godot: `data/api/godot-4.7/classes/ShaderGlobalsOverride.api.json`.\n- Сгенерированное описание API Electron2D: `data/api/electron2d/classes/ShaderGlobalsOverride.api.json`.\n- Сгенерированный отчёт о расхождениях API: `data/api/electron2d/diff/ShaderGlobalsOverride.diff.md`; `data/api/electron2d/diff/ShaderGlobalsOverride.diff.json`.\n- Сгенерированное описание поведения Godot: `data/api/godot-4.7/behavior/ShaderGlobalsOverride.behavior.md`; `data/api/godot-4.7/behavior/ShaderGlobalsOverride.behavior.json`.\n- Сгенерированный отчёт о расхождениях поведения: `data/api/electron2d/behavior-diff/ShaderGlobalsOverride.behavior.diff.md`.\n\n### Что входит в задачу\n\n- Реализовать публичное поведение `ShaderGlobalsOverride`, которое описано в сгенерированных описаниях Godot `4.7-stable` из `T-0242`.\n- Доказать совпадение `ShaderGlobalsOverride` с Godot через отчёт о расхождениях и проверку `T-0243`, а также через проверки поведения `T-0244` или утверждённые строки `Deferred`/`Unsupported`.\n- Сначала добавить падающие тесты, затем довести их до прохождения; отдельно покрыть неверные входные данные, освобождённые объекты, отсутствующие ресурсы и неподдержанные платформенные пути, относящиеся к `ShaderGlobalsOverride`.\n- Зафиксировать выбранный срез выполнения в заметках задачи и дневнике перед production-изменениями.\n- Обновить XML-документацию, сгенерированный указатель документации, доменный документ, заметки задачи и запись в дневнике для `ShaderGlobalsOverride`.\n\n### Что не входит в задачу\n\n- Публичный API, которого нет в сгенерированном описании Godot `4.7-stable` для `ShaderGlobalsOverride`, если только отдельная задача совместимости явно не утвердила такое отличие.\n- Соседние классы, самостоятельные внутренние возможности и широкие рефакторинги сверх минимальной связи, нужной для `ShaderGlobalsOverride`.\n- Перевод задачи в closed/accepted без явного пользовательского acceptance.\n\n### На что обратить особое внимание\n\n- shader global override lifecycle, property propagation, reset behavior, render-frame ordering and diagnostics for unsupported shader parameter/backend paths.\n- lifecycle, ownership, disposal/freeing, default values, event/signal ordering, diagnostics and unsupported platform paths for `ShaderGlobalsOverride`.\n\n### Связь с внутренними слоями\n\nRendering behavior must use approved rendering and shader contracts; shader parsing, semantics and variant compilation remain in their own substrate tasks; unsupported backend paths need explicit diagnostics.\n\n### Подтверждение поведения\n\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают shader global override lifecycle, property propagation, reset behavior, render-frame ordering and diagnostics for unsupported shader parameter/backend paths.\n- [ ] Отчёт о расхождениях API и проверка public API показывают, что `ShaderGlobalsOverride` не имеет незапланированных отличий от Godot 4.7.\n- [ ] Документация и generated docs index синхронизированы после реализации.\n\n### First implementation slice\n\nЭта задача остаётся полным class done gate для `ShaderGlobalsOverride`, но один goal-агент не обязан закрывать весь класс за одну итерацию. Перед изменениями агент выбирает ровно один срез и фиксирует его в заметках задачи и дневнике.\n\n- `A-api-surface`: сгенерировать/обновить API packet, XML docs, manifest/diff и compile-time/API verifier evidence без обещания полного runtime поведения.\n- `B-core-behavior`: закрыть основной пользовательский happy path и ошибки для ключевых методов/свойств.\n- `C-substrate-integration`: привязать `ShaderGlobalsOverride` к настоящему внутреннему слою и покрыть lifecycle/resource/platform integration.\n- `D-performance-lifetime-platform`: подтвердить производительность, отсутствие утечек и платформенные различия.\n- `GATE-class-done`: подтвердить, что срезы `A`-`D` закрыты или имеют утверждённые `Deferred`/`Unsupported`, затем запускать `verify public-api-done --class ShaderGlobalsOverride`, docs/XML/generated docs checks, required performance/platform evidence and external audit when required.\n\n### Критерии приёмки\n\n- [ ] Сгенерированное описание API для `ShaderGlobalsOverride` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю публичную поверхность; ручные списки элементов API в `TASKS.md` не являются источником истины.\n- [ ] До рабочего кода добавлены сначала падающие тесты и проверочные сценарии: они падают на текущем неполном `ShaderGlobalsOverride` и покрывают не только наличие элементов API, но и ключевое поведение.\n- [ ] Рабочая реализация `ShaderGlobalsOverride` опирается на настоящий внутренний слой: нет фасадного поведения, временных пустых методов, неописанных платформенных разрывов и скрытых синхронных блокировок на критических путях выполнения.\n- [ ] Поведение `ShaderGlobalsOverride` покрыто модульными тестами, проверками совпадения API, интеграционными тестами, тестами ошибок, жизненного цикла, сигналов, сериализации и ресурсов, если сущность наследуется от `Object`, `Node` или `Resource`.\n- [ ] Для поведения в среде выполнения и на критических путях добавлены бенчмарки или проверки выделений памяти и производительности: без лишних LINQ, boxing и всплесков выделений; без зависаний UI/render/audio/input thread; без утечек CPU/GPU/ресурсов.\n- [ ] Полная документация `ShaderGlobalsOverride` синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7, если они неизбежны.\n- [ ] Проверки запускаются в текущей сессии и фиксируются в дневнике: целевые тесты и проверки, нужные проверки сборки, документации и лицензий и `git diff --check` для изменённых файлов.\n\n### Подзадачи\n\n- [ ] Сгенерировать/обновить описание API `ShaderGlobalsOverride` через `T-0242` и зафиксировать official Godot `4.7-stable` входные данные в сгенерированные файлы.\n- [ ] Обновить доменный документ `docs/rendering/godot-47-shader-globals-override.md` только в части поведения этого класса, связи с внутренними слоями, намеренных отличий, заметок `Deferred`/`Unsupported` и подтверждений тестами; полную сгенерированную поверхность элементов API вручную не копировать.\n- [ ] Добавить сначала падающие тесты и проверки выделений памяти/производительности для рискованных путей.\n- [ ] Реализовать рабочий код минимальным срезом, совместимым с существующей архитектурой Electron2D.\n- [ ] Обновить XML-документацию, полную документацию, сгенерированную документацию API и заметки задачи после зелёных проверок.\n\n### Заметки агента\n\n2026-07-09T01:49:26+03:00 - Создано по запросу пользователя: класс `ShaderGlobalsOverride` добавлен в публичный API profile и должен иметь отдельную leaf-public-api задачу полного совпадения с Godot 4.7; profile approval не закрывает реализацию и поведенческие проверки.\n\n2026-07-09T01:49:26+03:00 - По прямому решению владельца проекта `Electron2D.ShaderGlobalsOverride` добавлен в `data/api/electron2d-public-api-profile.json` как `approved`: requested shader globals override node; текущего экспортного пакета `data/api/electron2d/classes/ShaderGlobalsOverride.api.json` пока нет, поэтому generated manifest отразит поддержку после реализации и генерации класса; `profile approval` не закрывает class-done задачу, рабочую реализацию и проверки поведения.\n\n2026-07-09T16:37:00+03:00 - По прямому решению владельца проекта `Electron2D.ShaderGlobalsOverride` остаётся `approved` только для HLSL/2D shader globals; `VisualShader`, `VisualShaderNode*`, `spatial`, `sky`, `fog` и RD API остаются запрещены.\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0015",
+    "tag-0016",
+    "tag-0021",
+    "tag-0027"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fab4705fe4a1db467903c0bc500995a7"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c1168ce3c83f3a40e9b21637a6205f18"
+    },
+    {
+      "relationId": "relation-0006",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c0723930d7fbe7fa15273fedf161e45a"
+    },
+    {
+      "relationId": "relation-0007",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b6cfdb1a3e9935d3db1dcd40e97b1963"
+    },
+    {
+      "relationId": "relation-0008",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-665b1f83b05f6b6b32d3cf92a23ed590"
+    },
+    {
+      "relationId": "relation-0009",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-643e8259c9e4a480675b16d89f69c33a"
+    },
+    {
+      "relationId": "relation-0010",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3ed6d2c4bbff37eb26e81cefacbeda1e"
+    },
+    {
+      "relationId": "relation-0011",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-bc728ac4eee3637eedacc7fa098f8b22"
+    },
+    {
+      "relationId": "relation-0012",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-114eaaec60dc21330629dda1e69e1880"
+    },
+    {
+      "relationId": "relation-0013",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a11ec8c7262419879a949821f9efc066"
+    },
+    {
+      "relationId": "relation-0014",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b0af681628d7b897f3b4ae252e265f2c"
+    },
+    {
+      "relationId": "relation-0015",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-dd5b7cb10954267dc00940163c1bce56"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Сгенерированное описание API для `ShaderGlobalsOverride` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю публичную поверхность; ручные списки элементов API в `TASKS.md` не являются источником истины.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "До рабочего кода добавлены сначала падающие тесты и проверочные сценарии: они падают на текущем неполном `ShaderGlobalsOverride` и покрывают не только наличие элементов API, но и ключевое поведение.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Рабочая реализация `ShaderGlobalsOverride` опирается на настоящий внутренний слой: нет фасадного поведения, временных пустых методов, неописанных платформенных разрывов и скрытых синхронных блокировок на критических путях выполнения.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Поведение `ShaderGlobalsOverride` покрыто модульными тестами, проверками совпадения API, интеграционными тестами, тестами ошибок, жизненного цикла, сигналов, сериализации и ресурсов, если сущность наследуется от `Object`, `Node` или `Resource`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Для поведения в среде выполнения и на критических путях добавлены бенчмарки или проверки выделений памяти и производительности: без лишних LINQ, boxing и всплесков выделений; без зависаний UI/render/audio/input thread; без утечек CPU/GPU/ресурсов.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Полная документация `ShaderGlobalsOverride` синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7, если они неизбежны.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Проверки запускаются в текущей сессии и фиксируются в дневнике: целевые тесты и проверки, нужные проверки сборки, документации и лицензий и `git diff --check` для изменённых файлов.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-08T22:49:26.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя: класс `ShaderGlobalsOverride` добавлен в публичный API profile и должен иметь отдельную leaf-public-api задачу полного совпадения с Godot 4.7; profile approval не закрывает реализацию и поведенческие проверки."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-08T22:49:26.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "По прямому решению владельца проекта `Electron2D.ShaderGlobalsOverride` добавлен в `data/api/electron2d-public-api-profile.json` как `approved`: requested shader globals override node; текущего экспортного пакета `data/api/electron2d/classes/ShaderGlobalsOverride.api.json` пока нет, поэтому generated manifest отразит поддержку после реализации и генерации класса; `profile approval` не закрывает class-done задачу, рабочую реализацию и проверки поведения."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-09T13:37:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "По прямому решению владельца проекта `Electron2D.ShaderGlobalsOverride` остаётся `approved` только для HLSL/2D shader globals; `VisualShader`, `VisualShaderNode*`, `spatial`, `sky`, `fog` и RD API остаются запрещены."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required for final acceptance unless a parent gate explicitly owns audit evidence"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/api/electron2d-public-api-profile.json"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/api/electron2d/behavior-diff/ShaderGlobalsOverride.behavior.diff.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "data/api/electron2d/classes/ShaderGlobalsOverride.api.json"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "data/api/electron2d/diff/ShaderGlobalsOverride.diff.json"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "data/api/electron2d/diff/ShaderGlobalsOverride.diff.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "data/api/godot-4.7/behavior/ShaderGlobalsOverride.behavior.json"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "data/api/godot-4.7/behavior/ShaderGlobalsOverride.behavior.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "data/api/godot-4.7/classes/ShaderGlobalsOverride.api.json"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/rendering/godot-47-shader-globals-override.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "Uri",
+      "value": "https://docs.godotengine.org/en/4.7/classes/class_shaderglobalsoverride.html"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "Uri",
+      "value": "https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/ShaderGlobalsOverride.xml"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "Дополнительные runtime/editor публичные узлы"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.",
+      "docs/rendering/godot-47-shader-globals-override.md is current and RED tests/verifiers can be added before production changes."
+    ],
+    "stopConditions": [
+      "implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.",
+      "tests, domain document or generated source-of-truth artifacts are missing or stale.",
+      "a shortcut would introduce facade, stub, hidden fallback or undocumented behavior."
+    ],
+    "allowedChanges": [
+      "files named in this task's `Ссылки` block and their owning tests/docs.",
+      "generated artifacts only through their owning generator/verifier.",
+      "`TASKS.md` notes/current evidence and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.",
+      "public API surface not present in generated Godot 4.7 packets.",
+      "unrelated formatting, dependency graph or metadata churn."
+    ],
+    "requiredOutputs": [
+      "docs/rendering/godot-47-shader-globals-override.md",
+      "RED/GREEN test or verifier evidence for the selected slice.",
+      "synchronized XML/docs/API/generated documentation evidence when public surface or docs change.",
+      "task notes/current evidence and diary entry with exact command results."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required for final acceptance unless a parent gate explicitly owns audit evidence",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 13783202,
+      "byteLength": 16024,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "c1578971ec7ec1cd4ccd1ce242909cac7890ab1ebd83e448712d46babbb36bcb",
+      "markdown": "## T-1003 [ ] P0: Привести `ShaderGlobalsOverride` к полному публичному API Godot 4.7\n\n- Создана: 2026-07-09T01:49:26+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `leaf-public-api`\n- Scheduling tier: `later`\n- Зависимости: T-0241, T-0242, T-0243, T-0245, T-0254, T-0321, T-0247, T-0966, T-0967, T-0968, T-0969, T-0970, T-0971, T-0972, T-0975\n- Ссылки:\n  - Доменный документ: `docs/rendering/godot-47-shader-globals-override.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `Дополнительные runtime/editor публичные узлы`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/rendering/godot-47-shader-globals-override.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/rendering/godot-47-shader-globals-override.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к группе `Rendering`. Цель - реализовать `ShaderGlobalsOverride` как полноценную публичную сущность API Electron2D 0.1-preview, совместимую с Godot 4.7 публичным C# API из сгенерированных описаний `T-0242` и поведением, проверенным через `T-0244`.\n\nПублично объект должен работать как соответствующий класс Godot 4.7 для C#. Внутренние зависимости и запреты описаны в разделах «Что входит в задачу», «Что не входит в задачу» и «Связь с внутренними слоями»; эта задача не забирает на себя соседние классы и посторонние внутренние возможности.\n\nОжидаемый результат: `ShaderGlobalsOverride` не должен быть витриной, временной заглушкой или пустой реализацией. Задача закрывается только если сгенерированные описания, проверки, разделы «На что обратить особое внимание», «Связь с внутренними слоями» и «Подтверждение поведения» доказывают совпадение с Godot.\n\n### Источники и сгенерированные описания API\n\n- Версия Godot: `4.7-stable`.\n- Официальная справка Godot по классу: `https://docs.godotengine.org/en/4.7/classes/class_shaderglobalsoverride.html`.\n- XML-описание класса в исходном коде Godot: `https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/ShaderGlobalsOverride.xml`.\n- Доменный документ: `docs/rendering/godot-47-shader-globals-override.md`.\n- Сгенерированное описание API Godot: `data/api/godot-4.7/classes/ShaderGlobalsOverride.api.json`.\n- Сгенерированное описание API Electron2D: `data/api/electron2d/classes/ShaderGlobalsOverride.api.json`.\n- Сгенерированный отчёт о расхождениях API: `data/api/electron2d/diff/ShaderGlobalsOverride.diff.md`; `data/api/electron2d/diff/ShaderGlobalsOverride.diff.json`.\n- Сгенерированное описание поведения Godot: `data/api/godot-4.7/behavior/ShaderGlobalsOverride.behavior.md`; `data/api/godot-4.7/behavior/ShaderGlobalsOverride.behavior.json`.\n- Сгенерированный отчёт о расхождениях поведения: `data/api/electron2d/behavior-diff/ShaderGlobalsOverride.behavior.diff.md`.\n\n### Что входит в задачу\n\n- Реализовать публичное поведение `ShaderGlobalsOverride`, которое описано в сгенерированных описаниях Godot `4.7-stable` из `T-0242`.\n- Доказать совпадение `ShaderGlobalsOverride` с Godot через отчёт о расхождениях и проверку `T-0243`, а также через проверки поведения `T-0244` или утверждённые строки `Deferred`/`Unsupported`.\n- Сначала добавить падающие тесты, затем довести их до прохождения; отдельно покрыть неверные входные данные, освобождённые объекты, отсутствующие ресурсы и неподдержанные платформенные пути, относящиеся к `ShaderGlobalsOverride`.\n- Зафиксировать выбранный срез выполнения в заметках задачи и дневнике перед production-изменениями.\n- Обновить XML-документацию, сгенерированный указатель документации, доменный документ, заметки задачи и запись в дневнике для `ShaderGlobalsOverride`.\n\n### Что не входит в задачу\n\n- Публичный API, которого нет в сгенерированном описании Godot `4.7-stable` для `ShaderGlobalsOverride`, если только отдельная задача совместимости явно не утвердила такое отличие.\n- Соседние классы, самостоятельные внутренние возможности и широкие рефакторинги сверх минимальной связи, нужной для `ShaderGlobalsOverride`.\n- Перевод задачи в closed/accepted без явного пользовательского acceptance.\n\n### На что обратить особое внимание\n\n- shader global override lifecycle, property propagation, reset behavior, render-frame ordering and diagnostics for unsupported shader parameter/backend paths.\n- lifecycle, ownership, disposal/freeing, default values, event/signal ordering, diagnostics and unsupported platform paths for `ShaderGlobalsOverride`.\n\n### Связь с внутренними слоями\n\nRendering behavior must use approved rendering and shader contracts; shader parsing, semantics and variant compilation remain in their own substrate tasks; unsupported backend paths need explicit diagnostics.\n\n### Подтверждение поведения\n\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают shader global override lifecycle, property propagation, reset behavior, render-frame ordering and diagnostics for unsupported shader parameter/backend paths.\n- [ ] Отчёт о расхождениях API и проверка public API показывают, что `ShaderGlobalsOverride` не имеет незапланированных отличий от Godot 4.7.\n- [ ] Документация и generated docs index синхронизированы после реализации.\n\n### First implementation slice\n\nЭта задача остаётся полным class done gate для `ShaderGlobalsOverride`, но один goal-агент не обязан закрывать весь класс за одну итерацию. Перед изменениями агент выбирает ровно один срез и фиксирует его в заметках задачи и дневнике.\n\n- `A-api-surface`: сгенерировать/обновить API packet, XML docs, manifest/diff и compile-time/API verifier evidence без обещания полного runtime поведения.\n- `B-core-behavior`: закрыть основной пользовательский happy path и ошибки для ключевых методов/свойств.\n- `C-substrate-integration`: привязать `ShaderGlobalsOverride` к настоящему внутреннему слою и покрыть lifecycle/resource/platform integration.\n- `D-performance-lifetime-platform`: подтвердить производительность, отсутствие утечек и платформенные различия.\n- `GATE-class-done`: подтвердить, что срезы `A`-`D` закрыты или имеют утверждённые `Deferred`/`Unsupported`, затем запускать `verify public-api-done --class ShaderGlobalsOverride`, docs/XML/generated docs checks, required performance/platform evidence and external audit when required.\n\n### Критерии приёмки\n\n- [ ] Сгенерированное описание API для `ShaderGlobalsOverride` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю публичную поверхность; ручные списки элементов API в `TASKS.md` не являются источником истины.\n- [ ] До рабочего кода добавлены сначала падающие тесты и проверочные сценарии: они падают на текущем неполном `ShaderGlobalsOverride` и покрывают не только наличие элементов API, но и ключевое поведение.\n- [ ] Рабочая реализация `ShaderGlobalsOverride` опирается на настоящий внутренний слой: нет фасадного поведения, временных пустых методов, неописанных платформенных разрывов и скрытых синхронных блокировок на критических путях выполнения.\n- [ ] Поведение `ShaderGlobalsOverride` покрыто модульными тестами, проверками совпадения API, интеграционными тестами, тестами ошибок, жизненного цикла, сигналов, сериализации и ресурсов, если сущность наследуется от `Object`, `Node` или `Resource`.\n- [ ] Для поведения в среде выполнения и на критических путях добавлены бенчмарки или проверки выделений памяти и производительности: без лишних LINQ, boxing и всплесков выделений; без зависаний UI/render/audio/input thread; без утечек CPU/GPU/ресурсов.\n- [ ] Полная документация `ShaderGlobalsOverride` синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7, если они неизбежны.\n- [ ] Проверки запускаются в текущей сессии и фиксируются в дневнике: целевые тесты и проверки, нужные проверки сборки, документации и лицензий и `git diff --check` для изменённых файлов.\n\n### Подзадачи\n\n- [ ] Сгенерировать/обновить описание API `ShaderGlobalsOverride` через `T-0242` и зафиксировать official Godot `4.7-stable` входные данные в сгенерированные файлы.\n- [ ] Обновить доменный документ `docs/rendering/godot-47-shader-globals-override.md` только в части поведения этого класса, связи с внутренними слоями, намеренных отличий, заметок `Deferred`/`Unsupported` и подтверждений тестами; полную сгенерированную поверхность элементов API вручную не копировать.\n- [ ] Добавить сначала падающие тесты и проверки выделений памяти/производительности для рискованных путей.\n- [ ] Реализовать рабочий код минимальным срезом, совместимым с существующей архитектурой Electron2D.\n- [ ] Обновить XML-документацию, полную документацию, сгенерированную документацию API и заметки задачи после зелёных проверок.\n\n### Заметки агента\n\n2026-07-09T01:49:26+03:00 - Создано по запросу пользователя: класс `ShaderGlobalsOverride` добавлен в публичный API profile и должен иметь отдельную leaf-public-api задачу полного совпадения с Godot 4.7; profile approval не закрывает реализацию и поведенческие проверки.\n\n2026-07-09T01:49:26+03:00 - По прямому решению владельца проекта `Electron2D.ShaderGlobalsOverride` добавлен в `data/api/electron2d-public-api-profile.json` как `approved`: requested shader globals override node; текущего экспортного пакета `data/api/electron2d/classes/ShaderGlobalsOverride.api.json` пока нет, поэтому generated manifest отразит поддержку после реализации и генерации класса; `profile approval` не закрывает class-done задачу, рабочую реализацию и проверки поведения.\n\n2026-07-09T16:37:00+03:00 - По прямому решению владельца проекта `Electron2D.ShaderGlobalsOverride` остаётся `approved` только для HLSL/2D shader globals; `VisualShader`, `VisualShaderNode*`, `spatial`, `sky`, `fog` и RD API остаются запрещены.\n"
+    }
+  ],
+  "createdAt": "2026-07-08T22:49:26.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

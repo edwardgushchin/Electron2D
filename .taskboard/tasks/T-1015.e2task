@@ -1,0 +1,265 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-9b1b0a2901bb5ff3fd29506a3a15f0b3",
+  "revision": 2,
+  "taskId": "T-1015",
+  "legacyAliases": [],
+  "title": "Привести `SceneReplicationConfig` к полному публичному API Godot 4.7",
+  "description": "## T-1015 [ ] P0: Привести `SceneReplicationConfig` к полному публичному API Godot 4.7\n\n- Статус: open\n- Приоритет: P0\n- Тип: leaf-public-api\n- Область: Networking Public API\n- Зависимости: T-0241, T-0242, T-0243, T-0245, T-0254, T-0255, T-0256, T-0670, T-0671, T-0673, T-0999, T-0974, T-0980\n- Связанные документы: `docs/networking/godot-47-scene-replication-config.md`, `data/api/godot-4.7/classes/SceneReplicationConfig.api.json`, `data/api/electron2d/classes/SceneReplicationConfig.api.json`, `data/api/electron2d/diff/SceneReplicationConfig.diff.md`\n- Связанные исходники: `src/Electron2D/**/*.cs`\n- Связанные тесты: `tests/Electron2D.Tests.Integration/**/*SceneReplicationConfig*.cs`, `tests/Electron2D.Tests.Integration/**/*MultiplayerSynchronizer*.cs`\n\n### Кратко\n\nЗадача относится к группе `Networking Public API`. Цель - реализовать `SceneReplicationConfig` как полноценную публичную сущность API Electron2D 0.1-preview, совместимую с Godot 4.7 публичным C# API из сгенерированных описаний `T-0242` и поведением, проверенным через `T-0244`.\n\n`SceneReplicationConfig` разрешён, потому что Electron2D поддерживает multiplayer и `MultiplayerSynchronizer`; сам profile approval не закрывает реализацию, сетевое поведение, сериализацию свойств и проверки совместимости.\n\n### Execution contract\n\n- Task type: `leaf-public-api`.\n- Ready to start: зависимости приняты, закрыты или имеют сохранённый `ACCEPT`; для внешних блокеров есть явный текущий override владельца проекта.\n- Stop conditions: blocked state, непринятые зависимости без override, отсутствие generated Godot API input или расхождение public API source-of-truth.\n- Allowed changes: только `SceneReplicationConfig`, минимальные внутренние multiplayer/resource hooks, целевые тесты, XML-документация, доменный документ, generated docs/API evidence и заметки задач.\n- Forbidden changes: широкие сетевые рефакторинги, изменение поведения `MultiplayerSynchronizer` сверх нужной связи с конфигом, временные фасады, пустые методы, неподтверждённые отклонения от Godot.\n- Required outputs: generated Godot/Electron2D API descriptions, diff/evidence, focused tests, domain document, XML docs, updated local docs index and task notes.\n- Required commands: focused tests for `SceneReplicationConfig` and related multiplayer serialization, `dotnet run --project eng/Electron2D.Build -- update docs`, `dotnet run --project eng/Electron2D.Build -- update docs --check`, `dotnet run --project eng/Electron2D.Build -- verify docs`, `dotnet run --project eng/Electron2D.Build -- verify audit-contracts`, `git diff --check`; license verifier if C# files change.\n- External audit: only after local GREEN and only through the repository audit commands from `docs/release-management/audit-package.md` when the task is promoted to full acceptance.\n\n### First implementation slice\n\nЭта задача остаётся полным class done gate для `SceneReplicationConfig`, но один goal-агент не обязан закрывать весь класс за одну итерацию. Перед изменениями агент выбирает ровно один срез и фиксирует его в заметках задачи и дневнике.\n\nДопустимые срезы:\n\n- `A-api-surface`: сгенерировать/проверить публичную поверхность, XML-docs и manifest/profile mapping.\n- `B-core-behavior`: реализовать настройку репликации свойств, default values, validation and error paths.\n- `C-substrate-integration`: связать конфиг с настоящим `MultiplayerSynchronizer`/`SceneMultiplayer` substrate.\n- `D-performance-lifetime-platform`: покрыть сериализацию, lifecycle, ownership, allocation/performance and unsupported platform paths.\n- `GATE-class-done`: подтвердить, что срезы `A`-`D` закрыты или имеют утверждённые `Deferred`/`Unsupported`, затем запускать `verify public-api-done --class SceneReplicationConfig`, docs/XML/generated docs checks, required performance/platform evidence and external audit when required.\n\n### Критерии приёмки\n\n- [ ] Сгенерированное описание API для `SceneReplicationConfig` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю публичную поверхность.\n- [ ] До рабочего кода добавлены сначала падающие тесты и проверочные сценарии, которые покрывают не только наличие элементов API, но и поведение репликации.\n- [ ] Рабочая реализация опирается на настоящий multiplayer/resource substrate и не является фасадом.\n- [ ] Поведение покрыто модульными и интеграционными тестами, проверками ошибок, lifecycle, сериализации и связи с `MultiplayerSynchronizer`.\n- [ ] Полная документация синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7.\n- [ ] Проверки запускаются в текущей сессии и фиксируются в дневнике.\n\n### Подзадачи\n\n- [ ] Сгенерировать/обновить описание API `SceneReplicationConfig` через `T-0242`.\n- [ ] Обновить доменный документ `docs/networking/godot-47-scene-replication-config.md`.\n- [ ] Добавить сначала падающие тесты для настройки репликации свойств и ошибок.\n- [ ] Реализовать рабочий код минимальным срезом, совместимым с существующей архитектурой Electron2D.\n- [ ] Обновить XML-документацию, полную документацию, сгенерированную документацию API и заметки задачи после зелёных проверок.\n\n### Заметки агента\n\n2026-07-09T14:25:15+03:00 - Создано по запросу пользователя: `SceneReplicationConfig` добавлен в публичный API profile, потому что Electron2D поддерживает multiplayer и `MultiplayerSynchronizer`; profile approval не закрывает реализацию, сетевое поведение и проверки совместимости.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0015",
+    "tag-0016",
+    "tag-0021",
+    "tag-0027"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fab4705fe4a1db467903c0bc500995a7"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c0723930d7fbe7fa15273fedf161e45a"
+    },
+    {
+      "relationId": "relation-0006",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-4517718793f133884d81016a0f80c4d9"
+    },
+    {
+      "relationId": "relation-0007",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-7c5ab8f696209bb39e4a88cd6f048ff0"
+    },
+    {
+      "relationId": "relation-0008",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-4075630508fc8f585a40de4d2c76a4d1"
+    },
+    {
+      "relationId": "relation-0009",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-40ecc8958eeb0c05c470649857ae75b5"
+    },
+    {
+      "relationId": "relation-0010",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ce9d6a0e08455077e8ac25f1f096d9ac"
+    },
+    {
+      "relationId": "relation-0011",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-367c7ae2eab5b8bed3aa30606f853a54"
+    },
+    {
+      "relationId": "relation-0012",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-332236bef0860c8be3da95467bbc43f4"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Сгенерированное описание API для `SceneReplicationConfig` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю публичную поверхность.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "До рабочего кода добавлены сначала падающие тесты и проверочные сценарии, которые покрывают не только наличие элементов API, но и поведение репликации.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Рабочая реализация опирается на настоящий multiplayer/resource substrate и не является фасадом.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Поведение покрыто модульными и интеграционными тестами, проверками ошибок, lifecycle, сериализации и связи с `MultiplayerSynchronizer`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Полная документация синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Проверки запускаются в текущей сессии и фиксируются в дневнике.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-09T11:25:15.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя: `SceneReplicationConfig` добавлен в публичный API profile, потому что Electron2D поддерживает multiplayer и `MultiplayerSynchronizer`; profile approval не закрывает реализацию, сетевое поведение и проверки совместимости."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "only after local GREEN and only through the repository audit commands from `docs/release-management/audit-package.md` when the task is promoted to full acceptance."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "data/api/electron2d/classes/SceneReplicationConfig.api.json"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/api/electron2d/diff/SceneReplicationConfig.diff.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/api/godot-4.7/classes/SceneReplicationConfig.api.json"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/networking/godot-47-scene-replication-config.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "src/Electron2D/**/*.cs"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/**/*MultiplayerSynchronizer*.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/**/*SceneReplicationConfig*.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "leaf-public-api`.",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- update docs",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- update docs --check",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify docs",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "only after local GREEN and only through the repository audit commands from `docs/release-management/audit-package.md` when the task is promoted to full acceptance.",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 13979970,
+      "byteLength": 7545,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "af5a04ad9c6812c526f701d5cf4e3b17a5a0654e7e486d99f08dcfb6b352c684",
+      "markdown": "## T-1015 [ ] P0: Привести `SceneReplicationConfig` к полному публичному API Godot 4.7\n\n- Статус: open\n- Приоритет: P0\n- Тип: leaf-public-api\n- Область: Networking Public API\n- Зависимости: T-0241, T-0242, T-0243, T-0245, T-0254, T-0255, T-0256, T-0670, T-0671, T-0673, T-0999, T-0974, T-0980\n- Связанные документы: `docs/networking/godot-47-scene-replication-config.md`, `data/api/godot-4.7/classes/SceneReplicationConfig.api.json`, `data/api/electron2d/classes/SceneReplicationConfig.api.json`, `data/api/electron2d/diff/SceneReplicationConfig.diff.md`\n- Связанные исходники: `src/Electron2D/**/*.cs`\n- Связанные тесты: `tests/Electron2D.Tests.Integration/**/*SceneReplicationConfig*.cs`, `tests/Electron2D.Tests.Integration/**/*MultiplayerSynchronizer*.cs`\n\n### Кратко\n\nЗадача относится к группе `Networking Public API`. Цель - реализовать `SceneReplicationConfig` как полноценную публичную сущность API Electron2D 0.1-preview, совместимую с Godot 4.7 публичным C# API из сгенерированных описаний `T-0242` и поведением, проверенным через `T-0244`.\n\n`SceneReplicationConfig` разрешён, потому что Electron2D поддерживает multiplayer и `MultiplayerSynchronizer`; сам profile approval не закрывает реализацию, сетевое поведение, сериализацию свойств и проверки совместимости.\n\n### Execution contract\n\n- Task type: `leaf-public-api`.\n- Ready to start: зависимости приняты, закрыты или имеют сохранённый `ACCEPT`; для внешних блокеров есть явный текущий override владельца проекта.\n- Stop conditions: blocked state, непринятые зависимости без override, отсутствие generated Godot API input или расхождение public API source-of-truth.\n- Allowed changes: только `SceneReplicationConfig`, минимальные внутренние multiplayer/resource hooks, целевые тесты, XML-документация, доменный документ, generated docs/API evidence и заметки задач.\n- Forbidden changes: широкие сетевые рефакторинги, изменение поведения `MultiplayerSynchronizer` сверх нужной связи с конфигом, временные фасады, пустые методы, неподтверждённые отклонения от Godot.\n- Required outputs: generated Godot/Electron2D API descriptions, diff/evidence, focused tests, domain document, XML docs, updated local docs index and task notes.\n- Required commands: focused tests for `SceneReplicationConfig` and related multiplayer serialization, `dotnet run --project eng/Electron2D.Build -- update docs`, `dotnet run --project eng/Electron2D.Build -- update docs --check`, `dotnet run --project eng/Electron2D.Build -- verify docs`, `dotnet run --project eng/Electron2D.Build -- verify audit-contracts`, `git diff --check`; license verifier if C# files change.\n- External audit: only after local GREEN and only through the repository audit commands from `docs/release-management/audit-package.md` when the task is promoted to full acceptance.\n\n### First implementation slice\n\nЭта задача остаётся полным class done gate для `SceneReplicationConfig`, но один goal-агент не обязан закрывать весь класс за одну итерацию. Перед изменениями агент выбирает ровно один срез и фиксирует его в заметках задачи и дневнике.\n\nДопустимые срезы:\n\n- `A-api-surface`: сгенерировать/проверить публичную поверхность, XML-docs и manifest/profile mapping.\n- `B-core-behavior`: реализовать настройку репликации свойств, default values, validation and error paths.\n- `C-substrate-integration`: связать конфиг с настоящим `MultiplayerSynchronizer`/`SceneMultiplayer` substrate.\n- `D-performance-lifetime-platform`: покрыть сериализацию, lifecycle, ownership, allocation/performance and unsupported platform paths.\n- `GATE-class-done`: подтвердить, что срезы `A`-`D` закрыты или имеют утверждённые `Deferred`/`Unsupported`, затем запускать `verify public-api-done --class SceneReplicationConfig`, docs/XML/generated docs checks, required performance/platform evidence and external audit when required.\n\n### Критерии приёмки\n\n- [ ] Сгенерированное описание API для `SceneReplicationConfig` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю публичную поверхность.\n- [ ] До рабочего кода добавлены сначала падающие тесты и проверочные сценарии, которые покрывают не только наличие элементов API, но и поведение репликации.\n- [ ] Рабочая реализация опирается на настоящий multiplayer/resource substrate и не является фасадом.\n- [ ] Поведение покрыто модульными и интеграционными тестами, проверками ошибок, lifecycle, сериализации и связи с `MultiplayerSynchronizer`.\n- [ ] Полная документация синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7.\n- [ ] Проверки запускаются в текущей сессии и фиксируются в дневнике.\n\n### Подзадачи\n\n- [ ] Сгенерировать/обновить описание API `SceneReplicationConfig` через `T-0242`.\n- [ ] Обновить доменный документ `docs/networking/godot-47-scene-replication-config.md`.\n- [ ] Добавить сначала падающие тесты для настройки репликации свойств и ошибок.\n- [ ] Реализовать рабочий код минимальным срезом, совместимым с существующей архитектурой Electron2D.\n- [ ] Обновить XML-документацию, полную документацию, сгенерированную документацию API и заметки задачи после зелёных проверок.\n\n### Заметки агента\n\n2026-07-09T14:25:15+03:00 - Создано по запросу пользователя: `SceneReplicationConfig` добавлен в публичный API profile, потому что Electron2D поддерживает multiplayer и `MultiplayerSynchronizer`; profile approval не закрывает реализацию, сетевое поведение и проверки совместимости.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-09T11:25:15.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

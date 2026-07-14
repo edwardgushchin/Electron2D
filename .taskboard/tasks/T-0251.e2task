@@ -1,0 +1,272 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-4ded7d2e54986a2e0d2e7725c67d7d9e",
+  "revision": 2,
+  "taskId": "T-0251",
+  "legacyAliases": [],
+  "title": "Подготовить внутренний слой файловой системы для FileAccess, DirAccess и ввода-вывода ресурсов",
+  "description": "## T-0251 [ ] P0: Подготовить внутренний слой файловой системы для FileAccess, DirAccess и ввода-вывода ресурсов\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0246\n- Ссылки:\n  - Доменный документ: `docs/runtime/godot-47-public-api-filesystem-substrate.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/runtime/godot-47-public-api-filesystem-substrate.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/runtime/godot-47-public-api-filesystem-substrate.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к внутреннему исполняющему слою файловой системы, а не к публичному API, совместимому с поверхностью Godot 4.7. `T-0251` не определяет публичные методы, свойства, перечисления, сигналы, константы или перегрузки. Публичная поверхность берётся только из матрицы API Godot 4.7 и отдельных задач `FileAccess`, `DirAccess`, `ResourceLoader`, `ResourceSaver`, `ResourceFormatLoader`, `ResourceFormatSaver`, `ProjectSettings`, `PackedScene`, `SceneState` и связанных задач форматов ресурсов.\n\nЦель `T-0251` - зафиксировать и реализовать минимальный продуктовый внутренний слой файловой системы, который задачи публичного API обязаны использовать вместо прямого `System.IO` или платформенного доступа. Этот слой отвечает только за внутренний исполняемый контракт: нормализованную модель путей, `res://` и `user://`, hooks разрешения путей или документированную зависимость от VFS-задач, адаптер host filesystem, package/mount read hooks, sandbox- и платформенную диагностику, устойчивую внутреннюю модель ошибок с маппингом на совместимый с Godot `Error`, атомарную запись, операции чтения/записи метаданных файла, hooks наблюдения за файлами, где это применимо, и защиту от утечки секретов в диагностике.\n\n`T-0251` допустим как общий внутренний слой, потому что один и тот же исполняемый слой нужен `FileAccess`, `DirAccess`, `ResourceLoader`, `ResourceSaver`, задачам форматов ресурсов, импорту, кэшу, hot reload и package/mount. Он не закрывает наблюдаемое поведение этих публичных классов: каждая задача публичного API остаётся владельцем совместимой с Godot семантики, сначала падающих тестов, XML-документации, покрытия матрицы API и пользовательски видимых ошибок.\n\n### Что не входит в задачу\n\n- Полный публичный API `FileAccess`.\n- Полный публичный API `DirAccess`.\n- Полный публичный API `ResourceLoader` или `ResourceSaver`.\n- Публичный API `ResourceFormatLoader`, `ResourceFormatSaver`, `ProjectSettings`, `PackedScene` или `SceneState`.\n- Разбор `.tscn`, `.tres` и `.res`.\n- Import cache, resource cache и hot reload как пользовательски видимое поведение.\n- PCK-подобный формат пакета за пределами hooks для mount/read interface.\n- Любой новый публичный API, не описанный матрицей API и соответствующей задачей публичного API.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Первичные потребители результата\n\n- `FileAccess` и `DirAccess` требуют нормализованные примитивы путей host/`res://`/`user://` и устойчивый маппинг `Error`.\n- `ResourceLoader`, `ResourceSaver`, `ResourceFormatLoader` и `ResourceFormatSaver` требуют package/mount read hooks, атомарную запись и sandbox-диагностику.\n- Задачам `ProjectSettings`, `PackedScene`, `.tscn`, `.tres` и `.res` нужны контракты VFS/resource IO, но не владение публичным поведением файловой системы.\n- Первое подтверждение должно доказать, что минимум один публичный потребитель использует этот внутренний слой вместо прямого платформенного файлового ввода-вывода.\n\nДоменный документ должен развернуть этот список в таблицу: публичная задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Исполняемый контракт\n\n- Должны появиться или обновиться: `docs/runtime/godot-47-public-api-filesystem-substrate.md`, `data/runtime/filesystem-substrate-contract.json`, `tests/Electron2D.Tests.Integration/FilesystemSubstrateTests.cs`, reusable fixtures under `tests/Electron2D.Tests.Integration/Fixtures/FilesystemSubstrate/` and internal implementation only under documented filesystem substrate ownership.\n- Обязательная команда: `dotnet run --project eng/Electron2D.Build -- verify filesystem-substrate`; focused proof: `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~FilesystemSubstrate\" --no-restore -v:minimal`.\n- RED-before-GREEN: test сначала падает на missing `res://`/`user://` resolver, direct `System.IO` usage outside substrate adapters, missing atomic write, missing sandbox diagnostic, missing secret redaction, or missing consumer fixture for `FileAccess`/`DirAccess`/`ResourceLoader`.\n- Diagnostic codes: `E2D-FS-0001` invalid or unsupported path scheme, `E2D-FS-0002` sandbox denied, `E2D-FS-0003` atomic write failed or non-atomic fallback, `E2D-FS-0004` secret leakage in diagnostics, `E2D-FS-0005` direct filesystem bypass detected.\n- Consumer proof: at least one test fixture must be reusable by `FileAccess`, `DirAccess`, `ResourceLoader` and `ResourceSaver`; consumer tasks must reference the substrate contract and forbid direct platform filesystem access except inside approved adapters.\n- Запрещено: implementing full public API for `FileAccess`, `DirAccess`, `ResourceLoader`, `ResourceSaver`, resource parsers `.tscn`/`.tres`/`.res`, import cache, hot reload or package format behavior; changing public API matrix from this task.\n\n### Internal substrate acceptance contract\n\n- `внутренний слой файловой системы для FileAccess, DirAccess и ввода-вывода ресурсов` has deterministic init/success and fail-closed diagnostics in the domain document, including a stable `E2D-*` code family when runtime failure is possible.\n- First consumer proof names the public task, required internal capability and first test/report that proves the consumer uses this substrate instead of a fallback.\n- Resource lifetime, cache, handle or subscription counters return to baseline after the smallest create/use/dispose scenario applicable to this substrate.\n- Unsupported platform/backend paths return documented diagnostics and do not silently degrade into stubs or no-op behavior.\n- This task does not define public methods/properties/signals/enums; public behavior remains owned by the concrete public API tasks.\n### Критерии приёмки\n\n- [ ] `data/runtime/filesystem-substrate-contract.json` описывает path schemes, normalization rules, mounts, host adapter, package/mount hooks, atomic write policy, metadata primitives, sandbox policy, redaction rules, consumer task IDs and diagnostics.\n- [ ] `FilesystemSubstrateTests` содержит RED cases for `res://`, `user://`, host path normalization, invalid scheme, sandbox denial, atomic write interruption, secret redaction and direct `System.IO` bypass.\n- [ ] `verify filesystem-substrate` проходит and emits `E2D-FS-0001`-`0005` with stable messages and no secrets.\n- [ ] Reusable fixtures under `tests/Electron2D.Tests.Integration/Fixtures/FilesystemSubstrate/` are documented and referenced by `FileAccess`, `DirAccess`, `ResourceLoader`, `ResourceSaver` tasks.\n- [ ] Public API matrix remains unchanged by `T-0251`; any public member change is rejected by the API verifier and moved to the relevant public class task.\n- [ ] В diff нет parsers/import-cache/hot-reload/resource-cache/package-format behavior outside substrate hooks and no direct platform filesystem calls outside approved adapters.\n\n### Подзадачи\n\n- [ ] Создать/обновить filesystem substrate contract JSON, domain consumer table and reusable fixtures.\n- [ ] Добавить RED tests for path schemes, sandbox, atomic write, redaction and direct bypass.\n- [ ] Реализовать substrate adapters and verifier diagnostics `E2D-FS-0001`-`0005`.\n- [ ] Подключить at least one public consumer fixture route without implementing public class behavior.\n- [ ] Запустить `verify filesystem-substrate`, focused tests, docs checks and `git diff --check`.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n2026-07-05T12:32:00+03:00 - Граница задачи сужена после проверки: `T-0251` является внутренним слоем файловой системы, а не источником публичной поверхности API. Публичное поведение закрывают отдельные задачи классов; `T-0251` только предоставляет общий исполняемый слой и переиспользуемые контрактные проверки.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a9dc106b3357162a2b473b8e01e91ad3"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`data/runtime/filesystem-substrate-contract.json` описывает path schemes, normalization rules, mounts, host adapter, package/mount hooks, atomic write policy, metadata primitives, sandbox policy, redaction rules, consumer task IDs and diagnostics.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`FilesystemSubstrateTests` содержит RED cases for `res://`, `user://`, host path normalization, invalid scheme, sandbox denial, atomic write interruption, secret redaction and direct `System.IO` bypass.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`verify filesystem-substrate` проходит and emits `E2D-FS-0001`-`0005` with stable messages and no secrets.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Reusable fixtures under `tests/Electron2D.Tests.Integration/Fixtures/FilesystemSubstrate/` are documented and referenced by `FileAccess`, `DirAccess`, `ResourceLoader`, `ResourceSaver` tasks.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Public API matrix remains unchanged by `T-0251`; any public member change is rejected by the API verifier and moved to the relevant public class task.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "В diff нет parsers/import-cache/hot-reload/resource-cache/package-format behavior outside substrate hooks and no direct platform filesystem calls outside approved adapters.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T09:32:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Граница задачи сужена после проверки: `T-0251` является внутренним слоем файловой системы, а не источником публичной поверхности API. Публичное поведение закрывают отдельные задачи классов; `T-0251` только предоставляет общий исполняемый слой и переиспользуемые контрактные проверки."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required for final acceptance unless a parent gate explicitly owns audit evidence"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/runtime/filesystem-substrate-contract.json"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/runtime/godot-47-public-api-filesystem-substrate.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Uri",
+      "value": "res://"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/FilesystemSubstrateTests.cs"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "tests/Electron2D.Tests.Integration/Fixtures/FilesystemSubstrate"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Uri",
+      "value": "user://"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.",
+      "docs/runtime/godot-47-public-api-filesystem-substrate.md is current and RED tests/verifiers can be added before production changes."
+    ],
+    "stopConditions": [
+      "implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.",
+      "tests, domain document or generated source-of-truth artifacts are missing or stale.",
+      "a shortcut would introduce facade, stub, hidden fallback or undocumented behavior."
+    ],
+    "allowedChanges": [
+      "files named in this task's `Ссылки` block and their owning tests/docs.",
+      "generated artifacts only through their owning generator/verifier.",
+      "`TASKS.md` notes/current evidence and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.",
+      "public API surface not present in generated Godot 4.7 packets.",
+      "unrelated formatting, dependency graph or metadata churn."
+    ],
+    "requiredOutputs": [
+      "docs/runtime/godot-47-public-api-filesystem-substrate.md",
+      "RED/GREEN test or verifier evidence for the selected slice.",
+      "synchronized XML/docs/API/generated documentation evidence when public surface or docs change.",
+      "task notes/current evidence and diary entry with exact command results."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify filesystem-substrate",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~FilesystemSubstrate\" --no-restore -v:minimal",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required for final acceptance unless a parent gate explicitly owns audit evidence",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 540991,
+      "byteLength": 16147,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "03a5f3fd66bd8c74caa2aa25aaa6d6977692d72958561a799e6c82ac0622feed",
+      "markdown": "## T-0251 [ ] P0: Подготовить внутренний слой файловой системы для FileAccess, DirAccess и ввода-вывода ресурсов\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0246\n- Ссылки:\n  - Доменный документ: `docs/runtime/godot-47-public-api-filesystem-substrate.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/runtime/godot-47-public-api-filesystem-substrate.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/runtime/godot-47-public-api-filesystem-substrate.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к внутреннему исполняющему слою файловой системы, а не к публичному API, совместимому с поверхностью Godot 4.7. `T-0251` не определяет публичные методы, свойства, перечисления, сигналы, константы или перегрузки. Публичная поверхность берётся только из матрицы API Godot 4.7 и отдельных задач `FileAccess`, `DirAccess`, `ResourceLoader`, `ResourceSaver`, `ResourceFormatLoader`, `ResourceFormatSaver`, `ProjectSettings`, `PackedScene`, `SceneState` и связанных задач форматов ресурсов.\n\nЦель `T-0251` - зафиксировать и реализовать минимальный продуктовый внутренний слой файловой системы, который задачи публичного API обязаны использовать вместо прямого `System.IO` или платформенного доступа. Этот слой отвечает только за внутренний исполняемый контракт: нормализованную модель путей, `res://` и `user://`, hooks разрешения путей или документированную зависимость от VFS-задач, адаптер host filesystem, package/mount read hooks, sandbox- и платформенную диагностику, устойчивую внутреннюю модель ошибок с маппингом на совместимый с Godot `Error`, атомарную запись, операции чтения/записи метаданных файла, hooks наблюдения за файлами, где это применимо, и защиту от утечки секретов в диагностике.\n\n`T-0251` допустим как общий внутренний слой, потому что один и тот же исполняемый слой нужен `FileAccess`, `DirAccess`, `ResourceLoader`, `ResourceSaver`, задачам форматов ресурсов, импорту, кэшу, hot reload и package/mount. Он не закрывает наблюдаемое поведение этих публичных классов: каждая задача публичного API остаётся владельцем совместимой с Godot семантики, сначала падающих тестов, XML-документации, покрытия матрицы API и пользовательски видимых ошибок.\n\n### Что не входит в задачу\n\n- Полный публичный API `FileAccess`.\n- Полный публичный API `DirAccess`.\n- Полный публичный API `ResourceLoader` или `ResourceSaver`.\n- Публичный API `ResourceFormatLoader`, `ResourceFormatSaver`, `ProjectSettings`, `PackedScene` или `SceneState`.\n- Разбор `.tscn`, `.tres` и `.res`.\n- Import cache, resource cache и hot reload как пользовательски видимое поведение.\n- PCK-подобный формат пакета за пределами hooks для mount/read interface.\n- Любой новый публичный API, не описанный матрицей API и соответствующей задачей публичного API.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Первичные потребители результата\n\n- `FileAccess` и `DirAccess` требуют нормализованные примитивы путей host/`res://`/`user://` и устойчивый маппинг `Error`.\n- `ResourceLoader`, `ResourceSaver`, `ResourceFormatLoader` и `ResourceFormatSaver` требуют package/mount read hooks, атомарную запись и sandbox-диагностику.\n- Задачам `ProjectSettings`, `PackedScene`, `.tscn`, `.tres` и `.res` нужны контракты VFS/resource IO, но не владение публичным поведением файловой системы.\n- Первое подтверждение должно доказать, что минимум один публичный потребитель использует этот внутренний слой вместо прямого платформенного файлового ввода-вывода.\n\nДоменный документ должен развернуть этот список в таблицу: публичная задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Исполняемый контракт\n\n- Должны появиться или обновиться: `docs/runtime/godot-47-public-api-filesystem-substrate.md`, `data/runtime/filesystem-substrate-contract.json`, `tests/Electron2D.Tests.Integration/FilesystemSubstrateTests.cs`, reusable fixtures under `tests/Electron2D.Tests.Integration/Fixtures/FilesystemSubstrate/` and internal implementation only under documented filesystem substrate ownership.\n- Обязательная команда: `dotnet run --project eng/Electron2D.Build -- verify filesystem-substrate`; focused proof: `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~FilesystemSubstrate\" --no-restore -v:minimal`.\n- RED-before-GREEN: test сначала падает на missing `res://`/`user://` resolver, direct `System.IO` usage outside substrate adapters, missing atomic write, missing sandbox diagnostic, missing secret redaction, or missing consumer fixture for `FileAccess`/`DirAccess`/`ResourceLoader`.\n- Diagnostic codes: `E2D-FS-0001` invalid or unsupported path scheme, `E2D-FS-0002` sandbox denied, `E2D-FS-0003` atomic write failed or non-atomic fallback, `E2D-FS-0004` secret leakage in diagnostics, `E2D-FS-0005` direct filesystem bypass detected.\n- Consumer proof: at least one test fixture must be reusable by `FileAccess`, `DirAccess`, `ResourceLoader` and `ResourceSaver`; consumer tasks must reference the substrate contract and forbid direct platform filesystem access except inside approved adapters.\n- Запрещено: implementing full public API for `FileAccess`, `DirAccess`, `ResourceLoader`, `ResourceSaver`, resource parsers `.tscn`/`.tres`/`.res`, import cache, hot reload or package format behavior; changing public API matrix from this task.\n\n### Internal substrate acceptance contract\n\n- `внутренний слой файловой системы для FileAccess, DirAccess и ввода-вывода ресурсов` has deterministic init/success and fail-closed diagnostics in the domain document, including a stable `E2D-*` code family when runtime failure is possible.\n- First consumer proof names the public task, required internal capability and first test/report that proves the consumer uses this substrate instead of a fallback.\n- Resource lifetime, cache, handle or subscription counters return to baseline after the smallest create/use/dispose scenario applicable to this substrate.\n- Unsupported platform/backend paths return documented diagnostics and do not silently degrade into stubs or no-op behavior.\n- This task does not define public methods/properties/signals/enums; public behavior remains owned by the concrete public API tasks.\n### Критерии приёмки\n\n- [ ] `data/runtime/filesystem-substrate-contract.json` описывает path schemes, normalization rules, mounts, host adapter, package/mount hooks, atomic write policy, metadata primitives, sandbox policy, redaction rules, consumer task IDs and diagnostics.\n- [ ] `FilesystemSubstrateTests` содержит RED cases for `res://`, `user://`, host path normalization, invalid scheme, sandbox denial, atomic write interruption, secret redaction and direct `System.IO` bypass.\n- [ ] `verify filesystem-substrate` проходит and emits `E2D-FS-0001`-`0005` with stable messages and no secrets.\n- [ ] Reusable fixtures under `tests/Electron2D.Tests.Integration/Fixtures/FilesystemSubstrate/` are documented and referenced by `FileAccess`, `DirAccess`, `ResourceLoader`, `ResourceSaver` tasks.\n- [ ] Public API matrix remains unchanged by `T-0251`; any public member change is rejected by the API verifier and moved to the relevant public class task.\n- [ ] В diff нет parsers/import-cache/hot-reload/resource-cache/package-format behavior outside substrate hooks and no direct platform filesystem calls outside approved adapters.\n\n### Подзадачи\n\n- [ ] Создать/обновить filesystem substrate contract JSON, domain consumer table and reusable fixtures.\n- [ ] Добавить RED tests for path schemes, sandbox, atomic write, redaction and direct bypass.\n- [ ] Реализовать substrate adapters and verifier diagnostics `E2D-FS-0001`-`0005`.\n- [ ] Подключить at least one public consumer fixture route without implementing public class behavior.\n- [ ] Запустить `verify filesystem-substrate`, focused tests, docs checks and `git diff --check`.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n2026-07-05T12:32:00+03:00 - Граница задачи сужена после проверки: `T-0251` является внутренним слоем файловой системы, а не источником публичной поверхности API. Публичное поведение закрывают отдельные задачи классов; `T-0251` только предоставляет общий исполняемый слой и переиспользуемые контрактные проверки.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

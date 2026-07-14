@@ -273,7 +273,31 @@ internal static class DiagnosticCodeRegistry
             DiagnosticSeverity.Warning,
             DiagnosticCategory.Project,
             "Project task dependency graph requires attention.",
-            "docs/diagnostics/diagnostics-core.md#e2d-task-0003")
+            "docs/diagnostics/diagnostics-core.md#e2d-task-0003"),
+        new(
+            "E2D-TASK-0004",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Project,
+            "Taskboard writer lock timed out.",
+            "docs/diagnostics/diagnostics-core.md#e2d-task-0004"),
+        new(
+            "E2D-TASK-0005",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Project,
+            "Taskboard writer coordination was cancelled.",
+            "docs/diagnostics/diagnostics-core.md#e2d-task-0005"),
+        new(
+            "E2D-TASK-0006",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Project,
+            "Taskboard optimistic revision check rejected the operation.",
+            "docs/diagnostics/diagnostics-core.md#e2d-task-0006"),
+        new(
+            "E2D-TASK-0007",
+            DiagnosticSeverity.Error,
+            DiagnosticCategory.Project,
+            "Taskboard operation identity conflicts with an existing receipt.",
+            "docs/diagnostics/diagnostics-core.md#e2d-task-0007")
     ];
 
     private static readonly IReadOnlyList<DiagnosticCodeDefinition> SortedDefinitions =

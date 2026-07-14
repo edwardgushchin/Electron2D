@@ -1,0 +1,125 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-a242ee77ff7971a574520d3cd12a7364",
+  "revision": 2,
+  "taskId": "T-0076",
+  "legacyAliases": [],
+  "title": "Реализовать сохранение user settings, project settings, input settings и window/display settings",
+  "description": "# T-0076 [x] P0: Реализовать сохранение user settings, project settings, input settings и window/display settings\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T16:30:00+03:00\n- Статус: завершена\n- Коммит: `T-0076: добавить settings persistence baseline`\n\n## Итог\n\nРеализован внутренний settings persistence baseline для `0.1.0 Preview`. Внутренний baseline означает слой кода движка и будущего редактора, который доступен тестам и toolchain, но не добавляет новый public runtime API.\n\n## Что сделано\n\n- Добавлен домен `src/Electron2D/Runtime/Settings`.\n- Добавлен `Electron2DSettingsStore` для сохранения и загрузки project/user settings.\n- Добавлен project settings JSON contract `Electron2D.ProjectSettings`, `formatVersion: 1`.\n- `project.e2d.json` теперь содержит project identity, main scene, renderer profile, physics tick rate, `input.actions` и display/window defaults.\n- `InputMap` actions сохраняются через существующий serializer input settings, поэтому keyboard, mouse button, gamepad button и gamepad axis bindings используют один формат.\n- Добавлен user settings JSON contract `Electron2D.UserSettings`, `formatVersion: 1`.\n- User settings сохраняют locale, last project path, recent projects и editor window state.\n- Повреждённые project/user settings возвращают diagnostics и не применяют частичное состояние к `InputMap`, `DisplayServer` или `TranslationServer`.\n- Шаблон `electron2d-empty` обновлён под новый `project.e2d.json`.\n\n## Документация\n\n- Добавлена спецификация `docs/settings-localization/settings-persistence.md`.\n- Добавлена справка `docs/settings-localization/settings-persistence.md`.\n- Обновлены индексы `docs/README.md` и `docs/README.md`.\n- Обновлена справка `docs/input/input-map-actions.md`.\n- Обновлена справка `docs/settings-localization/translation-runtime.md`.\n- Обновлены project-template спецификация и справка.\n- Обновлены `CHANGELOG.md` и `RELEASE-NOTES.md`.\n\n## Проверенное поведение\n\n- Project settings round-trip сохраняет project identity, input actions, renderer profile, physics tick rate и display/window defaults.\n- User settings round-trip сохраняет locale, recent projects и window state.\n- Corrupt project settings возвращают `settings.malformed_json` и не заменяют текущий `InputMap`.\n- Corrupt user settings возвращают `settings.malformed_json` и не меняют текущую locale.\n- Runtime-only `InputEventAction` не сохраняется в project settings молча, а отклоняется с `FormatException`.\n- Project template verifier проходит с расширенным `project.e2d.json`.\n\n## Проверки\n\n- RED: `SettingsPersistenceTests` сначала упали на отсутствующем `Electron2DSettingsDiagnostic`.\n- RED edge case: `ProjectSettingsRejectRuntimeOnlyActionEventsInsteadOfDroppingThem` сначала упал, потому что исключение не выбрасывалось.\n- Focused settings: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SettingsPersistenceTests\" --no-restore -m:1` - прошло, `5` тестов.\n- Focused input/settings: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SettingsPersistenceTests|FullyQualifiedName~InputMapActionTests\" --no-restore -m:1` - прошло, `8` тестов.\n- Focused translation: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~TranslationTests\" --no-restore -m:1` - прошло, `2` теста.\n- Full runner: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit `62`, integration `194`, runtime smoke `5`, golden data `11`.\n- Project template verifier: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- API compatibility: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types `120`.\n- Source license headers: `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло, проверено `324` tracked source files.\n- Staged diff: `git diff --cached --check` - прошло.\n- `git diff --check` - прошло с обычными CRLF предупреждениями.\n\n## Ограничения\n\n- Public `ProjectSettings` API не добавлен.\n- Public `Window` API не добавлен.\n- Project Settings UI, Input Map UI и user settings path policy остаются задачами редактора/tooling.\n- `LoadProject()` только валидирует и возвращает snapshot; runtime state меняет `ApplyToRuntime()` или `LoadProjectAndApply()`.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T13:30:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/README.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/input/input-map-actions.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/settings-localization/settings-persistence.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/settings-localization/translation-runtime.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Settings"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 252197,
+      "byteLength": 5378,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "b6b8e0f1bae23aea026e349f7fbe4044469b4e2ea04a6f0be843768d719ef72b",
+      "markdown": "# T-0076 [x] P0: Реализовать сохранение user settings, project settings, input settings и window/display settings\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T16:30:00+03:00\n- Статус: завершена\n- Коммит: `T-0076: добавить settings persistence baseline`\n\n## Итог\n\nРеализован внутренний settings persistence baseline для `0.1.0 Preview`. Внутренний baseline означает слой кода движка и будущего редактора, который доступен тестам и toolchain, но не добавляет новый public runtime API.\n\n## Что сделано\n\n- Добавлен домен `src/Electron2D/Runtime/Settings`.\n- Добавлен `Electron2DSettingsStore` для сохранения и загрузки project/user settings.\n- Добавлен project settings JSON contract `Electron2D.ProjectSettings`, `formatVersion: 1`.\n- `project.e2d.json` теперь содержит project identity, main scene, renderer profile, physics tick rate, `input.actions` и display/window defaults.\n- `InputMap` actions сохраняются через существующий serializer input settings, поэтому keyboard, mouse button, gamepad button и gamepad axis bindings используют один формат.\n- Добавлен user settings JSON contract `Electron2D.UserSettings`, `formatVersion: 1`.\n- User settings сохраняют locale, last project path, recent projects и editor window state.\n- Повреждённые project/user settings возвращают diagnostics и не применяют частичное состояние к `InputMap`, `DisplayServer` или `TranslationServer`.\n- Шаблон `electron2d-empty` обновлён под новый `project.e2d.json`.\n\n## Документация\n\n- Добавлена спецификация `docs/settings-localization/settings-persistence.md`.\n- Добавлена справка `docs/settings-localization/settings-persistence.md`.\n- Обновлены индексы `docs/README.md` и `docs/README.md`.\n- Обновлена справка `docs/input/input-map-actions.md`.\n- Обновлена справка `docs/settings-localization/translation-runtime.md`.\n- Обновлены project-template спецификация и справка.\n- Обновлены `CHANGELOG.md` и `RELEASE-NOTES.md`.\n\n## Проверенное поведение\n\n- Project settings round-trip сохраняет project identity, input actions, renderer profile, physics tick rate и display/window defaults.\n- User settings round-trip сохраняет locale, recent projects и window state.\n- Corrupt project settings возвращают `settings.malformed_json` и не заменяют текущий `InputMap`.\n- Corrupt user settings возвращают `settings.malformed_json` и не меняют текущую locale.\n- Runtime-only `InputEventAction` не сохраняется в project settings молча, а отклоняется с `FormatException`.\n- Project template verifier проходит с расширенным `project.e2d.json`.\n\n## Проверки\n\n- RED: `SettingsPersistenceTests` сначала упали на отсутствующем `Electron2DSettingsDiagnostic`.\n- RED edge case: `ProjectSettingsRejectRuntimeOnlyActionEventsInsteadOfDroppingThem` сначала упал, потому что исключение не выбрасывалось.\n- Focused settings: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SettingsPersistenceTests\" --no-restore -m:1` - прошло, `5` тестов.\n- Focused input/settings: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SettingsPersistenceTests|FullyQualifiedName~InputMapActionTests\" --no-restore -m:1` - прошло, `8` тестов.\n- Focused translation: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~TranslationTests\" --no-restore -m:1` - прошло, `2` теста.\n- Full runner: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit `62`, integration `194`, runtime smoke `5`, golden data `11`.\n- Project template verifier: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- API compatibility: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types `120`.\n- Source license headers: `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло, проверено `324` tracked source files.\n- Staged diff: `git diff --cached --check` - прошло.\n- `git diff --check` - прошло с обычными CRLF предупреждениями.\n\n## Ограничения\n\n- Public `ProjectSettings` API не добавлен.\n- Public `Window` API не добавлен.\n- Project Settings UI, Input Map UI и user settings path policy остаются задачами редактора/tooling.\n- `LoadProject()` только валидирует и возвращает snapshot; runtime state меняет `ApplyToRuntime()` или `LoadProjectAndApply()`.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T13:30:00.0000000+00:00",
+  "completedAt": "2026-06-21T13:30:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T13:30:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T13:30:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

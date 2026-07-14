@@ -1,0 +1,532 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-be9db2bbcef2fdd32e3978b12680dbc4",
+  "revision": 2,
+  "taskId": "T-0154",
+  "legacyAliases": [],
+  "title": "Ввести ProjectTaskManager и TaskActivity вместо Markdown-backlog в пользовательских проектах",
+  "description": "# T-0154: Ввести ProjectTaskManager и TaskActivity вместо Markdown-backlog в пользовательских проектах\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: `b07da28`\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0154 [ ] P0: Ввести ProjectTaskManager и TaskActivity вместо Markdown-backlog в пользовательских проектах\n\n- Создана: 2026-06-22T12:25:00+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0125\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/releases/0.1.0-preview.md`\n  - Документация: `docs/project-system/`\n  - Исходный код: `src/Electron2D.ProjectSystem/`; `tests/`\n\n### Самодостаточное описание\n\nПользовательские проекты Electron2D не должны получать `TASKS.md`, `completed-tasks/` или `dev-diary/` как источник истины. Эта задача реализует core/domain/storage слой `ProjectTaskManager`: `Task`, `TaskActivityEntry`, `AcceptanceCriterion`, `TaskBoard`, `TaskStore`, `TaskDependencyGraph`, `TaskAcceptanceService`, стабильный текстовый формат, migrations и интеграцию task/board documents с `ProjectWorkspace`.\n\nЗадачи должны храниться как first-class документы `ProjectWorkspace`: `.electron2d/tasks/*.e2task` и `.electron2d/tasks/board.e2tasks`, с schema version, UID, canonical formatting, structural merge, migrations, dirty state, revisions, `expectedRevision`, grouped Undo/Redo и готовностью к `ExternalImport`. SQLite или другой индекс допустим только как cache.\n\nТекущий `dev-diary/` репозитория Electron2D не мигрируется и не удаляется: это внутренний workflow разработки движка, а не продуктовый контракт пользовательских проектов.\n\n### Критерии приёмки\n\n- [x] Создана спецификация `ProjectTaskManager`, `TaskActivity`, `TaskAcceptanceService` и task storage.\n- [x] Поддержаны статусы `Backlog`, `Ready`, `In Progress`, `Blocked`, `Review`, `Awaiting Acceptance`, `Done`, `Cancelled`.\n- [x] Определены переходы статусов: `Backlog -> Ready/Cancelled`; `Ready -> Backlog/InProgress/Blocked/Cancelled`; `InProgress -> Ready/Blocked/Review/Cancelled`; `Blocked -> Ready/InProgress/Cancelled`; `Review -> InProgress/AwaitingAcceptance/Blocked`; `AwaitingAcceptance -> InProgress/Done`; `Done --Reopen--> Ready`; `Cancelled --Reopen--> Backlog`; `Reopen` является человеческим действием, а не отдельным статусом.\n- [x] `Review` означает техническую проверку, `Awaiting Acceptance` означает ожидание решения разработчика, `Request changes` возвращает задачу в `In Progress`.\n- [x] Task model содержит `TaskId`, title, description, status, `Readiness`, `BlockingReasons`, priority, `Rank`/`SortKey`, labels, assignee, created by, parent, dependencies, acceptance criteria, subtasks, activity, linked transactions/jobs/diagnostics/artifacts/scenes/resources/nodes, `CreatedAt`, `UpdatedAt`, `SubmittedAt`, `CompletedAt`, `AcceptedAt`, `AcceptedBy`, `AcceptanceState`, `ArchivedAt`, `ArchivedBy`, `CancellationReason`.\n- [x] `TaskActivityEntry` имеет `ActivityEntryId`, `ActorId`, `ActorKind`, `CreatedAt`, `Kind`, `Payload` и поддерживает `Comment`, `Decision`, `Investigation`, `Blocker`, `TestResult`, `StatusChange`, `AgentSummary`, `AcceptanceResult`.\n- [x] `TaskActivityStore` сам заполняет `ActorId`, `ActorKind` и `CreatedAt` из доверенного `OperationContext` и системных часов; вызывающий агент, CLI или MCP payload не может передать или перезаписать эти audit fields.\n- [x] `AcceptanceCriterion` имеет `CriterionId`, `Description`, `State`, `EvidenceLinks`.\n- [x] `Rank`/`SortKey`, activity entries и acceptance criteria имеют стабильные UID или стабильные ключи для structural merge.\n- [x] Task и board documents являются first-class документами `ProjectWorkspace`.\n- [x] Task mutations проходят через `WorkspaceTransactionEngine`, поддерживают `expectedRevision`, dirty state, `SaveAffectedDocuments`, grouped Undo/Redo и conflict handling.\n- [x] Task document parser, serializer и structural merge поддерживают `ExternalImport` и пригодны для использования `ExternalChangeSynchronizer`.\n- [x] `TaskTransitionValidator` и `TaskAcceptanceService` применяются ко всем изменениям task document: Tooling, CLI, MCP, ExternalImport, migration и crash recovery.\n- [x] Непривилегированный payload не может изменить `CreatedBy`, `CreatedAt`, `UpdatedAt`, `SubmittedAt`, `CompletedAt`, `AcceptedAt`, `AcceptedBy`, `AcceptanceState`, `ArchivedAt`, `ArchivedBy`, `TaskActivityEntry.ActorId`, `TaskActivityEntry.ActorKind`, `TaskActivityEntry.CreatedAt`.\n- [x] Попытка direct file edit поставить `Done`, выполнить `Done -> Ready` или `Cancelled -> Backlog` без trusted command возвращает structured diagnostic и conflict/pending-import state.\n- [x] `.electron2d/tasks/**` является `EditorMetadata`: документы задач могут храниться в source control по решению разработчика, доступны Editor/Tooling/CLI/MCP, но не импортируются как игровые ресурсы, не включаются в production asset packs, APK, AAB, app bundle или desktop distribution и не материализуются в runtime snapshot как игровые файлы.\n- [x] Если task data экспортируется во внешний отчёт, это выполняется только отдельной явной report-командой; report export не является обязательной возможностью `0.1.0` и не становится canonical storage.\n- [x] `TaskDependencyGraph` запрещает циклические зависимости, не переводит задачу в `Ready` автоматически при незавершённой обязательной dependency, возвращает диагностируемую причину blocked-состояния, обновляет только dependency-related `BlockingReasons`/`Readiness` после завершения dependency и не снимает ручной `Status = Blocked`.\n- [x] Отмена dependency имеет явную policy и structured diagnostic для зависимых задач.\n- [x] `Reopen` не удаляет `CompletedAt`, `AcceptedAt`, `AcceptedBy` и исторический `AcceptanceState`; переход фиксируется в `TaskActivity`.\n- [x] `OperationContext`, `PrincipalKind` и `OperationCapability` находятся ниже `Electron2D.Tooling` в общем contracts/project-system слое, например `Electron2D.ProjectSystem/Operations/`, чтобы core `TaskAcceptanceService` не зависел от будущего `TaskService`.\n- [x] `TaskAcceptanceService` использует доверенный `OperationContext` с `PrincipalId`, `PrincipalKind`, `SessionId`, `Capabilities` и `Origin`; `ActorKind` из activity payload не считается полномочием.\n- [x] AI может перевести задачу в `Awaiting Acceptance`, но `TaskAcceptanceService` запрещает установить `Done`/accepted без человеческого подтверждения независимо от adapter-а вызова.\n- [x] Agent MCP/Tooling session не может подменить себя человеком через `ActorKind = Human`; `Task.Accept` и `Task.RequestChanges` требуют interactive Editor user capability или краткоживущее подтверждение Editor.\n- [x] Операции агента связываются с `TaskId`, `AgentSessionId`, `OperationId`, `TransactionId`, `SnapshotId` и `JobId`.\n- [x] Completed tasks являются представлением `Status = Done`, а не отдельной папкой или архивом.\n- [x] Добавлены unit tests доменной модели, storage round-trip, migrations, dependency graph, acceptance guard, structural merge и transaction/revision semantics.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: task state пользовательских проектов должен быть first-class подсистемой Editor/Tooling/MCP, а не набором Markdown-файлов, которые пишет AI.\n\n2026-06-22T12:42:00+03:00 - Уточнение пользователя: `T-0154` является только core/domain/storage задачей. Tooling-команды остаются в `T-0115`, MCP tools/resources - в `T-0119`, project template - в `T-0148`, Agent Workspace current task - в `T-0150`, полноценная доска - в `T-0155`, Markdown-отчёт - отдельная CLI/report задача вне core.\n\n2026-06-22T19:50:00+03:00 - Реализация готова к приёмке: добавлены спецификация, focused tests, `OperationContext`, `ProjectTaskManager` core, task serializer/storage, acceptance guard, dependency graph, external import guard, diagnostics `E2D-TASK-0002`/`E2D-TASK-0003`, implementation documentation и проверки. Задача не закрыта за пользователя.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b5e1ea9744649d7252b1f4a088fec1cb"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создана спецификация `ProjectTaskManager`, `TaskActivity`, `TaskAcceptanceService` и task storage.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Поддержаны статусы `Backlog`, `Ready`, `In Progress`, `Blocked`, `Review`, `Awaiting Acceptance`, `Done`, `Cancelled`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Определены переходы статусов: `Backlog -> Ready/Cancelled`; `Ready -> Backlog/InProgress/Blocked/Cancelled`; `InProgress -> Ready/Blocked/Review/Cancelled`; `Blocked -> Ready/InProgress/Cancelled`; `Review -> InProgress/AwaitingAcceptance/Blocked`; `AwaitingAcceptance -> InProgress/Done`; `Done --Reopen--> Ready`; `Cancelled --Reopen--> Backlog`; `Reopen` является человеческим действием, а не отдельным статусом.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`Review` означает техническую проверку, `Awaiting Acceptance` означает ожидание решения разработчика, `Request changes` возвращает задачу в `In Progress`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Task model содержит `TaskId`, title, description, status, `Readiness`, `BlockingReasons`, priority, `Rank`/`SortKey`, labels, assignee, created by, parent, dependencies, acceptance criteria, subtasks, activity, linked transactions/jobs/diagnostics/artifacts/scenes/resources/nodes, `CreatedAt`, `UpdatedAt`, `SubmittedAt`, `CompletedAt`, `AcceptedAt`, `AcceptedBy`, `AcceptanceState`, `ArchivedAt`, `ArchivedBy`, `CancellationReason`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "`TaskActivityEntry` имеет `ActivityEntryId`, `ActorId`, `ActorKind`, `CreatedAt`, `Kind`, `Payload` и поддерживает `Comment`, `Decision`, `Investigation`, `Blocker`, `TestResult`, `StatusChange`, `AgentSummary`, `AcceptanceResult`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "`TaskActivityStore` сам заполняет `ActorId`, `ActorKind` и `CreatedAt` из доверенного `OperationContext` и системных часов; вызывающий агент, CLI или MCP payload не может передать или перезаписать эти audit fields.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "`AcceptanceCriterion` имеет `CriterionId`, `Description`, `State`, `EvidenceLinks`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "`Rank`/`SortKey`, activity entries и acceptance criteria имеют стабильные UID или стабильные ключи для structural merge.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Task и board documents являются first-class документами `ProjectWorkspace`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Task mutations проходят через `WorkspaceTransactionEngine`, поддерживают `expectedRevision`, dirty state, `SaveAffectedDocuments`, grouped Undo/Redo и conflict handling.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Task document parser, serializer и structural merge поддерживают `ExternalImport` и пригодны для использования `ExternalChangeSynchronizer`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-013",
+      "description": "`TaskTransitionValidator` и `TaskAcceptanceService` применяются ко всем изменениям task document: Tooling, CLI, MCP, ExternalImport, migration и crash recovery.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-014",
+      "description": "Непривилегированный payload не может изменить `CreatedBy`, `CreatedAt`, `UpdatedAt`, `SubmittedAt`, `CompletedAt`, `AcceptedAt`, `AcceptedBy`, `AcceptanceState`, `ArchivedAt`, `ArchivedBy`, `TaskActivityEntry.ActorId`, `TaskActivityEntry.ActorKind`, `TaskActivityEntry.CreatedAt`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-015",
+      "description": "Попытка direct file edit поставить `Done`, выполнить `Done -> Ready` или `Cancelled -> Backlog` без trusted command возвращает structured diagnostic и conflict/pending-import state.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-016",
+      "description": "`.electron2d/tasks/**` является `EditorMetadata`: документы задач могут храниться в source control по решению разработчика, доступны Editor/Tooling/CLI/MCP, но не импортируются как игровые ресурсы, не включаются в production asset packs, APK, AAB, app bundle или desktop distribution и не материализуются в runtime snapshot как игровые файлы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-017",
+      "description": "Если task data экспортируется во внешний отчёт, это выполняется только отдельной явной report-командой; report export не является обязательной возможностью `0.1.0` и не становится canonical storage.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-018",
+      "description": "`TaskDependencyGraph` запрещает циклические зависимости, не переводит задачу в `Ready` автоматически при незавершённой обязательной dependency, возвращает диагностируемую причину blocked-состояния, обновляет только dependency-related `BlockingReasons`/`Readiness` после завершения dependency и не снимает ручной `Status = Blocked`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-019",
+      "description": "Отмена dependency имеет явную policy и structured diagnostic для зависимых задач.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-020",
+      "description": "`Reopen` не удаляет `CompletedAt`, `AcceptedAt`, `AcceptedBy` и исторический `AcceptanceState`; переход фиксируется в `TaskActivity`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-021",
+      "description": "`OperationContext`, `PrincipalKind` и `OperationCapability` находятся ниже `Electron2D.Tooling` в общем contracts/project-system слое, например `Electron2D.ProjectSystem/Operations/`, чтобы core `TaskAcceptanceService` не зависел от будущего `TaskService`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-022",
+      "description": "`TaskAcceptanceService` использует доверенный `OperationContext` с `PrincipalId`, `PrincipalKind`, `SessionId`, `Capabilities` и `Origin`; `ActorKind` из activity payload не считается полномочием.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-023",
+      "description": "AI может перевести задачу в `Awaiting Acceptance`, но `TaskAcceptanceService` запрещает установить `Done`/accepted без человеческого подтверждения независимо от adapter-а вызова.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-024",
+      "description": "Agent MCP/Tooling session не может подменить себя человеком через `ActorKind = Human`; `Task.Accept` и `Task.RequestChanges` требуют interactive Editor user capability или краткоживущее подтверждение Editor.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-025",
+      "description": "Операции агента связываются с `TaskId`, `AgentSessionId`, `OperationId`, `TransactionId`, `SnapshotId` и `JobId`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-026",
+      "description": "Completed tasks являются представлением `Status = Done`, а не отдельной папкой или архивом.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-027",
+      "description": "Добавлены unit tests доменной модели, storage round-trip, migrations, dependency graph, acceptance guard, structural merge и transaction/revision semantics.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-028",
+      "description": "Документация фактического поведения обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-029",
+      "description": "Команда проверки задокументирована.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be9db2bbcef2fdd32e3978b12680dbc4/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T09:42:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: `T-0154` является только core/domain/storage задачей. Tooling-команды остаются в `T-0115`, MCP tools/resources - в `T-0119`, project template - в `T-0148`, Agent Workspace current task - в `T-0150`, полноценная доска - в `T-0155`, Markdown-отчёт - отдельная CLI/report задача вне core."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T16:50:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Реализация готова к приёмке: добавлены спецификация, focused tests, `OperationContext`, `ProjectTaskManager` core, task serializer/storage, acceptance guard, dependency graph, external import guard, diagnostics `E2D-TASK-0002`/`E2D-TASK-0003`, implementation documentation и проверки. Задача не закрыта за пользователя."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T18:14:16.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".electron2d/tasks/**"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": ".electron2d/tasks/*.e2task"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": ".electron2d/tasks/board.e2tasks"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "AwaitingAcceptance -> InProgress/Done"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "Backlog -> Ready/Cancelled"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "Blocked -> Ready/InProgress/Cancelled"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "Electron2D.ProjectSystem/Operations"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "InProgress -> Ready/Blocked/Review/Cancelled"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "Ready -> Backlog/InProgress/Blocked/Cancelled"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "Review -> InProgress/AwaitingAcceptance/Blocked"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "completed-tasks"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "Directory",
+      "value": "dev-diary"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/architecture/ai-friendly-workflow.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "Directory",
+      "value": "docs/project-system"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "src/Electron2D.ProjectSystem"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 570714,
+      "byteLength": 10893,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "72d6752fe57d449a13dd1486e6e398da80fad528fe5d4924ca60b4a9bdd2b967",
+      "markdown": "# T-0154: Ввести ProjectTaskManager и TaskActivity вместо Markdown-backlog в пользовательских проектах\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: `b07da28`\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0154 [ ] P0: Ввести ProjectTaskManager и TaskActivity вместо Markdown-backlog в пользовательских проектах\n\n- Создана: 2026-06-22T12:25:00+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0125\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/releases/0.1.0-preview.md`\n  - Документация: `docs/project-system/`\n  - Исходный код: `src/Electron2D.ProjectSystem/`; `tests/`\n\n### Самодостаточное описание\n\nПользовательские проекты Electron2D не должны получать `TASKS.md`, `completed-tasks/` или `dev-diary/` как источник истины. Эта задача реализует core/domain/storage слой `ProjectTaskManager`: `Task`, `TaskActivityEntry`, `AcceptanceCriterion`, `TaskBoard`, `TaskStore`, `TaskDependencyGraph`, `TaskAcceptanceService`, стабильный текстовый формат, migrations и интеграцию task/board documents с `ProjectWorkspace`.\n\nЗадачи должны храниться как first-class документы `ProjectWorkspace`: `.electron2d/tasks/*.e2task` и `.electron2d/tasks/board.e2tasks`, с schema version, UID, canonical formatting, structural merge, migrations, dirty state, revisions, `expectedRevision`, grouped Undo/Redo и готовностью к `ExternalImport`. SQLite или другой индекс допустим только как cache.\n\nТекущий `dev-diary/` репозитория Electron2D не мигрируется и не удаляется: это внутренний workflow разработки движка, а не продуктовый контракт пользовательских проектов.\n\n### Критерии приёмки\n\n- [x] Создана спецификация `ProjectTaskManager`, `TaskActivity`, `TaskAcceptanceService` и task storage.\n- [x] Поддержаны статусы `Backlog`, `Ready`, `In Progress`, `Blocked`, `Review`, `Awaiting Acceptance`, `Done`, `Cancelled`.\n- [x] Определены переходы статусов: `Backlog -> Ready/Cancelled`; `Ready -> Backlog/InProgress/Blocked/Cancelled`; `InProgress -> Ready/Blocked/Review/Cancelled`; `Blocked -> Ready/InProgress/Cancelled`; `Review -> InProgress/AwaitingAcceptance/Blocked`; `AwaitingAcceptance -> InProgress/Done`; `Done --Reopen--> Ready`; `Cancelled --Reopen--> Backlog`; `Reopen` является человеческим действием, а не отдельным статусом.\n- [x] `Review` означает техническую проверку, `Awaiting Acceptance` означает ожидание решения разработчика, `Request changes` возвращает задачу в `In Progress`.\n- [x] Task model содержит `TaskId`, title, description, status, `Readiness`, `BlockingReasons`, priority, `Rank`/`SortKey`, labels, assignee, created by, parent, dependencies, acceptance criteria, subtasks, activity, linked transactions/jobs/diagnostics/artifacts/scenes/resources/nodes, `CreatedAt`, `UpdatedAt`, `SubmittedAt`, `CompletedAt`, `AcceptedAt`, `AcceptedBy`, `AcceptanceState`, `ArchivedAt`, `ArchivedBy`, `CancellationReason`.\n- [x] `TaskActivityEntry` имеет `ActivityEntryId`, `ActorId`, `ActorKind`, `CreatedAt`, `Kind`, `Payload` и поддерживает `Comment`, `Decision`, `Investigation`, `Blocker`, `TestResult`, `StatusChange`, `AgentSummary`, `AcceptanceResult`.\n- [x] `TaskActivityStore` сам заполняет `ActorId`, `ActorKind` и `CreatedAt` из доверенного `OperationContext` и системных часов; вызывающий агент, CLI или MCP payload не может передать или перезаписать эти audit fields.\n- [x] `AcceptanceCriterion` имеет `CriterionId`, `Description`, `State`, `EvidenceLinks`.\n- [x] `Rank`/`SortKey`, activity entries и acceptance criteria имеют стабильные UID или стабильные ключи для structural merge.\n- [x] Task и board documents являются first-class документами `ProjectWorkspace`.\n- [x] Task mutations проходят через `WorkspaceTransactionEngine`, поддерживают `expectedRevision`, dirty state, `SaveAffectedDocuments`, grouped Undo/Redo и conflict handling.\n- [x] Task document parser, serializer и structural merge поддерживают `ExternalImport` и пригодны для использования `ExternalChangeSynchronizer`.\n- [x] `TaskTransitionValidator` и `TaskAcceptanceService` применяются ко всем изменениям task document: Tooling, CLI, MCP, ExternalImport, migration и crash recovery.\n- [x] Непривилегированный payload не может изменить `CreatedBy`, `CreatedAt`, `UpdatedAt`, `SubmittedAt`, `CompletedAt`, `AcceptedAt`, `AcceptedBy`, `AcceptanceState`, `ArchivedAt`, `ArchivedBy`, `TaskActivityEntry.ActorId`, `TaskActivityEntry.ActorKind`, `TaskActivityEntry.CreatedAt`.\n- [x] Попытка direct file edit поставить `Done`, выполнить `Done -> Ready` или `Cancelled -> Backlog` без trusted command возвращает structured diagnostic и conflict/pending-import state.\n- [x] `.electron2d/tasks/**` является `EditorMetadata`: документы задач могут храниться в source control по решению разработчика, доступны Editor/Tooling/CLI/MCP, но не импортируются как игровые ресурсы, не включаются в production asset packs, APK, AAB, app bundle или desktop distribution и не материализуются в runtime snapshot как игровые файлы.\n- [x] Если task data экспортируется во внешний отчёт, это выполняется только отдельной явной report-командой; report export не является обязательной возможностью `0.1.0` и не становится canonical storage.\n- [x] `TaskDependencyGraph` запрещает циклические зависимости, не переводит задачу в `Ready` автоматически при незавершённой обязательной dependency, возвращает диагностируемую причину blocked-состояния, обновляет только dependency-related `BlockingReasons`/`Readiness` после завершения dependency и не снимает ручной `Status = Blocked`.\n- [x] Отмена dependency имеет явную policy и structured diagnostic для зависимых задач.\n- [x] `Reopen` не удаляет `CompletedAt`, `AcceptedAt`, `AcceptedBy` и исторический `AcceptanceState`; переход фиксируется в `TaskActivity`.\n- [x] `OperationContext`, `PrincipalKind` и `OperationCapability` находятся ниже `Electron2D.Tooling` в общем contracts/project-system слое, например `Electron2D.ProjectSystem/Operations/`, чтобы core `TaskAcceptanceService` не зависел от будущего `TaskService`.\n- [x] `TaskAcceptanceService` использует доверенный `OperationContext` с `PrincipalId`, `PrincipalKind`, `SessionId`, `Capabilities` и `Origin`; `ActorKind` из activity payload не считается полномочием.\n- [x] AI может перевести задачу в `Awaiting Acceptance`, но `TaskAcceptanceService` запрещает установить `Done`/accepted без человеческого подтверждения независимо от adapter-а вызова.\n- [x] Agent MCP/Tooling session не может подменить себя человеком через `ActorKind = Human`; `Task.Accept` и `Task.RequestChanges` требуют interactive Editor user capability или краткоживущее подтверждение Editor.\n- [x] Операции агента связываются с `TaskId`, `AgentSessionId`, `OperationId`, `TransactionId`, `SnapshotId` и `JobId`.\n- [x] Completed tasks являются представлением `Status = Done`, а не отдельной папкой или архивом.\n- [x] Добавлены unit tests доменной модели, storage round-trip, migrations, dependency graph, acceptance guard, structural merge и transaction/revision semantics.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: task state пользовательских проектов должен быть first-class подсистемой Editor/Tooling/MCP, а не набором Markdown-файлов, которые пишет AI.\n\n2026-06-22T12:42:00+03:00 - Уточнение пользователя: `T-0154` является только core/domain/storage задачей. Tooling-команды остаются в `T-0115`, MCP tools/resources - в `T-0119`, project template - в `T-0148`, Agent Workspace current task - в `T-0150`, полноценная доска - в `T-0155`, Markdown-отчёт - отдельная CLI/report задача вне core.\n\n2026-06-22T19:50:00+03:00 - Реализация готова к приёмке: добавлены спецификация, focused tests, `OperationContext`, `ProjectTaskManager` core, task serializer/storage, acceptance guard, dependency graph, external import guard, diagnostics `E2D-TASK-0002`/`E2D-TASK-0003`, implementation documentation и проверки. Задача не закрыта за пользователя.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T09:25:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "completedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

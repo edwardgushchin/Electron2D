@@ -1,0 +1,241 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-a129b3843ed32ad18bc5c86dd3b48ede",
+  "revision": 2,
+  "taskId": "T-0147",
+  "legacyAliases": [],
+  "title": "Ввести job contract и event stream для долгих операций",
+  "description": "# T-0147: Ввести job contract и event stream для долгих операций\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: `6892cd1`\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0147 [ ] P0: Ввести job contract и event stream для долгих операций\n\n- Создана: 2026-06-22T11:24:00+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0146, T-0153\n- Ссылки:\n  - Спецификация: `docs/project-system/workspace-jobs.md`; `docs/architecture/ai-friendly-workflow.md`\n  - Документация: `docs/project-system/workspace-jobs.md`\n  - Исходный код: `src/Electron2D.ProjectSystem/Workspace/WorkspaceJobs.cs`; `tests/Electron2D.Tests.Integration/WorkspaceJobTests.cs`\n\n### Самодостаточное описание\n\nИмпорт, сборка, тесты, экспорт и запуск игры не должны возвращать только синхронный `success`. Нужен core job-контракт: operation id, input snapshot id, input workspace revision, input content revision, input document revisions, input build configuration hash, kind, state, progress, can cancel, diagnostics, artifacts, started/completed timestamps, stale flag и поток событий. CLI JSONL, MCP, Agent Workspace и Editor panels подключают этот поток в своих адаптерных задачах.\n\n### Критерии приёмки\n\n- [x] Описан и реализован `OperationId`, `InputSnapshotId`, `InputWorkspaceRevision`, `InputContentRevision`, `InputDocumentRevisions`, `InputBuildConfigurationHash`, `Kind`, `State`, `Progress`, `CanCancel`, `Diagnostics`, `Artifacts`, `StartedAt`, `CompletedAt` и `Stale`.\n- [x] Поддержаны states `queued`, `running`, `succeeded`, `failed`, `cancelled`.\n- [x] Реализованы события `operation.started`, `operation.progress`, `operation.diagnostic`, `operation.artifactProduced`, `operation.completed`.\n- [x] Cancel/stop работает через job model и возвращает structured diagnostics.\n- [x] Event stream, cancellation semantics и stale marking по input documents/content/build configuration покрыты in-memory tests.\n- [x] Добавлены fake consumer tests на progress, cancellation, diagnostics и artifacts без зависимости от готовых CLI/MCP/Editor UI.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: Agent Workspace требует progress/cancel/results, поэтому базовый Tooling должен иметь job model до UI.\n\n2026-06-22T19:02:00+03:00 - Взято в работу после `T-0153`: зависимости `Diagnostics.Core` и `WorkspaceSnapshot` готовы к приёмке, задача является следующей разблокированной P0 вне Editor implementation queue. Перед production-кодом нужно выделить проверяемую спецификацию job contract/event stream, добавить красные focused tests и только затем реализовать internal job core.\n\n2026-06-22T19:11:00+03:00 - Реализация готова к приёмке: добавлены спецификация `docs/project-system/workspace-jobs.md`, implementation documentation `docs/project-system/workspace-jobs.md`, focused tests `WorkspaceJobTests`, internal job model `src/Electron2D.ProjectSystem/Workspace/WorkspaceJobs.cs`, `ProjectWorkspace.Jobs`, stale marker у `WorkspaceJobArtifact` и diagnostic code `E2D-TOOLING-0001`. Задача не закрыта за пользователя.\n\nПроверки: красный focused test сначала упал на отсутствующем job API; затем прошли `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~WorkspaceJobTests`, `git diff --check` с предупреждениями только о будущей LF/CRLF-нормализации Git, `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1`, `dotnet build src\\Electron2D.sln`, `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1`, `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1`, `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` и `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1`.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-6fa7d2bc25702ed1522f79fb235ac6e4"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-8f9de83d456b281aabdaa6b0dbd08764"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Описан и реализован `OperationId`, `InputSnapshotId`, `InputWorkspaceRevision`, `InputContentRevision`, `InputDocumentRevisions`, `InputBuildConfigurationHash`, `Kind`, `State`, `Progress`, `CanCancel`, `Diagnostics`, `Artifacts`, `StartedAt`, `CompletedAt` и `Stale`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a129b3843ed32ad18bc5c86dd3b48ede/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Поддержаны states `queued`, `running`, `succeeded`, `failed`, `cancelled`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a129b3843ed32ad18bc5c86dd3b48ede/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Реализованы события `operation.started`, `operation.progress`, `operation.diagnostic`, `operation.artifactProduced`, `operation.completed`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a129b3843ed32ad18bc5c86dd3b48ede/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Cancel/stop работает через job model и возвращает structured diagnostics.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a129b3843ed32ad18bc5c86dd3b48ede/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Event stream, cancellation semantics и stale marking по input documents/content/build configuration покрыты in-memory tests.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a129b3843ed32ad18bc5c86dd3b48ede/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Добавлены fake consumer tests на progress, cancellation, diagnostics и artifacts без зависимости от готовых CLI/MCP/Editor UI.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a129b3843ed32ad18bc5c86dd3b48ede/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Документация фактического поведения обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a129b3843ed32ad18bc5c86dd3b48ede/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Команда проверки задокументирована.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a129b3843ed32ad18bc5c86dd3b48ede/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T16:02:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Взято в работу после `T-0153`: зависимости `Diagnostics.Core` и `WorkspaceSnapshot` готовы к приёмке, задача является следующей разблокированной P0 вне Editor implementation queue. Перед production-кодом нужно выделить проверяемую спецификацию job contract/event stream, добавить красные focused tests и только затем реализовать internal job core."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T16:11:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Реализация готова к приёмке: добавлены спецификация `docs/project-system/workspace-jobs.md`, implementation documentation `docs/project-system/workspace-jobs.md`, focused tests `WorkspaceJobTests`, internal job model `src/Electron2D.ProjectSystem/Workspace/WorkspaceJobs.cs`, `ProjectWorkspace.Jobs`, stale marker у `WorkspaceJobArtifact` и diagnostic code `E2D-TOOLING-0001`. Задача не закрыта за пользователя."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T18:14:16.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/architecture/ai-friendly-workflow.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/project-system/workspace-jobs.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Workspace/WorkspaceJobs.cs"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/WorkspaceJobTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 555371,
+      "byteLength": 5367,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "e43a18f46fcf61c9308d1f48994879bcd376f9ae04968edc29610a2401221885",
+      "markdown": "# T-0147: Ввести job contract и event stream для долгих операций\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: `6892cd1`\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0147 [ ] P0: Ввести job contract и event stream для долгих операций\n\n- Создана: 2026-06-22T11:24:00+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0146, T-0153\n- Ссылки:\n  - Спецификация: `docs/project-system/workspace-jobs.md`; `docs/architecture/ai-friendly-workflow.md`\n  - Документация: `docs/project-system/workspace-jobs.md`\n  - Исходный код: `src/Electron2D.ProjectSystem/Workspace/WorkspaceJobs.cs`; `tests/Electron2D.Tests.Integration/WorkspaceJobTests.cs`\n\n### Самодостаточное описание\n\nИмпорт, сборка, тесты, экспорт и запуск игры не должны возвращать только синхронный `success`. Нужен core job-контракт: operation id, input snapshot id, input workspace revision, input content revision, input document revisions, input build configuration hash, kind, state, progress, can cancel, diagnostics, artifacts, started/completed timestamps, stale flag и поток событий. CLI JSONL, MCP, Agent Workspace и Editor panels подключают этот поток в своих адаптерных задачах.\n\n### Критерии приёмки\n\n- [x] Описан и реализован `OperationId`, `InputSnapshotId`, `InputWorkspaceRevision`, `InputContentRevision`, `InputDocumentRevisions`, `InputBuildConfigurationHash`, `Kind`, `State`, `Progress`, `CanCancel`, `Diagnostics`, `Artifacts`, `StartedAt`, `CompletedAt` и `Stale`.\n- [x] Поддержаны states `queued`, `running`, `succeeded`, `failed`, `cancelled`.\n- [x] Реализованы события `operation.started`, `operation.progress`, `operation.diagnostic`, `operation.artifactProduced`, `operation.completed`.\n- [x] Cancel/stop работает через job model и возвращает structured diagnostics.\n- [x] Event stream, cancellation semantics и stale marking по input documents/content/build configuration покрыты in-memory tests.\n- [x] Добавлены fake consumer tests на progress, cancellation, diagnostics и artifacts без зависимости от готовых CLI/MCP/Editor UI.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: Agent Workspace требует progress/cancel/results, поэтому базовый Tooling должен иметь job model до UI.\n\n2026-06-22T19:02:00+03:00 - Взято в работу после `T-0153`: зависимости `Diagnostics.Core` и `WorkspaceSnapshot` готовы к приёмке, задача является следующей разблокированной P0 вне Editor implementation queue. Перед production-кодом нужно выделить проверяемую спецификацию job contract/event stream, добавить красные focused tests и только затем реализовать internal job core.\n\n2026-06-22T19:11:00+03:00 - Реализация готова к приёмке: добавлены спецификация `docs/project-system/workspace-jobs.md`, implementation documentation `docs/project-system/workspace-jobs.md`, focused tests `WorkspaceJobTests`, internal job model `src/Electron2D.ProjectSystem/Workspace/WorkspaceJobs.cs`, `ProjectWorkspace.Jobs`, stale marker у `WorkspaceJobArtifact` и diagnostic code `E2D-TOOLING-0001`. Задача не закрыта за пользователя.\n\nПроверки: красный focused test сначала упал на отсутствующем job API; затем прошли `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~WorkspaceJobTests`, `git diff --check` с предупреждениями только о будущей LF/CRLF-нормализации Git, `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1`, `dotnet build src\\Electron2D.sln`, `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1`, `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1`, `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` и `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1`.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T08:24:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "completedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

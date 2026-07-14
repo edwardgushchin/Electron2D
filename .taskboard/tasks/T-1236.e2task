@@ -1,0 +1,297 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-f853772d0ad247c981d1259b1e083ccf",
+  "revision": 1,
+  "taskId": "T-1236",
+  "legacyAliases": [],
+  "title": "Синхронизировать значки связанных файлов с File Icon Theme VS Code",
+  "description": "Значки в блоке «Связанные файлы» сейчас являются собственными Explorer-like SVG и заметно отличаются от значков тех же файлов в Explorer VS Code. Для одного и того же пути Task Board должен показывать тот же file-type icon, который использует Explorer текущего окна: не только близкий цвет, но и ту же геометрию и семантику активной File Icon Theme. Решение должно обновляться при смене темы, иметь честный fallback для недоступных icons и не использовать private API, scraping внутренних файлов VS Code или нелицензированные assets сторонних тем. T-1179 и T-1234 остаются базой классификации; эта задача отвечает за точный визуальный паритет.",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0002",
+    "tag-0003",
+    "tag-0010",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "assignee": null,
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [
+    {
+      "relationId": "relation-base-file-icons",
+      "kind": "RelatedTo",
+      "targetTaskUid": "task-23804ac4ed354382943ab243a425a6f6"
+    },
+    {
+      "relationId": "relation-extra-file-icons",
+      "kind": "RelatedTo",
+      "targetTaskUid": "task-e65a1c9d1acb43efa5c40c263c842945"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-explorer-parity",
+      "description": "Для одного и того же repository file путь в блоке «Связанные файлы» показывает тот же file-type icon, что и Explorer текущего окна VS Code: совпадают источник темы, геометрия, цвет и различимость; собственные приблизительные SVG не считаются паритетом.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-active-file-icon-theme",
+      "description": "Иконки следуют активной File Icon Theme и обновляются после её смены без перезапуска Extension Host; темы `None`, встроенная тема и сторонняя тема обрабатываются детерминированно в пределах поддерживаемого публичного контракта VS Code.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-supported-file-kinds",
+      "description": "Паритет проверен для Markdown/README, JSON, JavaScript, TypeScript, CSS, C#, project, image, archive, VSIX и неизвестного расширения; имя файла и составной extension учитываются так же, как в Explorer.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-safe-theme-assets",
+      "description": "Решение использует только поддерживаемый VS Code API или явно лицензированные локальные assets: запрещены private API, чтение внутренних файлов установки VS Code, небезопасное копирование assets сторонних тем, `innerHTML`, внешние сетевые ресурсы и literal palette, расходящаяся с темой.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-fallback-and-layout",
+      "description": "Если конкретный theme icon недоступен, применяется документированный fallback, согласованный с состоянием Explorer и не маскирующий ошибку; строки сохраняют текущие размеры, выравнивание, ellipsis, tooltip, keyboard accessibility и безопасное открытие файла.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-tests-and-visual-evidence",
+      "description": "До production-кода обновлён доменный документ и добавлены RED-тесты; затем проходят focused/full unit, typecheck, Extension Host и VSIX package/install, а снимок реального окна показывает бок о бок совпадающие значки Explorer и «Связанных файлов» минимум для шести разных типов.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [],
+  "auditRuns": [],
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "links": [
+    {
+      "linkId": "link-file-icon-domain",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-file-icon-model",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/model.ts"
+    },
+    {
+      "linkId": "link-file-icon-renderer",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "link-file-icon-styles",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.css"
+    },
+    {
+      "linkId": "link-file-icon-host",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/extension.ts"
+    },
+    {
+      "linkId": "link-file-icon-package",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/package.json"
+    },
+    {
+      "linkId": "link-file-icon-model-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/model.test.ts"
+    },
+    {
+      "linkId": "link-file-icon-layout-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+    },
+    {
+      "linkId": "link-file-icon-extension-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/suite/index.ts"
+    }
+  ],
+  "executionContract": {
+    "taskType": "визуальный паритет значков связанных файлов с VS Code Explorer",
+    "readyToStart": [
+      "T-1179 и T-1234 предоставляют текущую классификацию и SVG-renderer, но их собственные значки не совпадают с активной File Icon Theme Explorer.",
+      "До production-кода `docs/editor/project-tasks-board.md` определяет нормативный источник icons, поведение при смене темы, fallback и лицензионные ограничения.",
+      "До implementation добавлены падающие tests на theme source, file-kind mapping, refresh и безопасный fallback."
+    ],
+    "stopConditions": [
+      "Точное использование активной File Icon Theme возможно только через private VS Code API, scraping файлов установки или нелицензированное копирование assets сторонней темы.",
+      "Реализация требует внешней сети, передачи workspace paths за пределы Extension Host или ослабления CSP/webview security.",
+      "Нельзя определить детерминированный и честно документированный fallback для темы без доступных file icons.",
+      "Предлагаемое изменение затрагивает lifecycle, task schema или файловую семантику вместо presentation layer."
+    ],
+    "allowedChanges": [
+      "Доменный документ, VS Code host/model/webview/CSS, локальные лицензированные icon assets и package metadata, необходимые для паритета File Icon Theme.",
+      "Focused unit/Extension Host tests, VSIX package, visual evidence, generated docs index, task activity и append-only дневник.",
+      "Минимальный public-API adapter для отслеживания активной темы и передачи безопасной presentation-модели в webview."
+    ],
+    "forbiddenChanges": [
+      "Private/unstable VS Code API, чтение ресурсов из installation root или extensions других авторов без разрешённого API и лицензии.",
+      "Handcrafted approximations, которые снова только напоминают Explorer, literal theme colors, Unicode-глифы, `innerHTML` и сетевые icon resources.",
+      "Изменение canonical linked paths, автоматическое прикрепление файлов, несвязанный UI-рефакторинг и ручное редактирование `.taskboard`.",
+      "Автоматическая приёмка или архивирование этой и связанных задач."
+    ],
+    "requiredOutputs": [
+      "Документированный механизм паритета с File Icon Theme и безопасный fallback для неподдерживаемых themes.",
+      "Одинаковые значки одного файла в Explorer и блоке «Связанные файлы» с обновлением при смене темы.",
+      "RED/GREEN tests для mapping, theme refresh, CSP/licensing boundary и layout/accessibility regression.",
+      "Собранный и установленный VSIX и проверенный снимок реального окна с параллельным сравнением Explorer и Task Board."
+    ],
+    "commands": [
+      {
+        "commandId": "cmd-file-icon-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-file-icon-typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-file-icon-extension-host",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:extension"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Windows"
+        ],
+        "timeoutSeconds": 900,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "ExternalEffect"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-file-icon-package",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-file-icon-visual",
+        "kind": "Process",
+        "executable": "python",
+        "arguments": [
+          "eng/tools/capture_window.py",
+          "--title",
+          "Visual Studio Code",
+          "--output",
+          ".temp/taskboard-t1236-vscode-file-icon-parity.png"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Windows"
+        ],
+        "timeoutSeconds": 120,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "ExternalEffect"
+        ],
+        "confirmation": "PolicyDecides"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-13T23:29:10.7261097+00:00",
+  "updatedAt": "2026-07-13T23:29:10.7261097+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null
+}

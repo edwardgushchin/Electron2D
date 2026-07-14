@@ -1,0 +1,172 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-71da1d8740bbb9bb11aef1e0189952e2",
+  "revision": 2,
+  "taskId": "T-0047",
+  "legacyAliases": [],
+  "title": "Реализовать безопасное editor-time выполнение `[Tool]` scripts",
+  "description": "# T-0047: Реализовать безопасное editor-time выполнение `[Tool]` scripts\n\n- Статус: завершена\n- Завершена: 2026-06-21T13:10:00+03:00\n- Приоритет: P1\n- Зависимости: T-0045, T-0016\n- Домен: C# scripting\n\n## Исходная цель\n\nРеализовать безопасный baseline для editor-time выполнения `[Tool]` scripts: отделить этот путь от обычного runtime traversal, изолировать exceptions и не вводить dynamic assembly load для AOT/export paths.\n\n## Что сделано\n\n- Добавлена спецификация `docs/scripting/tool-script-execution.md`.\n- Добавлен internal `ToolScriptExecutionHost`.\n- Добавлены internal `ToolScriptExecutionCallback`, `ToolScriptExecutionStatus` и `ToolScriptExecutionResult`.\n- Host выполняет `_EnterTree()`, `_Ready()`, `_Process(delta)`, `_PhysicsProcess(delta)` и `_ExitTree()` только через явный call.\n- Host разрешает execution только для registered `ScriptObjectTypeMetadata`, где `IsTool == true` и `IsToolExecutionSandboxed == true`.\n- Для missing metadata, non-tool metadata и non-sandboxed metadata host возвращает structured skipped result и не вызывает callback.\n- Callback exceptions не пробрасываются наружу, а возвращаются как status `ExceptionIsolated`.\n- Host не предоставляет dynamic assembly loading capability и не принимает assembly/path/source inputs.\n- В `ScriptObjectMetadataRegistry` добавлен fail-closed `TryGetByScriptType()`.\n- Обновлены scripting docs и XML comments attributes, чтобы убрать запрещённые публичные формулировки из затронутого scripting-раздела.\n\n## Важные решения\n\n- Нового публичного API не добавлено: host остаётся internal contract для будущего editor/tooling layer.\n- Runtime traversal не изменён: `SceneTree` не вызывает tool execution host.\n- `[Tool]` attribute остаётся public marker, а фактическое выполнение требует explicit registered metadata.\n- GUI editor run loop, hot reload, compile pipeline, external IDE workflow и загрузка пользовательских assemblies остаются отдельными задачами.\n\n## Изменённые файлы\n\n- `src/Electron2D/Runtime/Scripting/ToolScriptExecutionHost.cs`\n- `src/Electron2D/Runtime/Scripting/ScriptObjectMetadata.cs`\n- `src/Electron2D/Runtime/Scripting/ExportAttribute.cs`\n- `src/Electron2D/Runtime/Scripting/SignalAttribute.cs`\n- `src/Electron2D/Runtime/Scripting/ToolAttribute.cs`\n- `tests/Electron2D.Tests.Integration/ToolScriptExecutionTests.cs`\n- `tests/Electron2D.Tests.Integration/ScriptMetadataTests.cs`\n- `docs/scripting/tool-script-execution.md`\n- `docs/scripting/tool-script-execution.md`\n- `docs/scripting/script-metadata.md`\n- `docs/scripting/script-metadata.md`\n- `docs/scripting/csharp-script-classes.md`\n- `docs/scripting/csharp-script-classes.md`\n- `docs/README.md`\n- `docs/README.md`\n- `docs/releases/0.1.0-preview.md`\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ToolScriptExecutionTests\" --no-restore` ожидаемо упал на compile errors из-за отсутствующих `ToolScriptExecutionHost`, callback/status/result types.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ToolScriptExecutionTests\" --no-restore` прошёл: `3` passed.\n- Focused scripting: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ToolScriptExecutionTests|FullyQualifiedName~ScriptMetadataTests\" --no-restore` прошёл: `7` passed.\n- Public type guard: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~CleanRuntimeBaselineTests\" --no-restore` прошёл: `1` passed.\n- API compatibility: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` прошёл, public types `106`.\n- AOT metadata: `powershell -ExecutionPolicy Bypass -File tools\\Verify-AotMetadataSafety.ps1` прошёл; остались прежние trim warnings в `Callable`, `PackedScene` и `SceneTree`.\n- Full runner: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `60`, integration `175`, runtime smoke `5`, golden data `11`.\n- Whitespace: `git diff --check` прошёл; Git вывел только предупреждения о будущей нормализации переносов строк под Windows.\n- Documentation wording: проверка добавленных строк текущего diff не нашла запрещённых публичных формулировок.\n\n## Ограничения\n\n- Host не запускает editor GUI run loop и не управляет scene preview.\n- Host не компилирует C# и не загружает assemblies.\n- Source generator для metadata остаётся отдельной задачей.\n- Полная sandbox isolation process model не входит в baseline.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017",
+    "tag-0023"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-6a591c5cb0d3c196bad5be3ad362c389"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-bdd62e40e0d8dd3bae90c2f2f72c104e"
+    }
+  ],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T10:10:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/README.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/scripting/csharp-script-classes.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/scripting/script-metadata.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/scripting/tool-script-execution.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Scripting/ExportAttribute.cs"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Scripting/ScriptObjectMetadata.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Scripting/SignalAttribute.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Scripting/ToolAttribute.cs"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Scripting/ToolScriptExecutionHost.cs"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ScriptMetadataTests.cs"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ToolScriptExecutionTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 165027,
+      "byteLength": 5515,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "cacb92d8ab5cdb999e03995b72408b19c4a4a888b5ec3280e4f5cb7be663eb4a",
+      "markdown": "# T-0047: Реализовать безопасное editor-time выполнение `[Tool]` scripts\n\n- Статус: завершена\n- Завершена: 2026-06-21T13:10:00+03:00\n- Приоритет: P1\n- Зависимости: T-0045, T-0016\n- Домен: C# scripting\n\n## Исходная цель\n\nРеализовать безопасный baseline для editor-time выполнения `[Tool]` scripts: отделить этот путь от обычного runtime traversal, изолировать exceptions и не вводить dynamic assembly load для AOT/export paths.\n\n## Что сделано\n\n- Добавлена спецификация `docs/scripting/tool-script-execution.md`.\n- Добавлен internal `ToolScriptExecutionHost`.\n- Добавлены internal `ToolScriptExecutionCallback`, `ToolScriptExecutionStatus` и `ToolScriptExecutionResult`.\n- Host выполняет `_EnterTree()`, `_Ready()`, `_Process(delta)`, `_PhysicsProcess(delta)` и `_ExitTree()` только через явный call.\n- Host разрешает execution только для registered `ScriptObjectTypeMetadata`, где `IsTool == true` и `IsToolExecutionSandboxed == true`.\n- Для missing metadata, non-tool metadata и non-sandboxed metadata host возвращает structured skipped result и не вызывает callback.\n- Callback exceptions не пробрасываются наружу, а возвращаются как status `ExceptionIsolated`.\n- Host не предоставляет dynamic assembly loading capability и не принимает assembly/path/source inputs.\n- В `ScriptObjectMetadataRegistry` добавлен fail-closed `TryGetByScriptType()`.\n- Обновлены scripting docs и XML comments attributes, чтобы убрать запрещённые публичные формулировки из затронутого scripting-раздела.\n\n## Важные решения\n\n- Нового публичного API не добавлено: host остаётся internal contract для будущего editor/tooling layer.\n- Runtime traversal не изменён: `SceneTree` не вызывает tool execution host.\n- `[Tool]` attribute остаётся public marker, а фактическое выполнение требует explicit registered metadata.\n- GUI editor run loop, hot reload, compile pipeline, external IDE workflow и загрузка пользовательских assemblies остаются отдельными задачами.\n\n## Изменённые файлы\n\n- `src/Electron2D/Runtime/Scripting/ToolScriptExecutionHost.cs`\n- `src/Electron2D/Runtime/Scripting/ScriptObjectMetadata.cs`\n- `src/Electron2D/Runtime/Scripting/ExportAttribute.cs`\n- `src/Electron2D/Runtime/Scripting/SignalAttribute.cs`\n- `src/Electron2D/Runtime/Scripting/ToolAttribute.cs`\n- `tests/Electron2D.Tests.Integration/ToolScriptExecutionTests.cs`\n- `tests/Electron2D.Tests.Integration/ScriptMetadataTests.cs`\n- `docs/scripting/tool-script-execution.md`\n- `docs/scripting/tool-script-execution.md`\n- `docs/scripting/script-metadata.md`\n- `docs/scripting/script-metadata.md`\n- `docs/scripting/csharp-script-classes.md`\n- `docs/scripting/csharp-script-classes.md`\n- `docs/README.md`\n- `docs/README.md`\n- `docs/releases/0.1.0-preview.md`\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ToolScriptExecutionTests\" --no-restore` ожидаемо упал на compile errors из-за отсутствующих `ToolScriptExecutionHost`, callback/status/result types.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ToolScriptExecutionTests\" --no-restore` прошёл: `3` passed.\n- Focused scripting: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ToolScriptExecutionTests|FullyQualifiedName~ScriptMetadataTests\" --no-restore` прошёл: `7` passed.\n- Public type guard: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~CleanRuntimeBaselineTests\" --no-restore` прошёл: `1` passed.\n- API compatibility: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` прошёл, public types `106`.\n- AOT metadata: `powershell -ExecutionPolicy Bypass -File tools\\Verify-AotMetadataSafety.ps1` прошёл; остались прежние trim warnings в `Callable`, `PackedScene` и `SceneTree`.\n- Full runner: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `60`, integration `175`, runtime smoke `5`, golden data `11`.\n- Whitespace: `git diff --check` прошёл; Git вывел только предупреждения о будущей нормализации переносов строк под Windows.\n- Documentation wording: проверка добавленных строк текущего diff не нашла запрещённых публичных формулировок.\n\n## Ограничения\n\n- Host не запускает editor GUI run loop и не управляет scene preview.\n- Host не компилирует C# и не загружает assemblies.\n- Source generator для metadata остаётся отдельной задачей.\n- Полная sandbox isolation process model не входит в baseline.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-21T10:10:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T10:10:00.0000000+00:00",
+  "completedAt": "2026-06-21T10:10:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T10:10:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T10:10:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

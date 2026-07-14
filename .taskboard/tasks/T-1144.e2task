@@ -1,0 +1,224 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-694d869462fbc7d5fd64cee53738276f",
+  "revision": 2,
+  "taskId": "T-1144",
+  "legacyAliases": [],
+  "title": "Унифицировать источник возможностей production renderer",
+  "description": "## T-1144 [ ] P3: Унифицировать источник возможностей production renderer\n\n- Создана: 2026-07-10T21:35:46+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-1137\n- Ссылки:\n  - Доменный документ: `docs/rendering/rendering-server.md`\n  - Источники: `src/Electron2D/Graphics/Rendering/StandardRenderingBackend.cs`; `src/Electron2D/Graphics/Rendering/SdlGpuRenderingBackend.cs`; `src/Electron2D/Runtime/Application/RuntimeFramePresenter.cs`\n  - Публичная граница: `src/Electron2D/Graphics/Rendering/RenderingServer.cs`\n  - Проверки: `tests/Electron2D.Tests.Integration/RuntimeHostTests.cs`; `tests/Electron2D.Tests.Integration/RenderingServerBackendTests.cs`\n  - Источник finding-а: `docs/verdicts/release-management/t-1137-audit-control-r37.md`, `FOLLOW_UP_FINDING F4`\n\n### Execution contract\n\n- Task type: production renderer capability-source unification without expanding supported features.\n- Ready-to-start:\n  - task state is `open`;\n  - `T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;\n  - no other task is `in progress`.\n- Stop conditions:\n  - work enables `RenderTargets`, `CustomShaders`, `ShaderMaterial`, `MultiPass`, `AdvancedBlending` or `PostProcessing` without their own implemented consumer paths;\n  - public signatures or manual API-profile decisions would change;\n  - the proposed source no longer represents the capabilities of the presenter actually selected by `RuntimeFramePresenter`.\n- May change:\n  - internal capability storage and propagation among the SDL GPU presenter/backend, `RuntimeFramePresenter` and `RenderingServer` binding;\n  - existing production-selection/backend tests and the rendering domain document.\n- Must not change:\n  - current `true`/`false` feature values;\n  - public `RenderingServer` signatures, profile enum values or 2D/HLSL/RD-free boundary;\n  - SDL Renderer fallback behavior and unrelated render paths.\n- Required outputs:\n  - one typed immutable capability source used by the actual production SDL GPU path and the public `RenderingServer` binding;\n  - no duplicated hand-maintained feature arrays for the same selected presenter;\n  - production `RuntimeHost` evidence without direct test calls to `SetBackend`.\n- Required commands:\n  - `dotnet build src/Electron2D/Electron2D.csproj --no-restore -v:minimal`\n  - existing focused `RuntimeHostTests.RuntimeFramePresenterUsesSdlRendererFallbackWhenGpuPresenterCreationFails`\n  - existing focused `RenderingServerBackendTests`\n  - `dotnet run --project eng/Electron2D.Build -- update api-manifest --check`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: not required by default; require it only if public feature values, signatures or profile semantics change.\n\n### Internal substrate acceptance contract\n\n- Input boundary: capabilities of the presenter actually selected by `RuntimeFramePresenter` for SDL GPU or SDL Renderer.\n- Selection invariant: `RenderingServer.CurrentProfile` and `HasFeature` observe the same immutable capability source as the active production presenter.\n- Failure policy: a presenter/backend capability mismatch fails focused production-selection tests instead of silently publishing a second feature list.\n- Consumer boundary: `RuntimeHost` selection, public `RenderingServer` binding and backend diagnostics agree without direct test-only backend replacement.\n- Regression boundary: all six not-yet-wired features remain `false`; fallback still selects `Compatibility`.\n\n### Самодостаточное описание\n\n`StandardRenderingBackend` и `SdlGpuRenderingBackend` сейчас содержат одинаковые ручные feature arrays, а `RuntimeFramePresenter` после создания GPU presenter привязывает к публичному facade новый `StandardRenderingBackend`, а не capability source фактически выбранного presenter-а. Списки пока совпадают, поэтому runtime корректен, но последующее изменение одного массива может незаметно разойтись со вторым. Задача устраняет только дублирование и связывает public profile с production source без включения новых возможностей.\n\n### Критерии приёмки\n\n- [ ] Канонический набор возможностей production presenter определён один раз типизированным immutable contract.\n- [ ] SDL GPU/SDL Renderer selection и public `RenderingServer` используют один согласованный источник.\n- [ ] Текущие feature values и public API не изменены.\n- [ ] Existing RuntimeHost/backend checks подтверждают production selection без прямого `SetBackend`.\n- [ ] Build/docs/license/whitespace checks проходят.\n\n### Подзадачи\n\n- [ ] Найти все дублирующие production capability arrays и потребителей.\n- [ ] Зафиксировать единый immutable source в доменном документе и существующих tests.\n- [ ] Реализовать минимальное связывание production presenter с public facade.\n- [ ] Выполнить обязательные проверки без расширения feature scope.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: r37 подтвердил, что текущие массивы совпадают и production profile/flags наблюдаются корректно.\n- Ещё отсутствует: единый capability source, который одновременно принадлежит фактическому presenter-у и public binding.\n- Принято аудитом: отсутствует; r37 классифицировал дублирование как неблокирующий follow-up.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r37.md\n  - id: FOLLOW_UP_FINDING F4\n  - state: tracked-new\n  - target: T-1144\n  - rationale: Текущее поведение согласовано; архитектурное устранение двух ручных capability arrays вынесено из corrective scope T-1137 в отдельную zero-context P3-задачу.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r38.md\n  - id: FOLLOW_UP_FINDING F4\n  - state: tracked-existing\n  - target: T-1144\n  - rationale: r38 повторяет архитектурное дублирование capability arrays; T-1144 уже владеет унификацией без изменения feature values.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P3",
+  "tagIds": [
+    "tag-0011"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-94ca0395565920c2776d3693d2df82fe"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Канонический набор возможностей production presenter определён один раз типизированным immutable contract.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "SDL GPU/SDL Renderer selection и public `RenderingServer` используют один согласованный источник.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Текущие feature values и public API не изменены.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Existing RuntimeHost/backend checks подтверждают production selection без прямого `SetBackend`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Build/docs/license/whitespace checks проходят.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required by default; require it only if public feature values, signatures or profile semantics change."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/rendering/rendering-server.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-1137-audit-control-r37.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/RenderingServer.cs"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/SdlGpuRenderingBackend.cs"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/StandardRenderingBackend.cs"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Application/RuntimeFramePresenter.cs"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RenderingServerBackendTests.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RuntimeHostTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production renderer capability-source unification without expanding supported features.",
+    "readyToStart": [
+      "task state is `open`;",
+      "`T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;",
+      "no other task is `in progress`."
+    ],
+    "stopConditions": [
+      "work enables `RenderTargets`, `CustomShaders`, `ShaderMaterial`, `MultiPass`, `AdvancedBlending` or `PostProcessing` without their own implemented consumer paths;",
+      "public signatures or manual API-profile decisions would change;",
+      "the proposed source no longer represents the capabilities of the presenter actually selected by `RuntimeFramePresenter`."
+    ],
+    "allowedChanges": [
+      "internal capability storage and propagation among the SDL GPU presenter/backend, `RuntimeFramePresenter` and `RenderingServer` binding;",
+      "existing production-selection/backend tests and the rendering domain document."
+    ],
+    "forbiddenChanges": [
+      "current `true`/`false` feature values;",
+      "public `RenderingServer` signatures, profile enum values or 2D/HLSL/RD-free boundary;",
+      "SDL Renderer fallback behavior and unrelated render paths."
+    ],
+    "requiredOutputs": [
+      "one typed immutable capability source used by the actual production SDL GPU path and the public `RenderingServer` binding;",
+      "no duplicated hand-maintained feature arrays for the same selected presenter;",
+      "production `RuntimeHost` evidence without direct test calls to `SetBackend`."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet build src/Electron2D/Electron2D.csproj --no-restore -v:minimal`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "existing focused `RuntimeHostTests.RuntimeFramePresenterUsesSdlRendererFallbackWhenGpuPresenterCreationFails`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "existing focused `RenderingServerBackendTests`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update api-manifest --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 15484675,
+      "byteLength": 7153,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "3b049040da1c3aa333839ca9d587be3de3f722c6d9af7a7a03d8523d46951857",
+      "markdown": "## T-1144 [ ] P3: Унифицировать источник возможностей production renderer\n\n- Создана: 2026-07-10T21:35:46+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-1137\n- Ссылки:\n  - Доменный документ: `docs/rendering/rendering-server.md`\n  - Источники: `src/Electron2D/Graphics/Rendering/StandardRenderingBackend.cs`; `src/Electron2D/Graphics/Rendering/SdlGpuRenderingBackend.cs`; `src/Electron2D/Runtime/Application/RuntimeFramePresenter.cs`\n  - Публичная граница: `src/Electron2D/Graphics/Rendering/RenderingServer.cs`\n  - Проверки: `tests/Electron2D.Tests.Integration/RuntimeHostTests.cs`; `tests/Electron2D.Tests.Integration/RenderingServerBackendTests.cs`\n  - Источник finding-а: `docs/verdicts/release-management/t-1137-audit-control-r37.md`, `FOLLOW_UP_FINDING F4`\n\n### Execution contract\n\n- Task type: production renderer capability-source unification without expanding supported features.\n- Ready-to-start:\n  - task state is `open`;\n  - `T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;\n  - no other task is `in progress`.\n- Stop conditions:\n  - work enables `RenderTargets`, `CustomShaders`, `ShaderMaterial`, `MultiPass`, `AdvancedBlending` or `PostProcessing` without their own implemented consumer paths;\n  - public signatures or manual API-profile decisions would change;\n  - the proposed source no longer represents the capabilities of the presenter actually selected by `RuntimeFramePresenter`.\n- May change:\n  - internal capability storage and propagation among the SDL GPU presenter/backend, `RuntimeFramePresenter` and `RenderingServer` binding;\n  - existing production-selection/backend tests and the rendering domain document.\n- Must not change:\n  - current `true`/`false` feature values;\n  - public `RenderingServer` signatures, profile enum values or 2D/HLSL/RD-free boundary;\n  - SDL Renderer fallback behavior and unrelated render paths.\n- Required outputs:\n  - one typed immutable capability source used by the actual production SDL GPU path and the public `RenderingServer` binding;\n  - no duplicated hand-maintained feature arrays for the same selected presenter;\n  - production `RuntimeHost` evidence without direct test calls to `SetBackend`.\n- Required commands:\n  - `dotnet build src/Electron2D/Electron2D.csproj --no-restore -v:minimal`\n  - existing focused `RuntimeHostTests.RuntimeFramePresenterUsesSdlRendererFallbackWhenGpuPresenterCreationFails`\n  - existing focused `RenderingServerBackendTests`\n  - `dotnet run --project eng/Electron2D.Build -- update api-manifest --check`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: not required by default; require it only if public feature values, signatures or profile semantics change.\n\n### Internal substrate acceptance contract\n\n- Input boundary: capabilities of the presenter actually selected by `RuntimeFramePresenter` for SDL GPU or SDL Renderer.\n- Selection invariant: `RenderingServer.CurrentProfile` and `HasFeature` observe the same immutable capability source as the active production presenter.\n- Failure policy: a presenter/backend capability mismatch fails focused production-selection tests instead of silently publishing a second feature list.\n- Consumer boundary: `RuntimeHost` selection, public `RenderingServer` binding and backend diagnostics agree without direct test-only backend replacement.\n- Regression boundary: all six not-yet-wired features remain `false`; fallback still selects `Compatibility`.\n\n### Самодостаточное описание\n\n`StandardRenderingBackend` и `SdlGpuRenderingBackend` сейчас содержат одинаковые ручные feature arrays, а `RuntimeFramePresenter` после создания GPU presenter привязывает к публичному facade новый `StandardRenderingBackend`, а не capability source фактически выбранного presenter-а. Списки пока совпадают, поэтому runtime корректен, но последующее изменение одного массива может незаметно разойтись со вторым. Задача устраняет только дублирование и связывает public profile с production source без включения новых возможностей.\n\n### Критерии приёмки\n\n- [ ] Канонический набор возможностей production presenter определён один раз типизированным immutable contract.\n- [ ] SDL GPU/SDL Renderer selection и public `RenderingServer` используют один согласованный источник.\n- [ ] Текущие feature values и public API не изменены.\n- [ ] Existing RuntimeHost/backend checks подтверждают production selection без прямого `SetBackend`.\n- [ ] Build/docs/license/whitespace checks проходят.\n\n### Подзадачи\n\n- [ ] Найти все дублирующие production capability arrays и потребителей.\n- [ ] Зафиксировать единый immutable source в доменном документе и существующих tests.\n- [ ] Реализовать минимальное связывание production presenter с public facade.\n- [ ] Выполнить обязательные проверки без расширения feature scope.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: r37 подтвердил, что текущие массивы совпадают и production profile/flags наблюдаются корректно.\n- Ещё отсутствует: единый capability source, который одновременно принадлежит фактическому presenter-у и public binding.\n- Принято аудитом: отсутствует; r37 классифицировал дублирование как неблокирующий follow-up.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r37.md\n  - id: FOLLOW_UP_FINDING F4\n  - state: tracked-new\n  - target: T-1144\n  - rationale: Текущее поведение согласовано; архитектурное устранение двух ручных capability arrays вынесено из corrective scope T-1137 в отдельную zero-context P3-задачу.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r38.md\n  - id: FOLLOW_UP_FINDING F4\n  - state: tracked-existing\n  - target: T-1144\n  - rationale: r38 повторяет архитектурное дублирование capability arrays; T-1144 уже владеет унификацией без изменения feature values.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-10T18:35:46.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

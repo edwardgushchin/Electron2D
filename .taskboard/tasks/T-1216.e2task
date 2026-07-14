@@ -1,0 +1,251 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-e4f2f26cd88e439da3c9a1a80e703d2b",
+  "revision": 2,
+  "taskId": "T-1216",
+  "legacyAliases": [],
+  "title": "Восстановить превью v3-вложений VS Code Task Board по taskUid",
+  "description": "После перехода TaskBoard v3 корректный compact snapshot содержит `cardPreview`, но установленное VS Code-расширение не показывает обложку. Канонический путь вложения строится по неизменяемому `taskUid` (`.taskboard/attachments/<taskUid>/...`), тогда как Extension Host проверяет allowlisted prefix по отображаемому `taskId` и поэтому удаляет безопасное превью перед отправкой в webview. Нужно использовать доверенный `taskUid` текущего snapshot для owner validation, сохранить traversal/containment boundary и покрыть одинаково compact card preview и изображения в полном окне задачи.",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0002",
+    "tag-0003",
+    "tag-0010",
+    "tag-0013"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "assignee": null,
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "v3-owner-path",
+      "description": "Extension Host принимает корректный растровый путь `.taskboard/attachments/<taskUid>/<attachmentId>/<sha256>.<ext>` только для `taskUid` текущей задачи и создаёт безопасный webview URI для `cardPreview` и attachment preview.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "automatic-preview",
+      "description": "При `previewAttachmentId = null` первое растровое вложение из compact snapshot отображается как автоматическая обложка карточки; явный выбор обложки продолжает отображать выбранное изображение.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "path-security",
+      "description": "Пути другого `taskUid`, absolute paths, пустые сегменты, `.` и `..` отклоняются; исправление не удаляет owner/containment-проверку и не расширяет webview resource boundary.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "regression-verification",
+      "description": "Focused regression сначала воспроизводит отбрасывание v3-превью, затем проходят полный unit-набор, typecheck, сборка VSIX и проверка установленного расширения в реальном VS Code с FFmpeg-снимком карточки.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "documentation",
+      "description": "Доменный документ VS Code Task Board до production-кода фиксирует taskUid-based attachment owner boundary, а после GREEN содержит фактическое поведение и команды проверки.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [],
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "links": [
+    {
+      "linkId": "link-preview-domain",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-preview-host",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/extension.ts"
+    },
+    {
+      "linkId": "link-preview-model",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/models.ts"
+    },
+    {
+      "linkId": "link-preview-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/extension-core.test.ts"
+    }
+  ],
+  "executionContract": {
+    "taskType": "исправление v3 attachment preview boundary в VS Code Task Board",
+    "readyToStart": [
+      "Пользовательский снимок после `Developer: Reload Window` подтверждает отсутствие обложки у `T-1212`, хотя `e2d tasks board --compact true` возвращает `cardPreview` A-0001.",
+      "Причина локализована: v3 хранит вложения под `taskUid`, а `isSafeAttachmentPath` в Extension Host всё ещё строит allowlisted prefix по `taskId`."
+    ],
+    "stopConditions": [
+      "Исправление требует удалить owner/containment-проверку, разрешить произвольные workspace paths или ослабить webview CSP/resource boundary.",
+      "Compact/full task snapshots не предоставляют доверенный `taskUid` либо обнаружено пересечение с незавершённой правкой того же security boundary, которое нельзя безопасно объединить."
+    ],
+    "allowedChanges": [
+      "Доменный документ, типы snapshot при необходимости, `taskForWebview`/`previewForWebview`/`isSafeAttachmentPath` и focused unit-тесты Extension Host.",
+      "Сборка и установка VSIX, FFmpeg evidence, taskboard evidence через CLI и append-only дневник."
+    ],
+    "forbiddenChanges": [
+      "Изменение canonical attachment layout, `taskUid`, blob-файлов или taskboard storage вне штатного CLI.",
+      "Отключение проверки безопасного пути, разрешение внешних URI, несвязанный рефакторинг webview или изменение выбора обложки."
+    ],
+    "requiredOutputs": [
+      "TaskUid-aware owner validation для compact `cardPreview` и полных attachment previews.",
+      "Негативные проверки foreign owner/traversal и RED/GREEN регрессия автоматической обложки.",
+      "Синхронизированный доменный документ, установленный VSIX и реальный FFmpeg-снимок карточки с обложкой."
+    ],
+    "commands": [
+      {
+        "commandId": "cmd-v3-preview-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "cmd-v3-preview-typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "cmd-v3-preview-package",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [
+    {
+      "attachmentId": "A-0001",
+      "displayName": "codex-clipboard-7a6028d7-4e05-40fc-a7ae-ccb9eeab9bec.png",
+      "relativePath": ".taskboard/attachments/task-e4f2f26cd88e439da3c9a1a80e703d2b/A-0001/9197dfa071a0e3015ba0da3fe46af5950ea27ff9deb845c3828e165c3532551e.png",
+      "mediaType": "image/png",
+      "byteLength": 10871,
+      "sha256": "9197dfa071a0e3015ba0da3fe46af5950ea27ff9deb845c3828e165c3532551e",
+      "addedAt": "2026-07-13T15:37:10.0756861+00:00",
+      "addedBy": "cli",
+      "derivatives": [
+        {
+          "derivativeId": "derivative-extractedtext",
+          "kind": "ExtractedText",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "9197dfa071a0e3015ba0da3fe46af5950ea27ff9deb845c3828e165c3532551e",
+          "extractor": null,
+          "createdAt": "2026-07-13T15:37:10.0756861+00:00"
+        },
+        {
+          "derivativeId": "derivative-ocr",
+          "kind": "Ocr",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "9197dfa071a0e3015ba0da3fe46af5950ea27ff9deb845c3828e165c3532551e",
+          "extractor": null,
+          "createdAt": "2026-07-13T15:37:10.0756861+00:00"
+        },
+        {
+          "derivativeId": "derivative-preview",
+          "kind": "Preview",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "9197dfa071a0e3015ba0da3fe46af5950ea27ff9deb845c3828e165c3532551e",
+          "extractor": null,
+          "createdAt": "2026-07-13T15:37:10.0756861+00:00"
+        }
+      ]
+    }
+  ],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-13T15:36:39.8024283+00:00",
+  "updatedAt": "2026-07-13T15:37:10.0756861+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "auditRuns": []
+}

@@ -12,10 +12,35 @@ This document contains the detailed agent workflow that used to make root `AGENT
 ## Language And Terms
 
 - `AGENTS.md` and this workflow document are English by explicit user request.
-- Project-facing Markdown is Russian by default unless the user or a more specific local rule explicitly requires another language. This includes domain documents, task files, completed-task archives, the diary, README files, agent notes, release notes, changelogs, and UI prose.
+- The repository human language is declared by the closest applicable `AGENTS.md`; root `AGENTS.md` currently declares Russian (`ru`). Changing the repository language requires updating that instruction first.
+- Project-facing Markdown uses the repository language unless the user or a more specific local rule explicitly requires another language. This includes domain documents, the diary, README files, agent notes, release notes, changelogs, and UI prose.
+- Every new or changed human-readable taskboard value must use the repository language. This includes task and subtask titles and descriptions, acceptance-criterion descriptions, comments, activity and evidence notes, blocker and closure explanations, human-readable group names and descriptions, and prose in the execution contract such as readiness rules, stop conditions, allowed or forbidden changes, required outputs, and external-audit instructions.
+- Do not copy source material written in another language into a human-readable task field as ordinary prose. State its meaning in the repository language and retain the original only when it is an exact quotation, external evidence, or a technical literal.
 - Exact identifiers remain unchanged: paths, commands, API fields, package names, code symbols, file formats, official product names, and diagnostic codes.
+- Task IDs, criterion IDs, schema and enum values, machine labels, literal command lines, and other contract values also remain unchanged. Translate only the human-readable explanation around them.
+- Migrated `legacySourceFragments`, historical task bytes, external quotations, and attached evidence remain verbatim. This language rule applies prospectively to task creation and updates; any normalization of existing task prose must use `e2d tasks` and must not rewrite preserved legacy content.
 - In Russian prose, do not use English words as shorthand when a normal Russian term exists. If an exact term is required, put it in backticks or explain it nearby.
 - Avoid English-heavy comma lists inside Russian sentences. Give the Russian meaning first, then the exact identifier when needed.
+
+### Human Writing Style For Tasks
+
+Task text is written for a teammate, not for a parser or another language model. Titles, descriptions, criteria, comments, evidence, blocker explanations and execution-contract prose must sound like normal human communication in the repository language.
+
+- Start with what needs to happen, why it matters and what result is expected. Do not start with an inventory of schema fields, storage objects or internal subsystems.
+- Use complete, natural sentences. Prefer active verbs and concrete nouns over compressed noun chains, bureaucratic wording and strings of technical labels.
+- Do not turn prose into a machine summary. Dense slash-separated lists, arrows that stand in for an explanation, unexplained abbreviations and English-heavy term sequences are not acceptable task writing.
+- Mention an internal field, schema name, enum value, command or path only when the person doing the work needs that exact detail. Explain its meaning in ordinary words before or alongside the literal identifier.
+- Do not list every implementation detail merely because it exists. Keep the task focused on the decision, constraint or observable result that affects the work.
+- Write acceptance criteria as outcomes a person can verify. A criterion should say what must be true, not recite the names of internal structures involved in making it true.
+- Before saving task text, read it as if the reader had not opened the schema and did not know the current agent's train of thought. If the reader must decode the sentence, rewrite it.
+
+Unacceptable machine-like wording:
+
+> Task schema v2 хранит immutable UID, человекочитаемый ID, execution contract, criteria, activity, audit fields, attachment metadata и legacy fragments. Board schema v2 хранит placements/ranks и иерархию **Epoch -> Milestone -> Task**; readiness вычисляется из dependency DAG. **Done** требует человеческой приёмки, а перенос в **.taskboard/completed** выполняется отдельным **archive**.
+
+The same meaning written for a person:
+
+> У каждой задачи есть обычный номер и постоянный внутренний идентификатор. В задаче хранятся требования, критерии проверки, история изменений и сведения о вложениях. На доске задачи можно объединять в эпохи и вехи и располагать в нужном порядке. Если задача зависит от других, начать её можно только после их завершения. Задача считается завершённой только после приёмки человеком. После этого её можно отдельно перенести в архив `.taskboard/completed` командой `archive`.
 
 ## Documentation And Public API
 
@@ -48,19 +73,22 @@ Do not create a second implementation-documentation file for the same behavior w
 
 ## Task Workflow
 
-- Active tasks live in tracked `TASKS.md`.
-- Every substantive change should be represented in `TASKS.md` when the file exists.
-- Each task entry must be zero-context: priority, dependencies, linked docs/source/tests, brief, acceptance criteria, subtasks, and agent notes.
-- Every active task must include `### Execution contract` with task type, ready-to-start rules, stop conditions, allowed and forbidden changes, required outputs, required commands, and external-audit handling. Public API class tasks must also include `### First implementation slice`; internal-substrate tasks must include a substrate-specific acceptance contract; tracking tasks must forbid production changes; blocked tasks must include `### Blocked protocol`.
-- In active tasks, acceptance criteria and subtasks are the target contract and stay unchecked until explicit user acceptance or archival. Current local progress, historical attempts, audit verdicts, and remaining gaps belong in a separate current-evidence section, not in checked acceptance boxes.
-- Do not close or archive a task without explicit user acceptance.
-- Completed tasks are appended to monthly archives under `data/completed-tasks/YYYY/MM <Russian month name>.md`, not to one-file-per-task archives.
-- `TASKS.md` must end with `## ROADMAP`. The roadmap must not create new task IDs and is not an acceptance state.
+- The tracked canonical store is `.taskboard`; its board document is `.taskboard/board.e2tasks`, active tasks live under `.taskboard/tasks/`, and archived tasks live under `.taskboard/completed/`.
+- The CLI is the only public writer for task state, and `e2d tasks` is the canonical read interface. Agents, repository automation, VS Code, Tooling and MCP must not edit `.e2tasks` or `.e2task` JSON directly.
+- Before substantive work, use `e2d tasks get <task-id> --project . --format json` and `e2d tasks board --project . --format json` to read the task, its current revision, dependencies and group placement.
+- Every substantive change should have a task created through `e2d tasks create`. The task must remain zero-context: priority, dependencies, linked docs/source/tests, a detailed brief, acceptance criteria, subtasks, activity and an execution contract.
+- A newly created task must be semantically complete in the canonical schema before implementation starts. Read it back through `e2d tasks get` and fill every applicable structured field instead of hiding the same information only in `description`: task type, ready-to-start rules, stop conditions, allowed and forbidden changes, required outputs and commands, parent/dependencies/subtasks, board placement, linked documentation/source/tests/artifacts, acceptance criteria, priority and deadline when one is actually known. Fields may stay empty only when they are genuinely not applicable or are historical runtime data that does not exist yet, such as activity, attachments, diagnostics, transactions, jobs, acceptance timestamps or cancellation data.
+- Every task must carry the relevant tags from the board-owned tag catalog. Reuse existing tags by stable ID, create a missing generally reusable tag through `e2d tasks tag create`, and avoid encoding status, priority, epoch or milestone as tags because those already have canonical fields. Read the task back and verify that the expected tag IDs resolve to the intended board tag definitions.
+- Task creation fails closed when the public CLI cannot express a required structured field. Do not leave a partial task, edit `.e2task` directly or treat prose in `description` as a substitute for missing schema data. Extend and verify the revision-aware `e2d tasks` mutation contract first, then complete the task and only after that move it to `InProgress`.
+- Mutations use the task and board revisions returned by the preceding read. Use the relevant `e2d tasks update`, `set-status`, `dependency`, `parent`, `group`, `comment`, `attachment`, `submit`, `accept`, `request-changes`, `cancel`, `reopen`, `archive` or `unarchive` command; never bypass optimistic concurrency by editing files.
+- Acceptance criteria and subtasks remain target contract until explicit human acceptance. Current evidence, audit verdicts, blocker reports and remaining gaps belong in task activity, normally through `e2d tasks comment add`, rather than by rewriting the target contract.
+- `Done` requires human acceptance. Do not invoke acceptance or archive a task without explicit user acceptance. Only `Done` or `Cancelled` tasks may be moved to `.taskboard/completed/` through `e2d tasks archive`.
+- Run `e2d tasks verify --project . --format json` after task graph or task-state mutations. Missing dependency targets, dependency cycles, parent cycles, invalid placements, revision mismatches and dual legacy/canonical stores fail closed.
 - `CHANGELOG*` and `RELEASE-NOTES*` are local release drafts. They stay ignored and are not canonical documentation.
 
 ### Ready-To-Start Gate
 
-When a user request, goal prompt, or automation names a concrete `T-XXXX`, run this gate before changing production code, tests, generated artifacts, docs, or task state for that task.
+When a user request, goal prompt, or automation names a concrete task ID, run this gate through `e2d tasks get` before changing production code, tests, generated artifacts, docs, or task state for that task.
 
 You may start implementation work only when all of these are true:
 
@@ -73,7 +101,7 @@ Stop conditions:
 - If the task state is `blocked`, do not implement production code, do not add tests for that task, do not package audit artifacts, and do not commit.
 - If the task state is `tracking`, use it only as context; pick an unblocked child task instead of implementing the tracking task directly.
 - If the task has `Execution class: final-gate`, treat it as verify-only: run the gate commands, gather evidence, produce the gate report, and record blockers with owning tasks. Do not fix leaf implementations, subsystem backends, platform runtime behavior, or class-specific docs inside the final gate; only missing or stale gate tooling/evidence plumbing may be changed there.
-- If dependencies are not accepted or an external blocker has no explicit current user override, write a blocker report in `TASKS.md` and the diary, then stop without commit.
+- If dependencies are not accepted or an external blocker has no explicit current user override, add a blocker report through `e2d tasks comment add`, set the task to `Blocked` through `e2d tasks set-status` when appropriate, update the diary, and then stop without commit.
 - A goal prompt that says to reach `ACCEPT` and commit does not bypass this gate. The gate must pass first, or the correct result is a blocker report.
 
 ## Development Diary
@@ -114,6 +142,33 @@ Rules:
 - After source changes, run the license verifier.
 - For docs or generated artifacts, run the repository generation and check commands.
 - Do not claim a check passed unless it ran in the current session.
+
+### Mandatory Windows UI Capture Through FFmpeg
+
+Every UI task must use the tracked `eng/tools/capture_window.py` for visual capture of the real Windows application. It uses the installed `ffmpeg` `gdigrab` input and has no third-party Python dependencies. This is the only approved screenshot path for Electron2D repository work: agents must not use the Windows-control or `computer-use` screenshot backend, even when that backend is available.
+
+Typical commands:
+
+```powershell
+python eng/tools/capture_window.py --list
+python eng/tools/capture_window.py --title "Visual Studio Code" --output .temp/taskboard-window.png
+python eng/tools/capture_window.py --output .temp/active-window.png
+python -m unittest discover -s eng/tools/tests -p "test_capture_window.py" -v
+```
+
+Rules:
+
+- Run the helper against the real application after every UI implementation or fix. Unit tests, Extension Host checks and compilation are complementary evidence, not replacements for the required PNG.
+- Do not use Windows-control or `computer-use` for screenshots in this repository. Do not describe the FFmpeg path as a fallback; it is the canonical capture path.
+- Keep captures under `.temp/` unless the task explicitly requires a tracked visual artifact.
+- Use `--title <fragment>` for a known application, no selector for the foreground window, `--hwnd <value>` for an exact native window, or `--desktop` for the virtual desktop.
+- Inspect the resulting PNG before claiming visual verification; a successful process exit alone is not visual evidence.
+- Record the command, PNG path and what was visibly verified in task activity and the diary.
+- The helper may restore and activate a minimized or covered target. If the Windows foreground lock still rejects activation, it temporarily applies `TOPMOST`, captures the visible desktop rectangle and removes `TOPMOST` in `finally`; it must never leave the target permanently above other windows.
+- Visible desktop crop is the primary window strategy because `gdigrab` can return a successful but fully black `HWND`/title frame for GPU-composited Electron or Chromium windows. Exact `HWND` and title capture remain fallbacks when desktop crop itself fails.
+- A desktop crop is evidence of pixels actually visible after target activation. It can still include foreign overlays, native popup windows or monitor-edge clipping, so inspect the PNG and describe any such limitation.
+- A fixture, headless render or user-provided pre-change screenshot may be diagnostic context, but it never replaces the mandatory post-change capture through this helper.
+- If Python, `ffmpeg`, window discovery, or every capture strategy fails, report the exact command and diagnostic and leave visual verification explicitly blocked. Do not silently substitute another screenshot backend, fixture or headless render.
 
 ## External Audit Workflow
 

@@ -1,0 +1,247 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-74bfcc810bb4ff8a8463ecc5f0ceee92",
+  "revision": 2,
+  "taskId": "T-0177",
+  "legacyAliases": [],
+  "title": "Основа UI B - текст, clipping, scrolling и DPI",
+  "description": "## T-0177 [ ] P0: Основа UI B - текст, clipping, scrolling и DPI\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0176\n- Ссылки:\n  - Доменный документ: `docs/ui/control-layout-core.md`; `docs/ui/containers.md`; `docs/ui/basic-controls.md`; `docs/rendering/text-backend-baseline.md`; `docs/settings-localization/unicode-ime-rtl-text.md`\n  - Исходный код: `src/Electron2D/Graphics/UI/`; `src/Electron2D/Rendering/`; `src/Electron2D/Resources/`\n  - Тесты: `tests/Electron2D.Tests.Integration/ControlLayoutCoreTests.cs`; `tests/Electron2D.Tests.Integration/ContainerLayoutTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0177.\n  - blocker artifact `data/quality/blockers/T-0177.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/ui/control-layout-core.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0177.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0177.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЦель - сделать runtime UI пригодным для длинных путей, русских labels, Inspector-строк, деревьев и прокручиваемых панелей на 100-200% DPI. Сейчас `ClipContents` ограничивает hit-test, но полноценный render clipping/scissor и text overrun behavior остаются недостающим foundation.\n\nОжидаемый результат: text clipping, wrapping, ellipsis, корректные minimum sizes, child clipping, scissor regions, scroll offsets, wheel input, programmatic ensure-visible, DPI-aware metrics и layout/repaint invalidation работают в общей runtime UI системе `SceneTree`/`Control`, а не в отдельной реализации редактора. Визуальный `ScrollBar` как отдельный desktop control закрывается позже в `T-0179`.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменные документы обновлены до кода: text overrun, wrapping, ellipsis, render clipping, scroll behavior и DPI scale описаны в одном месте с ограничениями.\n- [ ] Добавлены сначала падающие tests для render clipping, ellipsis, wrapping, long project paths, русских labels, minimum size и DPI scale 100%, 125%, 150%, 200%.\n- [ ] `Control.ClipContents` ограничивает не только pointer hit-test, но и фактическую отрисовку потомков через renderer/scissor внутреннего слоя.\n- [ ] `ScrollContainer` поддерживает scroll offsets, wheel input и programmatic ensure-visible; text overflow не ломает layout Scene Tree, FileSystem и Inspector.\n- [ ] Layout/repaint invalidation проверяется счётчиками: после initial layout за 120 неизменённых кадров не происходит новых measure/layout passes и не растут связанные allocation counters.\n- [ ] Real-window visual artifacts проверяют 1280x720 и 1920x1080 без text overflow.\n- [ ] Focused UI tests, проверка лицензий исходников и local проверка документации проходят.\n\n### Подзадачи\n\n- [ ] Специфицировать text overrun modes и clipping semantics.\n- [ ] Реализовать renderer scissor для clipped controls.\n- [ ] Подключить wrapping/ellipsis/minimum-size tests.\n- [ ] Расширить scrolling и DPI checks.\n- [ ] Проверить editor shell на длинных путях и русском тексте.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача выделена из пользовательского списка runtime foundation, чтобы не переносить overflow и DPI проблемы в каждый editor dock отдельно.\n\n2026-06-24T03:49:00+03:00 - Scope уточнён: `T-0177` не требует визуальный `ScrollBar`, потому что этот control входит в настольные элементы управления `T-0179`. Здесь остаются scroll offsets, clipping, wheel input и ensure-visible.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": "task-6e1088ab0e5bff54d81278aab3c7ac54",
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-cda46fb5c886cd60ac437bf29693a930"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменные документы обновлены до кода: text overrun, wrapping, ellipsis, render clipping, scroll behavior и DPI scale описаны в одном месте с ограничениями.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Добавлены сначала падающие tests для render clipping, ellipsis, wrapping, long project paths, русских labels, minimum size и DPI scale 100%, 125%, 150%, 200%.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`Control.ClipContents` ограничивает не только pointer hit-test, но и фактическую отрисовку потомков через renderer/scissor внутреннего слоя.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`ScrollContainer` поддерживает scroll offsets, wheel input и programmatic ensure-visible; text overflow не ломает layout Scene Tree, FileSystem и Inspector.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Layout/repaint invalidation проверяется счётчиками: после initial layout за 120 неизменённых кадров не происходит новых measure/layout passes и не растут связанные allocation counters.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Real-window visual artifacts проверяют 1280x720 и 1920x1080 без text overflow.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Focused UI tests, проверка лицензий исходников и local проверка документации проходят.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача выделена из пользовательского списка runtime foundation, чтобы не переносить overflow и DPI проблемы в каждый editor dock отдельно."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T00:49:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Scope уточнён: `T-0177` не требует визуальный `ScrollBar`, потому что этот control входит в настольные элементы управления `T-0179`. Здесь остаются scroll offsets, clipping, wheel input и ensure-visible."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/dev-diary"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/quality/blockers/T-0177.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/rendering/text-backend-baseline.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/settings-localization/unicode-ime-rtl-text.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/ui/basic-controls.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/ui/containers.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/ui/control-layout-core.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "src/Electron2D/Graphics/UI"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "src/Electron2D/Rendering"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "src/Electron2D/Resources"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ContainerLayoutTests.cs"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ControlLayoutCoreTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "blocked-environment",
+    "readyToStart": [
+      "только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.",
+      "перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate."
+    ],
+    "stopConditions": [
+      "dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.",
+      "требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.",
+      "задача просит audit package без отдельной blocker-report задачи."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` blocker/current evidence notes for T-0177.",
+      "blocker artifact `data/quality/blockers/T-0177.md`, если нужен отдельный отчёт.",
+      "дневник `data/dev-diary/` и связанный доменный документ docs/ui/control-layout-core.md только для уточнения blocker-а."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.",
+      "unrelated task statuses, dependency graph or release scope."
+    ],
+    "requiredOutputs": [
+      "blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.",
+      "blocker artifact `data/quality/blockers/T-0177.md` when diagnostics need a durable file.",
+      "diary entry with exact commands or host checks that proved the block."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 114785,
+      "byteLength": 8520,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "c61d0dce149b218b0f6d551a87c1469ff5e6d83ed888756ba70763b1898aea3e",
+      "markdown": "## T-0177 [ ] P0: Основа UI B - текст, clipping, scrolling и DPI\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0176\n- Ссылки:\n  - Доменный документ: `docs/ui/control-layout-core.md`; `docs/ui/containers.md`; `docs/ui/basic-controls.md`; `docs/rendering/text-backend-baseline.md`; `docs/settings-localization/unicode-ime-rtl-text.md`\n  - Исходный код: `src/Electron2D/Graphics/UI/`; `src/Electron2D/Rendering/`; `src/Electron2D/Resources/`\n  - Тесты: `tests/Electron2D.Tests.Integration/ControlLayoutCoreTests.cs`; `tests/Electron2D.Tests.Integration/ContainerLayoutTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0177.\n  - blocker artifact `data/quality/blockers/T-0177.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/ui/control-layout-core.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0177.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0177.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЦель - сделать runtime UI пригодным для длинных путей, русских labels, Inspector-строк, деревьев и прокручиваемых панелей на 100-200% DPI. Сейчас `ClipContents` ограничивает hit-test, но полноценный render clipping/scissor и text overrun behavior остаются недостающим foundation.\n\nОжидаемый результат: text clipping, wrapping, ellipsis, корректные minimum sizes, child clipping, scissor regions, scroll offsets, wheel input, programmatic ensure-visible, DPI-aware metrics и layout/repaint invalidation работают в общей runtime UI системе `SceneTree`/`Control`, а не в отдельной реализации редактора. Визуальный `ScrollBar` как отдельный desktop control закрывается позже в `T-0179`.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменные документы обновлены до кода: text overrun, wrapping, ellipsis, render clipping, scroll behavior и DPI scale описаны в одном месте с ограничениями.\n- [ ] Добавлены сначала падающие tests для render clipping, ellipsis, wrapping, long project paths, русских labels, minimum size и DPI scale 100%, 125%, 150%, 200%.\n- [ ] `Control.ClipContents` ограничивает не только pointer hit-test, но и фактическую отрисовку потомков через renderer/scissor внутреннего слоя.\n- [ ] `ScrollContainer` поддерживает scroll offsets, wheel input и programmatic ensure-visible; text overflow не ломает layout Scene Tree, FileSystem и Inspector.\n- [ ] Layout/repaint invalidation проверяется счётчиками: после initial layout за 120 неизменённых кадров не происходит новых measure/layout passes и не растут связанные allocation counters.\n- [ ] Real-window visual artifacts проверяют 1280x720 и 1920x1080 без text overflow.\n- [ ] Focused UI tests, проверка лицензий исходников и local проверка документации проходят.\n\n### Подзадачи\n\n- [ ] Специфицировать text overrun modes и clipping semantics.\n- [ ] Реализовать renderer scissor для clipped controls.\n- [ ] Подключить wrapping/ellipsis/minimum-size tests.\n- [ ] Расширить scrolling и DPI checks.\n- [ ] Проверить editor shell на длинных путях и русском тексте.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача выделена из пользовательского списка runtime foundation, чтобы не переносить overflow и DPI проблемы в каждый editor dock отдельно.\n\n2026-06-24T03:49:00+03:00 - Scope уточнён: `T-0177` не требует визуальный `ScrollBar`, потому что этот control входит в настольные элементы управления `T-0179`. Здесь остаются scroll offsets, clipping, wheel input и ensure-visible.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

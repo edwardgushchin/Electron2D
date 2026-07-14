@@ -1,0 +1,252 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da",
+  "revision": 2,
+  "taskId": "T-0243",
+  "legacyAliases": [],
+  "title": "Добавить проверку расхождений публичного API с Godot 4.7",
+  "description": "## T-0243 [ ] P0: Добавить проверку расхождений публичного API с Godot 4.7\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/testing/godot-47-public-api-parity-verifier.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/testing/godot-47-public-api-parity-verifier.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/testing/godot-47-public-api-parity-verifier.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. Проверка должна падать при отсутствующем публичном элементе API, неверной сигнатуре, несовместимом перечислении или константе, неописанном отличии поведения и несинхронизированной документации.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n### Сгенерированные файлы, за которые отвечает T-0243\n\n`T-0243` владеет созданием и проверкой отчётов о расхождениях. Эти файлы являются сгенерированным результатом и не редактируются вручную:\n\n- `data/api/electron2d/diff/<ClassName>.diff.json`\n- `data/api/electron2d/diff/<ClassName>.diff.md`\n- `data/api/electron2d/reports/public-api-parity-summary.md`\n\nОтчёт о расхождениях строится только из сгенерированных описаний Godot, сгенерированных описаний Electron2D и утверждённых контрактов `Deferred`/`Unsupported`.\n\n### Команды инструмента, за которые отвечает T-0243\n\n- `dotnet run --project eng/Electron2D.Build -- api diff --class <ClassName>`\n- `dotnet run --project eng/Electron2D.Build -- api verify --class <ClassName>`\n- `dotnet run --project eng/Electron2D.Build -- api verify-all`### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ описывает схему отчёта о расхождениях, модель разрешённых отличий, порядок утверждения `Deferred`/`Unsupported` и поведение контрольной проверки CI.\n- [ ] `api verify --class <ClassName>` падает при отсутствующем классе, неверном наследовании, отсутствующем элементе API, неверной сигнатуре, неверном значении перечисления или константы, отсутствующей документации и неутверждённых отличиях.\n- [ ] Проверка поддерживает режимы одного класса и всех классов, работает воспроизводимо и даёт вывод, удобный для аудита.\n- [ ] `api verify-all` покрывает весь целевой public API объём из ROADMAP раздела `2. Публичный API`, беря список задач только из канонических строк ROADMAP вида ``- `T-XXXX` - ...`` и игнорируя пояснительные повторные упоминания `T-XXXX`.\n- [ ] Задачу публичного класса нельзя принять, если `<ClassName>.diff.*` отсутствует, устарел или падает без утверждённых строк `Deferred`/`Unsupported`.\n- [ ] Проверка не принимает написанный вручную `*.diff.md` как доказательство: Markdown-отчёт является только читаемым сгенерированным представлением поверх `*.diff.json`.\n- [ ] Документация, манифест API и заметки задачи синхронизированы с фактическими отчётами о расхождениях и командами проверки.\n\n### Подзадачи\n\n- [ ] Зафиксировать схему отчёта о расхождениях и правила разрешённых отличий в доменном документе.\n- [ ] Добавить сначала падающие проверки на отсутствующий элемент API, неверную сигнатуру, неверное перечисление или константу, устаревшее описание API и неутверждённое отличие.\n- [ ] Реализовать `api diff`, `api verify --class` и `api verify-all` в `eng/Electron2D.Build`.\n- [ ] Добавить читаемый сводный отчёт для CI и доказательств в задаче.\n- [ ] Обновить документацию, сгенерированные файлы и заметки задачи и запустить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0013",
+    "tag-0015",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ описывает схему отчёта о расхождениях, модель разрешённых отличий, порядок утверждения `Deferred`/`Unsupported` и поведение контрольной проверки CI.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`api verify --class <ClassName>` падает при отсутствующем классе, неверном наследовании, отсутствующем элементе API, неверной сигнатуре, неверном значении перечисления или константы, отсутствующей документации и неутверждённых отличиях.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Проверка поддерживает режимы одного класса и всех классов, работает воспроизводимо и даёт вывод, удобный для аудита.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`api verify-all` покрывает весь целевой public API объём из ROADMAP раздела `2. Публичный API`, беря список задач только из канонических строк ROADMAP вида ``- `T-XXXX` - ...`` и игнорируя пояснительные повторные упоминания `T-XXXX`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Задачу публичного класса нельзя принять, если `<ClassName>.diff.*` отсутствует, устарел или падает без утверждённых строк `Deferred`/`Unsupported`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Проверка не принимает написанный вручную `*.diff.md` как доказательство: Markdown-отчёт является только читаемым сгенерированным представлением поверх `*.diff.json`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Документация, манифест API и заметки задачи синхронизированы с фактическими отчётами о расхождениях и командами проверки.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate unless task criteria explicitly require primary/control audit"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/api/electron2d/diff/<ClassName>.diff.json"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/api/electron2d/diff/<ClassName>.diff.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "data/api/electron2d/reports/public-api-parity-summary.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/testing/godot-47-public-api-parity-verifier.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "eng/Electron2D.Build"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tooling",
+    "readyToStart": [
+      "task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/testing/godot-47-public-api-parity-verifier.md describes the tool or policy contract.",
+      "add RED verifier/test coverage before changing implementation when tooling behavior changes."
+    ],
+    "stopConditions": [
+      "the change would define public API surface manually or close behavior owned by a public class task.",
+      "missing dependency, platform prerequisite or generated input prevents deterministic verifier output."
+    ],
+    "allowedChanges": [
+      "tooling, verifier, generated-report plumbing and docs named by this task.",
+      "tests under `tests/` that prove the tooling contract.",
+      "`TASKS.md` notes and diary evidence."
+    ],
+    "forbiddenChanges": [
+      "production runtime behavior outside this tooling contract.",
+      "generated artifacts by hand when a generator/verifier owns them.",
+      "unrelated task statuses or release scope."
+    ],
+    "requiredOutputs": [
+      "docs/testing/godot-47-public-api-parity-verifier.md",
+      "focused verifier/test evidence named by the task.",
+      "synchronized generated docs/index artifacts when docs are changed."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- api diff --class <ClassName>",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- api verify --class <ClassName>",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- api verify-all",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 448963,
+      "byteLength": 9481,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "cd5018356ff06281400e5b3ef0666c6f934ee251f368d8898469e57613927f37",
+      "markdown": "## T-0243 [ ] P0: Добавить проверку расхождений публичного API с Godot 4.7\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/testing/godot-47-public-api-parity-verifier.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/testing/godot-47-public-api-parity-verifier.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/testing/godot-47-public-api-parity-verifier.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. Проверка должна падать при отсутствующем публичном элементе API, неверной сигнатуре, несовместимом перечислении или константе, неописанном отличии поведения и несинхронизированной документации.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n### Сгенерированные файлы, за которые отвечает T-0243\n\n`T-0243` владеет созданием и проверкой отчётов о расхождениях. Эти файлы являются сгенерированным результатом и не редактируются вручную:\n\n- `data/api/electron2d/diff/<ClassName>.diff.json`\n- `data/api/electron2d/diff/<ClassName>.diff.md`\n- `data/api/electron2d/reports/public-api-parity-summary.md`\n\nОтчёт о расхождениях строится только из сгенерированных описаний Godot, сгенерированных описаний Electron2D и утверждённых контрактов `Deferred`/`Unsupported`.\n\n### Команды инструмента, за которые отвечает T-0243\n\n- `dotnet run --project eng/Electron2D.Build -- api diff --class <ClassName>`\n- `dotnet run --project eng/Electron2D.Build -- api verify --class <ClassName>`\n- `dotnet run --project eng/Electron2D.Build -- api verify-all`### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ описывает схему отчёта о расхождениях, модель разрешённых отличий, порядок утверждения `Deferred`/`Unsupported` и поведение контрольной проверки CI.\n- [ ] `api verify --class <ClassName>` падает при отсутствующем классе, неверном наследовании, отсутствующем элементе API, неверной сигнатуре, неверном значении перечисления или константы, отсутствующей документации и неутверждённых отличиях.\n- [ ] Проверка поддерживает режимы одного класса и всех классов, работает воспроизводимо и даёт вывод, удобный для аудита.\n- [ ] `api verify-all` покрывает весь целевой public API объём из ROADMAP раздела `2. Публичный API`, беря список задач только из канонических строк ROADMAP вида ``- `T-XXXX` - ...`` и игнорируя пояснительные повторные упоминания `T-XXXX`.\n- [ ] Задачу публичного класса нельзя принять, если `<ClassName>.diff.*` отсутствует, устарел или падает без утверждённых строк `Deferred`/`Unsupported`.\n- [ ] Проверка не принимает написанный вручную `*.diff.md` как доказательство: Markdown-отчёт является только читаемым сгенерированным представлением поверх `*.diff.json`.\n- [ ] Документация, манифест API и заметки задачи синхронизированы с фактическими отчётами о расхождениях и командами проверки.\n\n### Подзадачи\n\n- [ ] Зафиксировать схему отчёта о расхождениях и правила разрешённых отличий в доменном документе.\n- [ ] Добавить сначала падающие проверки на отсутствующий элемент API, неверную сигнатуру, неверное перечисление или константу, устаревшее описание API и неутверждённое отличие.\n- [ ] Реализовать `api diff`, `api verify --class` и `api verify-all` в `eng/Electron2D.Build`.\n- [ ] Добавить читаемый сводный отчёт для CI и доказательств в задаче.\n- [ ] Обновить документацию, сгенерированные файлы и заметки задачи и запустить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

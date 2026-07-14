@@ -78,7 +78,7 @@ public sealed class WindowsExportTests
         Assert.Contains("packs/scenes/main.e2dpkg::scenes/main.scene.json", ReadStringArrayPlanProperty(result.Plan, "ResourcePackEntries"));
         Assert.Contains("project.e2d.json", ReadStringArrayPlanProperty(result.Plan, "ForbiddenLooseFiles"));
         Assert.Contains("assets/", ReadStringArrayPlanProperty(result.Plan, "ForbiddenLooseFiles"));
-        Assert.Contains(".electron2d/tasks/", ReadStringArrayPlanProperty(result.Plan, "ForbiddenLooseFiles"));
+        Assert.Contains(".taskboard/", ReadStringArrayPlanProperty(result.Plan, "ForbiddenLooseFiles"));
         Assert.Equal(
             new[]
             {

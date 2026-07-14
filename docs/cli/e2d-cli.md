@@ -1,6 +1,6 @@
 # `e2d` CLI для headless, CI и active Editor routing
 
-Обновлено: 2026-06-28.
+Обновлено: 2026-07-13.
 
 Этот файл является единым доменным документом. Он заменяет прежнее разделение на отдельную спецификацию и отдельную документацию реализации: требования, фактическое состояние, ограничения и проверки ведутся здесь вместе.
 
@@ -13,7 +13,7 @@
 ## Контракт и ожидаемое поведение
 
 Статус: целевая спецификация для `T-0116` с дополнением `T-0231` для локальной документации.
-Обновлено: 2026-06-28.
+Обновлено: 2026-07-14.
 Связанные документы: [Agent-native cross-platform 2D game engine workflow Electron2D 0.1](../architecture/agent-native-workflow.md); [Electron2D 0.1-preview](../releases/0.1-preview.md); [Electron2D.Tooling service boundary](../tooling/tooling-service-boundary.md); [Editor session discovery и Editor-hosted Agent Gateway](../tooling/editor-session-discovery.md); [WorkspaceJob contract и event stream](../project-system/workspace-jobs.md); [Diagnostics adapters: JSON, stream и SARIF](../diagnostics/diagnostics-adapters.md).
 
 ## Назначение
@@ -203,15 +203,63 @@ e2d workspace transaction --project <path> --path <relative-file> --expected-rev
 
 `docs type` и `docs member` читают полные сведения из `data/api/electron2d-api-manifest.json`. `docs search` и `docs example` сначала используют SQLite-кэш `data/documentation/electron2d-local-docs-search.sqlite`, если он существует и совпадает с текущими `data/documentation/electron2d-local-docs-index.json` и `data/documentation/local-docs-index/*.ndjson`. Если кэш отсутствует, устарел или повреждён, команды читают manifest и NDJSON-shard-файлы напрямую и не создают SQLite-файл в рабочей копии.
 
-## Project Tasks report command
+## Task manager commands
 
-`tasks export` читает `.electron2d/tasks/*.e2task` и пишет Markdown-отчёт:
+`e2d tasks` является единственным публичным интерфейсом чтения и изменения `.taskboard`. Каноническая доска всегда находится в `.taskboard/board.e2tasks`; активные и архивные документы находятся в `.taskboard/tasks/*.e2task` и `.taskboard/completed/*.e2task`.
+
+`e2d tasks init` сразу создаёт нативную доску TaskBoard v3 с `migration = null`; новые доски v2 больше не создаются. v3 использует неизменяемый `taskUid` для placement, parent и typed relations, а `taskId` остаётся отображаемым номером. Board содержит обязательный versioned `validationContract` с `TaskBoardSemanticValidatorV3`, `TaskTransitionValidatorV3`, `AgentContextBuilderV3`, `TaskExecutionPolicyV3` и включёнными format assertions. Существующая v2-доска доступна только для чтения и миграции: `e2d tasks migrate --to-version 3 --dry-run` строит детерминированный отчёт по board/tasks/blobs. Apply разрешён только с проверенными `--report-sha` и `--expected-board-revision`, повторно собирает отчёт под общим lock и одной recoverable transaction записывает board, задачи, UID-пути вложений, v2 snapshot и связанный `.taskboard/.migration/v2/report.json`. Отдельный `--finalize true` сначала выполняет schema/semantic/blob verify, сверяет report artifact и source digests, затем удаляет временный v2 snapshot, но сохраняет отчёт provenance. Строковые v2-команды сохраняются как `LegacyShell` с `ForbiddenUntilReviewed` и не становятся разрешением на запуск.
+
+Обычные v3 mutations проходят три проверки: закрытую schema-форму, whole-board semantic validator и transition validator между предыдущим и новым snapshot. Create требует board CAS; task и board revisions увеличиваются строго на один. Изменение definition-полей автоматически дописывает immutable `TaskPatched` с типизированными RFC 6902 operations, `oldValue`/`value`, `fromRevision`/`toRevision`, hash profile и ссылкой на точный activity sequence; прежняя постановка восстанавливается replay без догадок. Conversation, activity, checkpoints, audit runs и originals имеют immutable prefix. Writer принимает единый CAS-тройник `expectedRevision + expectedLastMessageSequence + expectedLastActivitySequence`, а sequence обоих журналов выделяет только под общим lock. `Done` создаётся только trusted human bridge после `Review/Submitted`, непустого набора criteria и всех `Passed` criteria с evidence. Для `externalAudit.mode = Single|PrimaryControl` acceptance дополнительно ссылается на последний успешный immutable audit run, привязанный к непосредственно проверенной task revision, canonical context digest, workspace changes digest, package manifest и существующему report attachment; control run обязан продолжать primary verdict chain от другого auditor identity и явно исключать primary run/report из clean-control context. Архивирование terminal task одновременно удаляет placement и переносит TaskFile в `.taskboard/completed`; unarchive выполняет обратную транзакцию.
+
+`tasks create` и `tasks update` принимают через `--input <file|->` как короткие scalar-поля, так и проверяемые структуры `executionContract`, `acceptanceCriteria`, `links`, `tagIds`, `parentTaskUid`, `relations` и nullable `assignee`. Корень обязан быть JSON-объектом не больше 1 MiB; неизвестные и служебные lifecycle/context-поля, неправильные типы и неполные command specs отклоняются до записи. `executionContract.commands[].requestedCapabilities` является массивом запросов, а не разрешением: выполнение независимо решает trusted `TaskExecutionPolicyV3`; shell interpreters требуют отдельного grant и human confirmation. `externalAudit` передаётся typed object, а не строкой. Один mutable field нельзя одновременно задать в JSON и CLI-флагом: конфликт источников является ошибкой, а не неявным приоритетом. `-` читает stdin. Создание выделяет номер из актуального состояния уже под writer lock и не требует `expectedBoardRevision`; явно переданная revision работает как дополнительный CAS guard. Обновление требует `expectedRevision`; обе операции поддерживают `--dry-run` и возвращают полный проверенный snapshot.
+
+`tasks comment add` в v3 дописывает lossless `conversation.messages` с монотонным sequence; существующая реплика никогда не переписывается. Sequence выделяется под общим write lock вместе с CAS revision: stale конкурентный append отклоняется без automatic retry и не может затереть выигравшее сообщение. Activity независимо имеет непрерывный `sequence` и корневой `lastActivitySequence`. Новые `Comment`/`AgentSummary` в activity запрещены; legacy Comment однозначно переносится в conversation, а summary хранится только как derived `contextSnapshot`. `tasks get` сохраняет совместимый projection в `data.task`, полный schema-native context capsule в `data.canonicalTask` и нормализованный результат `AgentContextBuilderV3` в `data.agentContext`. Canonical payload содержит всю conversation, системную append-only activity, originals и derived attachment metadata, context checkpoints, авторитетный `workspaceChanges` и optional derived `contextSnapshot`. Summary не заменяет исходные сообщения. Agent runtime фиксирует прочитанные `taskRevision`, `lastMessageSequence`, `lastActivitySequence` и `contextDigest`; новая реплика или activity требует rebase до следующей mutation. Профиль `sha256-jcs-rfc8785-v1` использует RFC 8785/JCS, фиксированный source manifest и отдельные digests task core, conversation/activity/checkpoint/audit prefixes, attachment manifest и workspace changes. Snapshot означает `summary through K + exact raw tail`, а общий golden corpus обязан давать одинаковые canonical bytes и SHA-256 в .NET и JS.
+
+`tasks context checkpoint <task-id> --agent-run <id> --expected-revision <n> [--rebase-of <checkpoint-id>]` append-only фиксирует прочитанный агентом context capsule. Checkpoint содержит ревизию после записи, последние message/activity sequences и digest содержимого; checkpoint projection исключает собственное поле `contextDigest`, поэтому hash не самоссылочный. Изменение задачи, новая реплика или activity делает прежний checkpoint устаревшим и требует явного rebase.
+
+Корневой `workspaceChanges` является trusted итоговым manifest реализации, а не произвольной заметкой агента. При первом переходе в `InProgress` writer сохраняет baseline фактического workspace в локальном `.taskboard/.cache`; перед `Review`, `submit` и `Done` manifest пересчитывается из реальных файлов с SHA-256 и видами `Added|Modified|Deleted|Renamed|Copied|TypeChanged`. Один итоговый путь встречается один раз, `Renamed` хранит `previousPath`, а `Added`/`Deleted` имеют только применимый hash. `.taskboard`, `.git`, build/cache directories и attachments не попадают в список. Каждое изменение snapshot сопровождается append-only `WorkspaceChangesUpdated`; validator сверяет event digests, реальное состояние и machine-readable scope rules `path:<glob>` из `allowedChanges`/`forbiddenChanges`. Context snapshot содержит отдельный `workspaceChangesDigest`.
+
+`tasks criterion add-evidence <task-id> --criterion <id> --kind File|Uri|Attachment --value <typed-value> --expected-revision <n>` дописывает typed evidence revision-aware. Только после этого `criterion set-state ... --state Passed` разрешён; пустой evidence не заменяется текстом activity и не создаётся автоматически.
+
+Pre-release v3 reader перед проверкой применяет только безопасные однозначные преобразования прежней draft-формы: scalar access/audit становятся typed, Comment переносится в conversation, отсутствующие sequence/workspace/audit/derivative lifecycle fields получают однозначную каноническую форму, невалидно классифицированный legacy path становится неисполняемым `Resource`, а неподтверждённый `Passed` у активной задачи — `Open`. Старый draft `TaskPatched`, в котором нет `oldValue` и revision binding, сохраняется байт-в-байт как `Legacy/TaskPatchedV3Draft`: reader не изобретает историю, которую нельзя доказать. Это compatibility lens, а не полномочие или эвристический executor; новая запись всегда сериализует полный канонический contract. Текущая v3 ещё не входила в Git/release registry, поэтому draft заменяется под тем же `$id`; после первой публикации любое несовместимое изменение потребует v4 и нового `$id`.
+
+`tasks update --input` заменяет только явно переданные definition-поля и добавляет один `TaskPatched`; существующие conversation, context checkpoint, activity и audit prefixes остаются неизменными. Корневой `lastActivitySequence` может быть больше исторического checkpoint watermark и не является причиной переписывать checkpoint или отклонять разрешённый update.
+
+У context checkpoint compatibility lens добавляет только отсутствующий в старом draft `lastActivitySequence`. Уже сохранённое значение никогда не заменяется текущим корневым watermark, а повторный upgrade канонического TaskFile идемпотентен.
+
+Основные семейства:
+
+```text
+e2d tasks init|board|list|get|create|update|move|set-status
+e2d tasks submit|accept|request-changes|cancel|reopen
+e2d tasks archive|unarchive|delete
+e2d tasks comment ... | context ... | criterion ... | parent ... | dependency ... | group ... | attachment ... | tag ...
+e2d tasks verify|normalize|migrate|export
+```
+
+Read-команды и mutations поддерживают `--project` и JSON envelope. Writer-команды ограниченно ожидают общий lock: default timeout 10 секунд, начальная пауза 25 миллисекунд и верхняя граница 250 миллисекунд; `--lock-timeout-ms` и `--lock-backoff-ms` позволяют задать меньшие положительные значения для автоматизации и тестов. Timeout/cancellation возвращают retryable `E2D-TASK-0004`/`E2D-TASK-0005`, а revision mismatch — non-retryable `E2D-TASK-0006` с actual task/board revision в JSON data. Mutations, кроме коммутативного create, требуют актуальные `--expected-revision` и/или `--expected-board-revision`, поддерживают `--dry-run` и никогда не делают automatic retry после revision conflict.
+
+`--operation-id <stable-id>` включает идемпотентный повтор writer-команды. Первый успешный запуск атомарно сохраняет local receipt с fingerprint; тот же ID и тот же payload возвращает `data.replayed = true` и исходный результат без повторной mutation. Тот же ID с иным payload возвращает `E2D-TASK-0007`. ID не является полномочием и не ослабляет identity, revision, semantic или transition validation. `accept` и `request-changes` в noninteractive CLI возвращают fail-closed diagnostic: trusted VS Code вызывает private stdio bridge только после modal confirmation, capability не передаётся в webview payload или argv, а actor/time нельзя задать пользовательскими полями.
+
+`tasks board --compact true` возвращает определения общих тегов, board/groups/placements и компактные карточки задач: ID, revision, title, canonical `status`, вычисленный `boardStatus`, `acceptanceState`, priority, ссылки на теги, deadline, число пройденных и общее число критериев, количество настоящих вложений, безопасные metadata эффективной растровой обложки, parent, dependencies, readiness и archive marker. Для canonical `Ready` поле `boardStatus` равно `Blocked`, если есть незавершённая/отменённая dependency или ручной blocker; после снятия причин оно снова равно `Ready`. Тяжёлые description/activity/criteria/execution/полные attachment/legacy поля не входят в этот ответ; клиент загружает их точечно через `tasks get <task-id>`. Связанные пути из `linkedArtifacts` не считаются вложениями и не выбираются обложкой.
+
+`tasks attachment add <task-id> --file <path> --expected-revision <n>` копирует immutable original в UID-owned hashed path и создаёт явные lifecycle slots `ExtractedText|Ocr|Preview` со status `Pending`. `tasks attachment read <task-id> --attachment <attachment-id> [--derivative <derivative-id>]` является read-only retrieval API для агентов без filesystem access: команда возвращает metadata и `contentBase64` только после schema/ownership/reparse/size/SHA-256 проверки; derivative выдаётся только в `Ready`. `tasks attachment remove` для v3 fail closed, потому что original и его metadata являются lossless append-only history; исправление создаёт новое вложение или сообщение. `tasks attachment set-preview <task-id> --attachment <attachment-id> --expected-revision <n>` назначает прикреплённое растровое изображение обложкой карточки. `tasks attachment clear-preview <task-id> --expected-revision <n>` возвращает автоматический выбор первого растрового вложения. Отсутствующий ID и media type вне raster allowlist отклоняются без записи.
+
+Теги принадлежат доске, а поле задачи `labels` хранит только их устойчивые идентификаторы. `tasks tag create` добавляет тег в общий каталог; с `--assign-to <task-id>` та же транзакция сразу назначает его задаче, поэтому новый тег не может остаться локальным значением одной карточки. `tasks tag update|delete|assign|unassign` изменяют каталог и назначения с optimistic revisions. Удаление используемого тега и назначение неизвестного идентификатора завершаются без записи. Для атомарной классификации большой доски `tasks tag apply --input <file|->` принимает `expectedBoardRevision` и `tagUpdates[]` с полями `taskId`, `expectedRevision`, `tagIds`; весь план проверяется и записывается одной транзакцией либо полностью отклоняется. Дедлайн задаётся календарной датой через `tasks create|update --deadline <YYYY-MM-DD>` и очищается через `tasks update --clear-deadline true`.
+
+Lifecycle использует шесть status values: `Ready`, `InProgress`, `Blocked`, `Review`, `Done`, `Cancelled`. Задача с незавершёнными зависимостями не может перейти в `InProgress` или `Review`; активный explicit blocker допускается только в `Blocked`. `Passed` требует typed evidence, а `Done` дополнительно требует `submittedAt`, отсутствие blockers, хотя бы один criterion, все criteria в `Passed` с evidence, проверенный `workspaceChanges` и совпадающий trusted `AcceptanceResult`. `tasks submit` не меняет `Review`, а устанавливает `acceptanceState=Submitted`; private owner route `accept` переводит такую задачу в `Done`, а `request-changes` — в `InProgress`. Transition context различает `Worker`, `Auditor` и `Owner`: trusted AI auditor записывается как `actorKind=Agent`, worker не принимает задачу даже с ошибочно выданной capability, а creator/assignee/worker текущей попытки не может принять собственный результат. Невозможные legacy-значения вроде `Rejected`, `AwaitingAcceptance` или `Backlog` отклоняются fail closed.
+
+`tasks get <task-id>` и полные task snapshots публикуют описание только в обязательном поле `description`; compact board не включает его. Старое имя поля не принимается CLI reader-ом. Для v3 `tasks normalize --expected-board-revision <n>` сначала выполняет полную schema/semantic/blob-проверку, затем транзакционно переписывает только JSON, чьи canonical UTF-8 bytes отличаются. Форматирование, включая замену необязательных `\uXXXX` escape-последовательностей прямым UTF-8, не меняет task/board revisions, lifecycle или activity; повторный запуск возвращает пустой `changedFiles`. Перенос смыслов из legacy-полей выполняет только явная миграция v2→v3, а не normalizer.
+
+Acceptance criteria изменяются командами `tasks criterion add|update|set-state|remove`. Все четыре требуют `--criterion` и `--expected-revision`; `add`/`update` требуют `--description`, а `set-state` — `--state Open|Passed|Failed`. Task lifecycle не меняет criteria автоматически.
+
+`tasks export` читает `.taskboard/tasks/*.e2task` и пишет Markdown-отчёт:
 
 ```powershell
 e2d tasks export --project <path> --status done --format markdown
 ```
 
-Команда не открывает workspace на запись, не создаёт Undo group и не пишет отчёт в проектные файлы. `TASKS.md`, `completed-tasks/` и `dev-diary/` не создаются и не обновляются. Markdown является внешним отчётом, а не canonical task storage.
+Команда не открывает workspace на запись, не создаёт Undo group и не пишет отчёт в проектные файлы. Markdown является внешним отчётом, а не canonical task storage.
 
 Фильтры:
 
@@ -336,7 +384,7 @@ e2d api compare-godot Control --format json
 e2d project create MyGame --output .\projects --renderer-profile Compatibility --format json
 ```
 
-Команда создаёт `.csproj`, `project.e2d.json`, main scene, `AGENTS.md`, `.gitignore`, starter skills в `.codex/skills/`, начальную доску `.electron2d/tasks/board.e2tasks` и стартовую задачу `.electron2d/tasks/welcome.e2task`. Затем она пытается выполнить `git init`.
+Команда создаёт `.csproj`, `project.e2d.json`, main scene, `AGENTS.md`, `.gitignore`, starter skills в `.codex/skills/`, начальную доску `.taskboard/board.e2tasks` и стартовую задачу `.taskboard/tasks/welcome.e2task`. Затем она пытается выполнить `git init`.
 
 JSON envelope возвращает `command = "project create"`, `route = "headless"` и `data` с `projectName`, `projectPath`, `projectSettingsPath`, `mainScenePath`, `rendererProfile`, `gitInitialized`, `taskBoardPath`, `starterSkillCount` и `agentInstructionsPath`.
 
@@ -374,11 +422,11 @@ Signing check читает только references из `export_presets.e2export
 e2d tasks export --project <path> --status done --format markdown
 ```
 
-Если `--format` не указан, команда пишет тот же Markdown в stdout. Команда читает `.electron2d/tasks/*.e2task`, может использовать `.electron2d/tasks/board.e2tasks` только для порядка, но не меняет task storage, не открывает `ProjectWorkspace` на запись, не создаёт Undo group и не пишет отчёт в проектные файлы.
+Если `--format` не указан, команда пишет тот же Markdown в stdout. Команда читает `.taskboard/tasks/*.e2task`, может использовать `.taskboard/board.e2tasks` только для порядка, но не меняет task storage, не открывает `ProjectWorkspace` на запись, не создаёт Undo group и не пишет отчёт в проектные файлы.
 
 Поддержаны фильтры `--status`, `--milestone`, `--version`, `--epic`, `--assignee` и `--agent-session`. `status` сравнивается со статусом задачи. `milestone`, `version`, `epic` и `agent-session` сейчас читаются из labels вида `milestone:<value>`, `version:<value>`, `epic:<value>`, `agent-session:<value>`; agent session также может быть найден в activity payload с `AgentSessionId=<id>` или `agentSession=<id>`.
 
-Markdown output содержит явное предупреждение, что это report only. Он не заменяет `.electron2d/tasks/*.e2task` и `.electron2d/tasks/board.e2tasks`, не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/` в пользовательском проекте.
+Markdown output содержит явное предупреждение, что это report only. Он не заменяет `.taskboard/tasks/*.e2task` и `.taskboard/board.e2tasks`, не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/` в пользовательском проекте.
 
 ### `context build`
 

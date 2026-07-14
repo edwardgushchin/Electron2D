@@ -1,0 +1,31 @@
+{
+  "profile": "sha256-jcs-rfc8785-v1",
+  "cases": [
+    {
+      "name": "unicode-and-order",
+      "value": {
+        "z": "строка",
+        "a": "line\nquote\"",
+        "nested": {
+          "b": 2,
+          "a": true
+        }
+      },
+      "canonical": "{\"a\":\"line\\nquote\\\"\",\"nested\":{\"a\":true,\"b\":2},\"z\":\"строка\"}",
+      "sha256": "de2fd3c1a8d480319c248f7373e65ac90574fc5cb178b272fd6ea28dee15e538"
+    },
+    {
+      "name": "arrays-and-integers",
+      "value": [
+        3,
+        {
+          "y": null,
+          "x": "<safe>"
+        },
+        -7
+      ],
+      "canonical": "[3,{\"x\":\"<safe>\",\"y\":null},-7]",
+      "sha256": "818b0bf3a726c9d6f65cf300e02e52688d25e9422ccc8ecb395d22172ec8b3e9"
+    }
+  ]
+}

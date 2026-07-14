@@ -495,7 +495,9 @@ internal sealed class McpServerSession : IDisposable
 
     public IReadOnlyList<McpToolDefinition> ListTools()
     {
+        var taskTools = Tooling.Tasks.SupportedCommands.ToHashSet(StringComparer.Ordinal);
         return ToolNames
+            .Where(name => !name.StartsWith("task_", StringComparison.Ordinal) || taskTools.Contains(name))
             .Select(name => new McpToolDefinition(name, $"Electron2D MCP tool `{name}`."))
             .ToArray();
     }

@@ -1,0 +1,411 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-c2b9e4dc9c264474bb22025f4a46b120",
+  "revision": 1,
+  "taskId": "T-1240",
+  "legacyAliases": [],
+  "title": "Добавить значки для «Готово к работе», «В работе» и «Отменено» на карточки VS Code Task Board",
+  "description": "Карточки основной доски уже показывают визуальные индикаторы блокировки, ожидания пользовательского решения и завершения, но у состояний `Готово к работе`, `В работе` и `Отменено` отдельного статусного значка нет. Из-за этого нижняя строка карточек выглядит непоследовательно и хуже передаёт текущее состояние задачи.\n\nНужно добавить три недостающих theme-compatible индикатора без изменения канонических `status`, `boardStatus` и lifecycle. Для `Готово к работе` используется статический SVG начала/готовности, для `Отменено` — статический SVG перечёркнутого круга. Для `В работе` нужен анимированный spinner: неполная круговая дуга плавно вращается вокруг своего центра и появляется только у карточки с эффективным состоянием `InProgress`. Анимация реализуется CSS, не сдвигает footer и отключается через `prefers-reduced-motion`, оставляя читаемый статический значок.\n\nНовые значки создаются через DOM SVG API, наследуют цвета темы VS Code через `currentColor`, имеют локализованные tooltip и `aria-label`. Unicode-глифы, icon font, внешний asset и JavaScript-таймер для анимации не используются. Существующие индикаторы `Заблокировано`, `На проверке` и `Завершено` сохраняют текущее значение и расположение.",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0002",
+    "tag-0003",
+    "tag-0009",
+    "tag-0017",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "assignee": null,
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "missing-status-indicators",
+      "description": "Карточки в эффективных состояниях «Готово к работе», «В работе» и «Отменено» получают отдельные локализованные статусные индикаторы; существующие индикаторы блокировки, ожидания решения и завершения продолжают отображаться как прежде.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "animated-in-progress-spinner",
+      "description": "Индикатор «В работе» изображён неполной круговой SVG-дугой, которая плавно и непрерывно вращается вокруг собственного центра только для карточек в состоянии `InProgress`; вращение не меняет геометрию footer.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "ready-and-cancelled-semantics",
+      "description": "«Готово к работе» использует понятный статический SVG готовности/запуска, а «Отменено» — статический SVG перечёркнутого круга; оба значка визуально различимы и не дублируют смысл блокировки или завершения.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "accessible-reduced-motion",
+      "description": "Каждый новый индикатор имеет локализованные `title` и `aria-label`; при `prefers-reduced-motion: reduce` вращение отключается, но статическая дуга и доступное название состояния сохраняются.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "theme-and-layout-integrity",
+      "description": "Значки создаются через DOM SVG API, используют `currentColor` и переменные темы VS Code, имеют единый размер и выравнивание с текущими индикаторами; Unicode-глифы, icon font, внешний asset и JavaScript-таймер не применяются.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "regression-and-real-window-proof",
+      "description": "Unit-тесты покрывают три новых состояния, SVG-разметку, CSS-анимацию и reduced-motion; typecheck, Extension Host и упаковка VSIX проходят, а проверенный FFmpeg-снимок реального окна VS Code подтверждает значки в карточках без поломки footer.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "lastActivitySequence": 0,
+  "activity": [],
+  "auditRuns": [],
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "workspaceChanges": {
+    "baseRevision": null,
+    "currentRevision": null,
+    "files": []
+  },
+  "links": [
+    {
+      "linkId": "link-status-icons-domain",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-status-icons-webview",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "link-status-icons-css",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.css"
+    },
+    {
+      "linkId": "link-status-icons-localization",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/localization.ts"
+    },
+    {
+      "linkId": "link-status-icons-unit",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+    },
+    {
+      "linkId": "link-status-icons-extension-host",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/suite/index.ts"
+    }
+  ],
+  "executionContract": {
+    "taskType": "доступная визуальная индикация статуса карточек VS Code Task Board",
+    "readyToStart": [
+      "Родительская T-1147 принята; задача не имеет зависимостей и внешних блокеров.",
+      "Текущий renderer уже содержит общий контейнер `card-indicators` и индикаторы для блокировки, ожидания решения и завершения.",
+      "Перед production-кодом доменный документ должен зафиксировать семантику трёх новых значков и правило reduced motion."
+    ],
+    "stopConditions": [
+      "Исправление потребует изменить канонические `TaskStatus`, `boardStatus`, acceptance lifecycle или расположение карточки по колонкам.",
+      "Доступную анимацию нельзя реализовать без JavaScript-таймера, внешнего asset или игнорирования `prefers-reduced-motion`.",
+      "Проверка обнаружит, что статусный значок конфликтует с dependency/blocker/acceptance indicator и требует отдельного продуктового решения."
+    ],
+    "allowedChanges": [
+      "Доменный контракт представления статусов, renderer/CSS/localization VS Code Task Board и связанные unit/Extension Host тесты.",
+      "Generated VSIX, Extension Host runtime profile, FFmpeg evidence, task activity/evidence и append-only дневник.",
+      "path:docs/editor/project-tasks-board.md",
+      "path:src/Electron2D.VsCode/src/webview.ts",
+      "path:src/Electron2D.VsCode/src/webview.css",
+      "path:src/Electron2D.VsCode/src/localization.ts",
+      "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+      "path:src/Electron2D.VsCode/test/suite/index.ts",
+      "path:src/Electron2D.VsCode/dist/**",
+      "path:src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix",
+      "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+      "path:data/documentation/electron2d-local-docs-index.json",
+      "path:data/documentation/local-docs-index/documentation.ndjson",
+      "path:data/dev-diary/**"
+    ],
+    "forbiddenChanges": [
+      "Изменение канонических статусов, `boardStatus`, transition rules или task placement.",
+      "Unicode-глиф, icon font, внешний SVG/растровый asset либо `innerHTML` для новых статусных значков.",
+      "JavaScript-таймер анимации, отсутствие reduced-motion режима или literal-цвет вне theme variables.",
+      "Несвязанный рефакторинг Task Board и ручное редактирование `.taskboard`."
+    ],
+    "requiredOutputs": [
+      "Три недостающих статусных индикатора в footer карточки с локализованными доступными названиями.",
+      "CSS-анимированная неполная круговая дуга для `InProgress` и статический reduced-motion вариант без layout shift.",
+      "RED/GREEN unit regression, зелёные typecheck и Extension Host, проверенный VSIX и FFmpeg evidence реального окна."
+    ],
+    "commands": [
+      {
+        "commandId": "cmd-status-icons-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-status-icons-typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-status-icons-extension",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:extension"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 1200,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "ExternalEffect"
+        ],
+        "confirmation": "HumanRequired"
+      },
+      {
+        "commandId": "cmd-status-icons-package",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 1200,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-status-icons-docs-update",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "run",
+          "--project",
+          "eng/Electron2D.Build",
+          "--",
+          "update",
+          "docs"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-status-icons-docs-check",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "run",
+          "--project",
+          "eng/Electron2D.Build",
+          "--",
+          "update",
+          "docs",
+          "--check"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-status-icons-docs-verify",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "run",
+          "--project",
+          "eng/Electron2D.Build",
+          "--",
+          "verify",
+          "docs"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-status-icons-capture",
+        "kind": "Process",
+        "executable": "python",
+        "arguments": [
+          "eng/tools/capture_window.py",
+          "--title",
+          "Visual Studio Code",
+          "--output",
+          ".temp/taskboard-status-icons-real.png"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "ExternalEffect"
+        ],
+        "confirmation": "HumanRequired"
+      },
+      {
+        "commandId": "cmd-status-icons-taskboard",
+        "kind": "Process",
+        "executable": "e2d",
+        "arguments": [
+          "tasks",
+          "verify",
+          "--project",
+          ".",
+          "--format",
+          "json"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-status-icons-whitespace",
+        "kind": "Process",
+        "executable": "git",
+        "arguments": [
+          "diff",
+          "--check"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 120,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-14T12:29:47.2452235+00:00",
+  "updatedAt": "2026-07-14T12:29:47.2452235+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null
+}

@@ -1,0 +1,233 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-0cb411090217918573805ccd9b3d7f18",
+  "revision": 2,
+  "taskId": "T-1145",
+  "legacyAliases": [],
+  "title": "Уточнить смысловую XML-документацию профилей RenderingServer",
+  "description": "## T-1145 [ ] P3: Уточнить смысловую XML-документацию профилей RenderingServer\n\n- Создана: 2026-07-10T22:30:07+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-1137\n- Ссылки:\n  - Доменный документ: `docs/rendering/rendering-server.md`\n  - Исходник: `src/Electron2D/Graphics/Rendering/RenderingServer.cs`\n  - Сгенерированные потребители: `data/api/electron2d-api-manifest.json`; `.github/wiki/RenderingServer.md`; `data/documentation/`\n  - Проверки: `tests/Electron2D.Tests.Unit/RenderingServerPublicApiTests.cs`; `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`\n  - Источник finding-а: `docs/verdicts/release-management/t-1137-audit-control-r38.md`, `FOLLOW_UP_FINDING F5`\n\n### Execution contract\n\n- Task type: XML wording cleanup without runtime behavior, profile or public signature changes.\n- Ready-to-start:\n  - task state is `open`;\n  - `T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;\n  - no other task is `in progress`.\n- Stop conditions:\n  - wording promises additional Standard features not implemented by production consumer paths;\n  - work changes enum values, feature flags, presenter selection or public signatures;\n  - generated consumers cannot be synchronized through existing generators.\n- May change:\n  - XML summary for `RenderingProfile.Standard` and value text for `CurrentProfile`;\n  - corresponding rendering-domain wording and existing documentation assertions;\n  - generated manifest/Wiki/local docs.\n- Must not change:\n  - runtime renderer selection, feature values or backend arrays;\n  - manual API-profile decisions;\n  - unrelated public XML documentation.\n- Required outputs:\n  - grammatical XML stating that `Standard` means the selected SDL GPU presenter and does not itself promise extra features;\n  - nonduplicated `CurrentProfile` value wording;\n  - regenerated consumers without the old damaged phrases.\n- Required commands:\n  - `dotnet build src/Electron2D/Electron2D.csproj --no-restore -v:minimal`\n  - existing focused `RenderingServerPublicApiTests`\n  - `dotnet run --project eng/Electron2D.Build -- update api-manifest --check`\n  - `dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify public-api-documentation --wiki-path .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: not required by default; require it only if profile semantics or public behavior change.\n\n### Internal substrate acceptance contract\n\n- Input boundary: XML summaries for `RenderingProfile.Standard` and `RenderingServer.CurrentProfile`.\n- Semantic invariant: `Standard` describes SDL GPU presenter selection while actual support remains determined only by `HasFeature`.\n- Failure policy: stale damaged phrases fail existing public-documentation assertions or an extended assertion in the owning test.\n- Consumer boundary: source XML, manifest, Wiki, local docs and rendering domain use the same meaning.\n- Regression boundary: profile selection and every feature flag remain unchanged.\n\n### Самодостаточное описание\n\nПубличный XML сейчас содержит фразы `Full the native GPU backend-oriented renderer profile` и `current current profile`. Они грамматически повреждены и делают смысл `Standard` двусмысленным, хотя production-код и доменный документ уже однозначны. Задача исправляет только XML и generated consumers: `Standard` означает выбранный SDL GPU presenter, а поддержку конкретных возможностей определяет `HasFeature`.\n\n### Критерии приёмки\n\n- [ ] XML `RenderingProfile.Standard` грамматически корректен и не обещает неподключённые features.\n- [ ] XML `CurrentProfile` не содержит дублированного `current` и согласован с доменным документом.\n- [ ] Runtime behavior, enum values, feature flags и public signatures не изменены.\n- [ ] Generated manifest/Wiki/local docs синхронизированы и не содержат старых повреждённых фраз.\n- [ ] Existing focused documentation/build/license checks проходят.\n\n### Подзадачи\n\n- [ ] Локализовать повреждённые XML fragments и generated occurrences.\n- [ ] Исправить source XML и существующие assertions минимальным изменением.\n- [ ] Перегенерировать manifest/Wiki/local docs.\n- [ ] Выполнить обязательные проверки.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: r38 локализовал две точные повреждённые фразы и подтвердил корректность runtime contract.\n- Ещё отсутствует: source XML cleanup и синхронизация generated consumers.\n- Принято аудитом: отсутствует; r38 классифицировал finding как неблокирующий follow-up.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r38.md\n  - id: FOLLOW_UP_FINDING F5\n  - state: tracked-new\n  - target: T-1145\n  - rationale: XML wording не меняет принятое runtime-поведение T-1137 и вынесено в отдельную zero-context P3-задачу.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P3",
+  "tagIds": [
+    "tag-0012",
+    "tag-0015",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-94ca0395565920c2776d3693d2df82fe"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "XML `RenderingProfile.Standard` грамматически корректен и не обещает неподключённые features.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "XML `CurrentProfile` не содержит дублированного `current` и согласован с доменным документом.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Runtime behavior, enum values, feature flags и public signatures не изменены.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Generated manifest/Wiki/local docs синхронизированы и не содержат старых повреждённых фраз.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Existing focused documentation/build/license checks проходят.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required by default; require it only if profile semantics or public behavior change."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/wiki/RenderingServer.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/rendering/rendering-server.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-1137-audit-control-r38.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/RepositoryPolicyVerifiers.cs"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/RenderingServer.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Unit/RenderingServerPublicApiTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "XML wording cleanup without runtime behavior, profile or public signature changes.",
+    "readyToStart": [
+      "task state is `open`;",
+      "`T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;",
+      "no other task is `in progress`."
+    ],
+    "stopConditions": [
+      "wording promises additional Standard features not implemented by production consumer paths;",
+      "work changes enum values, feature flags, presenter selection or public signatures;",
+      "generated consumers cannot be synchronized through existing generators."
+    ],
+    "allowedChanges": [
+      "XML summary for `RenderingProfile.Standard` and value text for `CurrentProfile`;",
+      "corresponding rendering-domain wording and existing documentation assertions;",
+      "generated manifest/Wiki/local docs."
+    ],
+    "forbiddenChanges": [
+      "runtime renderer selection, feature values or backend arrays;",
+      "manual API-profile decisions;",
+      "unrelated public XML documentation."
+    ],
+    "requiredOutputs": [
+      "grammatical XML stating that `Standard` means the selected SDL GPU presenter and does not itself promise extra features;",
+      "nonduplicated `CurrentProfile` value wording;",
+      "regenerated consumers without the old damaged phrases."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet build src/Electron2D/Electron2D.csproj --no-restore -v:minimal`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "existing focused `RenderingServerPublicApiTests`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update api-manifest --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify public-api-documentation --wiki-path .github/wiki`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0008",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 15491828,
+      "byteLength": 5943,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "edb71bdb3b6897bb27a18c1e3bc5aa92b820ca187e5bb32d63efa720c8e22835",
+      "markdown": "## T-1145 [ ] P3: Уточнить смысловую XML-документацию профилей RenderingServer\n\n- Создана: 2026-07-10T22:30:07+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-1137\n- Ссылки:\n  - Доменный документ: `docs/rendering/rendering-server.md`\n  - Исходник: `src/Electron2D/Graphics/Rendering/RenderingServer.cs`\n  - Сгенерированные потребители: `data/api/electron2d-api-manifest.json`; `.github/wiki/RenderingServer.md`; `data/documentation/`\n  - Проверки: `tests/Electron2D.Tests.Unit/RenderingServerPublicApiTests.cs`; `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`\n  - Источник finding-а: `docs/verdicts/release-management/t-1137-audit-control-r38.md`, `FOLLOW_UP_FINDING F5`\n\n### Execution contract\n\n- Task type: XML wording cleanup without runtime behavior, profile or public signature changes.\n- Ready-to-start:\n  - task state is `open`;\n  - `T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;\n  - no other task is `in progress`.\n- Stop conditions:\n  - wording promises additional Standard features not implemented by production consumer paths;\n  - work changes enum values, feature flags, presenter selection or public signatures;\n  - generated consumers cannot be synchronized through existing generators.\n- May change:\n  - XML summary for `RenderingProfile.Standard` and value text for `CurrentProfile`;\n  - corresponding rendering-domain wording and existing documentation assertions;\n  - generated manifest/Wiki/local docs.\n- Must not change:\n  - runtime renderer selection, feature values or backend arrays;\n  - manual API-profile decisions;\n  - unrelated public XML documentation.\n- Required outputs:\n  - grammatical XML stating that `Standard` means the selected SDL GPU presenter and does not itself promise extra features;\n  - nonduplicated `CurrentProfile` value wording;\n  - regenerated consumers without the old damaged phrases.\n- Required commands:\n  - `dotnet build src/Electron2D/Electron2D.csproj --no-restore -v:minimal`\n  - existing focused `RenderingServerPublicApiTests`\n  - `dotnet run --project eng/Electron2D.Build -- update api-manifest --check`\n  - `dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify public-api-documentation --wiki-path .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: not required by default; require it only if profile semantics or public behavior change.\n\n### Internal substrate acceptance contract\n\n- Input boundary: XML summaries for `RenderingProfile.Standard` and `RenderingServer.CurrentProfile`.\n- Semantic invariant: `Standard` describes SDL GPU presenter selection while actual support remains determined only by `HasFeature`.\n- Failure policy: stale damaged phrases fail existing public-documentation assertions or an extended assertion in the owning test.\n- Consumer boundary: source XML, manifest, Wiki, local docs and rendering domain use the same meaning.\n- Regression boundary: profile selection and every feature flag remain unchanged.\n\n### Самодостаточное описание\n\nПубличный XML сейчас содержит фразы `Full the native GPU backend-oriented renderer profile` и `current current profile`. Они грамматически повреждены и делают смысл `Standard` двусмысленным, хотя production-код и доменный документ уже однозначны. Задача исправляет только XML и generated consumers: `Standard` означает выбранный SDL GPU presenter, а поддержку конкретных возможностей определяет `HasFeature`.\n\n### Критерии приёмки\n\n- [ ] XML `RenderingProfile.Standard` грамматически корректен и не обещает неподключённые features.\n- [ ] XML `CurrentProfile` не содержит дублированного `current` и согласован с доменным документом.\n- [ ] Runtime behavior, enum values, feature flags и public signatures не изменены.\n- [ ] Generated manifest/Wiki/local docs синхронизированы и не содержат старых повреждённых фраз.\n- [ ] Existing focused documentation/build/license checks проходят.\n\n### Подзадачи\n\n- [ ] Локализовать повреждённые XML fragments и generated occurrences.\n- [ ] Исправить source XML и существующие assertions минимальным изменением.\n- [ ] Перегенерировать manifest/Wiki/local docs.\n- [ ] Выполнить обязательные проверки.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: r38 локализовал две точные повреждённые фразы и подтвердил корректность runtime contract.\n- Ещё отсутствует: source XML cleanup и синхронизация generated consumers.\n- Принято аудитом: отсутствует; r38 классифицировал finding как неблокирующий follow-up.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r38.md\n  - id: FOLLOW_UP_FINDING F5\n  - state: tracked-new\n  - target: T-1145\n  - rationale: XML wording не меняет принятое runtime-поведение T-1137 и вынесено в отдельную zero-context P3-задачу.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-10T19:30:07.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

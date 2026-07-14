@@ -1,0 +1,262 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-ecca1c3fa8e40a63f500273da9ec07d0",
+  "revision": 2,
+  "taskId": "T-0955",
+  "legacyAliases": [],
+  "title": "Зафиксировать Godot trademark boundary",
+  "description": "## T-0955 [ ] P0: Зафиксировать Godot trademark boundary\n\n- Создана: 2026-07-05T03:32:25+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0241, T-0243, T-0245, T-0246\n- Ссылки:\n  - Доменный документ: `docs/quality/godot-47-trademark-boundary.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.21 Diagnostics, CI, Packaging And Compatibility Policy`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/quality/godot-47-trademark-boundary.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/quality/godot-47-trademark-boundary.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЦель - зафиксировать и проверить Godot trademark boundary для public-facing Electron2D artifacts.\n\nЗадача не реализует runtime/backend behavior и не добавляет public API. Она владеет только trademark context inventory, allowed/prohibited wording, scanner/verifier command, generated report, stable diagnostics, no secret leakage and release/audit evidence.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, approved wording, prohibited wording, release/audit consumers and verifier command.\n- Граница public API: задача не добавляет public API и не реализует runtime/backend behavior.\n- Исполняемый результат: policy document, generated checklist/report, repository verifier and stable diagnostics for violations.\n- Runtime checks: runtime benchmarks не применяются, если policy verifier не запускает runtime path; причина фиксируется в доменном документе.\n\n### Границы задачи\n\n- Цель: подготовить только policy contract `Godot trademark boundary`, без реализации runtime/backend behavior.\n- Входит: exact allowed/prohibited wording, verifier/checklist, generated policy report, stable diagnostics, no secret leakage and release/audit evidence.\n- Не входит: public API additions, class behavior implementation, packaging/legal attribution outside the named policy.\n- Подтверждение приёмки: updated policy document, verifier output, violation fixtures or examples and release/audit evidence.\n\n### Первичные потребители результата\n\n- Release/audit checks, documentation verifiers and task-plan gates consume the policy report or verifier from `Godot trademark boundary`.\n- Consumers must receive deterministic pass/fail diagnostics, allowed/prohibited wording and no secret leakage.\n- Доменный документ должен назвать policy artifact, verifier command and release/audit consumer evidence.\n\n### Internal substrate acceptance contract\n\n- `T-0955` has deterministic init/success and fail-closed diagnostics in the domain document, including a stable `E2D-*` code family when runtime failure is possible.\n- First consumer proof names the public task, required internal capability and first test/report that proves the consumer uses this substrate instead of a fallback.\n- Resource lifetime, cache, handle or subscription counters return to baseline after the smallest create/use/dispose scenario applicable to this substrate.\n- Unsupported platform/backend paths return documented diagnostics and do not silently degrade into stubs or no-op behavior.\n- This task does not define public methods/properties/signals/enums; public behavior remains owned by the concrete public API tasks.\n### Критерии приёмки\n\n- [ ] Доменный документ `docs/quality/godot-47-trademark-boundary.md` фиксирует task-specific scope `Godot trademark boundary`, source inventory, generated report/artifact, verifier command, consumers, unsupported/deferred rows and release/audit evidence.\n- [ ] Deterministic generation or verification command воспроизводимо создаёт report/artifact/log для `Godot trademark boundary` и fails on stale, missing or manually edited outputs.\n- [ ] Policy inventory содержит allowed wording, prohibited wording, checked files/scopes, expected report path and release/audit consumer evidence.\n- [ ] Generated artifact validation проверяет schema/file list/checksum/source links as applicable and produces stable diagnostics without secret leakage.\n- [ ] Release/audit consumer evidence показывает, какой gate, package check or report consumes `Godot trademark boundary` and how failures become actionable.\n- [ ] Runtime benchmarks не требуются, если `Godot trademark boundary` не запускает runtime path; доменный документ содержит явную not-applicable строку вместо фиктивных замеров критических путей.\n- [ ] Документация, generated documentation index or task notes синхронизированы с фактическим контрактом `Godot trademark boundary`.\n- [ ] Проверки текущей задачи фиксируются в дневнике: целевые verifier/test commands, нужные проверки сборки, документации и лицензий and `git diff --check`.\n\n### Подзадачи\n\n- [ ] Зафиксировать task-specific source inventory, consumers, generated artifact paths, verifier command and explicit out-of-scope в доменном документе.\n- [ ] Добавить или обновить verifier/test fixtures, которые сначала доказывают текущий разрыв, затем проходят на рабочем generator/check/artifact validation path.\n- [ ] Реализовать deterministic generator/check/report or explicit `Deferred`/`Unsupported` contract for `Godot trademark boundary` without adding public API.\n- [ ] Проверить generated artifacts, no secret leakage, release/audit evidence and runtime-benchmark applicability decision.\n- [ ] Обновить документацию и выполнить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:32:25+03:00 - Создано по результатам проверки целевого списка: этот явно названный объём раньше не имел отдельной активной задачи в предыдущем срезе ROADMAP.\n2026-07-05T20:21:00+03:00 - Переформулировано в trademark boundary: задача запрещает публичное brand/affiliation позиционирование через Godot и оставляет только необходимые технические ссылки по allowlist.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fab4705fe4a1db467903c0bc500995a7"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a9dc106b3357162a2b473b8e01e91ad3"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ `docs/quality/godot-47-trademark-boundary.md` фиксирует task-specific scope `Godot trademark boundary`, source inventory, generated report/artifact, verifier command, consumers, unsupported/deferred rows and release/audit evidence.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Deterministic generation or verification command воспроизводимо создаёт report/artifact/log для `Godot trademark boundary` и fails on stale, missing or manually edited outputs.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Policy inventory содержит allowed wording, prohibited wording, checked files/scopes, expected report path and release/audit consumer evidence.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Generated artifact validation проверяет schema/file list/checksum/source links as applicable and produces stable diagnostics without secret leakage.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Release/audit consumer evidence показывает, какой gate, package check or report consumes `Godot trademark boundary` and how failures become actionable.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Runtime benchmarks не требуются, если `Godot trademark boundary` не запускает runtime path; доменный документ содержит явную not-applicable строку вместо фиктивных замеров критических путей.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Документация, generated documentation index or task notes синхронизированы с фактическим контрактом `Godot trademark boundary`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Проверки текущей задачи фиксируются в дневнике: целевые verifier/test commands, нужные проверки сборки, документации и лицензий and `git diff --check`.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:32:25.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по результатам проверки целевого списка: этот явно названный объём раньше не имел отдельной активной задачи в предыдущем срезе ROADMAP."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T17:21:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Переформулировано в trademark boundary: задача запрещает публичное brand/affiliation позиционирование через Godot и оставляет только необходимые технические ссылки по allowlist."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required for final acceptance unless a parent gate explicitly owns audit evidence"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/quality/godot-47-trademark-boundary.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.",
+      "docs/quality/godot-47-trademark-boundary.md is current and RED tests/verifiers can be added before production changes."
+    ],
+    "stopConditions": [
+      "implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.",
+      "tests, domain document or generated source-of-truth artifacts are missing or stale.",
+      "a shortcut would introduce facade, stub, hidden fallback or undocumented behavior."
+    ],
+    "allowedChanges": [
+      "files named in this task's `Ссылки` block and their owning tests/docs.",
+      "generated artifacts only through their owning generator/verifier.",
+      "`TASKS.md` notes/current evidence and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.",
+      "public API surface not present in generated Godot 4.7 packets.",
+      "unrelated formatting, dependency graph or metadata churn."
+    ],
+    "requiredOutputs": [
+      "docs/quality/godot-47-trademark-boundary.md",
+      "RED/GREEN test or verifier evidence for the selected slice.",
+      "synchronized XML/docs/API/generated documentation evidence when public surface or docs change.",
+      "task notes/current evidence and diary entry with exact command results."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required for final acceptance unless a parent gate explicitly owns audit evidence",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 13395352,
+      "byteLength": 8939,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "0a42e4a4fae6da40bdfa3ecda81b1acfc5557be461fd1c9693a800c9688e17f6",
+      "markdown": "## T-0955 [ ] P0: Зафиксировать Godot trademark boundary\n\n- Создана: 2026-07-05T03:32:25+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0241, T-0243, T-0245, T-0246\n- Ссылки:\n  - Доменный документ: `docs/quality/godot-47-trademark-boundary.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.21 Diagnostics, CI, Packaging And Compatibility Policy`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/quality/godot-47-trademark-boundary.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/quality/godot-47-trademark-boundary.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЦель - зафиксировать и проверить Godot trademark boundary для public-facing Electron2D artifacts.\n\nЗадача не реализует runtime/backend behavior и не добавляет public API. Она владеет только trademark context inventory, allowed/prohibited wording, scanner/verifier command, generated report, stable diagnostics, no secret leakage and release/audit evidence.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, approved wording, prohibited wording, release/audit consumers and verifier command.\n- Граница public API: задача не добавляет public API и не реализует runtime/backend behavior.\n- Исполняемый результат: policy document, generated checklist/report, repository verifier and stable diagnostics for violations.\n- Runtime checks: runtime benchmarks не применяются, если policy verifier не запускает runtime path; причина фиксируется в доменном документе.\n\n### Границы задачи\n\n- Цель: подготовить только policy contract `Godot trademark boundary`, без реализации runtime/backend behavior.\n- Входит: exact allowed/prohibited wording, verifier/checklist, generated policy report, stable diagnostics, no secret leakage and release/audit evidence.\n- Не входит: public API additions, class behavior implementation, packaging/legal attribution outside the named policy.\n- Подтверждение приёмки: updated policy document, verifier output, violation fixtures or examples and release/audit evidence.\n\n### Первичные потребители результата\n\n- Release/audit checks, documentation verifiers and task-plan gates consume the policy report or verifier from `Godot trademark boundary`.\n- Consumers must receive deterministic pass/fail diagnostics, allowed/prohibited wording and no secret leakage.\n- Доменный документ должен назвать policy artifact, verifier command and release/audit consumer evidence.\n\n### Internal substrate acceptance contract\n\n- `T-0955` has deterministic init/success and fail-closed diagnostics in the domain document, including a stable `E2D-*` code family when runtime failure is possible.\n- First consumer proof names the public task, required internal capability and first test/report that proves the consumer uses this substrate instead of a fallback.\n- Resource lifetime, cache, handle or subscription counters return to baseline after the smallest create/use/dispose scenario applicable to this substrate.\n- Unsupported platform/backend paths return documented diagnostics and do not silently degrade into stubs or no-op behavior.\n- This task does not define public methods/properties/signals/enums; public behavior remains owned by the concrete public API tasks.\n### Критерии приёмки\n\n- [ ] Доменный документ `docs/quality/godot-47-trademark-boundary.md` фиксирует task-specific scope `Godot trademark boundary`, source inventory, generated report/artifact, verifier command, consumers, unsupported/deferred rows and release/audit evidence.\n- [ ] Deterministic generation or verification command воспроизводимо создаёт report/artifact/log для `Godot trademark boundary` и fails on stale, missing or manually edited outputs.\n- [ ] Policy inventory содержит allowed wording, prohibited wording, checked files/scopes, expected report path and release/audit consumer evidence.\n- [ ] Generated artifact validation проверяет schema/file list/checksum/source links as applicable and produces stable diagnostics without secret leakage.\n- [ ] Release/audit consumer evidence показывает, какой gate, package check or report consumes `Godot trademark boundary` and how failures become actionable.\n- [ ] Runtime benchmarks не требуются, если `Godot trademark boundary` не запускает runtime path; доменный документ содержит явную not-applicable строку вместо фиктивных замеров критических путей.\n- [ ] Документация, generated documentation index or task notes синхронизированы с фактическим контрактом `Godot trademark boundary`.\n- [ ] Проверки текущей задачи фиксируются в дневнике: целевые verifier/test commands, нужные проверки сборки, документации и лицензий and `git diff --check`.\n\n### Подзадачи\n\n- [ ] Зафиксировать task-specific source inventory, consumers, generated artifact paths, verifier command and explicit out-of-scope в доменном документе.\n- [ ] Добавить или обновить verifier/test fixtures, которые сначала доказывают текущий разрыв, затем проходят на рабочем generator/check/artifact validation path.\n- [ ] Реализовать deterministic generator/check/report or explicit `Deferred`/`Unsupported` contract for `Godot trademark boundary` without adding public API.\n- [ ] Проверить generated artifacts, no secret leakage, release/audit evidence and runtime-benchmark applicability decision.\n- [ ] Обновить документацию и выполнить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:32:25+03:00 - Создано по результатам проверки целевого списка: этот явно названный объём раньше не имел отдельной активной задачи в предыдущем срезе ROADMAP.\n2026-07-05T20:21:00+03:00 - Переформулировано в trademark boundary: задача запрещает публичное brand/affiliation позиционирование через Godot и оставляет только необходимые технические ссылки по allowlist.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:32:25.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

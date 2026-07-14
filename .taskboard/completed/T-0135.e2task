@@ -1,0 +1,275 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-0e8f0a7027c43b492f49d4ff5f177094",
+  "revision": 2,
+  "taskId": "T-0135",
+  "legacyAliases": [],
+  "title": "Реализовать публичный runtime API для tilemap, нужный reference platformer",
+  "description": "# T-0135 [x] P0: Реализовать публичный runtime API для tilemap, нужный reference platformer\n\n- Создана: 2026-06-21T23:58:00+03:00\n- Завершена: 2026-06-22T00:38:38+03:00\n- Приоритет: P0\n- Зависимости: T-0033, T-0049, T-0061\n\n## Ссылки\n\n- Спецификация: `docs/rendering/tilemap-layer-runtime-api.md`\n- Документация: `docs/rendering/tilemap-layer-runtime-api.md`\n- Исходный код: `src/Electron2D/Graphics/Rendering/TileSet.cs`; `src/Electron2D/Graphics/Rendering/TileSetAtlasSource.cs`; `src/Electron2D/Graphics/Rendering/TileData.cs`; `src/Electron2D/Graphics/Rendering/TileMapLayer.cs`; `src/Electron2D/Graphics/Rendering/TileSetResourceMetadata.cs`\n- Tests: `tests/Electron2D.Tests.Integration/TileMapLayerRuntimeTests.cs`; `tests/Electron2D.Tests.Unit/CleanRuntimeBaselineTests.cs`\n- Wiki: `.github/wiki/API-Reference.md`; `.github/wiki/API-Rendering.md`; `.github/wiki/API-Compatibility.md`\n\n## Самодостаточное описание\n\nНужно было убрать blocker для `T-0094` по отсутствующему публичному tilemap runtime API. Reference platformer не должен строить уровень через временный internal-only формат, приватный helper в примере или генерацию `StaticBody2D` вместо публичного tilemap-контракта.\n\n## Что сделано\n\n- Добавлены public `TileSet`, `TileSetSource`, `TileSetAtlasSource`, `TileData` и `TileMapLayer`.\n- `TileMapLayer` хранит cells, умеет `SetCell()`, `EraseCell()`, `Clear()`, `GetUsedCells()`, `GetUsedCellsById()`, `GetUsedRect()`, `LocalToMap()`, `MapToLocal()`, `GetCellTileData()`, `HasBodyRid()` и `GetCoordsForBodyRid()`.\n- Rendering path разворачивает visible tile cells в обычные canvas texture commands через `CanvasSubmissionContext`.\n- Physics/query path учитывает tile collision polygons как static AABB shapes слоя; one-way polygons блокируют падение сверху и пропускают движение снизу.\n- `TileSet` и `TileSetAtlasSource` получили internal AOT-safe resource metadata для `.e2res` round-trip tile definitions, atlas source data, rendering metadata и collision polygons.\n- Public API XML docs, GitHub Wiki API reference, API category pages и compatibility table обновлены под новые public types.\n- `T-0094` остаётся заблокированной по `T-0136`, потому что для reference games всё ещё нет утверждённых реальных ассетов.\n\n## Критерии приёмки\n\n- [x] Публичный tilemap runtime API реализован и задокументирован полными XML comments.\n- [x] API поддерживает terrain cells и one-way cells, достаточные для reference platformer preview slice.\n- [x] Tilemap resource data сериализуется в переносимый `.e2res` snapshot и читается через internal AOT-safe metadata.\n- [x] Rendering path и physics path покрыты интеграционными тестами.\n- [x] Спецификация создана в `docs/rendering/tilemap-layer-runtime-api.md`.\n- [x] Документация создана в `docs/rendering/tilemap-layer-runtime-api.md`.\n- [x] Команды тестирования и проверки задокументированы в архиве задачи.\n\n## Проверки\n\n- `dotnet test src\\Electron2D.sln --no-restore --filter TileMapLayerRuntimeTests` - пройдено, integration `5/5`.\n- `dotnet test src\\Electron2D.sln --no-restore --filter CleanRuntimeBaselineTests` - пройдено, unit `1/1`.\n- `dotnet test src\\Electron2D.sln --no-restore` - пройдено: unit `74/74`, integration `235/235`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiXmlDocs.ps1 -FailOnIssues` - пройдено, checked symbols `1389`, issues `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - пройдено, public types `130`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github\\wiki` - пройдено, generated pages `147`, scanned Markdown files `158`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-ApiWiki.ps1 -OutputPath .github\\wiki -Check` - пройдено, generated pages `147`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` - пройдено, scanned source files `269`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - пройдено для tracked source files.\n\n## Решения\n\n- `TileMapLayer` остаётся `Node2D`; physics RID и tile collision shapes являются внутренним runtime-представлением.\n- Polygon narrow phase не реализован в `0.1.0 Preview`: collision polygons участвуют как AABB, это зафиксировано в спецификации и документации.\n- Полная загрузка texture assets через import pipeline не добавлялась в публичный API этой задачи; runtime API хранит `Texture2D`, а реальные ассеты и import verification остаются в blocker-задаче `T-0136`.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0015",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ab53a69fed0ce2cff292a5b4932e0d41"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-8e3bbf6c2a0d812a828dc36c5bdb6bbb"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-e57af383fd797ec516e4f2b32631b682"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Публичный tilemap runtime API реализован и задокументирован полными XML comments.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0e8f0a7027c43b492f49d4ff5f177094/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "API поддерживает terrain cells и one-way cells, достаточные для reference platformer preview slice.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0e8f0a7027c43b492f49d4ff5f177094/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Tilemap resource data сериализуется в переносимый `.e2res` snapshot и читается через internal AOT-safe metadata.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0e8f0a7027c43b492f49d4ff5f177094/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Rendering path и physics path покрыты интеграционными тестами.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0e8f0a7027c43b492f49d4ff5f177094/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Спецификация создана в `docs/rendering/tilemap-layer-runtime-api.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0e8f0a7027c43b492f49d4ff5f177094/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Документация создана в `docs/rendering/tilemap-layer-runtime-api.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0e8f0a7027c43b492f49d4ff5f177094/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Команды тестирования и проверки задокументированы в архиве задачи.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0e8f0a7027c43b492f49d4ff5f177094/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T21:38:38.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/wiki/API-Compatibility.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": ".github/wiki/API-Reference.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": ".github/wiki/API-Rendering.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "235/235"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "74/74"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/rendering/tilemap-layer-runtime-api.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/TileData.cs"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/TileMapLayer.cs"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/TileSet.cs"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/TileSetAtlasSource.cs"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/TileSetResourceMetadata.cs"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/TileMapLayerRuntimeTests.cs"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Unit/CleanRuntimeBaselineTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 361406,
+      "byteLength": 5556,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "f4e220707b627ee3260cb09422ceac0822eeefeb7e1c96653735a8a24dcbf02f",
+      "markdown": "# T-0135 [x] P0: Реализовать публичный runtime API для tilemap, нужный reference platformer\n\n- Создана: 2026-06-21T23:58:00+03:00\n- Завершена: 2026-06-22T00:38:38+03:00\n- Приоритет: P0\n- Зависимости: T-0033, T-0049, T-0061\n\n## Ссылки\n\n- Спецификация: `docs/rendering/tilemap-layer-runtime-api.md`\n- Документация: `docs/rendering/tilemap-layer-runtime-api.md`\n- Исходный код: `src/Electron2D/Graphics/Rendering/TileSet.cs`; `src/Electron2D/Graphics/Rendering/TileSetAtlasSource.cs`; `src/Electron2D/Graphics/Rendering/TileData.cs`; `src/Electron2D/Graphics/Rendering/TileMapLayer.cs`; `src/Electron2D/Graphics/Rendering/TileSetResourceMetadata.cs`\n- Tests: `tests/Electron2D.Tests.Integration/TileMapLayerRuntimeTests.cs`; `tests/Electron2D.Tests.Unit/CleanRuntimeBaselineTests.cs`\n- Wiki: `.github/wiki/API-Reference.md`; `.github/wiki/API-Rendering.md`; `.github/wiki/API-Compatibility.md`\n\n## Самодостаточное описание\n\nНужно было убрать blocker для `T-0094` по отсутствующему публичному tilemap runtime API. Reference platformer не должен строить уровень через временный internal-only формат, приватный helper в примере или генерацию `StaticBody2D` вместо публичного tilemap-контракта.\n\n## Что сделано\n\n- Добавлены public `TileSet`, `TileSetSource`, `TileSetAtlasSource`, `TileData` и `TileMapLayer`.\n- `TileMapLayer` хранит cells, умеет `SetCell()`, `EraseCell()`, `Clear()`, `GetUsedCells()`, `GetUsedCellsById()`, `GetUsedRect()`, `LocalToMap()`, `MapToLocal()`, `GetCellTileData()`, `HasBodyRid()` и `GetCoordsForBodyRid()`.\n- Rendering path разворачивает visible tile cells в обычные canvas texture commands через `CanvasSubmissionContext`.\n- Physics/query path учитывает tile collision polygons как static AABB shapes слоя; one-way polygons блокируют падение сверху и пропускают движение снизу.\n- `TileSet` и `TileSetAtlasSource` получили internal AOT-safe resource metadata для `.e2res` round-trip tile definitions, atlas source data, rendering metadata и collision polygons.\n- Public API XML docs, GitHub Wiki API reference, API category pages и compatibility table обновлены под новые public types.\n- `T-0094` остаётся заблокированной по `T-0136`, потому что для reference games всё ещё нет утверждённых реальных ассетов.\n\n## Критерии приёмки\n\n- [x] Публичный tilemap runtime API реализован и задокументирован полными XML comments.\n- [x] API поддерживает terrain cells и one-way cells, достаточные для reference platformer preview slice.\n- [x] Tilemap resource data сериализуется в переносимый `.e2res` snapshot и читается через internal AOT-safe metadata.\n- [x] Rendering path и physics path покрыты интеграционными тестами.\n- [x] Спецификация создана в `docs/rendering/tilemap-layer-runtime-api.md`.\n- [x] Документация создана в `docs/rendering/tilemap-layer-runtime-api.md`.\n- [x] Команды тестирования и проверки задокументированы в архиве задачи.\n\n## Проверки\n\n- `dotnet test src\\Electron2D.sln --no-restore --filter TileMapLayerRuntimeTests` - пройдено, integration `5/5`.\n- `dotnet test src\\Electron2D.sln --no-restore --filter CleanRuntimeBaselineTests` - пройдено, unit `1/1`.\n- `dotnet test src\\Electron2D.sln --no-restore` - пройдено: unit `74/74`, integration `235/235`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiXmlDocs.ps1 -FailOnIssues` - пройдено, checked symbols `1389`, issues `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - пройдено, public types `130`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github\\wiki` - пройдено, generated pages `147`, scanned Markdown files `158`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-ApiWiki.ps1 -OutputPath .github\\wiki -Check` - пройдено, generated pages `147`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` - пройдено, scanned source files `269`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - пройдено для tracked source files.\n\n## Решения\n\n- `TileMapLayer` остаётся `Node2D`; physics RID и tile collision shapes являются внутренним runtime-представлением.\n- Polygon narrow phase не реализован в `0.1.0 Preview`: collision polygons участвуют как AABB, это зафиксировано в спецификации и документации.\n- Полная загрузка texture assets через import pipeline не добавлялась в публичный API этой задачи; runtime API хранит `Texture2D`, а реальные ассеты и import verification остаются в blocker-задаче `T-0136`.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-21T20:58:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T21:38:38.0000000+00:00",
+  "completedAt": "2026-06-21T21:38:38.0000000+00:00",
+  "acceptedAt": "2026-06-21T21:38:38.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T21:38:38.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

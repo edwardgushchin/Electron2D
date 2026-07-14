@@ -1,0 +1,620 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-c9329206f6594d6d96a98a3d132d8d6c",
+  "revision": 10,
+  "taskId": "T-1151",
+  "legacyAliases": [],
+  "title": "Добавить CLI-команды для управления критериями приёмки",
+  "description": "CLI TaskBoard v3 должен позволять управлять критериями приёмки без прямого редактирования файлов .e2task. Пользователь может создать критерий, изменить его описание, добавить типизированное доказательство, явно сменить состояние или удалить критерий. Новый критерий всегда создаётся в состоянии Open, а переход в Passed разрешён только после добавления доказательства типа File, Uri или Attachment. Все операции используют оптимистичную проверку ревизии, поддерживают --dry-run, записываются транзакционно и не меняют состояние задачи автоматически. Область задачи ограничена CLI, мутациями и проверкой TaskBoard v3, интеграционным тестом и доменной документацией.",
+  "status": "Review",
+  "acceptanceState": "InternalReview",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0009",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-command-surface",
+      "description": "Команды criterion add, update, add-evidence, set-state и remove принимают обязательные параметры, используют общий контракт проверки ревизии и возвращают актуальный снимок задачи.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.Cli/ProjectTasksCli.cs"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-cas-and-dry-run",
+      "description": "Устаревшая ревизия, повторяющийся идентификатор, отсутствующий критерий и недопустимые значения завершаются безопасной ошибкой, а --dry-run не меняет файл задачи и её ревизию.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-state-evidence",
+      "description": "Новый критерий получает состояние Open; команда обновления меняет только описание, а состояние Passed можно установить только после добавления существующего типизированного доказательства.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.ProjectSystem/Tasks/TaskBoardV3Mutations.cs"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.ProjectSystem/Tasks/TaskBoardV3Validation.cs"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-lifecycle-isolation",
+      "description": "Смена статуса задачи, отправка на проверку, приёмка и архивирование не меняют состояния критериев приёмки автоматически.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-documentation",
+      "description": "Документация CLI и менеджера задач описывает актуальные команды, проверку ревизии и обязательность доказательства перед переходом критерия в Passed.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "docs/cli/e2d-cli.md"
+        },
+        {
+          "kind": "File",
+          "path": "docs/project-system/project-task-manager.md"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-df48e327e8a54eedb92a04747be0f79a",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T09:17:39.0564104+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Ready."
+      }
+    },
+    {
+      "activityEntryId": "activity-fc10f29a09ab4251bb46e90f5a7274f5",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T09:17:39.7576371+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to InProgress."
+      }
+    },
+    {
+      "activityEntryId": "activity-2110e1c4c15f4835a4877a4bd395ef63",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T09:27:34.9397338+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Review."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    },
+    {
+      "activityEntryId": "activity-062a98febb32428b8accf05edd3a18b1",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T21:45:18.2692484+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/title",
+            "value": "Добавить CLI-команды для управления критериями приёмки"
+          },
+          {
+            "op": "replace",
+            "path": "/description",
+            "value": "CLI TaskBoard v3 должен позволять управлять критериями приёмки без прямого редактирования файлов .e2task. Пользователь может создать критерий, изменить его описание, добавить типизированное доказательство, явно сменить состояние или удалить критерий. Новый критерий всегда создаётся в состоянии Open, а переход в Passed разрешён только после добавления доказательства типа File, Uri или Attachment. Все операции используют оптимистичную проверку ревизии, поддерживают --dry-run, записываются транзакционно и не меняют состояние задачи автоматически. Область задачи ограничена CLI, мутациями и проверкой TaskBoard v3, интеграционным тестом и доменной документацией."
+          },
+          {
+            "op": "replace",
+            "path": "/acceptanceCriteria",
+            "value": [
+              {
+                "criterionId": "criterion-command-surface",
+                "description": "Команды criterion add, update, add-evidence, set-state и remove принимают обязательные параметры, используют общий контракт проверки ревизии и возвращают актуальный снимок задачи.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.Cli/ProjectTasksCli.cs"
+                  }
+                ]
+              },
+              {
+                "criterionId": "criterion-cas-and-dry-run",
+                "description": "Устаревшая ревизия, повторяющийся идентификатор, отсутствующий критерий и недопустимые значения завершаются безопасной ошибкой, а --dry-run не меняет файл задачи и её ревизию.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+                  }
+                ]
+              },
+              {
+                "criterionId": "criterion-state-evidence",
+                "description": "Новый критерий получает состояние Open; команда обновления меняет только описание, а состояние Passed можно установить только после добавления существующего типизированного доказательства.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.ProjectSystem/Tasks/TaskBoardV3Mutations.cs"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.ProjectSystem/Tasks/TaskBoardV3Validation.cs"
+                  }
+                ]
+              },
+              {
+                "criterionId": "criterion-lifecycle-isolation",
+                "description": "Смена статуса задачи, отправка на проверку, приёмка и архивирование не меняют состояния критериев приёмки автоматически.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+                  }
+                ]
+              },
+              {
+                "criterionId": "criterion-documentation",
+                "description": "Документация CLI и менеджера задач описывает актуальные команды, проверку ревизии и обязательность доказательства перед переходом критерия в Passed.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "docs/cli/e2d-cli.md"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "docs/project-system/project-task-manager.md"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "replace",
+            "path": "/links",
+            "value": [
+              {
+                "linkId": "criterion-cli",
+                "kind": "File",
+                "value": "src/Electron2D.Cli/ProjectTasksCli.cs"
+              },
+              {
+                "linkId": "criterion-mutations",
+                "kind": "File",
+                "value": "src/Electron2D.ProjectSystem/Tasks/TaskBoardV3Mutations.cs"
+              },
+              {
+                "linkId": "criterion-validation",
+                "kind": "File",
+                "value": "src/Electron2D.ProjectSystem/Tasks/TaskBoardV3Validation.cs"
+              },
+              {
+                "linkId": "criterion-tests",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+              },
+              {
+                "linkId": "cli-contract",
+                "kind": "File",
+                "value": "docs/cli/e2d-cli.md"
+              },
+              {
+                "linkId": "task-manager-contract",
+                "kind": "File",
+                "value": "docs/project-system/project-task-manager.md"
+              }
+            ]
+          },
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "value": {
+              "taskType": "CLI-управление критериями приёмки TaskBoard v3",
+              "readyToStart": [
+                "Проект использует каноническую доску TaskBoard v3, а задача существует в ожидаемой ревизии.",
+                "Все изменения критериев выполняются через e2d tasks, без прямого редактирования хранилища.",
+                "Доменный контракт и сфокусированный интеграционный тест доступны для синхронного обновления."
+              ],
+              "stopConditions": [
+                "Для операции требуется обойти проверку ревизии или транзакционную запись.",
+                "Состояние Passed можно установить без типизированного доказательства.",
+                "Операция с жизненным циклом задачи автоматически меняет состояние критерия.",
+                "Для завершения требуется несвязанное изменение интерфейса или внешнего аудита."
+              ],
+              "allowedChanges": [
+                "Маршрутизация и проверка команд criterion в CLI.",
+                "Мутации и семантическая проверка критериев в TaskBoard v3.",
+                "Сфокусированные интеграционные тесты и доменная документация."
+              ],
+              "forbiddenChanges": [
+                "Прямое редактирование файлов .e2task или board.e2tasks.",
+                "Автоматическая оценка критериев по статусу задачи.",
+                "Несвязанные изменения статуса, приёмки, аудита или архивирования задач.",
+                "Несвязанные изменения расширения VS Code и webview."
+              ],
+              "requiredOutputs": [
+                "Команды add, update, add-evidence, set-state и remove для критериев.",
+                "Безопасное поведение при конфликте ревизии, ошибочных данных и --dry-run.",
+                "Проверка типизированного доказательства перед установкой Passed.",
+                "Синхронизированные интеграционный тест и доменная документация."
+              ],
+              "commands": [
+                {
+                  "commandId": "focused-integration",
+                  "kind": "Process",
+                  "executable": "dotnet",
+                  "arguments": [
+                    "test",
+                    "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+                    "--filter",
+                    "FullyQualifiedName~TasksCriterionCommandsProvideRevisionAwareCrudAndExplicitStateChanges",
+                    "--no-restore",
+                    "-v:minimal"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ],
+                  "confirmation": "PolicyDecides"
+                },
+                {
+                  "commandId": "taskboard-verify",
+                  "kind": "Process",
+                  "executable": "e2d",
+                  "arguments": [
+                    "tasks",
+                    "verify",
+                    "--project",
+                    ".",
+                    "--format",
+                    "json"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ],
+                  "confirmation": "PolicyDecides"
+                },
+                {
+                  "commandId": "docs-check",
+                  "kind": "Process",
+                  "executable": "dotnet",
+                  "arguments": [
+                    "run",
+                    "--project",
+                    "eng/Electron2D.Build",
+                    "--",
+                    "update",
+                    "docs",
+                    "--check"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ],
+                  "confirmation": "PolicyDecides"
+                },
+                {
+                  "commandId": "licenses",
+                  "kind": "Process",
+                  "executable": "dotnet",
+                  "arguments": [
+                    "run",
+                    "--project",
+                    "eng/Electron2D.Build",
+                    "--",
+                    "verify",
+                    "licenses"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ],
+                  "confirmation": "PolicyDecides"
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "5a83e9a74f73e34e77823d132ad1b7f89830c560fb120f4281f59026db1f5087",
+        "afterTaskCoreDigest": "cd2c5efc5da4374b720fc2c21c2adc986594fddcd8efe4f0145147925c3567d1"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "criterion-cli",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/ProjectTasksCli.cs"
+    },
+    {
+      "linkId": "criterion-mutations",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Tasks/TaskBoardV3Mutations.cs"
+    },
+    {
+      "linkId": "criterion-validation",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Tasks/TaskBoardV3Validation.cs"
+    },
+    {
+      "linkId": "criterion-tests",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+    },
+    {
+      "linkId": "cli-contract",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "task-manager-contract",
+      "kind": "File",
+      "value": "docs/project-system/project-task-manager.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "CLI-управление критериями приёмки TaskBoard v3",
+    "readyToStart": [
+      "Проект использует каноническую доску TaskBoard v3, а задача существует в ожидаемой ревизии.",
+      "Все изменения критериев выполняются через e2d tasks, без прямого редактирования хранилища.",
+      "Доменный контракт и сфокусированный интеграционный тест доступны для синхронного обновления."
+    ],
+    "stopConditions": [
+      "Для операции требуется обойти проверку ревизии или транзакционную запись.",
+      "Состояние Passed можно установить без типизированного доказательства.",
+      "Операция с жизненным циклом задачи автоматически меняет состояние критерия.",
+      "Для завершения требуется несвязанное изменение интерфейса или внешнего аудита."
+    ],
+    "allowedChanges": [
+      "Маршрутизация и проверка команд criterion в CLI.",
+      "Мутации и семантическая проверка критериев в TaskBoard v3.",
+      "Сфокусированные интеграционные тесты и доменная документация."
+    ],
+    "forbiddenChanges": [
+      "Прямое редактирование файлов .e2task или board.e2tasks.",
+      "Автоматическая оценка критериев по статусу задачи.",
+      "Несвязанные изменения статуса, приёмки, аудита или архивирования задач.",
+      "Несвязанные изменения расширения VS Code и webview."
+    ],
+    "requiredOutputs": [
+      "Команды add, update, add-evidence, set-state и remove для критериев.",
+      "Безопасное поведение при конфликте ревизии, ошибочных данных и --dry-run.",
+      "Проверка типизированного доказательства перед установкой Passed.",
+      "Синхронизированные интеграционный тест и доменная документация."
+    ],
+    "commands": [
+      {
+        "commandId": "focused-integration",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "test",
+          "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+          "--filter",
+          "FullyQualifiedName~TasksCriterionCommandsProvideRevisionAwareCrudAndExplicitStateChanges",
+          "--no-restore",
+          "-v:minimal"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "taskboard-verify",
+        "kind": "Process",
+        "executable": "e2d",
+        "arguments": [
+          "tasks",
+          "verify",
+          "--project",
+          ".",
+          "--format",
+          "json"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "docs-check",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "run",
+          "--project",
+          "eng/Electron2D.Build",
+          "--",
+          "update",
+          "docs",
+          "--check"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "licenses",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "run",
+          "--project",
+          "eng/Electron2D.Build",
+          "--",
+          "verify",
+          "licenses"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-11T09:17:38.3614456+00:00",
+  "updatedAt": "2026-07-13T21:45:18.2692484+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "activity-6acb285e1ff249398b64fe13afd91585",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T09:27:33.8765827+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Реализованы tasks criterion add, update, set-state и remove поверх общего revision-aware transaction store. Focused workflow прошёл RED-GREEN и покрывает duplicate, missing, invalid state и dry-run; acceptance invariant подтверждает, что trusted Done не меняет criterion states. Aggregate task-manager slice 13/13, docs и licenses GREEN. Реальный smoke на T-1151: add создал criterion-cli-crud Open revision 3→4; set-state перевёл его в Passed revision 4→5, по одному changed file."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

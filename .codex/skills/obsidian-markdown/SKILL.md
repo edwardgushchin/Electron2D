@@ -1,9 +1,9 @@
 ---
 name: obsidian-markdown
 description: |
-  Work with StellarDown Markdown knowledge artifacts: TASKS.md, dev-diary, completed task archives,
-  docs domain documents, and migrated legacy Obsidian Markdown. Use when creating,
-  moving, or editing project-facing Markdown records.
+  Work with StellarDown Markdown knowledge artifacts: the development diary, domain documents,
+  and migrated legacy Obsidian Markdown. Use when creating, moving, or editing project-facing
+  Markdown records; task state itself is handled only through e2d tasks.
 ---
 
 # Obsidian Markdown
@@ -14,9 +14,8 @@ Use this skill for repository Markdown that acts as project memory, task state, 
 
 The current live layout is:
 
-- `TASKS.md` - active task tracker.
-- `dev-diary/YYYY/MM Month/DD-MM-YYYY.md` - development diary.
-- `completed-tasks/YYYY/MM Месяц.md` - accepted/closed task archives and historical backlog grouped by completion month.
+- `.taskboard/board.e2tasks` and `.taskboard/{tasks,completed}/*.e2task` - machine-readable task state; access it only through `e2d tasks`, not through Markdown editing.
+- `data/dev-diary/YYYY/MM Month/DD-MM-YYYY.md` - development diary.
 - `docs/<domain>/` - domain documents that combine expected contract, current implemented state, limits, and verification notes in one place.
 - `.temp/` - temporary drafts, probes, and generated scratch artifacts.
 
@@ -28,8 +27,8 @@ The current live layout is:
 
 ## Legacy Markdown
 
-- Migrated legacy files under `docs/legacy/`, `docs/legacy-memory/`, `dev-diary/`, and `completed-tasks/` keep their historical internal format unless the user explicitly asks for normalization.
-- Legacy memory files are archival context only. New durable context should be captured in `dev-diary/`, `completed-tasks/`, and `TASKS.md`.
+- Migrated legacy files under `docs/legacy/`, `docs/legacy-memory/`, and `data/dev-diary/` keep their historical internal format unless the user explicitly asks for normalization.
+- Legacy memory files are archival context only. New durable prose context belongs in `data/dev-diary/` and the relevant domain document; task evidence belongs in task activity through `e2d tasks comment add`.
 - Do not revive old `MEMORY.md`, `TODO.md`, or workflow-preflight processes.
 
 ## New Diary Entries
@@ -59,14 +58,12 @@ Required shape for new daily files and new entries:
 
 Every new entry must include `- Действия:` with nested chronological `HH:MM - ...` bullets. Append new entries after older entries in the same file. Do not rewrite older diary history unless the user explicitly asks.
 
-## Tasks
+## Taskboard Boundary
 
-- Active tasks live only in `TASKS.md`.
-- Use sequential IDs such as `T-0001`.
-- Only the task currently being worked should be `in progress`.
-- Keep imported `todo-...` identifiers as `Legacy anchor` metadata, not as the primary ID for new tasks.
-- Move accepted/closed work to `completed-tasks/YYYY/MM Месяц.md` only after explicit user acceptance.
-- Completed tasks are appended to the monthly archive for their completion date. Do not create standalone task files such as `completed-tasks/T-0001.md`.
+- Read task state through `e2d tasks get` or `e2d tasks board` and mutate it only through the relevant `e2d tasks` subcommand.
+- Never create or edit `.e2task` or `.e2tasks` JSON through this Markdown skill.
+- Record implementation evidence or blocker reports with `e2d tasks comment add`; do not create a parallel Markdown task ledger.
+- Human acceptance is required before `Done`, and only accepted or cancelled tasks may be archived through `e2d tasks archive`.
 
 ## Domain Documents
 
@@ -78,5 +75,5 @@ Every new entry must include `- Действия:` with nested chronological `HH
 ## Temporary Artifacts
 
 - Put drafts, probes, generated scratch outputs, and one-off analysis files under `.temp/`.
-- Do not place temporary artifacts in the repository root, `.codex`, `docs/`, `dev-diary/`, or `completed-tasks/`.
+- Do not place temporary artifacts in the repository root, `.codex`, `docs/`, `data/dev-diary/`, or `.taskboard/`.
 - Promote an artifact out of `.temp/` only when it becomes part of the intended durable repository state.

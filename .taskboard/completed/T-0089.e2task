@@ -1,0 +1,230 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-1399557de1d2d196576b4f910eeff665",
+  "revision": 2,
+  "taskId": "T-0089",
+  "legacyAliases": [],
+  "title": "Реализовать Linux x64 glibc export: debug/release, Wayland/X11 desktop runtime, standard graphics backend",
+  "description": "# T-0089 [x] P0: Реализовать Linux x64 glibc export: debug/release, Wayland/X11 desktop runtime, standard graphics backend\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T19:18:00+03:00\n- Приоритет: P0\n- Зависимости: T-0087, T-0023, T-0134\n\n## Ссылки\n\n- Спецификация: `docs/export/linux-x64-export.md`\n- Документация: `docs/export/linux-x64-export.md`\n- Исходный код: `src/Electron2D/Export/Linux/`\n- Тесты: `tests/Electron2D.Tests.Integration/LinuxExportTests.cs`\n- Проверка: `tools/Verify-LinuxExport.ps1`; `tools/Verify-LinuxExport.sh`\n- CI: `.github/workflows/ci.yml`\n\n## Самодостаточное описание\n\nРеализован Linux x64 glibc export baseline для `0.1.0 Preview`: внутренний planner строит deterministic package plan для `linux-x64`, Debug/Release, self-contained publish, renderer profile, `glibc` scope и desktop protocols `wayland`/`x11`. Отдельный verifier публикует шаблонный проект и запускает exported Linux executable на Linux host или через WSL, чтобы проверить reference scene и C# script lifecycle.\n\nРеализация не добавляет public runtime API, не подписывает artifacts, не выполняет deploy и не публикует GitHub Release.\n\n## Что сделано\n\n- Добавлен internal домен `src/Electron2D/Export/Linux`.\n- Добавлены internal types:\n  - `Electron2DLinuxExportPlanner`;\n  - `Electron2DLinuxExportPlan`;\n  - `Electron2DLinuxExportPlanResult`.\n- Planner проверяет Linux contract:\n  - `target == LinuxX64`;\n  - `runtimeIdentifier == linux-x64`;\n  - `selfContained == true`;\n  - musl/ARM runtime identifiers явно вне scope;\n  - project file path не пустой;\n  - project settings валидны.\n- Добавлены diagnostics:\n  - `E2D-EXPORT-LINUX-0001`;\n  - `E2D-EXPORT-LINUX-0002`;\n  - `E2D-EXPORT-LINUX-0003`;\n  - `E2D-EXPORT-LINUX-0004`;\n  - `E2D-EXPORT-LINUX-0005`;\n  - `E2D-EXPORT-LINUX-0006`;\n  - `E2D-EXPORT-LINUX-0007`.\n- Добавлены integration tests для Release/standard, Debug/compatibility и fail-closed validation.\n- Добавлены `tools/Verify-LinuxExport.ps1` и `tools/Verify-LinuxExport.sh`.\n- CI запускает Linux export verifier только на `ubuntu-latest`.\n- Обновлены export documentation, release notes и changelog.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: Linux x64 glibc export baseline для Debug/Release, Wayland/X11 desktop runtime и standard graphics backend.\n- [x] Exported app starts and runs reference scene on target Linux через `tools/Verify-LinuxExport.ps1`.\n- [x] musl/ARM explicitly out of scope.\n- [x] Подготовлена спецификация `docs/export/linux-x64-export.md`.\n- [x] Добавлены автоматические тесты `LinuxExportTests`.\n- [x] Подготовлена справка `docs/export/linux-x64-export.md`.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- RED: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~LinuxExportTests\" --no-restore -m:1` - ожидаемо упало на отсутствующем `Electron2DLinuxExportPlanner`.\n- GREEN: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~LinuxExportTests\" --no-restore -m:1` - пройдено, `3` теста.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LinuxExport.ps1` - пройдено через WSL2 `archlinux`: Debug и Release self-contained `linux-x64` publish запускают exported reference scene.\n\n## Решения\n\n- Linux export code размещён в `src/Electron2D/Export/Linux`, а не в `Core`.\n- Planner не запускает внешние процессы: он строит проверяемый plan, а реальный publish/run выполняет отдельный verifier.\n- Windows host запускает Linux verifier через WSL, потому что это даёт локальную проверку Linux executable без публикации релиза.\n- CI запускает Linux verifier только на Linux runner, чтобы Windows/macOS jobs не пытались публиковать `linux-x64`.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016",
+    "tag-0032"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-2a21ac96891bb9f389256d3ba39794f3"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-76d6dce169972a72deab350849af2417"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-be4cbb3527c7a3bf1b62121480f624f1"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Реализована цель задачи: Linux x64 glibc export baseline для Debug/Release, Wayland/X11 desktop runtime и standard graphics backend.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1399557de1d2d196576b4f910eeff665/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Exported app starts and runs reference scene on target Linux через `tools/Verify-LinuxExport.ps1`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1399557de1d2d196576b4f910eeff665/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "musl/ARM explicitly out of scope.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1399557de1d2d196576b4f910eeff665/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Подготовлена спецификация `docs/export/linux-x64-export.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1399557de1d2d196576b4f910eeff665/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Добавлены автоматические тесты `LinuxExportTests`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1399557de1d2d196576b4f910eeff665/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Подготовлена справка `docs/export/linux-x64-export.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1399557de1d2d196576b4f910eeff665/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1399557de1d2d196576b4f910eeff665/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T16:18:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/workflows/ci.yml"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/export/linux-x64-export.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "src/Electron2D/Export/Linux"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "src/Electron2D/Export/Linux"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/LinuxExportTests.cs"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "tools/Verify-LinuxExport.ps1"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "tools/Verify-LinuxExport.sh"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 266311,
+      "byteLength": 4564,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "7a1f8e0626bacdc83c8b6aeb180779d8e27f1130891323d9e77b04bfc530938b",
+      "markdown": "# T-0089 [x] P0: Реализовать Linux x64 glibc export: debug/release, Wayland/X11 desktop runtime, standard graphics backend\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T19:18:00+03:00\n- Приоритет: P0\n- Зависимости: T-0087, T-0023, T-0134\n\n## Ссылки\n\n- Спецификация: `docs/export/linux-x64-export.md`\n- Документация: `docs/export/linux-x64-export.md`\n- Исходный код: `src/Electron2D/Export/Linux/`\n- Тесты: `tests/Electron2D.Tests.Integration/LinuxExportTests.cs`\n- Проверка: `tools/Verify-LinuxExport.ps1`; `tools/Verify-LinuxExport.sh`\n- CI: `.github/workflows/ci.yml`\n\n## Самодостаточное описание\n\nРеализован Linux x64 glibc export baseline для `0.1.0 Preview`: внутренний planner строит deterministic package plan для `linux-x64`, Debug/Release, self-contained publish, renderer profile, `glibc` scope и desktop protocols `wayland`/`x11`. Отдельный verifier публикует шаблонный проект и запускает exported Linux executable на Linux host или через WSL, чтобы проверить reference scene и C# script lifecycle.\n\nРеализация не добавляет public runtime API, не подписывает artifacts, не выполняет deploy и не публикует GitHub Release.\n\n## Что сделано\n\n- Добавлен internal домен `src/Electron2D/Export/Linux`.\n- Добавлены internal types:\n  - `Electron2DLinuxExportPlanner`;\n  - `Electron2DLinuxExportPlan`;\n  - `Electron2DLinuxExportPlanResult`.\n- Planner проверяет Linux contract:\n  - `target == LinuxX64`;\n  - `runtimeIdentifier == linux-x64`;\n  - `selfContained == true`;\n  - musl/ARM runtime identifiers явно вне scope;\n  - project file path не пустой;\n  - project settings валидны.\n- Добавлены diagnostics:\n  - `E2D-EXPORT-LINUX-0001`;\n  - `E2D-EXPORT-LINUX-0002`;\n  - `E2D-EXPORT-LINUX-0003`;\n  - `E2D-EXPORT-LINUX-0004`;\n  - `E2D-EXPORT-LINUX-0005`;\n  - `E2D-EXPORT-LINUX-0006`;\n  - `E2D-EXPORT-LINUX-0007`.\n- Добавлены integration tests для Release/standard, Debug/compatibility и fail-closed validation.\n- Добавлены `tools/Verify-LinuxExport.ps1` и `tools/Verify-LinuxExport.sh`.\n- CI запускает Linux export verifier только на `ubuntu-latest`.\n- Обновлены export documentation, release notes и changelog.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: Linux x64 glibc export baseline для Debug/Release, Wayland/X11 desktop runtime и standard graphics backend.\n- [x] Exported app starts and runs reference scene on target Linux через `tools/Verify-LinuxExport.ps1`.\n- [x] musl/ARM explicitly out of scope.\n- [x] Подготовлена спецификация `docs/export/linux-x64-export.md`.\n- [x] Добавлены автоматические тесты `LinuxExportTests`.\n- [x] Подготовлена справка `docs/export/linux-x64-export.md`.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- RED: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~LinuxExportTests\" --no-restore -m:1` - ожидаемо упало на отсутствующем `Electron2DLinuxExportPlanner`.\n- GREEN: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~LinuxExportTests\" --no-restore -m:1` - пройдено, `3` теста.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LinuxExport.ps1` - пройдено через WSL2 `archlinux`: Debug и Release self-contained `linux-x64` publish запускают exported reference scene.\n\n## Решения\n\n- Linux export code размещён в `src/Electron2D/Export/Linux`, а не в `Core`.\n- Planner не запускает внешние процессы: он строит проверяемый plan, а реальный publish/run выполняет отдельный verifier.\n- Windows host запускает Linux verifier через WSL, потому что это даёт локальную проверку Linux executable без публикации релиза.\n- CI запускает Linux verifier только на Linux runner, чтобы Windows/macOS jobs не пытались публиковать `linux-x64`.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T16:18:00.0000000+00:00",
+  "completedAt": "2026-06-21T16:18:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T16:18:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T16:18:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

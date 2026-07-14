@@ -1,0 +1,428 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-e4b4ba1fa2cd4e48409d296281499f13",
+  "revision": 2,
+  "taskId": "T-0220",
+  "legacyAliases": [],
+  "title": "Исправить frame scheduler RuntimeHost через DeltaTime, accumulator и ожидание до deadline",
+  "description": "## T-0220 [x] P0: Исправить frame scheduler RuntimeHost через DeltaTime, accumulator и ожидание до deadline\n\n- Создана: 2026-06-24T19:20:00+03:00\n- Завершена: 2026-06-26T01:38:51+03:00\n- Принята внешним аудитом: 2026-06-26T01:38:51+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний acceptance audit r04 принял задачу без blocker-ов.\n- Приоритет: P0\n- Зависимости: нет\n- Ссылки:\n  - Доменный документ: `docs/runtime/project-runtime-runner.md`\n  - Доменный документ: `docs/physics/fixed-physics-step-and-rigid-body-motion.md`\n  - Release notes: `docs/releases/0.1.0-preview.md`\n  - Внешние аудиты: `docs/verdicts/runtime/t-0220-audit-r01.md`; `docs/verdicts/runtime/t-0220-audit-r02.md`; `docs/verdicts/runtime/t-0220-audit-r03.md`; `docs/verdicts/runtime/t-0220-audit-r04.md`\n  - Исходный код: `src/Electron2D/Runtime/Application/RuntimeHost.cs`; `src/Electron2D/Runtime/Application/RuntimeHostOptions.cs`; `src/Electron2D/Runtime/Application/RuntimeHostResult.cs`; `src/Electron2D/Runtime/Application/RuntimeFramePresenter.cs`; `src/Electron2D/Runtime/Application/RuntimeSdlRendererFramePresenter.cs`; `src/Electron2D/Core/SceneTree/SceneTree.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RuntimeHostTests.cs`; `tests/Electron2D.Tests.Integration/FixedPhysicsStepAndRigidBodyMotionTests.cs`\n  - Финальный архив аудита: `T-0220-audit-r04.zip`\n\n### Самодостаточное описание\n\nПовторный аудит Platformer показал, что обычный runtime loop вызывал physics и `_Process` с одним фиксированным `FixedDeltaTime`, не связанным с фактическим временем кадра, а затем безусловно делал `Thread.Sleep(16)` после рендера. Поэтому длительность кадра становилась `update + render + present + 16 ms`, а `_Process` получал фиктивный `deltaTime` при просадках.\n\nПринятый результат: интерактивный `RuntimeHost` использует монотонные часы, измеренный `DeltaTime`, накопитель fixed physics, ограничение догоняющих physics-шагов и ожидание только до срока кадра либо через синхронизацию показа. `SceneTree.FixedPhysicsStep` выполняет `_PhysicsProcess` фиксированными шагами, `_Process` получает измеренный и ограниченный `deltaTime`, а bounded smoke-режим остаётся детерминированным для проверок.\n\n### Критерии и результат\n\n- [x] До изменения кода `docs/runtime/project-runtime-runner.md` и `docs/physics/fixed-physics-step-and-rigid-body-motion.md` описали loop с монотонными часами, накопителем, `DeltaTime` и ожиданием до срока кадра.\n- [x] Добавлены сначала падающие tests, доказывающие, что старый `Thread.Sleep(16)` после рендера ломал 60 FPS budget и что `_Process` получал не фактический `deltaTime`.\n- [x] Runtime loop вычисляет `measuredDeltaTime = now - previous` по монотонным часам и ограничивает выбросы правилом `deltaTime = Min(measuredDeltaTime, MaxDeltaTime)`.\n- [x] Clock и sleeper инъецируются, чтобы scheduler можно было детерминированно тестировать без реального ожидания.\n- [x] `MaxDeltaTime = 0.25` и `MaxPhysicsStepsPerFrame = 5` зафиксированы в доменных документах и tests.\n- [x] Physics выполняется через `while accumulator >= FixedDeltaTime`, а `_PhysicsProcess` получает `FixedDeltaTime`.\n- [x] Scheduler защищён от бесконечного догоняющего цикла при просадках и считает отброшенное время.\n- [x] `_Process` получает `deltaTime` отображаемого кадра, а не фиксированное значение без учёта фактической длительности кадра.\n- [x] Безусловный `Thread.Sleep(16)` после всей работы удалён; ожидание делает только остаток до deadline или presentation sync.\n- [x] Политика minimized/unfocused окна описана и покрыта тестом: scheduler не сжигает CPU и не разрушает накопитель при паузе окна.\n- [x] VSync/presentation sync отделён от software frame limiter.\n- [x] Scheduler поддерживает целевые режимы 60/120/144/165 Hz через deadline budget и настройки ожидания.\n- [x] Bounded smoke с `FrameLimit > 0` остаётся детерминированным и не зависит от wall-clock там, где тестам нужен фиксированный результат.\n- [x] Runtime diagnostics разделяют `input`, `physics`, `process`, `render-plan`, `submit`, `present`, requested/observed wait и pause wait, чтобы `T-0221` мог строить живой performance artifact.\n- [x] После зелёных проверок доменные документы и release notes обновлены фактическим поведением, ограничениями и командами проверки.\n- [x] Внешний audit archive содержит воспроизводимые manifest, patch, red/green evidence, worker ownership evidence и clean restore evidence; внешний аудит r04 вернул `VERDICT: ACCEPT` без blocker-ов.\n\n### Подзадачи\n\n- [x] Уточнить runtime loop contract в документах.\n- [x] Добавить red tests на `DeltaTime` scheduling и отсутствие post-render wait.\n- [x] Реализовать accumulator loop и deadline wait.\n- [x] Сохранить deterministic bounded mode для verifier-ов.\n- [x] Запустить focused runtime/physics tests, repository verifiers, внешний аудит и записать результат в дневник.\n\n### Проверки\n\n- [x] Baseline red evidence r04: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"RuntimeHostInteractiveLoopUsesMeasuredProcessDelta|RuntimeHostInteractiveLoopDoesNotAddFixedPostRenderWaitToFrameBudget\"` завершился с exit code 1 и двумя ожидаемыми failures на baseline `1f8fda08c370f2d2a7cce5eb669019906ed825d4`.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~RuntimeHostTests|FullyQualifiedName~FixedPhysicsStepAndRigidBodyMotionTests\"` прошёл 70/70.\n- [x] `dotnet build src\\Electron2D.sln --no-restore` прошёл без предупреждений и ошибок.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-Tasks.ps1` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл.\n- [x] `git diff --check` прошёл; Git выводил только предупреждения о будущей замене LF на CRLF.\n- [x] Restore evidence r04 из чистого worktree применил patch sequence от baseline, материализовал exact state snapshots для нейтрализации Windows line-ending conversion, подтвердил `hash=PASS` и повторил focused tests/build/verifiers с exit code 0.\n- [x] Внешний аудит r04 `docs/verdicts/runtime/t-0220-audit-r04.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-24T19:20:00+03:00 - Создано по повторному аудиту пользователя. Оптимизация gameplay scripts не должна маскировать базовую ошибку scheduler-а: пока ожидание стоит после рендера, 60 FPS не доказывается.\n\n2026-06-25T20:01:03+03:00 - Пользователь принял `T-0219`; единственная зависимость этой задачи закрыта, поэтому `T-0220` переведена из `blocked` в `open`.\n\n2026-06-25T21:20:00+03:00 - Внешний аудит r01 вернул `VERDICT: NEEDS_FIXES` с 8 blocker-ами по архитектуре scheduler-а, diagnostics, evidence и workflow.\n\n2026-06-25T22:19:38+03:00 - Writer-worker `Darwin` проверил и заменил/сохранил корректные части частичного вывода `Cicero`; изменения Cicero не выброшены вслепую, но финальное runtime-состояние принадлежит Darwin и последующим index-workers.\n\n2026-06-25T23:17:00+03:00 - Внешний аудит r02 вернул `VERDICT: NEEDS_FIXES` с 5 workflow/evidence blocker-ами.\n\n2026-06-26T00:26:32+03:00 - Внешний аудит r03 вернул `VERDICT: NEEDS_FIXES` с 2 blocker-ами: неполная baseline-red демонстрация post-render wait и недостаточная patch reproducibility evidence.\n\n2026-06-26T01:38:51+03:00 - Внешний аудит r04 вернул `VERDICT: ACCEPT`: r03 blocker-ы закрыты baseline-red post-render frame-budget test и clean restore evidence от baseline. Задача удалена из активного `TASKS.md`, перенесена в этот архив, `T-0166` отмечает scheduler-критерий выполненным, а `T-0222` открыт как следующий Platformer scope.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0010"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "До изменения кода `docs/runtime/project-runtime-runner.md` и `docs/physics/fixed-physics-step-and-rigid-body-motion.md` описали loop с монотонными часами, накопителем, `DeltaTime` и ожиданием до срока кадра.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Добавлены сначала падающие tests, доказывающие, что старый `Thread.Sleep(16)` после рендера ломал 60 FPS budget и что `_Process` получал не фактический `deltaTime`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Runtime loop вычисляет `measuredDeltaTime = now - previous` по монотонным часам и ограничивает выбросы правилом `deltaTime = Min(measuredDeltaTime, MaxDeltaTime)`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Clock и sleeper инъецируются, чтобы scheduler можно было детерминированно тестировать без реального ожидания.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`MaxDeltaTime = 0.25` и `MaxPhysicsStepsPerFrame = 5` зафиксированы в доменных документах и tests.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Physics выполняется через `while accumulator >= FixedDeltaTime`, а `_PhysicsProcess` получает `FixedDeltaTime`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Scheduler защищён от бесконечного догоняющего цикла при просадках и считает отброшенное время.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "`_Process` получает `deltaTime` отображаемого кадра, а не фиксированное значение без учёта фактической длительности кадра.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Безусловный `Thread.Sleep(16)` после всей работы удалён; ожидание делает только остаток до deadline или presentation sync.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Политика minimized/unfocused окна описана и покрыта тестом: scheduler не сжигает CPU и не разрушает накопитель при паузе окна.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "VSync/presentation sync отделён от software frame limiter.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Scheduler поддерживает целевые режимы 60/120/144/165 Hz через deadline budget и настройки ожидания.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-013",
+      "description": "Bounded smoke с `FrameLimit > 0` остаётся детерминированным и не зависит от wall-clock там, где тестам нужен фиксированный результат.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-014",
+      "description": "Runtime diagnostics разделяют `input`, `physics`, `process`, `render-plan`, `submit`, `present`, requested/observed wait и pause wait, чтобы `T-0221` мог строить живой performance artifact.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-015",
+      "description": "После зелёных проверок доменные документы и release notes обновлены фактическим поведением, ограничениями и командами проверки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-016",
+      "description": "Внешний audit archive содержит воспроизводимые manifest, patch, red/green evidence, worker ownership evidence и clean restore evidence; внешний аудит r04 вернул `VERDICT: ACCEPT` без blocker-ов.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e4b4ba1fa2cd4e48409d296281499f13/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по повторному аудиту пользователя. Оптимизация gameplay scripts не должна маскировать базовую ошибку scheduler-а: пока ожидание стоит после рендера, 60 FPS не доказывается."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-25T17:01:03.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Пользователь принял `T-0219`; единственная зависимость этой задачи закрыта, поэтому `T-0220` переведена из `blocked` в `open`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-25T18:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r01 вернул `VERDICT: NEEDS_FIXES` с 8 blocker-ами по архитектуре scheduler-а, diagnostics, evidence и workflow."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-25T19:19:38.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Writer-worker `Darwin` проверил и заменил/сохранил корректные части частичного вывода `Cicero`; изменения Cicero не выброшены вслепую, но финальное runtime-состояние принадлежит Darwin и последующим index-workers."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-25T20:17:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r02 вернул `VERDICT: NEEDS_FIXES` с 5 workflow/evidence blocker-ами."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0006",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-25T21:26:32.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r03 вернул `VERDICT: NEEDS_FIXES` с 2 blocker-ами: неполная baseline-red демонстрация post-render wait и недостаточная patch reproducibility evidence."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0007",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-25T22:38:51.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r04 вернул `VERDICT: ACCEPT`: r03 blocker-ы закрыты baseline-red post-render frame-budget test и clean restore evidence от baseline. Задача удалена из активного `TASKS.md`, перенесена в этот архив, `T-0166` отмечает scheduler-критерий выполненным, а `T-0222` открыт как следующий Platformer scope."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-25T22:38:51.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/physics/fixed-physics-step-and-rigid-body-motion.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/runtime/project-runtime-runner.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/verdicts/runtime/t-0220-audit-r01.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/verdicts/runtime/t-0220-audit-r02.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/verdicts/runtime/t-0220-audit-r03.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/verdicts/runtime/t-0220-audit-r04.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "src/Electron2D/Core/SceneTree/SceneTree.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Application/RuntimeFramePresenter.cs"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Application/RuntimeHost.cs"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Application/RuntimeHostOptions.cs"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Application/RuntimeHostResult.cs"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Application/RuntimeSdlRendererFramePresenter.cs"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/FixedPhysicsStepAndRigidBodyMotionTests.cs"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RuntimeHostTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 965220,
+      "byteLength": 10209,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "a2f8792fe5cadf406e38d0af33986e13fbc01347babe6f8091e3e3737fe6b13e",
+      "markdown": "## T-0220 [x] P0: Исправить frame scheduler RuntimeHost через DeltaTime, accumulator и ожидание до deadline\n\n- Создана: 2026-06-24T19:20:00+03:00\n- Завершена: 2026-06-26T01:38:51+03:00\n- Принята внешним аудитом: 2026-06-26T01:38:51+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний acceptance audit r04 принял задачу без blocker-ов.\n- Приоритет: P0\n- Зависимости: нет\n- Ссылки:\n  - Доменный документ: `docs/runtime/project-runtime-runner.md`\n  - Доменный документ: `docs/physics/fixed-physics-step-and-rigid-body-motion.md`\n  - Release notes: `docs/releases/0.1.0-preview.md`\n  - Внешние аудиты: `docs/verdicts/runtime/t-0220-audit-r01.md`; `docs/verdicts/runtime/t-0220-audit-r02.md`; `docs/verdicts/runtime/t-0220-audit-r03.md`; `docs/verdicts/runtime/t-0220-audit-r04.md`\n  - Исходный код: `src/Electron2D/Runtime/Application/RuntimeHost.cs`; `src/Electron2D/Runtime/Application/RuntimeHostOptions.cs`; `src/Electron2D/Runtime/Application/RuntimeHostResult.cs`; `src/Electron2D/Runtime/Application/RuntimeFramePresenter.cs`; `src/Electron2D/Runtime/Application/RuntimeSdlRendererFramePresenter.cs`; `src/Electron2D/Core/SceneTree/SceneTree.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RuntimeHostTests.cs`; `tests/Electron2D.Tests.Integration/FixedPhysicsStepAndRigidBodyMotionTests.cs`\n  - Финальный архив аудита: `T-0220-audit-r04.zip`\n\n### Самодостаточное описание\n\nПовторный аудит Platformer показал, что обычный runtime loop вызывал physics и `_Process` с одним фиксированным `FixedDeltaTime`, не связанным с фактическим временем кадра, а затем безусловно делал `Thread.Sleep(16)` после рендера. Поэтому длительность кадра становилась `update + render + present + 16 ms`, а `_Process` получал фиктивный `deltaTime` при просадках.\n\nПринятый результат: интерактивный `RuntimeHost` использует монотонные часы, измеренный `DeltaTime`, накопитель fixed physics, ограничение догоняющих physics-шагов и ожидание только до срока кадра либо через синхронизацию показа. `SceneTree.FixedPhysicsStep` выполняет `_PhysicsProcess` фиксированными шагами, `_Process` получает измеренный и ограниченный `deltaTime`, а bounded smoke-режим остаётся детерминированным для проверок.\n\n### Критерии и результат\n\n- [x] До изменения кода `docs/runtime/project-runtime-runner.md` и `docs/physics/fixed-physics-step-and-rigid-body-motion.md` описали loop с монотонными часами, накопителем, `DeltaTime` и ожиданием до срока кадра.\n- [x] Добавлены сначала падающие tests, доказывающие, что старый `Thread.Sleep(16)` после рендера ломал 60 FPS budget и что `_Process` получал не фактический `deltaTime`.\n- [x] Runtime loop вычисляет `measuredDeltaTime = now - previous` по монотонным часам и ограничивает выбросы правилом `deltaTime = Min(measuredDeltaTime, MaxDeltaTime)`.\n- [x] Clock и sleeper инъецируются, чтобы scheduler можно было детерминированно тестировать без реального ожидания.\n- [x] `MaxDeltaTime = 0.25` и `MaxPhysicsStepsPerFrame = 5` зафиксированы в доменных документах и tests.\n- [x] Physics выполняется через `while accumulator >= FixedDeltaTime`, а `_PhysicsProcess` получает `FixedDeltaTime`.\n- [x] Scheduler защищён от бесконечного догоняющего цикла при просадках и считает отброшенное время.\n- [x] `_Process` получает `deltaTime` отображаемого кадра, а не фиксированное значение без учёта фактической длительности кадра.\n- [x] Безусловный `Thread.Sleep(16)` после всей работы удалён; ожидание делает только остаток до deadline или presentation sync.\n- [x] Политика minimized/unfocused окна описана и покрыта тестом: scheduler не сжигает CPU и не разрушает накопитель при паузе окна.\n- [x] VSync/presentation sync отделён от software frame limiter.\n- [x] Scheduler поддерживает целевые режимы 60/120/144/165 Hz через deadline budget и настройки ожидания.\n- [x] Bounded smoke с `FrameLimit > 0` остаётся детерминированным и не зависит от wall-clock там, где тестам нужен фиксированный результат.\n- [x] Runtime diagnostics разделяют `input`, `physics`, `process`, `render-plan`, `submit`, `present`, requested/observed wait и pause wait, чтобы `T-0221` мог строить живой performance artifact.\n- [x] После зелёных проверок доменные документы и release notes обновлены фактическим поведением, ограничениями и командами проверки.\n- [x] Внешний audit archive содержит воспроизводимые manifest, patch, red/green evidence, worker ownership evidence и clean restore evidence; внешний аудит r04 вернул `VERDICT: ACCEPT` без blocker-ов.\n\n### Подзадачи\n\n- [x] Уточнить runtime loop contract в документах.\n- [x] Добавить red tests на `DeltaTime` scheduling и отсутствие post-render wait.\n- [x] Реализовать accumulator loop и deadline wait.\n- [x] Сохранить deterministic bounded mode для verifier-ов.\n- [x] Запустить focused runtime/physics tests, repository verifiers, внешний аудит и записать результат в дневник.\n\n### Проверки\n\n- [x] Baseline red evidence r04: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"RuntimeHostInteractiveLoopUsesMeasuredProcessDelta|RuntimeHostInteractiveLoopDoesNotAddFixedPostRenderWaitToFrameBudget\"` завершился с exit code 1 и двумя ожидаемыми failures на baseline `1f8fda08c370f2d2a7cce5eb669019906ed825d4`.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~RuntimeHostTests|FullyQualifiedName~FixedPhysicsStepAndRigidBodyMotionTests\"` прошёл 70/70.\n- [x] `dotnet build src\\Electron2D.sln --no-restore` прошёл без предупреждений и ошибок.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-Tasks.ps1` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл.\n- [x] `git diff --check` прошёл; Git выводил только предупреждения о будущей замене LF на CRLF.\n- [x] Restore evidence r04 из чистого worktree применил patch sequence от baseline, материализовал exact state snapshots для нейтрализации Windows line-ending conversion, подтвердил `hash=PASS` и повторил focused tests/build/verifiers с exit code 0.\n- [x] Внешний аудит r04 `docs/verdicts/runtime/t-0220-audit-r04.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-24T19:20:00+03:00 - Создано по повторному аудиту пользователя. Оптимизация gameplay scripts не должна маскировать базовую ошибку scheduler-а: пока ожидание стоит после рендера, 60 FPS не доказывается.\n\n2026-06-25T20:01:03+03:00 - Пользователь принял `T-0219`; единственная зависимость этой задачи закрыта, поэтому `T-0220` переведена из `blocked` в `open`.\n\n2026-06-25T21:20:00+03:00 - Внешний аудит r01 вернул `VERDICT: NEEDS_FIXES` с 8 blocker-ами по архитектуре scheduler-а, diagnostics, evidence и workflow.\n\n2026-06-25T22:19:38+03:00 - Writer-worker `Darwin` проверил и заменил/сохранил корректные части частичного вывода `Cicero`; изменения Cicero не выброшены вслепую, но финальное runtime-состояние принадлежит Darwin и последующим index-workers.\n\n2026-06-25T23:17:00+03:00 - Внешний аудит r02 вернул `VERDICT: NEEDS_FIXES` с 5 workflow/evidence blocker-ами.\n\n2026-06-26T00:26:32+03:00 - Внешний аудит r03 вернул `VERDICT: NEEDS_FIXES` с 2 blocker-ами: неполная baseline-red демонстрация post-render wait и недостаточная patch reproducibility evidence.\n\n2026-06-26T01:38:51+03:00 - Внешний аудит r04 вернул `VERDICT: ACCEPT`: r03 blocker-ы закрыты baseline-red post-render frame-budget test и clean restore evidence от baseline. Задача удалена из активного `TASKS.md`, перенесена в этот архив, `T-0166` отмечает scheduler-критерий выполненным, а `T-0222` открыт как следующий Platformer scope.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-25T22:38:51.0000000+00:00",
+  "completedAt": "2026-06-25T22:38:51.0000000+00:00",
+  "acceptedAt": "2026-06-25T22:38:51.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-25T22:38:51.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

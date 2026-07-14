@@ -1,0 +1,257 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-fab4705fe4a1db467903c0bc500995a7",
+  "revision": 2,
+  "taskId": "T-0245",
+  "legacyAliases": [],
+  "title": "Ввести общий контроль готовности API, тестов, документации и замеров производительности",
+  "description": "## T-0245 [ ] P0: Ввести общий контроль готовности API, тестов, документации и замеров производительности\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0244\n- Ссылки:\n  - Доменный документ: `docs/quality/godot-47-public-api-public-api-контроль готовности.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/quality/godot-47-public-api-public-api-контроль готовности.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/quality/godot-47-public-api-public-api-контроль готовности.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. Контроль готовности должен запрещать считать объект готовым без доменного документа, сначала падающих и затем проходящих тестов, рабочей реализации, XML-документации, полной документации, проверок производительности и выделений памяти для критических путей выполнения и синхронизированного манифеста API.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n### Команда контрольной проверки, за которую отвечает T-0245\n\n`T-0245` владеет проверкой готовности одного класса и всего объёма:\n\n- `dotnet run --project eng/Electron2D.Build -- verify public-api-done --class <ClassName>`\n- `dotnet run --project eng/Electron2D.Build -- verify public-api-done --all`\n\nПроверка должна падать, если сгенерированное описание API, отчёт о расхождениях API, описание поведения, тесты, документация, подтверждение замеров производительности и выделений памяти или заметки задачи отсутствуют, устарели или противоречат утверждённому контракту `Deferred`/`Unsupported`.\n\n### Граница задачи публичного API\n\nЗадача публичного класса не требует и не содержит встроенного перечня публичных элементов API в `TASKS.md`. Такой список живёт только в сгенерированных описаниях `T-0242`; соответствие проверяется `T-0243`; наблюдаемое поведение проверяется `T-0244`.\n\nЕсли сгенерированное описание, отчёт о расхождениях или проверка отсутствуют либо устарели, задача публичного класса остаётся заблокированной независимо от ручного описания.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ описывает входные данные проверки готовности, правила устаревших выходных файлов, обязательные доказательства задачи и обработку состояний `blocked`, `deferred` и `unsupported`.\n- [ ] `verify public-api-done --class <ClassName>` проверяет сгенерированное описание API, отчёт о расхождениях API, описание поведения, тесты класса, документацию, подтверждение замеров производительности и выделений памяти и заметки задачи.\n- [ ] `verify public-api-done --class <ClassName>` падает, если описание API, отчёт о расхождениях API или описание поведения отсутствует, устарело или не проходит проверку.\n- [ ] `verify public-api-done --class <ClassName>` падает, если проверки поведения, обязательные для семейства класса, отсутствуют или покрыты только неутверждёнными ручными заметками.\n- [ ] `verify public-api-done --class <ClassName>` падает, если XML-документация, сгенерированная документация, доменные документы, обязательные тесты или обязательные доказательства производительности и выделений памяти отсутствуют либо устарели.\n- [ ] `verify public-api-done --class <ClassName>` различает slice evidence и full class evidence: срезы `A-api-surface`, `B-core-behavior`, `C-substrate-integration` и `D-performance-lifetime-platform` могут быть зелёным проверяемым прогрессом, но не закрывают задачу публичного класса.\n- [ ] `verify public-api-done --class <ClassName>` даёт full success только для среза `GATE-class-done`, когда срезы `A`-`D` закрыты либо имеют утверждённые строки `Deferred`/`Unsupported`.\n- [ ] `verify public-api-done --all` проверяет весь public API объём из ROADMAP раздела `2. Публичный API`, строя coverage только по каноническим строкам ROADMAP вида ``- `T-XXXX` - ...``.\n- [ ] `verify public-api-done --all` падает, если любая активная задача не содержит `Execution class` и `Scheduling tier` либо содержит значение вне утверждённых наборов `ready-now|blocked|tracking|gate|final-gate|foundation|leaf-public-api|internal-substrate` и `current|next|later|final-gate`.\n- [ ] `verify public-api-done --all` падает, если задача с `Execution class: leaf-public-api` не содержит раздел `### Срезы выполнения для goal-агента` или пытается стать evidence для `T-0980` без `GATE-class-done`.\n- [ ] Проверка запрещает закрывать задачу публичного класса по ручному списку элементов API, ручному отчёту о расхождениях или непроверенной заметке о поведении.\n- [ ] Документация, манифест API и заметки задачи синхронизированы с фактическими командами контроля готовности и их артефактами.\n\n### Подзадачи\n\n- [ ] Зафиксировать входные данные контроля готовности и правила устаревших выходных файлов в доменном документе.\n- [ ] Добавить сначала падающие проверки на отсутствующее описание API, отсутствующий отчёт о расхождениях, отсутствующее описание поведения, отсутствующие тесты/документацию и ручные доказательства.\n- [ ] Реализовать `verify public-api-done --class` и `verify public-api-done --all`.\n- [ ] Добавить readable отчёт об ошибке для агента и CI.\n- [ ] Обновить документацию, сгенерированные файлы и заметки задачи и запустить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0013",
+    "tag-0018",
+    "tag-0022",
+    "tag-0030"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fb8ef0d5a90d34ece52148458b4f5b8e"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ описывает входные данные проверки готовности, правила устаревших выходных файлов, обязательные доказательства задачи и обработку состояний `blocked`, `deferred` и `unsupported`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`verify public-api-done --class <ClassName>` проверяет сгенерированное описание API, отчёт о расхождениях API, описание поведения, тесты класса, документацию, подтверждение замеров производительности и выделений памяти и заметки задачи.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`verify public-api-done --class <ClassName>` падает, если описание API, отчёт о расхождениях API или описание поведения отсутствует, устарело или не проходит проверку.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`verify public-api-done --class <ClassName>` падает, если проверки поведения, обязательные для семейства класса, отсутствуют или покрыты только неутверждёнными ручными заметками.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`verify public-api-done --class <ClassName>` падает, если XML-документация, сгенерированная документация, доменные документы, обязательные тесты или обязательные доказательства производительности и выделений памяти отсутствуют либо устарели.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "`verify public-api-done --class <ClassName>` различает slice evidence и full class evidence: срезы `A-api-surface`, `B-core-behavior`, `C-substrate-integration` и `D-performance-lifetime-platform` могут быть зелёным проверяемым прогрессом, но не закрывают задачу публичного класса.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "`verify public-api-done --class <ClassName>` даёт full success только для среза `GATE-class-done`, когда срезы `A`-`D` закрыты либо имеют утверждённые строки `Deferred`/`Unsupported`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "`verify public-api-done --all` проверяет весь public API объём из ROADMAP раздела `2. Публичный API`, строя coverage только по каноническим строкам ROADMAP вида ``- `T-XXXX` - ...``.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "`verify public-api-done --all` падает, если любая активная задача не содержит `Execution class` и `Scheduling tier` либо содержит значение вне утверждённых наборов `ready-now|blocked|tracking|gate|final-gate|foundation|leaf-public-api|internal-substrate` и `current|next|later|final-gate`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "`verify public-api-done --all` падает, если задача с `Execution class: leaf-public-api` не содержит раздел `### Срезы выполнения для goal-агента` или пытается стать evidence для `T-0980` без `GATE-class-done`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Проверка запрещает закрывать задачу публичного класса по ручному списку элементов API, ручному отчёту о расхождениях или непроверенной заметке о поведении.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Документация, манифест API и заметки задачи синхронизированы с фактическими командами контроля готовности и их артефактами.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate unless task criteria explicitly require primary/control audit"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/quality/godot-47-public-api-public-api-контроль готовности.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tooling",
+    "readyToStart": [
+      "task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/quality/godot-47-public-api-public-api-контроль готовности.md describes the tool or policy contract.",
+      "add RED verifier/test coverage before changing implementation when tooling behavior changes."
+    ],
+    "stopConditions": [
+      "the change would define public API surface manually or close behavior owned by a public class task.",
+      "missing dependency, platform prerequisite or generated input prevents deterministic verifier output."
+    ],
+    "allowedChanges": [
+      "tooling, verifier, generated-report plumbing and docs named by this task.",
+      "tests under `tests/` that prove the tooling contract.",
+      "`TASKS.md` notes and diary evidence."
+    ],
+    "forbiddenChanges": [
+      "production runtime behavior outside this tooling contract.",
+      "generated artifacts by hand when a generator/verifier owns them.",
+      "unrelated task statuses or release scope."
+    ],
+    "requiredOutputs": [
+      "docs/quality/godot-47-public-api-public-api-контроль готовности.md",
+      "focused verifier/test evidence named by the task.",
+      "synchronized generated docs/index artifacts when docs are changed."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify public-api-done --all",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify public-api-done --class <ClassName>",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 469100,
+      "byteLength": 12290,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "6afcbb7341fa0122c15eec897982a93070215da197b628169ff6bd9ca6c27653",
+      "markdown": "## T-0245 [ ] P0: Ввести общий контроль готовности API, тестов, документации и замеров производительности\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0244\n- Ссылки:\n  - Доменный документ: `docs/quality/godot-47-public-api-public-api-контроль готовности.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/quality/godot-47-public-api-public-api-контроль готовности.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/quality/godot-47-public-api-public-api-контроль готовности.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. Контроль готовности должен запрещать считать объект готовым без доменного документа, сначала падающих и затем проходящих тестов, рабочей реализации, XML-документации, полной документации, проверок производительности и выделений памяти для критических путей выполнения и синхронизированного манифеста API.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n### Команда контрольной проверки, за которую отвечает T-0245\n\n`T-0245` владеет проверкой готовности одного класса и всего объёма:\n\n- `dotnet run --project eng/Electron2D.Build -- verify public-api-done --class <ClassName>`\n- `dotnet run --project eng/Electron2D.Build -- verify public-api-done --all`\n\nПроверка должна падать, если сгенерированное описание API, отчёт о расхождениях API, описание поведения, тесты, документация, подтверждение замеров производительности и выделений памяти или заметки задачи отсутствуют, устарели или противоречат утверждённому контракту `Deferred`/`Unsupported`.\n\n### Граница задачи публичного API\n\nЗадача публичного класса не требует и не содержит встроенного перечня публичных элементов API в `TASKS.md`. Такой список живёт только в сгенерированных описаниях `T-0242`; соответствие проверяется `T-0243`; наблюдаемое поведение проверяется `T-0244`.\n\nЕсли сгенерированное описание, отчёт о расхождениях или проверка отсутствуют либо устарели, задача публичного класса остаётся заблокированной независимо от ручного описания.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ описывает входные данные проверки готовности, правила устаревших выходных файлов, обязательные доказательства задачи и обработку состояний `blocked`, `deferred` и `unsupported`.\n- [ ] `verify public-api-done --class <ClassName>` проверяет сгенерированное описание API, отчёт о расхождениях API, описание поведения, тесты класса, документацию, подтверждение замеров производительности и выделений памяти и заметки задачи.\n- [ ] `verify public-api-done --class <ClassName>` падает, если описание API, отчёт о расхождениях API или описание поведения отсутствует, устарело или не проходит проверку.\n- [ ] `verify public-api-done --class <ClassName>` падает, если проверки поведения, обязательные для семейства класса, отсутствуют или покрыты только неутверждёнными ручными заметками.\n- [ ] `verify public-api-done --class <ClassName>` падает, если XML-документация, сгенерированная документация, доменные документы, обязательные тесты или обязательные доказательства производительности и выделений памяти отсутствуют либо устарели.\n- [ ] `verify public-api-done --class <ClassName>` различает slice evidence и full class evidence: срезы `A-api-surface`, `B-core-behavior`, `C-substrate-integration` и `D-performance-lifetime-platform` могут быть зелёным проверяемым прогрессом, но не закрывают задачу публичного класса.\n- [ ] `verify public-api-done --class <ClassName>` даёт full success только для среза `GATE-class-done`, когда срезы `A`-`D` закрыты либо имеют утверждённые строки `Deferred`/`Unsupported`.\n- [ ] `verify public-api-done --all` проверяет весь public API объём из ROADMAP раздела `2. Публичный API`, строя coverage только по каноническим строкам ROADMAP вида ``- `T-XXXX` - ...``.\n- [ ] `verify public-api-done --all` падает, если любая активная задача не содержит `Execution class` и `Scheduling tier` либо содержит значение вне утверждённых наборов `ready-now|blocked|tracking|gate|final-gate|foundation|leaf-public-api|internal-substrate` и `current|next|later|final-gate`.\n- [ ] `verify public-api-done --all` падает, если задача с `Execution class: leaf-public-api` не содержит раздел `### Срезы выполнения для goal-агента` или пытается стать evidence для `T-0980` без `GATE-class-done`.\n- [ ] Проверка запрещает закрывать задачу публичного класса по ручному списку элементов API, ручному отчёту о расхождениях или непроверенной заметке о поведении.\n- [ ] Документация, манифест API и заметки задачи синхронизированы с фактическими командами контроля готовности и их артефактами.\n\n### Подзадачи\n\n- [ ] Зафиксировать входные данные контроля готовности и правила устаревших выходных файлов в доменном документе.\n- [ ] Добавить сначала падающие проверки на отсутствующее описание API, отсутствующий отчёт о расхождениях, отсутствующее описание поведения, отсутствующие тесты/документацию и ручные доказательства.\n- [ ] Реализовать `verify public-api-done --class` и `verify public-api-done --all`.\n- [ ] Добавить readable отчёт об ошибке для агента и CI.\n- [ ] Обновить документацию, сгенерированные файлы и заметки задачи и запустить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -1,0 +1,11 @@
+src/**
+test/**
+scripts/**
+tsconfig.json
+artifacts/**
+node_modules/**
+!node_modules/.package-lock.json
+dist/test/**
+dist/**/*.map
+.gitignore
+*.vsix

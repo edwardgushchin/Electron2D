@@ -1,0 +1,109 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-30f510b278968988e997ca10f069c022",
+  "revision": 2,
+  "taskId": "T-0038",
+  "legacyAliases": [],
+  "title": "Реализовать импорт TTF/OTF в `Font`",
+  "description": "# T-0038 [x] P1: Реализовать импорт TTF/OTF в `Font`\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T06:48:00+03:00\n- Статус: завершена\n- Коммит: `T-0038: реализовать TTF/OTF font import`\n\n## Итог\n\nРеализован внутренний TTF/OTF font import baseline поверх import cache. Font source assets импортируются в stable `font.e2font.json` cache artifact, sidecar `<font>.e2import.json` задаёт fallback fonts и SDF/bitmap policy, а fallback font files участвуют в dependency tracking и cache invalidation.\n\n## Проверенное поведение\n\n- `FontImporter` поддерживает `.ttf` и `.otf`.\n- `FontMetadataReader` читает sfnt signature `0x00010000` как `Ttf` и `OTTO` как `Otf`.\n- `FontMetadataReader` читает `name` table records family/style/full/PostScript name.\n- Optional sidecar `<font>.e2import.json` задаёт `fallbacks` и `rasterization`.\n- Default rasterization policy: `Bitmap`, `baseSize=16`, `sdfSpread=0`.\n- `Sdf` policy сохраняет `baseSize` и `sdfSpread` в metadata.\n- Fallback font files отслеживаются как dependencies: изменение fallback file вызывает `DependencyChanged` reimport у основного font source.\n- `FontImportMetadataTextSerializer` пишет stable JSON с сортировкой fallback paths.\n- `FontImportResourceFactory` создаёт internal `Font` instance из metadata.\n- Public API не расширялся: public types осталось `47`.\n\n## Документация\n\n- Добавлена спецификация `docs/resources/font-import.md`.\n- Добавлена справка `docs/resources/font-import.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены import-cache docs, text backend docs/spec, `README.md`, `CHANGELOG.md` и `RELEASE-NOTES.md`.\n\n## Проверки\n\n- Red-state integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~FontImportTests\" --no-restore -m:1` упал на отсутствующем `FontImportMetadata`.\n- Red-state golden-data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --filter \"FullyQualifiedName~FontImportMetadataGoldenTests\" --no-restore -m:1` упал на отсутствующих font import metadata types.\n- Focused green integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~FontImportTests\" --no-restore -m:1` - прошло, 3 теста.\n- Focused green golden-data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --filter \"FullyQualifiedName~FontImportMetadataGoldenTests\" --no-restore -m:1` - прошло, 1 тест.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit `59`, integration `100`, runtime smoke `5`, golden data `9`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types `47`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло для tracked files до staging; staged check выполняется перед commit.\n- `git diff --check` - прошло; предупреждения были только о будущей нормализации переносов строк Git под Windows.\n\n## Заметки агента\n\nВ задаче намеренно не добавлен public `FontFile`: импорт работает как внутренний pipeline и не расширяет пользовательский API без отдельной спецификации целевого API. SDF/bitmap policy пока metadata-level; glyph rasterization, atlas generation и SDL_ttf native file loading остаются следующими задачами.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T03:48:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Uri",
+      "value": "T-0038: реализовать TTF/OTF font import"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/resources/font-import.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 137377,
+      "byteLength": 4059,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "bc7b5a124e0c40e90dce187329fc337c235eebe349cdeb9c43055368b6bc7b42",
+      "markdown": "# T-0038 [x] P1: Реализовать импорт TTF/OTF в `Font`\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T06:48:00+03:00\n- Статус: завершена\n- Коммит: `T-0038: реализовать TTF/OTF font import`\n\n## Итог\n\nРеализован внутренний TTF/OTF font import baseline поверх import cache. Font source assets импортируются в stable `font.e2font.json` cache artifact, sidecar `<font>.e2import.json` задаёт fallback fonts и SDF/bitmap policy, а fallback font files участвуют в dependency tracking и cache invalidation.\n\n## Проверенное поведение\n\n- `FontImporter` поддерживает `.ttf` и `.otf`.\n- `FontMetadataReader` читает sfnt signature `0x00010000` как `Ttf` и `OTTO` как `Otf`.\n- `FontMetadataReader` читает `name` table records family/style/full/PostScript name.\n- Optional sidecar `<font>.e2import.json` задаёт `fallbacks` и `rasterization`.\n- Default rasterization policy: `Bitmap`, `baseSize=16`, `sdfSpread=0`.\n- `Sdf` policy сохраняет `baseSize` и `sdfSpread` в metadata.\n- Fallback font files отслеживаются как dependencies: изменение fallback file вызывает `DependencyChanged` reimport у основного font source.\n- `FontImportMetadataTextSerializer` пишет stable JSON с сортировкой fallback paths.\n- `FontImportResourceFactory` создаёт internal `Font` instance из metadata.\n- Public API не расширялся: public types осталось `47`.\n\n## Документация\n\n- Добавлена спецификация `docs/resources/font-import.md`.\n- Добавлена справка `docs/resources/font-import.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены import-cache docs, text backend docs/spec, `README.md`, `CHANGELOG.md` и `RELEASE-NOTES.md`.\n\n## Проверки\n\n- Red-state integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~FontImportTests\" --no-restore -m:1` упал на отсутствующем `FontImportMetadata`.\n- Red-state golden-data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --filter \"FullyQualifiedName~FontImportMetadataGoldenTests\" --no-restore -m:1` упал на отсутствующих font import metadata types.\n- Focused green integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~FontImportTests\" --no-restore -m:1` - прошло, 3 теста.\n- Focused green golden-data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --filter \"FullyQualifiedName~FontImportMetadataGoldenTests\" --no-restore -m:1` - прошло, 1 тест.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit `59`, integration `100`, runtime smoke `5`, golden data `9`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types `47`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло для tracked files до staging; staged check выполняется перед commit.\n- `git diff --check` - прошло; предупреждения были только о будущей нормализации переносов строк Git под Windows.\n\n## Заметки агента\n\nВ задаче намеренно не добавлен public `FontFile`: импорт работает как внутренний pipeline и не расширяет пользовательский API без отдельной спецификации целевого API. SDF/bitmap policy пока metadata-level; glyph rasterization, atlas generation и SDL_ttf native file loading остаются следующими задачами.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T03:48:00.0000000+00:00",
+  "completedAt": "2026-06-21T03:48:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T03:48:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T03:48:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

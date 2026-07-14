@@ -1,0 +1,245 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-04849fe271ac948b92bd22dcd4fc54af",
+  "revision": 2,
+  "taskId": "T-0985",
+  "legacyAliases": [],
+  "title": "Ограничить reviewer placeholder `pass` контекстом previous verdict",
+  "description": "## T-0985 [ ] P1: Ограничить reviewer placeholder `pass` контекстом previous verdict\n\n- Создана: 2026-07-06T16:45:00+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходный код: `eng/Electron2D.Build/AuditPackageCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник: локальный отказ `audit package` r03 до создания ZIP на сохранённом `docs/verdicts/release-management/t-0242-audit-r02.md`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - `docs/release-management/audit-package.md` описывает границу `previousVerdictChain` для reviewer placeholder.\n  - focused regression покрывает положительный previous verdict и отрицательный task-owned файл.\n- Stop conditions:\n  - правило начинает разрешать конкретные secret-like значения в обычных task-owned файлах, evidence, metadata или текущем `AUDIT-REQUEST.md`.\n  - требуется редактировать сохранённый verdict-файл внешнего аудита вместо настройки scanner-а.\n- May change:\n  - exact allowlist для reviewer placeholder values только в контексте `previousVerdictChain`.\n  - previous-verdict Markdown code span matcher только если он принимает точные известные исторические reviewer-фразы и не разрешает произвольный suffix.\n  - focused tests и доменный документ audit package.\n  - `TASKS.md` notes, diary и r03 audit config для явной combined scope.\n- Must not change:\n  - сохранённые external verdict reports.\n  - general secret scan policy для обычных файлов и evidence.\n  - generated API data, public API surface или browser submit workflow.\n- Required outputs:\n  - previous verdict scanner принимает точное reviewer placeholder-значение `pass` после secret-like ключа и старые Markdown code span reviewer-фразы с этим значением только для файлов из `previousVerdictChain`.\n  - произвольный secret-like suffix после разрешённого Markdown code span в previous verdict остаётся отказом `E2D-BUILD-AUDIT-SECRET-DETECTED`.\n  - task-owned файл с тем же значением остаётся отказом `E2D-BUILD-AUDIT-SECRET-DETECTED`.\n  - r03 config включает `T-0985` в `scopeTaskIds` и proof matrix.\n- Required commands:\n  - focused `AuditPackageAllowsKnownReviewerPlaceholderPhraseInPreviousVerdicts|AuditPackageRejectsReviewerPasswordPlaceholderInTaskOwnedFiles` integration test.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-contracts`\n  - `git diff --check`\n- External audit:\n  - included with `T-0242` r03 as explicit combined scope because r03 must include previous verdict r02 unchanged.\n\n### Самодостаточное описание\n\nСохранённый primary r02 verdict содержит reviewer-текст о синтетических документационных примерах со значением `pass` после secret-like ключа; в Markdown эта строка записана как code span, а scanner видит значение вместе с хвостом reviewer-фразы после закрывающей обратной кавычки. Это не секрет и не новая task-owned строка, но `audit package` обязан включать previous verdict reports дословно через `previousVerdictChain`. Scanner должен разрешать этот точный placeholder и старую reviewer-фразу только в previous verdict context и продолжать блокировать такое же значение в обычных файлах текущей задачи.\n\n### Критерии приёмки\n\n- [ ] `audit package` принимает previous verdict report из `previousVerdictChain`, где reviewer цитирует точное placeholder-значение `pass` и старые точные Markdown code span reviewer-фразы с этим значением.\n- [ ] `audit package` отклоняет previous verdict report, где после разрешённого Markdown code span с `pass` идёт произвольный secret-like suffix.\n- [ ] `audit package` отклоняет task-owned файл с тем же secret-like assignment.\n- [ ] `docs/release-management/audit-package.md` описывает границу исключения.\n- [ ] r03 package config явно включает `T-0985` в `scopeTaskIds`.\n\n### Заметки агента\n\n2026-07-06T16:45:00+03:00 - Создано после локального отказа r03 package: saved r02 verdict содержит reviewer placeholder `pass` внутри Markdown code span с поясняющим suffix, package обязан сохранять отчёт дословно, а focused tests подтверждают previous verdict allow и task-owned reject.\n\n2026-07-06T17:53:00+03:00 - После saved r03 verdict тот же previous-verdict-only scanner rule расширен с одной точной фразы до Markdown code span matcher: `pass` после secret-like ключа может иметь reviewer prose suffix только в файлах `previousVerdictChain`; task-owned файлы с таким же code span всё ещё отклоняются focused test-ом.\n\n2026-07-06T18:32:00+03:00 - Primary r04 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: Markdown code span matcher оказался слишком широким и разрешает произвольный suffix после `pass` в previous verdict. Для r05 правило сужается до точных известных исторических reviewer-фраз; добавляется отрицательный previous-verdict test на произвольный secret-like suffix.\n\n2026-07-06T18:47:00+03:00 - Исправление для r05 подготовлено: previous-verdict allowlist теперь принимает только точные нормализованные reviewer placeholder values, а общий `pass\\`` + whitespace matcher удалён. RED test `AuditPackageRejectsReviewerPasswordPlaceholderCodeSpanWithSecretSuffixInPreviousVerdicts` сначала подтвердил, что старый matcher пропускает unsafe suffix, затем focused scanner suite `AuditPackageAllowsKnownReviewerPlaceholderPhraseInPreviousVerdicts|AuditPackageRejectsReviewerPasswordPlaceholderInTaskOwnedFiles|AuditPackageRejectsReviewerPasswordPlaceholderCodeSpanWithSecretSuffixInPreviousVerdicts` прошёл `3/3`.\n\n2026-07-06T19:17:00+03:00 - Второй r05 package attempt остановился до ZIP на сохранённом r03 verdict: previous-verdict allowlist не покрывал ещё одну точную историческую reviewer-фразу. Allowlist расширен только точными нормализованными значениями из saved verdicts; regression на произвольный secret-like suffix остаётся, focused scanner suite и `audit-loop-stabilization` evidence обновлены.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0011",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`audit package` принимает previous verdict report из `previousVerdictChain`, где reviewer цитирует точное placeholder-значение `pass` и старые точные Markdown code span reviewer-фразы с этим значением.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`audit package` отклоняет previous verdict report, где после разрешённого Markdown code span с `pass` идёт произвольный secret-like suffix.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`audit package` отклоняет task-owned файл с тем же secret-like assignment.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`docs/release-management/audit-package.md` описывает границу исключения.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "r03 package config явно включает `T-0985` в `scopeTaskIds`.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T13:45:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано после локального отказа r03 package: saved r02 verdict содержит reviewer placeholder `pass` внутри Markdown code span с поясняющим suffix, package обязан сохранять отчёт дословно, а focused tests подтверждают previous verdict allow и task-owned reject."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T14:53:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "После saved r03 verdict тот же previous-verdict-only scanner rule расширен с одной точной фразы до Markdown code span matcher: `pass` после secret-like ключа может иметь reviewer prose suffix только в файлах `previousVerdictChain`; task-owned файлы с таким же code span всё ещё отклоняются focused test-ом."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T15:32:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r04 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: Markdown code span matcher оказался слишком широким и разрешает произвольный suffix после `pass` в previous verdict. Для r05 правило сужается до точных известных исторических reviewer-фраз; добавляется отрицательный previous-verdict test на произвольный secret-like suffix."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T15:47:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Исправление для r05 подготовлено: previous-verdict allowlist теперь принимает только точные нормализованные reviewer placeholder values, а общий `pass\\`` + whitespace matcher удалён. RED test `AuditPackageRejectsReviewerPasswordPlaceholderCodeSpanWithSecretSuffixInPreviousVerdicts` сначала подтвердил, что старый matcher пропускает unsafe suffix, затем focused scanner suite `AuditPackageAllowsKnownReviewerPlaceholderPhraseInPreviousVerdicts|AuditPackageRejectsReviewerPasswordPlaceholderInTaskOwnedFiles|AuditPackageRejectsReviewerPasswordPlaceholderCodeSpanWithSecretSuffixInPreviousVerdicts` прошёл `3/3`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T16:17:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Второй r05 package attempt остановился до ZIP на сохранённом r03 verdict: previous-verdict allowlist не покрывал ещё одну точную историческую reviewer-фразу. Allowlist расширен только точными нормализованными значениями из saved verdicts; regression на произвольный secret-like suffix остаётся, focused scanner suite и `audit-loop-stabilization` evidence обновлены."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "included with `T-0242` r03 as explicit combined scope because r03 must include previous verdict r02 unchanged."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0242-audit-r02.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/AuditPackageCommand.cs"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "`docs/release-management/audit-package.md` описывает границу `previousVerdictChain` для reviewer placeholder.",
+      "focused regression покрывает положительный previous verdict и отрицательный task-owned файл."
+    ],
+    "stopConditions": [
+      "правило начинает разрешать конкретные secret-like значения в обычных task-owned файлах, evidence, metadata или текущем `AUDIT-REQUEST.md`.",
+      "требуется редактировать сохранённый verdict-файл внешнего аудита вместо настройки scanner-а."
+    ],
+    "allowedChanges": [
+      "exact allowlist для reviewer placeholder values только в контексте `previousVerdictChain`.",
+      "previous-verdict Markdown code span matcher только если он принимает точные известные исторические reviewer-фразы и не разрешает произвольный suffix.",
+      "focused tests и доменный документ audit package.",
+      "`TASKS.md` notes, diary и r03 audit config для явной combined scope."
+    ],
+    "forbiddenChanges": [
+      "сохранённые external verdict reports.",
+      "general secret scan policy для обычных файлов и evidence.",
+      "generated API data, public API surface или browser submit workflow."
+    ],
+    "requiredOutputs": [
+      "previous verdict scanner принимает точное reviewer placeholder-значение `pass` после secret-like ключа и старые Markdown code span reviewer-фразы с этим значением только для файлов из `previousVerdictChain`.",
+      "произвольный secret-like suffix после разрешённого Markdown code span в previous verdict остаётся отказом `E2D-BUILD-AUDIT-SECRET-DETECTED`.",
+      "task-owned файл с тем же значением остаётся отказом `E2D-BUILD-AUDIT-SECRET-DETECTED`.",
+      "r03 config включает `T-0985` в `scopeTaskIds` и proof matrix."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "focused `AuditPackageAllowsKnownReviewerPlaceholderPhraseInPreviousVerdicts|AuditPackageRejectsReviewerPasswordPlaceholderInTaskOwnedFiles` integration test.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-contracts`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "included with `T-0242` r03 as explicit combined scope because r03 must include previous verdict r02 unchanged.",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 389371,
+      "byteLength": 7894,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "195e3beea7d4cfcb52acbbf7a502d2ea3e8425b58adfa2d69945d56367a3282f",
+      "markdown": "## T-0985 [ ] P1: Ограничить reviewer placeholder `pass` контекстом previous verdict\n\n- Создана: 2026-07-06T16:45:00+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходный код: `eng/Electron2D.Build/AuditPackageCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник: локальный отказ `audit package` r03 до создания ZIP на сохранённом `docs/verdicts/release-management/t-0242-audit-r02.md`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - `docs/release-management/audit-package.md` описывает границу `previousVerdictChain` для reviewer placeholder.\n  - focused regression покрывает положительный previous verdict и отрицательный task-owned файл.\n- Stop conditions:\n  - правило начинает разрешать конкретные secret-like значения в обычных task-owned файлах, evidence, metadata или текущем `AUDIT-REQUEST.md`.\n  - требуется редактировать сохранённый verdict-файл внешнего аудита вместо настройки scanner-а.\n- May change:\n  - exact allowlist для reviewer placeholder values только в контексте `previousVerdictChain`.\n  - previous-verdict Markdown code span matcher только если он принимает точные известные исторические reviewer-фразы и не разрешает произвольный suffix.\n  - focused tests и доменный документ audit package.\n  - `TASKS.md` notes, diary и r03 audit config для явной combined scope.\n- Must not change:\n  - сохранённые external verdict reports.\n  - general secret scan policy для обычных файлов и evidence.\n  - generated API data, public API surface или browser submit workflow.\n- Required outputs:\n  - previous verdict scanner принимает точное reviewer placeholder-значение `pass` после secret-like ключа и старые Markdown code span reviewer-фразы с этим значением только для файлов из `previousVerdictChain`.\n  - произвольный secret-like suffix после разрешённого Markdown code span в previous verdict остаётся отказом `E2D-BUILD-AUDIT-SECRET-DETECTED`.\n  - task-owned файл с тем же значением остаётся отказом `E2D-BUILD-AUDIT-SECRET-DETECTED`.\n  - r03 config включает `T-0985` в `scopeTaskIds` и proof matrix.\n- Required commands:\n  - focused `AuditPackageAllowsKnownReviewerPlaceholderPhraseInPreviousVerdicts|AuditPackageRejectsReviewerPasswordPlaceholderInTaskOwnedFiles` integration test.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-contracts`\n  - `git diff --check`\n- External audit:\n  - included with `T-0242` r03 as explicit combined scope because r03 must include previous verdict r02 unchanged.\n\n### Самодостаточное описание\n\nСохранённый primary r02 verdict содержит reviewer-текст о синтетических документационных примерах со значением `pass` после secret-like ключа; в Markdown эта строка записана как code span, а scanner видит значение вместе с хвостом reviewer-фразы после закрывающей обратной кавычки. Это не секрет и не новая task-owned строка, но `audit package` обязан включать previous verdict reports дословно через `previousVerdictChain`. Scanner должен разрешать этот точный placeholder и старую reviewer-фразу только в previous verdict context и продолжать блокировать такое же значение в обычных файлах текущей задачи.\n\n### Критерии приёмки\n\n- [ ] `audit package` принимает previous verdict report из `previousVerdictChain`, где reviewer цитирует точное placeholder-значение `pass` и старые точные Markdown code span reviewer-фразы с этим значением.\n- [ ] `audit package` отклоняет previous verdict report, где после разрешённого Markdown code span с `pass` идёт произвольный secret-like suffix.\n- [ ] `audit package` отклоняет task-owned файл с тем же secret-like assignment.\n- [ ] `docs/release-management/audit-package.md` описывает границу исключения.\n- [ ] r03 package config явно включает `T-0985` в `scopeTaskIds`.\n\n### Заметки агента\n\n2026-07-06T16:45:00+03:00 - Создано после локального отказа r03 package: saved r02 verdict содержит reviewer placeholder `pass` внутри Markdown code span с поясняющим suffix, package обязан сохранять отчёт дословно, а focused tests подтверждают previous verdict allow и task-owned reject.\n\n2026-07-06T17:53:00+03:00 - После saved r03 verdict тот же previous-verdict-only scanner rule расширен с одной точной фразы до Markdown code span matcher: `pass` после secret-like ключа может иметь reviewer prose suffix только в файлах `previousVerdictChain`; task-owned файлы с таким же code span всё ещё отклоняются focused test-ом.\n\n2026-07-06T18:32:00+03:00 - Primary r04 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: Markdown code span matcher оказался слишком широким и разрешает произвольный suffix после `pass` в previous verdict. Для r05 правило сужается до точных известных исторических reviewer-фраз; добавляется отрицательный previous-verdict test на произвольный secret-like suffix.\n\n2026-07-06T18:47:00+03:00 - Исправление для r05 подготовлено: previous-verdict allowlist теперь принимает только точные нормализованные reviewer placeholder values, а общий `pass\\`` + whitespace matcher удалён. RED test `AuditPackageRejectsReviewerPasswordPlaceholderCodeSpanWithSecretSuffixInPreviousVerdicts` сначала подтвердил, что старый matcher пропускает unsafe suffix, затем focused scanner suite `AuditPackageAllowsKnownReviewerPlaceholderPhraseInPreviousVerdicts|AuditPackageRejectsReviewerPasswordPlaceholderInTaskOwnedFiles|AuditPackageRejectsReviewerPasswordPlaceholderCodeSpanWithSecretSuffixInPreviousVerdicts` прошёл `3/3`.\n\n2026-07-06T19:17:00+03:00 - Второй r05 package attempt остановился до ZIP на сохранённом r03 verdict: previous-verdict allowlist не покрывал ещё одну точную историческую reviewer-фразу. Allowlist расширен только точными нормализованными значениями из saved verdicts; regression на произвольный secret-like suffix остаётся, focused scanner suite и `audit-loop-stabilization` evidence обновлены.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-06T13:45:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -1,0 +1,621 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-22a3d17e1d1a40ee97e0779972495a73",
+  "revision": 38,
+  "taskId": "T-1157",
+  "legacyAliases": [],
+  "title": "Локализовать статусы VS Code Task Board на русский",
+  "description": "VS Code Task Board должна показывать по-русски все шесть актуальных колонок: «Готово к работе», «В работе», «Заблокировано», «На проверке», «Завершено» и «Отменено». Эти же подписи используются в списке задач Activity Bar и в сведениях о задаче. Заголовок каждой колонки объясняет в подсказке критерий размещения. Канонические значения Ready, InProgress, Blocked, Review, Done и Cancelled, вычисляемый boardStatus и команды CLI остаются неизменными. Ожидание пользовательского решения не является отдельной колонкой: задача остаётся в Review, а состояние Open или Submitted определяется через acceptanceState. Готовая задача с незавершённой или отменённой зависимостью либо ручной причиной блокировки отображается в «Заблокировано» через boardStatus без изменения её канонического status. Во вкладке «Активность» события StatusChange должны отображаться читаемым локализованным резюме перехода и причины: технический JSON и Unicode escape-последовательности остаются в canonical activity, но не выводятся пользователю.",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0009",
+    "tag-0017",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "six-russian-columns",
+      "description": "Основная доска всегда показывает шесть колонок с подписями «Готово к работе», «В работе», «Заблокировано», «На проверке», «Завершено» и «Отменено»; отдельных колонок Backlog и AwaitingAcceptance нет.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": ".temp/taskboard-t1157-six-russian-statuses.png"
+        }
+      ]
+    },
+    {
+      "criterionId": "shared-status-presentation",
+      "description": "Список задач Activity Bar и сведения о задаче используют те же локализованные названия, что и заголовки колонок.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/model.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "lifecycle-tooltips",
+      "description": "Подсказка каждой колонки по-русски объясняет критерий размещения, включая вычисляемую блокировку готовой задачи и различие Open/Submitted внутри Review.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/localization.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "machine-contract-preserved",
+      "description": "Локализация не меняет канонические status, boardStatus, acceptanceState, DOM dataset, порядок колонок, drag-and-drop payload и аргументы CLI.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/model.test.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "verification",
+      "description": "Доменный документ отражает актуальную шестиколоночную модель; focused и полный unit-наборы, typecheck, Extension Host и упаковка VSIX проходят, а реальное окно VS Code проверено снимком через FFmpeg helper.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "docs/editor/project-tasks-board.md"
+        }
+      ]
+    },
+    {
+      "criterionId": "readable-status-change-activity",
+      "description": "Корректное событие StatusChange во вкладке «Активность» показывает локализованные названия предыдущего и нового статуса, а также декодированную причину обычным текстом; сырой JSON и последовательности вида \\uXXXX не видны.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": ".temp/taskboard-t1157-status-change-readable.png"
+        }
+      ]
+    },
+    {
+      "criterionId": "safe-status-change-fallback",
+      "description": "Некорректный или неизвестный payload StatusChange не ломает timeline и остаётся безопасным буквальным текстом без выполнения HTML.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/model.test.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "status-change-verification",
+      "description": "Поведение покрыто focused unit-тестами, typecheck и Extension Host проходят, собранный VSIX установлен, а реальное окно VS Code проверено FFmpeg-снимком.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "docs/editor/project-tasks-board.md"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-cfd6a14f88a04bc88f07f46462606da2",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T11:20:17.0026746+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Ready."
+      },
+      "sequence": 1
+    },
+    {
+      "activityEntryId": "activity-6b5c968068b44256b85c123265c841a9",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T11:20:18.5195256+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to InProgress."
+      },
+      "sequence": 2
+    },
+    {
+      "activityEntryId": "activity-9b0c16a1aab045089a58495b486dd7a8",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T11:26:37.2075132+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Review."
+      },
+      "sequence": 3
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      },
+      "sequence": 4
+    },
+    {
+      "activityEntryId": "activity-4323127da0f647d8854812c864626f61",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T22:42:02.1976038+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "TaskPatchedV3Draft",
+        "text": "{\"patch\":[{\"op\":\"replace\",\"path\":\"/description\",\"value\":\"VS Code Task Board \\u0434\\u043E\\u043B\\u0436\\u043D\\u0430 \\u043F\\u043E\\u043A\\u0430\\u0437\\u044B\\u0432\\u0430\\u0442\\u044C \\u043F\\u043E-\\u0440\\u0443\\u0441\\u0441\\u043A\\u0438 \\u0432\\u0441\\u0435 \\u0448\\u0435\\u0441\\u0442\\u044C \\u0430\\u043A\\u0442\\u0443\\u0430\\u043B\\u044C\\u043D\\u044B\\u0445 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A: \\u00AB\\u0413\\u043E\\u0442\\u043E\\u0432\\u043E \\u043A \\u0440\\u0430\\u0431\\u043E\\u0442\\u0435\\u00BB, \\u00AB\\u0412 \\u0440\\u0430\\u0431\\u043E\\u0442\\u0435\\u00BB, \\u00AB\\u0417\\u0430\\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u043E\\u00BB, \\u00AB\\u041D\\u0430 \\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u043A\\u0435\\u00BB, \\u00AB\\u0417\\u0430\\u0432\\u0435\\u0440\\u0448\\u0435\\u043D\\u043E\\u00BB \\u0438 \\u00AB\\u041E\\u0442\\u043C\\u0435\\u043D\\u0435\\u043D\\u043E\\u00BB. \\u042D\\u0442\\u0438 \\u0436\\u0435 \\u043F\\u043E\\u0434\\u043F\\u0438\\u0441\\u0438 \\u0438\\u0441\\u043F\\u043E\\u043B\\u044C\\u0437\\u0443\\u044E\\u0442\\u0441\\u044F \\u0432 \\u0441\\u043F\\u0438\\u0441\\u043A\\u0435 \\u0437\\u0430\\u0434\\u0430\\u0447 Activity Bar \\u0438 \\u0432 \\u0441\\u0432\\u0435\\u0434\\u0435\\u043D\\u0438\\u044F\\u0445 \\u043E \\u0437\\u0430\\u0434\\u0430\\u0447\\u0435. \\u0417\\u0430\\u0433\\u043E\\u043B\\u043E\\u0432\\u043E\\u043A \\u043A\\u0430\\u0436\\u0434\\u043E\\u0439 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043A\\u0438 \\u043E\\u0431\\u044A\\u044F\\u0441\\u043D\\u044F\\u0435\\u0442 \\u0432 \\u043F\\u043E\\u0434\\u0441\\u043A\\u0430\\u0437\\u043A\\u0435 \\u043A\\u0440\\u0438\\u0442\\u0435\\u0440\\u0438\\u0439 \\u0440\\u0430\\u0437\\u043C\\u0435\\u0449\\u0435\\u043D\\u0438\\u044F. \\u041A\\u0430\\u043D\\u043E\\u043D\\u0438\\u0447\\u0435\\u0441\\u043A\\u0438\\u0435 \\u0437\\u043D\\u0430\\u0447\\u0435\\u043D\\u0438\\u044F Ready, InProgress, Blocked, Review, Done \\u0438 Cancelled, \\u0432\\u044B\\u0447\\u0438\\u0441\\u043B\\u044F\\u0435\\u043C\\u044B\\u0439 boardStatus \\u0438 \\u043A\\u043E\\u043C\\u0430\\u043D\\u0434\\u044B CLI \\u043E\\u0441\\u0442\\u0430\\u044E\\u0442\\u0441\\u044F \\u043D\\u0435\\u0438\\u0437\\u043C\\u0435\\u043D\\u043D\\u044B\\u043C\\u0438. \\u041E\\u0436\\u0438\\u0434\\u0430\\u043D\\u0438\\u0435 \\u043F\\u043E\\u043B\\u044C\\u0437\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044C\\u0441\\u043A\\u043E\\u0433\\u043E \\u0440\\u0435\\u0448\\u0435\\u043D\\u0438\\u044F \\u043D\\u0435 \\u044F\\u0432\\u043B\\u044F\\u0435\\u0442\\u0441\\u044F \\u043E\\u0442\\u0434\\u0435\\u043B\\u044C\\u043D\\u043E\\u0439 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043A\\u043E\\u0439: \\u0437\\u0430\\u0434\\u0430\\u0447\\u0430 \\u043E\\u0441\\u0442\\u0430\\u0451\\u0442\\u0441\\u044F \\u0432 Review, \\u0430 \\u0441\\u043E\\u0441\\u0442\\u043E\\u044F\\u043D\\u0438\\u0435 Open \\u0438\\u043B\\u0438 Submitted \\u043E\\u043F\\u0440\\u0435\\u0434\\u0435\\u043B\\u044F\\u0435\\u0442\\u0441\\u044F \\u0447\\u0435\\u0440\\u0435\\u0437 acceptanceState. \\u0413\\u043E\\u0442\\u043E\\u0432\\u0430\\u044F \\u0437\\u0430\\u0434\\u0430\\u0447\\u0430 \\u0441 \\u043D\\u0435\\u0437\\u0430\\u0432\\u0435\\u0440\\u0448\\u0451\\u043D\\u043D\\u043E\\u0439 \\u0438\\u043B\\u0438 \\u043E\\u0442\\u043C\\u0435\\u043D\\u0451\\u043D\\u043D\\u043E\\u0439 \\u0437\\u0430\\u0432\\u0438\\u0441\\u0438\\u043C\\u043E\\u0441\\u0442\\u044C\\u044E \\u043B\\u0438\\u0431\\u043E \\u0440\\u0443\\u0447\\u043D\\u043E\\u0439 \\u043F\\u0440\\u0438\\u0447\\u0438\\u043D\\u043E\\u0439 \\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u043A\\u0438 \\u043E\\u0442\\u043E\\u0431\\u0440\\u0430\\u0436\\u0430\\u0435\\u0442\\u0441\\u044F \\u0432 \\u00AB\\u0417\\u0430\\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u043E\\u00BB \\u0447\\u0435\\u0440\\u0435\\u0437 boardStatus \\u0431\\u0435\\u0437 \\u0438\\u0437\\u043C\\u0435\\u043D\\u0435\\u043D\\u0438\\u044F \\u0435\\u0451 \\u043A\\u0430\\u043D\\u043E\\u043D\\u0438\\u0447\\u0435\\u0441\\u043A\\u043E\\u0433\\u043E status.\"},{\"op\":\"replace\",\"path\":\"/acceptanceCriteria\",\"value\":[{\"criterionId\":\"six-russian-columns\",\"description\":\"\\u041E\\u0441\\u043D\\u043E\\u0432\\u043D\\u0430\\u044F \\u0434\\u043E\\u0441\\u043A\\u0430 \\u0432\\u0441\\u0435\\u0433\\u0434\\u0430 \\u043F\\u043E\\u043A\\u0430\\u0437\\u044B\\u0432\\u0430\\u0435\\u0442 \\u0448\\u0435\\u0441\\u0442\\u044C \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A \\u0441 \\u043F\\u043E\\u0434\\u043F\\u0438\\u0441\\u044F\\u043C\\u0438 \\u00AB\\u0413\\u043E\\u0442\\u043E\\u0432\\u043E \\u043A \\u0440\\u0430\\u0431\\u043E\\u0442\\u0435\\u00BB, \\u00AB\\u0412 \\u0440\\u0430\\u0431\\u043E\\u0442\\u0435\\u00BB, \\u00AB\\u0417\\u0430\\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u043E\\u00BB, \\u00AB\\u041D\\u0430 \\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u043A\\u0435\\u00BB, \\u00AB\\u0417\\u0430\\u0432\\u0435\\u0440\\u0448\\u0435\\u043D\\u043E\\u00BB \\u0438 \\u00AB\\u041E\\u0442\\u043C\\u0435\\u043D\\u0435\\u043D\\u043E\\u00BB; \\u043E\\u0442\\u0434\\u0435\\u043B\\u044C\\u043D\\u044B\\u0445 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A Backlog \\u0438 AwaitingAcceptance \\u043D\\u0435\\u0442.\",\"state\":\"Open\",\"evidence\":[]},{\"criterionId\":\"shared-status-presentation\",\"description\":\"\\u0421\\u043F\\u0438\\u0441\\u043E\\u043A \\u0437\\u0430\\u0434\\u0430\\u0447 Activity Bar \\u0438 \\u0441\\u0432\\u0435\\u0434\\u0435\\u043D\\u0438\\u044F \\u043E \\u0437\\u0430\\u0434\\u0430\\u0447\\u0435 \\u0438\\u0441\\u043F\\u043E\\u043B\\u044C\\u0437\\u0443\\u044E\\u0442 \\u0442\\u0435 \\u0436\\u0435 \\u043B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u043E\\u0432\\u0430\\u043D\\u043D\\u044B\\u0435 \\u043D\\u0430\\u0437\\u0432\\u0430\\u043D\\u0438\\u044F, \\u0447\\u0442\\u043E \\u0438 \\u0437\\u0430\\u0433\\u043E\\u043B\\u043E\\u0432\\u043A\\u0438 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A.\",\"state\":\"Open\",\"evidence\":[]},{\"criterionId\":\"lifecycle-tooltips\",\"description\":\"\\u041F\\u043E\\u0434\\u0441\\u043A\\u0430\\u0437\\u043A\\u0430 \\u043A\\u0430\\u0436\\u0434\\u043E\\u0439 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043A\\u0438 \\u043F\\u043E-\\u0440\\u0443\\u0441\\u0441\\u043A\\u0438 \\u043E\\u0431\\u044A\\u044F\\u0441\\u043D\\u044F\\u0435\\u0442 \\u043A\\u0440\\u0438\\u0442\\u0435\\u0440\\u0438\\u0439 \\u0440\\u0430\\u0437\\u043C\\u0435\\u0449\\u0435\\u043D\\u0438\\u044F, \\u0432\\u043A\\u043B\\u044E\\u0447\\u0430\\u044F \\u0432\\u044B\\u0447\\u0438\\u0441\\u043B\\u044F\\u0435\\u043C\\u0443\\u044E \\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u043A\\u0443 \\u0433\\u043E\\u0442\\u043E\\u0432\\u043E\\u0439 \\u0437\\u0430\\u0434\\u0430\\u0447\\u0438 \\u0438 \\u0440\\u0430\\u0437\\u043B\\u0438\\u0447\\u0438\\u0435 Open/Submitted \\u0432\\u043D\\u0443\\u0442\\u0440\\u0438 Review.\",\"state\":\"Open\",\"evidence\":[]},{\"criterionId\":\"machine-contract-preserved\",\"description\":\"\\u041B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u0430\\u0446\\u0438\\u044F \\u043D\\u0435 \\u043C\\u0435\\u043D\\u044F\\u0435\\u0442 \\u043A\\u0430\\u043D\\u043E\\u043D\\u0438\\u0447\\u0435\\u0441\\u043A\\u0438\\u0435 status, boardStatus, acceptanceState, DOM dataset, \\u043F\\u043E\\u0440\\u044F\\u0434\\u043E\\u043A \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A, drag-and-drop payload \\u0438 \\u0430\\u0440\\u0433\\u0443\\u043C\\u0435\\u043D\\u0442\\u044B CLI.\",\"state\":\"Open\",\"evidence\":[]},{\"criterionId\":\"verification\",\"description\":\"\\u0414\\u043E\\u043C\\u0435\\u043D\\u043D\\u044B\\u0439 \\u0434\\u043E\\u043A\\u0443\\u043C\\u0435\\u043D\\u0442 \\u043E\\u0442\\u0440\\u0430\\u0436\\u0430\\u0435\\u0442 \\u0430\\u043A\\u0442\\u0443\\u0430\\u043B\\u044C\\u043D\\u0443\\u044E \\u0448\\u0435\\u0441\\u0442\\u0438\\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u0447\\u043D\\u0443\\u044E \\u043C\\u043E\\u0434\\u0435\\u043B\\u044C; focused \\u0438 \\u043F\\u043E\\u043B\\u043D\\u044B\\u0439 unit-\\u043D\\u0430\\u0431\\u043E\\u0440\\u044B, typecheck, Extension Host \\u0438 \\u0443\\u043F\\u0430\\u043A\\u043E\\u0432\\u043A\\u0430 VSIX \\u043F\\u0440\\u043E\\u0445\\u043E\\u0434\\u044F\\u0442, \\u0430 \\u0440\\u0435\\u0430\\u043B\\u044C\\u043D\\u043E\\u0435 \\u043E\\u043A\\u043D\\u043E VS Code \\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u0435\\u043D\\u043E \\u0441\\u043D\\u0438\\u043C\\u043A\\u043E\\u043C \\u0447\\u0435\\u0440\\u0435\\u0437 FFmpeg helper.\",\"state\":\"Open\",\"evidence\":[]}]},{\"op\":\"replace\",\"path\":\"/links\",\"value\":[{\"linkId\":\"status-model\",\"kind\":\"File\",\"value\":\"src/Electron2D.VsCode/src/model.ts\"},{\"linkId\":\"status-localization\",\"kind\":\"File\",\"value\":\"src/Electron2D.VsCode/src/localization.ts\"},{\"linkId\":\"board-presentation\",\"kind\":\"File\",\"value\":\"src/Electron2D.VsCode/src/webview.ts\"},{\"linkId\":\"sidebar-presentation\",\"kind\":\"File\",\"value\":\"src/Electron2D.VsCode/src/extension.ts\"},{\"linkId\":\"model-tests\",\"kind\":\"File\",\"value\":\"src/Electron2D.VsCode/test/unit/model.test.ts\"},{\"linkId\":\"sidebar-tests\",\"kind\":\"File\",\"value\":\"src/Electron2D.VsCode/test/unit/sidebar.test.ts\"},{\"linkId\":\"layout-tests\",\"kind\":\"File\",\"value\":\"src/Electron2D.VsCode/test/unit/webview-layout.test.ts\"},{\"linkId\":\"domain-document\",\"kind\":\"File\",\"value\":\"docs/editor/project-tasks-board.md\"}]},{\"op\":\"replace\",\"path\":\"/executionContract\",\"value\":{\"taskType\":\"\\u0410\\u043A\\u0442\\u0443\\u0430\\u043B\\u0438\\u0437\\u0430\\u0446\\u0438\\u044F \\u0440\\u0443\\u0441\\u0441\\u043A\\u043E\\u0439 \\u0441\\u0442\\u0430\\u0442\\u0443\\u0441\\u043D\\u043E\\u0439 \\u043C\\u043E\\u0434\\u0435\\u043B\\u0438 VS Code Task Board\",\"readyToStart\":[\"\\u0422\\u0435\\u043A\\u0443\\u0449\\u0430\\u044F \\u043C\\u043E\\u0434\\u0435\\u043B\\u044C \\u0434\\u043E\\u0441\\u043A\\u0438 \\u0441\\u043E\\u0434\\u0435\\u0440\\u0436\\u0438\\u0442 \\u0448\\u0435\\u0441\\u0442\\u044C \\u043E\\u0442\\u043E\\u0431\\u0440\\u0430\\u0436\\u0430\\u0435\\u043C\\u044B\\u0445 \\u0441\\u0442\\u0430\\u0442\\u0443\\u0441\\u043E\\u0432 \\u0438 \\u043E\\u0442\\u0434\\u0435\\u043B\\u044C\\u043D\\u044B\\u0439 acceptanceState \\u0434\\u043B\\u044F \\u043F\\u043E\\u043B\\u044C\\u0437\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044C\\u0441\\u043A\\u043E\\u0433\\u043E \\u0440\\u0435\\u0448\\u0435\\u043D\\u0438\\u044F.\",\"\\u0417\\u0430\\u0434\\u0430\\u0447\\u0430 \\u043D\\u0435 \\u0438\\u043C\\u0435\\u0435\\u0442 \\u0437\\u0430\\u0432\\u0438\\u0441\\u0438\\u043C\\u043E\\u0441\\u0442\\u0435\\u0439 \\u0438 \\u0431\\u043B\\u043E\\u043A\\u0435\\u0440\\u043E\\u0432; \\u0442\\u0435\\u043A\\u0443\\u0449\\u0438\\u0439 \\u0437\\u0430\\u043F\\u0440\\u043E\\u0441 \\u043F\\u043E\\u043B\\u044C\\u0437\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044F \\u0440\\u0430\\u0437\\u0440\\u0435\\u0448\\u0430\\u0435\\u0442 \\u0430\\u043A\\u0442\\u0443\\u0430\\u043B\\u0438\\u0437\\u0438\\u0440\\u043E\\u0432\\u0430\\u0442\\u044C \\u0435\\u0451 \\u043A\\u043E\\u043D\\u0442\\u0440\\u0430\\u043A\\u0442 \\u0438 evidence.\",\"\\u041F\\u0435\\u0440\\u0435\\u0434 \\u0438\\u0437\\u043C\\u0435\\u043D\\u0435\\u043D\\u0438\\u0435\\u043C production-\\u043A\\u043E\\u0434\\u0430 \\u0442\\u0440\\u0435\\u0431\\u0443\\u0435\\u0442\\u0441\\u044F \\u0434\\u043E\\u043A\\u0430\\u0437\\u0430\\u0442\\u044C \\u043A\\u043E\\u043D\\u043A\\u0440\\u0435\\u0442\\u043D\\u043E\\u0435 \\u0440\\u0430\\u0441\\u0445\\u043E\\u0436\\u0434\\u0435\\u043D\\u0438\\u0435 \\u0441\\u0443\\u0449\\u0435\\u0441\\u0442\\u0432\\u0443\\u044E\\u0449\\u0438\\u043C \\u0438\\u043B\\u0438 \\u043D\\u043E\\u0432\\u044B\\u043C RED-\\u0442\\u0435\\u0441\\u0442\\u043E\\u043C.\"],\"stopConditions\":[\"\\u041F\\u0440\\u043E\\u0432\\u0435\\u0440\\u043A\\u0430 \\u043E\\u0431\\u043D\\u0430\\u0440\\u0443\\u0436\\u0438\\u0442, \\u0447\\u0442\\u043E \\u0434\\u043B\\u044F \\u0438\\u0441\\u043F\\u0440\\u0430\\u0432\\u043B\\u0435\\u043D\\u0438\\u044F \\u0442\\u0440\\u0435\\u0431\\u0443\\u0435\\u0442\\u0441\\u044F \\u0432\\u0435\\u0440\\u043D\\u0443\\u0442\\u044C Backlog \\u0438\\u043B\\u0438 \\u043E\\u0442\\u0434\\u0435\\u043B\\u044C\\u043D\\u044B\\u0439 AwaitingAcceptance \\u0432 \\u043A\\u0430\\u043D\\u043E\\u043D\\u0438\\u0447\\u0435\\u0441\\u043A\\u0443\\u044E \\u043C\\u043E\\u0434\\u0435\\u043B\\u044C.\",\"\\u041B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u0430\\u0446\\u0438\\u044F \\u043F\\u043E\\u0442\\u0440\\u0435\\u0431\\u0443\\u0435\\u0442 \\u0438\\u0437\\u043C\\u0435\\u043D\\u0438\\u0442\\u044C lifecycle, CLI-\\u043A\\u043E\\u043C\\u0430\\u043D\\u0434\\u044B \\u0438\\u043B\\u0438 \\u0444\\u043E\\u0440\\u043C\\u0430\\u0442 taskboard.\",\"\\u041F\\u0430\\u0440\\u0430\\u043B\\u043B\\u0435\\u043B\\u044C\\u043D\\u044B\\u0435 \\u0438\\u0437\\u043C\\u0435\\u043D\\u0435\\u043D\\u0438\\u044F \\u043F\\u0435\\u0440\\u0435\\u0441\\u0435\\u043A\\u0443\\u0442\\u0441\\u044F \\u0441 \\u0442\\u0435\\u043C\\u0438 \\u0436\\u0435 \\u0441\\u0442\\u0440\\u043E\\u043A\\u0430\\u043C\\u0438 status presentation \\u0438 \\u043D\\u0435 \\u043F\\u043E\\u0437\\u0432\\u043E\\u043B\\u044F\\u0442 \\u0431\\u0435\\u0437\\u043E\\u043F\\u0430\\u0441\\u043D\\u043E \\u0441\\u043E\\u0445\\u0440\\u0430\\u043D\\u0438\\u0442\\u044C \\u043F\\u043E\\u043B\\u044C\\u0437\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044C\\u0441\\u043A\\u0443\\u044E \\u0440\\u0430\\u0431\\u043E\\u0442\\u0443.\"],\"allowedChanges\":[\"\\u0421\\u0442\\u0440\\u0443\\u043A\\u0442\\u0443\\u0440\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u043D\\u044B\\u0439 \\u043A\\u043E\\u043D\\u0442\\u0440\\u0430\\u043A\\u0442, \\u043A\\u0440\\u0438\\u0442\\u0435\\u0440\\u0438\\u0438, \\u0441\\u0441\\u044B\\u043B\\u043A\\u0438, evidence \\u0438 \\u0441\\u043E\\u0441\\u0442\\u043E\\u044F\\u043D\\u0438\\u0435 T-1157 \\u0447\\u0435\\u0440\\u0435\\u0437 e2d tasks.\",\"\\u0414\\u043E\\u043C\\u0435\\u043D\\u043D\\u044B\\u0439 \\u0434\\u043E\\u043A\\u0443\\u043C\\u0435\\u043D\\u0442 \\u0430\\u043A\\u0442\\u0443\\u0430\\u043B\\u044C\\u043D\\u043E\\u0439 \\u0448\\u0435\\u0441\\u0442\\u0438\\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u0447\\u043D\\u043E\\u0439 \\u0441\\u0442\\u0430\\u0442\\u0443\\u0441\\u043D\\u043E\\u0439 \\u043C\\u043E\\u0434\\u0435\\u043B\\u0438.\",\"\\u0422\\u0435\\u0441\\u0442\\u044B \\u0438 presentation-\\u043A\\u043E\\u0434 VS Code Task Board \\u0442\\u043E\\u043B\\u044C\\u043A\\u043E \\u043F\\u0440\\u0438 \\u0434\\u043E\\u043A\\u0430\\u0437\\u0430\\u043D\\u043D\\u043E\\u043C \\u0440\\u0430\\u0441\\u0445\\u043E\\u0436\\u0434\\u0435\\u043D\\u0438\\u0438.\"],\"forbiddenChanges\":[\"\\u0412\\u043E\\u0437\\u0432\\u0440\\u0430\\u0449\\u0435\\u043D\\u0438\\u0435 Backlog \\u0438\\u043B\\u0438 AwaitingAcceptance \\u0432 \\u043A\\u0430\\u043D\\u043E\\u043D\\u0438\\u0447\\u0435\\u0441\\u043A\\u0438\\u0435 status \\u0438 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043A\\u0438.\",\"\\u0418\\u0437\\u043C\\u0435\\u043D\\u0435\\u043D\\u0438\\u0435 TaskManager lifecycle, \\u0441\\u0445\\u0435\\u043C\\u044B v3, CLI transition rules \\u0438\\u043B\\u0438 taskboard \\u043D\\u0430\\u043F\\u0440\\u044F\\u043C\\u0443\\u044E.\",\"\\u041D\\u0435\\u0441\\u0432\\u044F\\u0437\\u0430\\u043D\\u043D\\u044B\\u0435 \\u043F\\u0440\\u0430\\u0432\\u043A\\u0438 \\u043A\\u0430\\u0440\\u0442\\u043E\\u0447\\u0435\\u043A, \\u0444\\u0438\\u043B\\u044C\\u0442\\u0440\\u043E\\u0432, Task Details \\u0438 \\u0434\\u0440\\u0443\\u0433\\u0438\\u0445 \\u0437\\u0430\\u0434\\u0430\\u0447.\"],\"requiredOutputs\":[\"\\u0410\\u043A\\u0442\\u0443\\u0430\\u043B\\u044C\\u043D\\u0430\\u044F T-1157 \\u0441 \\u043F\\u044F\\u0442\\u044C\\u044E \\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u044F\\u0435\\u043C\\u044B\\u043C\\u0438 \\u043A\\u0440\\u0438\\u0442\\u0435\\u0440\\u0438\\u044F\\u043C\\u0438 \\u0438 \\u0441\\u0432\\u044F\\u0437\\u0430\\u043D\\u043D\\u044B\\u043C\\u0438 \\u0444\\u0430\\u0439\\u043B\\u0430\\u043C\\u0438.\",\"\\u041F\\u043E\\u0434\\u0442\\u0432\\u0435\\u0440\\u0436\\u0434\\u0435\\u043D\\u0438\\u0435 \\u0448\\u0435\\u0441\\u0442\\u0438 \\u0440\\u0443\\u0441\\u0441\\u043A\\u0438\\u0445 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A, \\u043E\\u0431\\u0449\\u0438\\u0445 \\u043F\\u043E\\u0434\\u043F\\u0438\\u0441\\u0435\\u0439 sidebar/details \\u0438 lifecycle tooltip.\",\"\\u0420\\u0435\\u0437\\u0443\\u043B\\u044C\\u0442\\u0430\\u0442\\u044B focused/full unit, typecheck, Extension Host, VSIX \\u0438 FFmpeg-\\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u043A\\u0438 \\u0440\\u0435\\u0430\\u043B\\u044C\\u043D\\u043E\\u0433\\u043E \\u043E\\u043A\\u043D\\u0430.\"],\"commands\":[{\"commandId\":\"focused-status-presentation\",\"kind\":\"Process\",\"executable\":\"npm\",\"arguments\":[\"exec\",\"tsx\",\"--\",\"--test\",\"--test-name-pattern\",\"task status presentation|buildBoardView always|sidebar rows list active|status columns use localized\",\"test/unit/model.test.ts\",\"test/unit/sidebar.test.ts\",\"test/unit/webview-layout.test.ts\"],\"workingDirectory\":\"src/Electron2D.VsCode\",\"platforms\":[\"Any\"],\"timeoutSeconds\":300,\"expectedExitCodes\":[0],\"requestedCapabilities\":[\"WorkspaceRead\"],\"confirmation\":\"PolicyDecides\"},{\"commandId\":\"unit\",\"kind\":\"Process\",\"executable\":\"npm\",\"arguments\":[\"run\",\"test:unit\"],\"workingDirectory\":\"src/Electron2D.VsCode\",\"platforms\":[\"Any\"],\"timeoutSeconds\":300,\"expectedExitCodes\":[0],\"requestedCapabilities\":[\"WorkspaceRead\"],\"confirmation\":\"PolicyDecides\"},{\"commandId\":\"typecheck\",\"kind\":\"Process\",\"executable\":\"npm\",\"arguments\":[\"run\",\"typecheck\"],\"workingDirectory\":\"src/Electron2D.VsCode\",\"platforms\":[\"Any\"],\"timeoutSeconds\":300,\"expectedExitCodes\":[0],\"requestedCapabilities\":[\"WorkspaceRead\"],\"confirmation\":\"PolicyDecides\"},{\"commandId\":\"extension-host\",\"kind\":\"Process\",\"executable\":\"npm\",\"arguments\":[\"run\",\"test:extension\"],\"workingDirectory\":\"src/Electron2D.VsCode\",\"platforms\":[\"Any\"],\"timeoutSeconds\":900,\"expectedExitCodes\":[0],\"requestedCapabilities\":[\"WorkspaceRead\",\"WorkspaceWrite\"],\"confirmation\":\"PolicyDecides\"},{\"commandId\":\"package-vsix\",\"kind\":\"Process\",\"executable\":\"npm\",\"arguments\":[\"run\",\"package:vsix\"],\"workingDirectory\":\"src/Electron2D.VsCode\",\"platforms\":[\"Any\"],\"timeoutSeconds\":600,\"expectedExitCodes\":[0],\"requestedCapabilities\":[\"WorkspaceRead\",\"WorkspaceWrite\"],\"confirmation\":\"PolicyDecides\"},{\"commandId\":\"visual-capture\",\"kind\":\"Process\",\"executable\":\"python\",\"arguments\":[\"eng/tools/capture_window.py\",\"--title\",\"Visual Studio Code\",\"--output\",\".temp/taskboard-t1157-six-russian-statuses.png\"],\"workingDirectory\":\".\",\"platforms\":[\"Windows\"],\"timeoutSeconds\":120,\"expectedExitCodes\":[0],\"requestedCapabilities\":[\"WorkspaceRead\",\"WorkspaceWrite\"],\"confirmation\":\"PolicyDecides\"}],\"externalAudit\":{\"mode\":\"None\",\"independence\":\"NotRequired\",\"instructions\":null,\"requiredVerdicts\":[]}}}],\"beforeTaskCoreDigest\":\"de4aa4f6ea73b92835a71b3eaccb89a13f93446419da62680d7278c394b91b02\",\"afterTaskCoreDigest\":\"0f366b846f14bc61fcbf302b93bf32aeffb0f96f64bc3755bd27fa78124f30f4\"}"
+      },
+      "sequence": 5
+    },
+    {
+      "activityEntryId": "activity-b4361027cf394af781fbdb27f46f66d0",
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T22:42:05.3319892+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "InProgress",
+        "reason": "Пользователь запросил исправить T-1157; старый восьмиколоночный контракт заменён актуальной шестиколоночной моделью, начинаю повторную проверку evidence."
+      },
+      "sequence": 6
+    },
+    {
+      "activityEntryId": "activity-cac823dabe3a4463b8ba597e452c8c5c",
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T22:48:18.8453043+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "InProgress",
+        "next": "Review",
+        "reason": "Контракт актуализирован, существующая шестиколоночная реализация повторно проверена, все критерии имеют typed evidence и Passed."
+      },
+      "sequence": 7
+    },
+    {
+      "activityEntryId": "activity-e15fa252ff1f495ebfbaac6f86b80ee5",
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T22:54:58.8197059+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "InProgress",
+        "reason": "Пользователь сообщил, что события StatusChange во вкладке «Активность» всё ещё показывают сырой JSON и Unicode escape-последовательности; возвращаю задачу в работу для исправления presentation layer."
+      },
+      "sequence": 8
+    },
+    {
+      "activityEntryId": "activity-4001ad620c52497bbaf389809b78a0f8",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T22:55:00.3906713+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "TaskPatchedV3Draft",
+        "text": "{\"patch\":[{\"op\":\"replace\",\"path\":\"/description\",\"value\":\"VS Code Task Board \\u0434\\u043E\\u043B\\u0436\\u043D\\u0430 \\u043F\\u043E\\u043A\\u0430\\u0437\\u044B\\u0432\\u0430\\u0442\\u044C \\u043F\\u043E-\\u0440\\u0443\\u0441\\u0441\\u043A\\u0438 \\u0432\\u0441\\u0435 \\u0448\\u0435\\u0441\\u0442\\u044C \\u0430\\u043A\\u0442\\u0443\\u0430\\u043B\\u044C\\u043D\\u044B\\u0445 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A: \\u00AB\\u0413\\u043E\\u0442\\u043E\\u0432\\u043E \\u043A \\u0440\\u0430\\u0431\\u043E\\u0442\\u0435\\u00BB, \\u00AB\\u0412 \\u0440\\u0430\\u0431\\u043E\\u0442\\u0435\\u00BB, \\u00AB\\u0417\\u0430\\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u043E\\u00BB, \\u00AB\\u041D\\u0430 \\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u043A\\u0435\\u00BB, \\u00AB\\u0417\\u0430\\u0432\\u0435\\u0440\\u0448\\u0435\\u043D\\u043E\\u00BB \\u0438 \\u00AB\\u041E\\u0442\\u043C\\u0435\\u043D\\u0435\\u043D\\u043E\\u00BB. \\u042D\\u0442\\u0438 \\u0436\\u0435 \\u043F\\u043E\\u0434\\u043F\\u0438\\u0441\\u0438 \\u0438\\u0441\\u043F\\u043E\\u043B\\u044C\\u0437\\u0443\\u044E\\u0442\\u0441\\u044F \\u0432 \\u0441\\u043F\\u0438\\u0441\\u043A\\u0435 \\u0437\\u0430\\u0434\\u0430\\u0447 Activity Bar \\u0438 \\u0432 \\u0441\\u0432\\u0435\\u0434\\u0435\\u043D\\u0438\\u044F\\u0445 \\u043E \\u0437\\u0430\\u0434\\u0430\\u0447\\u0435. \\u0417\\u0430\\u0433\\u043E\\u043B\\u043E\\u0432\\u043E\\u043A \\u043A\\u0430\\u0436\\u0434\\u043E\\u0439 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043A\\u0438 \\u043E\\u0431\\u044A\\u044F\\u0441\\u043D\\u044F\\u0435\\u0442 \\u0432 \\u043F\\u043E\\u0434\\u0441\\u043A\\u0430\\u0437\\u043A\\u0435 \\u043A\\u0440\\u0438\\u0442\\u0435\\u0440\\u0438\\u0439 \\u0440\\u0430\\u0437\\u043C\\u0435\\u0449\\u0435\\u043D\\u0438\\u044F. \\u041A\\u0430\\u043D\\u043E\\u043D\\u0438\\u0447\\u0435\\u0441\\u043A\\u0438\\u0435 \\u0437\\u043D\\u0430\\u0447\\u0435\\u043D\\u0438\\u044F Ready, InProgress, Blocked, Review, Done \\u0438 Cancelled, \\u0432\\u044B\\u0447\\u0438\\u0441\\u043B\\u044F\\u0435\\u043C\\u044B\\u0439 boardStatus \\u0438 \\u043A\\u043E\\u043C\\u0430\\u043D\\u0434\\u044B CLI \\u043E\\u0441\\u0442\\u0430\\u044E\\u0442\\u0441\\u044F \\u043D\\u0435\\u0438\\u0437\\u043C\\u0435\\u043D\\u043D\\u044B\\u043C\\u0438. \\u041E\\u0436\\u0438\\u0434\\u0430\\u043D\\u0438\\u0435 \\u043F\\u043E\\u043B\\u044C\\u0437\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044C\\u0441\\u043A\\u043E\\u0433\\u043E \\u0440\\u0435\\u0448\\u0435\\u043D\\u0438\\u044F \\u043D\\u0435 \\u044F\\u0432\\u043B\\u044F\\u0435\\u0442\\u0441\\u044F \\u043E\\u0442\\u0434\\u0435\\u043B\\u044C\\u043D\\u043E\\u0439 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043A\\u043E\\u0439: \\u0437\\u0430\\u0434\\u0430\\u0447\\u0430 \\u043E\\u0441\\u0442\\u0430\\u0451\\u0442\\u0441\\u044F \\u0432 Review, \\u0430 \\u0441\\u043E\\u0441\\u0442\\u043E\\u044F\\u043D\\u0438\\u0435 Open \\u0438\\u043B\\u0438 Submitted \\u043E\\u043F\\u0440\\u0435\\u0434\\u0435\\u043B\\u044F\\u0435\\u0442\\u0441\\u044F \\u0447\\u0435\\u0440\\u0435\\u0437 acceptanceState. \\u0413\\u043E\\u0442\\u043E\\u0432\\u0430\\u044F \\u0437\\u0430\\u0434\\u0430\\u0447\\u0430 \\u0441 \\u043D\\u0435\\u0437\\u0430\\u0432\\u0435\\u0440\\u0448\\u0451\\u043D\\u043D\\u043E\\u0439 \\u0438\\u043B\\u0438 \\u043E\\u0442\\u043C\\u0435\\u043D\\u0451\\u043D\\u043D\\u043E\\u0439 \\u0437\\u0430\\u0432\\u0438\\u0441\\u0438\\u043C\\u043E\\u0441\\u0442\\u044C\\u044E \\u043B\\u0438\\u0431\\u043E \\u0440\\u0443\\u0447\\u043D\\u043E\\u0439 \\u043F\\u0440\\u0438\\u0447\\u0438\\u043D\\u043E\\u0439 \\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u043A\\u0438 \\u043E\\u0442\\u043E\\u0431\\u0440\\u0430\\u0436\\u0430\\u0435\\u0442\\u0441\\u044F \\u0432 \\u00AB\\u0417\\u0430\\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u043E\\u00BB \\u0447\\u0435\\u0440\\u0435\\u0437 boardStatus \\u0431\\u0435\\u0437 \\u0438\\u0437\\u043C\\u0435\\u043D\\u0435\\u043D\\u0438\\u044F \\u0435\\u0451 \\u043A\\u0430\\u043D\\u043E\\u043D\\u0438\\u0447\\u0435\\u0441\\u043A\\u043E\\u0433\\u043E status. \\u0412\\u043E \\u0432\\u043A\\u043B\\u0430\\u0434\\u043A\\u0435 \\u00AB\\u0410\\u043A\\u0442\\u0438\\u0432\\u043D\\u043E\\u0441\\u0442\\u044C\\u00BB \\u0441\\u043E\\u0431\\u044B\\u0442\\u0438\\u044F StatusChange \\u0434\\u043E\\u043B\\u0436\\u043D\\u044B \\u043E\\u0442\\u043E\\u0431\\u0440\\u0430\\u0436\\u0430\\u0442\\u044C\\u0441\\u044F \\u0447\\u0438\\u0442\\u0430\\u0435\\u043C\\u044B\\u043C \\u043B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u043E\\u0432\\u0430\\u043D\\u043D\\u044B\\u043C \\u0440\\u0435\\u0437\\u044E\\u043C\\u0435 \\u043F\\u0435\\u0440\\u0435\\u0445\\u043E\\u0434\\u0430 \\u0438 \\u043F\\u0440\\u0438\\u0447\\u0438\\u043D\\u044B: \\u0442\\u0435\\u0445\\u043D\\u0438\\u0447\\u0435\\u0441\\u043A\\u0438\\u0439 JSON \\u0438 Unicode escape-\\u043F\\u043E\\u0441\\u043B\\u0435\\u0434\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044C\\u043D\\u043E\\u0441\\u0442\\u0438 \\u043E\\u0441\\u0442\\u0430\\u044E\\u0442\\u0441\\u044F \\u0432 canonical activity, \\u043D\\u043E \\u043D\\u0435 \\u0432\\u044B\\u0432\\u043E\\u0434\\u044F\\u0442\\u0441\\u044F \\u043F\\u043E\\u043B\\u044C\\u0437\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044E.\"}],\"beforeTaskCoreDigest\":\"0f366b846f14bc61fcbf302b93bf32aeffb0f96f64bc3755bd27fa78124f30f4\",\"afterTaskCoreDigest\":\"46e4207f8d95989bc2cc6382f337aa11f6fcafbc2b82aeaff377131bfce3a695\"}"
+      },
+      "sequence": 9
+    },
+    {
+      "activityEntryId": "activity-0ef9938379954a17a267a85095fb408b",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T22:55:02.1687658+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "TaskPatchedV3Draft",
+        "text": "{\"patch\":[{\"op\":\"replace\",\"path\":\"/acceptanceCriteria\",\"value\":[{\"criterionId\":\"six-russian-columns\",\"description\":\"\\u041E\\u0441\\u043D\\u043E\\u0432\\u043D\\u0430\\u044F \\u0434\\u043E\\u0441\\u043A\\u0430 \\u0432\\u0441\\u0435\\u0433\\u0434\\u0430 \\u043F\\u043E\\u043A\\u0430\\u0437\\u044B\\u0432\\u0430\\u0435\\u0442 \\u0448\\u0435\\u0441\\u0442\\u044C \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A \\u0441 \\u043F\\u043E\\u0434\\u043F\\u0438\\u0441\\u044F\\u043C\\u0438 \\u00AB\\u0413\\u043E\\u0442\\u043E\\u0432\\u043E \\u043A \\u0440\\u0430\\u0431\\u043E\\u0442\\u0435\\u00BB, \\u00AB\\u0412 \\u0440\\u0430\\u0431\\u043E\\u0442\\u0435\\u00BB, \\u00AB\\u0417\\u0430\\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u043E\\u00BB, \\u00AB\\u041D\\u0430 \\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u043A\\u0435\\u00BB, \\u00AB\\u0417\\u0430\\u0432\\u0435\\u0440\\u0448\\u0435\\u043D\\u043E\\u00BB \\u0438 \\u00AB\\u041E\\u0442\\u043C\\u0435\\u043D\\u0435\\u043D\\u043E\\u00BB; \\u043E\\u0442\\u0434\\u0435\\u043B\\u044C\\u043D\\u044B\\u0445 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A Backlog \\u0438 AwaitingAcceptance \\u043D\\u0435\\u0442.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\".temp/taskboard-t1157-six-russian-statuses.png\"}]},{\"criterionId\":\"shared-status-presentation\",\"description\":\"\\u0421\\u043F\\u0438\\u0441\\u043E\\u043A \\u0437\\u0430\\u0434\\u0430\\u0447 Activity Bar \\u0438 \\u0441\\u0432\\u0435\\u0434\\u0435\\u043D\\u0438\\u044F \\u043E \\u0437\\u0430\\u0434\\u0430\\u0447\\u0435 \\u0438\\u0441\\u043F\\u043E\\u043B\\u044C\\u0437\\u0443\\u044E\\u0442 \\u0442\\u0435 \\u0436\\u0435 \\u043B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u043E\\u0432\\u0430\\u043D\\u043D\\u044B\\u0435 \\u043D\\u0430\\u0437\\u0432\\u0430\\u043D\\u0438\\u044F, \\u0447\\u0442\\u043E \\u0438 \\u0437\\u0430\\u0433\\u043E\\u043B\\u043E\\u0432\\u043A\\u0438 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\"src/Electron2D.VsCode/src/model.ts\"}]},{\"criterionId\":\"lifecycle-tooltips\",\"description\":\"\\u041F\\u043E\\u0434\\u0441\\u043A\\u0430\\u0437\\u043A\\u0430 \\u043A\\u0430\\u0436\\u0434\\u043E\\u0439 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043A\\u0438 \\u043F\\u043E-\\u0440\\u0443\\u0441\\u0441\\u043A\\u0438 \\u043E\\u0431\\u044A\\u044F\\u0441\\u043D\\u044F\\u0435\\u0442 \\u043A\\u0440\\u0438\\u0442\\u0435\\u0440\\u0438\\u0439 \\u0440\\u0430\\u0437\\u043C\\u0435\\u0449\\u0435\\u043D\\u0438\\u044F, \\u0432\\u043A\\u043B\\u044E\\u0447\\u0430\\u044F \\u0432\\u044B\\u0447\\u0438\\u0441\\u043B\\u044F\\u0435\\u043C\\u0443\\u044E \\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u043A\\u0443 \\u0433\\u043E\\u0442\\u043E\\u0432\\u043E\\u0439 \\u0437\\u0430\\u0434\\u0430\\u0447\\u0438 \\u0438 \\u0440\\u0430\\u0437\\u043B\\u0438\\u0447\\u0438\\u0435 Open/Submitted \\u0432\\u043D\\u0443\\u0442\\u0440\\u0438 Review.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\"src/Electron2D.VsCode/src/localization.ts\"}]},{\"criterionId\":\"machine-contract-preserved\",\"description\":\"\\u041B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u0430\\u0446\\u0438\\u044F \\u043D\\u0435 \\u043C\\u0435\\u043D\\u044F\\u0435\\u0442 \\u043A\\u0430\\u043D\\u043E\\u043D\\u0438\\u0447\\u0435\\u0441\\u043A\\u0438\\u0435 status, boardStatus, acceptanceState, DOM dataset, \\u043F\\u043E\\u0440\\u044F\\u0434\\u043E\\u043A \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A, drag-and-drop payload \\u0438 \\u0430\\u0440\\u0433\\u0443\\u043C\\u0435\\u043D\\u0442\\u044B CLI.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\"src/Electron2D.VsCode/test/unit/model.test.ts\"}]},{\"criterionId\":\"verification\",\"description\":\"\\u0414\\u043E\\u043C\\u0435\\u043D\\u043D\\u044B\\u0439 \\u0434\\u043E\\u043A\\u0443\\u043C\\u0435\\u043D\\u0442 \\u043E\\u0442\\u0440\\u0430\\u0436\\u0430\\u0435\\u0442 \\u0430\\u043A\\u0442\\u0443\\u0430\\u043B\\u044C\\u043D\\u0443\\u044E \\u0448\\u0435\\u0441\\u0442\\u0438\\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u0447\\u043D\\u0443\\u044E \\u043C\\u043E\\u0434\\u0435\\u043B\\u044C; focused \\u0438 \\u043F\\u043E\\u043B\\u043D\\u044B\\u0439 unit-\\u043D\\u0430\\u0431\\u043E\\u0440\\u044B, typecheck, Extension Host \\u0438 \\u0443\\u043F\\u0430\\u043A\\u043E\\u0432\\u043A\\u0430 VSIX \\u043F\\u0440\\u043E\\u0445\\u043E\\u0434\\u044F\\u0442, \\u0430 \\u0440\\u0435\\u0430\\u043B\\u044C\\u043D\\u043E\\u0435 \\u043E\\u043A\\u043D\\u043E VS Code \\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u0435\\u043D\\u043E \\u0441\\u043D\\u0438\\u043C\\u043A\\u043E\\u043C \\u0447\\u0435\\u0440\\u0435\\u0437 FFmpeg helper.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\"docs/editor/project-tasks-board.md\"}]},{\"criterionId\":\"readable-status-change-activity\",\"description\":\"\\u041A\\u043E\\u0440\\u0440\\u0435\\u043A\\u0442\\u043D\\u043E\\u0435 \\u0441\\u043E\\u0431\\u044B\\u0442\\u0438\\u0435 StatusChange \\u0432\\u043E \\u0432\\u043A\\u043B\\u0430\\u0434\\u043A\\u0435 \\u00AB\\u0410\\u043A\\u0442\\u0438\\u0432\\u043D\\u043E\\u0441\\u0442\\u044C\\u00BB \\u043F\\u043E\\u043A\\u0430\\u0437\\u044B\\u0432\\u0430\\u0435\\u0442 \\u043B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u043E\\u0432\\u0430\\u043D\\u043D\\u044B\\u0435 \\u043D\\u0430\\u0437\\u0432\\u0430\\u043D\\u0438\\u044F \\u043F\\u0440\\u0435\\u0434\\u044B\\u0434\\u0443\\u0449\\u0435\\u0433\\u043E \\u0438 \\u043D\\u043E\\u0432\\u043E\\u0433\\u043E \\u0441\\u0442\\u0430\\u0442\\u0443\\u0441\\u0430, \\u0430 \\u0442\\u0430\\u043A\\u0436\\u0435 \\u0434\\u0435\\u043A\\u043E\\u0434\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u043D\\u0443\\u044E \\u043F\\u0440\\u0438\\u0447\\u0438\\u043D\\u0443 \\u043E\\u0431\\u044B\\u0447\\u043D\\u044B\\u043C \\u0442\\u0435\\u043A\\u0441\\u0442\\u043E\\u043C; \\u0441\\u044B\\u0440\\u043E\\u0439 JSON \\u0438 \\u043F\\u043E\\u0441\\u043B\\u0435\\u0434\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044C\\u043D\\u043E\\u0441\\u0442\\u0438 \\u0432\\u0438\\u0434\\u0430 \\\\uXXXX \\u043D\\u0435 \\u0432\\u0438\\u0434\\u043D\\u044B.\",\"state\":\"Open\",\"evidence\":[]}]}],\"beforeTaskCoreDigest\":\"46e4207f8d95989bc2cc6382f337aa11f6fcafbc2b82aeaff377131bfce3a695\",\"afterTaskCoreDigest\":\"65cba71985fe038039b0fe6bef9329707ad75a20704fdb3c9bfa072e845435f5\"}"
+      },
+      "sequence": 10
+    },
+    {
+      "activityEntryId": "activity-5dcc9d318d2247f4b50e16a83c6d432c",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T22:55:03.6917063+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "TaskPatchedV3Draft",
+        "text": "{\"patch\":[{\"op\":\"replace\",\"path\":\"/acceptanceCriteria\",\"value\":[{\"criterionId\":\"six-russian-columns\",\"description\":\"\\u041E\\u0441\\u043D\\u043E\\u0432\\u043D\\u0430\\u044F \\u0434\\u043E\\u0441\\u043A\\u0430 \\u0432\\u0441\\u0435\\u0433\\u0434\\u0430 \\u043F\\u043E\\u043A\\u0430\\u0437\\u044B\\u0432\\u0430\\u0435\\u0442 \\u0448\\u0435\\u0441\\u0442\\u044C \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A \\u0441 \\u043F\\u043E\\u0434\\u043F\\u0438\\u0441\\u044F\\u043C\\u0438 \\u00AB\\u0413\\u043E\\u0442\\u043E\\u0432\\u043E \\u043A \\u0440\\u0430\\u0431\\u043E\\u0442\\u0435\\u00BB, \\u00AB\\u0412 \\u0440\\u0430\\u0431\\u043E\\u0442\\u0435\\u00BB, \\u00AB\\u0417\\u0430\\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u043E\\u00BB, \\u00AB\\u041D\\u0430 \\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u043A\\u0435\\u00BB, \\u00AB\\u0417\\u0430\\u0432\\u0435\\u0440\\u0448\\u0435\\u043D\\u043E\\u00BB \\u0438 \\u00AB\\u041E\\u0442\\u043C\\u0435\\u043D\\u0435\\u043D\\u043E\\u00BB; \\u043E\\u0442\\u0434\\u0435\\u043B\\u044C\\u043D\\u044B\\u0445 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A Backlog \\u0438 AwaitingAcceptance \\u043D\\u0435\\u0442.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\".temp/taskboard-t1157-six-russian-statuses.png\"}]},{\"criterionId\":\"shared-status-presentation\",\"description\":\"\\u0421\\u043F\\u0438\\u0441\\u043E\\u043A \\u0437\\u0430\\u0434\\u0430\\u0447 Activity Bar \\u0438 \\u0441\\u0432\\u0435\\u0434\\u0435\\u043D\\u0438\\u044F \\u043E \\u0437\\u0430\\u0434\\u0430\\u0447\\u0435 \\u0438\\u0441\\u043F\\u043E\\u043B\\u044C\\u0437\\u0443\\u044E\\u0442 \\u0442\\u0435 \\u0436\\u0435 \\u043B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u043E\\u0432\\u0430\\u043D\\u043D\\u044B\\u0435 \\u043D\\u0430\\u0437\\u0432\\u0430\\u043D\\u0438\\u044F, \\u0447\\u0442\\u043E \\u0438 \\u0437\\u0430\\u0433\\u043E\\u043B\\u043E\\u0432\\u043A\\u0438 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\"src/Electron2D.VsCode/src/model.ts\"}]},{\"criterionId\":\"lifecycle-tooltips\",\"description\":\"\\u041F\\u043E\\u0434\\u0441\\u043A\\u0430\\u0437\\u043A\\u0430 \\u043A\\u0430\\u0436\\u0434\\u043E\\u0439 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043A\\u0438 \\u043F\\u043E-\\u0440\\u0443\\u0441\\u0441\\u043A\\u0438 \\u043E\\u0431\\u044A\\u044F\\u0441\\u043D\\u044F\\u0435\\u0442 \\u043A\\u0440\\u0438\\u0442\\u0435\\u0440\\u0438\\u0439 \\u0440\\u0430\\u0437\\u043C\\u0435\\u0449\\u0435\\u043D\\u0438\\u044F, \\u0432\\u043A\\u043B\\u044E\\u0447\\u0430\\u044F \\u0432\\u044B\\u0447\\u0438\\u0441\\u043B\\u044F\\u0435\\u043C\\u0443\\u044E \\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u043A\\u0443 \\u0433\\u043E\\u0442\\u043E\\u0432\\u043E\\u0439 \\u0437\\u0430\\u0434\\u0430\\u0447\\u0438 \\u0438 \\u0440\\u0430\\u0437\\u043B\\u0438\\u0447\\u0438\\u0435 Open/Submitted \\u0432\\u043D\\u0443\\u0442\\u0440\\u0438 Review.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\"src/Electron2D.VsCode/src/localization.ts\"}]},{\"criterionId\":\"machine-contract-preserved\",\"description\":\"\\u041B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u0430\\u0446\\u0438\\u044F \\u043D\\u0435 \\u043C\\u0435\\u043D\\u044F\\u0435\\u0442 \\u043A\\u0430\\u043D\\u043E\\u043D\\u0438\\u0447\\u0435\\u0441\\u043A\\u0438\\u0435 status, boardStatus, acceptanceState, DOM dataset, \\u043F\\u043E\\u0440\\u044F\\u0434\\u043E\\u043A \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A, drag-and-drop payload \\u0438 \\u0430\\u0440\\u0433\\u0443\\u043C\\u0435\\u043D\\u0442\\u044B CLI.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\"src/Electron2D.VsCode/test/unit/model.test.ts\"}]},{\"criterionId\":\"verification\",\"description\":\"\\u0414\\u043E\\u043C\\u0435\\u043D\\u043D\\u044B\\u0439 \\u0434\\u043E\\u043A\\u0443\\u043C\\u0435\\u043D\\u0442 \\u043E\\u0442\\u0440\\u0430\\u0436\\u0430\\u0435\\u0442 \\u0430\\u043A\\u0442\\u0443\\u0430\\u043B\\u044C\\u043D\\u0443\\u044E \\u0448\\u0435\\u0441\\u0442\\u0438\\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u0447\\u043D\\u0443\\u044E \\u043C\\u043E\\u0434\\u0435\\u043B\\u044C; focused \\u0438 \\u043F\\u043E\\u043B\\u043D\\u044B\\u0439 unit-\\u043D\\u0430\\u0431\\u043E\\u0440\\u044B, typecheck, Extension Host \\u0438 \\u0443\\u043F\\u0430\\u043A\\u043E\\u0432\\u043A\\u0430 VSIX \\u043F\\u0440\\u043E\\u0445\\u043E\\u0434\\u044F\\u0442, \\u0430 \\u0440\\u0435\\u0430\\u043B\\u044C\\u043D\\u043E\\u0435 \\u043E\\u043A\\u043D\\u043E VS Code \\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u0435\\u043D\\u043E \\u0441\\u043D\\u0438\\u043C\\u043A\\u043E\\u043C \\u0447\\u0435\\u0440\\u0435\\u0437 FFmpeg helper.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\"docs/editor/project-tasks-board.md\"}]},{\"criterionId\":\"readable-status-change-activity\",\"description\":\"\\u041A\\u043E\\u0440\\u0440\\u0435\\u043A\\u0442\\u043D\\u043E\\u0435 \\u0441\\u043E\\u0431\\u044B\\u0442\\u0438\\u0435 StatusChange \\u0432\\u043E \\u0432\\u043A\\u043B\\u0430\\u0434\\u043A\\u0435 \\u00AB\\u0410\\u043A\\u0442\\u0438\\u0432\\u043D\\u043E\\u0441\\u0442\\u044C\\u00BB \\u043F\\u043E\\u043A\\u0430\\u0437\\u044B\\u0432\\u0430\\u0435\\u0442 \\u043B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u043E\\u0432\\u0430\\u043D\\u043D\\u044B\\u0435 \\u043D\\u0430\\u0437\\u0432\\u0430\\u043D\\u0438\\u044F \\u043F\\u0440\\u0435\\u0434\\u044B\\u0434\\u0443\\u0449\\u0435\\u0433\\u043E \\u0438 \\u043D\\u043E\\u0432\\u043E\\u0433\\u043E \\u0441\\u0442\\u0430\\u0442\\u0443\\u0441\\u0430, \\u0430 \\u0442\\u0430\\u043A\\u0436\\u0435 \\u0434\\u0435\\u043A\\u043E\\u0434\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u043D\\u0443\\u044E \\u043F\\u0440\\u0438\\u0447\\u0438\\u043D\\u0443 \\u043E\\u0431\\u044B\\u0447\\u043D\\u044B\\u043C \\u0442\\u0435\\u043A\\u0441\\u0442\\u043E\\u043C; \\u0441\\u044B\\u0440\\u043E\\u0439 JSON \\u0438 \\u043F\\u043E\\u0441\\u043B\\u0435\\u0434\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044C\\u043D\\u043E\\u0441\\u0442\\u0438 \\u0432\\u0438\\u0434\\u0430 \\\\uXXXX \\u043D\\u0435 \\u0432\\u0438\\u0434\\u043D\\u044B.\",\"state\":\"Open\",\"evidence\":[]},{\"criterionId\":\"safe-status-change-fallback\",\"description\":\"\\u041D\\u0435\\u043A\\u043E\\u0440\\u0440\\u0435\\u043A\\u0442\\u043D\\u044B\\u0439 \\u0438\\u043B\\u0438 \\u043D\\u0435\\u0438\\u0437\\u0432\\u0435\\u0441\\u0442\\u043D\\u044B\\u0439 payload StatusChange \\u043D\\u0435 \\u043B\\u043E\\u043C\\u0430\\u0435\\u0442 timeline \\u0438 \\u043E\\u0441\\u0442\\u0430\\u0451\\u0442\\u0441\\u044F \\u0431\\u0435\\u0437\\u043E\\u043F\\u0430\\u0441\\u043D\\u044B\\u043C \\u0431\\u0443\\u043A\\u0432\\u0430\\u043B\\u044C\\u043D\\u044B\\u043C \\u0442\\u0435\\u043A\\u0441\\u0442\\u043E\\u043C \\u0431\\u0435\\u0437 \\u0432\\u044B\\u043F\\u043E\\u043B\\u043D\\u0435\\u043D\\u0438\\u044F HTML.\",\"state\":\"Open\",\"evidence\":[]}]}],\"beforeTaskCoreDigest\":\"65cba71985fe038039b0fe6bef9329707ad75a20704fdb3c9bfa072e845435f5\",\"afterTaskCoreDigest\":\"be0dd73919034b61015da1cad51d7e027ba37434fd38a27e4dd576890c5f03ba\"}"
+      },
+      "sequence": 11
+    },
+    {
+      "activityEntryId": "activity-bebf4b5fabaa4641bf3e0d8a243302c2",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T22:55:05.3776316+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "TaskPatchedV3Draft",
+        "text": "{\"patch\":[{\"op\":\"replace\",\"path\":\"/acceptanceCriteria\",\"value\":[{\"criterionId\":\"six-russian-columns\",\"description\":\"\\u041E\\u0441\\u043D\\u043E\\u0432\\u043D\\u0430\\u044F \\u0434\\u043E\\u0441\\u043A\\u0430 \\u0432\\u0441\\u0435\\u0433\\u0434\\u0430 \\u043F\\u043E\\u043A\\u0430\\u0437\\u044B\\u0432\\u0430\\u0435\\u0442 \\u0448\\u0435\\u0441\\u0442\\u044C \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A \\u0441 \\u043F\\u043E\\u0434\\u043F\\u0438\\u0441\\u044F\\u043C\\u0438 \\u00AB\\u0413\\u043E\\u0442\\u043E\\u0432\\u043E \\u043A \\u0440\\u0430\\u0431\\u043E\\u0442\\u0435\\u00BB, \\u00AB\\u0412 \\u0440\\u0430\\u0431\\u043E\\u0442\\u0435\\u00BB, \\u00AB\\u0417\\u0430\\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u043E\\u00BB, \\u00AB\\u041D\\u0430 \\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u043A\\u0435\\u00BB, \\u00AB\\u0417\\u0430\\u0432\\u0435\\u0440\\u0448\\u0435\\u043D\\u043E\\u00BB \\u0438 \\u00AB\\u041E\\u0442\\u043C\\u0435\\u043D\\u0435\\u043D\\u043E\\u00BB; \\u043E\\u0442\\u0434\\u0435\\u043B\\u044C\\u043D\\u044B\\u0445 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A Backlog \\u0438 AwaitingAcceptance \\u043D\\u0435\\u0442.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\".temp/taskboard-t1157-six-russian-statuses.png\"}]},{\"criterionId\":\"shared-status-presentation\",\"description\":\"\\u0421\\u043F\\u0438\\u0441\\u043E\\u043A \\u0437\\u0430\\u0434\\u0430\\u0447 Activity Bar \\u0438 \\u0441\\u0432\\u0435\\u0434\\u0435\\u043D\\u0438\\u044F \\u043E \\u0437\\u0430\\u0434\\u0430\\u0447\\u0435 \\u0438\\u0441\\u043F\\u043E\\u043B\\u044C\\u0437\\u0443\\u044E\\u0442 \\u0442\\u0435 \\u0436\\u0435 \\u043B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u043E\\u0432\\u0430\\u043D\\u043D\\u044B\\u0435 \\u043D\\u0430\\u0437\\u0432\\u0430\\u043D\\u0438\\u044F, \\u0447\\u0442\\u043E \\u0438 \\u0437\\u0430\\u0433\\u043E\\u043B\\u043E\\u0432\\u043A\\u0438 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\"src/Electron2D.VsCode/src/model.ts\"}]},{\"criterionId\":\"lifecycle-tooltips\",\"description\":\"\\u041F\\u043E\\u0434\\u0441\\u043A\\u0430\\u0437\\u043A\\u0430 \\u043A\\u0430\\u0436\\u0434\\u043E\\u0439 \\u043A\\u043E\\u043B\\u043E\\u043D\\u043A\\u0438 \\u043F\\u043E-\\u0440\\u0443\\u0441\\u0441\\u043A\\u0438 \\u043E\\u0431\\u044A\\u044F\\u0441\\u043D\\u044F\\u0435\\u0442 \\u043A\\u0440\\u0438\\u0442\\u0435\\u0440\\u0438\\u0439 \\u0440\\u0430\\u0437\\u043C\\u0435\\u0449\\u0435\\u043D\\u0438\\u044F, \\u0432\\u043A\\u043B\\u044E\\u0447\\u0430\\u044F \\u0432\\u044B\\u0447\\u0438\\u0441\\u043B\\u044F\\u0435\\u043C\\u0443\\u044E \\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u043E\\u0432\\u043A\\u0443 \\u0433\\u043E\\u0442\\u043E\\u0432\\u043E\\u0439 \\u0437\\u0430\\u0434\\u0430\\u0447\\u0438 \\u0438 \\u0440\\u0430\\u0437\\u043B\\u0438\\u0447\\u0438\\u0435 Open/Submitted \\u0432\\u043D\\u0443\\u0442\\u0440\\u0438 Review.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\"src/Electron2D.VsCode/src/localization.ts\"}]},{\"criterionId\":\"machine-contract-preserved\",\"description\":\"\\u041B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u0430\\u0446\\u0438\\u044F \\u043D\\u0435 \\u043C\\u0435\\u043D\\u044F\\u0435\\u0442 \\u043A\\u0430\\u043D\\u043E\\u043D\\u0438\\u0447\\u0435\\u0441\\u043A\\u0438\\u0435 status, boardStatus, acceptanceState, DOM dataset, \\u043F\\u043E\\u0440\\u044F\\u0434\\u043E\\u043A \\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u043A, drag-and-drop payload \\u0438 \\u0430\\u0440\\u0433\\u0443\\u043C\\u0435\\u043D\\u0442\\u044B CLI.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\"src/Electron2D.VsCode/test/unit/model.test.ts\"}]},{\"criterionId\":\"verification\",\"description\":\"\\u0414\\u043E\\u043C\\u0435\\u043D\\u043D\\u044B\\u0439 \\u0434\\u043E\\u043A\\u0443\\u043C\\u0435\\u043D\\u0442 \\u043E\\u0442\\u0440\\u0430\\u0436\\u0430\\u0435\\u0442 \\u0430\\u043A\\u0442\\u0443\\u0430\\u043B\\u044C\\u043D\\u0443\\u044E \\u0448\\u0435\\u0441\\u0442\\u0438\\u043A\\u043E\\u043B\\u043E\\u043D\\u043E\\u0447\\u043D\\u0443\\u044E \\u043C\\u043E\\u0434\\u0435\\u043B\\u044C; focused \\u0438 \\u043F\\u043E\\u043B\\u043D\\u044B\\u0439 unit-\\u043D\\u0430\\u0431\\u043E\\u0440\\u044B, typecheck, Extension Host \\u0438 \\u0443\\u043F\\u0430\\u043A\\u043E\\u0432\\u043A\\u0430 VSIX \\u043F\\u0440\\u043E\\u0445\\u043E\\u0434\\u044F\\u0442, \\u0430 \\u0440\\u0435\\u0430\\u043B\\u044C\\u043D\\u043E\\u0435 \\u043E\\u043A\\u043D\\u043E VS Code \\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u0435\\u043D\\u043E \\u0441\\u043D\\u0438\\u043C\\u043A\\u043E\\u043C \\u0447\\u0435\\u0440\\u0435\\u0437 FFmpeg helper.\",\"state\":\"Passed\",\"evidence\":[{\"kind\":\"File\",\"path\":\"docs/editor/project-tasks-board.md\"}]},{\"criterionId\":\"readable-status-change-activity\",\"description\":\"\\u041A\\u043E\\u0440\\u0440\\u0435\\u043A\\u0442\\u043D\\u043E\\u0435 \\u0441\\u043E\\u0431\\u044B\\u0442\\u0438\\u0435 StatusChange \\u0432\\u043E \\u0432\\u043A\\u043B\\u0430\\u0434\\u043A\\u0435 \\u00AB\\u0410\\u043A\\u0442\\u0438\\u0432\\u043D\\u043E\\u0441\\u0442\\u044C\\u00BB \\u043F\\u043E\\u043A\\u0430\\u0437\\u044B\\u0432\\u0430\\u0435\\u0442 \\u043B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u043E\\u0432\\u0430\\u043D\\u043D\\u044B\\u0435 \\u043D\\u0430\\u0437\\u0432\\u0430\\u043D\\u0438\\u044F \\u043F\\u0440\\u0435\\u0434\\u044B\\u0434\\u0443\\u0449\\u0435\\u0433\\u043E \\u0438 \\u043D\\u043E\\u0432\\u043E\\u0433\\u043E \\u0441\\u0442\\u0430\\u0442\\u0443\\u0441\\u0430, \\u0430 \\u0442\\u0430\\u043A\\u0436\\u0435 \\u0434\\u0435\\u043A\\u043E\\u0434\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u043D\\u0443\\u044E \\u043F\\u0440\\u0438\\u0447\\u0438\\u043D\\u0443 \\u043E\\u0431\\u044B\\u0447\\u043D\\u044B\\u043C \\u0442\\u0435\\u043A\\u0441\\u0442\\u043E\\u043C; \\u0441\\u044B\\u0440\\u043E\\u0439 JSON \\u0438 \\u043F\\u043E\\u0441\\u043B\\u0435\\u0434\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044C\\u043D\\u043E\\u0441\\u0442\\u0438 \\u0432\\u0438\\u0434\\u0430 \\\\uXXXX \\u043D\\u0435 \\u0432\\u0438\\u0434\\u043D\\u044B.\",\"state\":\"Open\",\"evidence\":[]},{\"criterionId\":\"safe-status-change-fallback\",\"description\":\"\\u041D\\u0435\\u043A\\u043E\\u0440\\u0440\\u0435\\u043A\\u0442\\u043D\\u044B\\u0439 \\u0438\\u043B\\u0438 \\u043D\\u0435\\u0438\\u0437\\u0432\\u0435\\u0441\\u0442\\u043D\\u044B\\u0439 payload StatusChange \\u043D\\u0435 \\u043B\\u043E\\u043C\\u0430\\u0435\\u0442 timeline \\u0438 \\u043E\\u0441\\u0442\\u0430\\u0451\\u0442\\u0441\\u044F \\u0431\\u0435\\u0437\\u043E\\u043F\\u0430\\u0441\\u043D\\u044B\\u043C \\u0431\\u0443\\u043A\\u0432\\u0430\\u043B\\u044C\\u043D\\u044B\\u043C \\u0442\\u0435\\u043A\\u0441\\u0442\\u043E\\u043C \\u0431\\u0435\\u0437 \\u0432\\u044B\\u043F\\u043E\\u043B\\u043D\\u0435\\u043D\\u0438\\u044F HTML.\",\"state\":\"Open\",\"evidence\":[]},{\"criterionId\":\"status-change-verification\",\"description\":\"\\u041F\\u043E\\u0432\\u0435\\u0434\\u0435\\u043D\\u0438\\u0435 \\u043F\\u043E\\u043A\\u0440\\u044B\\u0442\\u043E focused unit-\\u0442\\u0435\\u0441\\u0442\\u0430\\u043C\\u0438, typecheck \\u0438 Extension Host \\u043F\\u0440\\u043E\\u0445\\u043E\\u0434\\u044F\\u0442, \\u0441\\u043E\\u0431\\u0440\\u0430\\u043D\\u043D\\u044B\\u0439 VSIX \\u0443\\u0441\\u0442\\u0430\\u043D\\u043E\\u0432\\u043B\\u0435\\u043D, \\u0430 \\u0440\\u0435\\u0430\\u043B\\u044C\\u043D\\u043E\\u0435 \\u043E\\u043A\\u043D\\u043E VS Code \\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u0435\\u043D\\u043E FFmpeg-\\u0441\\u043D\\u0438\\u043C\\u043A\\u043E\\u043C.\",\"state\":\"Open\",\"evidence\":[]}]}],\"beforeTaskCoreDigest\":\"be0dd73919034b61015da1cad51d7e027ba37434fd38a27e4dd576890c5f03ba\",\"afterTaskCoreDigest\":\"bd77bc6b3cfaab1cf04510a3b780348179e3d3de546d0fe573726d7f703ce3c6\"}"
+      },
+      "sequence": 12
+    },
+    {
+      "activityEntryId": "activity-487f2377f51f440683da9c602f601066",
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T23:14:27.2732700+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "InProgress",
+        "next": "Review",
+        "reason": "Пользовательское замечание по StatusChange исправлено; новые критерии имеют typed evidence и Passed, автоматическая и runtime-проверка завершены."
+      },
+      "sequence": 13
+    },
+    {
+      "activityEntryId": "activity-5c73de3724e94097ae3d2a231ae81813",
+      "sequence": 14,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T12:03:12.4272907+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "427a8f787e9f733dbe19ea48c3d9e18ced3c91c897998a03e7ac361049a6261e",
+        "afterDigest": "b4c7d785d2b5472991fbe54603eed0f67e5e2065c0df1393c8608f9009198e7f",
+        "workspaceChanges": {
+          "baseRevision": "workspace:931ade09ee06f643d3e51f3de350e521c3ceea25ffad7d309fcf78658b51e90b",
+          "currentRevision": "workspace:931ade09ee06f643d3e51f3de350e521c3ceea25ffad7d309fcf78658b51e90b",
+          "files": []
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-6f3ccadc7f784299a16d9504223f24df",
+      "sequence": 15,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T12:03:12.4272907+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Задача принята пользователем в VS Code Task Board."
+      }
+    },
+    {
+      "activityEntryId": "activity-a8def03ec64b4dc2977099c3a549dc8e",
+      "sequence": 16,
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-14T12:03:25.0184585+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Задача принята пользователем в VS Code Task Board.",
+        "authorityActorId": "vscode:eduar",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "status-model",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/model.ts"
+    },
+    {
+      "linkId": "status-localization",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/localization.ts"
+    },
+    {
+      "linkId": "board-presentation",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "sidebar-presentation",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/extension.ts"
+    },
+    {
+      "linkId": "model-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/model.test.ts"
+    },
+    {
+      "linkId": "sidebar-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/sidebar.test.ts"
+    },
+    {
+      "linkId": "layout-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+    },
+    {
+      "linkId": "domain-document",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "Актуализация русской статусной модели VS Code Task Board",
+    "readyToStart": [
+      "Текущая модель доски содержит шесть отображаемых статусов и отдельный acceptanceState для пользовательского решения.",
+      "Задача не имеет зависимостей и блокеров; текущий запрос пользователя разрешает актуализировать её контракт и evidence.",
+      "Перед изменением production-кода требуется доказать конкретное расхождение существующим или новым RED-тестом."
+    ],
+    "stopConditions": [
+      "Проверка обнаружит, что для исправления требуется вернуть Backlog или отдельный AwaitingAcceptance в каноническую модель.",
+      "Локализация потребует изменить lifecycle, CLI-команды или формат taskboard.",
+      "Параллельные изменения пересекутся с теми же строками status presentation и не позволят безопасно сохранить пользовательскую работу."
+    ],
+    "allowedChanges": [
+      "Структурированный контракт, критерии, ссылки, evidence и состояние T-1157 через e2d tasks.",
+      "Доменный документ актуальной шестиколоночной статусной модели.",
+      "Тесты и presentation-код VS Code Task Board только при доказанном расхождении."
+    ],
+    "forbiddenChanges": [
+      "Возвращение Backlog или AwaitingAcceptance в канонические status и колонки.",
+      "Изменение TaskManager lifecycle, схемы v3, CLI transition rules или taskboard напрямую.",
+      "Несвязанные правки карточек, фильтров, Task Details и других задач."
+    ],
+    "requiredOutputs": [
+      "Актуальная T-1157 с пятью проверяемыми критериями и связанными файлами.",
+      "Подтверждение шести русских колонок, общих подписей sidebar/details и lifecycle tooltip.",
+      "Результаты focused/full unit, typecheck, Extension Host, VSIX и FFmpeg-проверки реального окна."
+    ],
+    "commands": [
+      {
+        "commandId": "focused-status-presentation",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "exec",
+          "tsx",
+          "--",
+          "--test",
+          "--test-name-pattern",
+          "task status presentation|buildBoardView always|sidebar rows list active|status columns use localized",
+          "test/unit/model.test.ts",
+          "test/unit/sidebar.test.ts",
+          "test/unit/webview-layout.test.ts"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "extension-host",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:extension"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 900,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "package-vsix",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "visual-capture",
+        "kind": "Process",
+        "executable": "python",
+        "arguments": [
+          "eng/tools/capture_window.py",
+          "--title",
+          "Visual Studio Code",
+          "--output",
+          ".temp/taskboard-t1157-six-russian-statuses.png"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Windows"
+        ],
+        "timeoutSeconds": 120,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-11T11:18:22.5792981+00:00",
+  "updatedAt": "2026-07-14T12:03:25.0184585+00:00",
+  "submittedAt": "2026-07-14T12:03:12.4272907+00:00",
+  "completedAt": "2026-07-14T12:03:25.0184585+00:00",
+  "acceptedAt": "2026-07-14T12:03:25.0184585+00:00",
+  "acceptedBy": "vscode:eduar",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 3,
+    "messages": [
+      {
+        "messageId": "activity-5094f444d5f14d0b9b8edf8c275687ab",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T11:26:35.8047426+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Реализация и проверки: добавлен единый taskStatusPresentation с восемью русскими labels и lifecycle tooltip; webview и sidebar используют общий словарь, internal TaskStatus/drag-drop/CLI identifiers не изменены. RED: unit 25/28. GREEN: unit 28/28; npm run typecheck; Extension Host Insiders exit 0 с фактическим sidebar metadata 'Бэклог · P1'; VSIX 9 файлов, 19,79 KB, установлен в stable VS Code. docs update/check, verify docs и verify licenses прошли. Автоматическая Windows UI-проверка заблокирована внешним bootstrap os error 3."
+          }
+        ]
+      },
+      {
+        "messageId": "message-2ecd7487dd7f492396447c3fdc0bd098",
+        "sequence": 2,
+        "author": {
+          "actorId": "Codex",
+          "actorKind": "Agent",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-13T22:48:17.1529581+00:00",
+        "replyToMessageId": null,
+        "agentRunId": "run-815f6a19813240ba89ef434ae0785158",
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "T-1157 актуализирована с устаревших восьми колонок на текущие шесть: «Готово к работе», «В работе», «Заблокировано», «На проверке», «Завершено», «Отменено». Backlog удалён моделью T-1165, а ожидание решения пользователя после T-1166 представлено acceptanceState Submitted внутри Review. Production-код уже соответствовал этому контракту, поэтому менять его и добавлять тесты не потребовалось. Проверки: focused status presentation 4/4; npm run test:unit 122/122; npm run typecheck code 0; npm run test:extension code 0; npm run package:vsix — 11 файлов, 106,71 KB; пакет установлен в stable VS Code; docs update/check/verify code 0. FFmpeg evidence .temp/taskboard-t1157-six-russian-statuses.png показывает все шесть русских колонок в реальном окне."
+          }
+        ]
+      },
+      {
+        "messageId": "message-5097e78e09d04e56a037ed05315a7e57",
+        "sequence": 3,
+        "author": {
+          "actorId": "Codex",
+          "actorKind": "Agent",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-13T23:14:24.6170355+00:00",
+        "replyToMessageId": null,
+        "agentRunId": "run-44ef183150644073a7ff50f182baaf60",
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Исправлен presentation layer событий StatusChange: канонический JSON строго разбирается, статусы отображаются общими локализованными подписями, Unicode в причине декодируется, а невалидный payload сохраняет безопасный буквальный fallback. Focused regression: RED 0/3 → GREEN 3/3; unit 125/125; typecheck и Extension Host code 0; VSIX 11 файлов / 107,27 KB установлен. Реальное окно VS Code и FFmpeg-снимок .temp/taskboard-t1157-status-change-readable.png подтверждают читаемые строки без JSON и \\uXXXX."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": [],
+  "workspaceChanges": {
+    "baseRevision": "workspace:931ade09ee06f643d3e51f3de350e521c3ceea25ffad7d309fcf78658b51e90b",
+    "currentRevision": "workspace:931ade09ee06f643d3e51f3de350e521c3ceea25ffad7d309fcf78658b51e90b",
+    "files": []
+  },
+  "lastActivitySequence": 16
+}

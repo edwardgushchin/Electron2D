@@ -1,0 +1,412 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-e5eaeda9f60b48d4eec518dfe00fff72",
+  "revision": 2,
+  "taskId": "T-0158",
+  "legacyAliases": [],
+  "title": "Реализовать Script workspace и базовый встроенный C# text editor",
+  "description": "## T-0158 - Реализовать Script workspace и базовый встроенный C# text editor\n\n- Закрыта: 2026-06-23T06:05:00+03:00\n- Коммит: `39b4849 feat: add script workspace editor model`\n- Спецификация:\n  - `docs/scripting/editor-script-workflow.md`\n  - `docs/editor/godot4-editor-reference.md`\n- Документация:\n  - `docs/editor/script-workspace.md`\n  - `docs/scripting/editor-script-workflow.md`\n  - `docs/editor/editor-project-shell.md`\n  - `docs/README.md`\n- Исходный код и тесты:\n  - `src/Electron2D.Editor/Scripting/EditorScriptWorkspaceView.cs`\n  - `src/Electron2D.Editor/Scripting/EditorScriptWorkspaceSmoke.cs`\n  - `src/Electron2D.Editor/Scripting/EditorScriptWorkspaceSmokeResult.cs`\n  - `src/Electron2D.Editor/Scripting/EditorScriptWorkspaceVisualHarness.cs`\n  - `src/Electron2D.Editor/Program.cs`\n  - `tests/Electron2D.Tests.Integration/EditorScriptWorkspaceTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nРеализован model-first `Script` workspace для `Electron2D.Editor`: workspace switcher выбирает `Script`, snapshot содержит prerequisite manifest UI public API, операции с `.cs` files, tabs, active `CodeDocument`, editor surface, search/replace, go-to-line, clipboard/save/undo commands, `TextBufferEditSession`, grouped undo для AI/refactoring, agent save conflict diagnostic, external change result и `WorkspaceJobInputIdentity`.\n\nПостоянный desktop event loop и live text input ещё не являются частью этой задачи; они подключаются следующими задачами поверх проверенного snapshot-контракта.\n\n### Критерии и результат\n\n- [x] Workspace `Script` открывается из центрального workspace switcher.\n- [x] Поддержаны model-level create/open/edit/rename/delete `.cs` files.\n- [x] Поддержаны document tabs, line numbers, syntax token categories, auto indentation, spaces policy, bracket/quote matching, code folding marker и current line highlight.\n- [x] Поддержаны search/replace in file, project search, go to line, clipboard, Undo/Redo, save file и `Save All`.\n- [x] Перед реализацией зафиксирован UI prerequisite manifest для text editor surface.\n- [x] `CodeDocument` содержит `DocumentId`, path, text, revision, persisted revision, dirty state, diagnostics и semantic version.\n- [x] Внешнее изменение `.cs` моделируется как non-overlap merge с visible conflict marker.\n- [x] Build/run/test identity представлен через `WorkspaceJobInputIdentity` с content revision и build configuration hash.\n- [x] `TextBufferEditSession` отделён от `OperationJournal`: typing events не создают project operation на каждый символ, а AI/refactoring получает grouped undo id.\n- [x] Agent save conflict diagnostic представлен как structured marker `E2D-SCRIPT-0002`.\n- [x] Добавлен UI/model integration test без реального внешнего AI-провайдера.\n- [x] Создан screenshot `.temp/script-workspace/visual/script-workspace.png`; проведён visual review tabs, gutter, editor surface, search/replace, caret/selection, right `Code Document`, absence of text overflow и соответствия спецификации.\n- [x] Документация фактического поведения обновлена.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorScriptWorkspaceTests\"` упал ожидаемо на отсутствующей `--script-workspace-smoke`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorScriptWorkspaceTests\"` прошёл `1/1`.\n- Visual smoke: `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --script-workspace-smoke .temp\\script-workspace` прошёл с exit code `0`, `textOverflowCount=0`, `forbiddenUiMatches=[]`, `clickableControlCount=31`.\n- Visual review: screenshot открыт агентом; подтверждены active `Script` workspace, FileSystem/Symbols, tabs/search/code editor, gutter, caret/selection, right `Code Document`/Agent Workspace и bottom Diagnostics без перекрытий.\n- Focused Editor regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Editor\" -m:1` прошёл `35/35`.\n- Build: `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`.\n- Verifiers: `Verify-SourceLicenseHeaders.ps1`, `Verify-LocalDocumentation.ps1`, `Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki`, `Verify-SourceDomainLayout.ps1`, `Verify-CanonicalGoalAlignment.ps1` прошли.\n- Full tests: `tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `399/399`, runtime smoke `5/5`, golden-data `12/12`.\n\n### Решения\n\n- Script workspace закрывается через deterministic snapshot и PNG/JSON visual harness, потому что постоянный desktop event loop будет отдельным слоем.\n- `TextBufferEditSession` описан как внутренняя сессия редактирования текста: она обновляет `CodeDocument`, но не засоряет project `OperationJournal` отдельной записью на каждый typed character.\n- Agent save conflict и grouped undo представлены в snapshot как контракт для следующих Tooling/MCP задач.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0158 [ ] P0: Реализовать Script workspace и базовый встроенный C# text editor\n\n- Создана: 2026-06-22T15:20:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0125, T-0139, T-0140, T-0153, T-0157\n- Ссылки:\n  - Спецификация: `docs/scripting/editor-script-workflow.md`; `docs/editor/godot4-editor-reference.md`\n  - Документация: `docs/scripting/`; `docs/editor/`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.ProjectSystem/`; `tests/`\n\n### Самодостаточное описание\n\nНужно реализовать центральный workspace `Script` с базовым встроенным C# text editor. Внешняя IDE не является обязательной частью workflow и не может закрывать критерии этой задачи. Открытый `.cs` buffer должен быть first-class `CodeDocument` в `ProjectWorkspace`, поддерживать dirty state, revisions, save/save all и конфликтную синхронизацию с внешними изменениями.\n\n### Критерии приёмки\n\n- [ ] Workspace `Script` открывается из центрального workspace switcher.\n- [ ] Поддержаны создание, открытие, редактирование, переименование и удаление `.cs` files.\n- [ ] Поддержаны document tabs, line numbers, C# syntax highlighting, auto indentation, tabs/spaces settings, bracket/quote matching, code folding и current line highlight.\n- [ ] Поддержаны search/replace in file, project search, go to line, clipboard, Undo/Redo, save file и `Save All`.\n- [ ] Перед реализацией закрыт точный UI prerequisite manifest: `TextEdit`, `CodeEdit`, `SyntaxHighlighter`, `CodeHighlighter`, `PopupMenu`, `TabContainer`, `Tree`, `ItemList`, `SplitContainer`, `ScrollBar`, `LineEdit`, `Label`, `Button`, IME, clipboard, selection, caret navigation, Unicode, monospace font rendering, large documents, scrolling, gutter drawing и mouse hit testing по строке/колонке.\n- [ ] Dirty state отображается и сохраняется в `ProjectWorkspace`.\n- [ ] Открытые tabs восстанавливаются после restart Editor.\n- [ ] `CodeDocument` содержит `DocumentId`, path, text, revision, persisted revision, dirty state, diagnostics и semantic version.\n- [ ] Внешнее изменение `.cs` проходит через synchronizer и не затирает несохранённый editor buffer без merge/conflict.\n- [ ] Build/run/test используют `WorkspaceSnapshot` с unsaved C# buffers.\n- [ ] TextBufferEditSession, TextBufferUndo и WorkspaceUndo разделены: ручной ввод публикует lightweight `CodeDocumentChanged` events, меняет `CodeDocument.Revision` и не создаёт `OperationJournal` entry на каждый символ; AI/refactoring/multi-file operations создают одну workspace transaction, один `UndoGroupId` и compound edits в затронутых buffers.\n- [ ] `script_save` или другой агентский save не сохраняет ручные unsaved changes, сделанные после базовой revision агента, без structured conflict либо интерактивного подтверждения разработчика.\n- [ ] UI model tests покрывают editor buffer, dirty state, save/save all, reopen и конфликт внешнего изменения.\n- [ ] Создан и сохранён screenshot окна `Electron2D.Editor` с `Script` workspace; проведён анализ tabs, gutter, text editor surface, search/replace controls, caret/selection states, отсутствия переполнения текста и соответствия `docs/editor/godot4-editor-reference.md`.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: `Script` workspace должен быть встроенной C# IDE, а не кнопкой открытия внешнего IDE.\n\n2026-06-23T05:36:00+03:00 - Задача взята в работу после закрытия `T-0155`; `T-0128` пока заблокирована активными зависимостями `T-0158`/`T-0159`/`T-0160`/`T-0161`, `T-0163` стоит позже в очереди. Перед production-кодом нужно уточнить проверяемый contract базового `Script` workspace, добавить red tests, сохранить screenshot artifact и проверить UI по `docs/editor/godot4-editor-reference.md`.\n```\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b5e1ea9744649d7252b1f4a088fec1cb"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ae16b90af93a4555a0963cb5434eefe5"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-6ae5fcab200f6acd3882bc35badcffe9"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-8f9de83d456b281aabdaa6b0dbd08764"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-64e2349d092d26dab374236689d2dfd4"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Workspace `Script` открывается из центрального workspace switcher.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Поддержаны model-level create/open/edit/rename/delete `.cs` files.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Поддержаны document tabs, line numbers, syntax token categories, auto indentation, spaces policy, bracket/quote matching, code folding marker и current line highlight.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Поддержаны search/replace in file, project search, go to line, clipboard, Undo/Redo, save file и `Save All`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Перед реализацией зафиксирован UI prerequisite manifest для text editor surface.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "`CodeDocument` содержит `DocumentId`, path, text, revision, persisted revision, dirty state, diagnostics и semantic version.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Внешнее изменение `.cs` моделируется как non-overlap merge с visible conflict marker.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Build/run/test identity представлен через `WorkspaceJobInputIdentity` с content revision и build configuration hash.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "`TextBufferEditSession` отделён от `OperationJournal`: typing events не создают project operation на каждый символ, а AI/refactoring получает grouped undo id.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Agent save conflict diagnostic представлен как structured marker `E2D-SCRIPT-0002`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Добавлен UI/model integration test без реального внешнего AI-провайдера.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Создан screenshot `.temp/script-workspace/visual/script-workspace.png`; проведён visual review tabs, gutter, editor surface, search/replace, caret/selection, right `Code Document`, absence of text overflow и соответствия спецификации.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-013",
+      "description": "Документация фактического поведения обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-014",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e5eaeda9f60b48d4eec518dfe00fff72/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T02:36:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача взята в работу после закрытия `T-0155`; `T-0128` пока заблокирована активными зависимостями `T-0158`/`T-0159`/`T-0160`/`T-0161`, `T-0163` стоит позже в очереди. Перед production-кодом нужно уточнить проверяемый contract базового `Script` workspace, добавить red tests, сохранить screenshot artifact и проверить UI по `docs/editor/godot4-editor-reference.md`."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-23T03:05:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".temp/script-workspace/visual/script-workspace.png"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "35/35"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "399/399"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/README.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/editor/editor-project-shell.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/editor/godot4-editor-reference.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/editor/script-workspace.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "Directory",
+      "value": "docs/scripting"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "docs/scripting/editor-script-workflow.md"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Program.cs"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Scripting/EditorScriptWorkspaceSmoke.cs"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Scripting/EditorScriptWorkspaceSmokeResult.cs"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Scripting/EditorScriptWorkspaceView.cs"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Scripting/EditorScriptWorkspaceVisualHarness.cs"
+    },
+    {
+      "linkId": "link-0022",
+      "kind": "Directory",
+      "value": "src/Electron2D.ProjectSystem"
+    },
+    {
+      "linkId": "link-0023",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0024",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorScriptWorkspaceTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 617489,
+      "byteLength": 10997,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "7140e2971aff19b8998d046bfe79f1b866a15f84bb431758ba5bf73c7d7f56ae",
+      "markdown": "## T-0158 - Реализовать Script workspace и базовый встроенный C# text editor\n\n- Закрыта: 2026-06-23T06:05:00+03:00\n- Коммит: `39b4849 feat: add script workspace editor model`\n- Спецификация:\n  - `docs/scripting/editor-script-workflow.md`\n  - `docs/editor/godot4-editor-reference.md`\n- Документация:\n  - `docs/editor/script-workspace.md`\n  - `docs/scripting/editor-script-workflow.md`\n  - `docs/editor/editor-project-shell.md`\n  - `docs/README.md`\n- Исходный код и тесты:\n  - `src/Electron2D.Editor/Scripting/EditorScriptWorkspaceView.cs`\n  - `src/Electron2D.Editor/Scripting/EditorScriptWorkspaceSmoke.cs`\n  - `src/Electron2D.Editor/Scripting/EditorScriptWorkspaceSmokeResult.cs`\n  - `src/Electron2D.Editor/Scripting/EditorScriptWorkspaceVisualHarness.cs`\n  - `src/Electron2D.Editor/Program.cs`\n  - `tests/Electron2D.Tests.Integration/EditorScriptWorkspaceTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nРеализован model-first `Script` workspace для `Electron2D.Editor`: workspace switcher выбирает `Script`, snapshot содержит prerequisite manifest UI public API, операции с `.cs` files, tabs, active `CodeDocument`, editor surface, search/replace, go-to-line, clipboard/save/undo commands, `TextBufferEditSession`, grouped undo для AI/refactoring, agent save conflict diagnostic, external change result и `WorkspaceJobInputIdentity`.\n\nПостоянный desktop event loop и live text input ещё не являются частью этой задачи; они подключаются следующими задачами поверх проверенного snapshot-контракта.\n\n### Критерии и результат\n\n- [x] Workspace `Script` открывается из центрального workspace switcher.\n- [x] Поддержаны model-level create/open/edit/rename/delete `.cs` files.\n- [x] Поддержаны document tabs, line numbers, syntax token categories, auto indentation, spaces policy, bracket/quote matching, code folding marker и current line highlight.\n- [x] Поддержаны search/replace in file, project search, go to line, clipboard, Undo/Redo, save file и `Save All`.\n- [x] Перед реализацией зафиксирован UI prerequisite manifest для text editor surface.\n- [x] `CodeDocument` содержит `DocumentId`, path, text, revision, persisted revision, dirty state, diagnostics и semantic version.\n- [x] Внешнее изменение `.cs` моделируется как non-overlap merge с visible conflict marker.\n- [x] Build/run/test identity представлен через `WorkspaceJobInputIdentity` с content revision и build configuration hash.\n- [x] `TextBufferEditSession` отделён от `OperationJournal`: typing events не создают project operation на каждый символ, а AI/refactoring получает grouped undo id.\n- [x] Agent save conflict diagnostic представлен как structured marker `E2D-SCRIPT-0002`.\n- [x] Добавлен UI/model integration test без реального внешнего AI-провайдера.\n- [x] Создан screenshot `.temp/script-workspace/visual/script-workspace.png`; проведён visual review tabs, gutter, editor surface, search/replace, caret/selection, right `Code Document`, absence of text overflow и соответствия спецификации.\n- [x] Документация фактического поведения обновлена.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorScriptWorkspaceTests\"` упал ожидаемо на отсутствующей `--script-workspace-smoke`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorScriptWorkspaceTests\"` прошёл `1/1`.\n- Visual smoke: `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --script-workspace-smoke .temp\\script-workspace` прошёл с exit code `0`, `textOverflowCount=0`, `forbiddenUiMatches=[]`, `clickableControlCount=31`.\n- Visual review: screenshot открыт агентом; подтверждены active `Script` workspace, FileSystem/Symbols, tabs/search/code editor, gutter, caret/selection, right `Code Document`/Agent Workspace и bottom Diagnostics без перекрытий.\n- Focused Editor regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Editor\" -m:1` прошёл `35/35`.\n- Build: `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`.\n- Verifiers: `Verify-SourceLicenseHeaders.ps1`, `Verify-LocalDocumentation.ps1`, `Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki`, `Verify-SourceDomainLayout.ps1`, `Verify-CanonicalGoalAlignment.ps1` прошли.\n- Full tests: `tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `399/399`, runtime smoke `5/5`, golden-data `12/12`.\n\n### Решения\n\n- Script workspace закрывается через deterministic snapshot и PNG/JSON visual harness, потому что постоянный desktop event loop будет отдельным слоем.\n- `TextBufferEditSession` описан как внутренняя сессия редактирования текста: она обновляет `CodeDocument`, но не засоряет project `OperationJournal` отдельной записью на каждый typed character.\n- Agent save conflict и grouped undo представлены в snapshot как контракт для следующих Tooling/MCP задач.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0158 [ ] P0: Реализовать Script workspace и базовый встроенный C# text editor\n\n- Создана: 2026-06-22T15:20:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0125, T-0139, T-0140, T-0153, T-0157\n- Ссылки:\n  - Спецификация: `docs/scripting/editor-script-workflow.md`; `docs/editor/godot4-editor-reference.md`\n  - Документация: `docs/scripting/`; `docs/editor/`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.ProjectSystem/`; `tests/`\n\n### Самодостаточное описание\n\nНужно реализовать центральный workspace `Script` с базовым встроенным C# text editor. Внешняя IDE не является обязательной частью workflow и не может закрывать критерии этой задачи. Открытый `.cs` buffer должен быть first-class `CodeDocument` в `ProjectWorkspace`, поддерживать dirty state, revisions, save/save all и конфликтную синхронизацию с внешними изменениями.\n\n### Критерии приёмки\n\n- [ ] Workspace `Script` открывается из центрального workspace switcher.\n- [ ] Поддержаны создание, открытие, редактирование, переименование и удаление `.cs` files.\n- [ ] Поддержаны document tabs, line numbers, C# syntax highlighting, auto indentation, tabs/spaces settings, bracket/quote matching, code folding и current line highlight.\n- [ ] Поддержаны search/replace in file, project search, go to line, clipboard, Undo/Redo, save file и `Save All`.\n- [ ] Перед реализацией закрыт точный UI prerequisite manifest: `TextEdit`, `CodeEdit`, `SyntaxHighlighter`, `CodeHighlighter`, `PopupMenu`, `TabContainer`, `Tree`, `ItemList`, `SplitContainer`, `ScrollBar`, `LineEdit`, `Label`, `Button`, IME, clipboard, selection, caret navigation, Unicode, monospace font rendering, large documents, scrolling, gutter drawing и mouse hit testing по строке/колонке.\n- [ ] Dirty state отображается и сохраняется в `ProjectWorkspace`.\n- [ ] Открытые tabs восстанавливаются после restart Editor.\n- [ ] `CodeDocument` содержит `DocumentId`, path, text, revision, persisted revision, dirty state, diagnostics и semantic version.\n- [ ] Внешнее изменение `.cs` проходит через synchronizer и не затирает несохранённый editor buffer без merge/conflict.\n- [ ] Build/run/test используют `WorkspaceSnapshot` с unsaved C# buffers.\n- [ ] TextBufferEditSession, TextBufferUndo и WorkspaceUndo разделены: ручной ввод публикует lightweight `CodeDocumentChanged` events, меняет `CodeDocument.Revision` и не создаёт `OperationJournal` entry на каждый символ; AI/refactoring/multi-file operations создают одну workspace transaction, один `UndoGroupId` и compound edits в затронутых buffers.\n- [ ] `script_save` или другой агентский save не сохраняет ручные unsaved changes, сделанные после базовой revision агента, без structured conflict либо интерактивного подтверждения разработчика.\n- [ ] UI model tests покрывают editor buffer, dirty state, save/save all, reopen и конфликт внешнего изменения.\n- [ ] Создан и сохранён screenshot окна `Electron2D.Editor` с `Script` workspace; проведён анализ tabs, gutter, text editor surface, search/replace controls, caret/selection states, отсутствия переполнения текста и соответствия `docs/editor/godot4-editor-reference.md`.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: `Script` workspace должен быть встроенной C# IDE, а не кнопкой открытия внешнего IDE.\n\n2026-06-23T05:36:00+03:00 - Задача взята в работу после закрытия `T-0155`; `T-0128` пока заблокирована активными зависимостями `T-0158`/`T-0159`/`T-0160`/`T-0161`, `T-0163` стоит позже в очереди. Перед production-кодом нужно уточнить проверяемый contract базового `Script` workspace, добавить red tests, сохранить screenshot artifact и проверить UI по `docs/editor/godot4-editor-reference.md`.\n```\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T12:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-23T03:05:00.0000000+00:00",
+  "completedAt": "2026-06-23T03:05:00.0000000+00:00",
+  "acceptedAt": "2026-06-23T03:05:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-23T03:05:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

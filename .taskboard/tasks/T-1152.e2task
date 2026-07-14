@@ -1,0 +1,645 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-86150b44f2674e95ad9d0c82143cd6cc",
+  "revision": 12,
+  "taskId": "T-1152",
+  "legacyAliases": [],
+  "title": "Добавить значок Task Board в Activity Bar VS Code",
+  "description": "В расширении VS Code Task Board нужен отдельный монохромный значок в Activity Bar. Manifest регистрирует контейнер electron2d-taskboard и launcher view electron2d.taskBoardLauncher; когда представление становится видимым, оно вызывает существующую команду electron2d.openTaskBoard. Команда выбирает доверенную workspace folder с канонической .taskboard/board.e2tasks, создаёт editor-area панель при первом обращении и раскрывает уже открытую панель при повторном, не создавая второй вкладки и не меняя taskboard напрямую. SVG входит в VSIX как безопасный статический ресурс. Задача относится только к VS Code contribution, orchestration открытия, упаковке, проверкам и соответствующему доменному документу.",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0009",
+    "tag-0017",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "activity-bar-contribution",
+      "description": "Manifest регистрирует отдельный контейнер Activity Bar electron2d-taskboard, launcher view electron2d.taskBoardLauncher и событие активации этого представления.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/package.json"
+        }
+      ]
+    },
+    {
+      "criterionId": "launcher-behavior",
+      "description": "Показ launcher view вызывает штатную команду electron2d.openTaskBoard и открывает выбранную каноническую доску .taskboard/board.e2tasks только в доверенной рабочей области.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/extension.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "single-panel",
+      "description": "Первое обращение создаёт editor-area Task Board, а повторное раскрывает существующий WebviewPanel в активной колонке без второй вкладки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/suite/index.ts"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/extension.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "safe-icon-package",
+      "description": "Монохромный media/taskboard.svg имеет безопасную SVG-разметку без script, foreignObject и внешних ресурсов, объявлен в manifest и включён в устанавливаемый VSIX.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/media/taskboard.svg"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/extension-core.test.ts"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix"
+        }
+      ]
+    },
+    {
+      "criterionId": "verification",
+      "description": "Unit regression, typecheck, Extension Host и VSIX packaging проверяют Activity Bar contribution, повторное открытие без дубликата и наличие значка; доменный документ описывает фактическое поведение.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/extension-core.test.ts"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/suite/index.ts"
+        },
+        {
+          "kind": "File",
+          "path": "docs/editor/project-tasks-board.md"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-3961fdd17e564c6c8eadf7639223dbcd",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T09:31:57.6303621+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Ready."
+      }
+    },
+    {
+      "activityEntryId": "activity-638f35bbdc434c24835ee93670ade28e",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T09:31:59.0864431+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to InProgress."
+      }
+    },
+    {
+      "activityEntryId": "activity-203402ca5cc8473ba28587774c6d34a8",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T09:37:44.4967855+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Review."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    },
+    {
+      "activityEntryId": "activity-73fa7ab796fa40cb94b83c8dc119784c",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T21:04:18.9660307+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/description",
+            "value": "В расширении VS Code Task Board нужен отдельный монохромный значок в Activity Bar. Manifest регистрирует контейнер electron2d-taskboard и launcher view electron2d.taskBoardLauncher; когда представление становится видимым, оно вызывает существующую команду electron2d.openTaskBoard. Команда выбирает доверенную workspace folder с канонической .taskboard/board.e2tasks, создаёт editor-area панель при первом обращении и раскрывает уже открытую панель при повторном, не создавая второй вкладки и не меняя taskboard напрямую. SVG входит в VSIX как безопасный статический ресурс. Задача относится только к VS Code contribution, orchestration открытия, упаковке, проверкам и соответствующему доменному документу."
+          },
+          {
+            "op": "replace",
+            "path": "/acceptanceCriteria",
+            "value": [
+              {
+                "criterionId": "activity-bar-contribution",
+                "description": "Manifest регистрирует отдельный контейнер Activity Bar electron2d-taskboard, launcher view electron2d.taskBoardLauncher и событие активации этого представления.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/package.json"
+                  }
+                ]
+              },
+              {
+                "criterionId": "launcher-behavior",
+                "description": "Показ launcher view вызывает штатную команду electron2d.openTaskBoard и открывает выбранную каноническую доску .taskboard/board.e2tasks только в доверенной рабочей области.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/src/extension.ts"
+                  }
+                ]
+              },
+              {
+                "criterionId": "single-panel",
+                "description": "Первое обращение создаёт editor-area Task Board, а повторное раскрывает существующий WebviewPanel в активной колонке без второй вкладки.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/test/suite/index.ts"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/src/extension.ts"
+                  }
+                ]
+              },
+              {
+                "criterionId": "safe-icon-package",
+                "description": "Монохромный media/taskboard.svg имеет безопасную SVG-разметку без script, foreignObject и внешних ресурсов, объявлен в manifest и включён в устанавливаемый VSIX.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/media/taskboard.svg"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/test/unit/extension-core.test.ts"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix"
+                  }
+                ]
+              },
+              {
+                "criterionId": "verification",
+                "description": "Unit regression, typecheck, Extension Host и VSIX packaging проверяют Activity Bar contribution, повторное открытие без дубликата и наличие значка; доменный документ описывает фактическое поведение.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/test/unit/extension-core.test.ts"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/test/suite/index.ts"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "docs/editor/project-tasks-board.md"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "replace",
+            "path": "/links",
+            "value": [
+              {
+                "linkId": "extension-manifest",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/package.json"
+              },
+              {
+                "linkId": "activity-icon",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/media/taskboard.svg"
+              },
+              {
+                "linkId": "extension-host",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/src/extension.ts"
+              },
+              {
+                "linkId": "unit-tests",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/test/unit/extension-core.test.ts"
+              },
+              {
+                "linkId": "extension-tests",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/test/suite/index.ts"
+              },
+              {
+                "linkId": "editor-contract",
+                "kind": "File",
+                "value": "docs/editor/project-tasks-board.md"
+              },
+              {
+                "linkId": "packaged-vsix",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix"
+              }
+            ]
+          },
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "value": {
+              "taskType": "Интеграция VS Code Task Board с Activity Bar",
+              "readyToStart": [
+                "Расширение использует каноническую TaskBoard v3 в .taskboard.",
+                "Команда electron2d.openTaskBoard уже является единственной точкой открытия editor-area панели.",
+                "Изменение Activity Bar не создаёт отдельный writer или второй источник состояния."
+              ],
+              "stopConditions": [
+                "Для launcher потребуется прямое редактирование .taskboard в обход e2d tasks.",
+                "Повторное открытие создаёт вторую editor-area панель.",
+                "Значок требует исполняемой SVG-разметки или внешнего ресурса.",
+                "Расширение должно работать в недоверенной рабочей области."
+              ],
+              "allowedChanges": [
+                "Manifest и NLS-ресурсы расширения VS Code Task Board.",
+                "Extension Host orchestration открытия и повторного раскрытия панели.",
+                "Монохромный SVG-значок, unit/Extension Host tests, VSIX inventory и доменный документ."
+              ],
+              "forbiddenChanges": [
+                "Изменение TaskBoard v3 schema, lifecycle или canonical storage.",
+                "Прямое изменение .e2task или board.e2tasks из расширения.",
+                "Создание отдельной доски или панели для Activity Bar launcher.",
+                "Несвязанные изменения webview, карточек и Task Details."
+              ],
+              "requiredOutputs": [
+                "Activity Bar container и launcher view в manifest.",
+                "Безопасный упакованный media/taskboard.svg.",
+                "Открытие или раскрытие единственной editor-area панели через существующую команду.",
+                "Автоматические проверки и синхронизированный доменный документ."
+              ],
+              "commands": [
+                {
+                  "commandId": "unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ],
+                  "confirmation": "PolicyDecides"
+                },
+                {
+                  "commandId": "typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ],
+                  "confirmation": "PolicyDecides"
+                },
+                {
+                  "commandId": "extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ],
+                  "confirmation": "PolicyDecides"
+                },
+                {
+                  "commandId": "package-vsix",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 600,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ],
+                  "confirmation": "PolicyDecides"
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "acfd1f73cc6cfaffa3a2abfec9dd5cbbe9ff2c9762b3885bdee2119573c90d3c",
+        "afterTaskCoreDigest": "f67cffb5cfb82b27edffb07aed482ae3f73791ca8b82074483b26ab2d1210ff7"
+      }
+    },
+    {
+      "activityEntryId": "activity-3ae67be7f9b3404894709938f1a0beac",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-13T21:06:07.6096305+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Задача принята пользователем в VS Code Task Board."
+      }
+    },
+    {
+      "activityEntryId": "activity-134e673b17984cb9a4ab931a1c233e70",
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-13T21:06:08.7358243+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "╨Ч╨░╨┤╨░╤З╨░ ╨┐╤А╨╕╨╜╤П╤В╨░ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╨╡╨╝ ╨▓ VS Code Task Board.",
+        "authorityActorId": "vscode:eduar",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "extension-manifest",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/package.json"
+    },
+    {
+      "linkId": "activity-icon",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/media/taskboard.svg"
+    },
+    {
+      "linkId": "extension-host",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/extension.ts"
+    },
+    {
+      "linkId": "unit-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/extension-core.test.ts"
+    },
+    {
+      "linkId": "extension-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/suite/index.ts"
+    },
+    {
+      "linkId": "editor-contract",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "packaged-vsix",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix"
+    }
+  ],
+  "executionContract": {
+    "taskType": "Интеграция VS Code Task Board с Activity Bar",
+    "readyToStart": [
+      "Расширение использует каноническую TaskBoard v3 в .taskboard.",
+      "Команда electron2d.openTaskBoard уже является единственной точкой открытия editor-area панели.",
+      "Изменение Activity Bar не создаёт отдельный writer или второй источник состояния."
+    ],
+    "stopConditions": [
+      "Для launcher потребуется прямое редактирование .taskboard в обход e2d tasks.",
+      "Повторное открытие создаёт вторую editor-area панель.",
+      "Значок требует исполняемой SVG-разметки или внешнего ресурса.",
+      "Расширение должно работать в недоверенной рабочей области."
+    ],
+    "allowedChanges": [
+      "Manifest и NLS-ресурсы расширения VS Code Task Board.",
+      "Extension Host orchestration открытия и повторного раскрытия панели.",
+      "Монохромный SVG-значок, unit/Extension Host tests, VSIX inventory и доменный документ."
+    ],
+    "forbiddenChanges": [
+      "Изменение TaskBoard v3 schema, lifecycle или canonical storage.",
+      "Прямое изменение .e2task или board.e2tasks из расширения.",
+      "Создание отдельной доски или панели для Activity Bar launcher.",
+      "Несвязанные изменения webview, карточек и Task Details."
+    ],
+    "requiredOutputs": [
+      "Activity Bar container и launcher view в manifest.",
+      "Безопасный упакованный media/taskboard.svg.",
+      "Открытие или раскрытие единственной editor-area панели через существующую команду.",
+      "Автоматические проверки и синхронизированный доменный документ."
+    ],
+    "commands": [
+      {
+        "commandId": "unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "extension-host",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:extension"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 900,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "package-vsix",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-11T09:31:45.5920560+00:00",
+  "updatedAt": "2026-07-13T21:06:08.7358243+00:00",
+  "submittedAt": "2026-07-13T21:06:07.6096305+00:00",
+  "completedAt": "2026-07-13T21:06:08.7358243+00:00",
+  "acceptedAt": "2026-07-13T21:06:08.7358243+00:00",
+  "acceptedBy": "vscode:eduar",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "activity-8dea1529be8648d0bb860d8c517f9c3d",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T09:37:43.4014694+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Добавлены Activity Bar container electron2d-taskboard, launcher view electron2d.taskBoardLauncher и media/taskboard.svg. RED regression упал на отсутствующем onView; GREEN unit 22/22 и typecheck. Extension Host Insiders через workbench.view.extension.electron2d-taskboard открыл доску и подтвердил одну webview tab после повторного вызова, exit 0. VSIX: 9 файлов, 15.96 KB, icon включён; пакет успешно установлен в stable VS Code 0.1.0. Docs update/check/verify и licenses GREEN. Pixel-level визуальная проверка недоступна: Windows control bootstrap снова завершился os error 3."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

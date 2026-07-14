@@ -85,35 +85,48 @@ public sealed class PlatformerProjectTests
                 .OrderBy(target => target, StringComparer.Ordinal)
                 .ToArray());
 
-        var taskBoard = ReadJson(Path.Combine(projectRoot, ".electron2d", "tasks", "board.e2tasks"));
+        var taskBoard = ReadJson(Path.Combine(projectRoot, ".taskboard", "board.e2tasks"));
         Assert.Equal("Electron2D.TaskBoard", taskBoard.RootElement.GetProperty("format").GetString());
-        Assert.Equal(1, taskBoard.RootElement.GetProperty("version").GetInt32());
-        var taskBoardColumns = taskBoard.RootElement.GetProperty("columns")
-            .EnumerateArray()
-            .ToDictionary(
-                column => column.GetProperty("status").GetString()!,
-                column => ReadStringArray(column.GetProperty("taskIds")),
-                StringComparer.Ordinal);
-        Assert.Equal(["T-0222"], taskBoardColumns["Ready"]);
-        Assert.Equal(["T-0223", "T-0225", "T-0221", "T-0166", "platformer-acceptance"], taskBoardColumns["Blocked"]);
-        Assert.Empty(taskBoardColumns["AwaitingAcceptance"]);
+        Assert.Equal(3, taskBoard.RootElement.GetProperty("version").GetInt32());
+        var taskRoots = ExpectedProjectTasks.Keys.ToDictionary(
+            taskId => taskId,
+            taskId => JsonDocument.Parse(File.ReadAllText(Path.Combine(projectRoot, ".taskboard", "tasks", $"{taskId}.e2task"))).RootElement.Clone(),
+            StringComparer.Ordinal);
+        var taskIdByUid = taskRoots.Values.ToDictionary(
+            task => task.GetProperty("taskUid").GetString()!,
+            task => task.GetProperty("taskId").GetString()!,
+            StringComparer.Ordinal);
+        Assert.Equal(
+            ["T-0222", "T-0223", "T-0225", "T-0221", "T-0166", "platformer-acceptance"],
+            taskBoard.RootElement.GetProperty("placements").EnumerateArray()
+                .Select(placement => taskIdByUid[placement.GetProperty("taskUid").GetString()!]).ToArray());
 
         foreach (var (taskId, expectedTask) in ExpectedProjectTasks)
         {
-            using var taskDocument = ReadJson(Path.Combine(projectRoot, ".electron2d", "tasks", $"{taskId}.e2task"));
+            using var taskDocument = ReadJson(Path.Combine(projectRoot, ".taskboard", "tasks", $"{taskId}.e2task"));
             var taskRoot = taskDocument.RootElement;
             Assert.Equal("Electron2D.TaskFile", taskRoot.GetProperty("format").GetString());
-            Assert.Equal(1, taskRoot.GetProperty("version").GetInt32());
+            Assert.Equal(3, taskRoot.GetProperty("version").GetInt32());
             Assert.Equal(taskId, taskRoot.GetProperty("taskId").GetString());
             Assert.Equal(expectedTask.Status, taskRoot.GetProperty("status").GetString());
             Assert.Equal(expectedTask.Title, taskRoot.GetProperty("title").GetString());
             Assert.Equal(expectedTask.Priority, taskRoot.GetProperty("priority").GetString());
-            Assert.Equal(expectedTask.Dependencies, ReadStringArray(taskRoot.GetProperty("dependencies")));
+            Assert.Equal(
+                expectedTask.Dependencies,
+                taskRoot.GetProperty("relations").EnumerateArray()
+                    .Where(relation => relation.GetProperty("kind").GetString() == "DependsOn")
+                    .Select(relation => taskIdByUid[relation.GetProperty("targetTaskUid").GetString()!])
+                    .ToArray());
             Assert.False(
                 string.IsNullOrWhiteSpace(taskRoot.GetProperty("description").GetString()),
                 $"Task {taskId} must keep a description.");
             Assert.True(taskRoot.GetProperty("acceptanceCriteria").EnumerateArray().Any(), $"Task {taskId} must keep acceptance criteria.");
-            var subtasks = ReadStringArray(taskRoot.GetProperty("subtasks"));
+            var taskUid = taskRoot.GetProperty("taskUid").GetString();
+            var subtasks = taskRoots.Values
+                .Where(candidate => candidate.GetProperty("parentTaskUid").ValueKind == JsonValueKind.String &&
+                    candidate.GetProperty("parentTaskUid").GetString() == taskUid)
+                .Select(candidate => candidate.GetProperty("taskId").GetString()!)
+                .ToArray();
             foreach (var expectedSubtask in expectedTask.RequiredSubtasks)
             {
                 Assert.Contains(expectedSubtask, subtasks);
@@ -121,7 +134,7 @@ public sealed class PlatformerProjectTests
 
             var activityPayloads = taskRoot.GetProperty("activity")
                 .EnumerateArray()
-                .Select(entry => entry.GetProperty("payload").GetString() ?? string.Empty)
+                .Select(entry => ReadActivityText(entry.GetProperty("payload")))
                 .ToArray();
             foreach (var expectedActivity in expectedTask.RequiredActivityPayloads)
             {
@@ -129,10 +142,13 @@ public sealed class PlatformerProjectTests
             }
         }
 
-        using var acceptanceTask = ReadJson(Path.Combine(projectRoot, ".electron2d", "tasks", "platformer-acceptance.e2task"));
-        Assert.Equal("BlockedByDependencies", acceptanceTask.RootElement.GetProperty("readiness").GetString());
-        Assert.Equal("ChangesRequested", acceptanceTask.RootElement.GetProperty("acceptanceState").GetString());
-        Assert.Equal(["T-0166"], ReadStringArray(acceptanceTask.RootElement.GetProperty("dependencies")));
+        using var acceptanceTask = ReadJson(Path.Combine(projectRoot, ".taskboard", "tasks", "platformer-acceptance.e2task"));
+        Assert.Equal("NotSubmitted", acceptanceTask.RootElement.GetProperty("acceptanceState").GetString());
+        Assert.Equal(
+            ["T-0166"],
+            acceptanceTask.RootElement.GetProperty("relations").EnumerateArray()
+                .Where(relation => relation.GetProperty("kind").GetString() == "DependsOn")
+                .Select(relation => taskIdByUid[relation.GetProperty("targetTaskUid").GetString()!]).ToArray());
 
         Assert.DoesNotContain(
             Directory.EnumerateFiles(projectRoot, "*", SearchOption.AllDirectories),
@@ -299,9 +315,9 @@ public sealed class PlatformerProjectTests
         Assert.Contains("Platformer.csproj", verifier, StringComparison.Ordinal);
         Assert.DoesNotContain("Electron2D.Platformer.csproj", verifier, StringComparison.Ordinal);
         Assert.Contains("verify platformer", projectDocument, StringComparison.Ordinal);
-        Assert.Contains(".electron2d/tasks", projectDocument, StringComparison.Ordinal);
+        Assert.Contains(".taskboard", projectDocument, StringComparison.Ordinal);
         Assert.Contains("T-0222.e2task", projectDocument, StringComparison.Ordinal);
-        Assert.Contains("ChangesRequested", File.ReadAllText(Path.Combine(root, "examples", "platformer", ".electron2d", "tasks", "platformer-acceptance.e2task")), StringComparison.Ordinal);
+        Assert.Contains("NotSubmitted", File.ReadAllText(Path.Combine(root, "examples", "platformer", ".taskboard", "tasks", "platformer-acceptance.e2task")), StringComparison.Ordinal);
     }
 
     [Fact]
@@ -502,7 +518,7 @@ public sealed class PlatformerProjectTests
                 .ToArray();
             Assert.Contains("Platformer.e2d", entries);
             Assert.DoesNotContain("project.e2d.json", entries);
-            Assert.DoesNotContain(entries, entry => entry.StartsWith(".electron2d/tasks/", StringComparison.Ordinal));
+            Assert.DoesNotContain(entries, entry => entry.StartsWith(".taskboard/", StringComparison.Ordinal));
         }
 
         using (var scenePack = ZipFile.OpenRead(scenePackPath))
@@ -578,13 +594,13 @@ public sealed class PlatformerProjectTests
         "global.json",
         "scenes/main.scene.json",
         "resources/platformer.manifest.json",
-        ".electron2d/tasks/board.e2tasks",
-        ".electron2d/tasks/platformer-acceptance.e2task",
-        ".electron2d/tasks/T-0166.e2task",
-        ".electron2d/tasks/T-0221.e2task",
-        ".electron2d/tasks/T-0222.e2task",
-        ".electron2d/tasks/T-0223.e2task",
-        ".electron2d/tasks/T-0225.e2task"
+        ".taskboard/board.e2tasks",
+        ".taskboard/tasks/platformer-acceptance.e2task",
+        ".taskboard/tasks/T-0166.e2task",
+        ".taskboard/tasks/T-0221.e2task",
+        ".taskboard/tasks/T-0222.e2task",
+        ".taskboard/tasks/T-0223.e2task",
+        ".taskboard/tasks/T-0225.e2task"
     ];
 
     private static readonly Dictionary<string, ExpectedProjectTask> ExpectedProjectTasks = new(StringComparer.Ordinal)
@@ -594,27 +610,27 @@ public sealed class PlatformerProjectTests
             "Ready",
             "P0",
             [],
-            ["Открыто: Пересобрать scene data и gameplay script без ручных verifier shortcuts."],
+            [],
             [
                 "2026-06-24T19:20:00+03:00 - Создано по пользовательскому audit rejection.",
                 "Задача перенесена из корневого TASKS.md"
             ]),
         ["T-0223"] = new ExpectedProjectTask(
             "Переписать Platformer acceptance без самопроверки",
-            "Blocked",
+            "Ready",
             "P0",
             ["T-0222"],
-            ["Открыто: Переписать play-script/verifier path на наблюдение gameplay events."],
+            [],
             [
                 "2026-06-24T19:20:00+03:00 - Создано по пользовательскому audit rejection.",
                 "Задача перенесена из корневого TASKS.md"
             ]),
         ["T-0225"] = new ExpectedProjectTask(
             "Вынести Platformer visual gate в отдельные screenshots и runtime probes",
-            "Blocked",
+            "Ready",
             "P0",
             ["T-0222", "T-0223"],
-            ["Открыто: Реализовать сбор probes и pixel analysis поверх probes."],
+            [],
             [
                 "2026-06-24T19:45:00+03:00 - Создано по замечанию пользователя: screenshot gate нужно отделить от `T-0223`",
                 "Задача перенесена из корневого TASKS.md"
@@ -623,28 +639,28 @@ public sealed class PlatformerProjectTests
             "Восстановить performance gate для настоящего Platformer и RuntimeHost",
             "Blocked",
             "P0",
-            ["T-0215", "T-0223", "T-0225"],
-            ["Открыто: Подключить `Platformer` scenario к generic runner/schema из `T-0215`."],
+            ["T-0223", "T-0225"],
+            [],
             [
                 "2026-06-24T19:45:00+03:00 - Ownership уточнён по аудиту пользователя",
                 "Задача перенесена из корневого TASKS.md"
             ]),
         ["T-0166"] = new ExpectedProjectTask(
             "Ужесточить Platformer после аудита Godot-переносимости",
-            "Blocked",
+            "Ready",
             "P0",
             ["T-0221", "T-0222", "T-0223", "T-0225"],
-            ["Открыто: Выполнить gameplay, acceptance, visual и performance дочерние задачи."],
+            [],
             [
                 "2026-06-23T21:02:00+03:00 - Задача создана по текущему аудиту пользователя.",
                 "Задача перенесена из корневого TASKS.md"
             ]),
         ["platformer-acceptance"] = new ExpectedProjectTask(
-            "Verify the 0.1-preview Platformer",
-            "Blocked",
+            "Verify the 0.1.0 Preview Platformer",
+            "Ready",
             "P0",
             ["T-0166"],
-            [],
+            ["T-0166"],
             [
                 "Initial acceptance task created with the Platformer project files.",
                 "Предыдущая заявка на приёмку Platformer заблокирована по T-0234"
@@ -670,6 +686,27 @@ public sealed class PlatformerProjectTests
         return element.EnumerateArray()
             .Select(item => item.GetString()!)
             .ToArray();
+    }
+
+    private static string ReadActivityText(JsonElement payload)
+    {
+        if (payload.ValueKind == JsonValueKind.String)
+        {
+            return payload.GetString() ?? string.Empty;
+        }
+
+        if (payload.ValueKind == JsonValueKind.Object)
+        {
+            foreach (var propertyName in new[] { "text", "markdown", "summary", "rationale", "reason" })
+            {
+                if (payload.TryGetProperty(propertyName, out var value) && value.ValueKind == JsonValueKind.String)
+                {
+                    return value.GetString() ?? string.Empty;
+                }
+            }
+        }
+
+        return payload.GetRawText();
     }
 
     private static IEnumerable<(string Type, string Name, JsonElement Element)> FlattenSceneNodes(JsonElement node)

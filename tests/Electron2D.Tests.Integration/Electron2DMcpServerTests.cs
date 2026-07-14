@@ -58,6 +58,49 @@ public sealed class Electron2DMcpServerTests
     }
 
     [Fact]
+    public void McpSessionTreatsTaskBoardV3AsReadOnlyAndKeepsCliAsSingleWriter()
+    {
+        var projectRoot = CreateProjectRoot("v3-read-only", SceneText(speed: 10), TaskText("task-alpha", ProjectTaskStatus.InProgress));
+        Directory.Delete(Path.Combine(projectRoot, ".electron2d", "tasks"), recursive: true);
+        Directory.CreateDirectory(Path.Combine(projectRoot, ".taskboard", "tasks"));
+        Directory.CreateDirectory(Path.Combine(projectRoot, ".taskboard", "completed"));
+        Directory.CreateDirectory(Path.Combine(projectRoot, ".taskboard", "attachments"));
+        File.WriteAllText(Path.Combine(projectRoot, ".taskboard", "tasks", "task-alpha.e2task"), TaskText("task-alpha", ProjectTaskStatus.InProgress));
+        File.WriteAllText(
+            Path.Combine(projectRoot, ".taskboard", "board.e2tasks"),
+            ProjectTaskSerializer.SerializeBoard(new TaskBoard(
+                "main",
+                revision: 1,
+                groups: [],
+                placements: [new TaskBoardPlacement("task-alpha", groupId: null, "00001000")])));
+        var plan = TaskBoardV3Migration.BuildPlan(projectRoot, FixedInstant);
+        var applied = new TaskBoardDiskStore(projectRoot).ApplyV3Migration(
+            plan.ReportSha256,
+            plan.SourceBoardRevision,
+            FixedInstant,
+            dryRun: false);
+        Assert.False(applied.DryRun);
+
+        using var session = McpServerSession.Open(projectRoot, registry: null, FixedInstant);
+        var tools = session.ListTools().Select(tool => tool.Name).ToArray();
+        Assert.Contains("task_list", tools);
+        Assert.Contains("task_get", tools);
+        Assert.DoesNotContain("task_append_activity", tools);
+        Assert.DoesNotContain("task_submit_for_acceptance", tools);
+
+        var tasks = session.CallTool(new McpToolRequest("task_list", new Dictionary<string, string>()));
+        Assert.True(tasks.Succeeded);
+        var rejected = session.CallTool(new McpToolRequest("task_append_activity", new Dictionary<string, string>
+        {
+            ["taskId"] = "task-alpha",
+            ["expectedRevision"] = "1",
+            ["payload"] = "Не должно записываться через MCP."
+        }));
+        Assert.False(rejected.Succeeded);
+        Assert.Contains(rejected.Diagnostics, diagnostic => diagnostic.Message.Contains("e2d tasks", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void WorkspaceResourcesReadActiveEditorDirtyStateAndMutationsRouteToActiveWorkspace()
     {
         var projectRoot = CreateProjectRoot("active-editor", SceneText(speed: 10), TaskText("task-alpha", ProjectTaskStatus.InProgress));
@@ -206,7 +249,7 @@ public sealed class Electron2DMcpServerTests
             EditorSessionEndpoint.NamedPipe(@"\\.\pipe\electron2d-mcp-task"),
             FixedInstant);
         editor.Workspace.CommandBus.OpenTextDocument(
-            ".electron2d/tasks/task-alpha.e2task",
+            ".taskboard/tasks/task-alpha.e2task",
             TaskText("task-alpha", ProjectTaskStatus.Review),
             1,
             ProjectWorkspaceOperationContext.ForTest("open-mcp-task"));
@@ -226,7 +269,8 @@ public sealed class Electron2DMcpServerTests
         Assert.True(submitted.Succeeded);
         Assert.False(accepted.Succeeded);
         Assert.Contains(accepted.Diagnostics, diagnostic => diagnostic.Code == "E2D-TASK-0002");
-        Assert.Equal(ProjectTaskStatus.AwaitingAcceptance, editor.Workspace.Tasks.GetTask("task-alpha").Status);
+        Assert.Equal(ProjectTaskStatus.Review, editor.Workspace.Tasks.GetTask("task-alpha").Status);
+        Assert.Equal(ProjectTaskAcceptanceState.Submitted, editor.Workspace.Tasks.GetTask("task-alpha").AcceptanceState);
     }
 
     [Fact]

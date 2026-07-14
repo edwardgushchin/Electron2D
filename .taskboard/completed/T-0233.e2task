@@ -1,0 +1,322 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-2deb50c6aedb0d88818281ece43ebf03",
+  "revision": 2,
+  "taskId": "T-0233",
+  "legacyAliases": [],
+  "title": "Разграничить роли `AGENTS.md`, `AUDIT-REQUEST.md` и `goal-task-loop.md`",
+  "description": "## T-0233 [x] P0: Разграничить роли `AGENTS.md`, `AUDIT-REQUEST.md` и `goal-task-loop.md`\n\n- Создана: 2026-06-29T17:08:00+03:00\n- Завершена: 2026-06-29T20:58:58+03:00\n- Принята внешним аудитом: 2026-06-29T20:58:58+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний audit r03 принял разграничение ролей без blocker-ов.\n- Приоритет: P0\n- Зависимости: T-0228, T-0229, T-0230\n- Ссылки:\n  - Агентские правила: `AGENTS.md`\n  - Запрос внешнего аудита: `docs/release-management/AUDIT-REQUEST.md`\n  - Локальный prompt оркестратора: `.codex/prompts/goal-task-loop.md`\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Внешние аудиты: `docs/verdicts/release-management/t-0233-audit-r01.md`; `docs/verdicts/release-management/t-0233-audit-r03.md`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n\n### Самодостаточное описание\n\n`AGENTS.md`, `docs/release-management/AUDIT-REQUEST.md` и `.codex/prompts/goal-task-loop.md` получили отдельные роли. `AGENTS.md` задаёт правила работы агента внутри репозитория и ссылается на `docs/release-management/audit-package.md` как точный источник механики внешнего аудита. `AUDIT-REQUEST.md` остаётся только текстом для внешнего аудитора и не описывает локальную доставку, вкладки, cookies, контрольные суммы или ручное скачивание отчёта. `goal-task-loop.md` стал коротким prompt-ом оркестратора: предварительное чтение, работа исполнителя, проверки, упаковка, проверка ZIP, `audit submit`, обработка verdict-а, исправления и завершение.\n\nPrompt больше не предписывает открывать, переиспользовать или закрывать вкладки ChatGPT, читать страницу вручную, копировать ответ, обновлять страницу или писать аудитору служебный текст. Единственный штатный путь внешней приёмки остаётся `audit package`, `audit package verify`, затем `audit submit --browser-backend codex-chrome`; задача считается принятой только после сохранённого полного внешнего отчёта `VERDICT: ACCEPT`.\n\n### Критерии и результат\n\n- [x] `AGENTS.md` описывает только правила агента и ссылается на `docs/release-management/audit-package.md`.\n- [x] `AGENTS.md` не содержит ручного браузерного сценария, который дублирует или обходит `audit submit`.\n- [x] `AUDIT-REQUEST.md` остаётся запросом внешнему аудитору и не содержит локальные операторские инструкции.\n- [x] `goal-task-loop.md` описывает orchestration loop: preflight, worker, checks, package, verify, submit, verdict, fix loop, accept and commit.\n- [x] `goal-task-loop.md` делегирует детали отправки и чтения отчёта команде `audit submit` через ссылку на доменный контракт.\n- [x] `goal-task-loop.md` и `AGENTS.md` фиксируют, что принятие задачи требует внешнего `VERDICT: ACCEPT`, сохранённого командой `audit submit`.\n- [x] `goal-task-loop.md` не требует закрывать или переиспользовать чужие вкладки ChatGPT.\n- [x] `goal-task-loop.md` не запрещает вести `TASKS.md` и дневник по правилам `AGENTS.md`.\n- [x] Команды в `goal-task-loop.md` используют переносимые пути с `/`.\n- [x] `goal-task-loop.md` содержит 3102 символа и не превышает лимит 4000 символов.\n- [x] `docs/release-management/audit-package.md` остаётся единственным подробным источником контракта C#-инструмента отправки.\n- [x] После правок выполнены `git diff --check`, focused tests и проверка документации.\n\n### Проверки\n\n- [x] Красный прогон `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~AuditWorkflowDocumentsSeparateAgentRequestAndGoalPromptResponsibilities\"` сначала упал на текущем prompt-е, затем прошёл после исправления.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~AuditWorkflowDocumentsSeparateAgentRequestAndGoalPromptResponsibilities|FullyQualifiedName~AuditPackageDocumentation\" --no-restore` прошёл: 4/4.\n- [x] `dotnet build eng\\Electron2D.Build\\Electron2D.Build.csproj` прошёл без предупреждений.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs` выполнен после изменения tracked docs и verdict-файлов.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify docs` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify line-endings` прошёл.\n- [x] `git diff --check` прошёл.\n- [x] `audit package` и `audit package verify` прошли для r01 и r03; локальный r02 package не был отправлен, потому что проверка восстановления выявила неверную модель неизменённого verdict-файла.\n- [x] Внешний аудит `docs/verdicts/release-management/t-0233-audit-r03.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-29T20:42:00+03:00 - Внешний аудит r01 вернул `VERDICT: NEEDS_FIXES`: prompt ещё перечислял детали браузерной механики, тест не ловил этот класс дефекта, а generated docs index обновил устаревший hash для `docs/verdicts/release-management/t-0001-audit-r33.md` без объяснения области.\n\n2026-06-29T20:45:00+03:00 - Локальная упаковка r02 не была отправлена: `audit package verify` выявил неверную попытку добавить неизменённый `t-0001-audit-r33.md` в restore file set. В r03 этот файл включён только как archive-only evidence для проверки generated index.\n\n2026-06-29T20:58:58+03:00 - Внешний аудит r03 вернул `VERDICT: ACCEPT`; T-0233 удалена из активного `TASKS.md` и перенесена в monthly archive.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0011",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a7e566c050469d2fc0d9c5c41e58cf56"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-d912690df9dfa62789462a0818ddba11"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-8529dd7a59a3a55765d809f3c71b38ff"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`AGENTS.md` описывает только правила агента и ссылается на `docs/release-management/audit-package.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2deb50c6aedb0d88818281ece43ebf03/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`AGENTS.md` не содержит ручного браузерного сценария, который дублирует или обходит `audit submit`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2deb50c6aedb0d88818281ece43ebf03/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`AUDIT-REQUEST.md` остаётся запросом внешнему аудитору и не содержит локальные операторские инструкции.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2deb50c6aedb0d88818281ece43ebf03/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`goal-task-loop.md` описывает orchestration loop: preflight, worker, checks, package, verify, submit, verdict, fix loop, accept and commit.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2deb50c6aedb0d88818281ece43ebf03/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`goal-task-loop.md` делегирует детали отправки и чтения отчёта команде `audit submit` через ссылку на доменный контракт.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2deb50c6aedb0d88818281ece43ebf03/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "`goal-task-loop.md` и `AGENTS.md` фиксируют, что принятие задачи требует внешнего `VERDICT: ACCEPT`, сохранённого командой `audit submit`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2deb50c6aedb0d88818281ece43ebf03/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "`goal-task-loop.md` не требует закрывать или переиспользовать чужие вкладки ChatGPT.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2deb50c6aedb0d88818281ece43ebf03/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "`goal-task-loop.md` не запрещает вести `TASKS.md` и дневник по правилам `AGENTS.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2deb50c6aedb0d88818281ece43ebf03/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Команды в `goal-task-loop.md` используют переносимые пути с `/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2deb50c6aedb0d88818281ece43ebf03/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "`goal-task-loop.md` содержит 3102 символа и не превышает лимит 4000 символов.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2deb50c6aedb0d88818281ece43ebf03/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "`docs/release-management/audit-package.md` остаётся единственным подробным источником контракта C#-инструмента отправки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2deb50c6aedb0d88818281ece43ebf03/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "После правок выполнены `git diff --check`, focused tests и проверка документации.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2deb50c6aedb0d88818281ece43ebf03/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-29T17:42:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r01 вернул `VERDICT: NEEDS_FIXES`: prompt ещё перечислял детали браузерной механики, тест не ловил этот класс дефекта, а generated docs index обновил устаревший hash для `docs/verdicts/release-management/t-0001-audit-r33.md` без объяснения области."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-29T17:45:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Локальная упаковка r02 не была отправлена: `audit package verify` выявил неверную попытку добавить неизменённый `t-0001-audit-r33.md` в restore file set. В r03 этот файл включён только как archive-only evidence для проверки generated index."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-29T17:58:58.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r03 вернул `VERDICT: ACCEPT`; T-0233 удалена из активного `TASKS.md` и перенесена в monthly archive."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-29T17:58:58.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".codex/prompts/goal-task-loop.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "."
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/release-management/AUDIT-REQUEST.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0001-audit-r33.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0233-audit-r01.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0233-audit-r03.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 1023214,
+      "byteLength": 7402,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "5141a0f38e0ae0805397db42a079521c69335e9827f6c15053492e5fd4b022c3",
+      "markdown": "## T-0233 [x] P0: Разграничить роли `AGENTS.md`, `AUDIT-REQUEST.md` и `goal-task-loop.md`\n\n- Создана: 2026-06-29T17:08:00+03:00\n- Завершена: 2026-06-29T20:58:58+03:00\n- Принята внешним аудитом: 2026-06-29T20:58:58+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний audit r03 принял разграничение ролей без blocker-ов.\n- Приоритет: P0\n- Зависимости: T-0228, T-0229, T-0230\n- Ссылки:\n  - Агентские правила: `AGENTS.md`\n  - Запрос внешнего аудита: `docs/release-management/AUDIT-REQUEST.md`\n  - Локальный prompt оркестратора: `.codex/prompts/goal-task-loop.md`\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Внешние аудиты: `docs/verdicts/release-management/t-0233-audit-r01.md`; `docs/verdicts/release-management/t-0233-audit-r03.md`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n\n### Самодостаточное описание\n\n`AGENTS.md`, `docs/release-management/AUDIT-REQUEST.md` и `.codex/prompts/goal-task-loop.md` получили отдельные роли. `AGENTS.md` задаёт правила работы агента внутри репозитория и ссылается на `docs/release-management/audit-package.md` как точный источник механики внешнего аудита. `AUDIT-REQUEST.md` остаётся только текстом для внешнего аудитора и не описывает локальную доставку, вкладки, cookies, контрольные суммы или ручное скачивание отчёта. `goal-task-loop.md` стал коротким prompt-ом оркестратора: предварительное чтение, работа исполнителя, проверки, упаковка, проверка ZIP, `audit submit`, обработка verdict-а, исправления и завершение.\n\nPrompt больше не предписывает открывать, переиспользовать или закрывать вкладки ChatGPT, читать страницу вручную, копировать ответ, обновлять страницу или писать аудитору служебный текст. Единственный штатный путь внешней приёмки остаётся `audit package`, `audit package verify`, затем `audit submit --browser-backend codex-chrome`; задача считается принятой только после сохранённого полного внешнего отчёта `VERDICT: ACCEPT`.\n\n### Критерии и результат\n\n- [x] `AGENTS.md` описывает только правила агента и ссылается на `docs/release-management/audit-package.md`.\n- [x] `AGENTS.md` не содержит ручного браузерного сценария, который дублирует или обходит `audit submit`.\n- [x] `AUDIT-REQUEST.md` остаётся запросом внешнему аудитору и не содержит локальные операторские инструкции.\n- [x] `goal-task-loop.md` описывает orchestration loop: preflight, worker, checks, package, verify, submit, verdict, fix loop, accept and commit.\n- [x] `goal-task-loop.md` делегирует детали отправки и чтения отчёта команде `audit submit` через ссылку на доменный контракт.\n- [x] `goal-task-loop.md` и `AGENTS.md` фиксируют, что принятие задачи требует внешнего `VERDICT: ACCEPT`, сохранённого командой `audit submit`.\n- [x] `goal-task-loop.md` не требует закрывать или переиспользовать чужие вкладки ChatGPT.\n- [x] `goal-task-loop.md` не запрещает вести `TASKS.md` и дневник по правилам `AGENTS.md`.\n- [x] Команды в `goal-task-loop.md` используют переносимые пути с `/`.\n- [x] `goal-task-loop.md` содержит 3102 символа и не превышает лимит 4000 символов.\n- [x] `docs/release-management/audit-package.md` остаётся единственным подробным источником контракта C#-инструмента отправки.\n- [x] После правок выполнены `git diff --check`, focused tests и проверка документации.\n\n### Проверки\n\n- [x] Красный прогон `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~AuditWorkflowDocumentsSeparateAgentRequestAndGoalPromptResponsibilities\"` сначала упал на текущем prompt-е, затем прошёл после исправления.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~AuditWorkflowDocumentsSeparateAgentRequestAndGoalPromptResponsibilities|FullyQualifiedName~AuditPackageDocumentation\" --no-restore` прошёл: 4/4.\n- [x] `dotnet build eng\\Electron2D.Build\\Electron2D.Build.csproj` прошёл без предупреждений.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs` выполнен после изменения tracked docs и verdict-файлов.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify docs` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify line-endings` прошёл.\n- [x] `git diff --check` прошёл.\n- [x] `audit package` и `audit package verify` прошли для r01 и r03; локальный r02 package не был отправлен, потому что проверка восстановления выявила неверную модель неизменённого verdict-файла.\n- [x] Внешний аудит `docs/verdicts/release-management/t-0233-audit-r03.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-29T20:42:00+03:00 - Внешний аудит r01 вернул `VERDICT: NEEDS_FIXES`: prompt ещё перечислял детали браузерной механики, тест не ловил этот класс дефекта, а generated docs index обновил устаревший hash для `docs/verdicts/release-management/t-0001-audit-r33.md` без объяснения области.\n\n2026-06-29T20:45:00+03:00 - Локальная упаковка r02 не была отправлена: `audit package verify` выявил неверную попытку добавить неизменённый `t-0001-audit-r33.md` в restore file set. В r03 этот файл включён только как archive-only evidence для проверки generated index.\n\n2026-06-29T20:58:58+03:00 - Внешний аудит r03 вернул `VERDICT: ACCEPT`; T-0233 удалена из активного `TASKS.md` и перенесена в monthly archive.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-29T14:08:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-29T17:58:58.0000000+00:00",
+  "completedAt": "2026-06-29T17:58:58.0000000+00:00",
+  "acceptedAt": "2026-06-29T17:58:58.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-29T17:58:58.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

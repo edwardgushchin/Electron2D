@@ -1,0 +1,109 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-d4ba72dc9d0370b7a4a313b318447268",
+  "revision": 2,
+  "taskId": "T-0131",
+  "legacyAliases": [],
+  "title": "Закрепить MIT License правило в `AGENTS.md`",
+  "description": "# T-0131 [x] P0: Закрепить MIT License правило в `AGENTS.md`\n\n- Создана: 2026-06-21T03:00:00+03:00\n- Завершена: 2026-06-21T03:00:00+03:00\n- Статус: завершена\n- Коммит: `T-0131: закрепить MIT License правило`\n\n## Итог\n\nПравило MIT License закреплено в локальных инструкциях агента. Следующие агенты должны создавать и редактировать source-файлы так, чтобы C# и PowerShell файлы сохраняли полный MIT license header в стиле SDL: текст лицензии находится прямо в начале каждого файла.\n\n## Проверенное поведение\n\n- `AGENTS.md` прямо указывает, что Electron2D распространяется по MIT License.\n- `AGENTS.md` запрещает подменять MIT текстом SDL zlib license: аналогия с SDL означает формат per-file header, а не другую лицензию.\n- Для C# файлов требуется header в форме `/* ... */`.\n- Для PowerShell файлов требуется header в форме `<# ... #>`.\n- Перед staging или commit source-изменений требуется запуск `tools\\Verify-SourceLicenseHeaders.ps1`.\n\n## Документация\n\n- Обновлён `AGENTS.md`.\n- Действующая спецификация остаётся `docs/repository/license-policy.md`.\n- Действующая справка остаётся `docs/repository/license-policy.md`.\n\n## Проверки\n\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло, 97 tracked source files.\n\n## Заметки агента\n\nЗадача создана как уточнение правил для будущей работы. Исходники менять не потребовалось: политика MIT License и verifier уже были реализованы в `T-0130`.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0011"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T00:00:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Resource",
+      "value": "/* ... *"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/repository/license-policy.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 296477,
+      "byteLength": 2093,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "1d9f643a1232f8ac2964a7e78cfcf1887c412d204cbcfc18a7ebdad364bb5001",
+      "markdown": "# T-0131 [x] P0: Закрепить MIT License правило в `AGENTS.md`\n\n- Создана: 2026-06-21T03:00:00+03:00\n- Завершена: 2026-06-21T03:00:00+03:00\n- Статус: завершена\n- Коммит: `T-0131: закрепить MIT License правило`\n\n## Итог\n\nПравило MIT License закреплено в локальных инструкциях агента. Следующие агенты должны создавать и редактировать source-файлы так, чтобы C# и PowerShell файлы сохраняли полный MIT license header в стиле SDL: текст лицензии находится прямо в начале каждого файла.\n\n## Проверенное поведение\n\n- `AGENTS.md` прямо указывает, что Electron2D распространяется по MIT License.\n- `AGENTS.md` запрещает подменять MIT текстом SDL zlib license: аналогия с SDL означает формат per-file header, а не другую лицензию.\n- Для C# файлов требуется header в форме `/* ... */`.\n- Для PowerShell файлов требуется header в форме `<# ... #>`.\n- Перед staging или commit source-изменений требуется запуск `tools\\Verify-SourceLicenseHeaders.ps1`.\n\n## Документация\n\n- Обновлён `AGENTS.md`.\n- Действующая спецификация остаётся `docs/repository/license-policy.md`.\n- Действующая справка остаётся `docs/repository/license-policy.md`.\n\n## Проверки\n\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло, 97 tracked source files.\n\n## Заметки агента\n\nЗадача создана как уточнение правил для будущей работы. Исходники менять не потребовалось: политика MIT License и verifier уже были реализованы в `T-0130`.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-21T00:00:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T00:00:00.0000000+00:00",
+  "completedAt": "2026-06-21T00:00:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T00:00:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T00:00:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

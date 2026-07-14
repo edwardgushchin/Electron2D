@@ -1,0 +1,232 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-045f5dd70915dce6ceead264e737f449",
+  "revision": 2,
+  "taskId": "T-0079",
+  "legacyAliases": [],
+  "title": "Реализовать Project Manager: create/open project, recent projects, renderer profile и SDK check",
+  "description": "# T-0079 [x] P0: Реализовать Project Manager: create/open project, recent projects, renderer profile и SDK check\n\n- Статус: завершена\n- Завершена: 2026-06-22T06:16:53+03:00\n- Коммит: `T-0079: add editor project manager`\n\n## Ссылки\n\n- Спецификация: `docs/editor/project-manager.md`\n- Документация: `docs/editor/project-manager.md`\n- Исходный код: `src/Electron2D.Editor/ProjectManagement/`; `src/Electron2D.Editor/Program.cs`; `src/Electron2D/Properties/AssemblyInfo.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/EditorProjectManagerTests.cs`\n- Шаблон проекта: `templates/electron2d-empty/`\n\n## Самодостаточное описание\n\nЗадача относилась к домену «Electron2D.Editor». Цель - реализовать Project Manager для первого clean-machine workflow: создать проект из canonical template, открыть проект, сохранить recent projects, применить выбранный renderer profile и проверить доступность .NET SDK до будущей сборки пользовательского проекта.\n\nПолноценный визуальный экран Project Manager в постоянном окне редактора не входил в эту задачу. Реализована проверяемая внутренняя логика и smoke-команда editor executable, чтобы следующие editor-задачи могли строить UI поверх уже работающей логики.\n\n## Что сделано\n\n- Добавлена спецификация `docs/editor/project-manager.md`.\n- Добавлена документация реализации `docs/editor/project-manager.md` и обновлены индексы документации.\n- Добавлена команда редактора:\n\n```powershell\ndotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --project-manager-smoke <work-root> --user-data-dir <user-data-dir>\n```\n\n- Project Manager копирует `templates/electron2d-empty/`, не переносит `.template.config/`, переименовывает `.csproj`, обновляет `project.e2d.json` и нормализует namespace sample-кода.\n- Открытие проекта принимает путь к папке проекта или `project.e2d.json`, проверяет project settings и наличие `mainScene`.\n- Успешное открытие сохраняет `lastProjectPath` и recent projects в `user.e2settings.json`.\n- Добавлена проверка .NET SDK через `dotnet --version`; smoke-режим выводит `SdkAvailable` и `SdkVersion`.\n- Runtime открыл существующие внутренние settings-типы только для сборки редактора, чтобы редактор использовал тот же JSON-формат проекта без расширения публичного API.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: Project Manager умеет create/open project, recent projects, renderer profile и SDK check.\n- [x] Clean-machine workflow documented and smoke-tested.\n- [x] Готова спецификация в `docs/editor/`.\n- [x] Добавлены automated tests, покрывающие новое поведение.\n- [x] Готова документация реализации в `docs/editor/`.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectManagerTests\" --no-restore -m:1` упал с exit code `2`, потому что editor executable ещё поддерживал только `--smoke`.\n- Green phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectManagerTests\" --no-restore -m:1` прошёл: `1/1`.\n- Прямой smoke-run `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --project-manager-smoke ...` прошёл и вывел `RendererProfile=Compatibility`, `SdkAvailable=True`, `RecentProjects=1`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: tracked source files `444`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: source files scanned `305`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `264/264`, runtime smoke `5/5`, golden-data `12/12`.\n- `dotnet build src\\Electron2D.sln -c Release` прошёл: warnings `0`, errors `0`.\n\n## Решения\n\n- Project Manager использует canonical template `electron2d-empty`, чтобы не создавать второй формат проекта.\n- `.template.config/` не копируется в созданный проект, потому что это metadata для `dotnet new`, а не runtime-файл проекта.\n- Project Manager не создаёт локальный Git repository, agent file или skills: это отдельная AI-friendly workflow задача.\n- Project Manager не собирает пользовательский проект: текущий слой только проверяет наличие SDK, а build/run workflow закрывается следующими задачами.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Реализована цель задачи: Project Manager умеет create/open project, recent projects, renderer profile и SDK check.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-045f5dd70915dce6ceead264e737f449/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Clean-machine workflow documented and smoke-tested.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-045f5dd70915dce6ceead264e737f449/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Готова спецификация в `docs/editor/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-045f5dd70915dce6ceead264e737f449/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Добавлены automated tests, покрывающие новое поведение.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-045f5dd70915dce6ceead264e737f449/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Готова документация реализации в `docs/editor/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-045f5dd70915dce6ceead264e737f449/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-045f5dd70915dce6ceead264e737f449/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T03:16:53.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": ".template.config"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "264/264"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/editor/project-manager.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Program.cs"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor/ProjectManagement"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "src/Electron2D/Properties/AssemblyInfo.cs"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "Directory",
+      "value": "templates/electron2d-empty"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectManagerTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 417419,
+      "byteLength": 5687,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "3ff2dfed4f04cf07215c52bf81afcc54367fee186a828c5cdd73d3c3c88aedbe",
+      "markdown": "# T-0079 [x] P0: Реализовать Project Manager: create/open project, recent projects, renderer profile и SDK check\n\n- Статус: завершена\n- Завершена: 2026-06-22T06:16:53+03:00\n- Коммит: `T-0079: add editor project manager`\n\n## Ссылки\n\n- Спецификация: `docs/editor/project-manager.md`\n- Документация: `docs/editor/project-manager.md`\n- Исходный код: `src/Electron2D.Editor/ProjectManagement/`; `src/Electron2D.Editor/Program.cs`; `src/Electron2D/Properties/AssemblyInfo.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/EditorProjectManagerTests.cs`\n- Шаблон проекта: `templates/electron2d-empty/`\n\n## Самодостаточное описание\n\nЗадача относилась к домену «Electron2D.Editor». Цель - реализовать Project Manager для первого clean-machine workflow: создать проект из canonical template, открыть проект, сохранить recent projects, применить выбранный renderer profile и проверить доступность .NET SDK до будущей сборки пользовательского проекта.\n\nПолноценный визуальный экран Project Manager в постоянном окне редактора не входил в эту задачу. Реализована проверяемая внутренняя логика и smoke-команда editor executable, чтобы следующие editor-задачи могли строить UI поверх уже работающей логики.\n\n## Что сделано\n\n- Добавлена спецификация `docs/editor/project-manager.md`.\n- Добавлена документация реализации `docs/editor/project-manager.md` и обновлены индексы документации.\n- Добавлена команда редактора:\n\n```powershell\ndotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --project-manager-smoke <work-root> --user-data-dir <user-data-dir>\n```\n\n- Project Manager копирует `templates/electron2d-empty/`, не переносит `.template.config/`, переименовывает `.csproj`, обновляет `project.e2d.json` и нормализует namespace sample-кода.\n- Открытие проекта принимает путь к папке проекта или `project.e2d.json`, проверяет project settings и наличие `mainScene`.\n- Успешное открытие сохраняет `lastProjectPath` и recent projects в `user.e2settings.json`.\n- Добавлена проверка .NET SDK через `dotnet --version`; smoke-режим выводит `SdkAvailable` и `SdkVersion`.\n- Runtime открыл существующие внутренние settings-типы только для сборки редактора, чтобы редактор использовал тот же JSON-формат проекта без расширения публичного API.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: Project Manager умеет create/open project, recent projects, renderer profile и SDK check.\n- [x] Clean-machine workflow documented and smoke-tested.\n- [x] Готова спецификация в `docs/editor/`.\n- [x] Добавлены automated tests, покрывающие новое поведение.\n- [x] Готова документация реализации в `docs/editor/`.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectManagerTests\" --no-restore -m:1` упал с exit code `2`, потому что editor executable ещё поддерживал только `--smoke`.\n- Green phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectManagerTests\" --no-restore -m:1` прошёл: `1/1`.\n- Прямой smoke-run `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --project-manager-smoke ...` прошёл и вывел `RendererProfile=Compatibility`, `SdkAvailable=True`, `RecentProjects=1`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: tracked source files `444`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: source files scanned `305`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `264/264`, runtime smoke `5/5`, golden-data `12/12`.\n- `dotnet build src\\Electron2D.sln -c Release` прошёл: warnings `0`, errors `0`.\n\n## Решения\n\n- Project Manager использует canonical template `electron2d-empty`, чтобы не создавать второй формат проекта.\n- `.template.config/` не копируется в созданный проект, потому что это metadata для `dotnet new`, а не runtime-файл проекта.\n- Project Manager не создаёт локальный Git repository, agent file или skills: это отдельная AI-friendly workflow задача.\n- Project Manager не собирает пользовательский проект: текущий слой только проверяет наличие SDK, а build/run workflow закрывается следующими задачами.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T03:16:53.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T03:16:53.0000000+00:00",
+  "completedAt": "2026-06-22T03:16:53.0000000+00:00",
+  "acceptedAt": "2026-06-22T03:16:53.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T03:16:53.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

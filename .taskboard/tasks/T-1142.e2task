@@ -1,0 +1,199 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-06ba017d28e91c95843151faf1251e23",
+  "revision": 2,
+  "taskId": "T-1142",
+  "legacyAliases": [],
+  "title": "Синхронизировать CLI help api compare-godot с profile-lookup контрактом",
+  "description": "## T-1142 [ ] P3: Синхронизировать CLI help api compare-godot с profile-lookup контрактом\n\n- Создана: 2026-07-10T18:30:38+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-1137\n- Ссылки:\n  - Доменный документ: `docs/cli/e2d-cli.md`\n  - CLI: `src/Electron2D.Cli/CliGeneralCommands.cs`\n  - Профильный контракт: `docs/release-management/api-compatibility.md`\n  - Проверки: `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`\n  - Источник finding-а: `docs/verdicts/release-management/t-1137-audit-control-r33.md`, `FOLLOW_UP_FINDING F2`\n\n### Execution contract\n\n- Task type: CLI wording/diagnostic synchronization without changing profile lookup semantics.\n- Ready-to-start:\n  - task state is `open`;\n  - `T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;\n  - no other task is `in progress`.\n- Stop conditions:\n  - proposed wording reintroduces strict/full Godot parity claims;\n  - implementation changes JSON fields, exit codes or profile-resolution behavior;\n  - work expands into API-profile decision changes.\n- May change:\n  - `api compare-godot` group help and unknown-command diagnostics;\n  - corresponding CLI documentation;\n  - existing CLI behavior/snapshot assertions that own these messages.\n- Must not change:\n  - manual profile data or generated manifest semantics;\n  - `profile_approved`, runtime availability or `parityEvidence=not_verified` payloads;\n  - unrelated CLI commands.\n- Required outputs:\n  - help/diagnostics that describe `api compare-godot` as manual profile lookup;\n  - explicit separation of profile approval from strict parity evidence;\n  - synchronized CLI documentation and existing focused tests.\n- Required commands:\n  - `dotnet build src/Electron2D.Cli/Electron2D.Cli.csproj --no-restore -v:minimal`\n  - focused existing `Electron2DCliWorkflowTests` for API help/diagnostics\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: not required by default; require it only if JSON/exit-code/profile behavior changes.\n\n### Internal substrate acceptance contract\n\n- Input boundary: `e2d api --help`, `e2d api compare-godot` help text and unknown API-command diagnostics.\n- Resolution invariant: wording describes manual profile lookup and never claims comparison/parity verification without separate evidence.\n- Failure policy: stale strict-verifier wording is rejected by the existing CLI contract checks.\n- Consumer boundary: command output and `docs/cli/e2d-cli.md` use the same terminology.\n- Regression boundary: JSON schema, exit codes and profile-resolution behavior remain unchanged.\n\n### Самодостаточное описание\n\nОсновной `api compare-godot` JSON уже честно сообщает `profile_approved`, availability и `parityEvidence=not_verified`, но краткая справка и diagnostic для API-команды всё ещё называют её verifier/compare по «2D profile». Задача исправляет только пользовательскую формулировку и не меняет профиль или parity semantics.\n\n### Критерии приёмки\n\n- [ ] Help и diagnostics называют команду profile lookup и не обещают strict/full parity verification.\n- [ ] JSON payload, exit codes и profile-resolution behavior не изменены.\n- [ ] CLI-документ и существующие focused tests синхронизированы.\n- [ ] Build/docs/license/whitespace checks проходят.\n\n### Подзадачи\n\n- [ ] Найти все stale help/diagnostic формулировки для `api compare-godot`.\n- [ ] Исправить минимальный текстовый контракт и существующие assertions.\n- [ ] Синхронизировать CLI-документ и выполнить проверки.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: r33 локализовал две stale формулировки в `CliGeneralCommands.cs`.\n- Ещё отсутствует: отдельный wording cleanup после принятия `T-1137`.\n- Принято аудитом: отсутствует; r33 классифицировал finding как неблокирующий follow-up.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r33.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-new\n  - target: T-1142\n  - rationale: CLI wording cleanup не меняет profile/runtime scope `T-1137` и вынесен в отдельную zero-context P3-задачу.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r35.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-1142\n  - rationale: r35 повторно локализовал тот же stale CLI help/diagnostic wording; T-1142 уже владеет синхронизацией без изменения profile lookup semantics.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r36.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-1142\n  - rationale: r36 повторяет тот же CLI help/diagnostic wording finding и прямо указывает существующую T-1142 как владельца синхронизации.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r37.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-1142\n  - rationale: r37 повторяет тот же CLI help/diagnostic wording finding; T-1142 уже владеет синхронизацией без изменения profile lookup semantics.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r38.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-1142\n  - rationale: r38 повторяет тот же CLI help/diagnostic wording finding; T-1142 остаётся владельцем узкой синхронизации текста.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P3",
+  "tagIds": [
+    "tag-0012",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-94ca0395565920c2776d3693d2df82fe"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Help и diagnostics называют команду profile lookup и не обещают strict/full parity verification.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "JSON payload, exit codes и profile-resolution behavior не изменены.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "CLI-документ и существующие focused tests синхронизированы.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Build/docs/license/whitespace checks проходят.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required by default; require it only if JSON/exit-code/profile behavior changes."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-1137-audit-control-r33.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/CliGeneralCommands.cs"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "CLI wording/diagnostic synchronization without changing profile lookup semantics.",
+    "readyToStart": [
+      "task state is `open`;",
+      "`T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;",
+      "no other task is `in progress`."
+    ],
+    "stopConditions": [
+      "proposed wording reintroduces strict/full Godot parity claims;",
+      "implementation changes JSON fields, exit codes or profile-resolution behavior;",
+      "work expands into API-profile decision changes."
+    ],
+    "allowedChanges": [
+      "`api compare-godot` group help and unknown-command diagnostics;",
+      "corresponding CLI documentation;",
+      "existing CLI behavior/snapshot assertions that own these messages."
+    ],
+    "forbiddenChanges": [
+      "manual profile data or generated manifest semantics;",
+      "`profile_approved`, runtime availability or `parityEvidence=not_verified` payloads;",
+      "unrelated CLI commands."
+    ],
+    "requiredOutputs": [
+      "help/diagnostics that describe `api compare-godot` as manual profile lookup;",
+      "explicit separation of profile approval from strict parity evidence;",
+      "synchronized CLI documentation and existing focused tests."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet build src/Electron2D.Cli/Electron2D.Cli.csproj --no-restore -v:minimal`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "focused existing `Electron2DCliWorkflowTests` for API help/diagnostics",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 15471497,
+      "byteLength": 6526,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "d89e528a2b3bc1808250456eaa05c5946dc682beeea5d598027b8ea35f6af636",
+      "markdown": "## T-1142 [ ] P3: Синхронизировать CLI help api compare-godot с profile-lookup контрактом\n\n- Создана: 2026-07-10T18:30:38+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-1137\n- Ссылки:\n  - Доменный документ: `docs/cli/e2d-cli.md`\n  - CLI: `src/Electron2D.Cli/CliGeneralCommands.cs`\n  - Профильный контракт: `docs/release-management/api-compatibility.md`\n  - Проверки: `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`\n  - Источник finding-а: `docs/verdicts/release-management/t-1137-audit-control-r33.md`, `FOLLOW_UP_FINDING F2`\n\n### Execution contract\n\n- Task type: CLI wording/diagnostic synchronization without changing profile lookup semantics.\n- Ready-to-start:\n  - task state is `open`;\n  - `T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;\n  - no other task is `in progress`.\n- Stop conditions:\n  - proposed wording reintroduces strict/full Godot parity claims;\n  - implementation changes JSON fields, exit codes or profile-resolution behavior;\n  - work expands into API-profile decision changes.\n- May change:\n  - `api compare-godot` group help and unknown-command diagnostics;\n  - corresponding CLI documentation;\n  - existing CLI behavior/snapshot assertions that own these messages.\n- Must not change:\n  - manual profile data or generated manifest semantics;\n  - `profile_approved`, runtime availability or `parityEvidence=not_verified` payloads;\n  - unrelated CLI commands.\n- Required outputs:\n  - help/diagnostics that describe `api compare-godot` as manual profile lookup;\n  - explicit separation of profile approval from strict parity evidence;\n  - synchronized CLI documentation and existing focused tests.\n- Required commands:\n  - `dotnet build src/Electron2D.Cli/Electron2D.Cli.csproj --no-restore -v:minimal`\n  - focused existing `Electron2DCliWorkflowTests` for API help/diagnostics\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: not required by default; require it only if JSON/exit-code/profile behavior changes.\n\n### Internal substrate acceptance contract\n\n- Input boundary: `e2d api --help`, `e2d api compare-godot` help text and unknown API-command diagnostics.\n- Resolution invariant: wording describes manual profile lookup and never claims comparison/parity verification without separate evidence.\n- Failure policy: stale strict-verifier wording is rejected by the existing CLI contract checks.\n- Consumer boundary: command output and `docs/cli/e2d-cli.md` use the same terminology.\n- Regression boundary: JSON schema, exit codes and profile-resolution behavior remain unchanged.\n\n### Самодостаточное описание\n\nОсновной `api compare-godot` JSON уже честно сообщает `profile_approved`, availability и `parityEvidence=not_verified`, но краткая справка и diagnostic для API-команды всё ещё называют её verifier/compare по «2D profile». Задача исправляет только пользовательскую формулировку и не меняет профиль или parity semantics.\n\n### Критерии приёмки\n\n- [ ] Help и diagnostics называют команду profile lookup и не обещают strict/full parity verification.\n- [ ] JSON payload, exit codes и profile-resolution behavior не изменены.\n- [ ] CLI-документ и существующие focused tests синхронизированы.\n- [ ] Build/docs/license/whitespace checks проходят.\n\n### Подзадачи\n\n- [ ] Найти все stale help/diagnostic формулировки для `api compare-godot`.\n- [ ] Исправить минимальный текстовый контракт и существующие assertions.\n- [ ] Синхронизировать CLI-документ и выполнить проверки.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: r33 локализовал две stale формулировки в `CliGeneralCommands.cs`.\n- Ещё отсутствует: отдельный wording cleanup после принятия `T-1137`.\n- Принято аудитом: отсутствует; r33 классифицировал finding как неблокирующий follow-up.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r33.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-new\n  - target: T-1142\n  - rationale: CLI wording cleanup не меняет profile/runtime scope `T-1137` и вынесен в отдельную zero-context P3-задачу.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r35.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-1142\n  - rationale: r35 повторно локализовал тот же stale CLI help/diagnostic wording; T-1142 уже владеет синхронизацией без изменения profile lookup semantics.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r36.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-1142\n  - rationale: r36 повторяет тот же CLI help/diagnostic wording finding и прямо указывает существующую T-1142 как владельца синхронизации.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r37.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-1142\n  - rationale: r37 повторяет тот же CLI help/diagnostic wording finding; T-1142 уже владеет синхронизацией без изменения profile lookup semantics.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r38.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-1142\n  - rationale: r38 повторяет тот же CLI help/diagnostic wording finding; T-1142 остаётся владельцем узкой синхронизации текста.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-10T15:30:38.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

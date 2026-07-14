@@ -1,0 +1,863 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-87cdb54a9d50430fb6a80935cd1ad9ec",
+  "revision": 17,
+  "taskId": "T-1168",
+  "legacyAliases": [],
+  "title": "Сделать высоту колонок зависимой от содержимого",
+  "description": "## Контекст\n\nКолонки Task Board сохраняют min-height 100% viewport и выглядят как одинаково длинные пустые панели. Высота каждой колонки должна определяться собственным header и фактическим содержимым; длинная колонка при этом продолжает формировать общий vertical scroll board.\n\n## Критерии приёмки\n\n- Column не имеет viewport-filling min-height и заканчивается сразу после header/content; пустая колонка имеет только высоту header/body padding.\n- Board сохраняет align-items:start, общий vertical overflow и доступность последней карточки длинной колонки.\n- Unit/typecheck/Extension Host/visual/VSIX/docs проверки проходят.\n\n## Execution contract\n\nРазрешены точечные изменения VS Code webview CSS, layout regression, visual harness и доменной документации. Task files изменять только через e2d tasks. Done/архивирование без пользовательской приёмки запрещено.",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "content-sized-columns",
+      "description": "Колонки не заполняют viewport по min-height и заканчиваются после собственного содержимого.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "docs/editor/project-tasks-board.md"
+        }
+      ]
+    },
+    {
+      "criterionId": "scroll-and-verification",
+      "description": "Общий vertical scroll сохранён; unit/typecheck/Extension Host/visual/VSIX/docs проверки проходят.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-ce3f45118c9345598e553c398904cbd3",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T16:41:11.9020511+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to InProgress."
+      },
+      "sequence": 1
+    },
+    {
+      "activityEntryId": "activity-19938110ff0b45a1b21965534169a0fc",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T16:51:27.5050112+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Review."
+      },
+      "sequence": 2
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      },
+      "sequence": 3
+    },
+    {
+      "activityEntryId": "activity-b2d179e6b19b440287b90458feed53db",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T22:10:57.2611208+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "TaskPatchedV3Draft",
+        "text": "{\"patch\":[{\"op\":\"replace\",\"path\":\"/tagIds\",\"value\":[\"tag-0001\",\"tag-0009\"]}],\"beforeTaskCoreDigest\":\"f0d29b7e20f8ad7a21c27ec5a31a4bc3c5b79b3f84ccb6bab3beae95f26e9ba6\",\"afterTaskCoreDigest\":\"44981df0116db5146c848aa9f3f739ce6ec3a06dddb72b240842d1a5e02cfa71\"}"
+      },
+      "sequence": 4
+    },
+    {
+      "activityEntryId": "activity-6ac0d19ff2e74cc8b8df55948dbb7e6b",
+      "sequence": 5,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T12:45:46.0911088+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 11,
+        "toRevision": 12,
+        "activitySequence": 5,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/links",
+            "oldValue": [],
+            "value": [
+              {
+                "linkId": "link-editor-contract",
+                "kind": "File",
+                "value": "docs/editor/project-tasks-board.md"
+              },
+              {
+                "linkId": "link-webview-source",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/src/webview.ts"
+              },
+              {
+                "linkId": "link-webview-layout-tests",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+              },
+              {
+                "linkId": "link-vscode-package",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/package.json"
+              }
+            ]
+          },
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "general",
+              "readyToStart": [],
+              "stopConditions": [],
+              "allowedChanges": [],
+              "forbiddenChanges": [],
+              "requiredOutputs": [],
+              "commands": [],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "verification",
+              "readyToStart": [
+                "Актуальные доменные документы и сохранённое сообщение о выполнении доступны.",
+                "Текущее состояние результата можно проверить существующими автоматизированными тестами."
+              ],
+              "stopConditions": [
+                "Текущая реализация или тесты противоречат заявленному результату задачи.",
+                "Для хотя бы одного критерия отсутствует проверяемое typed evidence."
+              ],
+              "allowedChanges": [
+                "Revision-aware обновление описания, критериев, ссылок и execution contract только этой задачи через e2d tasks.",
+                "Добавление typed evidence и передача доказанного результата на пользовательскую приёмку."
+              ],
+              "forbiddenChanges": [
+                "Прямое редактирование .taskboard, .e2task или board.e2tasks.",
+                "Изменение production-кода под видом нормализации исторического контракта."
+              ],
+              "requiredOutputs": [
+                "Актуальные русские описание и критерии без требований, отменённых более поздними задачами.",
+                "Typed links и evidence, связывающие каждый Passed-критерий с текущим документом или тестом.",
+                "Review/Submitted для доказанного результата без создания ложной human acceptance."
+              ],
+              "commands": [
+                {
+                  "commandId": "command-vscode-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 600,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "command-taskboard-verify",
+                  "kind": "Process",
+                  "executable": "e2d",
+                  "arguments": [
+                    "tasks",
+                    "verify",
+                    "--project",
+                    ".",
+                    "--format",
+                    "json"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "0d5bb3606ca933840db0b8a7bac477a13404206f07420b061d00b7d1c7c018a2",
+        "afterTaskCoreDigest": "3bd0a28d07039bf36562e612759c2288a5b41c61b02e32aacb349b8a8b150871"
+      }
+    },
+    {
+      "activityEntryId": "activity-51d3e522efdb4d04afeb8d4bf9dd1caf",
+      "sequence": 6,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T12:58:11.6271825+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "427a8f787e9f733dbe19ea48c3d9e18ced3c91c897998a03e7ac361049a6261e",
+        "afterDigest": "e7ee80c13dfd9549e87f810b920df35aa77a8e989e237313b94c36c455938c84",
+        "workspaceChanges": {
+          "baseRevision": "workspace:e395df255f9cb8f9f9782d2c95a61675951b946141d0ba359c549d1411c9d5a1",
+          "currentRevision": "workspace:e395df255f9cb8f9f9782d2c95a61675951b946141d0ba359c549d1411c9d5a1",
+          "files": []
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-f9d0e47c703344c292098519e88c9f85",
+      "sequence": 7,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T12:58:11.6271825+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Актуальный контракт, typed evidence и все критерии проверены в рамках T-1241; результат передан пользователю без создания human acceptance."
+      }
+    },
+    {
+      "activityEntryId": "activity-389b94d2477b47acbbbf8c6c9f470e3e",
+      "sequence": 8,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:47:49.3286499+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 14,
+        "toRevision": 15,
+        "activitySequence": 8,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "verification",
+              "readyToStart": [
+                "Актуальные доменные документы и сохранённое сообщение о выполнении доступны.",
+                "Текущее состояние результата можно проверить существующими автоматизированными тестами."
+              ],
+              "stopConditions": [
+                "Текущая реализация или тесты противоречат заявленному результату задачи.",
+                "Для хотя бы одного критерия отсутствует проверяемое typed evidence."
+              ],
+              "allowedChanges": [
+                "Revision-aware обновление описания, критериев, ссылок и execution contract только этой задачи через e2d tasks.",
+                "Добавление typed evidence и передача доказанного результата на пользовательскую приёмку."
+              ],
+              "forbiddenChanges": [
+                "Прямое редактирование .taskboard, .e2task или board.e2tasks.",
+                "Изменение production-кода под видом нормализации исторического контракта."
+              ],
+              "requiredOutputs": [
+                "Актуальные русские описание и критерии без требований, отменённых более поздними задачами.",
+                "Typed links и evidence, связывающие каждый Passed-критерий с текущим документом или тестом.",
+                "Review/Submitted для доказанного результата без создания ложной human acceptance."
+              ],
+              "commands": [
+                {
+                  "commandId": "command-vscode-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 600,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "command-taskboard-verify",
+                  "kind": "Process",
+                  "executable": "e2d",
+                  "arguments": [
+                    "tasks",
+                    "verify",
+                    "--project",
+                    ".",
+                    "--format",
+                    "json"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "verification",
+              "readyToStart": [
+                "Актуальные доменные документы и сохранённое сообщение о выполнении доступны.",
+                "Текущее состояние результата можно проверить существующими автоматизированными тестами."
+              ],
+              "stopConditions": [
+                "Текущая реализация или тесты противоречат заявленному результату задачи.",
+                "Для хотя бы одного критерия отсутствует проверяемое typed evidence."
+              ],
+              "allowedChanges": [
+                "Revision-aware обновление описания, критериев, ссылок и execution contract только этой задачи через e2d tasks.",
+                "Добавление typed evidence и передача доказанного результата на пользовательскую приёмку.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/package.json",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+              ],
+              "forbiddenChanges": [
+                "Прямое редактирование .taskboard, .e2task или board.e2tasks.",
+                "Изменение production-кода под видом нормализации исторического контракта."
+              ],
+              "requiredOutputs": [
+                "Актуальные русские описание и критерии без требований, отменённых более поздними задачами.",
+                "Typed links и evidence, связывающие каждый Passed-критерий с текущим документом или тестом.",
+                "Review/Submitted для доказанного результата без создания ложной human acceptance."
+              ],
+              "commands": [
+                {
+                  "commandId": "command-vscode-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 600,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "command-taskboard-verify",
+                  "kind": "Process",
+                  "executable": "e2d",
+                  "arguments": [
+                    "tasks",
+                    "verify",
+                    "--project",
+                    ".",
+                    "--format",
+                    "json"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "3bd0a28d07039bf36562e612759c2288a5b41c61b02e32aacb349b8a8b150871",
+        "afterTaskCoreDigest": "1c9bd6bb52d158459937ceec364b51385635b09383dcb57b1c3b223792a32f2c"
+      }
+    },
+    {
+      "activityEntryId": "activity-e87b426a820545a79b576b5af182b3b8",
+      "sequence": 9,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:10:38.0487941+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 15,
+        "toRevision": 16,
+        "activitySequence": 9,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "verification",
+              "readyToStart": [
+                "Актуальные доменные документы и сохранённое сообщение о выполнении доступны.",
+                "Текущее состояние результата можно проверить существующими автоматизированными тестами."
+              ],
+              "stopConditions": [
+                "Текущая реализация или тесты противоречат заявленному результату задачи.",
+                "Для хотя бы одного критерия отсутствует проверяемое typed evidence."
+              ],
+              "allowedChanges": [
+                "Revision-aware обновление описания, критериев, ссылок и execution contract только этой задачи через e2d tasks.",
+                "Добавление typed evidence и передача доказанного результата на пользовательскую приёмку.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/package.json",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+              ],
+              "forbiddenChanges": [
+                "Прямое редактирование .taskboard, .e2task или board.e2tasks.",
+                "Изменение production-кода под видом нормализации исторического контракта."
+              ],
+              "requiredOutputs": [
+                "Актуальные русские описание и критерии без требований, отменённых более поздними задачами.",
+                "Typed links и evidence, связывающие каждый Passed-критерий с текущим документом или тестом.",
+                "Review/Submitted для доказанного результата без создания ложной human acceptance."
+              ],
+              "commands": [
+                {
+                  "commandId": "command-vscode-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 600,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "command-taskboard-verify",
+                  "kind": "Process",
+                  "executable": "e2d",
+                  "arguments": [
+                    "tasks",
+                    "verify",
+                    "--project",
+                    ".",
+                    "--format",
+                    "json"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "verification",
+              "readyToStart": [
+                "Актуальные доменные документы и сохранённое сообщение о выполнении доступны.",
+                "Текущее состояние результата можно проверить существующими автоматизированными тестами."
+              ],
+              "stopConditions": [
+                "Текущая реализация или тесты противоречат заявленному результату задачи.",
+                "Для хотя бы одного критерия отсутствует проверяемое typed evidence."
+              ],
+              "allowedChanges": [
+                "Revision-aware обновление описания, критериев, ссылок и execution contract только этой задачи через e2d tasks.",
+                "Добавление typed evidence и передача доказанного результата на пользовательскую приёмку.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/package.json",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+                "path:data/dev-diary/**"
+              ],
+              "forbiddenChanges": [
+                "Прямое редактирование .taskboard, .e2task или board.e2tasks.",
+                "Изменение production-кода под видом нормализации исторического контракта."
+              ],
+              "requiredOutputs": [
+                "Актуальные русские описание и критерии без требований, отменённых более поздними задачами.",
+                "Typed links и evidence, связывающие каждый Passed-критерий с текущим документом или тестом.",
+                "Review/Submitted для доказанного результата без создания ложной human acceptance."
+              ],
+              "commands": [
+                {
+                  "commandId": "command-vscode-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 600,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "command-taskboard-verify",
+                  "kind": "Process",
+                  "executable": "e2d",
+                  "arguments": [
+                    "tasks",
+                    "verify",
+                    "--project",
+                    ".",
+                    "--format",
+                    "json"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "1c9bd6bb52d158459937ceec364b51385635b09383dcb57b1c3b223792a32f2c",
+        "afterTaskCoreDigest": "d4361e8a86cc5e968c6789460da18224e03f5797bd96dbec255c939a7d6948b1"
+      }
+    },
+    {
+      "activityEntryId": "activity-ce3fbe130e3449b098e5162cb7a82d62",
+      "sequence": 10,
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-14T14:32:02.6224776+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "e7ee80c13dfd9549e87f810b920df35aa77a8e989e237313b94c36c455938c84",
+        "afterDigest": "bc544aeb938479abf1766544bf254503e59f7c1e9a8686b98f42f4e8446f49c2",
+        "workspaceChanges": {
+          "baseRevision": "workspace:e395df255f9cb8f9f9782d2c95a61675951b946141d0ba359c549d1411c9d5a1",
+          "currentRevision": "workspace:de3b2bdd4d476597dbc305cc084ce1ce70e18f75035de541805d63f877bcc53c",
+          "files": [
+            {
+              "path": "data/dev-diary/2026/07 Июль/14-07-2026.md",
+              "changeKind": "Modified",
+              "previousPath": null,
+              "baseSha256": "5bb70de13765b90dca45918459f8784d0792f26e35bd037496437ab987f1271c",
+              "currentSha256": "4dd871cc20be7af1f6d0ec2ce40360dc4df8ceed0ebf8f9dc22468073392c19d",
+              "firstChangedAt": "2026-07-14T14:32:02.6224776+00:00",
+              "lastChangedAt": "2026-07-14T14:32:02.6224776+00:00",
+              "agentRunIds": []
+            },
+            {
+              "path": "docs/editor/project-tasks-board.md",
+              "changeKind": "Modified",
+              "previousPath": null,
+              "baseSha256": "77e5483f3130505d6ca2bab36fcf72b7c9c33d41bbe56b542bd3e0ec4ceb1163",
+              "currentSha256": "66e1e99c07cb0da14936cf5edb6fbfda5b8a77b29f51cc7f311f67275b0094be",
+              "firstChangedAt": "2026-07-14T14:32:02.6224776+00:00",
+              "lastChangedAt": "2026-07-14T14:32:02.6224776+00:00",
+              "agentRunIds": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-0aa0ee9932e647db8ccf23c2df2726cc",
+      "sequence": 11,
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-14T14:32:02.6224776+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Задача принята пользователем в VS Code Task Board.",
+        "authorityActorId": "vscode:eduar",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-editor-contract",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-webview-source",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "link-webview-layout-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+    },
+    {
+      "linkId": "link-vscode-package",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/package.json"
+    }
+  ],
+  "executionContract": {
+    "taskType": "verification",
+    "readyToStart": [
+      "Актуальные доменные документы и сохранённое сообщение о выполнении доступны.",
+      "Текущее состояние результата можно проверить существующими автоматизированными тестами."
+    ],
+    "stopConditions": [
+      "Текущая реализация или тесты противоречат заявленному результату задачи.",
+      "Для хотя бы одного критерия отсутствует проверяемое typed evidence."
+    ],
+    "allowedChanges": [
+      "Revision-aware обновление описания, критериев, ссылок и execution contract только этой задачи через e2d tasks.",
+      "Добавление typed evidence и передача доказанного результата на пользовательскую приёмку.",
+      "path:docs/editor/project-tasks-board.md",
+      "path:src/Electron2D.VsCode/package.json",
+      "path:src/Electron2D.VsCode/src/webview.ts",
+      "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+      "path:data/dev-diary/**"
+    ],
+    "forbiddenChanges": [
+      "Прямое редактирование .taskboard, .e2task или board.e2tasks.",
+      "Изменение production-кода под видом нормализации исторического контракта."
+    ],
+    "requiredOutputs": [
+      "Актуальные русские описание и критерии без требований, отменённых более поздними задачами.",
+      "Typed links и evidence, связывающие каждый Passed-критерий с текущим документом или тестом.",
+      "Review/Submitted для доказанного результата без создания ложной human acceptance."
+    ],
+    "commands": [
+      {
+        "commandId": "command-vscode-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "command-taskboard-verify",
+        "kind": "Process",
+        "executable": "e2d",
+        "arguments": [
+          "tasks",
+          "verify",
+          "--project",
+          ".",
+          "--format",
+          "json"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-11T16:41:05.3871044+00:00",
+  "updatedAt": "2026-07-14T14:32:02.6224776+00:00",
+  "submittedAt": "2026-07-14T12:58:11.6271825+00:00",
+  "completedAt": "2026-07-14T14:32:02.6224776+00:00",
+  "acceptedAt": "2026-07-14T14:32:02.6224776+00:00",
+  "acceptedBy": "vscode:eduar",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "activity-fd4da8736f3b4a8e8d02ed15009ae906",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T16:51:25.7566859+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Removed column min-height:100%; retained height:max-content, board align-items:start and overflow:auto. RED 42/43 → GREEN 43/43, typecheck, Extension Host, headless content-height visual, VSIX package/install and docs checks passed."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": [],
+  "workspaceChanges": {
+    "baseRevision": "workspace:e395df255f9cb8f9f9782d2c95a61675951b946141d0ba359c549d1411c9d5a1",
+    "currentRevision": "workspace:de3b2bdd4d476597dbc305cc084ce1ce70e18f75035de541805d63f877bcc53c",
+    "files": [
+      {
+        "path": "data/dev-diary/2026/07 Июль/14-07-2026.md",
+        "changeKind": "Modified",
+        "previousPath": null,
+        "baseSha256": "5bb70de13765b90dca45918459f8784d0792f26e35bd037496437ab987f1271c",
+        "currentSha256": "4dd871cc20be7af1f6d0ec2ce40360dc4df8ceed0ebf8f9dc22468073392c19d",
+        "firstChangedAt": "2026-07-14T14:32:02.6224776+00:00",
+        "lastChangedAt": "2026-07-14T14:32:02.6224776+00:00",
+        "agentRunIds": []
+      },
+      {
+        "path": "docs/editor/project-tasks-board.md",
+        "changeKind": "Modified",
+        "previousPath": null,
+        "baseSha256": "77e5483f3130505d6ca2bab36fcf72b7c9c33d41bbe56b542bd3e0ec4ceb1163",
+        "currentSha256": "66e1e99c07cb0da14936cf5edb6fbfda5b8a77b29f51cc7f311f67275b0094be",
+        "firstChangedAt": "2026-07-14T14:32:02.6224776+00:00",
+        "lastChangedAt": "2026-07-14T14:32:02.6224776+00:00",
+        "agentRunIds": []
+      }
+    ]
+  },
+  "lastActivitySequence": 11
+}

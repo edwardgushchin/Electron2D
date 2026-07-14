@@ -1,0 +1,235 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-dd9a891241f73f86d9df6d40838951ba",
+  "revision": 2,
+  "taskId": "T-0179",
+  "legacyAliases": [],
+  "title": "Основа UI D - настольные элементы управления для Editor",
+  "description": "## T-0179 [ ] P0: Основа UI D - настольные элементы управления для Editor\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: tracking\n- Приоритет: P0\n- Execution class: `tracking`\n- Scheduling tier: `next`\n- Зависимости: T-0178\n- Дочерние задачи: T-0194, T-0195, T-0196, T-0197\n- Ссылки:\n  - Доменный документ: `docs/ui/basic-controls.md`; `docs/ui/structured-controls.md`; `docs/ui/containers.md`; `docs/editor/editor-shell-layout.md`\n  - Исходный код: `src/Electron2D/Graphics/UI/`; `src/Electron2D.Editor/`\n  - Тесты: `tests/Electron2D.Tests.Integration/StructuredControlInteractionTests.cs`; `tests/Electron2D.Tests.Integration/BasicControlInteractionTests.cs`; `tests/Electron2D.Tests.Integration/ContainerLayoutTests.cs`; `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`; `tests/Electron2D.Tests.Integration/EditorScriptWorkspaceTests.cs`\n\n### Execution contract\n\n- Task type: tracking\n- Ready-to-start:\n  - можно начинать только для синхронизации child task list, dependency/status notes or parent current evidence.\n  - все production changes должны быть перенесены в named child tasks before implementation.\n- Stop conditions:\n  - требуется изменить production code, tests, generated artifacts, runtime behavior or public docs beyond status/dependency bookkeeping.\n  - child tasks are missing, blocked or not accepted but parent is being marked complete.\n- May change:\n  - `TASKS.md` status/dependency/current evidence notes for T-0179 and its explicitly listed children.\n  - diary entries and lightweight planning notes.\n- Must not change:\n  - production source, tests, generated artifacts, public API behavior, runtime/editor implementation or child task scope.\n- Required outputs:\n  - updated child-task status summary in `TASKS.md`.\n  - current evidence explaining which children remain open/blocked/accepted.\n  - diary entry with no-production-change confirmation.\n- Required commands:\n  - `git diff --check`\n- External audit:\n  - inherited; tracking tasks do not request audit packages directly\n\n### Самодостаточное описание\n\nЦель tracking-задачи - собрать набор runtime controls, на котором можно строить настоящий Editor: menu bar, popup menu, toolbar buttons, checkboxes, line edits, spin boxes, option buttons, tabs, trees, lists, scroll containers, split containers, text/code editors, separators, tooltips и progress indicators. Исполняемая работа разделена на `T-0194`-`T-0197`; эту задачу нельзя брать как один production объём.\n\nОжидаемый результат: перечисленные controls имеют layout, rendering, input, focus, keyboard navigation, clipping, states и theme lookup на уровне runtime. Editor-specific `DockHost`, property editors и timeline могут быть internal composite controls, но не должны обходить общий runtime UI stack.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] `T-0194` принята пользователем.\n- [ ] `T-0195` принята пользователем.\n- [ ] `T-0196` принята пользователем.\n- [ ] `T-0197` принята пользователем.\n- [ ] Общий manifest настольных controls в доменных документах согласован с фактически принятыми дочерними задачами.\n\n### Подзадачи\n\n- [ ] Вести зависимости и объём дочерних задач.\n- [ ] После приёмки дочерних задач обновить итоговый manifest и статус `T-0179`.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача завершает runtime UI foundation перед editor-level задачами. До её закрытия визуальная полировка Script, Tasks, Project Settings и specialized editors не должна расширяться.\n\n2026-06-24T03:20:00+03:00 - Scope остаётся крупным milestone control-library. Перед implementation рекомендуется разбить его на menus/toolbars/tabs, form controls, tree/list/scroll/split и text/code editing; `CodeEdit` можно выделить ближе к `T-0184`.\n\n2026-06-24T03:49:00+03:00 - Задача переведена в `tracking`; дочерние production-задачи: `T-0194` меню/toolbars/tabs, `T-0195` form controls, `T-0196` tree/list/scroll/split, `T-0197` text/code editing и индикаторы.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": "task-6e1088ab0e5bff54d81278aab3c7ac54",
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-62dcdbbe53532a93688e38a62b8c719e"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`T-0194` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`T-0195` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`T-0196` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`T-0197` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Общий manifest настольных controls в доменных документах согласован с фактически принятыми дочерними задачами.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача завершает runtime UI foundation перед editor-level задачами. До её закрытия визуальная полировка Script, Tasks, Project Settings и specialized editors не должна расширяться."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T00:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Scope остаётся крупным milestone control-library. Перед implementation рекомендуется разбить его на menus/toolbars/tabs, form controls, tree/list/scroll/split и text/code editing; `CodeEdit` можно выделить ближе к `T-0184`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T00:49:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача переведена в `tracking`; дочерние production-задачи: `T-0194` меню/toolbars/tabs, `T-0195` form controls, `T-0196` tree/list/scroll/split, `T-0197` text/code editing и индикаторы."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "inherited; tracking tasks do not request audit packages directly"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/editor/editor-shell-layout.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/ui/basic-controls.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/ui/containers.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/ui/structured-controls.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "src/Electron2D/Graphics/UI"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/BasicControlInteractionTests.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ContainerLayoutTests.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorScriptWorkspaceTests.cs"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/StructuredControlInteractionTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tracking",
+    "readyToStart": [
+      "можно начинать только для синхронизации child task list, dependency/status notes or parent current evidence.",
+      "все production changes должны быть перенесены в named child tasks before implementation."
+    ],
+    "stopConditions": [
+      "требуется изменить production code, tests, generated artifacts, runtime behavior or public docs beyond status/dependency bookkeeping.",
+      "child tasks are missing, blocked or not accepted but parent is being marked complete."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` status/dependency/current evidence notes for T-0179 and its explicitly listed children.",
+      "diary entries and lightweight planning notes."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, public API behavior, runtime/editor implementation or child task scope."
+    ],
+    "requiredOutputs": [
+      "updated child-task status summary in `TASKS.md`.",
+      "current evidence explaining which children remain open/blocked/accepted.",
+      "diary entry with no-production-change confirmation."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "inherited; tracking tasks do not request audit packages directly",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 132811,
+      "byteLength": 6526,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "5f877f4bd2d88a259b36c421ce3f15c83d138995240e28c6b8eb4be9adbc4fdb",
+      "markdown": "## T-0179 [ ] P0: Основа UI D - настольные элементы управления для Editor\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: tracking\n- Приоритет: P0\n- Execution class: `tracking`\n- Scheduling tier: `next`\n- Зависимости: T-0178\n- Дочерние задачи: T-0194, T-0195, T-0196, T-0197\n- Ссылки:\n  - Доменный документ: `docs/ui/basic-controls.md`; `docs/ui/structured-controls.md`; `docs/ui/containers.md`; `docs/editor/editor-shell-layout.md`\n  - Исходный код: `src/Electron2D/Graphics/UI/`; `src/Electron2D.Editor/`\n  - Тесты: `tests/Electron2D.Tests.Integration/StructuredControlInteractionTests.cs`; `tests/Electron2D.Tests.Integration/BasicControlInteractionTests.cs`; `tests/Electron2D.Tests.Integration/ContainerLayoutTests.cs`; `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`; `tests/Electron2D.Tests.Integration/EditorScriptWorkspaceTests.cs`\n\n### Execution contract\n\n- Task type: tracking\n- Ready-to-start:\n  - можно начинать только для синхронизации child task list, dependency/status notes or parent current evidence.\n  - все production changes должны быть перенесены в named child tasks before implementation.\n- Stop conditions:\n  - требуется изменить production code, tests, generated artifacts, runtime behavior or public docs beyond status/dependency bookkeeping.\n  - child tasks are missing, blocked or not accepted but parent is being marked complete.\n- May change:\n  - `TASKS.md` status/dependency/current evidence notes for T-0179 and its explicitly listed children.\n  - diary entries and lightweight planning notes.\n- Must not change:\n  - production source, tests, generated artifacts, public API behavior, runtime/editor implementation or child task scope.\n- Required outputs:\n  - updated child-task status summary in `TASKS.md`.\n  - current evidence explaining which children remain open/blocked/accepted.\n  - diary entry with no-production-change confirmation.\n- Required commands:\n  - `git diff --check`\n- External audit:\n  - inherited; tracking tasks do not request audit packages directly\n\n### Самодостаточное описание\n\nЦель tracking-задачи - собрать набор runtime controls, на котором можно строить настоящий Editor: menu bar, popup menu, toolbar buttons, checkboxes, line edits, spin boxes, option buttons, tabs, trees, lists, scroll containers, split containers, text/code editors, separators, tooltips и progress indicators. Исполняемая работа разделена на `T-0194`-`T-0197`; эту задачу нельзя брать как один production объём.\n\nОжидаемый результат: перечисленные controls имеют layout, rendering, input, focus, keyboard navigation, clipping, states и theme lookup на уровне runtime. Editor-specific `DockHost`, property editors и timeline могут быть internal composite controls, но не должны обходить общий runtime UI stack.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] `T-0194` принята пользователем.\n- [ ] `T-0195` принята пользователем.\n- [ ] `T-0196` принята пользователем.\n- [ ] `T-0197` принята пользователем.\n- [ ] Общий manifest настольных controls в доменных документах согласован с фактически принятыми дочерними задачами.\n\n### Подзадачи\n\n- [ ] Вести зависимости и объём дочерних задач.\n- [ ] После приёмки дочерних задач обновить итоговый manifest и статус `T-0179`.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача завершает runtime UI foundation перед editor-level задачами. До её закрытия визуальная полировка Script, Tasks, Project Settings и specialized editors не должна расширяться.\n\n2026-06-24T03:20:00+03:00 - Scope остаётся крупным milestone control-library. Перед implementation рекомендуется разбить его на menus/toolbars/tabs, form controls, tree/list/scroll/split и text/code editing; `CodeEdit` можно выделить ближе к `T-0184`.\n\n2026-06-24T03:49:00+03:00 - Задача переведена в `tracking`; дочерние production-задачи: `T-0194` меню/toolbars/tabs, `T-0195` form controls, `T-0196` tree/list/scroll/split, `T-0197` text/code editing и индикаторы.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

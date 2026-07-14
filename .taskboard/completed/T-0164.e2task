@@ -1,0 +1,321 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-15a643ccdfc69372590ed9d720d7f814",
+  "revision": 2,
+  "taskId": "T-0164",
+  "legacyAliases": [],
+  "title": "Реализовать WebAssembly export и browser runtime для запуска игр в браузере",
+  "description": "## T-0164: Реализовать WebAssembly export и browser runtime для запуска игр в браузере\n\n- Закрыта: 2026-06-23T03:35:00+03:00\n- Коммит: `d55129e feat: add webassembly browser export runtime`\n- Спецификация:\n  - `docs/export/webassembly-browser-export.md`\n  - `docs/export/export-preset-model.md`\n  - `docs/releases/0.1.0-preview.md`\n- Документация:\n  - `docs/export/webassembly-browser-export.md`\n  - `docs/export/export-guide.md`\n  - `docs/cli/e2d-cli.md`\n  - `docs/documentation/user-guide.md`\n  - `docs/documentation/troubleshooting-release-checklist.md`\n- Исходный код и тесты:\n  - `src/Electron2D/Export/Web/`\n  - `src/Electron2D/Export/Presets/`\n  - `src/Electron2D.Cli/CliGeneralCommands.cs`\n  - `tests/Electron2D.Tests.Integration/WebAssemblyExportTests.cs`\n  - `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`\n\n### Сводка\n\nДобавлен target `WebAssemblyBrowser` с runtime identifier `browser-wasm`, fail-closed toolchain diagnostic для WebAssembly build tools, internal planner, package builder и smoke runner. CLI получил specialized routes `export plan-web`, `export build-web` и `export run-web`, которые не queue generic workspace job: `plan-web` возвращает deterministic publish/package plan, `build-web` создаёт static `wwwroot` layout и при обычном запуске сначала проверяет matching WebAssembly toolchain для `dotnet publish`, а `run-web` сохраняет `Electron2D.WebAssemblySmokeArtifact` с launch URL и criteria results.\n\n### Критерии и результат\n\n- [x] Спецификация web export добавлена и описывает target, `browser-wasm`, package layout, loader, assets, diagnostics, ограничения и smoke criteria.\n- [x] Export preset model поддерживает `WebAssemblyBrowser` без регрессий существующих targets.\n- [x] CLI умеет планировать build/run workflow и fail closed при отсутствии подходящего WebAssembly toolchain.\n- [x] Создаётся проверяемый browser package layout: `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, `_framework`, `assets`, `project.e2d.json`, main scene и launch instructions.\n- [x] Smoke artifact проверяет startup, scene load, rendering readiness, input event path, audio policy state, resource loading и browser sandbox save-data policy.\n- [x] Red tests добавлены до implementation и зафиксировали отсутствие builder/run path; green tests покрывают planner/layout/diagnostics/package/smoke/CLI.\n- [x] Документация export, CLI, user guide и troubleshooting обновлена по фактическому поведению.\n- [x] Source license/header checks, focused tests, documentation verifiers, build и full test sweep прошли.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~WebAssemblyExportTests` упал ожидаемо на отсутствующем `WebAssemblyBrowser`/planner; после добавления package/run tests focused run упал ожидаемо на отсутствующих `Electron2DWebAssemblyPackageBuilder` и `Electron2DWebAssemblySmokeRunner`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~WebAssemblyExportTests|FullyQualifiedName~Electron2DCliWorkflowTests.ExportBuildWebCreatesBrowserPackageWithoutQueueingJob|FullyQualifiedName~Electron2DCliWorkflowTests.ExportRunWebWritesBrowserSmokeArtifactWithoutQueueingJob|FullyQualifiedName~Electron2DCliWorkflowTests.ExportPlanWebReturnsWebAssemblyBrowserPlanWithoutQueueingJob\"` прошёл `8/8`.\n- Focused regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~WebAssemblyExportTests|FullyQualifiedName~ExportPresetTests|FullyQualifiedName~Electron2DCliWorkflowTests|FullyQualifiedName~LocalDocumentationCliTests\"` прошёл `27/27`.\n- Documentation: `powershell -ExecutionPolicy Bypass -File tools\\Update-LocalDocumentationIndex.ps1`; `tools\\Verify-ExportDocumentation.ps1`; `tools\\Verify-UserDocumentation.ps1`; `tools\\Verify-LocalDocumentation.ps1`; `tools\\Verify-CanonicalGoalAlignment.ps1` прошли.\n- Source/build: `tools\\Verify-SourceDomainLayout.ps1` прошёл для `312` source files; `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`; `tools\\Verify-SourceLicenseHeaders.ps1` после staging прошёл для `570` tracked source files.\n- Full tests: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `395/395`, runtime smoke `5/5`, golden-data `12/12`.\n- Git: `git diff --cached --check` прошёл; commit `d55129e`.\n\n### Решения\n\n- `build-web --skip-publish true` добавлен как deterministic package-layout режим для CI/tests: он не объявляет внешний publish успешным, но создаёт проверяемый static browser package.\n- Обычный `build-web` проверяет WebAssembly workload на соответствие активному SDK, поэтому установленный `wasm-tools-net9` не считается достаточным для SDK `10.0.x`.\n- `run-web` сохраняет local smoke artifact и launch URL; remote hosting, CDN, PWA/service worker и полноценная browser automation оставлены за пределами текущего implementation scope.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0164 [ ] P0: Реализовать WebAssembly export и browser runtime для запуска игр в браузере\n\n- Создана: 2026-06-23T02:35:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0087, T-0034, T-0051\n- Ссылки:\n  - Спецификация: `docs/releases/0.1.0-preview.md`; `docs/export/`\n  - Документация: `docs/export/`; `docs/documentation/user-guide.md`\n  - Исходный код: `src/Electron2D/Export/`; `src/Electron2D.Cli/`; `tests/`; `tools/`\n\n### Самодостаточное описание\n\nНужно добавить отдельный web export/runtime path, позволяющий собрать игру в WebAssembly и запустить её в браузере. Результат должен быть не только записью в preset model: он должен задавать проверяемый web target, ожидаемые runtime files, browser host page/loader, packaging layout, понятные diagnostics при отсутствии web toolchain и smoke-проверку запуска. WebAssembly support не заменяет desktop/mobile targets и не должен ломать существующие presets.\n\nОграничения: не публиковать артефакты во внешние hosting-сервисы, не добавлять реальные credentials, не считать задачу закрытой без spec-first/test-first pipeline и документированного browser run workflow. Если фактическая сборка WebAssembly на текущем host невозможна, задача должна fail closed с диагностикой и не выдавать web export за готовый release path.\n\n### Критерии приёмки\n\n- [ ] В `docs/export/` добавлена или обновлена спецификация web export: target name, runtime identifier, expected package layout, browser loader, assets, diagnostics, ограничения и smoke criteria.\n- [ ] Export preset model поддерживает WebAssembly/browser target без регрессий existing Windows/Linux/macOS/Android/iOS presets.\n- [ ] CLI/tooling умеет планировать WebAssembly build/run workflow или fail closed с понятным diagnostic, если web toolchain отсутствует.\n- [ ] Создаётся проверяемый browser package layout для игры: WebAssembly output, loader/host page, static assets, project metadata и launch instructions.\n- [ ] Runtime/browser smoke проверяет хотя бы startup, scene load, rendering readiness, input event path, audio policy state, resource loading и filesystem/save-data policy для browser sandbox.\n- [ ] Добавлены red tests до implementation и green tests после implementation; если полноценный браузерный run требует внешнего toolchain, есть deterministic tests для planner/layout/diagnostics и документированный manual или automated smoke command.\n- [ ] Документация в `docs/export/` и пользовательский export guide обновлены по фактическому поведению.\n- [ ] Source license/header checks, focused export tests, documentation verifiers и нужные broader checks проходят.\n- [ ] Команды проверки и результат зафиксированы в дневнике разработки.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016",
+    "tag-0036"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-e638ce08de8baf3418a1acc91b8f2e61"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ca7dd03bdbc59bc5189e977898e8171f"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-76d6dce169972a72deab350849af2417"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Спецификация web export добавлена и описывает target, `browser-wasm`, package layout, loader, assets, diagnostics, ограничения и smoke criteria.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-15a643ccdfc69372590ed9d720d7f814/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Export preset model поддерживает `WebAssemblyBrowser` без регрессий существующих targets.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-15a643ccdfc69372590ed9d720d7f814/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "CLI умеет планировать build/run workflow и fail closed при отсутствии подходящего WebAssembly toolchain.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-15a643ccdfc69372590ed9d720d7f814/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Создаётся проверяемый browser package layout: `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, `_framework`, `assets`, `project.e2d.json`, main scene и launch instructions.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-15a643ccdfc69372590ed9d720d7f814/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Smoke artifact проверяет startup, scene load, rendering readiness, input event path, audio policy state, resource loading и browser sandbox save-data policy.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-15a643ccdfc69372590ed9d720d7f814/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Red tests добавлены до implementation и зафиксировали отсутствие builder/run path; green tests покрывают planner/layout/diagnostics/package/smoke/CLI.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-15a643ccdfc69372590ed9d720d7f814/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Документация export, CLI, user guide и troubleshooting обновлена по фактическому поведению.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-15a643ccdfc69372590ed9d720d7f814/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Source license/header checks, focused tests, documentation verifiers, build и full test sweep прошли.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-15a643ccdfc69372590ed9d720d7f814/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-23T00:35:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "27/27"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "395/395"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "8/8"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/documentation/troubleshooting-release-checklist.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/documentation/user-guide.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "docs/export"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/export/export-guide.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/export/export-preset-model.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/export/webassembly-browser-export.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "Directory",
+      "value": "src/Electron2D.Cli"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/CliGeneralCommands.cs"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "Directory",
+      "value": "src/Electron2D/Export"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "Directory",
+      "value": "src/Electron2D/Export/Presets"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "Directory",
+      "value": "src/Electron2D/Export/Web"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+    },
+    {
+      "linkId": "link-0022",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/WebAssemblyExportTests.cs"
+    },
+    {
+      "linkId": "link-0023",
+      "kind": "Directory",
+      "value": "tools"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 640261,
+      "byteLength": 9501,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "457e09a977f47ad5463a9002162d861e05e840ec4f48c2fe0163847f15b33f11",
+      "markdown": "## T-0164: Реализовать WebAssembly export и browser runtime для запуска игр в браузере\n\n- Закрыта: 2026-06-23T03:35:00+03:00\n- Коммит: `d55129e feat: add webassembly browser export runtime`\n- Спецификация:\n  - `docs/export/webassembly-browser-export.md`\n  - `docs/export/export-preset-model.md`\n  - `docs/releases/0.1.0-preview.md`\n- Документация:\n  - `docs/export/webassembly-browser-export.md`\n  - `docs/export/export-guide.md`\n  - `docs/cli/e2d-cli.md`\n  - `docs/documentation/user-guide.md`\n  - `docs/documentation/troubleshooting-release-checklist.md`\n- Исходный код и тесты:\n  - `src/Electron2D/Export/Web/`\n  - `src/Electron2D/Export/Presets/`\n  - `src/Electron2D.Cli/CliGeneralCommands.cs`\n  - `tests/Electron2D.Tests.Integration/WebAssemblyExportTests.cs`\n  - `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`\n\n### Сводка\n\nДобавлен target `WebAssemblyBrowser` с runtime identifier `browser-wasm`, fail-closed toolchain diagnostic для WebAssembly build tools, internal planner, package builder и smoke runner. CLI получил specialized routes `export plan-web`, `export build-web` и `export run-web`, которые не queue generic workspace job: `plan-web` возвращает deterministic publish/package plan, `build-web` создаёт static `wwwroot` layout и при обычном запуске сначала проверяет matching WebAssembly toolchain для `dotnet publish`, а `run-web` сохраняет `Electron2D.WebAssemblySmokeArtifact` с launch URL и criteria results.\n\n### Критерии и результат\n\n- [x] Спецификация web export добавлена и описывает target, `browser-wasm`, package layout, loader, assets, diagnostics, ограничения и smoke criteria.\n- [x] Export preset model поддерживает `WebAssemblyBrowser` без регрессий существующих targets.\n- [x] CLI умеет планировать build/run workflow и fail closed при отсутствии подходящего WebAssembly toolchain.\n- [x] Создаётся проверяемый browser package layout: `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, `_framework`, `assets`, `project.e2d.json`, main scene и launch instructions.\n- [x] Smoke artifact проверяет startup, scene load, rendering readiness, input event path, audio policy state, resource loading и browser sandbox save-data policy.\n- [x] Red tests добавлены до implementation и зафиксировали отсутствие builder/run path; green tests покрывают planner/layout/diagnostics/package/smoke/CLI.\n- [x] Документация export, CLI, user guide и troubleshooting обновлена по фактическому поведению.\n- [x] Source license/header checks, focused tests, documentation verifiers, build и full test sweep прошли.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~WebAssemblyExportTests` упал ожидаемо на отсутствующем `WebAssemblyBrowser`/planner; после добавления package/run tests focused run упал ожидаемо на отсутствующих `Electron2DWebAssemblyPackageBuilder` и `Electron2DWebAssemblySmokeRunner`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~WebAssemblyExportTests|FullyQualifiedName~Electron2DCliWorkflowTests.ExportBuildWebCreatesBrowserPackageWithoutQueueingJob|FullyQualifiedName~Electron2DCliWorkflowTests.ExportRunWebWritesBrowserSmokeArtifactWithoutQueueingJob|FullyQualifiedName~Electron2DCliWorkflowTests.ExportPlanWebReturnsWebAssemblyBrowserPlanWithoutQueueingJob\"` прошёл `8/8`.\n- Focused regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~WebAssemblyExportTests|FullyQualifiedName~ExportPresetTests|FullyQualifiedName~Electron2DCliWorkflowTests|FullyQualifiedName~LocalDocumentationCliTests\"` прошёл `27/27`.\n- Documentation: `powershell -ExecutionPolicy Bypass -File tools\\Update-LocalDocumentationIndex.ps1`; `tools\\Verify-ExportDocumentation.ps1`; `tools\\Verify-UserDocumentation.ps1`; `tools\\Verify-LocalDocumentation.ps1`; `tools\\Verify-CanonicalGoalAlignment.ps1` прошли.\n- Source/build: `tools\\Verify-SourceDomainLayout.ps1` прошёл для `312` source files; `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`; `tools\\Verify-SourceLicenseHeaders.ps1` после staging прошёл для `570` tracked source files.\n- Full tests: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `395/395`, runtime smoke `5/5`, golden-data `12/12`.\n- Git: `git diff --cached --check` прошёл; commit `d55129e`.\n\n### Решения\n\n- `build-web --skip-publish true` добавлен как deterministic package-layout режим для CI/tests: он не объявляет внешний publish успешным, но создаёт проверяемый static browser package.\n- Обычный `build-web` проверяет WebAssembly workload на соответствие активному SDK, поэтому установленный `wasm-tools-net9` не считается достаточным для SDK `10.0.x`.\n- `run-web` сохраняет local smoke artifact и launch URL; remote hosting, CDN, PWA/service worker и полноценная browser automation оставлены за пределами текущего implementation scope.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0164 [ ] P0: Реализовать WebAssembly export и browser runtime для запуска игр в браузере\n\n- Создана: 2026-06-23T02:35:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0087, T-0034, T-0051\n- Ссылки:\n  - Спецификация: `docs/releases/0.1.0-preview.md`; `docs/export/`\n  - Документация: `docs/export/`; `docs/documentation/user-guide.md`\n  - Исходный код: `src/Electron2D/Export/`; `src/Electron2D.Cli/`; `tests/`; `tools/`\n\n### Самодостаточное описание\n\nНужно добавить отдельный web export/runtime path, позволяющий собрать игру в WebAssembly и запустить её в браузере. Результат должен быть не только записью в preset model: он должен задавать проверяемый web target, ожидаемые runtime files, browser host page/loader, packaging layout, понятные diagnostics при отсутствии web toolchain и smoke-проверку запуска. WebAssembly support не заменяет desktop/mobile targets и не должен ломать существующие presets.\n\nОграничения: не публиковать артефакты во внешние hosting-сервисы, не добавлять реальные credentials, не считать задачу закрытой без spec-first/test-first pipeline и документированного browser run workflow. Если фактическая сборка WebAssembly на текущем host невозможна, задача должна fail closed с диагностикой и не выдавать web export за готовый release path.\n\n### Критерии приёмки\n\n- [ ] В `docs/export/` добавлена или обновлена спецификация web export: target name, runtime identifier, expected package layout, browser loader, assets, diagnostics, ограничения и smoke criteria.\n- [ ] Export preset model поддерживает WebAssembly/browser target без регрессий existing Windows/Linux/macOS/Android/iOS presets.\n- [ ] CLI/tooling умеет планировать WebAssembly build/run workflow или fail closed с понятным diagnostic, если web toolchain отсутствует.\n- [ ] Создаётся проверяемый browser package layout для игры: WebAssembly output, loader/host page, static assets, project metadata и launch instructions.\n- [ ] Runtime/browser smoke проверяет хотя бы startup, scene load, rendering readiness, input event path, audio policy state, resource loading и filesystem/save-data policy для browser sandbox.\n- [ ] Добавлены red tests до implementation и green tests после implementation; если полноценный браузерный run требует внешнего toolchain, есть deterministic tests для planner/layout/diagnostics и документированный manual или automated smoke command.\n- [ ] Документация в `docs/export/` и пользовательский export guide обновлены по фактическому поведению.\n- [ ] Source license/header checks, focused export tests, documentation verifiers и нужные broader checks проходят.\n- [ ] Команды проверки и результат зафиксированы в дневнике разработки.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T23:35:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-23T00:35:00.0000000+00:00",
+  "completedAt": "2026-06-23T00:35:00.0000000+00:00",
+  "acceptedAt": "2026-06-23T00:35:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-23T00:35:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

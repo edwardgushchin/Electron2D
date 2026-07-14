@@ -24,6 +24,7 @@
 */
 
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace Electron2D.Build;
@@ -43,17 +44,21 @@ internal sealed class AuditFollowupVerifier(string repositoryRoot, JsonDiagnosti
 
     public async Task<int> VerifyAsync(CancellationToken cancellationToken)
     {
-        var tasksPath = Path.Combine(repositoryRoot, "TASKS.md");
-        if (!File.Exists(tasksPath))
+        var boardPath = Path.Combine(repositoryRoot, ".taskboard", "board.e2tasks");
+        if (!File.Exists(boardPath))
         {
             diagnostics.Write(Error(
-                "E2D-BUILD-AUDIT-FOLLOWUP-TASKS-MISSING",
-                "TASKS.md was not found; audit follow-up closure notes cannot be verified.",
-                "TASKS.md"));
+                "E2D-BUILD-AUDIT-FOLLOWUP-TASKBOARD-MISSING",
+                ".taskboard/board.e2tasks was not found; audit follow-up closure notes cannot be verified.",
+                ".taskboard/board.e2tasks"));
             return RepositoryBuildExitCodes.Failed;
         }
 
-        var closures = ReadClosureNotes(tasksPath);
+        if (!TryReadClosureNotes(out var closures))
+        {
+            return RepositoryBuildExitCodes.Failed;
+        }
+
         var reportPaths = await GetAuditReportPathsAsync(cancellationToken).ConfigureAwait(false);
         var findings = new List<AuditFollowupFinding>();
 
@@ -87,7 +92,7 @@ internal sealed class AuditFollowupVerifier(string repositoryRoot, JsonDiagnosti
             {
                 errors.Add(Error(
                     "E2D-BUILD-AUDIT-FOLLOWUP-UNCLOSED",
-                    $"Actionable {finding.Kind} {finding.FindingId} from {finding.ReportPath} has no closure note in TASKS.md or completed task archives.",
+                    $"Actionable {finding.Kind} {finding.FindingId} from {finding.ReportPath} has no closure note in active or completed .taskboard tasks.",
                     finding.ReportPath,
                     finding.LineNumber));
                 continue;
@@ -129,7 +134,7 @@ internal sealed class AuditFollowupVerifier(string repositoryRoot, JsonDiagnosti
                 new ProcessRunRequest(
                     "verify audit-followups git ls-files",
                     "git",
-                    ["ls-files", "--", "TASKS.md", "docs/verdicts"],
+                    ["ls-files", "--", "docs/verdicts"],
                     repositoryRoot,
                     TimeSpan.FromSeconds(30)),
                 cancellationToken).ConfigureAwait(false);
@@ -163,36 +168,171 @@ internal sealed class AuditFollowupVerifier(string repositoryRoot, JsonDiagnosti
             .ToArray();
     }
 
-    private IReadOnlyList<AuditFollowupClosureNote> ReadClosureNotes(string tasksPath)
+    private bool TryReadClosureNotes(out IReadOnlyList<AuditFollowupClosureNote> closures)
     {
-        var sources = new List<(string RelativePath, string Text)>
-        {
-            ("TASKS.md", File.ReadAllText(tasksPath, Encoding.UTF8))
-        };
+        var sources = new List<(string RelativePath, string Text)>();
 
-        foreach (var archivePath in EnumerateCompletedTaskArchivePaths())
+        foreach (var taskPath in EnumerateTaskPaths())
         {
-            var fullPath = Path.Combine(repositoryRoot, archivePath.Replace('/', Path.DirectorySeparatorChar));
-            sources.Add((archivePath, File.ReadAllText(fullPath, Encoding.UTF8)));
+            var fullPath = Path.Combine(repositoryRoot, taskPath.Replace('/', Path.DirectorySeparatorChar));
+            try
+            {
+                using var document = JsonDocument.Parse(File.ReadAllText(fullPath, Encoding.UTF8));
+                var root = document.RootElement;
+                if (root.ValueKind != JsonValueKind.Object ||
+                    !root.TryGetProperty("format", out var format) ||
+                    !string.Equals(format.GetString(), "Electron2D.TaskFile", StringComparison.Ordinal) ||
+                    !root.TryGetProperty("version", out var version) ||
+                    version.ValueKind != JsonValueKind.Number ||
+                    version.GetInt32() is not (2 or 3))
+                {
+                    diagnostics.Write(Error(
+                        "E2D-BUILD-AUDIT-FOLLOWUP-TASK-INVALID",
+                        "Audit follow-up task source must be an Electron2D.TaskFile version 2 or 3 document.",
+                        taskPath));
+                    closures = [];
+                    return false;
+                }
+
+                AddStringProperty(root, "description", taskPath, sources);
+                if (version.GetInt32() == 2)
+                {
+                    AddArrayStringProperties(root, "activity", "payload", taskPath, sources);
+                }
+                else
+                {
+                    AddV3ConversationSources(root, taskPath, sources);
+                    AddV3ActivitySources(root, taskPath, sources);
+                }
+
+                AddArrayStringProperties(root, "legacySourceFragments", "markdown", taskPath, sources);
+            }
+            catch (Exception exception) when (exception is JsonException or IOException or UnauthorizedAccessException)
+            {
+                diagnostics.Write(Error(
+                    "E2D-BUILD-AUDIT-FOLLOWUP-TASK-INVALID",
+                    $"Audit follow-up task source could not be read: {exception.Message}",
+                    taskPath));
+                closures = [];
+                return false;
+            }
         }
 
-        return sources
+        closures = sources
             .SelectMany(source => AuditFollowupClosureParser.ExtractClosures(source.Text, source.RelativePath))
             .ToArray();
+        return true;
     }
 
-    private IReadOnlyList<string> EnumerateCompletedTaskArchivePaths()
+    private IReadOnlyList<string> EnumerateTaskPaths()
     {
         return new[]
             {
-                Path.Combine(repositoryRoot, "completed-tasks"),
-                Path.Combine(repositoryRoot, "data", "completed-tasks")
+                Path.Combine(repositoryRoot, ".taskboard", "tasks"),
+                Path.Combine(repositoryRoot, ".taskboard", "completed")
             }
             .Where(Directory.Exists)
-            .SelectMany(root => Directory.EnumerateFiles(root, "*.md", SearchOption.AllDirectories))
+            .SelectMany(root => Directory.EnumerateFiles(root, "*.e2task", SearchOption.TopDirectoryOnly))
             .Select(path => Path.GetRelativePath(repositoryRoot, path).Replace('\\', '/'))
             .OrderBy(path => path, StringComparer.Ordinal)
             .ToArray();
+    }
+
+    private static void AddStringProperty(
+        JsonElement root,
+        string propertyName,
+        string sourcePath,
+        List<(string RelativePath, string Text)> sources)
+    {
+        if (root.TryGetProperty(propertyName, out var value) && value.ValueKind == JsonValueKind.String)
+        {
+            sources.Add((sourcePath, value.GetString() ?? string.Empty));
+        }
+    }
+
+    private static void AddArrayStringProperties(
+        JsonElement root,
+        string arrayPropertyName,
+        string stringPropertyName,
+        string sourcePath,
+        List<(string RelativePath, string Text)> sources)
+    {
+        if (!root.TryGetProperty(arrayPropertyName, out var items) || items.ValueKind != JsonValueKind.Array)
+        {
+            return;
+        }
+
+        foreach (var item in items.EnumerateArray())
+        {
+            if (item.ValueKind == JsonValueKind.Object)
+            {
+                AddStringProperty(item, stringPropertyName, sourcePath, sources);
+            }
+        }
+    }
+
+    private static void AddV3ConversationSources(
+        JsonElement root,
+        string sourcePath,
+        List<(string RelativePath, string Text)> sources)
+    {
+        if (!root.TryGetProperty("conversation", out var conversation) ||
+            conversation.ValueKind != JsonValueKind.Object ||
+            !conversation.TryGetProperty("messages", out var messages) ||
+            messages.ValueKind != JsonValueKind.Array)
+        {
+            return;
+        }
+
+        foreach (var message in messages.EnumerateArray())
+        {
+            if (message.ValueKind != JsonValueKind.Object ||
+                !message.TryGetProperty("content", out var content) ||
+                content.ValueKind != JsonValueKind.Array)
+            {
+                continue;
+            }
+
+            foreach (var part in content.EnumerateArray())
+            {
+                if (part.ValueKind != JsonValueKind.Object)
+                {
+                    continue;
+                }
+
+                AddStringProperty(part, "markdown", sourcePath, sources);
+                AddStringProperty(part, "text", sourcePath, sources);
+            }
+        }
+    }
+
+    private static void AddV3ActivitySources(
+        JsonElement root,
+        string sourcePath,
+        List<(string RelativePath, string Text)> sources)
+    {
+        if (!root.TryGetProperty("activity", out var activity) || activity.ValueKind != JsonValueKind.Array)
+        {
+            return;
+        }
+
+        foreach (var entry in activity.EnumerateArray())
+        {
+            if (entry.ValueKind != JsonValueKind.Object ||
+                !entry.TryGetProperty("payload", out var payload) ||
+                payload.ValueKind != JsonValueKind.Object)
+            {
+                continue;
+            }
+
+            foreach (var property in payload.EnumerateObject())
+            {
+                if (property.Value.ValueKind == JsonValueKind.String)
+                {
+                    sources.Add((sourcePath, property.Value.GetString() ?? string.Empty));
+                }
+            }
+        }
     }
 
     private static bool IsAuditReportPath(string path)
@@ -383,7 +523,7 @@ internal static class AuditFollowupClosureParser
         @"docs/verdicts/[^\s`'""]+\.md",
         RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-    public static IReadOnlyList<AuditFollowupClosureNote> ExtractClosures(string tasksText, string sourcePath = "TASKS.md")
+    public static IReadOnlyList<AuditFollowupClosureNote> ExtractClosures(string tasksText, string sourcePath = ".taskboard")
     {
         var lines = NormalizeNewlines(tasksText).Split('\n');
         var closures = new List<AuditFollowupClosureNote>();

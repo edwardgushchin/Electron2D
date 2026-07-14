@@ -16,7 +16,7 @@ In StellarDown, implementation follows this pipeline:
 4. Green tests fourth
 5. Update the same domain document when implementation changes actual behavior, limits, commands, or verification evidence
 
-Then the repository task tracker, development diary, domain document, and final checks provide the completion record.
+Then taskboard activity, the development diary, the domain document, and final checks provide the completion record.
 
 **Core principle:** If you didn't watch the test fail, you don't know if it tests the right thing.
 
@@ -29,7 +29,7 @@ This skill is the implementation half of the repository's document-to-code workf
 - The domain document comes first in `docs/<domain>/`. It is the single durable source for expected behavior, current behavior, limits, and verification notes.
 - If current-state knowledge must be captured, put it in the same domain document instead of creating a separate implementation doc.
 - `spec-driven-development` may be used for Spec-Kit planning artifacts, but it does not replace this pipeline.
-- `TASKS.md` tracks active work, `dev-diary/` records the session, and `completed-tasks/YYYY/MM Месяц.md` stores accepted/closed task history grouped by completion month.
+- `.taskboard/board.e2tasks` and its `.e2task` documents track work through `e2d tasks`; `data/dev-diary/` records the session; accepted or cancelled tasks are archived through the CLI under `.taskboard/completed/`.
 
 ## When to Use
 

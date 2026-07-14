@@ -1,0 +1,344 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-18095a0a589821d7a54d5aa661bab2da",
+  "revision": 2,
+  "taskId": "T-0119",
+  "legacyAliases": [],
+  "title": "Реализовать локальный MCP-сервер поверх активной Editor-сессии и `Tooling`",
+  "description": "# T-0119 — Реализовать локальный MCP-сервер поверх активной Editor-сессии и `Tooling`\n\n- Завершена: 2026-06-22T21:06:00+03:00\n- Коммит: `e32c917` (`feat: add local mcp adapter contract`)\n\n## Ссылки\n\n- Спецификация: `docs/mcp/mcp-server.md`; `docs/architecture/ai-friendly-workflow.md`; `docs/tooling/editor-session-discovery.md`; `docs/tooling/tooling-service-boundary.md`; `docs/project-system/workspace-jobs.md`; `docs/project-system/project-task-manager.md`\n- Документация: `docs/mcp/mcp-server.md`; `docs/tooling/tooling-service-boundary.md`; `docs/tooling/editor-session-discovery.md`; `docs/cli/e2d-cli.md`; `docs/diagnostics/diagnostics-core.md`\n- Исходный код: `src/Electron2D.Mcp/`; `src/Electron2D.Cli/`; `src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/Electron2DMcpServerTests.cs`; `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`\n\n## Самодостаточное описание\n\n`Electron2D.Mcp` получил локальный in-process MCP-like adapter: внутренний проверяемый слой resources/tools поверх `ProjectWorkspace`, `EditorSessionRegistry` и `Electron2D.Tooling`. Adapter выбирает active Editor route, когда открыт primary Editor для project root, и headless route, когда Editor закрыт. Текущий scope не запускает сетевой transport и не зависит от облачного AI-провайдера.\n\n## Что сделано\n\n- Добавлена целевая спецификация `docs/mcp/mcp-server.md`.\n- Добавлен project `src/Electron2D.Mcp` и включён в `src/Electron2D.sln`.\n- `McpServerSession` публикует обязательные Preview resources и tools.\n- `workspace_get_state` возвращает live open documents, dirty documents, workspace/content revisions и document revisions.\n- `workspace_apply_transaction` применяет изменения через `ProjectToolingHost.Project.ApplyTextEdit`; active Editor route использует `WorkspaceOnly`, headless route использует `HeadlessCommit`.\n- `project_build`, `project_run`, `project_test`, `project_export` и `resource_import` создают job-backed queued event с snapshot identity fields.\n- `task_list`, `task_get`, `task_append_activity`, `task_submit_for_acceptance`, `task_accept`, `task_request_changes` и `task_cancel` идут через `TaskService`.\n- Agent `task_accept` и `task_request_changes` не получают trusted human capability и возвращают `E2D-TASK-0002`.\n- Узкие scene/resource/runtime tools публикуются в manifest, но безопасно возвращают `E2D-MCP-0001` до реализации production semantics.\n- `e2d mcp serve --format json` возвращает manifest resources/tools и `cloudProviderRequired=false`.\n- Добавлена implementation documentation `docs/mcp/mcp-server.md`.\n\n## Критерии приёмки\n\n- [x] MCP resources покрывают project summary/settings/scenes/resources/diagnostics, open documents, selection, import/build state, scene/resource by UID, API type, Godot compatibility, editor capabilities и runtime capabilities.\n- [x] MCP tools покрывают validate/build/run/test/export, scene/resource операции, workspace transactions, conflict resolution, Undo, runtime automation и ProjectTaskManager operations.\n- [x] MCP task tools/resources являются adapter-ом над `TaskService` из `T-0115`, а не второй реализацией task model/storage.\n- [x] MCP публикует job events для import/build/test/export/run; в текущем Preview исполняемый минимум возвращает queued event, а остальные event names закреплены specification для будущего stream transport.\n- [x] MCP job events сохраняют `InputSnapshotId`, `InputWorkspaceRevision`, `InputContentRevision`, `InputDocumentRevisions`, `InputBuildConfigurationHash` и `stale` markers из core job contract.\n- [x] MCP task tools не принимают самодекларируемый human actor для `task_accept`; человеческая приёмка проходит только через trusted Editor confirmation.\n- [x] Когда Editor открыт, MCP-команды применяются через активный `ProjectWorkspace`, а не через параллельное чтение и запись тех же файлов.\n- [x] Когда Editor закрыт, MCP создаёт headless `ProjectWorkspace` с теми же результатами команд.\n- [x] MCP не выполняет произвольный shell и не читает signing secrets.\n- [x] Mutating tools идут через Tooling operation result, task activity или job contract; прямые file writes вне transaction engine отсутствуют.\n- [x] Добавлены integration tests без обращения к облачным AI-провайдерам.\n- [x] Документация MCP обновлена.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DMcpServerTests` падал на отсутствующем `src\\Electron2D.Mcp\\Electron2D.Mcp.csproj` и namespace `Electron2D.Mcp`.\n- Green focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DMcpServerTests` прошёл `5/5`.\n- Regression focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Electron2DMcpServerTests|FullyQualifiedName~Electron2DCliWorkflowTests\"` прошёл `14/14`.\n- `git diff --check` прошёл с предупреждениями только о будущей нормализации LF/CRLF.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: `539` tracked source files.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `338/338`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: `305` source files.\n\n## Решения\n\n- `T-0119` закрывает проверяемый in-process MCP contract; реальный network/pipe transport добавляется позднее поверх тех же resources/tools.\n- Узкие scene/resource/runtime tools уже видимы в manifest, но до отдельных production-задач возвращают `E2D-MCP-0001`, чтобы AI-клиенты получали стабильный failure mode.\n- `e2d mcp serve` в текущем scope является manifest-командой без долгоживущего процесса и без AI-provider SDK.\n- Local workflow files `TASKS.md`, `completed-tasks/` и `dev-diary/` остаются ignored/local-only и не входят в commit.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "MCP resources покрывают project summary/settings/scenes/resources/diagnostics, open documents, selection, import/build state, scene/resource by UID, API type, Godot compatibility, editor capabilities и runtime capabilities.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-18095a0a589821d7a54d5aa661bab2da/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "MCP tools покрывают validate/build/run/test/export, scene/resource операции, workspace transactions, conflict resolution, Undo, runtime automation и ProjectTaskManager operations.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-18095a0a589821d7a54d5aa661bab2da/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "MCP task tools/resources являются adapter-ом над `TaskService` из `T-0115`, а не второй реализацией task model/storage.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-18095a0a589821d7a54d5aa661bab2da/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "MCP публикует job events для import/build/test/export/run; в текущем Preview исполняемый минимум возвращает queued event, а остальные event names закреплены specification для будущего stream transport.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-18095a0a589821d7a54d5aa661bab2da/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "MCP job events сохраняют `InputSnapshotId`, `InputWorkspaceRevision`, `InputContentRevision`, `InputDocumentRevisions`, `InputBuildConfigurationHash` и `stale` markers из core job contract.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-18095a0a589821d7a54d5aa661bab2da/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "MCP task tools не принимают самодекларируемый human actor для `task_accept`; человеческая приёмка проходит только через trusted Editor confirmation.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-18095a0a589821d7a54d5aa661bab2da/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Когда Editor открыт, MCP-команды применяются через активный `ProjectWorkspace`, а не через параллельное чтение и запись тех же файлов.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-18095a0a589821d7a54d5aa661bab2da/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Когда Editor закрыт, MCP создаёт headless `ProjectWorkspace` с теми же результатами команд.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-18095a0a589821d7a54d5aa661bab2da/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "MCP не выполняет произвольный shell и не читает signing secrets.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-18095a0a589821d7a54d5aa661bab2da/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Mutating tools идут через Tooling operation result, task activity или job contract; прямые file writes вне transaction engine отсутствуют.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-18095a0a589821d7a54d5aa661bab2da/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Добавлены integration tests без обращения к облачным AI-провайдерам.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-18095a0a589821d7a54d5aa661bab2da/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Документация MCP обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-18095a0a589821d7a54d5aa661bab2da/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T18:06:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "14/14"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "338/338"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "completed-tasks"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "dev-diary"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/architecture/ai-friendly-workflow.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/diagnostics/diagnostics-core.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/mcp/mcp-server.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/project-system/project-task-manager.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/project-system/workspace-jobs.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "docs/tooling/editor-session-discovery.md"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "docs/tooling/tooling-service-boundary.md"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "src/Electron2D.Cli"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "src/Electron2D.Mcp"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "Directory",
+      "value": "src/Electron2D.Mcp"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": "src/Electron2D.sln"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+    },
+    {
+      "linkId": "link-0022",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DMcpServerTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 475383,
+      "byteLength": 7586,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "6b893d9f8dd8e9c7b6a3d49f0f4ef6de41524168ba19bd0c2c94bb0c85e35b38",
+      "markdown": "# T-0119 — Реализовать локальный MCP-сервер поверх активной Editor-сессии и `Tooling`\n\n- Завершена: 2026-06-22T21:06:00+03:00\n- Коммит: `e32c917` (`feat: add local mcp adapter contract`)\n\n## Ссылки\n\n- Спецификация: `docs/mcp/mcp-server.md`; `docs/architecture/ai-friendly-workflow.md`; `docs/tooling/editor-session-discovery.md`; `docs/tooling/tooling-service-boundary.md`; `docs/project-system/workspace-jobs.md`; `docs/project-system/project-task-manager.md`\n- Документация: `docs/mcp/mcp-server.md`; `docs/tooling/tooling-service-boundary.md`; `docs/tooling/editor-session-discovery.md`; `docs/cli/e2d-cli.md`; `docs/diagnostics/diagnostics-core.md`\n- Исходный код: `src/Electron2D.Mcp/`; `src/Electron2D.Cli/`; `src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/Electron2DMcpServerTests.cs`; `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`\n\n## Самодостаточное описание\n\n`Electron2D.Mcp` получил локальный in-process MCP-like adapter: внутренний проверяемый слой resources/tools поверх `ProjectWorkspace`, `EditorSessionRegistry` и `Electron2D.Tooling`. Adapter выбирает active Editor route, когда открыт primary Editor для project root, и headless route, когда Editor закрыт. Текущий scope не запускает сетевой transport и не зависит от облачного AI-провайдера.\n\n## Что сделано\n\n- Добавлена целевая спецификация `docs/mcp/mcp-server.md`.\n- Добавлен project `src/Electron2D.Mcp` и включён в `src/Electron2D.sln`.\n- `McpServerSession` публикует обязательные Preview resources и tools.\n- `workspace_get_state` возвращает live open documents, dirty documents, workspace/content revisions и document revisions.\n- `workspace_apply_transaction` применяет изменения через `ProjectToolingHost.Project.ApplyTextEdit`; active Editor route использует `WorkspaceOnly`, headless route использует `HeadlessCommit`.\n- `project_build`, `project_run`, `project_test`, `project_export` и `resource_import` создают job-backed queued event с snapshot identity fields.\n- `task_list`, `task_get`, `task_append_activity`, `task_submit_for_acceptance`, `task_accept`, `task_request_changes` и `task_cancel` идут через `TaskService`.\n- Agent `task_accept` и `task_request_changes` не получают trusted human capability и возвращают `E2D-TASK-0002`.\n- Узкие scene/resource/runtime tools публикуются в manifest, но безопасно возвращают `E2D-MCP-0001` до реализации production semantics.\n- `e2d mcp serve --format json` возвращает manifest resources/tools и `cloudProviderRequired=false`.\n- Добавлена implementation documentation `docs/mcp/mcp-server.md`.\n\n## Критерии приёмки\n\n- [x] MCP resources покрывают project summary/settings/scenes/resources/diagnostics, open documents, selection, import/build state, scene/resource by UID, API type, Godot compatibility, editor capabilities и runtime capabilities.\n- [x] MCP tools покрывают validate/build/run/test/export, scene/resource операции, workspace transactions, conflict resolution, Undo, runtime automation и ProjectTaskManager operations.\n- [x] MCP task tools/resources являются adapter-ом над `TaskService` из `T-0115`, а не второй реализацией task model/storage.\n- [x] MCP публикует job events для import/build/test/export/run; в текущем Preview исполняемый минимум возвращает queued event, а остальные event names закреплены specification для будущего stream transport.\n- [x] MCP job events сохраняют `InputSnapshotId`, `InputWorkspaceRevision`, `InputContentRevision`, `InputDocumentRevisions`, `InputBuildConfigurationHash` и `stale` markers из core job contract.\n- [x] MCP task tools не принимают самодекларируемый human actor для `task_accept`; человеческая приёмка проходит только через trusted Editor confirmation.\n- [x] Когда Editor открыт, MCP-команды применяются через активный `ProjectWorkspace`, а не через параллельное чтение и запись тех же файлов.\n- [x] Когда Editor закрыт, MCP создаёт headless `ProjectWorkspace` с теми же результатами команд.\n- [x] MCP не выполняет произвольный shell и не читает signing secrets.\n- [x] Mutating tools идут через Tooling operation result, task activity или job contract; прямые file writes вне transaction engine отсутствуют.\n- [x] Добавлены integration tests без обращения к облачным AI-провайдерам.\n- [x] Документация MCP обновлена.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DMcpServerTests` падал на отсутствующем `src\\Electron2D.Mcp\\Electron2D.Mcp.csproj` и namespace `Electron2D.Mcp`.\n- Green focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DMcpServerTests` прошёл `5/5`.\n- Regression focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Electron2DMcpServerTests|FullyQualifiedName~Electron2DCliWorkflowTests\"` прошёл `14/14`.\n- `git diff --check` прошёл с предупреждениями только о будущей нормализации LF/CRLF.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: `539` tracked source files.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `338/338`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: `305` source files.\n\n## Решения\n\n- `T-0119` закрывает проверяемый in-process MCP contract; реальный network/pipe transport добавляется позднее поверх тех же resources/tools.\n- Узкие scene/resource/runtime tools уже видимы в manifest, но до отдельных production-задач возвращают `E2D-MCP-0001`, чтобы AI-клиенты получали стабильный failure mode.\n- `e2d mcp serve` в текущем scope является manifest-командой без долгоживущего процесса и без AI-provider SDK.\n- Local workflow files `TASKS.md`, `completed-tasks/` и `dev-diary/` остаются ignored/local-only и не входят в commit.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T18:06:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T18:06:00.0000000+00:00",
+  "completedAt": "2026-06-22T18:06:00.0000000+00:00",
+  "acceptedAt": "2026-06-22T18:06:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T18:06:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

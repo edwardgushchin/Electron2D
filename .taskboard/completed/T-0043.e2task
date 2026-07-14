@@ -1,0 +1,123 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-3a8346e3b75d5a8027c5bfbc0ea39d92",
+  "revision": 2,
+  "taskId": "T-0043",
+  "legacyAliases": [],
+  "title": "Реализовать AOT-safe metadata для Inspector и serialization без `Reflection.Emit`, runtime IL generation и dynamic iOS code load",
+  "description": "# T-0043 [x] P0: Реализовать AOT-safe metadata для Inspector и serialization без `Reflection.Emit`, runtime IL generation и dynamic iOS code load\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T07:42:22+03:00\n- Статус: завершена\n- Коммит: `T-0043: реализовать AOT-safe metadata`\n\n## Итог\n\nРеализован internal AOT-safe metadata baseline для custom `Resource` serialization и будущего Inspector. `ResourceObjectSerializer` больше не использует reflection fallback: он не ищет типы по загруженным сборкам, не обходит public properties и не создаёт custom resource через dynamic constructor lookup.\n\n## Проверенное поведение\n\n- `ResourceObjectMetadataRegistry` регистрирует `ResourceObjectTypeMetadata` по CLR type и serialized type name.\n- `ResourceObjectTypeMetadata` хранит typed factory delegate и stable sorted property descriptors.\n- `ResourceObjectPropertyMetadata` хранит serialized property name, CLR value type, getter/setter delegates и converter hooks.\n- `ResourceObjectSerializer.Capture()` требует registered metadata и пишет property names из metadata, а не CLR property names.\n- `ResourceObjectSerializer.Instantiate()` требует registered serialized type metadata и создаёт resource через typed factory delegate.\n- Отсутствующая metadata даёт fail-closed `InvalidOperationException`.\n- Property value converter покрывает scalar values, enum, nullable, arrays и dictionaries для registered descriptors.\n- JSON serializers больше не выбирают AOT-опасный generic `JsonArray.Add<T>()` для serialization path.\n- Public API не расширялся: metadata остаётся internal surface.\n\n## Документация\n\n- Добавлена спецификация `docs/resources/aot-safe-metadata.md`.\n- Добавлена справка `docs/resources/aot-safe-metadata.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлена спецификация и справка scene/resource serialization: reflection baseline заменён на registered metadata contract.\n- Обновлены `README.md`, `CHANGELOG.md`, `RELEASE-NOTES.md` и `tests/README.md`.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~SceneResourceSerializationTests` падал на отсутствующих `ResourceObjectMetadataRegistry`, `ResourceObjectTypeMetadata` и `ResourceObjectPropertyMetadata`.\n- Focused integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SceneResourceSerializationTests\"` - прошло, 4 теста.\n- Golden data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --filter \"FullyQualifiedName~SerializedResourceGoldenTests\"` - прошло, 1 тест.\n- AOT metadata smoke: `powershell -ExecutionPolicy Bypass -File tools\\Verify-AotMetadataSafety.ps1 -NativeAot` - прошло; trimmed и NativeAOT artifacts запущены на `win-x64`.\n- Полный test runner: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit `59`, integration `111`, runtime smoke `5`, golden data `11`.\n- Быстрый поиск forbidden APIs в `Core/Resources/Serialization` и `Core/Resources/Importing` не нашёл `Reflection.Emit`, assembly scan, `Activator.CreateInstance`, property discovery или runtime dynamic load APIs.\n\n## Заметки агента\n\nNativeAOT smoke по-прежнему выводит старые trim warnings по `Callable`, `SceneTree` и in-memory `PackedScene`. Они не относятся к новому metadata/serialization path и должны закрываться отдельными AOT задачами. Source generator для metadata пока не реализован; `0.1.0 Preview` получает runtime contract и ручную/test registration model.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017",
+    "tag-0020",
+    "tag-0024",
+    "tag-0035"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T04:42:22.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "Core/Resources/Importing"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "Core/Resources/Serialization"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/resources/aot-safe-metadata.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "tests/README.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 154035,
+      "byteLength": 4265,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "9d9db485305bc7e75923f422157a22c76b8e77a2c248c8d66c7b9915bd90eabc",
+      "markdown": "# T-0043 [x] P0: Реализовать AOT-safe metadata для Inspector и serialization без `Reflection.Emit`, runtime IL generation и dynamic iOS code load\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T07:42:22+03:00\n- Статус: завершена\n- Коммит: `T-0043: реализовать AOT-safe metadata`\n\n## Итог\n\nРеализован internal AOT-safe metadata baseline для custom `Resource` serialization и будущего Inspector. `ResourceObjectSerializer` больше не использует reflection fallback: он не ищет типы по загруженным сборкам, не обходит public properties и не создаёт custom resource через dynamic constructor lookup.\n\n## Проверенное поведение\n\n- `ResourceObjectMetadataRegistry` регистрирует `ResourceObjectTypeMetadata` по CLR type и serialized type name.\n- `ResourceObjectTypeMetadata` хранит typed factory delegate и stable sorted property descriptors.\n- `ResourceObjectPropertyMetadata` хранит serialized property name, CLR value type, getter/setter delegates и converter hooks.\n- `ResourceObjectSerializer.Capture()` требует registered metadata и пишет property names из metadata, а не CLR property names.\n- `ResourceObjectSerializer.Instantiate()` требует registered serialized type metadata и создаёт resource через typed factory delegate.\n- Отсутствующая metadata даёт fail-closed `InvalidOperationException`.\n- Property value converter покрывает scalar values, enum, nullable, arrays и dictionaries для registered descriptors.\n- JSON serializers больше не выбирают AOT-опасный generic `JsonArray.Add<T>()` для serialization path.\n- Public API не расширялся: metadata остаётся internal surface.\n\n## Документация\n\n- Добавлена спецификация `docs/resources/aot-safe-metadata.md`.\n- Добавлена справка `docs/resources/aot-safe-metadata.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлена спецификация и справка scene/resource serialization: reflection baseline заменён на registered metadata contract.\n- Обновлены `README.md`, `CHANGELOG.md`, `RELEASE-NOTES.md` и `tests/README.md`.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~SceneResourceSerializationTests` падал на отсутствующих `ResourceObjectMetadataRegistry`, `ResourceObjectTypeMetadata` и `ResourceObjectPropertyMetadata`.\n- Focused integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SceneResourceSerializationTests\"` - прошло, 4 теста.\n- Golden data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --filter \"FullyQualifiedName~SerializedResourceGoldenTests\"` - прошло, 1 тест.\n- AOT metadata smoke: `powershell -ExecutionPolicy Bypass -File tools\\Verify-AotMetadataSafety.ps1 -NativeAot` - прошло; trimmed и NativeAOT artifacts запущены на `win-x64`.\n- Полный test runner: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit `59`, integration `111`, runtime smoke `5`, golden data `11`.\n- Быстрый поиск forbidden APIs в `Core/Resources/Serialization` и `Core/Resources/Importing` не нашёл `Reflection.Emit`, assembly scan, `Activator.CreateInstance`, property discovery или runtime dynamic load APIs.\n\n## Заметки агента\n\nNativeAOT smoke по-прежнему выводит старые trim warnings по `Callable`, `SceneTree` и in-memory `PackedScene`. Они не относятся к новому metadata/serialization path и должны закрываться отдельными AOT задачами. Source generator для metadata пока не реализован; `0.1.0 Preview` получает runtime contract и ручную/test registration model.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T04:42:22.0000000+00:00",
+  "completedAt": "2026-06-21T04:42:22.0000000+00:00",
+  "acceptedAt": "2026-06-21T04:42:22.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T04:42:22.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

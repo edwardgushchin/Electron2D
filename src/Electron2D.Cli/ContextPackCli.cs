@@ -616,7 +616,7 @@ internal static partial class StaticContextPackBuilder
 
         - Treat this directory as a snapshot. Rebuild it after project settings, scene, resource, script or task changes.
         - Do not edit generated `.electron2d` working directories by hand.
-        - Canonical project tasks stay in `.electron2d/tasks/*.e2task` and `.electron2d/tasks/board.e2tasks`.
+        - Canonical project tasks stay in `.taskboard/tasks/*.e2task` and `.taskboard/board.e2tasks`; mutate them only through `e2d tasks`.
         - Read the current project `AGENTS.md` before changing files.
         - Run `e2d validate --project <project> --format json` before reporting project state.
         """;

@@ -29,13 +29,24 @@ using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 using Microsoft.Data.Sqlite;
 
+Console.InputEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+Console.OutputEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+
+using var cancellation = new CancellationTokenSource();
+ConsoleCancelEventHandler cancelHandler = (_, eventArgs) =>
+{
+    eventArgs.Cancel = true;
+    cancellation.Cancel();
+};
+Console.CancelKeyPress += cancelHandler;
 try
 {
-    var exitCode = Electron2DCommandLine.Run(args, Console.Out, Console.Error);
+    var exitCode = Electron2DCommandLine.Run(args, Console.Out, Console.Error, CliExecutionContext.Default(cancellation.Token));
     return exitCode;
 }
 finally
 {
+    Console.CancelKeyPress -= cancelHandler;
     Electron2D.RuntimeApplicationServices.ShutdownOnRenderThread();
 }
 

@@ -1,0 +1,259 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "platformer-board",
+  "taskUid": "task-T-0166",
+  "revision": 1,
+  "taskId": "T-0166",
+  "legacyAliases": [],
+  "title": "Ужесточить Platformer после аудита Godot-переносимости",
+  "description": "Ссылки:\n  - Спецификация: `docs/examples/platformer.md`\n  - Документация: `docs/examples/platformer.md`\n  - Исходный код: `examples/platformer/scripts/PlatformerGame.cs`\n  - Связанный runtime rendering: `src/Electron2D/Graphics/Rendering/CanvasSubmissionContext.cs`; `docs/rendering/camera-viewport-presentation-baseline.md`\n  - Тесты: `tests/Electron2D.Tests.Integration/PlatformerProjectTests.cs`; `tests/Electron2D.Tests.Integration/ViewportPresentationTests.cs`\n\nПользователь указал, что текущий `PlatformerGame.cs` слишком легко даёт ложноположительный результат: он проверяет названия подсистем, но слабо доказывает реальное поведение ввода, one-way tile collision, прыжка, pause, animation и save. После повторного аудита 2026-06-24 эта задача больше не является самостоятельным implementation scope: она стала tracking-задачей, которая закрывается только после дочерних задач по runtime rendering, frame scheduling, настоящему Platformer, black-box acceptance, visual gate и live performance.\n\nНужное поведение: Platformer остаётся валидным проектом Electron2D и становится законченной приёмочной игрой. Публичный 2D coordinate contract уже определён совместимостью с Godot 4.7: `+Y` направлен вниз, `Vector2.Up = (0, -1)`, gravity platformer положительная по `Y`, jump velocity отрицательная по `Y`. Не создавать отдельную задачу выбора иной системы координат и не строить Platformer/Editor поверх `Y-up` модели.",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "platformer",
+    "reference-game",
+    "tracking",
+    "version:0.1.0-preview"
+  ],
+  "deadline": null,
+  "createdBy": "repository-task-migration",
+  "parentTaskUid": "task-platformer-acceptance",
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-T-0221"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-T-0222"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-T-0223"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-T-0225"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "t-0166-criterion-01",
+      "description": "`T-0219` принят: интерактивный runtime rendering path не создаёт framebuffer/presentation resource каждый кадр и использует общий rendering path.",
+      "state": "Passed",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0166-criterion-02",
+      "description": "`T-0220` принят: frame scheduler использует `DeltaTime`, accumulator, deadline wait и deterministic bounded mode.",
+      "state": "Passed",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0166-criterion-03",
+      "description": "`T-0222` принят: Platformer пересобран как законченная приёмочная игра.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0166-criterion-04",
+      "description": "`T-0223` принят: black-box acceptance доказывает полный gameplay path без прямой мутации состояния verifier-ом.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0166-criterion-05",
+      "description": "`T-0225` принят: visual/screenshot gate проверяет несколько игровых состояний через runtime probes и кадры, а не только наличие PNG.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0166-criterion-06",
+      "description": "`T-0221` принят: live performance gate прошёл на актуальном Platformer.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0166-criterion-07",
+      "description": "Исторические hardening-исправления от 2026-06-23 не используются как самостоятельное доказательство готовности игры.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-t-0166-001",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-23T18:02:00.0000000+00:00",
+      "kind": "Comment",
+      "payload": {
+        "markdown": "2026-06-23T21:02:00+03:00 - Задача создана по текущему аудиту пользователя. Основное ограничение: не расширять scope до полной совместимости с Godot 4.7 и не менять координатный контракт движка без отдельной спецификации."
+      }
+    },
+    {
+      "activityEntryId": "activity-t-0166-002",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-23T18:18:00.0000000+00:00",
+      "kind": "Comment",
+      "payload": {
+        "markdown": "2026-06-23T21:18:00+03:00 - Scope расширен пользователем: оставшийся сбой Windows export packaging с отсутствующим `packs/scenes/main.e2dpkg` нужно исправить в рамках этой же задачи."
+      }
+    },
+    {
+      "activityEntryId": "activity-t-0166-003",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-23T18:30:00.0000000+00:00",
+      "kind": "Comment",
+      "payload": {
+        "markdown": "2026-06-23T21:30:00+03:00 - Implementation завершён, но задача оставлена active до пользовательской приёмки. `dotnet run --project examples/reference-platformer/ReferencePlatformer.csproj -- --verify` проверен отдельно и не применим к текущему reference project shape: `OutputType` равен `Library`, запуском владеют CLI/export routes."
+      }
+    },
+    {
+      "activityEntryId": "activity-t-0166-004",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-23T18:46:00.0000000+00:00",
+      "kind": "Comment",
+      "payload": {
+        "markdown": "2026-06-23T21:46:00+03:00 - После напоминания пользователя про screenshots просмотрены local playable, exported playable и empty-template PNG. Найден и исправлен визуальный дефект: `CanvasLayer` наследовал camera transform, из-за чего HUD обрезался; pause menu был вне screen-space layer, а `zIndex` панели перекрывал её же детей. Добавлены regression tests для `CanvasLayer` и структуры reference platformer UI; screenshots после правки показывают целый HUD и читаемый pause menu. Empty-template export screenshot остаётся чёрным по смыслу пустого шаблона."
+      }
+    },
+    {
+      "activityEntryId": "activity-t-0166-005",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-23T19:41:00.0000000+00:00",
+      "kind": "Comment",
+      "payload": {
+        "markdown": "2026-06-23T22:41:00+03:00 - После повторного аудита пользователя исправлены оставшиеся поведенческие проблемы в рамках `T-0166`: добавлен `ProcessMode` и `SceneTree.Paused`, `PlatformerGame.cs` переключает дерево сцены вместо декоративного `Visible`; kinematic solver сохраняет floor contact между кадрами без ручной записи `Player.Position`; reference scene получила отдельный обычный collision floor и скрытый служебный `PlatformTileMap`; runtime host задаёт root `Viewport.Size` до `_Ready()`, из-за чего `Camera2D` центрирует world по реальному viewport. Добавлены focused tests для pause/process mode, repeated floor contact, runtime viewport size и динамического camera follow. Новый screenshot `.temp/reference-platformer/reference-platformer-playable-pause-physics.png` просмотрен: HUD и pause menu в screen-space, player не обрезан, лишние декоративные обрезания по краям убраны, строка HUD стала `CHECKPOINT-01 COINS 1 X 9`. Связанный integration-набор 26/26, `CleanRuntimeBaselineTests` и source license verifier прошли."
+      }
+    },
+    {
+      "activityEntryId": "activity-t-0166-006",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-24T11:32:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "Decision",
+        "text": "2026-06-24T14:32:00+03:00 - Целевое публичное имя примера теперь `Platformer`. Полная замена путей `reference-platformer`, типов `ReferencePlatformer*`, тестов, manifests и release matrix выполняется в `T-0212`; исторические заметки этой задачи не переписывать до фактической миграции."
+      }
+    },
+    {
+      "activityEntryId": "activity-t-0166-007",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+      "kind": "Comment",
+      "payload": {
+        "markdown": "2026-06-24T19:20:00+03:00 - Пользователь отклонил состояние `ready for acceptance`: текущий `Platformer` остаётся демонстрацией подсистем, а не законченной игрой, и одновременно страдает от серьёзных FPS-проблем в `RuntimeHost`. Прежние отмеченные пункты остаются историей выполненного hardening scope, но пользовательская приёмка `T-0166` заблокирована до исправления runtime rendering/frame pacing, реального performance gate и нового игрового вертикального среза."
+      }
+    },
+    {
+      "activityEntryId": "activity-t-0166-008",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-24T16:45:00.0000000+00:00",
+      "kind": "Comment",
+      "payload": {
+        "markdown": "2026-06-24T19:45:00+03:00 - `T-0166` переведена в tracking-задачу по замечанию пользователя. Старые `[x]` из scope 2026-06-23 больше не являются активными критериями приёмки; они остаются в исторических заметках как уже выполненный hardening, но текущая приёмка определяется дочерними задачами `T-0219`, `T-0220`, `T-0221`, `T-0222`, `T-0223` и `T-0225`."
+      }
+    },
+    {
+      "activityEntryId": "activity-t-0166-009",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-25T17:01:03.0000000+00:00",
+      "kind": "Comment",
+      "payload": {
+        "markdown": "2026-06-25T20:01:03+03:00 - Пользователь принял `T-0219`; первый критерий tracking-задачи отмечен выполненным, а активные зависимости `T-0166` теперь начинаются с `T-0220`."
+      }
+    },
+    {
+      "activityEntryId": "activity-t-0166-010",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-25T22:38:51.0000000+00:00",
+      "kind": "Comment",
+      "payload": {
+        "markdown": "2026-06-26T01:38:51+03:00 - Внешний аудит r04 принял `T-0220`; критерий frame scheduler отмечен выполненным, а активные зависимости `T-0166` теперь начинаются с `T-0222`, `T-0223`, `T-0225` и `T-0221`."
+      }
+    },
+    {
+      "activityEntryId": "activity-t-0166-migrated-to-project-board",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-30T09:21:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "Decision",
+        "text": "2026-06-30T12:21:00+03:00 - Задача перенесена из корневого TASKS.md в ProjectTaskManager проекта Platformer по T-0234. Исторический текст, критерии и зависимости сохранены в этом .e2task документе."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Node",
+      "value": "docs/examples/platformer.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Node",
+      "value": "docs/rendering/camera-viewport-presentation-baseline.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Node",
+      "value": "examples/platformer/scripts/PlatformerGame.cs"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Node",
+      "value": "src/Electron2D/Graphics/Rendering/CanvasSubmissionContext.cs"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Node",
+      "value": "tests/Electron2D.Tests.Integration/PlatformerProjectTests.cs"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Node",
+      "value": "tests/Electron2D.Tests.Integration/ViewportPresentationTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": "not-required"
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-06-23T18:02:00.0000000+00:00",
+  "updatedAt": "2026-06-30T09:21:00.0000000+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null
+}

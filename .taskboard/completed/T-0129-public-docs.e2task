@@ -1,0 +1,265 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-2b62b5c6ce9c4790a601ed436cd52f08",
+  "revision": 2,
+  "taskId": "T-0129-public-docs",
+  "legacyAliases": [
+    "T-0129"
+  ],
+  "title": "Проверить всю документацию публичного API на наличие и соответствие правилам",
+  "description": "# T-0129 [x] P0: Проверить всю документацию публичного API на наличие и соответствие правилам\n\n- Создана: 2026-06-21T11:19:09+03:00\n- Завершена: 2026-06-21T20:01:00+03:00\n- Приоритет: P0\n- Зависимости: T-0106, T-0107\n\n## Ссылки\n\n- Спецификация: `docs/documentation/public-api-xml-documentation.md`\n- Документация: `docs/documentation/public-api-xml-documentation.md`\n- XML verifier: `tools/Verify-PublicApiXmlDocs.ps1`\n- Consolidated audit verifier: `tools/Verify-PublicApiDocumentationAudit.ps1`\n- Infrastructure test: `tests/Electron2D.Tests.Unit/PublicApiDocumentationAuditInfrastructureTests.cs`\n- CI workflow: `.github/workflows/ci.yml`\n- GitHub Wiki clone: `.github/wiki`\n- GitHub Wiki commit: `bb63622`\n\n## Самодостаточное описание\n\nНужно было выполнить полный audit текущей public API documentation: проверить compiled public surface, XML documentation file, GitHub Wiki API reference и public documentation Markdown на наличие обязательных XML-тегов, запрещённых публичных формулировок и placeholder text.\n\n## Что сделано\n\n- Усилен `tools\\Verify-PublicApiXmlDocs.ps1`.\n- Verifier теперь проверяет:\n  - missing XML documentation для public symbols;\n  - обязательные `summary`, `param`, `typeparam`, `returns`, `value`, `threadsafety` и `since` по применимости member kind;\n  - multi-sentence `summary` без `para`;\n  - `seealso` без `cref` или `href`;\n  - `exception` без `cref` или текста;\n  - placeholder text;\n  - запрещённые публичные формулировки;\n  - bare `inheritdoc` в generated XML output.\n- Добавлен `tools\\Verify-PublicApiDocumentationAudit.ps1`.\n- Consolidated audit запускает strict XML verifier, сверяет `.github/wiki` через `tools\\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check` и сканирует public documentation Markdown.\n- CI теперь запускает consolidated audit после checkout GitHub Wiki clone.\n- Добавлен unit infrastructure test для audit gate.\n- Исправлены найденные audit-ом XML documentation defects:\n  - удалены bare `inheritdoc` у documented overrides `AtlasTexture` и `Camera2D`;\n  - `VerticalAlignment.Fill` получил `summary` с `para` blocks.\n- GitHub Wiki API reference обновлена и опубликована в `Electron2D.wiki.git`.\n- Спецификация, implementation documentation и CI documentation обновлены.\n\n## Критерии приёмки\n\n- [x] Создана или обновлена спецификация documentation quality gate.\n- [x] Для каждого public member проверено, что документация присутствует и соответствует правилам `AGENTS.md`; текущий strict audit проверяет `1258` public symbols и показывает `0` issues.\n- [x] Создан автоматический verifier, который читает compiled public surface и XML documentation, находит отсутствующие или неполные public comments и падает в CI.\n- [x] Verifier проверяет наличие обязательных тегов для методов, свойств, полей, событий, enum values, delegates и constructors по матрице применимости.\n- [x] Verifier запрещает публичные documentation phrases, нарушающие правила `AGENTS.md`, вне `README.md` в public API documentation pipeline.\n- [x] Весь текущий public API `src/Electron2D/` приведён к полному C# XML documentation формату, закреплённому в `AGENTS.md`.\n- [x] GitHub Wiki API source и локальная implementation documentation синхронизированы с результатом аудита.\n- [x] Добавлен script-level infrastructure test для verifier.\n- [x] Документация documentation pipeline обновлена.\n\n## Проверки\n\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki` - пройдено, checked symbols `1258`, issues `0`, generated Wiki pages `136`, scanned Markdown files `143`.\n- `git -C .github\\wiki diff --cached --check` - пройдено.\n- `git -C .github\\wiki commit -m \"Update public API documentation audit output\"` - создан Wiki commit `bb63622`.\n- `git -C .github\\wiki push` - пройдено, `master` опубликован в `Electron2D.wiki.git`.\n\n## Решения\n\n- `remarks`, `exception` и `seealso` проверяются строго, когда они присутствуют; обязательность этих тегов по смыслу фиксируется спецификацией и review, потому что не каждый trivial enum value или property имеет отдельные ограничения, исключения или связанный API.\n- Public documentation wording scan ограничен documentation pipeline для публичного API: `docs/documentation/`, `docs/documentation/` и `.github/wiki`.\n- Исторические архивные записи в `completed-tasks` не переписывались.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0013",
+    "tag-0015"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-e07cf89afae4241b9c110f897e2f4315"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-27d44d89feb495ed7ae7d693fcd96b97"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создана или обновлена спецификация documentation quality gate.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2b62b5c6ce9c4790a601ed436cd52f08/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Для каждого public member проверено, что документация присутствует и соответствует правилам `AGENTS.md`; текущий strict audit проверяет `1258` public symbols и показывает `0` issues.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2b62b5c6ce9c4790a601ed436cd52f08/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Создан автоматический verifier, который читает compiled public surface и XML documentation, находит отсутствующие или неполные public comments и падает в CI.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2b62b5c6ce9c4790a601ed436cd52f08/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Verifier проверяет наличие обязательных тегов для методов, свойств, полей, событий, enum values, delegates и constructors по матрице применимости.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2b62b5c6ce9c4790a601ed436cd52f08/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Verifier запрещает публичные documentation phrases, нарушающие правила `AGENTS.md`, вне `README.md` в public API documentation pipeline.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2b62b5c6ce9c4790a601ed436cd52f08/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Весь текущий public API `src/Electron2D/` приведён к полному C# XML documentation формату, закреплённому в `AGENTS.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2b62b5c6ce9c4790a601ed436cd52f08/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "GitHub Wiki API source и локальная implementation documentation синхронизированы с результатом аудита.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2b62b5c6ce9c4790a601ed436cd52f08/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Добавлен script-level infrastructure test для verifier.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2b62b5c6ce9c4790a601ed436cd52f08/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Документация documentation pipeline обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-2b62b5c6ce9c4790a601ed436cd52f08/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T17:01:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/wiki"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": ".github/workflows/ci.yml"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Directory",
+      "value": "docs/documentation"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/documentation/public-api-xml-documentation.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Unit/PublicApiDocumentationAuditInfrastructureTests.cs"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "tools/Verify-PublicApiDocumentationAudit.ps1"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tools/Verify-PublicApiXmlDocs.ps1"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tools/Update-ApiWiki.ps1 -OutputPath .github/wiki -Check"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 314105,
+      "byteLength": 5581,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "189273493bfc5e2467cf83b8c99547bc2b1c714434d5f662d32e9ba61c5cf158",
+      "markdown": "# T-0129 [x] P0: Проверить всю документацию публичного API на наличие и соответствие правилам\n\n- Создана: 2026-06-21T11:19:09+03:00\n- Завершена: 2026-06-21T20:01:00+03:00\n- Приоритет: P0\n- Зависимости: T-0106, T-0107\n\n## Ссылки\n\n- Спецификация: `docs/documentation/public-api-xml-documentation.md`\n- Документация: `docs/documentation/public-api-xml-documentation.md`\n- XML verifier: `tools/Verify-PublicApiXmlDocs.ps1`\n- Consolidated audit verifier: `tools/Verify-PublicApiDocumentationAudit.ps1`\n- Infrastructure test: `tests/Electron2D.Tests.Unit/PublicApiDocumentationAuditInfrastructureTests.cs`\n- CI workflow: `.github/workflows/ci.yml`\n- GitHub Wiki clone: `.github/wiki`\n- GitHub Wiki commit: `bb63622`\n\n## Самодостаточное описание\n\nНужно было выполнить полный audit текущей public API documentation: проверить compiled public surface, XML documentation file, GitHub Wiki API reference и public documentation Markdown на наличие обязательных XML-тегов, запрещённых публичных формулировок и placeholder text.\n\n## Что сделано\n\n- Усилен `tools\\Verify-PublicApiXmlDocs.ps1`.\n- Verifier теперь проверяет:\n  - missing XML documentation для public symbols;\n  - обязательные `summary`, `param`, `typeparam`, `returns`, `value`, `threadsafety` и `since` по применимости member kind;\n  - multi-sentence `summary` без `para`;\n  - `seealso` без `cref` или `href`;\n  - `exception` без `cref` или текста;\n  - placeholder text;\n  - запрещённые публичные формулировки;\n  - bare `inheritdoc` в generated XML output.\n- Добавлен `tools\\Verify-PublicApiDocumentationAudit.ps1`.\n- Consolidated audit запускает strict XML verifier, сверяет `.github/wiki` через `tools\\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check` и сканирует public documentation Markdown.\n- CI теперь запускает consolidated audit после checkout GitHub Wiki clone.\n- Добавлен unit infrastructure test для audit gate.\n- Исправлены найденные audit-ом XML documentation defects:\n  - удалены bare `inheritdoc` у documented overrides `AtlasTexture` и `Camera2D`;\n  - `VerticalAlignment.Fill` получил `summary` с `para` blocks.\n- GitHub Wiki API reference обновлена и опубликована в `Electron2D.wiki.git`.\n- Спецификация, implementation documentation и CI documentation обновлены.\n\n## Критерии приёмки\n\n- [x] Создана или обновлена спецификация documentation quality gate.\n- [x] Для каждого public member проверено, что документация присутствует и соответствует правилам `AGENTS.md`; текущий strict audit проверяет `1258` public symbols и показывает `0` issues.\n- [x] Создан автоматический verifier, который читает compiled public surface и XML documentation, находит отсутствующие или неполные public comments и падает в CI.\n- [x] Verifier проверяет наличие обязательных тегов для методов, свойств, полей, событий, enum values, delegates и constructors по матрице применимости.\n- [x] Verifier запрещает публичные documentation phrases, нарушающие правила `AGENTS.md`, вне `README.md` в public API documentation pipeline.\n- [x] Весь текущий public API `src/Electron2D/` приведён к полному C# XML documentation формату, закреплённому в `AGENTS.md`.\n- [x] GitHub Wiki API source и локальная implementation documentation синхронизированы с результатом аудита.\n- [x] Добавлен script-level infrastructure test для verifier.\n- [x] Документация documentation pipeline обновлена.\n\n## Проверки\n\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki` - пройдено, checked symbols `1258`, issues `0`, generated Wiki pages `136`, scanned Markdown files `143`.\n- `git -C .github\\wiki diff --cached --check` - пройдено.\n- `git -C .github\\wiki commit -m \"Update public API documentation audit output\"` - создан Wiki commit `bb63622`.\n- `git -C .github\\wiki push` - пройдено, `master` опубликован в `Electron2D.wiki.git`.\n\n## Решения\n\n- `remarks`, `exception` и `seealso` проверяются строго, когда они присутствуют; обязательность этих тегов по смыслу фиксируется спецификацией и review, потому что не каждый trivial enum value или property имеет отдельные ограничения, исключения или связанный API.\n- Public documentation wording scan ограничен documentation pipeline для публичного API: `docs/documentation/`, `docs/documentation/` и `.github/wiki`.\n- Исторические архивные записи в `completed-tasks` не переписывались.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-21T08:19:09.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T17:01:00.0000000+00:00",
+  "completedAt": "2026-06-21T17:01:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T17:01:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T17:01:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

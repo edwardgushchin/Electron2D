@@ -1,0 +1,284 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-ba94b982b4e1e7b877bf75cb68065e87",
+  "revision": 2,
+  "taskId": "T-1127",
+  "legacyAliases": [],
+  "title": "Зафиксировать запрет/непубличность `OpenXRInteractionProfileEditor` в публичном API Electron2D",
+  "description": "## T-1127 [ ] P0: Зафиксировать запрет/непубличность `OpenXRInteractionProfileEditor` в публичном API Electron2D\n\n- Создана: 2026-07-09T16:10:00+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `leaf-public-api`\n- Scheduling tier: `later`\n- Зависимости: T-0241, T-0242, T-0243, T-0245\n- Ссылки:\n  - Доменный документ: `docs/xr/godot-47-openxr-interaction-profile-editor.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.22 Дополнительные runtime/editor публичные узлы`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - `docs/xr/godot-47-openxr-interaction-profile-editor.md` is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets or the approved Electron2D scoped contract.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - game runtime availability for editor-only/export-only classes.\n  - 3D, XR, VisualShader, GDScript, RD, GDExtension or unsupported import/export pipeline semantics.\n- Required outputs:\n  - `docs/xr/godot-47-openxr-interaction-profile-editor.md`\n  - profile, ClassDB/API-filtering and verifier evidence that the class is not exported publicly.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к группе `2.22 Дополнительные runtime/editor публичные узлы`. Цель - доказать фильтрацию и запрет публичного экспорта для `OpenXRInteractionProfileEditor` в утверждённом слое `forbidden OpenXR editor API`.\n\nOpenXRInteractionProfileEditor запрещён, потому XR/OpenXR editor tooling не входит в 2D public API.\n\n### Источники и сгенерированные описания API\n\n- Версия Godot: `4.7-stable`.\n- Официальная справка Godot по классу: `https://docs.godotengine.org/en/stable/classes/class_openxrinteractionprofileeditor.html`.\n- XML-описание класса в исходном коде Godot: `https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/OpenXRInteractionProfileEditor.xml`.\n- Доменный документ: `docs/xr/godot-47-openxr-interaction-profile-editor.md`.\n- Сгенерированное описание API Godot: `data/api/godot-4.7/classes/OpenXRInteractionProfileEditor.api.json`.\n- Сгенерированное описание API Electron2D: `data/api/electron2d/classes/OpenXRInteractionProfileEditor.api.json`.\n- Сгенерированный отчёт о расхождениях API: `data/api/electron2d/diff/OpenXRInteractionProfileEditor.diff.md`; `data/api/electron2d/diff/OpenXRInteractionProfileEditor.diff.json`.\n- Сгенерированное описание поведения Godot: `data/api/godot-4.7/behavior/OpenXRInteractionProfileEditor.behavior.md`; `data/api/godot-4.7/behavior/OpenXRInteractionProfileEditor.behavior.json`.\n- Сгенерированный отчёт о расхождениях поведения: `data/api/electron2d/behavior-diff/OpenXRInteractionProfileEditor.behavior.diff.md`.\n\n### Что входит в задачу\n\n- Зафиксировать `OpenXRInteractionProfileEditor` в public API profile как `unsupported` и синхронизировать доменный документ, API manifest/diff и generated docs.\n- Доказать совпадение с утверждённой поверхностью через отчёт о расхождениях и проверку `T-0243`, а также через проверки поведения `T-0244` или утверждённые строки `Deferred`/`Unsupported`.\n- Обновить тесты или verifier-сценарии до production-изменений; для `unsupported` класса доказать, что он не экспортируется, не виден через filtered ClassDB/API и не появляется в game runtime public docs.\n- Зафиксировать выбранный срез выполнения в заметках задачи и дневнике перед production-изменениями.\n\n### Что не входит в задачу\n\n- Публичный API, которого нет в сгенерированном описании Godot `4.7-stable` или утверждённом Electron2D scoped contract.\n- 3D rendering, Node3D tooling, XR/spatial targets, VisualShader, GDScript, RD resources, GDExtension ABI и 3D import/navigation/physics pipeline.\n- Перевод задачи в closed/accepted без явного пользовательского acceptance.\n\n### На что обратить особое внимание\n\n- `OpenXRInteractionProfileEditor` availability, ClassDB/API filtering, generated docs visibility and exact editor/runtime boundary.\n- lifecycle, ownership, disposal/freeing, default values, event/signal ordering, diagnostics and unsupported platform paths for `OpenXRInteractionProfileEditor`.\n\n### Связь с внутренними слоями\n\nПоведение должно опираться на `forbidden OpenXR editor API` и не открывать неподдержанные 3D/XR/RD/VisualShader/GDScript/GDExtension ветки.\n\n### Подтверждение поведения\n\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают утверждённый $decision contract для `OpenXRInteractionProfileEditor`.\n- [ ] Отчёт о расхождениях API и проверка public API показывают, что `OpenXRInteractionProfileEditor` не имеет незапланированных отличий от утверждённого Electron2D/Godot-compatible контракта.\n- [ ] Документация и generated docs index синхронизированы после реализации.\n\n### First implementation slice\n\nЭта задача остаётся class done gate для `OpenXRInteractionProfileEditor`, но один goal-агент не обязан закрывать весь класс за одну итерацию. Перед изменениями агент выбирает ровно один срез и фиксирует его в заметках задачи и дневнике.\n\n- `A-api-surface`: сгенерировать/обновить API packet, XML docs, manifest/diff и compile-time/API verifier evidence без обещания полного runtime поведения.\n- `B-core-behavior`: закрыть основной пользовательский happy path и ошибки для ключевых методов/свойств либо подтвердить `Unsupported` фильтрацию.\n- `C-substrate-integration`: привязать `OpenXRInteractionProfileEditor` к настоящему внутреннему runtime/editor/tooling слою и покрыть lifecycle/resource/platform integration.\n- `D-performance-lifetime-platform`: подтвердить производительность, отсутствие утечек и платформенные различия.\n- `GATE-class-done`: подтвердить, что срезы `A`-`D` закрыты или имеют утверждённые `Deferred`/`Unsupported`, затем запускать `verify public-api-done --class OpenXRInteractionProfileEditor`, docs/XML/generated docs checks, required performance/platform evidence and external audit when required.\n\n### Критерии приёмки\n\n- [ ] Сгенерированное описание API для `OpenXRInteractionProfileEditor` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю утверждённую публичную поверхность; ручные списки элементов API в `TASKS.md` не являются источником истины.\n- [ ] До рабочего кода добавлены сначала падающие тесты и проверочные сценарии либо verifier для `Unsupported`/editor-only фильтрации.\n- [ ] Рабочая реализация или фильтрация `OpenXRInteractionProfileEditor` опирается на настоящий внутренний слой: нет фасадного поведения, временных пустых методов, неописанных платформенных разрывов и скрытых синхронных блокировок.\n- [ ] Полная документация `OpenXRInteractionProfileEditor` синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7, если они неизбежны.\n- [ ] Проверки запускаются в текущей сессии и фиксируются в дневнике.\n\n### Подзадачи\n\n- [ ] Сгенерировать/обновить описание API `OpenXRInteractionProfileEditor` через `T-0242`.\n- [ ] Обновить доменный документ `docs/xr/godot-47-openxr-interaction-profile-editor.md` только в части поведения этого класса, связи с внутренними слоями, намеренных отличий, заметок `Deferred`/`Unsupported` и подтверждений тестами.\n- [ ] Добавить сначала падающие тесты или verifier-сценарии для выбранного среза.\n- [ ] Реализовать рабочий код или явную public API фильтрацию минимальным срезом, совместимым с существующей архитектурой Electron2D.\n- [ ] Обновить XML-документацию, полную документацию, сгенерированную документацию API и заметки задачи после зелёных проверок.\n\n### Заметки агента\n\n2026-07-09T16:10:00+03:00 - Создано по запросу пользователя: `OpenXRInteractionProfileEditor` добавлен в public API profile как `unsupported` для слоя `forbidden OpenXR editor API`; profile approval/ban не закрывает реализацию и поведенческие проверки.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0015",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fab4705fe4a1db467903c0bc500995a7"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Сгенерированное описание API для `OpenXRInteractionProfileEditor` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю утверждённую публичную поверхность; ручные списки элементов API в `TASKS.md` не являются источником истины.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "До рабочего кода добавлены сначала падающие тесты и проверочные сценарии либо verifier для `Unsupported`/editor-only фильтрации.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Рабочая реализация или фильтрация `OpenXRInteractionProfileEditor` опирается на настоящий внутренний слой: нет фасадного поведения, временных пустых методов, неописанных платформенных разрывов и скрытых синхронных блокировок.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Полная документация `OpenXRInteractionProfileEditor` синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7, если они неизбежны.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Проверки запускаются в текущей сессии и фиксируются в дневнике.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-09T13:10:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя: `OpenXRInteractionProfileEditor` добавлен в public API profile как `unsupported` для слоя `forbidden OpenXR editor API`; profile approval/ban не закрывает реализацию и поведенческие проверки."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required for final acceptance unless a parent gate explicitly owns audit evidence"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "2.22 Дополнительные runtime/editor публичные узлы"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/api/electron2d/behavior-diff/OpenXRInteractionProfileEditor.behavior.diff.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "data/api/electron2d/classes/OpenXRInteractionProfileEditor.api.json"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "data/api/electron2d/diff/OpenXRInteractionProfileEditor.diff.json"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "data/api/electron2d/diff/OpenXRInteractionProfileEditor.diff.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "data/api/godot-4.7/behavior/OpenXRInteractionProfileEditor.behavior.json"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "data/api/godot-4.7/behavior/OpenXRInteractionProfileEditor.behavior.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "data/api/godot-4.7/classes/OpenXRInteractionProfileEditor.api.json"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/xr/godot-47-openxr-interaction-profile-editor.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "Uri",
+      "value": "https://docs.godotengine.org/en/stable/classes/class_openxrinteractionprofileeditor.html"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "Uri",
+      "value": "https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/OpenXRInteractionProfileEditor.xml"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.",
+      "`docs/xr/godot-47-openxr-interaction-profile-editor.md` is current and RED tests/verifiers can be added before production changes."
+    ],
+    "stopConditions": [
+      "implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets or the approved Electron2D scoped contract.",
+      "tests, domain document or generated source-of-truth artifacts are missing or stale.",
+      "a shortcut would introduce facade, stub, hidden fallback or undocumented behavior."
+    ],
+    "allowedChanges": [
+      "files named in this task's `Ссылки` block and their owning tests/docs.",
+      "generated artifacts only through their owning generator/verifier.",
+      "`TASKS.md` notes/current evidence and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.",
+      "game runtime availability for editor-only/export-only classes.",
+      "3D, XR, VisualShader, GDScript, RD, GDExtension or unsupported import/export pipeline semantics."
+    ],
+    "requiredOutputs": [
+      "`docs/xr/godot-47-openxr-interaction-profile-editor.md`",
+      "profile, ClassDB/API-filtering and verifier evidence that the class is not exported publicly.",
+      "synchronized XML/docs/API/generated documentation evidence when public surface or docs change.",
+      "task notes/current evidence and diary entry with exact command results."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required for final acceptance unless a parent gate explicitly owns audit evidence",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 15355263,
+      "byteLength": 12267,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "bee7d44daf087d25952c6f6250431e711e9a076ef6b80e78ff05a1c38e291653",
+      "markdown": "## T-1127 [ ] P0: Зафиксировать запрет/непубличность `OpenXRInteractionProfileEditor` в публичном API Electron2D\n\n- Создана: 2026-07-09T16:10:00+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `leaf-public-api`\n- Scheduling tier: `later`\n- Зависимости: T-0241, T-0242, T-0243, T-0245\n- Ссылки:\n  - Доменный документ: `docs/xr/godot-47-openxr-interaction-profile-editor.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.22 Дополнительные runtime/editor публичные узлы`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - `docs/xr/godot-47-openxr-interaction-profile-editor.md` is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets or the approved Electron2D scoped contract.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - game runtime availability for editor-only/export-only classes.\n  - 3D, XR, VisualShader, GDScript, RD, GDExtension or unsupported import/export pipeline semantics.\n- Required outputs:\n  - `docs/xr/godot-47-openxr-interaction-profile-editor.md`\n  - profile, ClassDB/API-filtering and verifier evidence that the class is not exported publicly.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к группе `2.22 Дополнительные runtime/editor публичные узлы`. Цель - доказать фильтрацию и запрет публичного экспорта для `OpenXRInteractionProfileEditor` в утверждённом слое `forbidden OpenXR editor API`.\n\nOpenXRInteractionProfileEditor запрещён, потому XR/OpenXR editor tooling не входит в 2D public API.\n\n### Источники и сгенерированные описания API\n\n- Версия Godot: `4.7-stable`.\n- Официальная справка Godot по классу: `https://docs.godotengine.org/en/stable/classes/class_openxrinteractionprofileeditor.html`.\n- XML-описание класса в исходном коде Godot: `https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/OpenXRInteractionProfileEditor.xml`.\n- Доменный документ: `docs/xr/godot-47-openxr-interaction-profile-editor.md`.\n- Сгенерированное описание API Godot: `data/api/godot-4.7/classes/OpenXRInteractionProfileEditor.api.json`.\n- Сгенерированное описание API Electron2D: `data/api/electron2d/classes/OpenXRInteractionProfileEditor.api.json`.\n- Сгенерированный отчёт о расхождениях API: `data/api/electron2d/diff/OpenXRInteractionProfileEditor.diff.md`; `data/api/electron2d/diff/OpenXRInteractionProfileEditor.diff.json`.\n- Сгенерированное описание поведения Godot: `data/api/godot-4.7/behavior/OpenXRInteractionProfileEditor.behavior.md`; `data/api/godot-4.7/behavior/OpenXRInteractionProfileEditor.behavior.json`.\n- Сгенерированный отчёт о расхождениях поведения: `data/api/electron2d/behavior-diff/OpenXRInteractionProfileEditor.behavior.diff.md`.\n\n### Что входит в задачу\n\n- Зафиксировать `OpenXRInteractionProfileEditor` в public API profile как `unsupported` и синхронизировать доменный документ, API manifest/diff и generated docs.\n- Доказать совпадение с утверждённой поверхностью через отчёт о расхождениях и проверку `T-0243`, а также через проверки поведения `T-0244` или утверждённые строки `Deferred`/`Unsupported`.\n- Обновить тесты или verifier-сценарии до production-изменений; для `unsupported` класса доказать, что он не экспортируется, не виден через filtered ClassDB/API и не появляется в game runtime public docs.\n- Зафиксировать выбранный срез выполнения в заметках задачи и дневнике перед production-изменениями.\n\n### Что не входит в задачу\n\n- Публичный API, которого нет в сгенерированном описании Godot `4.7-stable` или утверждённом Electron2D scoped contract.\n- 3D rendering, Node3D tooling, XR/spatial targets, VisualShader, GDScript, RD resources, GDExtension ABI и 3D import/navigation/physics pipeline.\n- Перевод задачи в closed/accepted без явного пользовательского acceptance.\n\n### На что обратить особое внимание\n\n- `OpenXRInteractionProfileEditor` availability, ClassDB/API filtering, generated docs visibility and exact editor/runtime boundary.\n- lifecycle, ownership, disposal/freeing, default values, event/signal ordering, diagnostics and unsupported platform paths for `OpenXRInteractionProfileEditor`.\n\n### Связь с внутренними слоями\n\nПоведение должно опираться на `forbidden OpenXR editor API` и не открывать неподдержанные 3D/XR/RD/VisualShader/GDScript/GDExtension ветки.\n\n### Подтверждение поведения\n\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают утверждённый $decision contract для `OpenXRInteractionProfileEditor`.\n- [ ] Отчёт о расхождениях API и проверка public API показывают, что `OpenXRInteractionProfileEditor` не имеет незапланированных отличий от утверждённого Electron2D/Godot-compatible контракта.\n- [ ] Документация и generated docs index синхронизированы после реализации.\n\n### First implementation slice\n\nЭта задача остаётся class done gate для `OpenXRInteractionProfileEditor`, но один goal-агент не обязан закрывать весь класс за одну итерацию. Перед изменениями агент выбирает ровно один срез и фиксирует его в заметках задачи и дневнике.\n\n- `A-api-surface`: сгенерировать/обновить API packet, XML docs, manifest/diff и compile-time/API verifier evidence без обещания полного runtime поведения.\n- `B-core-behavior`: закрыть основной пользовательский happy path и ошибки для ключевых методов/свойств либо подтвердить `Unsupported` фильтрацию.\n- `C-substrate-integration`: привязать `OpenXRInteractionProfileEditor` к настоящему внутреннему runtime/editor/tooling слою и покрыть lifecycle/resource/platform integration.\n- `D-performance-lifetime-platform`: подтвердить производительность, отсутствие утечек и платформенные различия.\n- `GATE-class-done`: подтвердить, что срезы `A`-`D` закрыты или имеют утверждённые `Deferred`/`Unsupported`, затем запускать `verify public-api-done --class OpenXRInteractionProfileEditor`, docs/XML/generated docs checks, required performance/platform evidence and external audit when required.\n\n### Критерии приёмки\n\n- [ ] Сгенерированное описание API для `OpenXRInteractionProfileEditor` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю утверждённую публичную поверхность; ручные списки элементов API в `TASKS.md` не являются источником истины.\n- [ ] До рабочего кода добавлены сначала падающие тесты и проверочные сценарии либо verifier для `Unsupported`/editor-only фильтрации.\n- [ ] Рабочая реализация или фильтрация `OpenXRInteractionProfileEditor` опирается на настоящий внутренний слой: нет фасадного поведения, временных пустых методов, неописанных платформенных разрывов и скрытых синхронных блокировок.\n- [ ] Полная документация `OpenXRInteractionProfileEditor` синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7, если они неизбежны.\n- [ ] Проверки запускаются в текущей сессии и фиксируются в дневнике.\n\n### Подзадачи\n\n- [ ] Сгенерировать/обновить описание API `OpenXRInteractionProfileEditor` через `T-0242`.\n- [ ] Обновить доменный документ `docs/xr/godot-47-openxr-interaction-profile-editor.md` только в части поведения этого класса, связи с внутренними слоями, намеренных отличий, заметок `Deferred`/`Unsupported` и подтверждений тестами.\n- [ ] Добавить сначала падающие тесты или verifier-сценарии для выбранного среза.\n- [ ] Реализовать рабочий код или явную public API фильтрацию минимальным срезом, совместимым с существующей архитектурой Electron2D.\n- [ ] Обновить XML-документацию, полную документацию, сгенерированную документацию API и заметки задачи после зелёных проверок.\n\n### Заметки агента\n\n2026-07-09T16:10:00+03:00 - Создано по запросу пользователя: `OpenXRInteractionProfileEditor` добавлен в public API profile как `unsupported` для слоя `forbidden OpenXR editor API`; profile approval/ban не закрывает реализацию и поведенческие проверки.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-09T13:10:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

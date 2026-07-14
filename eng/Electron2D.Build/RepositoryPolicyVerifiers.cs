@@ -372,8 +372,9 @@ internal sealed class ProjectTemplateVerifier(string repositoryRoot, JsonDiagnos
         ".codex/skills/electron2d-resource-import/SKILL.md",
         ".codex/skills/electron2d-run-test/SKILL.md",
         ".codex/skills/electron2d-export/SKILL.md",
-        ".electron2d/tasks/board.e2tasks",
-        ".electron2d/tasks/welcome.e2task"
+        ".taskboard/.gitignore",
+        ".taskboard/board.e2tasks",
+        ".taskboard/tasks/welcome.e2task"
     ];
 
     public int Verify()
@@ -459,27 +460,36 @@ internal sealed class ProjectTemplateVerifier(string repositoryRoot, JsonDiagnos
     private static void VerifyTaskFiles(string templateRoot, List<BuildDiagnostic> errors)
     {
         var board = LoadJsonObject(
-            Path.Combine(templateRoot, ".electron2d", "tasks", "board.e2tasks"),
-            $"{TemplateRelativeRoot}/.electron2d/tasks/board.e2tasks",
+            Path.Combine(templateRoot, ".taskboard", "board.e2tasks"),
+            $"{TemplateRelativeRoot}/.taskboard/board.e2tasks",
             "E2D-BUILD-PROJECT-TEMPLATE-TASK-BOARD",
             errors);
-        if (board is not null && (!TryGetString(board.Value, "format", out var boardFormat) || !string.Equals(boardFormat, "Electron2D.TaskBoard", StringComparison.Ordinal)))
+        if (board is not null &&
+            (!TryGetString(board.Value, "format", out var boardFormat) ||
+             !string.Equals(boardFormat, "Electron2D.TaskBoard", StringComparison.Ordinal) ||
+             !TryGetInt32(board.Value, "version", out var boardVersion) ||
+             boardVersion != 3 ||
+             !board.Value.TryGetProperty("placements", out var placements) ||
+             placements.ValueKind != JsonValueKind.Array))
         {
-            errors.Add(Error("E2D-BUILD-PROJECT-TEMPLATE-TASK-BOARD", "Task board format is invalid.", $"{TemplateRelativeRoot}/.electron2d/tasks/board.e2tasks"));
+            errors.Add(Error("E2D-BUILD-PROJECT-TEMPLATE-TASK-BOARD", "Task board format is invalid.", $"{TemplateRelativeRoot}/.taskboard/board.e2tasks"));
         }
 
         var welcome = LoadJsonObject(
-            Path.Combine(templateRoot, ".electron2d", "tasks", "welcome.e2task"),
-            $"{TemplateRelativeRoot}/.electron2d/tasks/welcome.e2task",
+            Path.Combine(templateRoot, ".taskboard", "tasks", "welcome.e2task"),
+            $"{TemplateRelativeRoot}/.taskboard/tasks/welcome.e2task",
             "E2D-BUILD-PROJECT-TEMPLATE-WELCOME-TASK",
             errors);
         if (welcome is not null &&
             (!TryGetString(welcome.Value, "format", out var taskFormat) ||
              !string.Equals(taskFormat, "Electron2D.TaskFile", StringComparison.Ordinal) ||
+             !TryGetInt32(welcome.Value, "version", out var taskVersion) ||
+             taskVersion != 3 ||
+             !TryGetString(welcome.Value, "taskUid", out _) ||
              !TryGetString(welcome.Value, "status", out var status) ||
-             !string.Equals(status, "Backlog", StringComparison.Ordinal)))
+             !string.Equals(status, "Ready", StringComparison.Ordinal)))
         {
-            errors.Add(Error("E2D-BUILD-PROJECT-TEMPLATE-WELCOME-TASK", "Starter task document is invalid.", $"{TemplateRelativeRoot}/.electron2d/tasks/welcome.e2task"));
+            errors.Add(Error("E2D-BUILD-PROJECT-TEMPLATE-WELCOME-TASK", "Starter task document is invalid.", $"{TemplateRelativeRoot}/.taskboard/tasks/welcome.e2task"));
         }
     }
 
@@ -501,7 +511,7 @@ internal sealed class ProjectTemplateVerifier(string repositoryRoot, JsonDiagnos
             "does not prove full Godot 4.7 strict parity",
             "separate parity evidence",
             "ProjectTaskManager",
-            "task_submit_for_acceptance"
+            "e2d tasks submit"
         })
         {
             if (!text.Contains(requiredText, StringComparison.Ordinal))
@@ -541,9 +551,9 @@ internal sealed class ProjectTemplateVerifier(string repositoryRoot, JsonDiagnos
             }
         }
 
-        if (lines.Contains(".electron2d/") || lines.Contains(".electron2d/tasks/"))
+        if (lines.Contains(".electron2d/") || lines.Contains(".taskboard/") || lines.Contains(".taskboard"))
         {
-            errors.Add(Error("E2D-BUILD-PROJECT-TEMPLATE-GITIGNORE", ".gitignore must not hide .electron2d/tasks/.", $"{TemplateRelativeRoot}/.gitignore"));
+            errors.Add(Error("E2D-BUILD-PROJECT-TEMPLATE-GITIGNORE", ".gitignore must not hide tracked .taskboard documents or attachments.", $"{TemplateRelativeRoot}/.gitignore"));
         }
     }
 
@@ -1160,7 +1170,6 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
 
     private static readonly string[] RootContractPaths =
     [
-        "TASKS.md",
         "docs/release-management/api-compatibility.md",
         "docs/documentation/api-manifest.md",
         "docs/documentation/github-wiki-api-reference.md",
@@ -1234,7 +1243,6 @@ internal sealed class ApiCompatibilityVerifier(string repositoryRoot, JsonDiagno
 
     private static readonly string[] ManualPublicApiListPaths =
     [
-        "TASKS.md",
         "docs/release-management/api-compatibility.md",
         "docs/documentation/api-manifest.md",
         "docs/documentation/github-wiki-api-reference.md",

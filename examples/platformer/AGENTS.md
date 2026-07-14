@@ -20,7 +20,7 @@ Project structure:
 - `scripts/` stores C# gameplay code.
 - `assets/` stores imported game assets copied from the checked reference asset pack.
 - `resources/platformer.manifest.json` maps imported files to gameplay roles.
-- `.electron2d/tasks/` stores ProjectTaskManager task documents.
+- `.taskboard/` stores ProjectTaskManager task documents; mutate them only through `e2d tasks`.
 
 Rules for agents:
 

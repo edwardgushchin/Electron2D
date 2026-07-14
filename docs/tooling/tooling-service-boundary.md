@@ -100,7 +100,7 @@ Task commands должны использовать `ProjectTaskManager`, `TaskD
 
 `task_cancel` переводит задачу в `Cancelled` как больше не нужную. Это не отказ от результата на приёмке: для возврата результата используется `task_request_changes`.
 
-`task_create` создаёт canonical `.electron2d/tasks/<taskId>.e2task` document и возвращает тот же operation result shape. Project template, начальная доска и внешний report export находятся вне `T-0115`.
+`task_create` создаёт canonical `.taskboard/<taskId>.e2task` document и возвращает тот же operation result shape. Project template, начальная доска и внешний report export находятся вне `T-0115`.
 
 ## Long-running operations
 

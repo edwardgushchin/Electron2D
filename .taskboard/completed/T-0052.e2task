@@ -1,0 +1,196 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-1550d7a1b455237ccd253ce1285c488f",
+  "revision": 2,
+  "taskId": "T-0052",
+  "legacyAliases": [],
+  "title": "Реализовать dispatch input в `SceneTree` и UI focus/mouse filter pipeline",
+  "description": "# T-0052 [x] P0: Реализовать dispatch input в `SceneTree` и UI focus/mouse filter pipeline\n\n- Статус: завершена\n- Завершена: 2026-06-22T01:50:00+03:00\n- Коммит: `T-0052: add input dispatch control focus`\n\n## Ссылки\n\n- Спецификация: `docs/input/input-dispatch-ui-focus.md`\n- Документация: `docs/input/input-dispatch-ui-focus.md`\n- Тесты: `tests/Electron2D.Tests.Integration/InputDispatchControlTests.cs`\n\n## Самодостаточное описание\n\nЗадача относилась к домену «Ввод». Цель - реализовать порядок доставки input events через `SceneTree`, handled-state текущего события, базовый GUI input для `Control`, mouse filter и focus ownership. Перед стартом пользователь перенёс reference games в самый последний этап, поэтому `T-0093`, `T-0094`, `T-0095`, `T-0096` и reference-game часть `T-0102` оставлены в blocker-е.\n\n## Что сделано\n\n- Добавлен public `Viewport.SetInputAsHandled()` и `Node.GetViewport()`.\n- `SceneTree.DispatchInput()` теперь обновляет `Input`, затем вызывает `_Input()`, а после этого при неhandled event выполняет GUI input dispatch.\n- `Node.InputRecursive()` останавливает traversal, если root viewport пометил event handled.\n- `Control` получил public `MouseFilter`, `FocusMode`, `_GuiInput(InputEvent)`, `AcceptEvent()`, `GrabFocus()`, `ReleaseFocus()` и `HasFocus()`.\n- Добавлены public enum `MouseFilter` и `FocusMode`.\n- Mouse GUI dispatch выполняет hit-test по `Control.Position`/`Size`, учитывает `Stop`, `Pass`, `Ignore`, topmost child order и bubbling к parent `Control`.\n- Focus хранится на root `Viewport`; mouse press фокусирует controls с `FocusMode.Click` или `FocusMode.All`, а keyboard/gamepad/action GUI input получает только focused control.\n- Обновлены generated GitHub Wiki API pages и compatibility table.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: dispatch input в `SceneTree` и UI focus/mouse filter pipeline.\n- [x] Event consumption order, `_Input` и UI controls покрыты integration tests.\n- [x] Спецификация создана до production-кода.\n- [x] Автоматические тесты добавлены и сначала упали на отсутствующем API.\n- [x] Документация реализации добавлена.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~InputDispatchControlTests\" --no-restore -m:1` упал на отсутствующем `Control._GuiInput`.\n- `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~InputDispatchControlTests|FullyQualifiedName~InputMapActionTests|FullyQualifiedName~NodeSceneTreeLifecycleTests\" --no-restore -m:1` прошёл: 13 tests.\n- `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~CleanRuntimeBaselineTests|FullyQualifiedName~TextPublicApiTests|FullyQualifiedName~CameraViewportPublicApiTests\" --no-restore -m:1` прошёл: 8 tests.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiXmlDocs.ps1 -FailOnIssues` прошёл: checked symbols `1406`, issues `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: tracked source files `393`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1 -WikiPath .github\\wiki\\API-Compatibility.md` прошёл: public types `132`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-ApiWiki.ps1 -OutputPath .github\\wiki -Check` прошёл: generated pages `149`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github\\wiki` прошёл: scanned Markdown files `160`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: source files scanned `271`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `74/74`, integration `239/239`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReferenceGameAssets.ps1` прошёл: files `25`, sources `4`.\n- `git diff --check` прошёл без whitespace errors.\n\n## Решения\n\n- Зависимость `T-0052` от `T-0066` удалена как ошибочная, потому что animation timeline data model в редакторе не должен блокировать runtime input/focus pipeline.\n- `SceneTree.DispatchInput()` остаётся internal entry point для platform dispatcher и tests; публичный event injection workflow должен появиться в отдельной automation/CLI задаче.\n- Full UI navigation, widgets, shortcuts, hover signals, tooltips и text editing не включены в эту задачу.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Реализована цель задачи: dispatch input в `SceneTree` и UI focus/mouse filter pipeline.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1550d7a1b455237ccd253ce1285c488f/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Event consumption order, `_Input` и UI controls покрыты integration tests.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1550d7a1b455237ccd253ce1285c488f/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Спецификация создана до production-кода.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1550d7a1b455237ccd253ce1285c488f/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Автоматические тесты добавлены и сначала упали на отсутствующем API.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1550d7a1b455237ccd253ce1285c488f/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Документация реализации добавлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1550d7a1b455237ccd253ce1285c488f/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1550d7a1b455237ccd253ce1285c488f/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T22:50:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "239/239"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "74/74"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/input/input-dispatch-ui-focus.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/InputDispatchControlTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 371270,
+      "byteLength": 5561,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "df4189dd75e7c0e3ed6215fdd5321dc4cb2df34ef40235b3d5a99c67519d73ea",
+      "markdown": "# T-0052 [x] P0: Реализовать dispatch input в `SceneTree` и UI focus/mouse filter pipeline\n\n- Статус: завершена\n- Завершена: 2026-06-22T01:50:00+03:00\n- Коммит: `T-0052: add input dispatch control focus`\n\n## Ссылки\n\n- Спецификация: `docs/input/input-dispatch-ui-focus.md`\n- Документация: `docs/input/input-dispatch-ui-focus.md`\n- Тесты: `tests/Electron2D.Tests.Integration/InputDispatchControlTests.cs`\n\n## Самодостаточное описание\n\nЗадача относилась к домену «Ввод». Цель - реализовать порядок доставки input events через `SceneTree`, handled-state текущего события, базовый GUI input для `Control`, mouse filter и focus ownership. Перед стартом пользователь перенёс reference games в самый последний этап, поэтому `T-0093`, `T-0094`, `T-0095`, `T-0096` и reference-game часть `T-0102` оставлены в blocker-е.\n\n## Что сделано\n\n- Добавлен public `Viewport.SetInputAsHandled()` и `Node.GetViewport()`.\n- `SceneTree.DispatchInput()` теперь обновляет `Input`, затем вызывает `_Input()`, а после этого при неhandled event выполняет GUI input dispatch.\n- `Node.InputRecursive()` останавливает traversal, если root viewport пометил event handled.\n- `Control` получил public `MouseFilter`, `FocusMode`, `_GuiInput(InputEvent)`, `AcceptEvent()`, `GrabFocus()`, `ReleaseFocus()` и `HasFocus()`.\n- Добавлены public enum `MouseFilter` и `FocusMode`.\n- Mouse GUI dispatch выполняет hit-test по `Control.Position`/`Size`, учитывает `Stop`, `Pass`, `Ignore`, topmost child order и bubbling к parent `Control`.\n- Focus хранится на root `Viewport`; mouse press фокусирует controls с `FocusMode.Click` или `FocusMode.All`, а keyboard/gamepad/action GUI input получает только focused control.\n- Обновлены generated GitHub Wiki API pages и compatibility table.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: dispatch input в `SceneTree` и UI focus/mouse filter pipeline.\n- [x] Event consumption order, `_Input` и UI controls покрыты integration tests.\n- [x] Спецификация создана до production-кода.\n- [x] Автоматические тесты добавлены и сначала упали на отсутствующем API.\n- [x] Документация реализации добавлена.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~InputDispatchControlTests\" --no-restore -m:1` упал на отсутствующем `Control._GuiInput`.\n- `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~InputDispatchControlTests|FullyQualifiedName~InputMapActionTests|FullyQualifiedName~NodeSceneTreeLifecycleTests\" --no-restore -m:1` прошёл: 13 tests.\n- `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~CleanRuntimeBaselineTests|FullyQualifiedName~TextPublicApiTests|FullyQualifiedName~CameraViewportPublicApiTests\" --no-restore -m:1` прошёл: 8 tests.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiXmlDocs.ps1 -FailOnIssues` прошёл: checked symbols `1406`, issues `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: tracked source files `393`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1 -WikiPath .github\\wiki\\API-Compatibility.md` прошёл: public types `132`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-ApiWiki.ps1 -OutputPath .github\\wiki -Check` прошёл: generated pages `149`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github\\wiki` прошёл: scanned Markdown files `160`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: source files scanned `271`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `74/74`, integration `239/239`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReferenceGameAssets.ps1` прошёл: files `25`, sources `4`.\n- `git diff --check` прошёл без whitespace errors.\n\n## Решения\n\n- Зависимость `T-0052` от `T-0066` удалена как ошибочная, потому что animation timeline data model в редакторе не должен блокировать runtime input/focus pipeline.\n- `SceneTree.DispatchInput()` остаётся internal entry point для platform dispatcher и tests; публичный event injection workflow должен появиться в отдельной automation/CLI задаче.\n- Full UI navigation, widgets, shortcuts, hover signals, tooltips и text editing не включены в эту задачу.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-21T22:50:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T22:50:00.0000000+00:00",
+  "completedAt": "2026-06-21T22:50:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T22:50:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T22:50:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

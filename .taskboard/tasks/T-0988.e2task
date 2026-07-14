@@ -1,0 +1,209 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-3f56856aba640a46676fdba83bf57dc9",
+  "revision": 2,
+  "taskId": "T-0988",
+  "legacyAliases": [],
+  "title": "Harden `api fetch-godot` zip extraction path containment",
+  "description": "## T-0988 [ ] P2: Harden `api fetch-godot` zip extraction path containment\n\n- Создана: 2026-07-07T01:14:03+03:00\n- Состояние: open\n- Приоритет: P2\n- Execution class: `tooling`\n- Scheduling tier: `next`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Источник follow-up: `docs/verdicts/release-management/t-0242-audit-control-r11.md`\n  - Исходный код: `eng/Electron2D.Build/ApiMatrixCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n\n### Execution contract\n\n- Task type: tooling-hardening\n- Ready-to-start:\n  - `api fetch-godot` source zip/download path is in scope.\n  - tests can construct a synthetic zip/source fixture with hostile relative entries.\n- Stop conditions:\n  - the change would alter generated packet schema or public API behavior.\n  - official Godot source fetching becomes dependent on manual filtering outside build-tool code.\n- May change:\n  - zip-entry normalization, containment checks and diagnostics in `api fetch-godot`.\n  - focused tests for hostile zip entries and safe entries.\n  - domain documentation for source snapshot ingestion hardening.\n- Must not change:\n  - class packet schema or C# projection rules.\n  - accepted generated API snapshots unless the source ingestion behavior changes them deterministically.\n- Required outputs:\n  - canonical containment validation for every zip entry before extraction.\n  - hostile `..`, rooted or separator-confused zip entries are rejected or skipped without writing outside the output directory.\n  - valid Godot API entries still copy normally.\n- Required commands:\n  - focused synthetic zip traversal regression test.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`\n  - relevant API fetch/generation checks.\n  - `git diff --check`\n- External audit:\n  - required only when included in a later audit-managed build-tool/package scope.\n\n### Самодостаточное описание\n\nControl r11 audit for `T-0242` found a hardening follow-up: `api fetch-godot` filters zip entries by Godot API prefix/suffix, but the extraction target should still be canonicalized and checked to remain inside the configured output directory before writing. The current `T-0242` package used official Godot source input and produced valid packets, so this is not a blocker for generated API snapshots; it is a build-tool robustness task.\n\n### Критерии приёмки\n\n- [ ] Synthetic zip test contains one valid Godot XML entry and one traversal/rooted entry.\n- [ ] `api fetch-godot` does not write any file outside the configured output directory.\n- [ ] Diagnostic behavior is deterministic for hostile zip entries.\n- [ ] Official/source fixture path still copies `doc/classes/*.xml`, module `doc_classes/*.xml`, `extension_api.json` and `csharp_api.json`.\n- [ ] `verify audit-followups` passes with the closure note from `T-0242` control r11.\n\n### Подзадачи\n\n- [ ] Add RED traversal regression for zip-source fetch.\n- [ ] Implement canonical target containment check before `ExtractToFile`.\n- [ ] Update documentation if command behavior or diagnostics change.\n- [ ] Run focused fetch/generation tests and required audit checks.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0242-audit-control-r11.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0988\n  - rationale: Control `T-0242` r11 classifies zip extraction containment as future hardening, not a blocker for current official-source generated packet output. `T-0988` tracks the focused containment regression and implementation.\n\n### Заметки агента\n\n2026-07-07T01:14:03+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0242-audit-control-r11.md`; finding перенесён в build-tool hardening task без изменения текущего `T-0242` generated packet contract.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P2",
+  "tagIds": [
+    "tag-0011",
+    "tag-0018",
+    "tag-0023"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Synthetic zip test contains one valid Godot XML entry and one traversal/rooted entry.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`api fetch-godot` does not write any file outside the configured output directory.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Diagnostic behavior is deterministic for hostile zip entries.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Official/source fixture path still copies `doc/classes/*.xml`, module `doc_classes/*.xml`, `extension_api.json` and `csharp_api.json`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`verify audit-followups` passes with the closure note from `T-0242` control r11.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T22:14:03.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0242-audit-control-r11.md`; finding перенесён в build-tool hardening task без изменения текущего `T-0242` generated packet contract."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required only when included in a later audit-managed build-tool/package scope."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "doc/classes/*.xml"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "doc_classes/*.xml"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0242-audit-control-r11.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/ApiMatrixCommand.cs"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tooling-hardening",
+    "readyToStart": [
+      "`api fetch-godot` source zip/download path is in scope.",
+      "tests can construct a synthetic zip/source fixture with hostile relative entries."
+    ],
+    "stopConditions": [
+      "the change would alter generated packet schema or public API behavior.",
+      "official Godot source fetching becomes dependent on manual filtering outside build-tool code."
+    ],
+    "allowedChanges": [
+      "zip-entry normalization, containment checks and diagnostics in `api fetch-godot`.",
+      "focused tests for hostile zip entries and safe entries.",
+      "domain documentation for source snapshot ingestion hardening."
+    ],
+    "forbiddenChanges": [
+      "class packet schema or C# projection rules.",
+      "accepted generated API snapshots unless the source ingestion behavior changes them deterministically."
+    ],
+    "requiredOutputs": [
+      "canonical containment validation for every zip entry before extraction.",
+      "hostile `..`, rooted or separator-confused zip entries are rejected or skipped without writing outside the output directory.",
+      "valid Godot API entries still copy normally."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "focused synthetic zip traversal regression test.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "relevant API fetch/generation checks.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required only when included in a later audit-managed build-tool/package scope.",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 407869,
+      "byteLength": 4103,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "3fa8e788371bb66ce9417a9b5df9592b76e4944725180f430736d3ed207810ef",
+      "markdown": "## T-0988 [ ] P2: Harden `api fetch-godot` zip extraction path containment\n\n- Создана: 2026-07-07T01:14:03+03:00\n- Состояние: open\n- Приоритет: P2\n- Execution class: `tooling`\n- Scheduling tier: `next`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Источник follow-up: `docs/verdicts/release-management/t-0242-audit-control-r11.md`\n  - Исходный код: `eng/Electron2D.Build/ApiMatrixCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n\n### Execution contract\n\n- Task type: tooling-hardening\n- Ready-to-start:\n  - `api fetch-godot` source zip/download path is in scope.\n  - tests can construct a synthetic zip/source fixture with hostile relative entries.\n- Stop conditions:\n  - the change would alter generated packet schema or public API behavior.\n  - official Godot source fetching becomes dependent on manual filtering outside build-tool code.\n- May change:\n  - zip-entry normalization, containment checks and diagnostics in `api fetch-godot`.\n  - focused tests for hostile zip entries and safe entries.\n  - domain documentation for source snapshot ingestion hardening.\n- Must not change:\n  - class packet schema or C# projection rules.\n  - accepted generated API snapshots unless the source ingestion behavior changes them deterministically.\n- Required outputs:\n  - canonical containment validation for every zip entry before extraction.\n  - hostile `..`, rooted or separator-confused zip entries are rejected or skipped without writing outside the output directory.\n  - valid Godot API entries still copy normally.\n- Required commands:\n  - focused synthetic zip traversal regression test.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`\n  - relevant API fetch/generation checks.\n  - `git diff --check`\n- External audit:\n  - required only when included in a later audit-managed build-tool/package scope.\n\n### Самодостаточное описание\n\nControl r11 audit for `T-0242` found a hardening follow-up: `api fetch-godot` filters zip entries by Godot API prefix/suffix, but the extraction target should still be canonicalized and checked to remain inside the configured output directory before writing. The current `T-0242` package used official Godot source input and produced valid packets, so this is not a blocker for generated API snapshots; it is a build-tool robustness task.\n\n### Критерии приёмки\n\n- [ ] Synthetic zip test contains one valid Godot XML entry and one traversal/rooted entry.\n- [ ] `api fetch-godot` does not write any file outside the configured output directory.\n- [ ] Diagnostic behavior is deterministic for hostile zip entries.\n- [ ] Official/source fixture path still copies `doc/classes/*.xml`, module `doc_classes/*.xml`, `extension_api.json` and `csharp_api.json`.\n- [ ] `verify audit-followups` passes with the closure note from `T-0242` control r11.\n\n### Подзадачи\n\n- [ ] Add RED traversal regression for zip-source fetch.\n- [ ] Implement canonical target containment check before `ExtractToFile`.\n- [ ] Update documentation if command behavior or diagnostics change.\n- [ ] Run focused fetch/generation tests and required audit checks.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0242-audit-control-r11.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0988\n  - rationale: Control `T-0242` r11 classifies zip extraction containment as future hardening, not a blocker for current official-source generated packet output. `T-0988` tracks the focused containment regression and implementation.\n\n### Заметки агента\n\n2026-07-07T01:14:03+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0242-audit-control-r11.md`; finding перенесён в build-tool hardening task без изменения текущего `T-0242` generated packet contract.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-06T22:14:03.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

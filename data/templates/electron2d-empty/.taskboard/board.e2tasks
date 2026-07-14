@@ -1,0 +1,41 @@
+{
+  "format": "Electron2D.TaskBoard",
+  "version": 3,
+  "boardId": "board-main",
+  "revision": 2,
+  "idPolicy": {
+    "prefix": "T-",
+    "padding": 4,
+    "nextNumber": 1
+  },
+  "attachmentPolicy": {
+    "perFileByteLimit": 26214400,
+    "boardByteLimit": 262144000
+  },
+  "migration": {
+    "sourceVersion": 2,
+    "reportSha256": "b5526f64d69c60e9a8b8ed76afbc69413b80b0f5d79f94e3bbf58fccb7be1f39",
+    "sourceBoardRevision": 1,
+    "sourceDigests": {
+      ".taskboard/board.e2tasks": "0d0adaabf3db8ccc150a196ed2cfb22fdefcac8095617891e886c830a52514c1",
+      ".taskboard/tasks/welcome.e2task": "72033d5f71683737b35ae0ec09a35a2a021ff98055a18a644cd3d3da333cca55"
+    },
+    "migratedAt": "2026-07-12T23:00:02.6460813+00:00",
+    "finalized": true
+  },
+  "tags": [
+    {
+      "tagId": "starter",
+      "name": "starter",
+      "color": "Gray"
+    }
+  ],
+  "groups": [],
+  "placements": [
+    {
+      "taskUid": "task-welcome",
+      "groupId": null,
+      "rank": "000000001000"
+    }
+  ]
+}

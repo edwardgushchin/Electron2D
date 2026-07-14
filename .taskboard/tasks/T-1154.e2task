@@ -1,0 +1,133 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-2d38b5fe54cb4e07bef8bfed11ab24f1",
+  "revision": 9,
+  "taskId": "T-1154",
+  "legacyAliases": [],
+  "title": "Сделать мгновенным открытие задачи из VS Code sidebar",
+  "description": "## Контекст\n\nКлик по task row в VS Code sidebar открывает выбранную задачу только после повторного полного `tasks board` refresh, а затем отдельного `tasks get`. На большой доске это создаёт заметную задержку. Modal должен появляться сразу из уже загруженного compact snapshot, а full details должны догружаться асинхронно.\n\n## Критерии приёмки\n\n- Для уже открытой board sidebar click не выполняет `tasks board`.\n- Modal выбранной задачи показывается немедленно из current BoardView.\n- Full `tasks get <id>` запускается после immediate render и заменяет placeholder полным snapshot.\n- Stale async response не может заменить более новую выбранную задачу.\n- Для отсутствующей панели сохраняется корректный create/initial board load path.\n- Extension Host проверяет порядок immediate selection до завершения details load.\n- Unit, typecheck, Extension Host, VSIX packaging/install проходят.\n\n## Execution contract\n\nМенять VS Code extension, domain document, task evidence и append-only diary. Не менять taskboard data вручную.",
+  "status": "Review",
+  "acceptanceState": "InternalReview",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "instant-sidebar-open",
+      "description": "Sidebar click renders selected task immediately and hydrates details without a full board refresh.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-306f886cc2344645859cad5529e161dd",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T10:17:46.2002803+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Ready."
+      }
+    },
+    {
+      "activityEntryId": "activity-54b8fe37478744bc8ce02577eeaee277",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T10:17:47.2648645+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to InProgress."
+      }
+    },
+    {
+      "activityEntryId": "activity-191c05bb5c0b46cf9cadd175d98f0d8e",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T10:23:53.5453404+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Review."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-11T10:17:34.6999405+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "activity-8660f3663603434195dc453074ff3cf8",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T10:23:51.4650719+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Убран полный existing.refresh из sidebar click-path. Existing panel раскрывается и команда возвращается сразу; renderTaskSelection сначала отправляет compact BoardTask, затем hydrates через tasks get и применяет ответ только для текущего selection token. RED 23/25 → GREEN 25/25; static regression запрещает tasks board refresh, delayed-loader regression подтверждает immediate render и stale suppression. Typecheck GREEN; Extension Host подтверждает selectedTaskId сразу после sidebar command, exit 0. VSIX 9 files/17.43 KB установлен в stable VS Code 0.1.0. Docs update/check/verify и licenses GREEN. Визуальная latency-проверка заблокирована Windows control os error 3."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

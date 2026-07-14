@@ -1,0 +1,285 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-d2568998aeba73e208834e7905f6e837",
+  "revision": 2,
+  "taskId": "T-1016",
+  "legacyAliases": [],
+  "title": "Привести `ShaderInclude` к полному публичному API Godot 4.7",
+  "description": "## T-1016 [ ] P0: Привести `ShaderInclude` к полному публичному API Godot 4.7\n\n- Статус: open\n- Приоритет: P0\n- Тип: leaf-public-api\n- Область: Rendering Public API\n- Зависимости: T-0241, T-0242, T-0243, T-0245, T-0247, T-0249, T-0254, T-0255, T-0256, T-0357, T-0358, T-0759, T-0760, T-0966, T-0967, T-0970, T-0980\n- Связанные документы: `docs/rendering/godot-47-shader-include.md`, `data/api/godot-4.7/classes/ShaderInclude.api.json`, `data/api/electron2d/classes/ShaderInclude.api.json`, `data/api/electron2d/diff/ShaderInclude.diff.md`\n- Связанные исходники: `src/Electron2D/**/*.cs`\n- Связанные тесты: `tests/Electron2D.Tests.Integration/**/*ShaderInclude*.cs`, `tests/Electron2D.Tests.Integration/**/*Shader*.cs`\n\n### Кратко\n\nЗадача относится к группе `Rendering Public API`. Цель - реализовать `ShaderInclude` как полноценную публичную сущность API Electron2D 0.1-preview, совместимую с Godot 4.7 публичным C# API из сгенерированных описаний `T-0242` и поведением, проверенным через `T-0244`.\n\n`ShaderInclude` разрешён как вспомогательный ресурс для утверждённого 2D shader contract. В Electron2D публичные shaders ограничены `canvas_item` и, если будет реализовано, particles-compatible 2D путями; `spatial`, `sky` и `fog` не входят в public profile.\n\n### Execution contract\n\n- Task type: `leaf-public-api`.\n- Ready to start: зависимости приняты, закрыты или имеют сохранённый `ACCEPT`; для внешних блокеров есть явный текущий override владельца проекта.\n- Stop conditions: blocked state, непринятые зависимости без override, отсутствие generated Godot API input или расхождение public API source-of-truth.\n- Allowed changes: только `ShaderInclude`, минимальная связь с approved 2D shader pipeline, целевые тесты, XML-документация, доменный документ, generated docs/API evidence и заметки задач.\n- Forbidden changes: включение `spatial`, `sky`, `fog` shader modes, Godot Shader Language как публичного языка, низкоуровневого RD API или 3D rendering pipeline.\n- Required outputs: generated Godot/Electron2D API descriptions, diff/evidence, focused tests, domain document, XML docs, updated local docs index and task notes.\n- Required commands: focused tests for `ShaderInclude` and 2D shader include loading, `dotnet run --project eng/Electron2D.Build -- update docs`, `dotnet run --project eng/Electron2D.Build -- update docs --check`, `dotnet run --project eng/Electron2D.Build -- verify docs`, `dotnet run --project eng/Electron2D.Build -- verify audit-contracts`, `git diff --check`; license verifier if C# files change.\n- External audit: only after local GREEN and only through the repository audit commands from `docs/release-management/audit-package.md` when the task is promoted to full acceptance.\n\n### First implementation slice\n\nЭта задача остаётся полным class done gate для `ShaderInclude`, но один goal-агент не обязан закрывать весь класс за одну итерацию. Перед изменениями агент выбирает ровно один срез и фиксирует его в заметках задачи и дневнике.\n\nДопустимые срезы:\n\n- `A-api-surface`: сгенерировать/проверить публичную поверхность, XML-docs и manifest/profile mapping.\n- `B-core-behavior`: реализовать хранение include-кода, default values, validation and error paths.\n- `C-substrate-integration`: связать ресурс с approved 2D shader import/compilation pipeline.\n- `D-performance-lifetime-platform`: покрыть lifecycle, resource loading, caching, allocation/performance and unsupported platform paths.\n- `GATE-class-done`: подтвердить, что срезы `A`-`D` закрыты или имеют утверждённые `Deferred`/`Unsupported`, затем запускать `verify public-api-done --class ShaderInclude`, docs/XML/generated docs checks, required performance/platform evidence and external audit when required.\n\n### Критерии приёмки\n\n- [ ] Сгенерированное описание API для `ShaderInclude` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю публичную поверхность.\n- [ ] До рабочего кода добавлены сначала падающие тесты и проверочные сценарии, которые покрывают не только наличие элементов API, но и поведение include-ресурса.\n- [ ] Рабочая реализация опирается на настоящий 2D shader substrate и не открывает 3D shader modes.\n- [ ] Поведение покрыто модульными и интеграционными тестами, проверками ошибок, lifecycle, сериализации и загрузки ресурсов.\n- [ ] Полная документация синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7.\n- [ ] Проверки запускаются в текущей сессии и фиксируются в дневнике.\n\n### Подзадачи\n\n- [ ] Сгенерировать/обновить описание API `ShaderInclude` через `T-0242`.\n- [ ] Обновить доменный документ `docs/rendering/godot-47-shader-include.md`.\n- [ ] Добавить сначала падающие тесты для загрузки include-кода и ошибок.\n- [ ] Реализовать рабочий код минимальным срезом, совместимым с существующей архитектурой Electron2D.\n- [ ] Обновить XML-документацию, полную документацию, сгенерированную документацию API и заметки задачи после зелёных проверок.\n\n### Заметки агента\n\n2026-07-09T14:25:15+03:00 - Создано по запросу пользователя: `ShaderInclude` добавлен в публичный API profile как supporting resource для утверждённого 2D shader contract; `spatial`, `sky` и `fog` shader modes остаются запрещены.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0015",
+    "tag-0016",
+    "tag-0021",
+    "tag-0027"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fab4705fe4a1db467903c0bc500995a7"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c1168ce3c83f3a40e9b21637a6205f18"
+    },
+    {
+      "relationId": "relation-0006",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-735f013fd6f6b703c9d2ef0562435923"
+    },
+    {
+      "relationId": "relation-0007",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c0723930d7fbe7fa15273fedf161e45a"
+    },
+    {
+      "relationId": "relation-0008",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-4517718793f133884d81016a0f80c4d9"
+    },
+    {
+      "relationId": "relation-0009",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-7c5ab8f696209bb39e4a88cd6f048ff0"
+    },
+    {
+      "relationId": "relation-0010",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-795ce468137a9fd38dae3622078e0521"
+    },
+    {
+      "relationId": "relation-0011",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-27b3d26cbc9174eff8ba31432c60c34a"
+    },
+    {
+      "relationId": "relation-0012",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-6520776c9f5662678a08c9aa4f1621c7"
+    },
+    {
+      "relationId": "relation-0013",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-6891f820916f79792baeb1f9ae6496c8"
+    },
+    {
+      "relationId": "relation-0014",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-665b1f83b05f6b6b32d3cf92a23ed590"
+    },
+    {
+      "relationId": "relation-0015",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-643e8259c9e4a480675b16d89f69c33a"
+    },
+    {
+      "relationId": "relation-0016",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-114eaaec60dc21330629dda1e69e1880"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Сгенерированное описание API для `ShaderInclude` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю публичную поверхность.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "До рабочего кода добавлены сначала падающие тесты и проверочные сценарии, которые покрывают не только наличие элементов API, но и поведение include-ресурса.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Рабочая реализация опирается на настоящий 2D shader substrate и не открывает 3D shader modes.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Поведение покрыто модульными и интеграционными тестами, проверками ошибок, lifecycle, сериализации и загрузки ресурсов.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Полная документация синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Проверки запускаются в текущей сессии и фиксируются в дневнике.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-09T11:25:15.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя: `ShaderInclude` добавлен в публичный API profile как supporting resource для утверждённого 2D shader contract; `spatial`, `sky` и `fog` shader modes остаются запрещены."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "only after local GREEN and only through the repository audit commands from `docs/release-management/audit-package.md` when the task is promoted to full acceptance."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "data/api/electron2d/classes/ShaderInclude.api.json"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/api/electron2d/diff/ShaderInclude.diff.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/api/godot-4.7/classes/ShaderInclude.api.json"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/rendering/godot-47-shader-include.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "src/Electron2D/**/*.cs"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/**/*Shader*.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/**/*ShaderInclude*.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "leaf-public-api`.",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- update docs",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- update docs --check",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify docs",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "only after local GREEN and only through the repository audit commands from `docs/release-management/audit-package.md` when the task is promoted to full acceptance.",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 13987515,
+      "byteLength": 7141,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "c2870a63837468778b2f77ad6387385fa95115cb09711685e1180777538b7810",
+      "markdown": "## T-1016 [ ] P0: Привести `ShaderInclude` к полному публичному API Godot 4.7\n\n- Статус: open\n- Приоритет: P0\n- Тип: leaf-public-api\n- Область: Rendering Public API\n- Зависимости: T-0241, T-0242, T-0243, T-0245, T-0247, T-0249, T-0254, T-0255, T-0256, T-0357, T-0358, T-0759, T-0760, T-0966, T-0967, T-0970, T-0980\n- Связанные документы: `docs/rendering/godot-47-shader-include.md`, `data/api/godot-4.7/classes/ShaderInclude.api.json`, `data/api/electron2d/classes/ShaderInclude.api.json`, `data/api/electron2d/diff/ShaderInclude.diff.md`\n- Связанные исходники: `src/Electron2D/**/*.cs`\n- Связанные тесты: `tests/Electron2D.Tests.Integration/**/*ShaderInclude*.cs`, `tests/Electron2D.Tests.Integration/**/*Shader*.cs`\n\n### Кратко\n\nЗадача относится к группе `Rendering Public API`. Цель - реализовать `ShaderInclude` как полноценную публичную сущность API Electron2D 0.1-preview, совместимую с Godot 4.7 публичным C# API из сгенерированных описаний `T-0242` и поведением, проверенным через `T-0244`.\n\n`ShaderInclude` разрешён как вспомогательный ресурс для утверждённого 2D shader contract. В Electron2D публичные shaders ограничены `canvas_item` и, если будет реализовано, particles-compatible 2D путями; `spatial`, `sky` и `fog` не входят в public profile.\n\n### Execution contract\n\n- Task type: `leaf-public-api`.\n- Ready to start: зависимости приняты, закрыты или имеют сохранённый `ACCEPT`; для внешних блокеров есть явный текущий override владельца проекта.\n- Stop conditions: blocked state, непринятые зависимости без override, отсутствие generated Godot API input или расхождение public API source-of-truth.\n- Allowed changes: только `ShaderInclude`, минимальная связь с approved 2D shader pipeline, целевые тесты, XML-документация, доменный документ, generated docs/API evidence и заметки задач.\n- Forbidden changes: включение `spatial`, `sky`, `fog` shader modes, Godot Shader Language как публичного языка, низкоуровневого RD API или 3D rendering pipeline.\n- Required outputs: generated Godot/Electron2D API descriptions, diff/evidence, focused tests, domain document, XML docs, updated local docs index and task notes.\n- Required commands: focused tests for `ShaderInclude` and 2D shader include loading, `dotnet run --project eng/Electron2D.Build -- update docs`, `dotnet run --project eng/Electron2D.Build -- update docs --check`, `dotnet run --project eng/Electron2D.Build -- verify docs`, `dotnet run --project eng/Electron2D.Build -- verify audit-contracts`, `git diff --check`; license verifier if C# files change.\n- External audit: only after local GREEN and only through the repository audit commands from `docs/release-management/audit-package.md` when the task is promoted to full acceptance.\n\n### First implementation slice\n\nЭта задача остаётся полным class done gate для `ShaderInclude`, но один goal-агент не обязан закрывать весь класс за одну итерацию. Перед изменениями агент выбирает ровно один срез и фиксирует его в заметках задачи и дневнике.\n\nДопустимые срезы:\n\n- `A-api-surface`: сгенерировать/проверить публичную поверхность, XML-docs и manifest/profile mapping.\n- `B-core-behavior`: реализовать хранение include-кода, default values, validation and error paths.\n- `C-substrate-integration`: связать ресурс с approved 2D shader import/compilation pipeline.\n- `D-performance-lifetime-platform`: покрыть lifecycle, resource loading, caching, allocation/performance and unsupported platform paths.\n- `GATE-class-done`: подтвердить, что срезы `A`-`D` закрыты или имеют утверждённые `Deferred`/`Unsupported`, затем запускать `verify public-api-done --class ShaderInclude`, docs/XML/generated docs checks, required performance/platform evidence and external audit when required.\n\n### Критерии приёмки\n\n- [ ] Сгенерированное описание API для `ShaderInclude` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю публичную поверхность.\n- [ ] До рабочего кода добавлены сначала падающие тесты и проверочные сценарии, которые покрывают не только наличие элементов API, но и поведение include-ресурса.\n- [ ] Рабочая реализация опирается на настоящий 2D shader substrate и не открывает 3D shader modes.\n- [ ] Поведение покрыто модульными и интеграционными тестами, проверками ошибок, lifecycle, сериализации и загрузки ресурсов.\n- [ ] Полная документация синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7.\n- [ ] Проверки запускаются в текущей сессии и фиксируются в дневнике.\n\n### Подзадачи\n\n- [ ] Сгенерировать/обновить описание API `ShaderInclude` через `T-0242`.\n- [ ] Обновить доменный документ `docs/rendering/godot-47-shader-include.md`.\n- [ ] Добавить сначала падающие тесты для загрузки include-кода и ошибок.\n- [ ] Реализовать рабочий код минимальным срезом, совместимым с существующей архитектурой Electron2D.\n- [ ] Обновить XML-документацию, полную документацию, сгенерированную документацию API и заметки задачи после зелёных проверок.\n\n### Заметки агента\n\n2026-07-09T14:25:15+03:00 - Создано по запросу пользователя: `ShaderInclude` добавлен в публичный API profile как supporting resource для утверждённого 2D shader contract; `spatial`, `sky` и `fog` shader modes остаются запрещены.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-09T11:25:15.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

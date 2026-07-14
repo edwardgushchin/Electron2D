@@ -1,0 +1,249 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-a50a277456d7154c5e34ed5aa09f50ef",
+  "revision": 2,
+  "taskId": "T-0186",
+  "legacyAliases": [],
+  "title": "Подключить Project Settings к живым элементам управления на canonical `.e2d`",
+  "description": "## T-0186 [ ] P0: Подключить Project Settings к живым элементам управления на canonical `.e2d`\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0175, T-0183\n- Ссылки:\n  - Доменный документ: `docs/editor/project-settings-ui.md`; `docs/editor/project-manager.md`; `docs/project-system/project-text-formats.md`; `docs/export/export-preset-model.md`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.ProjectSystem/`; `src/Electron2D.Export/`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorProjectSettingsUiTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0186.\n  - blocker artifact `data/quality/blockers/T-0186.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/editor/project-settings-ui.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0186.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0186.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nПосле устранения файлового конфликта и готового 2D workflow Project Settings должен перейти от smoke-frame/write-through модели к живым элементам управления внутри shell. UI должен редактировать canonical `<ProjectName>.e2d`, embedded `exportPresets`, Input Map, display, renderer и physics settings через общие controls.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ обновлён до контракта живых элементов управления и canonical `.e2d` behavior.\n- [ ] Добавлены сначала падающие tests для user edits через controls, keyboard save, revert, validation errors и round-trip `.e2d`.\n- [ ] Sections `Main Scene`, `Display`, `Renderer`, `Physics`, `Input Map`, `Export Presets` используют runtime form controls, search/filter where useful и validation messages.\n- [ ] `Save` записывает валидные изменения в canonical `<ProjectName>.e2d` и dirty state пропадает только после успешной записи.\n- [ ] `Apply` применяет только поддерживаемые runtime/editor settings без записи файла; настройки, требующие reload/restart, явно помечаются и не притворяются применёнными.\n- [ ] При validation error `Save` и `Apply` не меняют файл и не применяют частичное состояние; dirty state и сообщения ошибок остаются видимыми.\n- [ ] `Revert` возвращает UI к последнему сохранённому состоянию без записи secrets и без создания legacy files для новых проектов.\n- [ ] Real-window screenshot/analysis подтверждает pointer/keyboard workflow, no overflow и отсутствие запрещённых UI entries.\n\n### Подзадачи\n\n- [ ] Специфицировать live Project Settings controls.\n- [ ] Подключить canonical `.e2d` store и validation.\n- [ ] Реализовать form controls, save/revert и error display.\n- [ ] Проверить focused tests и real-window artifacts.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача зависит от `T-0175`, потому что нельзя строить живой save/apply UI поверх устаревающего файлового контракта.\n\n2026-06-24T03:20:00+03:00 - Приоритет поднят до P0, потому что `T-0189` остаётся P0-gate и зависит от этой задачи. Перед кодом нужно точно разделить `Save` и `Apply`, validation error flow и момент применения renderer/physics изменений.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-e98b1506fcb6c9346286d9bee39895a3"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-7f7b64a98f3293d7a7fe897551a30cfc"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ обновлён до контракта живых элементов управления и canonical `.e2d` behavior.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Добавлены сначала падающие tests для user edits через controls, keyboard save, revert, validation errors и round-trip `.e2d`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Sections `Main Scene`, `Display`, `Renderer`, `Physics`, `Input Map`, `Export Presets` используют runtime form controls, search/filter where useful и validation messages.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`Save` записывает валидные изменения в canonical `<ProjectName>.e2d` и dirty state пропадает только после успешной записи.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`Apply` применяет только поддерживаемые runtime/editor settings без записи файла; настройки, требующие reload/restart, явно помечаются и не притворяются применёнными.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "При validation error `Save` и `Apply` не меняют файл и не применяют частичное состояние; dirty state и сообщения ошибок остаются видимыми.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "`Revert` возвращает UI к последнему сохранённому состоянию без записи secrets и без создания legacy files для новых проектов.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Real-window screenshot/analysis подтверждает pointer/keyboard workflow, no overflow и отсутствие запрещённых UI entries.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача зависит от `T-0175`, потому что нельзя строить живой save/apply UI поверх устаревающего файлового контракта."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T00:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Приоритет поднят до P0, потому что `T-0189` остаётся P0-gate и зависит от этой задачи. Перед кодом нужно точно разделить `Save` и `Apply`, validation error flow и момент применения renderer/physics изменений."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/dev-diary"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/quality/blockers/T-0186.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/editor/project-manager.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/editor/project-settings-ui.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/export/export-preset-model.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/project-system/project-text-formats.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "src/Electron2D.Export"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "src/Electron2D.ProjectSystem"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectSettingsUiTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "blocked-environment",
+    "readyToStart": [
+      "только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.",
+      "перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate."
+    ],
+    "stopConditions": [
+      "dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.",
+      "требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.",
+      "задача просит audit package без отдельной blocker-report задачи."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` blocker/current evidence notes for T-0186.",
+      "blocker artifact `data/quality/blockers/T-0186.md`, если нужен отдельный отчёт.",
+      "дневник `data/dev-diary/` и связанный доменный документ docs/editor/project-settings-ui.md только для уточнения blocker-а."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.",
+      "unrelated task statuses, dependency graph or release scope."
+    ],
+    "requiredOutputs": [
+      "blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.",
+      "blocker artifact `data/quality/blockers/T-0186.md` when diagnostics need a durable file.",
+      "diary entry with exact commands or host checks that proved the block."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 193300,
+      "byteLength": 8150,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "14a5582d7ad76e97f5a76ccd9903b9ebacb28570bc63a15e5b2a94489a148902",
+      "markdown": "## T-0186 [ ] P0: Подключить Project Settings к живым элементам управления на canonical `.e2d`\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0175, T-0183\n- Ссылки:\n  - Доменный документ: `docs/editor/project-settings-ui.md`; `docs/editor/project-manager.md`; `docs/project-system/project-text-formats.md`; `docs/export/export-preset-model.md`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.ProjectSystem/`; `src/Electron2D.Export/`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorProjectSettingsUiTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0186.\n  - blocker artifact `data/quality/blockers/T-0186.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/editor/project-settings-ui.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0186.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0186.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nПосле устранения файлового конфликта и готового 2D workflow Project Settings должен перейти от smoke-frame/write-through модели к живым элементам управления внутри shell. UI должен редактировать canonical `<ProjectName>.e2d`, embedded `exportPresets`, Input Map, display, renderer и physics settings через общие controls.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ обновлён до контракта живых элементов управления и canonical `.e2d` behavior.\n- [ ] Добавлены сначала падающие tests для user edits через controls, keyboard save, revert, validation errors и round-trip `.e2d`.\n- [ ] Sections `Main Scene`, `Display`, `Renderer`, `Physics`, `Input Map`, `Export Presets` используют runtime form controls, search/filter where useful и validation messages.\n- [ ] `Save` записывает валидные изменения в canonical `<ProjectName>.e2d` и dirty state пропадает только после успешной записи.\n- [ ] `Apply` применяет только поддерживаемые runtime/editor settings без записи файла; настройки, требующие reload/restart, явно помечаются и не притворяются применёнными.\n- [ ] При validation error `Save` и `Apply` не меняют файл и не применяют частичное состояние; dirty state и сообщения ошибок остаются видимыми.\n- [ ] `Revert` возвращает UI к последнему сохранённому состоянию без записи secrets и без создания legacy files для новых проектов.\n- [ ] Real-window screenshot/analysis подтверждает pointer/keyboard workflow, no overflow и отсутствие запрещённых UI entries.\n\n### Подзадачи\n\n- [ ] Специфицировать live Project Settings controls.\n- [ ] Подключить canonical `.e2d` store и validation.\n- [ ] Реализовать form controls, save/revert и error display.\n- [ ] Проверить focused tests и real-window artifacts.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача зависит от `T-0175`, потому что нельзя строить живой save/apply UI поверх устаревающего файлового контракта.\n\n2026-06-24T03:20:00+03:00 - Приоритет поднят до P0, потому что `T-0189` остаётся P0-gate и зависит от этой задачи. Перед кодом нужно точно разделить `Save` и `Apply`, validation error flow и момент применения renderer/physics изменений.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

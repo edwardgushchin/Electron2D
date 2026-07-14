@@ -1,0 +1,159 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "platformer-board",
+  "taskUid": "task-T-0225",
+  "revision": 1,
+  "taskId": "T-0225",
+  "legacyAliases": [],
+  "title": "Вынести Platformer visual gate в отдельные screenshots и runtime probes",
+  "description": "Ссылки:\n  - Доменный документ: `docs/examples/platformer.md`\n  - Доменный документ: `docs/testing/scene-visual-testing.md`\n  - Verifier: `tools/Verify-Platformer.ps1`\n  - Тесты: `tests/Electron2D.Tests.Integration/PlatformerProjectTests.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/ViewportPresentationTests.cs`\n\nСтарый screenshot gate проверял слишком мало: наличие PNG и отсутствие грубо пустого кадра не доказывают, что камера, world, HUD и gameplay state согласованы. При этом один пиксельный анализ крупной тёмной области будет давать ложные срабатывания на законных тёмных сценах.\n\nНужное поведение: visual gate должен проверять несколько игровых состояний Platformer через сочетание runtime probes и кадров. Runtime probes, то есть машинно-читаемые данные из запуска игры, фиксируют player/world/camera/viewport/HUD geometry, текущий state и event trace. Pixel analysis используется поверх этих данных, а не вместо них.",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "platformer",
+    "reference-game",
+    "version:0.1.0-preview",
+    "visual-gate"
+  ],
+  "deadline": null,
+  "createdBy": "repository-task-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-T-0222"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-T-0223"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "t-0225-criterion-01",
+      "description": "До изменения verifier-а `docs/examples/platformer.md` и `docs/testing/scene-visual-testing.md` описывают visual gate как отдельный контракт от black-box gameplay acceptance.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0225-criterion-02",
+      "description": "Gate создаёт кадры start, checkpoint, death, pause и goal.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0225-criterion-03",
+      "description": "Для каждого кадра artifact содержит runtime probes: player bounds, camera transform, viewport size, HUD bounds, current state, frame index и event timestamp.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0225-criterion-04",
+      "description": "Pixel analysis проверяет пустые/обрезанные области с учётом runtime probes и не падает только из-за законной тёмной сцены.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0225-criterion-05",
+      "description": "Gate ловит рассогласование `World`/camera/HUD, скрытую служебную геометрию, обрезанный уровень и HUD, который движется вместе с камерой.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0225-criterion-06",
+      "description": "Gate не засчитывает screenshot, если PNG создан не из scene tree/rendering path актуального `e2d run`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0225-criterion-07",
+      "description": "Focused tests отклоняют специально подготовленные malformed fixtures с рассогласованными `World`/camera/HUD probes, обрезанным viewport и пустым кадром, а актуальные кадры Platformer проходят.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0225-criterion-08",
+      "description": "После зелёных проверок artifact paths и команды проверки записаны в доменный документ и дневник.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-t-0225-001",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-24T16:45:00.0000000+00:00",
+      "kind": "Comment",
+      "payload": {
+        "markdown": "2026-06-24T19:45:00+03:00 - Создано по замечанию пользователя: screenshot gate нужно отделить от `T-0223`, иначе black-box acceptance снова смешается с слабым анализом одного PNG."
+      }
+    },
+    {
+      "activityEntryId": "activity-t-0225-migrated-to-project-board",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-30T09:21:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "Decision",
+        "text": "2026-06-30T12:21:00+03:00 - Задача перенесена из корневого TASKS.md в ProjectTaskManager проекта Platformer по T-0234. Исторический текст, критерии и зависимости сохранены в этом .e2task документе."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Node",
+      "value": "docs/examples/platformer.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Node",
+      "value": "docs/testing/scene-visual-testing.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Node",
+      "value": "tests/Electron2D.Tests.Integration/PlatformerProjectTests.cs"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Node",
+      "value": "tests/Electron2D.Tests.Integration/ViewportPresentationTests.cs"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Node",
+      "value": "tools/Verify-Platformer.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": "not-required"
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-06-24T16:45:00.0000000+00:00",
+  "updatedAt": "2026-06-30T09:21:00.0000000+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null
+}

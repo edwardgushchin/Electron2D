@@ -1,0 +1,227 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-3ea6b1b73f90b35b1ab8e235ec97f6aa",
+  "revision": 2,
+  "taskId": "T-0940",
+  "legacyAliases": [],
+  "title": "Подготовить Headless CI Backend",
+  "description": "## T-0940 [ ] P0: Подготовить Headless CI Backend\n\n- Создана: 2026-07-05T03:32:25+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `gate`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0241, T-0243, T-0245, T-0246\n- Ссылки:\n  - Доменный документ: `docs/quality/godot-47-headless-ci-backend.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.21 Diagnostics, CI, Packaging And Compatibility Policy`\n\n### Execution contract\n\n- Task type: gate\n- Ready-to-start:\n  - dependencies and child evidence are closed, accepted or explicitly represented as blockers.\n  - gate commands and domain document for T-0940 are known before running checks.\n- Stop conditions:\n  - missing evidence belongs to a child/leaf task rather than the gate tooling.\n  - fixing the issue would change production behavior outside this gate's verifier/report ownership.\n- May change:\n  - gate report/check artifacts named by task criteria.\n  - verifier/report tooling owned by this gate.\n  - `TASKS.md` notes and diary evidence for T-0940.\n- Must not change:\n  - leaf implementation, subsystem backend, platform runtime behavior or sibling task acceptance state.\n- Required outputs:\n  - gate report or current evidence section naming pass/fail/blockers.\n  - links to commands, logs and owning tasks for blockers.\n- Required commands:\n  - exact gate commands named in this task or docs/quality/godot-47-headless-ci-backend.md.\n  - `git diff --check`\n- External audit:\n  - required when this gate is the acceptance boundary; otherwise inherited from parent gate\n\n### Самодостаточное описание\n\nЦель - настроить и проверить `Headless CI Backend` как отдельный CI gate для Public API 0.1-preview scope.\n\nЗадача не реализует runtime/backend behavior и не добавляет public API. Она владеет только CI job definition, pinned toolchain/runtime inputs, deterministic command sequence, generated logs/reports, artifact validation, stable failure diagnostics, no secret leakage and release/audit evidence.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, target platform/job matrix, pinned SDK/toolchain/native dependency inputs and release gate consumers.\n- Граница public API: задача запускает проверки и собирает evidence, но не меняет public API surface и не реализует runtime behavior.\n- Исполняемый результат: deterministic CI job, reproducible command sequence, generated logs/reports and artifact validation.\n- Runtime checks: benchmarks запускаются только если этот CI gate явно владеет benchmark job; иначе нужен documented not-applicable reason.\n\n### Границы задачи\n\n- Цель: подготовить только CI gate `Headless CI Backend`, без расширения на другие платформы или unrelated release gates.\n- Входит: job matrix, pinned inputs, deterministic command sequence, logs/reports, artifact validation, stable diagnostics and secret redaction.\n- Не входит: runtime/backend implementation, public API additions, legal attribution or packaging beyond CI artifacts named by `Headless CI Backend`.\n- Подтверждение приёмки: CI definition, local/reproducible command or documented platform blocker, generated report/log and release/audit evidence.\n\n### Первичные потребители результата\n\n- Release gates, platform matrix checks and audit package evidence consume the CI logs/reports from `Headless CI Backend`.\n- Consumers must receive deterministic command output, artifact validation and secret-redacted diagnostics.\n- Доменный документ должен назвать job definition, generated logs/reports and release/audit consumer evidence.\n\n### Критерии приёмки\n\n- [ ] Доменный документ `docs/quality/godot-47-headless-ci-backend.md` фиксирует task-specific scope `Headless CI Backend`, source inventory, generated report/artifact, verifier command, consumers, unsupported/deferred rows and release/audit evidence.\n- [ ] Deterministic generation or verification command воспроизводимо создаёт report/artifact/log для `Headless CI Backend` и fails on stale, missing or manually edited outputs.\n- [ ] CI/job inventory содержит target platform, pinned SDK/toolchain/runtime inputs, command sequence, expected generated logs/reports and artifact paths.\n- [ ] Generated artifact validation проверяет schema/file list/checksum/source links as applicable and produces stable diagnostics without secret leakage.\n- [ ] Release/audit consumer evidence показывает, какой gate, package check or report consumes `Headless CI Backend` and how failures become actionable.\n- [ ] Runtime benchmarks не требуются, если `Headless CI Backend` не запускает runtime path; доменный документ содержит явную not-applicable строку вместо фиктивных замеров критических путей.\n- [ ] Документация, generated documentation index or task notes синхронизированы с фактическим контрактом `Headless CI Backend`.\n- [ ] Проверки текущей задачи фиксируются в дневнике: целевые verifier/test commands, нужные проверки сборки, документации и лицензий and `git diff --check`.\n\n### Подзадачи\n\n- [ ] Зафиксировать task-specific source inventory, consumers, generated artifact paths, verifier command and explicit out-of-scope в доменном документе.\n- [ ] Добавить или обновить verifier/test fixtures, которые сначала доказывают текущий разрыв, затем проходят на рабочем generator/check/artifact validation path.\n- [ ] Реализовать deterministic generator/check/report or explicit `Deferred`/`Unsupported` contract for `Headless CI Backend` without adding public API.\n- [ ] Проверить generated artifacts, no secret leakage, release/audit evidence and runtime-benchmark applicability decision.\n- [ ] Обновить документацию и выполнить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:32:25+03:00 - Создано по результатам проверки целевого списка: этот явно названный объём раньше не имел отдельной активной задачи в предыдущем срезе ROADMAP.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0013",
+    "tag-0030"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fab4705fe4a1db467903c0bc500995a7"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a9dc106b3357162a2b473b8e01e91ad3"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ `docs/quality/godot-47-headless-ci-backend.md` фиксирует task-specific scope `Headless CI Backend`, source inventory, generated report/artifact, verifier command, consumers, unsupported/deferred rows and release/audit evidence.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Deterministic generation or verification command воспроизводимо создаёт report/artifact/log для `Headless CI Backend` и fails on stale, missing or manually edited outputs.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "CI/job inventory содержит target platform, pinned SDK/toolchain/runtime inputs, command sequence, expected generated logs/reports and artifact paths.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Generated artifact validation проверяет schema/file list/checksum/source links as applicable and produces stable diagnostics without secret leakage.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Release/audit consumer evidence показывает, какой gate, package check or report consumes `Headless CI Backend` and how failures become actionable.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Runtime benchmarks не требуются, если `Headless CI Backend` не запускает runtime path; доменный документ содержит явную not-applicable строку вместо фиктивных замеров критических путей.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Документация, generated documentation index or task notes синхронизированы с фактическим контрактом `Headless CI Backend`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Проверки текущей задачи фиксируются в дневнике: целевые verifier/test commands, нужные проверки сборки, документации и лицензий and `git diff --check`.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:32:25.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по результатам проверки целевого списка: этот явно названный объём раньше не имел отдельной активной задачи в предыдущем срезе ROADMAP."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required when this gate is the acceptance boundary; otherwise inherited from parent gate"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/quality/godot-47-headless-ci-backend.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "gate",
+    "readyToStart": [
+      "dependencies and child evidence are closed, accepted or explicitly represented as blockers.",
+      "gate commands and domain document for T-0940 are known before running checks."
+    ],
+    "stopConditions": [
+      "missing evidence belongs to a child/leaf task rather than the gate tooling.",
+      "fixing the issue would change production behavior outside this gate's verifier/report ownership."
+    ],
+    "allowedChanges": [
+      "gate report/check artifacts named by task criteria.",
+      "verifier/report tooling owned by this gate.",
+      "`TASKS.md` notes and diary evidence for T-0940."
+    ],
+    "forbiddenChanges": [
+      "leaf implementation, subsystem backend, platform runtime behavior or sibling task acceptance state."
+    ],
+    "requiredOutputs": [
+      "gate report or current evidence section naming pass/fail/blockers.",
+      "links to commands, logs and owning tasks for blockers."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "exact gate commands named in this task or docs/quality/godot-47-headless-ci-backend.md.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required when this gate is the acceptance boundary; otherwise inherited from parent gate",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 13264508,
+      "byteLength": 7241,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "865db3aa82f72ad04892d6ed0323e9d78a457b0f1a6ef23d566c99e75faddb87",
+      "markdown": "## T-0940 [ ] P0: Подготовить Headless CI Backend\n\n- Создана: 2026-07-05T03:32:25+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `gate`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0241, T-0243, T-0245, T-0246\n- Ссылки:\n  - Доменный документ: `docs/quality/godot-47-headless-ci-backend.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.21 Diagnostics, CI, Packaging And Compatibility Policy`\n\n### Execution contract\n\n- Task type: gate\n- Ready-to-start:\n  - dependencies and child evidence are closed, accepted or explicitly represented as blockers.\n  - gate commands and domain document for T-0940 are known before running checks.\n- Stop conditions:\n  - missing evidence belongs to a child/leaf task rather than the gate tooling.\n  - fixing the issue would change production behavior outside this gate's verifier/report ownership.\n- May change:\n  - gate report/check artifacts named by task criteria.\n  - verifier/report tooling owned by this gate.\n  - `TASKS.md` notes and diary evidence for T-0940.\n- Must not change:\n  - leaf implementation, subsystem backend, platform runtime behavior or sibling task acceptance state.\n- Required outputs:\n  - gate report or current evidence section naming pass/fail/blockers.\n  - links to commands, logs and owning tasks for blockers.\n- Required commands:\n  - exact gate commands named in this task or docs/quality/godot-47-headless-ci-backend.md.\n  - `git diff --check`\n- External audit:\n  - required when this gate is the acceptance boundary; otherwise inherited from parent gate\n\n### Самодостаточное описание\n\nЦель - настроить и проверить `Headless CI Backend` как отдельный CI gate для Public API 0.1-preview scope.\n\nЗадача не реализует runtime/backend behavior и не добавляет public API. Она владеет только CI job definition, pinned toolchain/runtime inputs, deterministic command sequence, generated logs/reports, artifact validation, stable failure diagnostics, no secret leakage and release/audit evidence.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, target platform/job matrix, pinned SDK/toolchain/native dependency inputs and release gate consumers.\n- Граница public API: задача запускает проверки и собирает evidence, но не меняет public API surface и не реализует runtime behavior.\n- Исполняемый результат: deterministic CI job, reproducible command sequence, generated logs/reports and artifact validation.\n- Runtime checks: benchmarks запускаются только если этот CI gate явно владеет benchmark job; иначе нужен documented not-applicable reason.\n\n### Границы задачи\n\n- Цель: подготовить только CI gate `Headless CI Backend`, без расширения на другие платформы или unrelated release gates.\n- Входит: job matrix, pinned inputs, deterministic command sequence, logs/reports, artifact validation, stable diagnostics and secret redaction.\n- Не входит: runtime/backend implementation, public API additions, legal attribution or packaging beyond CI artifacts named by `Headless CI Backend`.\n- Подтверждение приёмки: CI definition, local/reproducible command or documented platform blocker, generated report/log and release/audit evidence.\n\n### Первичные потребители результата\n\n- Release gates, platform matrix checks and audit package evidence consume the CI logs/reports from `Headless CI Backend`.\n- Consumers must receive deterministic command output, artifact validation and secret-redacted diagnostics.\n- Доменный документ должен назвать job definition, generated logs/reports and release/audit consumer evidence.\n\n### Критерии приёмки\n\n- [ ] Доменный документ `docs/quality/godot-47-headless-ci-backend.md` фиксирует task-specific scope `Headless CI Backend`, source inventory, generated report/artifact, verifier command, consumers, unsupported/deferred rows and release/audit evidence.\n- [ ] Deterministic generation or verification command воспроизводимо создаёт report/artifact/log для `Headless CI Backend` и fails on stale, missing or manually edited outputs.\n- [ ] CI/job inventory содержит target platform, pinned SDK/toolchain/runtime inputs, command sequence, expected generated logs/reports and artifact paths.\n- [ ] Generated artifact validation проверяет schema/file list/checksum/source links as applicable and produces stable diagnostics without secret leakage.\n- [ ] Release/audit consumer evidence показывает, какой gate, package check or report consumes `Headless CI Backend` and how failures become actionable.\n- [ ] Runtime benchmarks не требуются, если `Headless CI Backend` не запускает runtime path; доменный документ содержит явную not-applicable строку вместо фиктивных замеров критических путей.\n- [ ] Документация, generated documentation index or task notes синхронизированы с фактическим контрактом `Headless CI Backend`.\n- [ ] Проверки текущей задачи фиксируются в дневнике: целевые verifier/test commands, нужные проверки сборки, документации и лицензий and `git diff --check`.\n\n### Подзадачи\n\n- [ ] Зафиксировать task-specific source inventory, consumers, generated artifact paths, verifier command and explicit out-of-scope в доменном документе.\n- [ ] Добавить или обновить verifier/test fixtures, которые сначала доказывают текущий разрыв, затем проходят на рабочем generator/check/artifact validation path.\n- [ ] Реализовать deterministic generator/check/report or explicit `Deferred`/`Unsupported` contract for `Headless CI Backend` without adding public API.\n- [ ] Проверить generated artifacts, no secret leakage, release/audit evidence and runtime-benchmark applicability decision.\n- [ ] Обновить документацию и выполнить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:32:25+03:00 - Создано по результатам проверки целевого списка: этот явно названный объём раньше не имел отдельной активной задачи в предыдущем срезе ROADMAP.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:32:25.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

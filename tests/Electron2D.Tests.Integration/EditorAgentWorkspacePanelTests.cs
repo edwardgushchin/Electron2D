@@ -97,7 +97,7 @@ public sealed class EditorAgentWorkspacePanelTests
             Assert.Equal("runtime-tree", lines["StaleMarkers"]);
             Assert.Equal("True", lines["GroupedUndoAvailable"]);
             Assert.Equal("undo-agent-001", lines["UndoGroupId"]);
-            Assert.Equal("True", lines["AwaitingAcceptanceActionAvailable"]);
+            Assert.Equal("True", lines["SubmitForAcceptanceActionAvailable"]);
             Assert.Equal("False", lines["DoneActionAvailable"]);
             Assert.Equal("BottomPanel/Agent", lines["DockPlacement"]);
             Assert.Equal("True", lines["DockPersisted"]);
@@ -128,7 +128,7 @@ public sealed class EditorAgentWorkspacePanelTests
             Assert.True(data.GetProperty("clickableControlCount").GetInt32() >= 6);
             Assert.True(data.GetProperty("screenshotReviewed").GetBoolean());
             Assert.False(data.GetProperty("doneActionAvailable").GetBoolean());
-            Assert.True(data.GetProperty("awaitingAcceptanceActionAvailable").GetBoolean());
+            Assert.True(data.GetProperty("submitForAcceptanceActionAvailable").GetBoolean());
             Assert.True(data.GetProperty("groupedUndoAvailable").GetBoolean());
             Assert.Equal(
                 new[] { "Overview", "Changes", "Jobs", "Diagnostics", "Artifacts", "Terminal" },

@@ -1,0 +1,325 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-14241ca596f05941ca3f5a2c06833826",
+  "revision": 2,
+  "taskId": "T-0227",
+  "legacyAliases": [],
+  "title": "Привести `AtlasTexture` к полному публичному API Godot 4.7",
+  "description": "## T-0227 [ ] P0: Привести `AtlasTexture` к полному публичному API Godot 4.7\n\n- Создана: 2026-06-25T14:32:09+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0241, T-0242, T-0243, T-0245, T-0254, T-0256, T-0247, T-0248, T-0226, T-0974, T-0975\n- Ссылки:\n  - Доменный документ: `docs/rendering/godot-47-atlas-texture.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `Image, Texture, Material`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0227.\n  - blocker artifact `data/quality/blockers/T-0227.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/rendering/godot-47-atlas-texture.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0227.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0227.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЗадача относится к группе `Image, Texture, Material`. Цель - реализовать `AtlasTexture` как полноценную публичную сущность API Electron2D 0.1-preview, совместимую с Godot 4.7 публичным C# API из сгенерированных описаний `T-0242` и поведением, проверенным через `T-0244`.\n\nПублично объект должен работать как соответствующий класс Godot 4.7 для C#. Внутренние зависимости и запреты описаны в разделах «Что входит в задачу», «Что не входит в задачу» и «Связь с внутренними слоями»; эта задача не забирает на себя соседние классы и посторонние внутренние возможности.\n\nОжидаемый результат: `AtlasTexture` не должен быть витриной, временной заглушкой или пустой реализацией. Задача закрывается только если сгенерированные описания, проверки, разделы «На что обратить особое внимание», «Связь с внутренними слоями» и «Подтверждение поведения» доказывают совпадение с Godot.\n\nAtlasTexture остаётся отдельной задачей, но теперь зависит от полного Texture2D/Image/Resource контракта и обязан поддержать рекурсивные atlas chains, margins, regions, filter_clip, drawing и cache invalidation.\n\n### Источники и сгенерированные описания API\n\n- Версия Godot: `4.7-stable`.\n- Официальная справка Godot по классу: `https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html`.\n- XML-описание класса в исходном коде Godot: `https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/AtlasTexture.xml`.\n- Доменный документ: `docs/rendering/godot-47-atlas-texture.md`.\n- Сгенерированное описание API Godot: `data/api/godot-4.7/classes/AtlasTexture.api.json`.\n- Сгенерированное описание API Electron2D: `data/api/electron2d/classes/AtlasTexture.api.json`.\n- Сгенерированный отчёт о расхождениях API: `data/api/electron2d/diff/AtlasTexture.diff.md`; `data/api/electron2d/diff/AtlasTexture.diff.json`.\n- Сгенерированное описание поведения Godot: `data/api/godot-4.7/behavior/AtlasTexture.behavior.md`; `data/api/godot-4.7/behavior/AtlasTexture.behavior.json`.\n- Сгенерированный отчёт о расхождениях поведения: `data/api/electron2d/behavior-diff/AtlasTexture.behavior.diff.md`.\n\nЭти сгенерированные описания и отчёты создаются инструментами репозитория из `T-0242`, `T-0243` и `T-0244`. В этой задаче можно обновлять проверки поведения, уточняющие правила, реализацию, документацию и тесты, но нельзя править сгенерированные описания и отчёты вручную.\n\n### Совпадение поведения с Godot\n\nКласс `AtlasTexture` считается готовым только тогда, когда разработчик, знакомый с Godot, может пользоваться им с теми же ожиданиями, что и в Godot 4.7. Должны совпадать не только имена методов, свойств, сигналов и перечислений, но и правила работы, значения по умолчанию, порядок событий, ошибки, жизненный цикл и граничные случаи.\n\nЕсли сгенерированное описание API, отчёт о расхождениях или проверки поведения не доказывают такое совпадение для `AtlasTexture`, задачу нельзя закрывать. Единственное допустимое исключение — заранее утверждённая строка `Deferred` или `Unsupported` с понятной диагностикой для разработчика.\n\n### Что входит в задачу\n\n- Реализовать публичное поведение `AtlasTexture`, которое описано в сгенерированных описаниях Godot `4.7-stable` из `T-0242`.\n- Доказать совпадение `AtlasTexture` с Godot через отчёт о расхождениях и проверку `T-0243`, а также через проверки поведения `T-0244` или утверждённые строки `Deferred`/`Unsupported`.\n- Сначала добавить падающие тесты, затем довести их до прохождения; отдельно покрыть неверные входные данные, освобождённые объекты, отсутствующие ресурсы и неподдержанные платформенные пути, относящиеся к `AtlasTexture`.\n- Использовать только утверждённые внутренние слои, перечисленные в этой задаче, зависимостях и доменном документе.\n- Обновить XML-документацию, сгенерированный указатель документации, доменный документ, заметки задачи и запись в дневнике для `AtlasTexture`.\n\n### Что не входит в задачу\n\n- Ручное копирование справки Godot или списков публичных элементов API в `TASKS.md` и доменные документы.\n- Публичный API, которого нет в сгенерированном описании Godot `4.7-stable` для `AtlasTexture`, если только отдельная задача совместимости явно не утвердила такое отличие.\n- Соседние классы, самостоятельные внутренние возможности и широкие рефакторинги сверх минимальной связи, нужной для `AtlasTexture`.\n- Редакторское, только 3D или платформенно-особое поведение, которого нет в сгенерированном описании или утверждённых границах задачи.\n- Фасадная, временная или пустая реализация, скрытая синхронная блокировка критических путей выполнения или прямой доступ к внутреннему слою в обход утверждённого пути.\n\n### На что обратить особое внимание\n\n- region, margin и `filter_clip` behavior over a source `Texture2D`;\n- recursive atlas chains supported or explicitly rejected by approved deviation;\n- cache invalidation когда source texture, region or margin changes;\n- draw path reuses source texture without unnecessary GPU duplication;\n- serialization/duplication и negative region bounds tests.\n\n### Связь с внутренними слоями\n\n- Путь отрисовки должен использовать исходный `Texture2D` через принятый внутренний слой отрисовки.\n- Не должен без необходимости дублировать GPU-ресурсы при изменении region/margin.\n- Сериализация и дублирование ресурса используют принятую подсистему ресурсов; прямой обход файловой системы запрещён.\n\n### Подтверждение поведения\n\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают region, margin и `filter_clip` behavior over a source `Texture2D`.\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают recursive atlas chains supported or explicitly rejected by approved deviation.\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают cache invalidation когда source texture, region or margin changes.\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают draw path reuses source texture without unnecessary GPU duplication.\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают serialization/duplication и negative region bounds tests.\n- [ ] Подтверждение связи с внутренними слоями доказывает, что используются утверждённые пути, без прямого обхода и скрытого фасада.\n\n### Задачная граница\n\nЗадача реализует рабочее поведение класса `AtlasTexture`, наблюдаемое разработчиком. Полная публичная поверхность берётся только из сгенерированного описания API; ручной список элементов API в `TASKS.md` не ведётся и не является источником истины. Если сгенерированное описание API, отчёт о расхождениях, описание поведения или проверка отсутствуют либо устарели, задачу нельзя закрывать.\n\n### Критерии приёмки\n\n- [ ] Сгенерированное описание API для `AtlasTexture` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю публичную поверхность; ручные списки элементов API в `TASKS.md` не являются источником истины.\n- [ ] До рабочего кода добавлены сначала падающие тесты и проверочные сценарии: они падают на текущем неполном `AtlasTexture` и покрывают не только наличие элементов API, но и ключевое поведение.\n- [ ] Рабочая реализация `AtlasTexture` опирается на настоящий внутренний слой: нет фасадного поведения, временных пустых методов, неописанных платформенных разрывов и скрытых синхронных блокировок на критических путях выполнения.\n- [ ] Поведение `AtlasTexture` покрыто модульными тестами, проверками совпадения API, интеграционными тестами, тестами ошибок, жизненного цикла, сигналов, сериализации и ресурсов, если сущность наследуется от `Object`, `Node` или `Resource`.\n- [ ] Для поведения в среде выполнения и на критических путях добавлены бенчмарки или проверки выделений памяти и производительности: без лишних LINQ, boxing и всплесков выделений; без зависаний UI/render/audio/input thread; без утечек CPU/GPU/ресурсов.\n- [ ] Полная документация `AtlasTexture` синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7, если они неизбежны.\n- [ ] Проверки запускаются в текущей сессии и фиксируются в дневнике: целевые тесты и проверки, нужные проверки сборки, документации и лицензий и `git diff --check` для изменённых файлов.\n\n### Подзадачи\n\n- [ ] Сгенерировать/обновить описание API `AtlasTexture` через `T-0242` и зафиксировать official Godot `4.7-stable` входные данные в сгенерированные файлы.\n- [ ] Обновить доменный документ `docs/rendering/godot-47-atlas-texture.md` только в части поведения этого класса, связи с внутренними слоями, намеренных отличий, заметок `Deferred`/`Unsupported` и подтверждений тестами; полную сгенерированную поверхность элементов API вручную не копировать.\n- [ ] Добавить сначала падающие тесты и проверки выделений памяти/производительности для рискованных путей.\n- [ ] Реализовать рабочий код минимальным срезом, совместимым с существующей архитектурой Electron2D.\n- [ ] Обновить XML-документацию, полную документацию, сгенерированную документацию API и заметки задачи после зелёных проверок.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Обновлено по запросу пользователя: каждая публичная сущность Electron2D API должна иметь отдельную задачу и полную рабочую реализацию API, совместимого с Godot 4.7, а не витрину.\n\n2026-07-09T13:02:13+03:00 - По прямому решению владельца проекта `Electron2D.AtlasTexture` добавлен в `data/api/electron2d-public-api-profile.json` как `approved`: requested atlas-backed 2D texture resource; текущий экспортный пакет Electron2D существует, поэтому regenerated manifest сможет отразить `supported`; `profile approval` не закрывает class-done задачу, рабочую реализацию и проверки поведения.\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0015",
+    "tag-0021",
+    "tag-0027"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-47c21367739a4bbef11dbd28235c6ba5"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fab4705fe4a1db467903c0bc500995a7"
+    },
+    {
+      "relationId": "relation-0006",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c1168ce3c83f3a40e9b21637a6205f18"
+    },
+    {
+      "relationId": "relation-0007",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-4f2623e91556270e845d083123ca613f"
+    },
+    {
+      "relationId": "relation-0008",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c0723930d7fbe7fa15273fedf161e45a"
+    },
+    {
+      "relationId": "relation-0009",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-7c5ab8f696209bb39e4a88cd6f048ff0"
+    },
+    {
+      "relationId": "relation-0010",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-367c7ae2eab5b8bed3aa30606f853a54"
+    },
+    {
+      "relationId": "relation-0011",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-dd5b7cb10954267dc00940163c1bce56"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Сгенерированное описание API для `AtlasTexture` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю публичную поверхность; ручные списки элементов API в `TASKS.md` не являются источником истины.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "До рабочего кода добавлены сначала падающие тесты и проверочные сценарии: они падают на текущем неполном `AtlasTexture` и покрывают не только наличие элементов API, но и ключевое поведение.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Рабочая реализация `AtlasTexture` опирается на настоящий внутренний слой: нет фасадного поведения, временных пустых методов, неописанных платформенных разрывов и скрытых синхронных блокировок на критических путях выполнения.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Поведение `AtlasTexture` покрыто модульными тестами, проверками совпадения API, интеграционными тестами, тестами ошибок, жизненного цикла, сигналов, сериализации и ресурсов, если сущность наследуется от `Object`, `Node` или `Resource`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Для поведения в среде выполнения и на критических путях добавлены бенчмарки или проверки выделений памяти и производительности: без лишних LINQ, boxing и всплесков выделений; без зависаний UI/render/audio/input thread; без утечек CPU/GPU/ресурсов.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Полная документация `AtlasTexture` синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7, если они неизбежны.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Проверки запускаются в текущей сессии и фиксируются в дневнике: целевые тесты и проверки, нужные проверки сборки, документации и лицензий и `git diff --check` для изменённых файлов.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Обновлено по запросу пользователя: каждая публичная сущность Electron2D API должна иметь отдельную задачу и полную рабочую реализацию API, совместимого с Godot 4.7, а не витрину."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-09T10:02:13.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "По прямому решению владельца проекта `Electron2D.AtlasTexture` добавлен в `data/api/electron2d-public-api-profile.json` как `approved`: requested atlas-backed 2D texture resource; текущий экспортный пакет Electron2D существует, поэтому regenerated manifest сможет отразить `supported`; `profile approval` не закрывает class-done задачу, рабочую реализацию и проверки поведения."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/api/electron2d-public-api-profile.json"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/api/electron2d/behavior-diff/AtlasTexture.behavior.diff.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "data/api/electron2d/classes/AtlasTexture.api.json"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "data/api/electron2d/diff/AtlasTexture.diff.json"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "data/api/electron2d/diff/AtlasTexture.diff.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "data/api/godot-4.7/behavior/AtlasTexture.behavior.json"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "data/api/godot-4.7/behavior/AtlasTexture.behavior.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "data/api/godot-4.7/classes/AtlasTexture.api.json"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "data/dev-diary"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "data/quality/blockers/T-0227.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/rendering/godot-47-atlas-texture.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "Uri",
+      "value": "https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "Uri",
+      "value": "https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/AtlasTexture.xml"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "blocked-environment",
+    "readyToStart": [
+      "только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.",
+      "перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate."
+    ],
+    "stopConditions": [
+      "dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.",
+      "требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.",
+      "задача просит audit package без отдельной blocker-report задачи."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` blocker/current evidence notes for T-0227.",
+      "blocker artifact `data/quality/blockers/T-0227.md`, если нужен отдельный отчёт.",
+      "дневник `data/dev-diary/` и связанный доменный документ docs/rendering/godot-47-atlas-texture.md только для уточнения blocker-а."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.",
+      "unrelated task statuses, dependency graph or release scope."
+    ],
+    "requiredOutputs": [
+      "blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.",
+      "blocker artifact `data/quality/blockers/T-0227.md` when diagnostics need a durable file.",
+      "diary entry with exact commands or host checks that proved the block."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 359651,
+      "byteLength": 18834,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "3c5a8437edb74e516e4625f652dd86ac473b8d4c669e52fc5e91511f730d6443",
+      "markdown": "## T-0227 [ ] P0: Привести `AtlasTexture` к полному публичному API Godot 4.7\n\n- Создана: 2026-06-25T14:32:09+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0241, T-0242, T-0243, T-0245, T-0254, T-0256, T-0247, T-0248, T-0226, T-0974, T-0975\n- Ссылки:\n  - Доменный документ: `docs/rendering/godot-47-atlas-texture.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `Image, Texture, Material`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0227.\n  - blocker artifact `data/quality/blockers/T-0227.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/rendering/godot-47-atlas-texture.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0227.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0227.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЗадача относится к группе `Image, Texture, Material`. Цель - реализовать `AtlasTexture` как полноценную публичную сущность API Electron2D 0.1-preview, совместимую с Godot 4.7 публичным C# API из сгенерированных описаний `T-0242` и поведением, проверенным через `T-0244`.\n\nПублично объект должен работать как соответствующий класс Godot 4.7 для C#. Внутренние зависимости и запреты описаны в разделах «Что входит в задачу», «Что не входит в задачу» и «Связь с внутренними слоями»; эта задача не забирает на себя соседние классы и посторонние внутренние возможности.\n\nОжидаемый результат: `AtlasTexture` не должен быть витриной, временной заглушкой или пустой реализацией. Задача закрывается только если сгенерированные описания, проверки, разделы «На что обратить особое внимание», «Связь с внутренними слоями» и «Подтверждение поведения» доказывают совпадение с Godot.\n\nAtlasTexture остаётся отдельной задачей, но теперь зависит от полного Texture2D/Image/Resource контракта и обязан поддержать рекурсивные atlas chains, margins, regions, filter_clip, drawing и cache invalidation.\n\n### Источники и сгенерированные описания API\n\n- Версия Godot: `4.7-stable`.\n- Официальная справка Godot по классу: `https://docs.godotengine.org/en/4.7/classes/class_atlastexture.html`.\n- XML-описание класса в исходном коде Godot: `https://github.com/godotengine/godot/blob/4.7-stable/doc/classes/AtlasTexture.xml`.\n- Доменный документ: `docs/rendering/godot-47-atlas-texture.md`.\n- Сгенерированное описание API Godot: `data/api/godot-4.7/classes/AtlasTexture.api.json`.\n- Сгенерированное описание API Electron2D: `data/api/electron2d/classes/AtlasTexture.api.json`.\n- Сгенерированный отчёт о расхождениях API: `data/api/electron2d/diff/AtlasTexture.diff.md`; `data/api/electron2d/diff/AtlasTexture.diff.json`.\n- Сгенерированное описание поведения Godot: `data/api/godot-4.7/behavior/AtlasTexture.behavior.md`; `data/api/godot-4.7/behavior/AtlasTexture.behavior.json`.\n- Сгенерированный отчёт о расхождениях поведения: `data/api/electron2d/behavior-diff/AtlasTexture.behavior.diff.md`.\n\nЭти сгенерированные описания и отчёты создаются инструментами репозитория из `T-0242`, `T-0243` и `T-0244`. В этой задаче можно обновлять проверки поведения, уточняющие правила, реализацию, документацию и тесты, но нельзя править сгенерированные описания и отчёты вручную.\n\n### Совпадение поведения с Godot\n\nКласс `AtlasTexture` считается готовым только тогда, когда разработчик, знакомый с Godot, может пользоваться им с теми же ожиданиями, что и в Godot 4.7. Должны совпадать не только имена методов, свойств, сигналов и перечислений, но и правила работы, значения по умолчанию, порядок событий, ошибки, жизненный цикл и граничные случаи.\n\nЕсли сгенерированное описание API, отчёт о расхождениях или проверки поведения не доказывают такое совпадение для `AtlasTexture`, задачу нельзя закрывать. Единственное допустимое исключение — заранее утверждённая строка `Deferred` или `Unsupported` с понятной диагностикой для разработчика.\n\n### Что входит в задачу\n\n- Реализовать публичное поведение `AtlasTexture`, которое описано в сгенерированных описаниях Godot `4.7-stable` из `T-0242`.\n- Доказать совпадение `AtlasTexture` с Godot через отчёт о расхождениях и проверку `T-0243`, а также через проверки поведения `T-0244` или утверждённые строки `Deferred`/`Unsupported`.\n- Сначала добавить падающие тесты, затем довести их до прохождения; отдельно покрыть неверные входные данные, освобождённые объекты, отсутствующие ресурсы и неподдержанные платформенные пути, относящиеся к `AtlasTexture`.\n- Использовать только утверждённые внутренние слои, перечисленные в этой задаче, зависимостях и доменном документе.\n- Обновить XML-документацию, сгенерированный указатель документации, доменный документ, заметки задачи и запись в дневнике для `AtlasTexture`.\n\n### Что не входит в задачу\n\n- Ручное копирование справки Godot или списков публичных элементов API в `TASKS.md` и доменные документы.\n- Публичный API, которого нет в сгенерированном описании Godot `4.7-stable` для `AtlasTexture`, если только отдельная задача совместимости явно не утвердила такое отличие.\n- Соседние классы, самостоятельные внутренние возможности и широкие рефакторинги сверх минимальной связи, нужной для `AtlasTexture`.\n- Редакторское, только 3D или платформенно-особое поведение, которого нет в сгенерированном описании или утверждённых границах задачи.\n- Фасадная, временная или пустая реализация, скрытая синхронная блокировка критических путей выполнения или прямой доступ к внутреннему слою в обход утверждённого пути.\n\n### На что обратить особое внимание\n\n- region, margin и `filter_clip` behavior over a source `Texture2D`;\n- recursive atlas chains supported or explicitly rejected by approved deviation;\n- cache invalidation когда source texture, region or margin changes;\n- draw path reuses source texture without unnecessary GPU duplication;\n- serialization/duplication и negative region bounds tests.\n\n### Связь с внутренними слоями\n\n- Путь отрисовки должен использовать исходный `Texture2D` через принятый внутренний слой отрисовки.\n- Не должен без необходимости дублировать GPU-ресурсы при изменении region/margin.\n- Сериализация и дублирование ресурса используют принятую подсистему ресурсов; прямой обход файловой системы запрещён.\n\n### Подтверждение поведения\n\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают region, margin и `filter_clip` behavior over a source `Texture2D`.\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают recursive atlas chains supported or explicitly rejected by approved deviation.\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают cache invalidation когда source texture, region or margin changes.\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают draw path reuses source texture without unnecessary GPU duplication.\n- [ ] Тесты, проверки поведения или утверждённые строки `Deferred`/`Unsupported` покрывают serialization/duplication и negative region bounds tests.\n- [ ] Подтверждение связи с внутренними слоями доказывает, что используются утверждённые пути, без прямого обхода и скрытого фасада.\n\n### Задачная граница\n\nЗадача реализует рабочее поведение класса `AtlasTexture`, наблюдаемое разработчиком. Полная публичная поверхность берётся только из сгенерированного описания API; ручной список элементов API в `TASKS.md` не ведётся и не является источником истины. Если сгенерированное описание API, отчёт о расхождениях, описание поведения или проверка отсутствуют либо устарели, задачу нельзя закрывать.\n\n### Критерии приёмки\n\n- [ ] Сгенерированное описание API для `AtlasTexture` создано через `T-0242`, привязано к источникам Godot `4.7-stable` и содержит всю публичную поверхность; ручные списки элементов API в `TASKS.md` не являются источником истины.\n- [ ] До рабочего кода добавлены сначала падающие тесты и проверочные сценарии: они падают на текущем неполном `AtlasTexture` и покрывают не только наличие элементов API, но и ключевое поведение.\n- [ ] Рабочая реализация `AtlasTexture` опирается на настоящий внутренний слой: нет фасадного поведения, временных пустых методов, неописанных платформенных разрывов и скрытых синхронных блокировок на критических путях выполнения.\n- [ ] Поведение `AtlasTexture` покрыто модульными тестами, проверками совпадения API, интеграционными тестами, тестами ошибок, жизненного цикла, сигналов, сериализации и ресурсов, если сущность наследуется от `Object`, `Node` или `Resource`.\n- [ ] Для поведения в среде выполнения и на критических путях добавлены бенчмарки или проверки выделений памяти и производительности: без лишних LINQ, boxing и всплесков выделений; без зависаний UI/render/audio/input thread; без утечек CPU/GPU/ресурсов.\n- [ ] Полная документация `AtlasTexture` синхронизирована: XML-документация, манифест API, доменный документ, сгенерированный указатель документации и заметки о намеренных отличиях от Godot 4.7, если они неизбежны.\n- [ ] Проверки запускаются в текущей сессии и фиксируются в дневнике: целевые тесты и проверки, нужные проверки сборки, документации и лицензий и `git diff --check` для изменённых файлов.\n\n### Подзадачи\n\n- [ ] Сгенерировать/обновить описание API `AtlasTexture` через `T-0242` и зафиксировать official Godot `4.7-stable` входные данные в сгенерированные файлы.\n- [ ] Обновить доменный документ `docs/rendering/godot-47-atlas-texture.md` только в части поведения этого класса, связи с внутренними слоями, намеренных отличий, заметок `Deferred`/`Unsupported` и подтверждений тестами; полную сгенерированную поверхность элементов API вручную не копировать.\n- [ ] Добавить сначала падающие тесты и проверки выделений памяти/производительности для рискованных путей.\n- [ ] Реализовать рабочий код минимальным срезом, совместимым с существующей архитектурой Electron2D.\n- [ ] Обновить XML-документацию, полную документацию, сгенерированную документацию API и заметки задачи после зелёных проверок.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Обновлено по запросу пользователя: каждая публичная сущность Electron2D API должна иметь отдельную задачу и полную рабочую реализацию API, совместимого с Godot 4.7, а не витрину.\n\n2026-07-09T13:02:13+03:00 - По прямому решению владельца проекта `Electron2D.AtlasTexture` добавлен в `data/api/electron2d-public-api-profile.json` как `approved`: requested atlas-backed 2D texture resource; текущий экспортный пакет Electron2D существует, поэтому regenerated manifest сможет отразить `supported`; `profile approval` не закрывает class-done задачу, рабочую реализацию и проверки поведения.\n"
+    }
+  ],
+  "createdAt": "2026-06-25T11:32:09.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

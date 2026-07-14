@@ -92,7 +92,7 @@ Planner должен возвращать deterministic browser package layout:
 
 `_framework/` - publish output runtime/dependency directory для WebAssembly artifacts.
 
-`assets/` - статические игровые ресурсы после import/export processing. Служебные файлы редактора, включая `.electron2d/tasks/**`, local-only task tracker, дневник и completed archives, не входят в browser package.
+`assets/` - статические игровые ресурсы после import/export processing. Служебные файлы редактора, включая `.taskboard/**`, local-only task tracker, дневник и completed archives, не входят в browser package.
 
 ## Правила browser runtime
 
@@ -134,7 +134,7 @@ Browser run workflow:
 - Toolchain validator fail closed, если WebAssembly build tools отсутствуют.
 - Web planner создаёт deterministic package layout, publish arguments, browser policies и smoke criteria.
 - Web planner fail closed для неправильного target, runtime identifier, deployment mode, signing и отсутствующих project settings.
-- Web package builder создаёт `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, named project settings file `<ProjectName>.e2d`, main scene и `assets/**`, но не копирует `.electron2d/tasks/**`. Legacy `project.e2d.json` копируется только для старых проектов, где это фактическое имя project settings file.
+- Web package builder создаёт `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, named project settings file `<ProjectName>.e2d`, main scene и `assets/**`, но не копирует `.taskboard/**`. Legacy `project.e2d.json` копируется только для старых проектов, где это фактическое имя project settings file.
 - CLI `export build-web --skip-publish true` создаёт проверяемую статическую структуру пакета без workspace job, а обычный `export build-web` завершается закрытой ошибкой (`fail closed`), если WebAssembly build tools не соответствуют текущему SDK.
 - CLI `export run-web` создаёт structured smoke artifact с criteria для startup, scene load, rendering readiness, input event path, audio policy state, resource loading и save-data policy.
 - Implementation documentation описывает фактический target, layout, diagnostics, limitations и команды проверки.
@@ -185,7 +185,7 @@ dotnet publish <project.csproj> --configuration <Debug|Release> --runtime browse
     <main scene path>
 ```
 
-Сборщик пакета записывает `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, копирует фактический файл настроек проекта, например `Platformer.e2d`, копирует путь к главной сцене и `assets/**`. Manifest хранит путь к project file в `projectFile`, а loader использует его вместо предположения о `project.e2d.json`. Старые проекты, которые всё ещё используют `project.e2d.json`, сохраняют это имя файла. Пакет намеренно не включает `.electron2d/tasks/**`, локальные workflow-файлы или signing secrets.
+Сборщик пакета записывает `index.html`, `electron2d.loader.js`, `electron2d.webmanifest.json`, копирует фактический файл настроек проекта, например `Platformer.e2d`, копирует путь к главной сцене и `assets/**`. Manifest хранит путь к project file в `projectFile`, а loader использует его вместо предположения о `project.e2d.json`. Старые проекты, которые всё ещё используют `project.e2d.json`, сохраняют это имя файла. Пакет намеренно не включает `.taskboard/**`, локальные workflow-файлы или signing secrets.
 
 ## Правила браузерной среды выполнения
 

@@ -1,0 +1,12 @@
+{
+  "extension.displayName": "Electron2D Task Board",
+  "extension.description": "Trusted VS Code task board for Electron2D projects.",
+  "capability.untrusted": "The extension launches the project-local e2d CLI and therefore requires workspace trust.",
+  "capability.virtual": "Electron2D task boards require a local filesystem and CLI.",
+  "command.openTaskBoard": "Open Task Board",
+  "command.category": "Electron2D",
+  "viewContainer.title": "Task Board",
+  "view.name": "Tasks",
+  "configuration.title": "Electron2D Task Board",
+  "configuration.cliPath.description": "Absolute path to e2d. When empty, the extension resolves e2d from PATH."
+}

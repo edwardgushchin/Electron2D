@@ -1,0 +1,119 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-d9747c3e3048af22f085b798d96a6fdc",
+  "revision": 2,
+  "taskId": "T-0011",
+  "legacyAliases": [],
+  "title": "Реализовать `NodePath`, `GetNode`, `GetNodeOrNull` и стабильное разрешение путей",
+  "description": "# T-0011 [x] P0: Реализовать `NodePath`, `GetNode`, `GetNodeOrNull` и стабильное разрешение путей\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-20T22:45:00+03:00\n- Статус: завершена\n- Коммит: `T-0011: реализовать NodePath и GetNode`\n\n## Итог\n\nРеализован baseline path resolution для целевого API:\n\n- добавлен public type `Electron2D.NodePath`;\n- добавлены `Node.GetNode(NodePath path)` и `Node.GetNodeOrNull(NodePath path)`;\n- `NodePath` парсит node names, subnames, absolute flag и empty state;\n- C# shorthand `GetNode(\"Child\")` работает через implicit conversion из `string` в `NodePath`;\n- `SceneTree.Root` теперь имеет имя `root`, чтобы absolute paths вида `/root/...` совпадали с целевым соглашением.\n\n## Проверенное поведение\n\n- `NodePath` парсит `/root/World/Player:position:x` как absolute path с names и subnames.\n- Relative lookup поддерживает direct child, nested child, `.`, `..` и sibling path через parent.\n- Absolute lookup поддерживает `/root` и descendant paths от `SceneTree.Root`.\n- Subnames после `:` игнорируются node lookup на текущем baseline.\n- Missing path возвращает `null` через `GetNodeOrNull()` и `InvalidOperationException` через `GetNode()`.\n- После rename node старый path не разрешается, новый path разрешается.\n\n## Документация\n\n- Спецификация: `docs/object-model/node-path-resolution.md`.\n- Справка: `docs/object-model/node-path-resolution.md`.\n- Обновлены docs index, GitHub Wiki compatibility table, README, changelog и release notes.\n\n## Отличия и будущие задачи\n\n- `StringName` ещё не реализован, поэтому `NodePath.GetName()` и `GetSubname()` временно возвращают `string`.\n- `GetPath()` и `GetPathTo()` ещё не реализованы.\n- Property/resource lookup по subnames относится к будущему resource/Variant pipeline.\n- Полный XML documentation gate и 100% coverage gate остаются в `T-0106` и `T-0108`.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` упал на отсутствующих `NodePath`, `GetNode`, `GetNodeOrNull`.\n- Green narrow: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 17 тестов.\n- `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --no-restore` - прошло, 5 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 25 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 7.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n\n## Заметки агента\n\nЗадача выполнена через spec -> red tests -> минимальную runtime-реализацию -> документацию фактического поведения.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-20T19:45:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Resource",
+      "value": "/root"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Resource",
+      "value": "/root/..."
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Resource",
+      "value": "/root/World/Player:position:x"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/object-model/node-path-resolution.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 22964,
+      "byteLength": 3647,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "199f099a82e1f586d60fd9e87e50308d519be2d0e563531ea880deae1e006657",
+      "markdown": "# T-0011 [x] P0: Реализовать `NodePath`, `GetNode`, `GetNodeOrNull` и стабильное разрешение путей\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-20T22:45:00+03:00\n- Статус: завершена\n- Коммит: `T-0011: реализовать NodePath и GetNode`\n\n## Итог\n\nРеализован baseline path resolution для целевого API:\n\n- добавлен public type `Electron2D.NodePath`;\n- добавлены `Node.GetNode(NodePath path)` и `Node.GetNodeOrNull(NodePath path)`;\n- `NodePath` парсит node names, subnames, absolute flag и empty state;\n- C# shorthand `GetNode(\"Child\")` работает через implicit conversion из `string` в `NodePath`;\n- `SceneTree.Root` теперь имеет имя `root`, чтобы absolute paths вида `/root/...` совпадали с целевым соглашением.\n\n## Проверенное поведение\n\n- `NodePath` парсит `/root/World/Player:position:x` как absolute path с names и subnames.\n- Relative lookup поддерживает direct child, nested child, `.`, `..` и sibling path через parent.\n- Absolute lookup поддерживает `/root` и descendant paths от `SceneTree.Root`.\n- Subnames после `:` игнорируются node lookup на текущем baseline.\n- Missing path возвращает `null` через `GetNodeOrNull()` и `InvalidOperationException` через `GetNode()`.\n- После rename node старый path не разрешается, новый path разрешается.\n\n## Документация\n\n- Спецификация: `docs/object-model/node-path-resolution.md`.\n- Справка: `docs/object-model/node-path-resolution.md`.\n- Обновлены docs index, GitHub Wiki compatibility table, README, changelog и release notes.\n\n## Отличия и будущие задачи\n\n- `StringName` ещё не реализован, поэтому `NodePath.GetName()` и `GetSubname()` временно возвращают `string`.\n- `GetPath()` и `GetPathTo()` ещё не реализованы.\n- Property/resource lookup по subnames относится к будущему resource/Variant pipeline.\n- Полный XML documentation gate и 100% coverage gate остаются в `T-0106` и `T-0108`.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` упал на отсутствующих `NodePath`, `GetNode`, `GetNodeOrNull`.\n- Green narrow: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 17 тестов.\n- `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --no-restore` - прошло, 5 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 25 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 7.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n\n## Заметки агента\n\nЗадача выполнена через spec -> red tests -> минимальную runtime-реализацию -> документацию фактического поведения.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-20T19:45:00.0000000+00:00",
+  "completedAt": "2026-06-20T19:45:00.0000000+00:00",
+  "acceptedAt": "2026-06-20T19:45:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-20T19:45:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

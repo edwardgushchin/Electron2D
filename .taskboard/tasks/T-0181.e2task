@@ -1,0 +1,250 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-fc1417a58492e741c4143dfe410b7622",
+  "revision": 2,
+  "taskId": "T-0181",
+  "legacyAliases": [],
+  "title": "Каркас редактора - docks, команды, нижняя панель и сохранение раскладки",
+  "description": "## T-0181 [ ] P0: Каркас редактора - docks, команды, нижняя панель и сохранение раскладки\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0179, T-0180\n- Ссылки:\n  - Доменный документ: `docs/editor/editor-shell-layout.md`; `docs/editor/editor-project-shell.md`; `docs/editor/agent-workspace-panel.md`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D/Graphics/UI/`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`; `tests/Electron2D.Tests.Integration/EditorAgentWorkspacePanelTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0181.\n  - blocker artifact `data/quality/blockers/T-0181.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/editor/editor-shell-layout.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0181.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0181.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЦель - сделать каркас редактора поверх runtime controls: dock groups, splitters, tab groups, bottom panel, command routing, shortcut context и layout save/restore. Это не визуальный smoke-screen, а рабочий механизм, который должен использовать Scene Tree, FileSystem, Inspector, нижнюю вкладку `Agent`, Script, Tasks и specialized editors.\n\nОжидаемый результат: docks можно изменять по размеру, скрывать, переносить, максимизировать и восстанавливать. Bottom panel по умолчанию занимает collapsed strip около 30-32 px, раскрывается до 180-240 px, имеет tabs, badges, close/maximize controls и status area справа. Framework даёт общий механизм `RevealBottomPanel(tab, stealFocus: false)`, но не решает, когда раскрывать `Output`, `Debugger` или `Agent`: эти триггеры принадлежат workflow-задачам. Command routing знает active workspace и не теряет shortcuts при переходах.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ описывает `DockHost`, dock groups, splitters, bottom panel, command routing, persistence schema и shortcut context.\n- [ ] Добавлены сначала падающие tests для resize docks, tab movement, bottom collapsed/expanded state, splitter hit targets, command routing и layout round-trip.\n- [ ] Dock layout сохраняет left/right dock width, bottom height, collapsed state, selected bottom tabs, active Agent inner tab, active workspace, open documents, selection, zoom и Agent Workspace state.\n- [ ] Bottom panel не занимает большую пустую область по умолчанию, содержит вкладку `Agent` после `Debugger` и поддерживает общий API/command `RevealBottomPanel(tab, stealFocus: false)` для workflow-задач.\n- [ ] `RevealBottomPanel(..., stealFocus: false)` раскрывает нужную вкладку без перехвата keyboard focus; конкретные auto-reveal triggers для `Output`, `Debugger` и `Agent` остаются в `T-0183`, `T-0200` и `T-0188`.\n- [ ] При нехватке ширины bottom tabs уходят в overflow-menu, а не сжимаются до нечитаемого состояния.\n- [ ] Status area показывает renderer, FPS, build/run state, SDK state и version/branch там, где данные доступны.\n- [ ] Все видимые framework controls строятся из runtime controls, без manual shell renderer и без `ShellRegion` hit-test.\n- [ ] Real-window interaction smoke подтверждает resize, collapse/expand, keyboard shortcuts и persistence after restart.\n\n### Подзадачи\n\n- [ ] Специфицировать dock/persistence/command contract.\n- [ ] Добавить failing tests для dock layout и bottom panel.\n- [ ] Реализовать `DockHost` как internal composite control поверх runtime UI.\n- [ ] Подключить command routing и shortcut context.\n- [ ] Проверить real-window resize/persistence screenshots.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача отделяет reusable editor framework от productized shell: сначала нужен механизм docks/commands, затем конкретная раскладка shell.\n\n2026-06-24T13:36:00+03:00 - Scope уточнён: `T-0181` владеет механизмом раскрытия bottom panel и no-focus-steal, но не владеет моментом автоматического раскрытия `Output`, `Debugger` или `Agent`. Триггеры остаются в workflow-задачах.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-dd9a891241f73f86d9df6d40838951ba"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-2fbec1dcc565ce414dfb322c4c7f76ff"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ описывает `DockHost`, dock groups, splitters, bottom panel, command routing, persistence schema и shortcut context.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Добавлены сначала падающие tests для resize docks, tab movement, bottom collapsed/expanded state, splitter hit targets, command routing и layout round-trip.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Dock layout сохраняет left/right dock width, bottom height, collapsed state, selected bottom tabs, active Agent inner tab, active workspace, open documents, selection, zoom и Agent Workspace state.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Bottom panel не занимает большую пустую область по умолчанию, содержит вкладку `Agent` после `Debugger` и поддерживает общий API/command `RevealBottomPanel(tab, stealFocus: false)` для workflow-задач.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`RevealBottomPanel(..., stealFocus: false)` раскрывает нужную вкладку без перехвата keyboard focus; конкретные auto-reveal triggers для `Output`, `Debugger` и `Agent` остаются в `T-0183`, `T-0200` и `T-0188`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "При нехватке ширины bottom tabs уходят в overflow-menu, а не сжимаются до нечитаемого состояния.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Status area показывает renderer, FPS, build/run state, SDK state и version/branch там, где данные доступны.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Все видимые framework controls строятся из runtime controls, без manual shell renderer и без `ShellRegion` hit-test.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Real-window interaction smoke подтверждает resize, collapse/expand, keyboard shortcuts и persistence after restart.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача отделяет reusable editor framework от productized shell: сначала нужен механизм docks/commands, затем конкретная раскладка shell."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T10:36:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Scope уточнён: `T-0181` владеет механизмом раскрытия bottom panel и no-focus-steal, но не владеет моментом автоматического раскрытия `Output`, `Debugger` или `Agent`. Триггеры остаются в workflow-задачах."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/dev-diary"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/quality/blockers/T-0181.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/editor/agent-workspace-panel.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/editor/editor-project-shell.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/editor/editor-shell-layout.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "src/Electron2D/Graphics/UI"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorAgentWorkspacePanelTests.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "blocked-environment",
+    "readyToStart": [
+      "только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.",
+      "перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate."
+    ],
+    "stopConditions": [
+      "dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.",
+      "требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.",
+      "задача просит audit package без отдельной blocker-report задачи."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` blocker/current evidence notes for T-0181.",
+      "blocker artifact `data/quality/blockers/T-0181.md`, если нужен отдельный отчёт.",
+      "дневник `data/dev-diary/` и связанный доменный документ docs/editor/editor-shell-layout.md только для уточнения blocker-а."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.",
+      "unrelated task statuses, dependency graph or release scope."
+    ],
+    "requiredOutputs": [
+      "blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.",
+      "blocker artifact `data/quality/blockers/T-0181.md` when diagnostics need a durable file.",
+      "diary entry with exact commands or host checks that proved the block."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 147698,
+      "byteLength": 9178,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "12c319cad78dd2a6f336e200148d79216e0013866030da60b45e6a658cbef154",
+      "markdown": "## T-0181 [ ] P0: Каркас редактора - docks, команды, нижняя панель и сохранение раскладки\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0179, T-0180\n- Ссылки:\n  - Доменный документ: `docs/editor/editor-shell-layout.md`; `docs/editor/editor-project-shell.md`; `docs/editor/agent-workspace-panel.md`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D/Graphics/UI/`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`; `tests/Electron2D.Tests.Integration/EditorAgentWorkspacePanelTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0181.\n  - blocker artifact `data/quality/blockers/T-0181.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/editor/editor-shell-layout.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0181.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0181.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЦель - сделать каркас редактора поверх runtime controls: dock groups, splitters, tab groups, bottom panel, command routing, shortcut context и layout save/restore. Это не визуальный smoke-screen, а рабочий механизм, который должен использовать Scene Tree, FileSystem, Inspector, нижнюю вкладку `Agent`, Script, Tasks и specialized editors.\n\nОжидаемый результат: docks можно изменять по размеру, скрывать, переносить, максимизировать и восстанавливать. Bottom panel по умолчанию занимает collapsed strip около 30-32 px, раскрывается до 180-240 px, имеет tabs, badges, close/maximize controls и status area справа. Framework даёт общий механизм `RevealBottomPanel(tab, stealFocus: false)`, но не решает, когда раскрывать `Output`, `Debugger` или `Agent`: эти триггеры принадлежат workflow-задачам. Command routing знает active workspace и не теряет shortcuts при переходах.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ описывает `DockHost`, dock groups, splitters, bottom panel, command routing, persistence schema и shortcut context.\n- [ ] Добавлены сначала падающие tests для resize docks, tab movement, bottom collapsed/expanded state, splitter hit targets, command routing и layout round-trip.\n- [ ] Dock layout сохраняет left/right dock width, bottom height, collapsed state, selected bottom tabs, active Agent inner tab, active workspace, open documents, selection, zoom и Agent Workspace state.\n- [ ] Bottom panel не занимает большую пустую область по умолчанию, содержит вкладку `Agent` после `Debugger` и поддерживает общий API/command `RevealBottomPanel(tab, stealFocus: false)` для workflow-задач.\n- [ ] `RevealBottomPanel(..., stealFocus: false)` раскрывает нужную вкладку без перехвата keyboard focus; конкретные auto-reveal triggers для `Output`, `Debugger` и `Agent` остаются в `T-0183`, `T-0200` и `T-0188`.\n- [ ] При нехватке ширины bottom tabs уходят в overflow-menu, а не сжимаются до нечитаемого состояния.\n- [ ] Status area показывает renderer, FPS, build/run state, SDK state и version/branch там, где данные доступны.\n- [ ] Все видимые framework controls строятся из runtime controls, без manual shell renderer и без `ShellRegion` hit-test.\n- [ ] Real-window interaction smoke подтверждает resize, collapse/expand, keyboard shortcuts и persistence after restart.\n\n### Подзадачи\n\n- [ ] Специфицировать dock/persistence/command contract.\n- [ ] Добавить failing tests для dock layout и bottom panel.\n- [ ] Реализовать `DockHost` как internal composite control поверх runtime UI.\n- [ ] Подключить command routing и shortcut context.\n- [ ] Проверить real-window resize/persistence screenshots.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача отделяет reusable editor framework от productized shell: сначала нужен механизм docks/commands, затем конкретная раскладка shell.\n\n2026-06-24T13:36:00+03:00 - Scope уточнён: `T-0181` владеет механизмом раскрытия bottom panel и no-focus-steal, но не владеет моментом автоматического раскрытия `Output`, `Debugger` или `Agent`. Триггеры остаются в workflow-задачах.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

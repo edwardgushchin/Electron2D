@@ -1,0 +1,229 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-8f41d65484e3795850a39c152b6cc4ea",
+  "revision": 2,
+  "taskId": "T-0184",
+  "legacyAliases": [],
+  "title": "Подключить Script workspace к живому интерфейсу после 2D-среза",
+  "description": "## T-0184 [ ] P0: Подключить Script workspace к живому интерфейсу после 2D-среза\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: tracking\n- Приоритет: P0\n- Execution class: `tracking`\n- Scheduling tier: `later`\n- Зависимости: T-0183\n- Дочерние задачи: T-0198, T-0199, T-0200, T-0201\n- Ссылки:\n  - Доменный документ: `docs/editor/script-workspace.md`; `docs/scripting/editor-script-workflow.md`; `docs/scripting/editor-language-services.md`; `docs/scripting/managed-debugger.md`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.Tooling/`; `src/Electron2D.Scripting/`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorScriptWorkspaceTests.cs`; `tests/Electron2D.Tests.Integration/EditorScriptLanguageServicesTests.cs`; `tests/Electron2D.Tests.Integration/EditorManagedDebuggerTests.cs`\n\n### Execution contract\n\n- Task type: tracking\n- Ready-to-start:\n  - можно начинать только для синхронизации child task list, dependency/status notes or parent current evidence.\n  - все production changes должны быть перенесены в named child tasks before implementation.\n- Stop conditions:\n  - требуется изменить production code, tests, generated artifacts, runtime behavior or public docs beyond status/dependency bookkeeping.\n  - child tasks are missing, blocked or not accepted but parent is being marked complete.\n- May change:\n  - `TASKS.md` status/dependency/current evidence notes for T-0184 and its explicitly listed children.\n  - diary entries and lightweight planning notes.\n- Must not change:\n  - production source, tests, generated artifacts, public API behavior, runtime/editor implementation or child task scope.\n- Required outputs:\n  - updated child-task status summary in `TASKS.md`.\n  - current evidence explaining which children remain open/blocked/accepted.\n  - diary entry with no-production-change confirmation.\n- Required commands:\n  - `git diff --check`\n- External audit:\n  - inherited; tracking tasks do not request audit packages directly\n\n### Самодостаточное описание\n\nПосле живого 2D workflow нужно перевести Script workspace из snapshot/model-first состояния в постоянный UI на общих controls. Эта tracking-задача держит общий сценарий, а production объём разделён на code editor, language services UI, debugger UI и integration gate.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] `T-0198` принята пользователем.\n- [ ] `T-0199` принята пользователем.\n- [ ] `T-0200` принята пользователем.\n- [ ] `T-0201` принята пользователем.\n- [ ] Script workspace не создаёт отдельный tab/input framework за пределами общих controls.\n\n### Подзадачи\n\n- [ ] Вести зависимости code editor, language services UI и debugger UI.\n- [ ] После приёмки дочерних задач обновить итоговый статус `T-0184`.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - До `T-0183` эту задачу не начинать, чтобы Script workspace не закрепил временные tabs, lists и input paths.\n\n2026-06-24T03:20:00+03:00 - Приоритет поднят до P0, потому что `T-0189` остаётся P0-gate и зависит от этой задачи. При реализации желательно разделить работу на code editor, language services UI и debugger UI либо оформить отдельные дочерние задачи.\n\n2026-06-24T03:49:00+03:00 - Задача переведена в `tracking`; дочерние production-задачи: `T-0198` code editor, `T-0199` language services UI, `T-0200` debugger UI, `T-0201` integration gate.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-7f7b64a98f3293d7a7fe897551a30cfc"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`T-0198` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`T-0199` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`T-0200` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`T-0201` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Script workspace не создаёт отдельный tab/input framework за пределами общих controls.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "До `T-0183` эту задачу не начинать, чтобы Script workspace не закрепил временные tabs, lists и input paths."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T00:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Приоритет поднят до P0, потому что `T-0189` остаётся P0-gate и зависит от этой задачи. При реализации желательно разделить работу на code editor, language services UI и debugger UI либо оформить отдельные дочерние задачи."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T00:49:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача переведена в `tracking`; дочерние production-задачи: `T-0198` code editor, `T-0199` language services UI, `T-0200` debugger UI, `T-0201` integration gate."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "inherited; tracking tasks do not request audit packages directly"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/editor/script-workspace.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/scripting/editor-language-services.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/scripting/editor-script-workflow.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/scripting/managed-debugger.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "src/Electron2D.Scripting"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "src/Electron2D.Tooling"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorManagedDebuggerTests.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorScriptLanguageServicesTests.cs"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorScriptWorkspaceTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tracking",
+    "readyToStart": [
+      "можно начинать только для синхронизации child task list, dependency/status notes or parent current evidence.",
+      "все production changes должны быть перенесены в named child tasks before implementation."
+    ],
+    "stopConditions": [
+      "требуется изменить production code, tests, generated artifacts, runtime behavior or public docs beyond status/dependency bookkeeping.",
+      "child tasks are missing, blocked or not accepted but parent is being marked complete."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` status/dependency/current evidence notes for T-0184 and its explicitly listed children.",
+      "diary entries and lightweight planning notes."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, public API behavior, runtime/editor implementation or child task scope."
+    ],
+    "requiredOutputs": [
+      "updated child-task status summary in `TASKS.md`.",
+      "current evidence explaining which children remain open/blocked/accepted.",
+      "diary entry with no-production-change confirmation."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "inherited; tracking tasks do not request audit packages directly",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 178971,
+      "byteLength": 5775,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "e2765da7c474390ff37eb4972ccc9d81e78a251b1a42e0653a8fd50cf3f665d3",
+      "markdown": "## T-0184 [ ] P0: Подключить Script workspace к живому интерфейсу после 2D-среза\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: tracking\n- Приоритет: P0\n- Execution class: `tracking`\n- Scheduling tier: `later`\n- Зависимости: T-0183\n- Дочерние задачи: T-0198, T-0199, T-0200, T-0201\n- Ссылки:\n  - Доменный документ: `docs/editor/script-workspace.md`; `docs/scripting/editor-script-workflow.md`; `docs/scripting/editor-language-services.md`; `docs/scripting/managed-debugger.md`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.Tooling/`; `src/Electron2D.Scripting/`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorScriptWorkspaceTests.cs`; `tests/Electron2D.Tests.Integration/EditorScriptLanguageServicesTests.cs`; `tests/Electron2D.Tests.Integration/EditorManagedDebuggerTests.cs`\n\n### Execution contract\n\n- Task type: tracking\n- Ready-to-start:\n  - можно начинать только для синхронизации child task list, dependency/status notes or parent current evidence.\n  - все production changes должны быть перенесены в named child tasks before implementation.\n- Stop conditions:\n  - требуется изменить production code, tests, generated artifacts, runtime behavior or public docs beyond status/dependency bookkeeping.\n  - child tasks are missing, blocked or not accepted but parent is being marked complete.\n- May change:\n  - `TASKS.md` status/dependency/current evidence notes for T-0184 and its explicitly listed children.\n  - diary entries and lightweight planning notes.\n- Must not change:\n  - production source, tests, generated artifacts, public API behavior, runtime/editor implementation or child task scope.\n- Required outputs:\n  - updated child-task status summary in `TASKS.md`.\n  - current evidence explaining which children remain open/blocked/accepted.\n  - diary entry with no-production-change confirmation.\n- Required commands:\n  - `git diff --check`\n- External audit:\n  - inherited; tracking tasks do not request audit packages directly\n\n### Самодостаточное описание\n\nПосле живого 2D workflow нужно перевести Script workspace из snapshot/model-first состояния в постоянный UI на общих controls. Эта tracking-задача держит общий сценарий, а production объём разделён на code editor, language services UI, debugger UI и integration gate.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] `T-0198` принята пользователем.\n- [ ] `T-0199` принята пользователем.\n- [ ] `T-0200` принята пользователем.\n- [ ] `T-0201` принята пользователем.\n- [ ] Script workspace не создаёт отдельный tab/input framework за пределами общих controls.\n\n### Подзадачи\n\n- [ ] Вести зависимости code editor, language services UI и debugger UI.\n- [ ] После приёмки дочерних задач обновить итоговый статус `T-0184`.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - До `T-0183` эту задачу не начинать, чтобы Script workspace не закрепил временные tabs, lists и input paths.\n\n2026-06-24T03:20:00+03:00 - Приоритет поднят до P0, потому что `T-0189` остаётся P0-gate и зависит от этой задачи. При реализации желательно разделить работу на code editor, language services UI и debugger UI либо оформить отдельные дочерние задачи.\n\n2026-06-24T03:49:00+03:00 - Задача переведена в `tracking`; дочерние production-задачи: `T-0198` code editor, `T-0199` language services UI, `T-0200` debugger UI, `T-0201` integration gate.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

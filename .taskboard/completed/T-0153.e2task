@@ -1,0 +1,289 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-8f9de83d456b281aabdaa6b0dbd08764",
+  "revision": 2,
+  "taskId": "T-0153",
+  "legacyAliases": [],
+  "title": "Ввести immutable `WorkspaceSnapshot` для build, test, run и export artifacts",
+  "description": "# T-0153: Ввести immutable `WorkspaceSnapshot` для build, test, run и export artifacts\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: `96eb6f7`\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0153 [ ] P0: Ввести immutable `WorkspaceSnapshot` для build, test, run и export artifacts\n\n- Создана: 2026-06-22T11:56:00+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0139\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/releases/0.1.0-preview.md`\n  - Документация: `docs/tooling/`; `docs/editor/`\n  - Исходный код: `src/Electron2D.Tooling/`; `src/Electron2D.ProjectSystem/`; `tests/`\n\n### Самодостаточное описание\n\nНужно зафиксировать входное состояние для `build`, `test`, `run` и dirty snapshot export. `WorkspaceSnapshot` — неизменяемый снимок live workspace с `SnapshotId`, `WorkspaceRevision`, `ContentRevision`, `DocumentRevisions`, `DirtyDocuments`, `OpenCodeBuffers` и `CreatedAt`. `WorkspaceRevision` меняется от любых workspace-изменений, а `ContentRevision` - только от документов и настроек, влияющих на игровые jobs. Если отдельный game process или build toolchain читает файлы, snapshot материализуется во временную директорию `.electron2d/workspaces/<session>/<snapshot-id>/` без сохранения проекта и без изменения `PersistedRevision`.\n\nПо умолчанию export использует clean persisted state. Export dirty snapshot требует явной команды и не сохраняет ручные dirty-документы неявно.\n\n### Критерии приёмки\n\n- [x] Создана спецификация `WorkspaceSnapshot` и временной snapshot materialization.\n- [x] Snapshot содержит `SnapshotId`, `WorkspaceRevision`, `ContentRevision`, `DocumentRevisions`, `DirtyDocuments`, `OpenCodeBuffers` и `CreatedAt`.\n- [x] `build`, `test` и `run` создают или получают immutable snapshot и не читают произвольное старое состояние диска при dirty workspace.\n- [x] Snapshot materialization пишет только во временную workspace-директорию `.electron2d/workspaces/<session>/<snapshot-id>/`, не меняет source files и очищается по lifecycle rules.\n- [x] Каждый job и artifact возвращает `InputSnapshotId`, `InputWorkspaceRevision`, `InputContentRevision`, `InputDocumentRevisions` и `InputBuildConfigurationHash`.\n- [x] Job result, diagnostics, screenshot, runtime tree и visual diff помечаются как `stale` только при изменении входного документа, `ContentRevision` или build/run configuration, использованных этим job.\n- [x] Изменение task status, `TaskActivity`, board rank, selection или другого неигрового `EditorMetadata` после старта job не делает игровой artifact `stale`.\n- [x] Export clean persisted state остаётся поведением по умолчанию.\n- [x] Export dirty snapshot требует явной команды и не сохраняет ручные dirty-документы.\n- [x] Добавлены tests на snapshot creation, materialization, stale marking, open code buffers и export policy.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: build/test/run должны работать с зафиксированным snapshot открытого workspace, а не с произвольным состоянием диска.\n\n2026-06-22T19:12:00+03:00 - Реализация готова к приёмке: добавлены спецификация, `WorkspaceSnapshot` core, materialization, job input identity, stale evaluator, export policy, focused tests и документация. Задача не закрыта за пользователя.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ae16b90af93a4555a0963cb5434eefe5"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создана спецификация `WorkspaceSnapshot` и временной snapshot materialization.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-8f9de83d456b281aabdaa6b0dbd08764/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Snapshot содержит `SnapshotId`, `WorkspaceRevision`, `ContentRevision`, `DocumentRevisions`, `DirtyDocuments`, `OpenCodeBuffers` и `CreatedAt`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-8f9de83d456b281aabdaa6b0dbd08764/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`build`, `test` и `run` создают или получают immutable snapshot и не читают произвольное старое состояние диска при dirty workspace.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-8f9de83d456b281aabdaa6b0dbd08764/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Snapshot materialization пишет только во временную workspace-директорию `.electron2d/workspaces/<session>/<snapshot-id>/`, не меняет source files и очищается по lifecycle rules.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-8f9de83d456b281aabdaa6b0dbd08764/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Каждый job и artifact возвращает `InputSnapshotId`, `InputWorkspaceRevision`, `InputContentRevision`, `InputDocumentRevisions` и `InputBuildConfigurationHash`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-8f9de83d456b281aabdaa6b0dbd08764/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Job result, diagnostics, screenshot, runtime tree и visual diff помечаются как `stale` только при изменении входного документа, `ContentRevision` или build/run configuration, использованных этим job.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-8f9de83d456b281aabdaa6b0dbd08764/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Изменение task status, `TaskActivity`, board rank, selection или другого неигрового `EditorMetadata` после старта job не делает игровой artifact `stale`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-8f9de83d456b281aabdaa6b0dbd08764/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Export clean persisted state остаётся поведением по умолчанию.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-8f9de83d456b281aabdaa6b0dbd08764/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Export dirty snapshot требует явной команды и не сохраняет ручные dirty-документы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-8f9de83d456b281aabdaa6b0dbd08764/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Добавлены tests на snapshot creation, materialization, stale marking, open code buffers и export policy.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-8f9de83d456b281aabdaa6b0dbd08764/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Документация фактического поведения обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-8f9de83d456b281aabdaa6b0dbd08764/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Команда проверки задокументирована.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-8f9de83d456b281aabdaa6b0dbd08764/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T16:12:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Реализация готова к приёмке: добавлены спецификация, `WorkspaceSnapshot` core, materialization, job input identity, stale evaluator, export policy, focused tests и документация. Задача не закрыта за пользователя."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T18:14:16.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": ".electron2d/workspaces/<session>/<snapshot-id>"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/architecture/ai-friendly-workflow.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "docs/tooling"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "src/Electron2D.ProjectSystem"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "src/Electron2D.Tooling"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 565654,
+      "byteLength": 5060,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "96a7965191c671733fdd7235ab2382e4b3b2c31d138964f802687fbf135237fb",
+      "markdown": "# T-0153: Ввести immutable `WorkspaceSnapshot` для build, test, run и export artifacts\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: `96eb6f7`\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0153 [ ] P0: Ввести immutable `WorkspaceSnapshot` для build, test, run и export artifacts\n\n- Создана: 2026-06-22T11:56:00+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0139\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/releases/0.1.0-preview.md`\n  - Документация: `docs/tooling/`; `docs/editor/`\n  - Исходный код: `src/Electron2D.Tooling/`; `src/Electron2D.ProjectSystem/`; `tests/`\n\n### Самодостаточное описание\n\nНужно зафиксировать входное состояние для `build`, `test`, `run` и dirty snapshot export. `WorkspaceSnapshot` — неизменяемый снимок live workspace с `SnapshotId`, `WorkspaceRevision`, `ContentRevision`, `DocumentRevisions`, `DirtyDocuments`, `OpenCodeBuffers` и `CreatedAt`. `WorkspaceRevision` меняется от любых workspace-изменений, а `ContentRevision` - только от документов и настроек, влияющих на игровые jobs. Если отдельный game process или build toolchain читает файлы, snapshot материализуется во временную директорию `.electron2d/workspaces/<session>/<snapshot-id>/` без сохранения проекта и без изменения `PersistedRevision`.\n\nПо умолчанию export использует clean persisted state. Export dirty snapshot требует явной команды и не сохраняет ручные dirty-документы неявно.\n\n### Критерии приёмки\n\n- [x] Создана спецификация `WorkspaceSnapshot` и временной snapshot materialization.\n- [x] Snapshot содержит `SnapshotId`, `WorkspaceRevision`, `ContentRevision`, `DocumentRevisions`, `DirtyDocuments`, `OpenCodeBuffers` и `CreatedAt`.\n- [x] `build`, `test` и `run` создают или получают immutable snapshot и не читают произвольное старое состояние диска при dirty workspace.\n- [x] Snapshot materialization пишет только во временную workspace-директорию `.electron2d/workspaces/<session>/<snapshot-id>/`, не меняет source files и очищается по lifecycle rules.\n- [x] Каждый job и artifact возвращает `InputSnapshotId`, `InputWorkspaceRevision`, `InputContentRevision`, `InputDocumentRevisions` и `InputBuildConfigurationHash`.\n- [x] Job result, diagnostics, screenshot, runtime tree и visual diff помечаются как `stale` только при изменении входного документа, `ContentRevision` или build/run configuration, использованных этим job.\n- [x] Изменение task status, `TaskActivity`, board rank, selection или другого неигрового `EditorMetadata` после старта job не делает игровой artifact `stale`.\n- [x] Export clean persisted state остаётся поведением по умолчанию.\n- [x] Export dirty snapshot требует явной команды и не сохраняет ручные dirty-документы.\n- [x] Добавлены tests на snapshot creation, materialization, stale marking, open code buffers и export policy.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: build/test/run должны работать с зафиксированным snapshot открытого workspace, а не с произвольным состоянием диска.\n\n2026-06-22T19:12:00+03:00 - Реализация готова к приёмке: добавлены спецификация, `WorkspaceSnapshot` core, materialization, job input identity, stale evaluator, export policy, focused tests и документация. Задача не закрыта за пользователя.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T08:56:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "completedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

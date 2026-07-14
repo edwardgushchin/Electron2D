@@ -1,0 +1,218 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-4874695e7c98a3a55d21221977beac8d",
+  "revision": 2,
+  "taskId": "T-0174",
+  "legacyAliases": [],
+  "title": "Усилить завершение и диагностику window smoke при timeout",
+  "description": "## T-0174 [ ] P1: Усилить завершение и диагностику window smoke при timeout\n\n- Создана: 2026-06-24T01:58:00+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `gate`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0171\n- Ссылки:\n  - Доменный документ: `docs/editor/editor-project-shell.md`\n  - Исходный код: `src/Electron2D.Editor/Program.cs`; `src/Electron2D.Editor/Shell/WindowSmoke.cs`; `src/Electron2D.Editor/Shell/WindowHost.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`\n\n### Execution contract\n\n- Task type: gate\n- Ready-to-start:\n  - dependencies and child evidence are closed, accepted or explicitly represented as blockers.\n  - gate commands and domain document for T-0174 are known before running checks.\n- Stop conditions:\n  - missing evidence belongs to a child/leaf task rather than the gate tooling.\n  - fixing the issue would change production behavior outside this gate's verifier/report ownership.\n- May change:\n  - gate report/check artifacts named by task criteria.\n  - verifier/report tooling owned by this gate.\n  - `TASKS.md` notes and diary evidence for T-0174.\n- Must not change:\n  - leaf implementation, subsystem backend, platform runtime behavior or sibling task acceptance state.\n- Required outputs:\n  - gate report or current evidence section naming pass/fail/blockers.\n  - links to commands, logs and owning tasks for blockers.\n- Required commands:\n  - exact gate commands named in this task or docs/editor/editor-project-shell.md.\n  - `git diff --check`\n- External audit:\n  - required when this gate is the acceptance boundary; otherwise inherited from parent gate\n\n### Самодостаточное описание\n\nВо время проверки `T-0171` первый xUnit-запуск window smoke один раз завершился timeout, хотя прямой запуск `--window-smoke .temp\\editor-window-runtime-ui-debug` и повторный focused xUnit run прошли. Это не блокирует принятую `T-0171`, но показывает пробел в надёжности smoke harness: при timeout тест обязан гарантированно завершать дочерний процесс редактора, сохранять доступные stdout/stderr и diagnostic artifacts, а также ясно записывать причину остановки.\n\nОжидаемый результат: window smoke не должен оставлять зависшие дочерние процессы и не должен терять диагностику, если окно или раннер зависли до штатного завершения. При срабатывании timeout тест должен завершать дерево дочерних процессов, сохранить последние доступные логи, пути к screenshot/analysis artifacts и отдельную timeout-запись, чтобы следующий агент мог понять, где остановился smoke.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] `docs/editor/editor-project-shell.md` описывает timeout-поведение window smoke и ожидаемые diagnostic artifacts.\n- [ ] Добавлен focused failing test или контролируемая проверка harness timeout path.\n- [ ] При timeout завершается дочерний процесс редактора и его потомки, без orphan-процессов.\n- [ ] stdout/stderr, exit reason, elapsed time и пути к последним artifacts сохраняются в smoke диагностические сообщения.\n- [ ] Повторный focused window smoke проходит стабильно без зависших процессов.\n- [ ] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorWindowSmokeRunCreatesRealWindowAndWritesVisualArtifacts\" -v q` проходит.\n- [ ] `dotnet run --project eng/Electron2D.Build -- verify licenses` проходит.\n\n### Подзадачи\n\n- [ ] Специфицировать timeout диагностические сообщения в доменном документе.\n- [ ] Добавить тест или harness hook для воспроизводимого timeout path.\n- [ ] Реализовать гарантированное завершение process tree.\n- [ ] Сохранить stdout/stderr и artifact paths при timeout.\n- [ ] Запустить focused smoke checks и проверка лицензий.\n\n### Заметки агента\n\n2026-06-24T01:58:00+03:00 - Задача заведена по итогам приёмки `T-0171`: первый xUnit timeout фиксируется как отдельный reliability follow-up, а не как причина переоткрывать runtime UI dogfooding.\n\n2026-06-25T20:16:00+03:00 - Статус возвращён в `open` перед началом `T-0220`, потому что текущая сессия не работает над window smoke, а в `TASKS.md` должна быть только одна активная задача `in progress`.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0013",
+    "tag-0030"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ee12f004f6e22d73d20dce15f4947609"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`docs/editor/editor-project-shell.md` описывает timeout-поведение window smoke и ожидаемые diagnostic artifacts.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Добавлен focused failing test или контролируемая проверка harness timeout path.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "При timeout завершается дочерний процесс редактора и его потомки, без orphan-процессов.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "stdout/stderr, exit reason, elapsed time и пути к последним artifacts сохраняются в smoke диагностические сообщения.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Повторный focused window smoke проходит стабильно без зависших процессов.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "`dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorWindowSmokeRunCreatesRealWindowAndWritesVisualArtifacts\" -v q` проходит.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "`dotnet run --project eng/Electron2D.Build -- verify licenses` проходит.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T22:58:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача заведена по итогам приёмки `T-0171`: первый xUnit timeout фиксируется как отдельный reliability follow-up, а не как причина переоткрывать runtime UI dogfooding."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-25T17:16:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Статус возвращён в `open` перед началом `T-0220`, потому что текущая сессия не работает над window smoke, а в `TASKS.md` должна быть только одна активная задача `in progress`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required when this gate is the acceptance boundary; otherwise inherited from parent gate"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/editor/editor-project-shell.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Program.cs"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Shell/WindowHost.cs"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Shell/WindowSmoke.cs"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "gate",
+    "readyToStart": [
+      "dependencies and child evidence are closed, accepted or explicitly represented as blockers.",
+      "gate commands and domain document for T-0174 are known before running checks."
+    ],
+    "stopConditions": [
+      "missing evidence belongs to a child/leaf task rather than the gate tooling.",
+      "fixing the issue would change production behavior outside this gate's verifier/report ownership."
+    ],
+    "allowedChanges": [
+      "gate report/check artifacts named by task criteria.",
+      "verifier/report tooling owned by this gate.",
+      "`TASKS.md` notes and diary evidence for T-0174."
+    ],
+    "forbiddenChanges": [
+      "leaf implementation, subsystem backend, platform runtime behavior or sibling task acceptance state."
+    ],
+    "requiredOutputs": [
+      "gate report or current evidence section naming pass/fail/blockers.",
+      "links to commands, logs and owning tasks for blockers."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "exact gate commands named in this task or docs/editor/editor-project-shell.md.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required when this gate is the acceptance boundary; otherwise inherited from parent gate",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 91212,
+      "byteLength": 7110,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "09371246a1ec643a1f120d9392255f84523766d61bf2d454a6cc4eaaf8b2aee7",
+      "markdown": "## T-0174 [ ] P1: Усилить завершение и диагностику window smoke при timeout\n\n- Создана: 2026-06-24T01:58:00+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `gate`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0171\n- Ссылки:\n  - Доменный документ: `docs/editor/editor-project-shell.md`\n  - Исходный код: `src/Electron2D.Editor/Program.cs`; `src/Electron2D.Editor/Shell/WindowSmoke.cs`; `src/Electron2D.Editor/Shell/WindowHost.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`\n\n### Execution contract\n\n- Task type: gate\n- Ready-to-start:\n  - dependencies and child evidence are closed, accepted or explicitly represented as blockers.\n  - gate commands and domain document for T-0174 are known before running checks.\n- Stop conditions:\n  - missing evidence belongs to a child/leaf task rather than the gate tooling.\n  - fixing the issue would change production behavior outside this gate's verifier/report ownership.\n- May change:\n  - gate report/check artifacts named by task criteria.\n  - verifier/report tooling owned by this gate.\n  - `TASKS.md` notes and diary evidence for T-0174.\n- Must not change:\n  - leaf implementation, subsystem backend, platform runtime behavior or sibling task acceptance state.\n- Required outputs:\n  - gate report or current evidence section naming pass/fail/blockers.\n  - links to commands, logs and owning tasks for blockers.\n- Required commands:\n  - exact gate commands named in this task or docs/editor/editor-project-shell.md.\n  - `git diff --check`\n- External audit:\n  - required when this gate is the acceptance boundary; otherwise inherited from parent gate\n\n### Самодостаточное описание\n\nВо время проверки `T-0171` первый xUnit-запуск window smoke один раз завершился timeout, хотя прямой запуск `--window-smoke .temp\\editor-window-runtime-ui-debug` и повторный focused xUnit run прошли. Это не блокирует принятую `T-0171`, но показывает пробел в надёжности smoke harness: при timeout тест обязан гарантированно завершать дочерний процесс редактора, сохранять доступные stdout/stderr и diagnostic artifacts, а также ясно записывать причину остановки.\n\nОжидаемый результат: window smoke не должен оставлять зависшие дочерние процессы и не должен терять диагностику, если окно или раннер зависли до штатного завершения. При срабатывании timeout тест должен завершать дерево дочерних процессов, сохранить последние доступные логи, пути к screenshot/analysis artifacts и отдельную timeout-запись, чтобы следующий агент мог понять, где остановился smoke.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] `docs/editor/editor-project-shell.md` описывает timeout-поведение window smoke и ожидаемые diagnostic artifacts.\n- [ ] Добавлен focused failing test или контролируемая проверка harness timeout path.\n- [ ] При timeout завершается дочерний процесс редактора и его потомки, без orphan-процессов.\n- [ ] stdout/stderr, exit reason, elapsed time и пути к последним artifacts сохраняются в smoke диагностические сообщения.\n- [ ] Повторный focused window smoke проходит стабильно без зависших процессов.\n- [ ] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorWindowSmokeRunCreatesRealWindowAndWritesVisualArtifacts\" -v q` проходит.\n- [ ] `dotnet run --project eng/Electron2D.Build -- verify licenses` проходит.\n\n### Подзадачи\n\n- [ ] Специфицировать timeout диагностические сообщения в доменном документе.\n- [ ] Добавить тест или harness hook для воспроизводимого timeout path.\n- [ ] Реализовать гарантированное завершение process tree.\n- [ ] Сохранить stdout/stderr и artifact paths при timeout.\n- [ ] Запустить focused smoke checks и проверка лицензий.\n\n### Заметки агента\n\n2026-06-24T01:58:00+03:00 - Задача заведена по итогам приёмки `T-0171`: первый xUnit timeout фиксируется как отдельный reliability follow-up, а не как причина переоткрывать runtime UI dogfooding.\n\n2026-06-25T20:16:00+03:00 - Статус возвращён в `open` перед началом `T-0220`, потому что текущая сессия не работает над window smoke, а в `TASKS.md` должна быть только одна активная задача `in progress`.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T22:58:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

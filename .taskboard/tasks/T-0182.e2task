@@ -1,0 +1,291 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-75ba1427f9d312806241814c8f2b4981",
+  "revision": 2,
+  "taskId": "T-0182",
+  "legacyAliases": [],
+  "title": "Довести shell до продукта - заменить placeholders реальными controls и read-only binding",
+  "description": "## T-0182 [ ] P0: Довести shell до продукта - заменить placeholders реальными controls и read-only binding\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0175, T-0180, T-0181\n- Ссылки:\n  - Доменный документ: `docs/editor/editor-shell-layout.md`; `docs/editor/editor-project-shell.md`; `docs/editor/project-manager.md`; `docs/editor/scene-tree-dock.md`; `docs/editor/file-system-dock.md`; `docs/editor/inspector.md`; `docs/editor/viewport-2d.md`; `docs/editor/run-output-workflow.md`\n  - Визуальный референс: `docs/editor/references/godot-4.7-2d-workspace.md`; PNG `docs/editor/references/godot-4.7-2d-workspace.png`, 1920 x 1032 px, SHA-256 `CE8C799A6AE23423957A904BCA1CD4D28922461DE235A9A5D398864BDE10A84F`.\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D/Graphics/UI/`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0182.\n  - blocker artifact `data/quality/blockers/T-0182.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/editor/editor-shell-layout.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0182.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0182.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nТекущий shell выглядит как проверяемый каркас раскладки: крупные прямоугольные кнопки, смешанные document tabs, цветные docks с подписями, диагностический текст вместо viewport и пустой bottom panel. Эта задача заменяет placeholders на настоящую композицию shell из runtime controls и подключает read-only/model binding к уже существующим editor models.\n\nОжидаемый результат: верхняя строка содержит `Scene`, `Project`, `Debug`, `Editor`, `Help`, workspace switcher `[2D] [Script] [Game] [Tasks]` и run controls в компактной строке. Document tabs разделены по workspace: сцены в 2D, C# files в Script, selected task в Tasks. Левые и правые docks показывают реальные Scene/FileSystem/Inspector/Node panels в read-only режиме, а bottom panel содержит вкладку `Agent` как место процессного контекста. Настоящие изменения scene document, transform edit, save/run workflow остаются в `T-0183`; live jobs/actions/transport агента остаются в `T-0188`.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ обновлён до ожидаемого shell contract и после implementation отражает фактическое состояние.\n- [ ] Добавлены сначала падающие real-window tests/analysis, которые фиксируют отсутствие manual shell renderer, placeholder labels и смешанных tabs.\n- [ ] Top shell использует compact controls, icons/tooltips, separated document tabs и workspace-specific toolbar.\n- [ ] Left docks показывают Scene Tree и FileSystem controls с search/filter, headers, tree/list rows, icons и read-only selection state; операции редактирования дерева и drag/drop остаются в `T-0183`, `T-0190` и `T-0191`.\n- [ ] Right docks показывают только `Inspector` и `Node`, без `Agent Workspace` и без больших цветных пустых областей; property edit остаётся в `T-0183`.\n- [ ] Bottom panel содержит вкладку `Agent`; открытая вкладка показывает заголовок `Agent Workspace` и read-only placeholder/model state без live job transport, без выполнения `Send Review`, `Undo AI`, `Cancel` или `Stop`.\n- [ ] Автоматическое раскрытие `Agent`, live диагностические сообщения/actions/jobs и agent transport не входят в эту задачу и остаются критериями `T-0188`.\n- [ ] Bottom tabs имеют overflow-menu при нехватке ширины и не сжимаются до нечитаемого состояния.\n- [ ] Central `2D` workspace показывает read-only viewport surface with toolbar, grid/world axes/zoom status вместо текста `ACTIVE WORKSPACE`; scene edit и transform handles остаются в `T-0183`.\n- [ ] Bottom panel collapsed by default, имеет tabs, badges и status area; auto-open behavior для ошибок остаётся в workflow-задачах.\n- [ ] Переключение workspaces сохраняет read-only shell state: active workspace, open document tabs, selected dock tab и layout placement.\n- [ ] Real-window screenshots на 1280x720 и 1920x1080 подтверждают layout, states, pointer/keyboard checks и отсутствие `3D`, `AssetLib`, GDScript UI.\n\n### Подзадачи\n\n- [ ] Специфицировать productized shell layout и tab separation.\n- [ ] Подключить shell к read-only model state: project, documents, selection snapshot, диагностические сообщения summary, dock layout и command availability.\n- [ ] Заменить placeholder panels runtime controls.\n- [ ] Добавить viewport toolbar/grid placeholder, который уже является настоящим control layer.\n- [ ] Проверить screenshots и analysis в real window.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача не должна превращаться в перекраску текущего shell: цель - удалить placeholders и связать shell с живым состоянием редактора.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-e98b1506fcb6c9346286d9bee39895a3"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-2fbec1dcc565ce414dfb322c4c7f76ff"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fc1417a58492e741c4143dfe410b7622"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ обновлён до ожидаемого shell contract и после implementation отражает фактическое состояние.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Добавлены сначала падающие real-window tests/analysis, которые фиксируют отсутствие manual shell renderer, placeholder labels и смешанных tabs.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Top shell использует compact controls, icons/tooltips, separated document tabs и workspace-specific toolbar.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Left docks показывают Scene Tree и FileSystem controls с search/filter, headers, tree/list rows, icons и read-only selection state; операции редактирования дерева и drag/drop остаются в `T-0183`, `T-0190` и `T-0191`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Right docks показывают только `Inspector` и `Node`, без `Agent Workspace` и без больших цветных пустых областей; property edit остаётся в `T-0183`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Bottom panel содержит вкладку `Agent`; открытая вкладка показывает заголовок `Agent Workspace` и read-only placeholder/model state без live job transport, без выполнения `Send Review`, `Undo AI`, `Cancel` или `Stop`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Автоматическое раскрытие `Agent`, live диагностические сообщения/actions/jobs и agent transport не входят в эту задачу и остаются критериями `T-0188`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Bottom tabs имеют overflow-menu при нехватке ширины и не сжимаются до нечитаемого состояния.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Central `2D` workspace показывает read-only viewport surface with toolbar, grid/world axes/zoom status вместо текста `ACTIVE WORKSPACE`; scene edit и transform handles остаются в `T-0183`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Bottom panel collapsed by default, имеет tabs, badges и status area; auto-open behavior для ошибок остаётся в workflow-задачах.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Переключение workspaces сохраняет read-only shell state: active workspace, open document tabs, selected dock tab и layout placement.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Real-window screenshots на 1280x720 и 1920x1080 подтверждают layout, states, pointer/keyboard checks и отсутствие `3D`, `AssetLib`, GDScript UI.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача не должна превращаться в перекраску текущего shell: цель - удалить placeholders и связать shell с живым состоянием редактора."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/dev-diary"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/quality/blockers/T-0182.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/editor/editor-project-shell.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/editor/editor-shell-layout.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/editor/file-system-dock.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/editor/inspector.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/editor/project-manager.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/editor/references/godot-4.7-2d-workspace.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/editor/references/godot-4.7-2d-workspace.png"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/editor/run-output-workflow.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/editor/scene-tree-dock.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/editor/viewport-2d.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "Directory",
+      "value": "src/Electron2D/Graphics/UI"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "blocked-environment",
+    "readyToStart": [
+      "только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.",
+      "перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate."
+    ],
+    "stopConditions": [
+      "dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.",
+      "требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.",
+      "задача просит audit package без отдельной blocker-report задачи."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` blocker/current evidence notes for T-0182.",
+      "blocker artifact `data/quality/blockers/T-0182.md`, если нужен отдельный отчёт.",
+      "дневник `data/dev-diary/` и связанный доменный документ docs/editor/editor-shell-layout.md только для уточнения blocker-а."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.",
+      "unrelated task statuses, dependency graph or release scope."
+    ],
+    "requiredOutputs": [
+      "blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.",
+      "blocker artifact `data/quality/blockers/T-0182.md` when diagnostics need a durable file.",
+      "diary entry with exact commands or host checks that proved the block."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 156876,
+      "byteLength": 10185,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "e169c85dd80a1f78fe8ab2a0ac92c26e94479e611eb998623ffed40847c8c077",
+      "markdown": "## T-0182 [ ] P0: Довести shell до продукта - заменить placeholders реальными controls и read-only binding\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0175, T-0180, T-0181\n- Ссылки:\n  - Доменный документ: `docs/editor/editor-shell-layout.md`; `docs/editor/editor-project-shell.md`; `docs/editor/project-manager.md`; `docs/editor/scene-tree-dock.md`; `docs/editor/file-system-dock.md`; `docs/editor/inspector.md`; `docs/editor/viewport-2d.md`; `docs/editor/run-output-workflow.md`\n  - Визуальный референс: `docs/editor/references/godot-4.7-2d-workspace.md`; PNG `docs/editor/references/godot-4.7-2d-workspace.png`, 1920 x 1032 px, SHA-256 `CE8C799A6AE23423957A904BCA1CD4D28922461DE235A9A5D398864BDE10A84F`.\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D/Graphics/UI/`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0182.\n  - blocker artifact `data/quality/blockers/T-0182.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/editor/editor-shell-layout.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0182.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0182.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nТекущий shell выглядит как проверяемый каркас раскладки: крупные прямоугольные кнопки, смешанные document tabs, цветные docks с подписями, диагностический текст вместо viewport и пустой bottom panel. Эта задача заменяет placeholders на настоящую композицию shell из runtime controls и подключает read-only/model binding к уже существующим editor models.\n\nОжидаемый результат: верхняя строка содержит `Scene`, `Project`, `Debug`, `Editor`, `Help`, workspace switcher `[2D] [Script] [Game] [Tasks]` и run controls в компактной строке. Document tabs разделены по workspace: сцены в 2D, C# files в Script, selected task в Tasks. Левые и правые docks показывают реальные Scene/FileSystem/Inspector/Node panels в read-only режиме, а bottom panel содержит вкладку `Agent` как место процессного контекста. Настоящие изменения scene document, transform edit, save/run workflow остаются в `T-0183`; live jobs/actions/transport агента остаются в `T-0188`.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ обновлён до ожидаемого shell contract и после implementation отражает фактическое состояние.\n- [ ] Добавлены сначала падающие real-window tests/analysis, которые фиксируют отсутствие manual shell renderer, placeholder labels и смешанных tabs.\n- [ ] Top shell использует compact controls, icons/tooltips, separated document tabs и workspace-specific toolbar.\n- [ ] Left docks показывают Scene Tree и FileSystem controls с search/filter, headers, tree/list rows, icons и read-only selection state; операции редактирования дерева и drag/drop остаются в `T-0183`, `T-0190` и `T-0191`.\n- [ ] Right docks показывают только `Inspector` и `Node`, без `Agent Workspace` и без больших цветных пустых областей; property edit остаётся в `T-0183`.\n- [ ] Bottom panel содержит вкладку `Agent`; открытая вкладка показывает заголовок `Agent Workspace` и read-only placeholder/model state без live job transport, без выполнения `Send Review`, `Undo AI`, `Cancel` или `Stop`.\n- [ ] Автоматическое раскрытие `Agent`, live диагностические сообщения/actions/jobs и agent transport не входят в эту задачу и остаются критериями `T-0188`.\n- [ ] Bottom tabs имеют overflow-menu при нехватке ширины и не сжимаются до нечитаемого состояния.\n- [ ] Central `2D` workspace показывает read-only viewport surface with toolbar, grid/world axes/zoom status вместо текста `ACTIVE WORKSPACE`; scene edit и transform handles остаются в `T-0183`.\n- [ ] Bottom panel collapsed by default, имеет tabs, badges и status area; auto-open behavior для ошибок остаётся в workflow-задачах.\n- [ ] Переключение workspaces сохраняет read-only shell state: active workspace, open document tabs, selected dock tab и layout placement.\n- [ ] Real-window screenshots на 1280x720 и 1920x1080 подтверждают layout, states, pointer/keyboard checks и отсутствие `3D`, `AssetLib`, GDScript UI.\n\n### Подзадачи\n\n- [ ] Специфицировать productized shell layout и tab separation.\n- [ ] Подключить shell к read-only model state: project, documents, selection snapshot, диагностические сообщения summary, dock layout и command availability.\n- [ ] Заменить placeholder panels runtime controls.\n- [ ] Добавить viewport toolbar/grid placeholder, который уже является настоящим control layer.\n- [ ] Проверить screenshots и analysis в real window.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача не должна превращаться в перекраску текущего shell: цель - удалить placeholders и связать shell с живым состоянием редактора.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

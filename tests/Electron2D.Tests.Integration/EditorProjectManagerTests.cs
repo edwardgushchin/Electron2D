@@ -24,12 +24,43 @@
 */
 using System.Diagnostics;
 using System.Text.Json;
+using Electron2D.ProjectSystem;
 using Xunit;
 
 namespace Electron2D.Tests.Integration;
 
 public sealed class EditorProjectManagerTests
 {
+    [Fact]
+    public void ProjectTemplateCreatorWritesCanonicalTaskboardV3Surface()
+    {
+        var root = FindRepositoryRoot();
+        var projectsRoot = CreateTemporaryDirectory("electron2d-template-taskboard-");
+        try
+        {
+            var result = ProjectTemplateCreator.Create(new ProjectTemplateCreateOptions(
+                Path.Combine(root, "data", "templates", "electron2d-empty"),
+                "TaskboardTemplate",
+                projectsRoot,
+                "Compatibility",
+                InitializeGit: false));
+
+            Assert.Equal(Path.Combine(result.ProjectPath, ".taskboard", "board.e2tasks"), result.TaskBoardPath);
+            Assert.True(File.Exists(result.TaskBoardPath));
+            Assert.True(File.Exists(Path.Combine(result.ProjectPath, ".taskboard", "tasks", "welcome.e2task")));
+            Assert.False(Directory.Exists(Path.Combine(result.ProjectPath, ".electron2d", "tasks")));
+            using var board = JsonDocument.Parse(File.ReadAllText(result.TaskBoardPath));
+            Assert.Equal(3, board.RootElement.GetProperty("version").GetInt32());
+            using var task = JsonDocument.Parse(File.ReadAllText(Path.Combine(result.ProjectPath, ".taskboard", "tasks", "welcome.e2task")));
+            Assert.Contains(board.RootElement.GetProperty("placements").EnumerateArray(), placement =>
+                placement.GetProperty("taskUid").GetString() == task.RootElement.GetProperty("taskUid").GetString());
+        }
+        finally
+        {
+            Directory.Delete(projectsRoot, recursive: true);
+        }
+    }
+
     [Fact]
     public async Task ProjectManagerSmokeRunCreatesOpensProjectTracksRecentProjectsAndChecksSdk()
     {
@@ -215,7 +246,7 @@ public sealed class EditorProjectManagerTests
         Assert.Contains("e2d api compare-godot <type>", agents, StringComparison.Ordinal);
         Assert.Contains("active Editor session", agents, StringComparison.Ordinal);
         Assert.Contains("ProjectTaskManager", agents, StringComparison.Ordinal);
-        Assert.Contains("task_submit_for_acceptance", agents, StringComparison.Ordinal);
+        Assert.Contains("e2d tasks submit", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("completed-tasks", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("dev-diary", agents, StringComparison.Ordinal);
 
@@ -233,22 +264,22 @@ public sealed class EditorProjectManagerTests
             Assert.DoesNotContain("TASKS.md", skill, StringComparison.Ordinal);
         }
 
-        var boardPath = Path.Combine(projectRoot, ".electron2d", "tasks", "board.e2tasks");
-        var taskPath = Path.Combine(projectRoot, ".electron2d", "tasks", "welcome.e2task");
+        var boardPath = Path.Combine(projectRoot, ".taskboard", "board.e2tasks");
+        var taskPath = Path.Combine(projectRoot, ".taskboard", "tasks", "welcome.e2task");
         Assert.True(File.Exists(boardPath));
         Assert.True(File.Exists(taskPath));
 
         using var boardDocument = JsonDocument.Parse(File.ReadAllText(boardPath));
         Assert.Equal("Electron2D.TaskBoard", boardDocument.RootElement.GetProperty("format").GetString());
-        Assert.Contains(
-            boardDocument.RootElement.GetProperty("columns").EnumerateArray(),
-            column => column.GetProperty("status").GetString() == "Backlog" &&
-                column.GetProperty("taskIds").EnumerateArray().Any(task => task.GetString() == "welcome"));
-
         using var taskDocument = JsonDocument.Parse(File.ReadAllText(taskPath));
+        Assert.Contains(
+            boardDocument.RootElement.GetProperty("placements").EnumerateArray(),
+            placement => placement.GetProperty("taskUid").GetString() == taskDocument.RootElement.GetProperty("taskUid").GetString());
+
         Assert.Equal("Electron2D.TaskFile", taskDocument.RootElement.GetProperty("format").GetString());
+        Assert.Equal(3, taskDocument.RootElement.GetProperty("version").GetInt32());
         Assert.Equal("welcome", taskDocument.RootElement.GetProperty("taskId").GetString());
-        Assert.Equal("Backlog", taskDocument.RootElement.GetProperty("status").GetString());
+        Assert.Equal("Ready", taskDocument.RootElement.GetProperty("status").GetString());
         Assert.NotEmpty(taskDocument.RootElement.GetProperty("acceptanceCriteria").EnumerateArray());
     }
 

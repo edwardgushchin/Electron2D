@@ -1,0 +1,275 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-6be0a05a2230116dab3e13be42f09d8c",
+  "revision": 2,
+  "taskId": "T-0170",
+  "legacyAliases": [],
+  "title": "Объединить спецификации и документацию в единые доменные документы",
+  "description": "## T-0170 [x] P0: Объединить спецификации и документацию в единые доменные документы\n\n- Завершена: 2026-06-24T20:37:32+03:00\n- Принята пользователем: 2026-06-24T20:37:32+03:00\n- Архивная причина: пользователь принял задачу после проверки результата.\n\n- Ссылки:\n  - Рабочий процесс: `AGENTS.md`; `.codex/skills/spec-driven-development/SKILL.md`; `.codex/skills/test-driven-development/SKILL.md`; `.codex/skills/obsidian-markdown/SKILL.md`\n  - Документы: `docs/`\n  - Локальный учет: `TASKS.md`; `dev-diary/2026/06 Июнь/23-06-2026.md`\n\n### Самодостаточное описание\n\nПользователь попросил убрать разделение `docs/specifications/` и `docs/documentation/`. Новый корень документации - `docs/`; под ним сразу живут домены, например `docs/editor/`, `docs/rendering/`, `docs/runtime/`. Каждый Markdown-файл должен быть единым документом о конкретной вещи: он описывает целевой контракт, фактическое состояние, ограничения, проверки и открытые расхождения в одном месте.\n\nВажно не удалить спецификации механически, а перенести их содержание в соответствующие документы и убрать разночтения между прежними целевыми и фактическими текстами. Если над доменом проводится работа, доменный документ должен быть актуализирован до и после кода по необходимости.\n\nНовый рабочий пайплайн:\n\n1. Пишем или обновляем доменный документ.\n2. Пишем красные тесты.\n3. Пишем реализацию в коде.\n4. Проверяем зеленые тесты.\n5. Если реализация уточнила поведение, обновляем тот же доменный документ.\n\n### Критерии и результат\n\n- [x] Все файлы из `docs/specifications/<domain>/` и `docs/documentation/<domain>/` перенесены в единую структуру `docs/<domain>/`.\n- [x] Для файлов с одинаковым доменом и именем сохранено содержание обеих сторон в одном документе без старого разделения на \"спецификация\" и \"документация реализации\".\n- [x] Для одиночных файлов сохранено исходное содержание и добавлены явные секции, позволяющие дальше вести один доменный документ.\n- [x] `AGENTS.md` описывает новый Feature Gate: доменный документ под `docs/<domain>/`, красные тесты, implementation, зеленые тесты, финальная актуализация документа.\n- [x] `.codex/skills/spec-driven-development/SKILL.md` и `.codex/skills/test-driven-development/SKILL.md` больше не требуют `docs/specifications/` или `docs/documentation/` как канонические места.\n- [x] Локальный Markdown-навык `.codex/skills/obsidian-markdown/SKILL.md` не противоречит новой структуре.\n- [x] `TASKS.md` и новые документы не содержат устаревших ссылок на `docs/specifications/` или `docs/documentation/`, кроме явных исторических заметок, если такие будут оставлены осознанно.\n- [x] Выполнена проверка поиском по старым путям и проверка состояния рабочей копии.\n\n### Подзадачи\n\n- [x] Составить карту парных и одиночных файлов.\n- [x] Сгенерировать единые документы в `docs/<domain>/`.\n- [x] Удалить старые `docs/specifications/` и `docs/documentation/` после переноса.\n- [x] Обновить инструкции, навыки и локальные task-ссылки.\n- [x] Проверить, что старые пути не остались в актуальных правилах и ссылках.\n\n### Заметки агента\n\n2026-06-23T23:42:00+03:00 - Предварительная карта: 142 файла в `docs/specifications/`, 145 файлов в `docs/documentation/`, 132 совпадающие пары, 10 файлов только в спецификациях и 13 файлов только в документации. Рабочая копия уже была сильно изменена до начала задачи; существующие изменения считаются пользовательскими и должны переноситься как есть.\n\n2026-06-24T00:04:00+03:00 - Миграция выполнена без закрытия задачи: создан 151 Markdown-файл в новой структуре `docs/`, старые каталоги удалены, `AGENTS.md`, навыки SDD/TDD/Markdown, проверочные скрипты, диагностические ссылки и локальный индекс обновлены. Проверки `Verify-LocalDocumentation`, `Verify-UserDocumentation`, `Verify-ExportDocumentation`, `Verify-CanonicalGoalAlignment`, focused unit/integration tests и `Verify-SourceLicenseHeaders` прошли. `Verify-PublicApiDocumentationAudit` не прошёл из-за существующих неполных XML comments у `ImageTexture`, а не из-за новой структуры документации.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0012"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Все файлы из `docs/specifications/<domain>/` и `docs/documentation/<domain>/` перенесены в единую структуру `docs/<domain>/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6be0a05a2230116dab3e13be42f09d8c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Для файлов с одинаковым доменом и именем сохранено содержание обеих сторон в одном документе без старого разделения на \"спецификация\" и \"документация реализации\".",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6be0a05a2230116dab3e13be42f09d8c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Для одиночных файлов сохранено исходное содержание и добавлены явные секции, позволяющие дальше вести один доменный документ.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6be0a05a2230116dab3e13be42f09d8c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`AGENTS.md` описывает новый Feature Gate: доменный документ под `docs/<domain>/`, красные тесты, implementation, зеленые тесты, финальная актуализация документа.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6be0a05a2230116dab3e13be42f09d8c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`.codex/skills/spec-driven-development/SKILL.md` и `.codex/skills/test-driven-development/SKILL.md` больше не требуют `docs/specifications/` или `docs/documentation/` как канонические места.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6be0a05a2230116dab3e13be42f09d8c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Локальный Markdown-навык `.codex/skills/obsidian-markdown/SKILL.md` не противоречит новой структуре.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6be0a05a2230116dab3e13be42f09d8c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "`TASKS.md` и новые документы не содержат устаревших ссылок на `docs/specifications/` или `docs/documentation/`, кроме явных исторических заметок, если такие будут оставлены осознанно.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6be0a05a2230116dab3e13be42f09d8c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Выполнена проверка поиском по старым путям и проверка состояния рабочей копии.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-6be0a05a2230116dab3e13be42f09d8c/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T20:42:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Предварительная карта: 142 файла в `docs/specifications/`, 145 файлов в `docs/documentation/`, 132 совпадающие пары, 10 файлов только в спецификациях и 13 файлов только в документации. Рабочая копия уже была сильно изменена до начала задачи; существующие изменения считаются пользовательскими и должны переноситься как есть."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T21:04:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Миграция выполнена без закрытия задачи: создан 151 Markdown-файл в новой структуре `docs/`, старые каталоги удалены, `AGENTS.md`, навыки SDD/TDD/Markdown, проверочные скрипты, диагностические ссылки и локальный индекс обновлены. Проверки `Verify-LocalDocumentation`, `Verify-UserDocumentation`, `Verify-ExportDocumentation`, `Verify-CanonicalGoalAlignment`, focused unit/integration tests и `Verify-SourceLicenseHeaders` прошли. `Verify-PublicApiDocumentationAudit` не прошёл из-за существующих неполных XML comments у `ImageTexture`, а не из-за новой структуры документации."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-24T17:37:32.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".codex/skills/obsidian-markdown/SKILL.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": ".codex/skills/spec-driven-development/SKILL.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": ".codex/skills/test-driven-development/SKILL.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "dev-diary/2026/06 Июнь/23-06-2026.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "docs"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "docs/<domain>"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "docs/documentation"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "docs/documentation/<domain>"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "docs/rendering"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "docs/runtime"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "Directory",
+      "value": "docs/specifications"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "Directory",
+      "value": "docs/specifications/<domain>"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 906513,
+      "byteLength": 6171,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "e58d111668d4cc5991bd48bf523c4b31582126621efb5f261e86565807aa56ad",
+      "markdown": "## T-0170 [x] P0: Объединить спецификации и документацию в единые доменные документы\n\n- Завершена: 2026-06-24T20:37:32+03:00\n- Принята пользователем: 2026-06-24T20:37:32+03:00\n- Архивная причина: пользователь принял задачу после проверки результата.\n\n- Ссылки:\n  - Рабочий процесс: `AGENTS.md`; `.codex/skills/spec-driven-development/SKILL.md`; `.codex/skills/test-driven-development/SKILL.md`; `.codex/skills/obsidian-markdown/SKILL.md`\n  - Документы: `docs/`\n  - Локальный учет: `TASKS.md`; `dev-diary/2026/06 Июнь/23-06-2026.md`\n\n### Самодостаточное описание\n\nПользователь попросил убрать разделение `docs/specifications/` и `docs/documentation/`. Новый корень документации - `docs/`; под ним сразу живут домены, например `docs/editor/`, `docs/rendering/`, `docs/runtime/`. Каждый Markdown-файл должен быть единым документом о конкретной вещи: он описывает целевой контракт, фактическое состояние, ограничения, проверки и открытые расхождения в одном месте.\n\nВажно не удалить спецификации механически, а перенести их содержание в соответствующие документы и убрать разночтения между прежними целевыми и фактическими текстами. Если над доменом проводится работа, доменный документ должен быть актуализирован до и после кода по необходимости.\n\nНовый рабочий пайплайн:\n\n1. Пишем или обновляем доменный документ.\n2. Пишем красные тесты.\n3. Пишем реализацию в коде.\n4. Проверяем зеленые тесты.\n5. Если реализация уточнила поведение, обновляем тот же доменный документ.\n\n### Критерии и результат\n\n- [x] Все файлы из `docs/specifications/<domain>/` и `docs/documentation/<domain>/` перенесены в единую структуру `docs/<domain>/`.\n- [x] Для файлов с одинаковым доменом и именем сохранено содержание обеих сторон в одном документе без старого разделения на \"спецификация\" и \"документация реализации\".\n- [x] Для одиночных файлов сохранено исходное содержание и добавлены явные секции, позволяющие дальше вести один доменный документ.\n- [x] `AGENTS.md` описывает новый Feature Gate: доменный документ под `docs/<domain>/`, красные тесты, implementation, зеленые тесты, финальная актуализация документа.\n- [x] `.codex/skills/spec-driven-development/SKILL.md` и `.codex/skills/test-driven-development/SKILL.md` больше не требуют `docs/specifications/` или `docs/documentation/` как канонические места.\n- [x] Локальный Markdown-навык `.codex/skills/obsidian-markdown/SKILL.md` не противоречит новой структуре.\n- [x] `TASKS.md` и новые документы не содержат устаревших ссылок на `docs/specifications/` или `docs/documentation/`, кроме явных исторических заметок, если такие будут оставлены осознанно.\n- [x] Выполнена проверка поиском по старым путям и проверка состояния рабочей копии.\n\n### Подзадачи\n\n- [x] Составить карту парных и одиночных файлов.\n- [x] Сгенерировать единые документы в `docs/<domain>/`.\n- [x] Удалить старые `docs/specifications/` и `docs/documentation/` после переноса.\n- [x] Обновить инструкции, навыки и локальные task-ссылки.\n- [x] Проверить, что старые пути не остались в актуальных правилах и ссылках.\n\n### Заметки агента\n\n2026-06-23T23:42:00+03:00 - Предварительная карта: 142 файла в `docs/specifications/`, 145 файлов в `docs/documentation/`, 132 совпадающие пары, 10 файлов только в спецификациях и 13 файлов только в документации. Рабочая копия уже была сильно изменена до начала задачи; существующие изменения считаются пользовательскими и должны переноситься как есть.\n\n2026-06-24T00:04:00+03:00 - Миграция выполнена без закрытия задачи: создан 151 Markdown-файл в новой структуре `docs/`, старые каталоги удалены, `AGENTS.md`, навыки SDD/TDD/Markdown, проверочные скрипты, диагностические ссылки и локальный индекс обновлены. Проверки `Verify-LocalDocumentation`, `Verify-UserDocumentation`, `Verify-ExportDocumentation`, `Verify-CanonicalGoalAlignment`, focused unit/integration tests и `Verify-SourceLicenseHeaders` прошли. `Verify-PublicApiDocumentationAudit` не прошёл из-за существующих неполных XML comments у `ImageTexture`, а не из-за новой структуры документации.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T20:42:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-24T17:37:32.0000000+00:00",
+  "completedAt": "2026-06-24T17:37:32.0000000+00:00",
+  "acceptedAt": "2026-06-24T17:37:32.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-24T17:37:32.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

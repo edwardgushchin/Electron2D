@@ -172,7 +172,7 @@ internal sealed class NoPowerShellWorkflowVerifier(string repositoryRoot, JsonDi
         new("GitHub workflow definitions", relativePath =>
             relativePath.StartsWith(".github/workflows/", StringComparison.Ordinal) &&
             (relativePath.EndsWith(".yml", StringComparison.OrdinalIgnoreCase) || relativePath.EndsWith(".yaml", StringComparison.OrdinalIgnoreCase))),
-        new("root agent and task instructions", relativePath => relativePath is "AGENTS.md" or "TASKS.md"),
+        new("root agent instructions", relativePath => relativePath is "AGENTS.md"),
         new("local Codex skill documentation", relativePath =>
             relativePath.StartsWith(".codex/skills/", StringComparison.Ordinal) &&
             relativePath.EndsWith(".md", StringComparison.OrdinalIgnoreCase)),
@@ -246,7 +246,8 @@ internal sealed class NoPowerShellWorkflowVerifier(string repositoryRoot, JsonDi
             [
                 "635a7a84eed7c51aebddeb41e5dbf2e888971a212ffb4a80a508a926a3541fce",
                 "b0768fb46088545004958685fe1f38b6f37753be007120a06352d4acf7d14a7b",
-                "350bce2366626033efe3ab8dfdff78c4bddd35f9dc09848d090ffbc69ff9d745"
+                "350bce2366626033efe3ab8dfdff78c4bddd35f9dc09848d090ffbc69ff9d745",
+                "9d390dcd1eb5f57dad79245ddbd0ad88c2262e807b71d54e7269a6a635ccada1"
             ]),
         new(
             "release-management exact line",
@@ -266,7 +267,8 @@ internal sealed class NoPowerShellWorkflowVerifier(string repositoryRoot, JsonDi
                 "edc532052907c4de9e7000e3e977656b6772702a8ac2cd4c7b6c73003659656e",
                 "ac717611b5c2de31499df4efc25c9036717a3b58329f710456d26ec9f9344fbf",
                 "b6ad253421701556b3185b4b7a83149123f0ce2c343e24da22ce6070e380edfe",
-                "8093fc9a6990c5bdc0600ce8ae0cf879fd15d2f98860c6b5869f5099b273d4e3"
+                "8093fc9a6990c5bdc0600ce8ae0cf879fd15d2f98860c6b5869f5099b273d4e3",
+                "96d5b182c0686a3d97cb81ed29e54db2c95c2b83d215af677896344ea32eb5fb"
             ]),
         new(
             "release-management exact line",
@@ -288,27 +290,6 @@ internal sealed class NoPowerShellWorkflowVerifier(string repositoryRoot, JsonDi
             "docs/repository/license-policy.md",
             [
                 "709b7765c44c3ba9188fd326d887e9ce00d50f9ec5dbb23818a2e0ebb2cb5d24"
-            ]),
-        new(
-            "task history exact line",
-            "TASKS.md",
-            [
-                "0dafb838db411a69149e66b27a9de4f553fc032b48bad07cd9e19edacd26245d",
-                "8bf15528db996db31ac8a5b0eae7fe3329406569075c5ddcd1a526eaf5276605",
-                "39c657e88edefd9a3bb015980006c91adbf7e639d65ade88c36c856c83e82af2",
-                "11c16e746226d89ad569f200049538cbef8e16bd520ed5e33c514120c56a8edf",
-                "ea01ffeed61aa7265db1dbf15ed2496a09842de8be7438793e8b422d9075d284",
-                "21d94633803262124c13ba8b309938d3ef01a717b50bc67c655e01e6834a2b82",
-                "733f44bf76ae825b196d24daab35effa8e06be796b42c30a05953b5e916d8ecc",
-                "3845473b4de85b4f2a79562ffd165694c1680a5e21174ce8125b73b50b4f1f8f",
-                "f25ab06ca87d6e7c76048e5d0901ec960faf3026d1057c1442840ca9b8ab7f17",
-                "2f57f477a1b8acd13f5f310f86792b12156391f4f268ea939c0951ed60c74766",
-                "4fd7d35931680c3b58e02bbf088083e18891449c8856a1253a58d9b254f137d7",
-                "97e25d96ec0601c6befaef2eb521bf087cd0b9f6ba4a696aabbeea6f29541991",
-                "b5815d5e3d76e05b1b66c6b36d3979873d7a9a23a93830214f2d75186d85a299",
-                "ac09fecf1fb30c43da300bd2ef686159bbb295ae69a82b0788f3bf36b4242155",
-                "1d14ea74226703b05936623111daa4f4b25f8dc8cf867ccf3f0ef356c2e61855",
-                "5e88f62faba727aa5acd6597ecb294f3ba64f648f68b72d8f3eb6b2d8bf2d663"
             ])
     ];
 
@@ -526,8 +507,7 @@ internal sealed class NoPowerShellWorkflowVerifier(string repositoryRoot, JsonDi
             relativePath.EndsWith(".yml", StringComparison.OrdinalIgnoreCase) ||
             relativePath.EndsWith(".yaml", StringComparison.OrdinalIgnoreCase) ||
             relativePath.EndsWith(".txt", StringComparison.OrdinalIgnoreCase) ||
-            relativePath.Equals("AGENTS.md", StringComparison.Ordinal) ||
-            relativePath.Equals("TASKS.md", StringComparison.Ordinal);
+            relativePath.Equals("AGENTS.md", StringComparison.Ordinal);
     }
 
     private static bool ContainsPowerShellWorkflowToken(string line)
@@ -798,13 +778,13 @@ internal sealed class StaticRepositoryVerifier(string repositoryRoot, JsonDiagno
             "global.json",
             "scenes/main.scene.json",
             "resources/platformer.manifest.json",
-            ".electron2d/tasks/board.e2tasks",
-            ".electron2d/tasks/platformer-acceptance.e2task",
-            ".electron2d/tasks/T-0166.e2task",
-            ".electron2d/tasks/T-0221.e2task",
-            ".electron2d/tasks/T-0222.e2task",
-            ".electron2d/tasks/T-0223.e2task",
-            ".electron2d/tasks/T-0225.e2task"
+            ".taskboard/board.e2tasks",
+            ".taskboard/tasks/platformer-acceptance.e2task",
+            ".taskboard/tasks/T-0166.e2task",
+            ".taskboard/tasks/T-0221.e2task",
+            ".taskboard/tasks/T-0222.e2task",
+            ".taskboard/tasks/T-0223.e2task",
+            ".taskboard/tasks/T-0225.e2task"
         })
         {
             if (!File.Exists(Path.Combine(projectRoot, relativePath.Replace('/', Path.DirectorySeparatorChar))))
@@ -885,7 +865,7 @@ internal sealed class StaticRepositoryVerifier(string repositoryRoot, JsonDiagno
         {
             errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-WEB-EXPORT-FAILED", "Platformer WebAssembly package did not create wwwroot.", "examples/platformer"));
         }
-        else if (Directory.EnumerateFiles(webRoot, "*", SearchOption.AllDirectories).Any(path => path.Replace('\\', '/').Contains("/.electron2d/tasks/", StringComparison.OrdinalIgnoreCase)))
+        else if (Directory.EnumerateFiles(webRoot, "*", SearchOption.AllDirectories).Any(path => path.Replace('\\', '/').Contains("/.taskboard/", StringComparison.OrdinalIgnoreCase)))
         {
             errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-EDITOR-METADATA-PACKAGED", "Platformer WebAssembly package contains Editor task metadata.", ".temp/platformer/web"));
         }
@@ -1266,8 +1246,8 @@ internal sealed class StaticRepositoryVerifier(string repositoryRoot, JsonDiagno
 
     private void VerifyPlatformerTasks(string projectRoot, List<BuildDiagnostic> errors)
     {
-        var taskRoot = Path.Combine(projectRoot, ".electron2d", "tasks");
-        var boardPath = Path.Combine(taskRoot, "board.e2tasks");
+        var taskRoot = Path.Combine(projectRoot, ".taskboard", "tasks");
+        var boardPath = Path.Combine(projectRoot, ".taskboard", "board.e2tasks");
         if (!File.Exists(boardPath))
         {
             return;
@@ -1275,69 +1255,70 @@ internal sealed class StaticRepositoryVerifier(string repositoryRoot, JsonDiagno
 
         using var boardDocument = JsonDocument.Parse(File.ReadAllText(boardPath, Encoding.UTF8));
         var board = boardDocument.RootElement;
-        if (board.GetProperty("format").GetString() != "Electron2D.TaskBoard" || board.GetProperty("version").GetInt32() != 1)
+        if (board.GetProperty("format").GetString() != "Electron2D.TaskBoard" || board.GetProperty("version").GetInt32() != 3)
         {
-            errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-TASK-BOARD", "Platformer task metadata is invalid.", "examples/platformer/.electron2d/tasks/board.e2tasks"));
+            errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-TASK-BOARD", "Platformer task metadata is invalid.", "examples/platformer/.taskboard/board.e2tasks"));
         }
 
         var expectedTasks = new Dictionary<string, (string Status, string Priority, string[] Dependencies)>(StringComparer.Ordinal)
         {
             ["T-0222"] = ("Ready", "P0", []),
-            ["T-0223"] = ("Blocked", "P0", ["T-0222"]),
-            ["T-0225"] = ("Blocked", "P0", ["T-0222", "T-0223"]),
-            ["T-0221"] = ("Blocked", "P0", ["T-0215", "T-0223", "T-0225"]),
-            ["T-0166"] = ("Blocked", "P0", ["T-0221", "T-0222", "T-0223", "T-0225"]),
-            ["platformer-acceptance"] = ("Blocked", "P0", ["T-0166"])
+            ["T-0223"] = ("Ready", "P0", ["T-0222"]),
+            ["T-0225"] = ("Ready", "P0", ["T-0222", "T-0223"]),
+            ["T-0221"] = ("Blocked", "P0", ["T-0223", "T-0225"]),
+            ["T-0166"] = ("Ready", "P0", ["T-0221", "T-0222", "T-0223", "T-0225"]),
+            ["platformer-acceptance"] = ("Ready", "P0", ["T-0166"])
         };
+        var taskIdByUid = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var taskPath in Directory.EnumerateFiles(taskRoot, "*.e2task", SearchOption.TopDirectoryOnly))
+        {
+            using var taskIdentityDocument = JsonDocument.Parse(File.ReadAllText(taskPath, Encoding.UTF8));
+            var identity = taskIdentityDocument.RootElement;
+            taskIdByUid[identity.GetProperty("taskUid").GetString()!] = identity.GetProperty("taskId").GetString()!;
+        }
+
         foreach (var (taskId, expected) in expectedTasks)
         {
             var taskPath = Path.Combine(taskRoot, taskId + ".e2task");
             if (!File.Exists(taskPath))
             {
-                errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-TASK-FILE", $"Platformer task document is missing: {taskId}.", "examples/platformer/.electron2d/tasks/" + taskId + ".e2task"));
+                errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-TASK-FILE", $"Platformer task document is missing: {taskId}.", "examples/platformer/.taskboard/tasks/" + taskId + ".e2task"));
                 continue;
             }
 
             using var taskDocument = JsonDocument.Parse(File.ReadAllText(taskPath, Encoding.UTF8));
             var task = taskDocument.RootElement;
             if (task.GetProperty("format").GetString() != "Electron2D.TaskFile" ||
-                task.GetProperty("version").GetInt32() != 1 ||
+                task.GetProperty("version").GetInt32() != 3 ||
                 task.GetProperty("taskId").GetString() != taskId ||
                 task.GetProperty("status").GetString() != expected.Status ||
                 task.GetProperty("priority").GetString() != expected.Priority)
             {
-                errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-TASK-METADATA", $"Platformer task '{taskId}' metadata mismatch.", "examples/platformer/.electron2d/tasks/" + taskId + ".e2task"));
+                errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-TASK-METADATA", $"Platformer task '{taskId}' metadata mismatch.", "examples/platformer/.taskboard/tasks/" + taskId + ".e2task"));
             }
 
-            var dependencies = task.GetProperty("dependencies").EnumerateArray().Select(item => item.GetString()).Where(item => item is not null).Select(item => item!).ToArray();
+            var dependencies = task.GetProperty("relations").EnumerateArray()
+                .Where(item => item.GetProperty("kind").GetString() == "DependsOn")
+                .Select(item => taskIdByUid[item.GetProperty("targetTaskUid").GetString()!])
+                .ToArray();
             if (!dependencies.SequenceEqual(expected.Dependencies, StringComparer.Ordinal))
             {
-                errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-TASK-DEPENDENCIES", $"Platformer task '{taskId}' dependency mismatch.", "examples/platformer/.electron2d/tasks/" + taskId + ".e2task"));
+                errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-TASK-DEPENDENCIES", $"Platformer task '{taskId}' dependency mismatch.", "examples/platformer/.taskboard/tasks/" + taskId + ".e2task"));
             }
 
-            if (taskId == "platformer-acceptance" &&
-                (task.GetProperty("readiness").GetString() != "BlockedByDependencies" || task.GetProperty("acceptanceState").GetString() != "ChangesRequested"))
+            if (taskId == "platformer-acceptance" && task.GetProperty("acceptanceState").GetString() != "NotSubmitted")
             {
-                errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-ACCEPTANCE-TASK", "Platformer acceptance task must be blocked by migrated dependencies.", "examples/platformer/.electron2d/tasks/platformer-acceptance.e2task"));
+                errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-ACCEPTANCE-TASK", "Platformer acceptance task must use the canonical Ready/NotSubmitted lifecycle.", "examples/platformer/.taskboard/tasks/platformer-acceptance.e2task"));
             }
         }
 
-        var readyTaskIds = GetBoardColumnTaskIds(board, "Ready");
-        if (!readyTaskIds.SequenceEqual(["T-0222"], StringComparer.Ordinal))
+        var placementTaskIds = board.GetProperty("placements").EnumerateArray()
+            .Select(placement => taskIdByUid[placement.GetProperty("taskUid").GetString()!])
+            .ToArray();
+        var expectedPlacements = new[] { "T-0222", "T-0223", "T-0225", "T-0221", "T-0166", "platformer-acceptance" };
+        if (!placementTaskIds.SequenceEqual(expectedPlacements, StringComparer.Ordinal))
         {
-            errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-TASK-BOARD", "Platformer task board Ready column mismatch.", "examples/platformer/.electron2d/tasks/board.e2tasks"));
-        }
-
-        var blockedTaskIds = GetBoardColumnTaskIds(board, "Blocked");
-        var expectedBlocked = new[] { "T-0223", "T-0225", "T-0221", "T-0166", "platformer-acceptance" };
-        if (!blockedTaskIds.SequenceEqual(expectedBlocked, StringComparer.Ordinal))
-        {
-            errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-TASK-BOARD", "Platformer task board Blocked column mismatch.", "examples/platformer/.electron2d/tasks/board.e2tasks"));
-        }
-
-        if (GetBoardColumnTaskIds(board, "AwaitingAcceptance").Length != 0)
-        {
-            errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-TASK-BOARD", "Platformer task board must not keep stale AwaitingAcceptance tasks.", "examples/platformer/.electron2d/tasks/board.e2tasks"));
+            errors.Add(Error("verify platformer", "E2D-BUILD-PLATFORMER-TASK-BOARD", "Platformer task board placement order mismatch.", "examples/platformer/.taskboard/board.e2tasks"));
         }
     }
 

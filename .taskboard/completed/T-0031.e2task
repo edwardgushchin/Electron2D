@@ -1,0 +1,114 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-38fd410e3bf58707b71c1aafbaff7709",
+  "revision": 2,
+  "taskId": "T-0031",
+  "legacyAliases": [],
+  "title": "Реализовать canvas shaders: import, SDL_shadercross compile, vertex/fragment stages и диагностику файл/строка",
+  "description": "# T-0031 [x] P1: Реализовать canvas shaders: import, SDL_shadercross compile, vertex/fragment stages и диагностику файл/строка\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T05:22:00+03:00\n- Статус: завершена\n- Коммит: `T-0031: реализовать canvas shader import baseline`\n\n## Итог\n\nРеализован baseline canvas shader import для `0.1.0 Preview`: публичный `Shader` из целевого API, внутренний import pipeline, vertex/fragment stage compilation boundary через SDL_shadercross и diagnostics с file/line/column.\n\n`Shader` хранит source code, возвращает `Shader.Mode.CanvasItem` и не раскрывает SDL_shadercross, SDL_GPU handles или compiled bytecode. `ShaderMaterial`, uniforms, texture samplers и engine-provided built-ins остаются отдельной задачей T-0032.\n\n## Проверенное поведение\n\n- `Shader.Code` хранит исходный текст и нормализует `null` в пустую строку.\n- `Shader.GetMode()` возвращает `Shader.Mode.CanvasItem`.\n- Public API не содержит `ShaderMaterial` до выполнения T-0032.\n- `CanvasShaderImportPipeline` принимает source format `shader_type canvas_item;`, `vertex_entry <name>;`, `fragment_entry <name>;`.\n- Header lines заменяются пустыми строками перед compiler boundary, чтобы line numbers diagnostics совпадали с source file.\n- Import pipeline компилирует vertex и fragment stages для запрошенных target platforms.\n- Compiler diagnostics вида `file(line,column): error ...` маппятся в structured diagnostic с severity, file path, line, column, stage и target platform.\n- Успешный iOS import создаёт staged artifact и возвращает `RequiresRuntimeCompilation == false`.\n- `SdlShaderCrossCompiler` использует `SDL3.ShaderCross`: DXIL для Windows, SPIR-V для Linux/Android и MSL для macOS/iOS.\n\n## Документация\n\n- Добавлена спецификация `docs/rendering/canvas-shader-import-baseline.md`.\n- Добавлена справка `docs/rendering/canvas-shader-import-baseline.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены rendering server docs и SDL_GPU lifecycle docs.\n- Обновлены `.github/wiki/API-Compatibility.md`, `docs/release-management/api-compatibility.md`, `README.md`, `CHANGELOG.md` и `RELEASE-NOTES.md`.\n\n## Проверки\n\n- Red-state unit: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~ShaderPublicApiTests|FullyQualifiedName~CleanRuntimeBaselineTests\" --no-restore` упал на отсутствующем public `Shader`.\n- Red-state integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~CanvasShaderImportTests\" --no-restore` упал на отсутствующих internal shader import/compiler types.\n- Red-state runtime smoke: `dotnet test tests\\Electron2D.Tests.RuntimeSmoke\\Electron2D.Tests.RuntimeSmoke.csproj --filter \"FullyQualifiedName~CanvasShaderImportSmokeTests\" --no-restore` упал на отсутствующих internal shader import/compiler types.\n- Focused green unit: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~ShaderPublicApiTests|FullyQualifiedName~CleanRuntimeBaselineTests\" --no-restore` - прошло, 3 теста.\n- Focused green integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~CanvasShaderImportTests\" --no-restore` - прошло, 2 теста.\n- Focused green runtime smoke: `dotnet test tests\\Electron2D.Tests.RuntimeSmoke\\Electron2D.Tests.RuntimeSmoke.csproj --filter \"FullyQualifiedName~CanvasShaderImportSmokeTests\" --no-restore` - прошло, 1 тест.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 45.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit 55, integration 81, runtime smoke 5, golden data 4.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло для tracked source files до staging; staged check выполняется перед commit.\n\n## Заметки агента\n\nT-0031 не добавляет public `ShaderMaterial`, uniforms, samplers, resource import cache, real draw pipeline binding, Godot shader language compatibility, compute shaders, geometry shaders или visual shader editor. Native `SDL3-CS.Native.Shadercross` добавлен как dependency для import/export host; packaging по платформам остаётся будущими export задачами.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T02:22:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/wiki/API-Compatibility.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/rendering/canvas-shader-import-baseline.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 104543,
+      "byteLength": 5410,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "2ff360238ceb3bfa7c5bc99df33ac0c6f7f303c2123bdb1e70d82134df0fa653",
+      "markdown": "# T-0031 [x] P1: Реализовать canvas shaders: import, SDL_shadercross compile, vertex/fragment stages и диагностику файл/строка\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T05:22:00+03:00\n- Статус: завершена\n- Коммит: `T-0031: реализовать canvas shader import baseline`\n\n## Итог\n\nРеализован baseline canvas shader import для `0.1.0 Preview`: публичный `Shader` из целевого API, внутренний import pipeline, vertex/fragment stage compilation boundary через SDL_shadercross и diagnostics с file/line/column.\n\n`Shader` хранит source code, возвращает `Shader.Mode.CanvasItem` и не раскрывает SDL_shadercross, SDL_GPU handles или compiled bytecode. `ShaderMaterial`, uniforms, texture samplers и engine-provided built-ins остаются отдельной задачей T-0032.\n\n## Проверенное поведение\n\n- `Shader.Code` хранит исходный текст и нормализует `null` в пустую строку.\n- `Shader.GetMode()` возвращает `Shader.Mode.CanvasItem`.\n- Public API не содержит `ShaderMaterial` до выполнения T-0032.\n- `CanvasShaderImportPipeline` принимает source format `shader_type canvas_item;`, `vertex_entry <name>;`, `fragment_entry <name>;`.\n- Header lines заменяются пустыми строками перед compiler boundary, чтобы line numbers diagnostics совпадали с source file.\n- Import pipeline компилирует vertex и fragment stages для запрошенных target platforms.\n- Compiler diagnostics вида `file(line,column): error ...` маппятся в structured diagnostic с severity, file path, line, column, stage и target platform.\n- Успешный iOS import создаёт staged artifact и возвращает `RequiresRuntimeCompilation == false`.\n- `SdlShaderCrossCompiler` использует `SDL3.ShaderCross`: DXIL для Windows, SPIR-V для Linux/Android и MSL для macOS/iOS.\n\n## Документация\n\n- Добавлена спецификация `docs/rendering/canvas-shader-import-baseline.md`.\n- Добавлена справка `docs/rendering/canvas-shader-import-baseline.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены rendering server docs и SDL_GPU lifecycle docs.\n- Обновлены `.github/wiki/API-Compatibility.md`, `docs/release-management/api-compatibility.md`, `README.md`, `CHANGELOG.md` и `RELEASE-NOTES.md`.\n\n## Проверки\n\n- Red-state unit: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~ShaderPublicApiTests|FullyQualifiedName~CleanRuntimeBaselineTests\" --no-restore` упал на отсутствующем public `Shader`.\n- Red-state integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~CanvasShaderImportTests\" --no-restore` упал на отсутствующих internal shader import/compiler types.\n- Red-state runtime smoke: `dotnet test tests\\Electron2D.Tests.RuntimeSmoke\\Electron2D.Tests.RuntimeSmoke.csproj --filter \"FullyQualifiedName~CanvasShaderImportSmokeTests\" --no-restore` упал на отсутствующих internal shader import/compiler types.\n- Focused green unit: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~ShaderPublicApiTests|FullyQualifiedName~CleanRuntimeBaselineTests\" --no-restore` - прошло, 3 теста.\n- Focused green integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~CanvasShaderImportTests\" --no-restore` - прошло, 2 теста.\n- Focused green runtime smoke: `dotnet test tests\\Electron2D.Tests.RuntimeSmoke\\Electron2D.Tests.RuntimeSmoke.csproj --filter \"FullyQualifiedName~CanvasShaderImportSmokeTests\" --no-restore` - прошло, 1 тест.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 45.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit 55, integration 81, runtime smoke 5, golden data 4.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло для tracked source files до staging; staged check выполняется перед commit.\n\n## Заметки агента\n\nT-0031 не добавляет public `ShaderMaterial`, uniforms, samplers, resource import cache, real draw pipeline binding, Godot shader language compatibility, compute shaders, geometry shaders или visual shader editor. Native `SDL3-CS.Native.Shadercross` добавлен как dependency для import/export host; packaging по платформам остаётся будущими export задачами.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T02:22:00.0000000+00:00",
+  "completedAt": "2026-06-21T02:22:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T02:22:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T02:22:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

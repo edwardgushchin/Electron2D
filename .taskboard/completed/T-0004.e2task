@@ -1,0 +1,129 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-c09031e85da060f5381745f84753bec3",
+  "revision": 2,
+  "taskId": "T-0004",
+  "legacyAliases": [],
+  "title": "Сформировать таблицу совместимости публичного API с целевой моделью",
+  "description": "# T-0004: Сформировать таблицу совместимости публичного API с целевой моделью\n\n- Статус: завершена\n- Завершена: 2026-06-20T21:28:00+03:00\n- Коммит: `T-0004: сформировать compatibility table`\n\n## Итог\n\n- Добавлен GitHub Wiki source `.github/wiki/API-Compatibility.md`.\n- Таблица фиксирует текущий clean baseline: runtime assembly экспортирует `0` публичных типов.\n- Планируемая целевая 2D surface перечислена отдельно от текущего public surface.\n- Legacy/component API явно помечен как `Not planned`: `IComponent`, `SpriteRenderer`, `SpriteAnimator`, `AudioSource`, legacy physics components.\n- Добавлен verifier `tools/Verify-ApiCompatibility.ps1`.\n- Добавлены спецификация и документация:\n  - `docs/release-management/api-compatibility.md`\n  - `docs/release-management/api-compatibility.md`\n\n## Проверки\n\n- Первый запуск `tools/Verify-ApiCompatibility.ps1` до Wiki source упал ожидаемо: `.github/wiki/API-Compatibility.md` отсутствовал.\n- После добавления Wiki source `powershell -ExecutionPolicy Bypass -File tools/Verify-ApiCompatibility.ps1` прошёл успешно: `Public types: 0`.\n- `powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1` прошёл успешно.\n\n## Следующие задачи\n\n- Каждый будущий публичный тип должен попадать в `.github/wiki/API-Compatibility.md` с допустимым статусом.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009",
+    "tag-0015",
+    "tag-0021"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-20T18:28:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/wiki/API-Compatibility.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "tools/Verify-ApiCompatibility.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "powershell -ExecutionPolicy Bypass -File tools/Verify-ApiCompatibility.ps1",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 5811,
+      "byteLength": 1722,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "19a2d9060065cff83b32a34b26a6d8798edc52b564a5823fe3e0356f0e099826",
+      "markdown": "# T-0004: Сформировать таблицу совместимости публичного API с целевой моделью\n\n- Статус: завершена\n- Завершена: 2026-06-20T21:28:00+03:00\n- Коммит: `T-0004: сформировать compatibility table`\n\n## Итог\n\n- Добавлен GitHub Wiki source `.github/wiki/API-Compatibility.md`.\n- Таблица фиксирует текущий clean baseline: runtime assembly экспортирует `0` публичных типов.\n- Планируемая целевая 2D surface перечислена отдельно от текущего public surface.\n- Legacy/component API явно помечен как `Not planned`: `IComponent`, `SpriteRenderer`, `SpriteAnimator`, `AudioSource`, legacy physics components.\n- Добавлен verifier `tools/Verify-ApiCompatibility.ps1`.\n- Добавлены спецификация и документация:\n  - `docs/release-management/api-compatibility.md`\n  - `docs/release-management/api-compatibility.md`\n\n## Проверки\n\n- Первый запуск `tools/Verify-ApiCompatibility.ps1` до Wiki source упал ожидаемо: `.github/wiki/API-Compatibility.md` отсутствовал.\n- После добавления Wiki source `powershell -ExecutionPolicy Bypass -File tools/Verify-ApiCompatibility.ps1` прошёл успешно: `Public types: 0`.\n- `powershell -ExecutionPolicy Bypass -File tools/Run-Tests.ps1` прошёл успешно.\n\n## Следующие задачи\n\n- Каждый будущий публичный тип должен попадать в `.github/wiki/API-Compatibility.md` с допустимым статусом.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T18:28:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-20T18:28:00.0000000+00:00",
+  "completedAt": "2026-06-20T18:28:00.0000000+00:00",
+  "acceptedAt": "2026-06-20T18:28:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-20T18:28:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

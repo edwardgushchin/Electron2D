@@ -1,0 +1,229 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-890434dae68980ed02a85610b40efb5c",
+  "revision": 2,
+  "taskId": "T-0099",
+  "legacyAliases": [],
+  "title": "Написать документацию renderer profiles, Android fallback и различий Standard/Compatibility",
+  "description": "# T-0099 [x] P1: Написать документацию renderer profiles, Android fallback и различий Standard/Compatibility\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T23:00:38+03:00\n- Приоритет: P1\n- Зависимости: T-0022, T-0034\n\n## Ссылки\n\n- Спецификация задачи: `docs/documentation/renderer-profiles.md`\n- Базовая документационная спецификация: `docs/documentation/user-guide.md`\n- Пользовательская документация: `docs/documentation/renderer-profiles.md`\n- User guide: `docs/documentation/user-guide.md`\n- Rendering documentation: `docs/rendering/rendering-server.md`; `docs/rendering/android-mobile-gpu-fallback-policy.md`\n- Verifier: `tools/Verify-UserDocumentation.ps1`\n\n## Самодостаточное описание\n\nНужно было сделать renderer profiles, Android fallback, `Standard`/`Compatibility` differences и limitations частью проверяемой пользовательской документации `0.1.0 Preview`, не раскрывая низкоуровневые backend details как публичный пользовательский контракт.\n\n## Что сделано\n\n- Добавлена спецификация `docs/documentation/renderer-profiles.md`.\n- Добавлена пользовательская страница `docs/documentation/renderer-profiles.md`.\n- В `docs/documentation/user-guide.md` добавлен раздел `user-doc:renderer-profiles` со ссылкой на подробную страницу.\n- В `docs/documentation/user-guide.md` renderer profiles добавлены как обязательный раздел пользовательской документации.\n- Обновлены индексы `docs/README.md` и `docs/README.md`.\n- `tools/Verify-UserDocumentation.ps1` теперь проверяет наличие renderer profiles docs, marker в user guide и обязательные фрагменты: `Compatibility`, `Standard`, `feature flags`, `Automatic`, `FailIfUnavailable`, `fail_if_unavailable`, `Android fallback`, `RenderingServer.CurrentProfile`, `RenderingServer.HasFeature`.\n- Затронутые rendering docs приведены к нейтральным backend-формулировкам, чтобы публичная документация описывала поведение Electron2D, а не внутреннюю реализацию.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: написана документация renderer profiles, Android fallback и различий `Standard`/`Compatibility`.\n- [x] Описаны feature flags, fallback policy, `fail_if_unavailable` and limitations.\n- [x] Спецификация создана в `docs/documentation/renderer-profiles.md`.\n- [x] Документация создана в `docs/documentation/renderer-profiles.md`.\n- [x] Автоматическая проверка пользовательской документации обновлена.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- Поиск `SDL`/`Godot-like`/`Godot` в новых и затронутых документах - совпадений нет.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` - пройдено.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - пройдено, tracked source files `385`.\n- `git diff --check` - пройдено без ошибок.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - пройдено: unit `74/74`, integration `230/230`, runtime smoke `5/5`, golden-data `12/12`.\n\n## Решения\n\n- Описывать профили через public `RenderingServer.CurrentProfile`, `RenderingServer.HasFeature(...)` и стабильные feature flags.\n- `Automatic` остаётся рекомендуемым режимом: на Android он выбирает максимально доступный профиль и допускает fallback в `Compatibility`.\n- `FailIfUnavailable`/`fail_if_unavailable` предназначен для диагностики и строгих release checks, а не для обычного developer default.\n- GitHub Wiki не перегенерировалась, потому что публичный API и XML comments не менялись.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0012",
+    "tag-0021",
+    "tag-0034"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-f1c43b3fbae39ab0e60d8384b83a5d90"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-e638ce08de8baf3418a1acc91b8f2e61"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Реализована цель задачи: написана документация renderer profiles, Android fallback и различий `Standard`/`Compatibility`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-890434dae68980ed02a85610b40efb5c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Описаны feature flags, fallback policy, `fail_if_unavailable` and limitations.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-890434dae68980ed02a85610b40efb5c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Спецификация создана в `docs/documentation/renderer-profiles.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-890434dae68980ed02a85610b40efb5c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Документация создана в `docs/documentation/renderer-profiles.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-890434dae68980ed02a85610b40efb5c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Автоматическая проверка пользовательской документации обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-890434dae68980ed02a85610b40efb5c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-890434dae68980ed02a85610b40efb5c/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T20:00:38.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "230/230"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "74/74"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/README.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/documentation/renderer-profiles.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/documentation/user-guide.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/rendering/android-mobile-gpu-fallback-policy.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/rendering/rendering-server.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tools/Verify-UserDocumentation.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 349293,
+      "byteLength": 4578,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "a3fb6e89cb8ff1539c498d1994e9f141de764ea71d060dd2b6e3cb71ddc51ff5",
+      "markdown": "# T-0099 [x] P1: Написать документацию renderer profiles, Android fallback и различий Standard/Compatibility\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T23:00:38+03:00\n- Приоритет: P1\n- Зависимости: T-0022, T-0034\n\n## Ссылки\n\n- Спецификация задачи: `docs/documentation/renderer-profiles.md`\n- Базовая документационная спецификация: `docs/documentation/user-guide.md`\n- Пользовательская документация: `docs/documentation/renderer-profiles.md`\n- User guide: `docs/documentation/user-guide.md`\n- Rendering documentation: `docs/rendering/rendering-server.md`; `docs/rendering/android-mobile-gpu-fallback-policy.md`\n- Verifier: `tools/Verify-UserDocumentation.ps1`\n\n## Самодостаточное описание\n\nНужно было сделать renderer profiles, Android fallback, `Standard`/`Compatibility` differences и limitations частью проверяемой пользовательской документации `0.1.0 Preview`, не раскрывая низкоуровневые backend details как публичный пользовательский контракт.\n\n## Что сделано\n\n- Добавлена спецификация `docs/documentation/renderer-profiles.md`.\n- Добавлена пользовательская страница `docs/documentation/renderer-profiles.md`.\n- В `docs/documentation/user-guide.md` добавлен раздел `user-doc:renderer-profiles` со ссылкой на подробную страницу.\n- В `docs/documentation/user-guide.md` renderer profiles добавлены как обязательный раздел пользовательской документации.\n- Обновлены индексы `docs/README.md` и `docs/README.md`.\n- `tools/Verify-UserDocumentation.ps1` теперь проверяет наличие renderer profiles docs, marker в user guide и обязательные фрагменты: `Compatibility`, `Standard`, `feature flags`, `Automatic`, `FailIfUnavailable`, `fail_if_unavailable`, `Android fallback`, `RenderingServer.CurrentProfile`, `RenderingServer.HasFeature`.\n- Затронутые rendering docs приведены к нейтральным backend-формулировкам, чтобы публичная документация описывала поведение Electron2D, а не внутреннюю реализацию.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: написана документация renderer profiles, Android fallback и различий `Standard`/`Compatibility`.\n- [x] Описаны feature flags, fallback policy, `fail_if_unavailable` and limitations.\n- [x] Спецификация создана в `docs/documentation/renderer-profiles.md`.\n- [x] Документация создана в `docs/documentation/renderer-profiles.md`.\n- [x] Автоматическая проверка пользовательской документации обновлена.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- Поиск `SDL`/`Godot-like`/`Godot` в новых и затронутых документах - совпадений нет.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` - пройдено.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - пройдено, tracked source files `385`.\n- `git diff --check` - пройдено без ошибок.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - пройдено: unit `74/74`, integration `230/230`, runtime smoke `5/5`, golden-data `12/12`.\n\n## Решения\n\n- Описывать профили через public `RenderingServer.CurrentProfile`, `RenderingServer.HasFeature(...)` и стабильные feature flags.\n- `Automatic` остаётся рекомендуемым режимом: на Android он выбирает максимально доступный профиль и допускает fallback в `Compatibility`.\n- `FailIfUnavailable`/`fail_if_unavailable` предназначен для диагностики и строгих release checks, а не для обычного developer default.\n- GitHub Wiki не перегенерировалась, потому что публичный API и XML comments не менялись.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T20:00:38.0000000+00:00",
+  "completedAt": "2026-06-21T20:00:38.0000000+00:00",
+  "acceptedAt": "2026-06-21T20:00:38.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T20:00:38.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

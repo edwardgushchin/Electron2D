@@ -1,0 +1,344 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-0d9053724147fcd7f2af1f1bc95fdefd",
+  "revision": 2,
+  "taskId": "T-0092",
+  "legacyAliases": [],
+  "title": "Подготовить экспорт iOS arm64: Xcode-проект, Metal, касания, безопасную область экрана и подписание на macOS",
+  "description": "## T-0092 [ ] P0: Подготовить экспорт iOS arm64: Xcode-проект, Metal, касания, безопасную область экрана и подписание на macOS\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0087, T-0023, T-0051, T-0224\n- Ссылки:\n  - Upstream commit: нет\n  - Спецификация: `docs/export/`\n  - Документация: `docs/export/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0092.\n  - blocker artifact `data/quality/blockers/T-0092.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/export/ только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0092.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0092.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЗадача относится к домену «Export pipeline и платформы». Цель - подготовить экспорт iOS arm64: Xcode-проект, путь рендера через Metal, касания, безопасную область экрана (`safe area`), жизненный цикл приложения и подписание на macOS. iOS является полноценной платформой запуска и экспорта Electron2D и обязательным релизным блокером `0.1-preview`, потому что входит в обязательный runtime/export набор платформ Windows/Linux/macOS/Android/iOS/WebAssembly browser. Ожидаемый результат: результат должен быть проверяемым автоматическими тестами или документированной проверкой на macOS/Xcode и соответствовать критериям: проверка на устройстве или симуляторе задокументирована; автоматизация App Store Connect исключена.\n\nВажное решение из документации: поддержка платформы означает не только сборку, но запуск приложения, рендер, ввод, звук, ресурсы, сохранение данных, жизненный цикл и завершение. Ограничение для агента: не выполнять подписание, установку или публикацию с реальными учётными данными; отсутствующие SDK и учётные данные должны давать понятную ошибку. Не менять несвязанные файлы, не выносить iOS из матрицы запуска и экспорта, не считать отчёт о недоступном окружении успешной релизной проверкой и не закрывать задачу без проверяемого результата.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] iOS export создаёт Xcode project с предсказуемой структурой targets, assets, Info.plist, entitlements и build settings.\n- [ ] arm64 target выбран явно; simulator/device target различаются в планировщике и диагностике.\n- [ ] Внутренний слой отрисовки для iOS использует Metal-compatible path или возвращает стабильную ошибку, если host/toolchain не поддерживает сборку.\n- [ ] Touch input, safe area, pause/resume, background/foreground lifecycle и shutdown описаны в доменном документе и покрыты доступной smoke-проверкой.\n- [ ] Signing configuration генерируется как non-secret настройки и placeholders; реальные credentials, provisioning profiles и App Store Connect automation не выполняются агентом.\n- [ ] Device или simulator smoke выполнен на macOS/Xcode либо задача остаётся `blocked` с artifact, который фиксирует недоступные `xcodebuild`/`simctl`/workload prerequisites.\n- [ ] Если задача меняет код, готов или обновлен доменный документ в `docs/<domain>/`, соответствующий фактическому изменению.\n- [ ] Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.\n- [ ] Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, тот же доменный документ в `docs/<domain>/` отражает фактический результат изменения кода.\n- [ ] Команда тестирования или проверки задокументирована.\n\n### Подзадачи\n\n- [ ] Уточнить контракт задачи по связанным спецификациям и текущему коду.\n  - [ ] Сверить preview iOS runtime/export contract, архитектурный стек и доменную спецификацию.\n    - [ ] Зафиксировать расхождения, ограничения и неочевидные решения в дневнике разработки.\n- [ ] Подготовить минимальное изменение, которое закрывает критерии приёмки.\n  - [ ] Добавить или обновить автоматические проверки до изменения рабочего кода, если задача меняет поведение.\n    - [ ] Убедиться, что проверка действительно покрывает заявленный критерий, а не только счастливый путь.\n- [ ] Завершить реализацию, документацию и проверку.\n  - [ ] Обновить `docs/export/`, если задача меняет исполняемое поведение или публичный контракт.\n    - [ ] Записать итоговые команды проверки и результат в дневник разработки.\n\n### Заметки агента\n\n2026-06-21T20:16:00+03:00 - Blocked по окружению, задача не завершена и не переносится в `data/completed-tasks/`. Текущий host - Windows; `xcodebuild` и `simctl` недоступны, `DEVELOPER_DIR`/`XCODE_ROOT` не заданы, iOS workload не установлен. Критерии требуют Xcode project generation и device/simulator smoke, поэтому закрывать задачу без macOS/Xcode/iOS simulator или device нельзя.\n\nДля разблокировки нужен macOS host с Xcode, iOS simulator или подключённым iOS device, установленный iOS/.NET workload и user-provided signing setup. App Store Connect automation остаётся вне объёма.\n\n2026-06-23T16:31:00+03:00 - После закрытия `T-0096` dependency graph снова проверен. Пользователь сообщил «разблокировал», но текущий host остаётся Windows: `xcodebuild` и `simctl` не найдены, `DEVELOPER_DIR`/`XCODE_ROOT` не заданы. Android SDK/телефон не снимают iOS blocker, потому что критерии `T-0092` требуют macOS/Xcode и iOS device или simulator smoke.\n\n2026-06-23T16:39:00+03:00 - Выполнен частичный проверяемый прогресс без закрытия задачи: добавлены спецификация `docs/export/ios-arm64-export.md`, iOS planner, transient Xcode staging builder и blocked smoke-артефакт writer. Focused tests и export-regression tests прошли, но `T-0092` остаётся активной, потому что на текущем Windows host не выполнен обязательный macOS/Xcode simulator или device smoke.\n\n2026-06-23T16:47:00+03:00 - Выполнен дополнительный локально проверяемый прогресс без закрытия задачи: diagnostic code для отсутствующего Xcode в generic toolchain validation отделён от `E2D-EXPORT-IOS-0001`, который закреплён за неверным iOS target в planner. Новый код `E2D-EXPORT-IOS-0013` синхронизирован в specifications/documentation и покрыт focused test. `T-0092` всё ещё требует macOS/Xcode simulator или device smoke.\n\n2026-06-23T16:59:00+03:00 - Выполнен дополнительный локально проверяемый прогресс без закрытия задачи: добавлены CLI routes `e2d export plan-ios`, `e2d export build-ios --skip-publish true` и `e2d export run-ios`, которые возвращают stable JSON envelope, создают transient Xcode staging project и пишут blocked smoke-артефакт с `E2D-EXPORT-IOS-0011` без queue generic export job. Focused CLI tests, iOS/export tests, проверки документации, source checks и Release build прошли. `T-0092` остаётся активной до реального macOS/Xcode simulator или device smoke.\n\n2026-06-23T17:01:00+03:00 - Повторный blocker audit после commit `34dac5f`: локально проверяемый planner/staging/CLI/blocked-artifact объём выполнен. Оставшийся критерий `T-0092` требует macOS host с Xcode и iOS simulator или device smoke. На текущем Windows host `xcodebuild` и `simctl` недоступны, `DEVELOPER_DIR`/`XCODE_ROOT` не заданы; прежний dependency graph делал `T-0092` блокером `T-0093`, `T-0104`, `T-0105`, `T-0110`, `T-0111`.\n\n2026-06-24T13:36:00+03:00 - УСТАРЕЛО в части формулировки runtime matrix: эта заметка вывела iOS из обязательного preview path, но не должна читаться как удаление iOS из runtime/export targets. Актуальное решение от 2026-06-24T19:45:00+03:00: iOS остаётся полноценным runtime/export target, а обязательность iOS smoke/soak для конкретного релиза должна быть решена через `T-0224`.\n\n2026-06-24T22:12:00+03:00 - После отказа пользователя принять `T-0224` приоритет повышен до `P0`: продуктовый релизный документ требует Windows/Linux/macOS/Android/iOS/WebAssembly browser в `releaseVerificationTargets`, поэтому реальная проверка iOS на macOS/Xcode входит в критический путь `T-0093` и `T-0104`. Отчёт о недоступном окружении остаётся допустимой диагностикой для разработки, но не закрывает финальную релизную проверку.\n\n2026-07-05T12:42:00+03:00 - Статус возвращён в `blocked`: критерии требуют macOS/Xcode simulator или device smoke либо blocked artifact при недоступном окружении. Текущий task-plan не разрешает `ready for acceptance` без этой проверки или явного изменения критериев.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0033",
+    "tag-0035"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-2a21ac96891bb9f389256d3ba39794f3"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ca7dd03bdbc59bc5189e977898e8171f"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-76d6dce169972a72deab350849af2417"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ad05c3cc286456fa74fa8fbefaa72327"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "iOS export создаёт Xcode project с предсказуемой структурой targets, assets, Info.plist, entitlements и build settings.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "arm64 target выбран явно; simulator/device target различаются в планировщике и диагностике.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Внутренний слой отрисовки для iOS использует Metal-compatible path или возвращает стабильную ошибку, если host/toolchain не поддерживает сборку.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Touch input, safe area, pause/resume, background/foreground lifecycle и shutdown описаны в доменном документе и покрыты доступной smoke-проверкой.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Signing configuration генерируется как non-secret настройки и placeholders; реальные credentials, provisioning profiles и App Store Connect automation не выполняются агентом.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Device или simulator smoke выполнен на macOS/Xcode либо задача остаётся `blocked` с artifact, который фиксирует недоступные `xcodebuild`/`simctl`/workload prerequisites.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Если задача меняет код, готов или обновлен доменный документ в `docs/<domain>/`, соответствующий фактическому изменению.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, тот же доменный документ в `docs/<domain>/` отражает фактический результат изменения кода.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Команда тестирования или проверки задокументирована.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-21T17:16:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Blocked по окружению, задача не завершена и не переносится в `data/completed-tasks/`. Текущий host - Windows; `xcodebuild` и `simctl` недоступны, `DEVELOPER_DIR`/`XCODE_ROOT` не заданы, iOS workload не установлен. Критерии требуют Xcode project generation и device/simulator smoke, поэтому закрывать задачу без macOS/Xcode/iOS simulator или device нельзя."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T13:31:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "После закрытия `T-0096` dependency graph снова проверен. Пользователь сообщил «разблокировал», но текущий host остаётся Windows: `xcodebuild` и `simctl` не найдены, `DEVELOPER_DIR`/`XCODE_ROOT` не заданы. Android SDK/телефон не снимают iOS blocker, потому что критерии `T-0092` требуют macOS/Xcode и iOS device или simulator smoke."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T13:39:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Выполнен частичный проверяемый прогресс без закрытия задачи: добавлены спецификация `docs/export/ios-arm64-export.md`, iOS planner, transient Xcode staging builder и blocked smoke-артефакт writer. Focused tests и export-regression tests прошли, но `T-0092` остаётся активной, потому что на текущем Windows host не выполнен обязательный macOS/Xcode simulator или device smoke."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T13:47:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Выполнен дополнительный локально проверяемый прогресс без закрытия задачи: diagnostic code для отсутствующего Xcode в generic toolchain validation отделён от `E2D-EXPORT-IOS-0001`, который закреплён за неверным iOS target в planner. Новый код `E2D-EXPORT-IOS-0013` синхронизирован в specifications/documentation и покрыт focused test. `T-0092` всё ещё требует macOS/Xcode simulator или device smoke."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T13:59:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Выполнен дополнительный локально проверяемый прогресс без закрытия задачи: добавлены CLI routes `e2d export plan-ios`, `e2d export build-ios --skip-publish true` и `e2d export run-ios`, которые возвращают stable JSON envelope, создают transient Xcode staging project и пишут blocked smoke-артефакт с `E2D-EXPORT-IOS-0011` без queue generic export job. Focused CLI tests, iOS/export tests, проверки документации, source checks и Release build прошли. `T-0092` остаётся активной до реального macOS/Xcode simulator или device smoke."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0006",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T14:01:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Повторный blocker audit после commit `34dac5f`: локально проверяемый planner/staging/CLI/blocked-artifact объём выполнен. Оставшийся критерий `T-0092` требует macOS host с Xcode и iOS simulator или device smoke. На текущем Windows host `xcodebuild` и `simctl` недоступны, `DEVELOPER_DIR`/`XCODE_ROOT` не заданы; прежний dependency graph делал `T-0092` блокером `T-0093`, `T-0104`, `T-0105`, `T-0110`, `T-0111`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0007",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T10:36:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "УСТАРЕЛО в части формулировки runtime matrix: эта заметка вывела iOS из обязательного preview path, но не должна читаться как удаление iOS из runtime/export targets. Актуальное решение от 2026-06-24T19:45:00+03:00: iOS остаётся полноценным runtime/export target, а обязательность iOS smoke/soak для конкретного релиза должна быть решена через `T-0224`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0008",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T19:12:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "После отказа пользователя принять `T-0224` приоритет повышен до `P0`: продуктовый релизный документ требует Windows/Linux/macOS/Android/iOS/WebAssembly browser в `releaseVerificationTargets`, поэтому реальная проверка iOS на macOS/Xcode входит в критический путь `T-0093` и `T-0104`. Отчёт о недоступном окружении остаётся допустимой диагностикой для разработки, но не закрывает финальную релизную проверку."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0009",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T09:42:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Статус возвращён в `blocked`: критерии требуют macOS/Xcode simulator или device smoke либо blocked artifact при недоступном окружении. Текущий task-plan не разрешает `ready for acceptance` без этой проверки или явного изменения критериев."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/completed-tasks"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/dev-diary"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/quality/blockers/T-0092.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "docs/<domain>"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "docs/export"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/export/ios-arm64-export.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "examples"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "src/Electron2D/Runtime"
+    }
+  ],
+  "executionContract": {
+    "taskType": "blocked-environment",
+    "readyToStart": [
+      "только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.",
+      "перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate."
+    ],
+    "stopConditions": [
+      "dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.",
+      "требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.",
+      "задача просит audit package без отдельной blocker-report задачи."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` blocker/current evidence notes for T-0092.",
+      "blocker artifact `data/quality/blockers/T-0092.md`, если нужен отдельный отчёт.",
+      "дневник `data/dev-diary/` и связанный доменный документ docs/export/ только для уточнения blocker-а."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.",
+      "unrelated task statuses, dependency graph or release scope."
+    ],
+    "requiredOutputs": [
+      "blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.",
+      "blocker artifact `data/quality/blockers/T-0092.md` when diagnostics need a durable file.",
+      "diary entry with exact commands or host checks that proved the block."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 0,
+      "byteLength": 16100,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "22736c6fcf26ba15de34ed64b0dbe3acfaec61dd9a62189001d8f56b144b85a0",
+      "markdown": "## T-0092 [ ] P0: Подготовить экспорт iOS arm64: Xcode-проект, Metal, касания, безопасную область экрана и подписание на macOS\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0087, T-0023, T-0051, T-0224\n- Ссылки:\n  - Upstream commit: нет\n  - Спецификация: `docs/export/`\n  - Документация: `docs/export/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0092.\n  - blocker artifact `data/quality/blockers/T-0092.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/export/ только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0092.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0092.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЗадача относится к домену «Export pipeline и платформы». Цель - подготовить экспорт iOS arm64: Xcode-проект, путь рендера через Metal, касания, безопасную область экрана (`safe area`), жизненный цикл приложения и подписание на macOS. iOS является полноценной платформой запуска и экспорта Electron2D и обязательным релизным блокером `0.1-preview`, потому что входит в обязательный runtime/export набор платформ Windows/Linux/macOS/Android/iOS/WebAssembly browser. Ожидаемый результат: результат должен быть проверяемым автоматическими тестами или документированной проверкой на macOS/Xcode и соответствовать критериям: проверка на устройстве или симуляторе задокументирована; автоматизация App Store Connect исключена.\n\nВажное решение из документации: поддержка платформы означает не только сборку, но запуск приложения, рендер, ввод, звук, ресурсы, сохранение данных, жизненный цикл и завершение. Ограничение для агента: не выполнять подписание, установку или публикацию с реальными учётными данными; отсутствующие SDK и учётные данные должны давать понятную ошибку. Не менять несвязанные файлы, не выносить iOS из матрицы запуска и экспорта, не считать отчёт о недоступном окружении успешной релизной проверкой и не закрывать задачу без проверяемого результата.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] iOS export создаёт Xcode project с предсказуемой структурой targets, assets, Info.plist, entitlements и build settings.\n- [ ] arm64 target выбран явно; simulator/device target различаются в планировщике и диагностике.\n- [ ] Внутренний слой отрисовки для iOS использует Metal-compatible path или возвращает стабильную ошибку, если host/toolchain не поддерживает сборку.\n- [ ] Touch input, safe area, pause/resume, background/foreground lifecycle и shutdown описаны в доменном документе и покрыты доступной smoke-проверкой.\n- [ ] Signing configuration генерируется как non-secret настройки и placeholders; реальные credentials, provisioning profiles и App Store Connect automation не выполняются агентом.\n- [ ] Device или simulator smoke выполнен на macOS/Xcode либо задача остаётся `blocked` с artifact, который фиксирует недоступные `xcodebuild`/`simctl`/workload prerequisites.\n- [ ] Если задача меняет код, готов или обновлен доменный документ в `docs/<domain>/`, соответствующий фактическому изменению.\n- [ ] Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.\n- [ ] Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, тот же доменный документ в `docs/<domain>/` отражает фактический результат изменения кода.\n- [ ] Команда тестирования или проверки задокументирована.\n\n### Подзадачи\n\n- [ ] Уточнить контракт задачи по связанным спецификациям и текущему коду.\n  - [ ] Сверить preview iOS runtime/export contract, архитектурный стек и доменную спецификацию.\n    - [ ] Зафиксировать расхождения, ограничения и неочевидные решения в дневнике разработки.\n- [ ] Подготовить минимальное изменение, которое закрывает критерии приёмки.\n  - [ ] Добавить или обновить автоматические проверки до изменения рабочего кода, если задача меняет поведение.\n    - [ ] Убедиться, что проверка действительно покрывает заявленный критерий, а не только счастливый путь.\n- [ ] Завершить реализацию, документацию и проверку.\n  - [ ] Обновить `docs/export/`, если задача меняет исполняемое поведение или публичный контракт.\n    - [ ] Записать итоговые команды проверки и результат в дневник разработки.\n\n### Заметки агента\n\n2026-06-21T20:16:00+03:00 - Blocked по окружению, задача не завершена и не переносится в `data/completed-tasks/`. Текущий host - Windows; `xcodebuild` и `simctl` недоступны, `DEVELOPER_DIR`/`XCODE_ROOT` не заданы, iOS workload не установлен. Критерии требуют Xcode project generation и device/simulator smoke, поэтому закрывать задачу без macOS/Xcode/iOS simulator или device нельзя.\n\nДля разблокировки нужен macOS host с Xcode, iOS simulator или подключённым iOS device, установленный iOS/.NET workload и user-provided signing setup. App Store Connect automation остаётся вне объёма.\n\n2026-06-23T16:31:00+03:00 - После закрытия `T-0096` dependency graph снова проверен. Пользователь сообщил «разблокировал», но текущий host остаётся Windows: `xcodebuild` и `simctl` не найдены, `DEVELOPER_DIR`/`XCODE_ROOT` не заданы. Android SDK/телефон не снимают iOS blocker, потому что критерии `T-0092` требуют macOS/Xcode и iOS device или simulator smoke.\n\n2026-06-23T16:39:00+03:00 - Выполнен частичный проверяемый прогресс без закрытия задачи: добавлены спецификация `docs/export/ios-arm64-export.md`, iOS planner, transient Xcode staging builder и blocked smoke-артефакт writer. Focused tests и export-regression tests прошли, но `T-0092` остаётся активной, потому что на текущем Windows host не выполнен обязательный macOS/Xcode simulator или device smoke.\n\n2026-06-23T16:47:00+03:00 - Выполнен дополнительный локально проверяемый прогресс без закрытия задачи: diagnostic code для отсутствующего Xcode в generic toolchain validation отделён от `E2D-EXPORT-IOS-0001`, который закреплён за неверным iOS target в planner. Новый код `E2D-EXPORT-IOS-0013` синхронизирован в specifications/documentation и покрыт focused test. `T-0092` всё ещё требует macOS/Xcode simulator или device smoke.\n\n2026-06-23T16:59:00+03:00 - Выполнен дополнительный локально проверяемый прогресс без закрытия задачи: добавлены CLI routes `e2d export plan-ios`, `e2d export build-ios --skip-publish true` и `e2d export run-ios`, которые возвращают stable JSON envelope, создают transient Xcode staging project и пишут blocked smoke-артефакт с `E2D-EXPORT-IOS-0011` без queue generic export job. Focused CLI tests, iOS/export tests, проверки документации, source checks и Release build прошли. `T-0092` остаётся активной до реального macOS/Xcode simulator или device smoke.\n\n2026-06-23T17:01:00+03:00 - Повторный blocker audit после commit `34dac5f`: локально проверяемый planner/staging/CLI/blocked-artifact объём выполнен. Оставшийся критерий `T-0092` требует macOS host с Xcode и iOS simulator или device smoke. На текущем Windows host `xcodebuild` и `simctl` недоступны, `DEVELOPER_DIR`/`XCODE_ROOT` не заданы; прежний dependency graph делал `T-0092` блокером `T-0093`, `T-0104`, `T-0105`, `T-0110`, `T-0111`.\n\n2026-06-24T13:36:00+03:00 - УСТАРЕЛО в части формулировки runtime matrix: эта заметка вывела iOS из обязательного preview path, но не должна читаться как удаление iOS из runtime/export targets. Актуальное решение от 2026-06-24T19:45:00+03:00: iOS остаётся полноценным runtime/export target, а обязательность iOS smoke/soak для конкретного релиза должна быть решена через `T-0224`.\n\n2026-06-24T22:12:00+03:00 - После отказа пользователя принять `T-0224` приоритет повышен до `P0`: продуктовый релизный документ требует Windows/Linux/macOS/Android/iOS/WebAssembly browser в `releaseVerificationTargets`, поэтому реальная проверка iOS на macOS/Xcode входит в критический путь `T-0093` и `T-0104`. Отчёт о недоступном окружении остаётся допустимой диагностикой для разработки, но не закрывает финальную релизную проверку.\n\n2026-07-05T12:42:00+03:00 - Статус возвращён в `blocked`: критерии требуют macOS/Xcode simulator или device smoke либо blocked artifact при недоступном окружении. Текущий task-plan не разрешает `ready for acceptance` без этой проверки или явного изменения критериев.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

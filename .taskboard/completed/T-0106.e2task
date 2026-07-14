@@ -1,0 +1,219 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-e07cf89afae4241b9c110f897e2f4315",
+  "revision": 2,
+  "taskId": "T-0106",
+  "legacyAliases": [],
+  "title": "Ввести SDL3-style XML documentation для всего публичного API",
+  "description": "# T-0106 [x] P0: Ввести SDL3-style XML documentation для всего публичного API\n\n- Создана: 2026-06-20T22:01:23+03:00\n- Завершена: 2026-06-21T21:45:00+03:00\n- Приоритет: P0\n- Зависимости: T-0004, T-0008\n\n## Ссылки\n\n- Спецификация: `docs/documentation/public-api-xml-documentation.md`\n- Документация: `docs/documentation/public-api-xml-documentation.md`\n- Verifier: `tools/Verify-PublicApiXmlDocs.ps1`\n- CI: `.github/workflows/ci.yml`; `tools/Verify-CiMatrix.ps1`\n- Исходный код: `src/Electron2D/`\n\n## Самодостаточное описание\n\nВведено правило структурной C# XML documentation для всего публичного API runtime assembly `Electron2D`. Каждый public type/member должен иметь XML documentation, а verifier проверяет compiled public surface и generated XML file, чтобы новый недокументированный API не попадал в green path.\n\n## Что сделано\n\n- Добавлена спецификация формата XML documentation.\n- Добавлена документация фактического правила и команд проверки.\n- Добавлен `tools\\Verify-PublicApiXmlDocs.ps1` с report mode и strict mode `-FailOnIssues`.\n- Заполнена структурная XML documentation для текущего public API `Electron2D`.\n- Неявные public parameterless constructors сделаны явными там, где иначе их нельзя было документировать.\n- Исправлен verifier lookup для indexer XML member IDs.\n- CI переведён на strict gate `tools\\Verify-PublicApiXmlDocs.ps1 -FailOnIssues`.\n\n## Критерии приёмки\n\n- [x] Создана спецификация формата XML documentation для Electron2D public API.\n- [x] Все текущие public API имеют XML docs по новому формату.\n- [x] Включён build/verifier, который падает при недокументированном public API.\n- [x] Включён verifier качества, который проверяет обязательные разделы для методов с параметрами, возвращаемыми значениями, thread-safety, `since` и применимые `value`/`param`/`returns`.\n- [x] Legacy/component API не документируется как поддерживаемый API и не возвращается в public surface.\n- [x] Документация фактического правила обновлена в `docs/documentation/`.\n- [x] Команда проверки задокументирована.\n\n## Проверки\n\n- `dotnet build src\\Electron2D\\Electron2D.csproj --no-restore` - пройдено без предупреждений.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiXmlDocs.ps1 -FailOnIssues` - пройдено: `1258` public symbols, `0` issues.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - пройдено: `285` tests.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - пройдено.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - пройдено.\n- `git diff --check` - пройдено.\n\n## Решения\n\n- Strict mode подключён к CI только после заполнения текущего public API, чтобы green path не был красным на известных gaps.\n- Для неявных parameterless constructors добавлены явные public constructors: это сохраняет публичную поверхность и даёт XML documentation entry.\n- Indexer lookup в verifier учитывает XML documentation IDs с параметрами.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0015"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c09031e85da060f5381745f84753bec3"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-d58b18cd57bff5a7c6efb1336011bc04"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создана спецификация формата XML documentation для Electron2D public API.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e07cf89afae4241b9c110f897e2f4315/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Все текущие public API имеют XML docs по новому формату.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e07cf89afae4241b9c110f897e2f4315/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Включён build/verifier, который падает при недокументированном public API.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e07cf89afae4241b9c110f897e2f4315/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Включён verifier качества, который проверяет обязательные разделы для методов с параметрами, возвращаемыми значениями, thread-safety, `since` и применимые `value`/`param`/`returns`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e07cf89afae4241b9c110f897e2f4315/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Legacy/component API не документируется как поддерживаемый API и не возвращается в public surface.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e07cf89afae4241b9c110f897e2f4315/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Документация фактического правила обновлена в `docs/documentation/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e07cf89afae4241b9c110f897e2f4315/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Команда проверки задокументирована.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-e07cf89afae4241b9c110f897e2f4315/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T18:45:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/workflows/ci.yml"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "docs/documentation"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/documentation/public-api-xml-documentation.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "tools/Verify-CiMatrix.ps1"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "tools/Verify-PublicApiXmlDocs.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 279664,
+      "byteLength": 3959,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "afd1db25f1a81bfb455ae63f2c663b6331fef042855ae21f0e174e1c34e569b3",
+      "markdown": "# T-0106 [x] P0: Ввести SDL3-style XML documentation для всего публичного API\n\n- Создана: 2026-06-20T22:01:23+03:00\n- Завершена: 2026-06-21T21:45:00+03:00\n- Приоритет: P0\n- Зависимости: T-0004, T-0008\n\n## Ссылки\n\n- Спецификация: `docs/documentation/public-api-xml-documentation.md`\n- Документация: `docs/documentation/public-api-xml-documentation.md`\n- Verifier: `tools/Verify-PublicApiXmlDocs.ps1`\n- CI: `.github/workflows/ci.yml`; `tools/Verify-CiMatrix.ps1`\n- Исходный код: `src/Electron2D/`\n\n## Самодостаточное описание\n\nВведено правило структурной C# XML documentation для всего публичного API runtime assembly `Electron2D`. Каждый public type/member должен иметь XML documentation, а verifier проверяет compiled public surface и generated XML file, чтобы новый недокументированный API не попадал в green path.\n\n## Что сделано\n\n- Добавлена спецификация формата XML documentation.\n- Добавлена документация фактического правила и команд проверки.\n- Добавлен `tools\\Verify-PublicApiXmlDocs.ps1` с report mode и strict mode `-FailOnIssues`.\n- Заполнена структурная XML documentation для текущего public API `Electron2D`.\n- Неявные public parameterless constructors сделаны явными там, где иначе их нельзя было документировать.\n- Исправлен verifier lookup для indexer XML member IDs.\n- CI переведён на strict gate `tools\\Verify-PublicApiXmlDocs.ps1 -FailOnIssues`.\n\n## Критерии приёмки\n\n- [x] Создана спецификация формата XML documentation для Electron2D public API.\n- [x] Все текущие public API имеют XML docs по новому формату.\n- [x] Включён build/verifier, который падает при недокументированном public API.\n- [x] Включён verifier качества, который проверяет обязательные разделы для методов с параметрами, возвращаемыми значениями, thread-safety, `since` и применимые `value`/`param`/`returns`.\n- [x] Legacy/component API не документируется как поддерживаемый API и не возвращается в public surface.\n- [x] Документация фактического правила обновлена в `docs/documentation/`.\n- [x] Команда проверки задокументирована.\n\n## Проверки\n\n- `dotnet build src\\Electron2D\\Electron2D.csproj --no-restore` - пройдено без предупреждений.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiXmlDocs.ps1 -FailOnIssues` - пройдено: `1258` public symbols, `0` issues.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - пройдено: `285` tests.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - пройдено.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - пройдено.\n- `git diff --check` - пройдено.\n\n## Решения\n\n- Strict mode подключён к CI только после заполнения текущего public API, чтобы green path не был красным на известных gaps.\n- Для неявных parameterless constructors добавлены явные public constructors: это сохраняет публичную поверхность и даёт XML documentation entry.\n- Indexer lookup в verifier учитывает XML documentation IDs с параметрами.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T19:01:23.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T18:45:00.0000000+00:00",
+  "completedAt": "2026-06-21T18:45:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T18:45:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T18:45:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

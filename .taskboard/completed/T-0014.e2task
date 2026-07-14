@@ -1,0 +1,110 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-0244098abc4f8721f7af2db5a9b5e713",
+  "revision": 2,
+  "taskId": "T-0014",
+  "legacyAliases": [],
+  "title": "Реализовать deferred calls, очередь освобождения и безопасное изменение дерева во время обхода",
+  "description": "# T-0014 [x] P0: Реализовать deferred calls, очередь освобождения и безопасное изменение дерева во время обхода\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-20T23:35:00+03:00\n- Статус: завершена\n- Коммит: `T-0014: реализовать deferred calls и safe traversal`\n\n## Итог\n\nРеализован baseline deferred calls целевого API:\n\n- `Object.CallDeferred(string method, params object?[] args)`;\n- `Callable.CallDeferred(params object?[] args)`;\n- internal deterministic deferred queue;\n- flush deferred queue после lifecycle/process/physics/input traversal;\n- flush queued deletion после deferred queue;\n- безопасный snapshot traversal для изменения children во время обхода.\n\n## Проверенное поведение\n\n- Deferred calls выполняются после текущего `_Process()` traversal.\n- Порядок deferred calls соответствует порядку постановки в очередь.\n- Deferred call, который ставит новый deferred call, выполняет вложенный вызов в той же idle-фазе.\n- `QueueFree()` из `_Ready()` удаляет node после завершения lifecycle pass.\n- `QueueFree()` из `_PhysicsProcess()` не прерывает sibling callbacks и удаляет subtree после physics traversal.\n- `RemoveChild()` и `AddChild()` из `_Process()` не повреждают текущий traversal; новый child участвует в следующем frame pass.\n- Ошибочный deferred callable не останавливает очередь.\n\n## Документация\n\n- Спецификация: `docs/object-model/deferred-calls-safe-traversal.md`.\n- Справка: `docs/object-model/deferred-calls-safe-traversal.md`.\n- Обновлены docs index, GitHub Wiki compatibility table, README, changelog и release notes.\n- Устаревшие ограничения про отсутствие deferred calls удалены из документов object-model.\n\n## Дополнительно по прямому запросу пользователя\n\n- `Electron2D.sln` перенесён из корня репозитория в `src/Electron2D.sln`.\n- CI restore, solution layout tests, golden-data root discovery и release-management документация обновлены под новый путь.\n- В задаче `T-0111` закреплено ограничение: не публиковать GitHub Release без отдельной явной команды пользователя.\n\n## Отличия и будущие задачи\n\n- До `StringName` method names представлены `string`.\n- До `Variant` arguments представлены `object?[]`.\n- `SetDeferred()` и deferred property assignment ещё не реализованы.\n- Infinite deferred recursion guard будет частью будущей runtime diagnostics policy.\n- Отдельного публичного idle-loop API пока нет.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` упал на отсутствующих `Object.CallDeferred()` и `Callable.CallDeferred()`.\n- Green narrow: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 30 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 38 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 10.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n- `dotnet restore src\\Electron2D.sln` - прошло.\n- `dotnet sln src\\Electron2D.sln list` - показывает runtime-проект и четыре тестовых проекта.\n\n## Заметки агента\n\nЗадача выполнена через spec -> red tests -> минимальную runtime-реализацию -> документацию фактического поведения. Public API остался в целевом API-подмножестве и не добавил новых публичных типов.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0023"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-20T20:35:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/object-model/deferred-calls-safe-traversal.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "src/Electron2D.sln"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 33797,
+      "byteLength": 4698,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "9ac5be84f35aededf3e13937a7ef770b42186e19a67164cf060a6c121aafe028",
+      "markdown": "# T-0014 [x] P0: Реализовать deferred calls, очередь освобождения и безопасное изменение дерева во время обхода\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-20T23:35:00+03:00\n- Статус: завершена\n- Коммит: `T-0014: реализовать deferred calls и safe traversal`\n\n## Итог\n\nРеализован baseline deferred calls целевого API:\n\n- `Object.CallDeferred(string method, params object?[] args)`;\n- `Callable.CallDeferred(params object?[] args)`;\n- internal deterministic deferred queue;\n- flush deferred queue после lifecycle/process/physics/input traversal;\n- flush queued deletion после deferred queue;\n- безопасный snapshot traversal для изменения children во время обхода.\n\n## Проверенное поведение\n\n- Deferred calls выполняются после текущего `_Process()` traversal.\n- Порядок deferred calls соответствует порядку постановки в очередь.\n- Deferred call, который ставит новый deferred call, выполняет вложенный вызов в той же idle-фазе.\n- `QueueFree()` из `_Ready()` удаляет node после завершения lifecycle pass.\n- `QueueFree()` из `_PhysicsProcess()` не прерывает sibling callbacks и удаляет subtree после physics traversal.\n- `RemoveChild()` и `AddChild()` из `_Process()` не повреждают текущий traversal; новый child участвует в следующем frame pass.\n- Ошибочный deferred callable не останавливает очередь.\n\n## Документация\n\n- Спецификация: `docs/object-model/deferred-calls-safe-traversal.md`.\n- Справка: `docs/object-model/deferred-calls-safe-traversal.md`.\n- Обновлены docs index, GitHub Wiki compatibility table, README, changelog и release notes.\n- Устаревшие ограничения про отсутствие deferred calls удалены из документов object-model.\n\n## Дополнительно по прямому запросу пользователя\n\n- `Electron2D.sln` перенесён из корня репозитория в `src/Electron2D.sln`.\n- CI restore, solution layout tests, golden-data root discovery и release-management документация обновлены под новый путь.\n- В задаче `T-0111` закреплено ограничение: не публиковать GitHub Release без отдельной явной команды пользователя.\n\n## Отличия и будущие задачи\n\n- До `StringName` method names представлены `string`.\n- До `Variant` arguments представлены `object?[]`.\n- `SetDeferred()` и deferred property assignment ещё не реализованы.\n- Infinite deferred recursion guard будет частью будущей runtime diagnostics policy.\n- Отдельного публичного idle-loop API пока нет.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` упал на отсутствующих `Object.CallDeferred()` и `Callable.CallDeferred()`.\n- Green narrow: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 30 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 38 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 10.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n- `dotnet restore src\\Electron2D.sln` - прошло.\n- `dotnet sln src\\Electron2D.sln list` - показывает runtime-проект и четыре тестовых проекта.\n\n## Заметки агента\n\nЗадача выполнена через spec -> red tests -> минимальную runtime-реализацию -> документацию фактического поведения. Public API остался в целевом API-подмножестве и не добавил новых публичных типов.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-20T20:35:00.0000000+00:00",
+  "completedAt": "2026-06-20T20:35:00.0000000+00:00",
+  "acceptedAt": "2026-06-20T20:35:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-20T20:35:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

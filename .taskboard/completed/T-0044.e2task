@@ -1,0 +1,120 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-ddb39ad5d6ff63d5753d102d8c715881",
+  "revision": 2,
+  "taskId": "T-0044",
+  "legacyAliases": [],
+  "title": "Реализовать модель C# script classes, inheritance from `Node`, lifecycle callbacks и доступ к сервисам движка",
+  "description": "# T-0044 [x] P0: Реализовать модель C# script classes, inheritance from `Node`, lifecycle callbacks и доступ к сервисам движка\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T07:52:20+03:00\n- Статус: завершена\n- Коммит: `T-0044: реализовать модель C# script classes`\n\n## Итог\n\nЗафиксирована базовая модель C# scripting для `0.1.0 Preview`: script class является обычным C# классом, наследуется от `Node`, компилируется обычной .NET toolchain вместе с проектом и получает lifecycle callbacks целевого API без runtime compilation, dynamic assembly load или iOS dynamic code path.\n\n## Проверенное поведение\n\n- Script class наследуется от `Node`.\n- `_EnterTree()` и `_Ready()` вызываются при добавлении script node в `SceneTree.Root`.\n- `_Process(double)` и `_PhysicsProcess(double)` вызываются через текущий traversal host.\n- Script получает доступ к дереву через `GetTree()`.\n- Script получает доступ к runtime services через public facade `RenderingServer`.\n- Шаблон `templates/electron2d-empty` содержит `Scripts/MainScene.cs` и проверяемый script lifecycle sample.\n- `tools/Verify-ProjectTemplate.ps1` восстанавливает свежий local package в изолированный packages folder и проверяет output script sample.\n- Public API не расширялся: используется уже существующая целевая `Node`/`SceneTree`/`RenderingServer` модель.\n\n## Документация\n\n- Добавлена спецификация `docs/scripting/csharp-script-classes.md`.\n- Добавлена справка `docs/scripting/csharp-script-classes.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены спецификация и справка project template.\n- Обновлены `README.md`, `CHANGELOG.md`, `RELEASE-NOTES.md` и README шаблона.\n\n## Проверки\n\n- Red-state: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` упал на отсутствии `Scripts/MainScene.cs`.\n- Focused integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~CSharpScriptModelTests\"` - прошло, 1 тест.\n- Project template verifier: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло; project restored, built and ran script lifecycle sample.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit `59`, integration `112`, runtime smoke `5`, golden data `11`.\n\n## Заметки агента\n\n`T-0044` не реализует `[Export]`, `[Signal]`, `[Tool]`, editor script attach, external IDE opening или runtime C# compilation. Эти части остаются в следующих scripting задачах.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T04:52:20.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "Scripts/MainScene.cs"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/scripting/csharp-script-classes.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "templates/electron2d-empty"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "tools/Verify-ProjectTemplate.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 158300,
+      "byteLength": 3213,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "a234648998e451235fff3628484c3a2e86f2adb588e00b531ab57fd57a6a0577",
+      "markdown": "# T-0044 [x] P0: Реализовать модель C# script classes, inheritance from `Node`, lifecycle callbacks и доступ к сервисам движка\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T07:52:20+03:00\n- Статус: завершена\n- Коммит: `T-0044: реализовать модель C# script classes`\n\n## Итог\n\nЗафиксирована базовая модель C# scripting для `0.1.0 Preview`: script class является обычным C# классом, наследуется от `Node`, компилируется обычной .NET toolchain вместе с проектом и получает lifecycle callbacks целевого API без runtime compilation, dynamic assembly load или iOS dynamic code path.\n\n## Проверенное поведение\n\n- Script class наследуется от `Node`.\n- `_EnterTree()` и `_Ready()` вызываются при добавлении script node в `SceneTree.Root`.\n- `_Process(double)` и `_PhysicsProcess(double)` вызываются через текущий traversal host.\n- Script получает доступ к дереву через `GetTree()`.\n- Script получает доступ к runtime services через public facade `RenderingServer`.\n- Шаблон `templates/electron2d-empty` содержит `Scripts/MainScene.cs` и проверяемый script lifecycle sample.\n- `tools/Verify-ProjectTemplate.ps1` восстанавливает свежий local package в изолированный packages folder и проверяет output script sample.\n- Public API не расширялся: используется уже существующая целевая `Node`/`SceneTree`/`RenderingServer` модель.\n\n## Документация\n\n- Добавлена спецификация `docs/scripting/csharp-script-classes.md`.\n- Добавлена справка `docs/scripting/csharp-script-classes.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены спецификация и справка project template.\n- Обновлены `README.md`, `CHANGELOG.md`, `RELEASE-NOTES.md` и README шаблона.\n\n## Проверки\n\n- Red-state: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` упал на отсутствии `Scripts/MainScene.cs`.\n- Focused integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~CSharpScriptModelTests\"` - прошло, 1 тест.\n- Project template verifier: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло; project restored, built and ran script lifecycle sample.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit `59`, integration `112`, runtime smoke `5`, golden data `11`.\n\n## Заметки агента\n\n`T-0044` не реализует `[Export]`, `[Signal]`, `[Tool]`, editor script attach, external IDE opening или runtime C# compilation. Эти части остаются в следующих scripting задачах.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T04:52:20.0000000+00:00",
+  "completedAt": "2026-06-21T04:52:20.0000000+00:00",
+  "acceptedAt": "2026-06-21T04:52:20.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T04:52:20.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

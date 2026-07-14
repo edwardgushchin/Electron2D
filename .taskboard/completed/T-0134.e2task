@@ -1,0 +1,263 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-be4cbb3527c7a3bf1b62121480f624f1",
+  "revision": 2,
+  "taskId": "T-0134",
+  "legacyAliases": [],
+  "title": "Разнести `src/Electron2D/Core` на ядро и домены исходников",
+  "description": "# T-0134 [x] P0: Разнести `src/Electron2D/Core` на ядро и домены исходников\n\n- Создана: 2026-06-21T17:24:00+03:00\n- Завершена: 2026-06-21T17:44:00+03:00\n- Приоритет: P0\n- Зависимости: T-0087\n\n## Ссылки\n\n- Спецификация: `docs/architecture/source-domain-layout.md`\n- Документация: `docs/architecture/source-domain-layout.md`\n- Проверка: `tools/Verify-SourceDomainLayout.ps1`\n- CI: `.github/workflows/ci.yml`\n\n## Самодостаточное описание\n\nПо уточнению пользователя `Core` нужен, но только для вещей, напрямую относящихся к ядру движка. Корневые домены должны быть крупными: мелкие подсистемы вроде input, settings, text и UI не должны лежать ни в `Core`, ни отдельными root-папками.\n\nNamespace не должен следовать папкам. Runtime source сохраняет форму публичного API: основные типы находятся в `Electron2D`, коллекции - в `Electron2D.Collections`.\n\n## Что сделано\n\n- `src/Electron2D/Core` сужен до ядра:\n  - `Collections`;\n  - `Identity`;\n  - `Math`;\n  - `ObjectModel`;\n  - `Random`;\n  - `SceneTree`;\n  - `Variant`.\n- Non-core домены сгруппированы в крупные root domains:\n  - `Assets`;\n  - `Core`;\n  - `Export`;\n  - `Graphics`;\n  - `Physics`;\n  - `Runtime`.\n- Мелкие подсистемы перенесены на второй уровень:\n  - `Assets/Resources`;\n  - `Graphics/Display`;\n  - `Graphics/Rendering`;\n  - `Graphics/Text`;\n  - `Graphics/UI`;\n  - `Runtime/Animation`;\n  - `Runtime/Input`;\n  - `Runtime/Localization`;\n  - `Runtime/Scripting`;\n  - `Runtime/Settings`.\n- Export preset baseline перенесён в `src/Electron2D/Export/Presets`.\n- Добавлен verifier `tools/Verify-SourceDomainLayout.ps1`.\n- CI запускает source domain layout verifier.\n- `tools/Verify-CiMatrix.ps1` проверяет наличие нового CI step.\n- Документация и активные задачи обновлены на новую структуру.\n\n## Критерии приёмки\n\n- [x] В `src/Electron2D/Core` остались только core domains.\n- [x] Non-core домены сгруппированы в крупные root domains.\n- [x] Мелкие подсистемы находятся вторым уровнем внутри своих root domains.\n- [x] Namespace публичного API не менялся из-за файловой структуры.\n- [x] Документация реализации и активные задачи не указывают на старые non-core пути внутри `src/Electron2D/Core`.\n- [x] Добавлен verifier layout и CI-шаг.\n- [x] Сборка и тесты проходят после переноса.\n\n## Проверки\n\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` - пройдено, source files `237`.\n- `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ExportPresetTests|FullyQualifiedName~SettingsPersistenceTests\" --no-restore -m:1` - пройдено, `9` тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - пройдено: unit `62`, integration `198`, runtime smoke `5`, golden data `11`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - пройдено.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - пройдено, public types `120`.\n- `git diff --check` - пройдено.\n\n## Решения\n\n- `Core` не удалён: он оставлен для базового ядра.\n- Физическая папка не создаёт namespace. Добавление нового namespace требует отдельной задачи и API-обоснования.\n- Корневой layout должен оставаться крупным: новые мелкие подсистемы добавляются внутрь `Assets`, `Graphics`, `Runtime`, `Physics`, `Export` или `Core`, если они действительно относятся к ядру.\n- `T-0088` снята с in-progress до production-кода, чтобы Windows export не смешивался с layout refactor.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-76d6dce169972a72deab350849af2417"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "В `src/Electron2D/Core` остались только core domains.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be4cbb3527c7a3bf1b62121480f624f1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Non-core домены сгруппированы в крупные root domains.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be4cbb3527c7a3bf1b62121480f624f1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Мелкие подсистемы находятся вторым уровнем внутри своих root domains.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be4cbb3527c7a3bf1b62121480f624f1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Namespace публичного API не менялся из-за файловой структуры.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be4cbb3527c7a3bf1b62121480f624f1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Документация реализации и активные задачи не указывают на старые non-core пути внутри `src/Electron2D/Core`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be4cbb3527c7a3bf1b62121480f624f1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Добавлен verifier layout и CI-шаг.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be4cbb3527c7a3bf1b62121480f624f1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Сборка и тесты проходят после переноса.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-be4cbb3527c7a3bf1b62121480f624f1/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T14:44:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/workflows/ci.yml"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "Assets/Resources"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "Graphics/Display"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "Graphics/Rendering"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "Graphics/Text"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "Graphics/UI"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "Runtime/Animation"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "Runtime/Input"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "Runtime/Localization"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "Runtime/Scripting"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "Runtime/Settings"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/architecture/source-domain-layout.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "src/Electron2D/Core"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "src/Electron2D/Export/Presets"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "tools/Verify-CiMatrix.ps1"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "tools/Verify-SourceDomainLayout.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 304260,
+      "byteLength": 4559,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "7ad40bb85a226fead5c7329204b8305db0ef0f466b14bd7cbded57152e7aa041",
+      "markdown": "# T-0134 [x] P0: Разнести `src/Electron2D/Core` на ядро и домены исходников\n\n- Создана: 2026-06-21T17:24:00+03:00\n- Завершена: 2026-06-21T17:44:00+03:00\n- Приоритет: P0\n- Зависимости: T-0087\n\n## Ссылки\n\n- Спецификация: `docs/architecture/source-domain-layout.md`\n- Документация: `docs/architecture/source-domain-layout.md`\n- Проверка: `tools/Verify-SourceDomainLayout.ps1`\n- CI: `.github/workflows/ci.yml`\n\n## Самодостаточное описание\n\nПо уточнению пользователя `Core` нужен, но только для вещей, напрямую относящихся к ядру движка. Корневые домены должны быть крупными: мелкие подсистемы вроде input, settings, text и UI не должны лежать ни в `Core`, ни отдельными root-папками.\n\nNamespace не должен следовать папкам. Runtime source сохраняет форму публичного API: основные типы находятся в `Electron2D`, коллекции - в `Electron2D.Collections`.\n\n## Что сделано\n\n- `src/Electron2D/Core` сужен до ядра:\n  - `Collections`;\n  - `Identity`;\n  - `Math`;\n  - `ObjectModel`;\n  - `Random`;\n  - `SceneTree`;\n  - `Variant`.\n- Non-core домены сгруппированы в крупные root domains:\n  - `Assets`;\n  - `Core`;\n  - `Export`;\n  - `Graphics`;\n  - `Physics`;\n  - `Runtime`.\n- Мелкие подсистемы перенесены на второй уровень:\n  - `Assets/Resources`;\n  - `Graphics/Display`;\n  - `Graphics/Rendering`;\n  - `Graphics/Text`;\n  - `Graphics/UI`;\n  - `Runtime/Animation`;\n  - `Runtime/Input`;\n  - `Runtime/Localization`;\n  - `Runtime/Scripting`;\n  - `Runtime/Settings`.\n- Export preset baseline перенесён в `src/Electron2D/Export/Presets`.\n- Добавлен verifier `tools/Verify-SourceDomainLayout.ps1`.\n- CI запускает source domain layout verifier.\n- `tools/Verify-CiMatrix.ps1` проверяет наличие нового CI step.\n- Документация и активные задачи обновлены на новую структуру.\n\n## Критерии приёмки\n\n- [x] В `src/Electron2D/Core` остались только core domains.\n- [x] Non-core домены сгруппированы в крупные root domains.\n- [x] Мелкие подсистемы находятся вторым уровнем внутри своих root domains.\n- [x] Namespace публичного API не менялся из-за файловой структуры.\n- [x] Документация реализации и активные задачи не указывают на старые non-core пути внутри `src/Electron2D/Core`.\n- [x] Добавлен verifier layout и CI-шаг.\n- [x] Сборка и тесты проходят после переноса.\n\n## Проверки\n\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` - пройдено, source files `237`.\n- `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ExportPresetTests|FullyQualifiedName~SettingsPersistenceTests\" --no-restore -m:1` - пройдено, `9` тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - пройдено: unit `62`, integration `198`, runtime smoke `5`, golden data `11`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - пройдено.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - пройдено, public types `120`.\n- `git diff --check` - пройдено.\n\n## Решения\n\n- `Core` не удалён: он оставлен для базового ядра.\n- Физическая папка не создаёт namespace. Добавление нового namespace требует отдельной задачи и API-обоснования.\n- Корневой layout должен оставаться крупным: новые мелкие подсистемы добавляются внутрь `Assets`, `Graphics`, `Runtime`, `Physics`, `Export` или `Core`, если они действительно относятся к ядру.\n- `T-0088` снята с in-progress до production-кода, чтобы Windows export не смешивался с layout refactor.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-21T14:24:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T14:44:00.0000000+00:00",
+  "completedAt": "2026-06-21T14:44:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T14:44:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T14:44:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

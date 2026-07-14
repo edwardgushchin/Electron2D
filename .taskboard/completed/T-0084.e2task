@@ -1,0 +1,243 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-804bc015aae532e2b2308c5d5995e21c",
+  "revision": 2,
+  "taskId": "T-0084",
+  "legacyAliases": [],
+  "title": "Реализовать run/current scene, run/project, stop, output console, stack trace, shader/compiler diagnostics, FPS/frame time",
+  "description": "# T-0084 [x] P0: Реализовать run/current scene, run/project, stop, output console, stack trace, shader/compiler diagnostics, FPS/frame time\n\n- Статус: завершена\n- Завершена: 2026-06-22T08:32:59+03:00\n- Коммит: `T-0084: add editor run workflow`\n\n## Ссылки\n\n- Спецификация: `docs/editor/run-output-workflow.md`\n- Документация: `docs/editor/run-output-workflow.md`\n- Исходный код: `src/Electron2D.Editor/Run/`; `src/Electron2D.Editor/Program.cs`; `templates/electron2d-empty/Program.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/EditorRunWorkflowTests.cs`\n- Связанные документы: `docs/release-management/project-template.md`; `docs/release-management/project-template.md`\n\n## Самодостаточное описание\n\nЗадача относилась к домену `Electron2D.Editor`. Цель - реализовать проверяемый запуск проекта и выбранной сцены из редактора, остановку активного запуска, output console, stack trace, shader/compiler diagnostics, FPS и frame time.\n\nРеализована модель внутри редактора, которая управляет процессом запуска и собирает результат. Это не новый публичный runtime API: внешний контракт проекта остаётся обычным `.NET` project plus `project.e2d.json`.\n\n## Что сделано\n\n- Добавлена спецификация `docs/editor/run-output-workflow.md`.\n- Добавлена документация реализации `docs/editor/run-output-workflow.md` и обновлены индексы документации.\n- Добавлена команда редактора:\n\n```powershell\ndotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --run-workflow-smoke <work-root>\n```\n\n- Реализован `EditorRunController` для build-before-run, `Run Project`, `Run Current Scene`, active session state и stop.\n- Реализованы output console, diagnostics store и frame timing model для status/overlay UI.\n- Compiler diagnostics преобразуются в file/line/column/code/message.\n- Shader diagnostics читаются из import metadata и показывают file/line/column/message.\n- Runtime stack trace сохраняется из stderr процесса.\n- Project template понимает `ELECTRON2D_CURRENT_SCENE`: это относительный project path для запуска выбранной сцены без изменения `project.e2d.json`.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: run/current scene, run/project, stop, output console, stack trace, shader/compiler diagnostics, FPS/frame time.\n- [x] Repeated run/stop cycles не оставляют active session после stop.\n- [x] Diagnostics actionable: compiler и shader diagnostics содержат file/line/column/message; compiler diagnostics дополнительно содержат code.\n- [x] Готова спецификация в `docs/editor/`.\n- [x] Добавлены automated tests, покрывающие новое поведение.\n- [x] Готова документация реализации в `docs/editor/`.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- UI gate перед началом editor work: `powershell -ExecutionPolicy Bypass -File tools\\Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki` прошёл: UI/Text public types `48`, все строки имеют статус `Supported`.\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorRunWorkflowTests\" --no-restore -m:1` упал с exit code `2`, потому что editor executable ещё не поддерживал `--run-workflow-smoke`.\n- Green phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorRunWorkflowTests\" --no-restore -m:1` прошёл: `1/1`.\n- Прямой smoke-run `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --run-workflow-smoke .temp\\editor-run-workflow` прошёл и вывел `ProjectRunExitCode=0`, `CurrentSceneRunExitCode=0`, `CurrentSceneRunScene=scenes/alternate.scene.json`, `RuntimeStackTraceContains=True`, `ShaderDiagnosticCount=1`, `StopObserved=True`, `RepeatedRunStopCycles=3`, `ActiveSessionAfterStop=False`, `FramesPerSecond=45`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: tracked source files `492`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: source files scanned `305`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- Повторный UI gate прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `270/270`, runtime smoke `5/5`, golden-data `12/12`.\n- `dotnet build src\\Electron2D.sln -c Release` прошёл: warnings `0`, errors `0`.\n\n## Решения\n\n- `Run Current Scene` передаёт сцену через `ELECTRON2D_CURRENT_SCENE`, чтобы запуск не менял `project.e2d.json` и не пачкал проект при временном запуске.\n- Output console хранит stdout/stderr, а diagnostics store хранит структурированные ошибки. Будущий UI может показать их в отдельных панелях, не меняя model layer.\n- Frame timing пока заполняется через явные samples model layer. Подключение к живому render loop будет задачей постоянного окна редактора.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0022"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Реализована цель задачи: run/current scene, run/project, stop, output console, stack trace, shader/compiler diagnostics, FPS/frame time.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-804bc015aae532e2b2308c5d5995e21c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Repeated run/stop cycles не оставляют active session после stop.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-804bc015aae532e2b2308c5d5995e21c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Diagnostics actionable: compiler и shader diagnostics содержат file/line/column/message; compiler diagnostics дополнительно содержат code.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-804bc015aae532e2b2308c5d5995e21c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Готова спецификация в `docs/editor/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-804bc015aae532e2b2308c5d5995e21c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Добавлены automated tests, покрывающие новое поведение.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-804bc015aae532e2b2308c5d5995e21c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Готова документация реализации в `docs/editor/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-804bc015aae532e2b2308c5d5995e21c/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-804bc015aae532e2b2308c5d5995e21c/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T05:32:59.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "270/270"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "CurrentSceneRunScene=scenes/alternate.scene.json"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/editor/run-output-workflow.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/release-management/project-template.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Program.cs"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor/Run"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "templates/electron2d-empty/Program.cs"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorRunWorkflowTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 453344,
+      "byteLength": 6129,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "2ecff5e7c34fb8860d4b7733dea3a150cbf101819a4ef68daf59aaa13dd75140",
+      "markdown": "# T-0084 [x] P0: Реализовать run/current scene, run/project, stop, output console, stack trace, shader/compiler diagnostics, FPS/frame time\n\n- Статус: завершена\n- Завершена: 2026-06-22T08:32:59+03:00\n- Коммит: `T-0084: add editor run workflow`\n\n## Ссылки\n\n- Спецификация: `docs/editor/run-output-workflow.md`\n- Документация: `docs/editor/run-output-workflow.md`\n- Исходный код: `src/Electron2D.Editor/Run/`; `src/Electron2D.Editor/Program.cs`; `templates/electron2d-empty/Program.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/EditorRunWorkflowTests.cs`\n- Связанные документы: `docs/release-management/project-template.md`; `docs/release-management/project-template.md`\n\n## Самодостаточное описание\n\nЗадача относилась к домену `Electron2D.Editor`. Цель - реализовать проверяемый запуск проекта и выбранной сцены из редактора, остановку активного запуска, output console, stack trace, shader/compiler diagnostics, FPS и frame time.\n\nРеализована модель внутри редактора, которая управляет процессом запуска и собирает результат. Это не новый публичный runtime API: внешний контракт проекта остаётся обычным `.NET` project plus `project.e2d.json`.\n\n## Что сделано\n\n- Добавлена спецификация `docs/editor/run-output-workflow.md`.\n- Добавлена документация реализации `docs/editor/run-output-workflow.md` и обновлены индексы документации.\n- Добавлена команда редактора:\n\n```powershell\ndotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --run-workflow-smoke <work-root>\n```\n\n- Реализован `EditorRunController` для build-before-run, `Run Project`, `Run Current Scene`, active session state и stop.\n- Реализованы output console, diagnostics store и frame timing model для status/overlay UI.\n- Compiler diagnostics преобразуются в file/line/column/code/message.\n- Shader diagnostics читаются из import metadata и показывают file/line/column/message.\n- Runtime stack trace сохраняется из stderr процесса.\n- Project template понимает `ELECTRON2D_CURRENT_SCENE`: это относительный project path для запуска выбранной сцены без изменения `project.e2d.json`.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: run/current scene, run/project, stop, output console, stack trace, shader/compiler diagnostics, FPS/frame time.\n- [x] Repeated run/stop cycles не оставляют active session после stop.\n- [x] Diagnostics actionable: compiler и shader diagnostics содержат file/line/column/message; compiler diagnostics дополнительно содержат code.\n- [x] Готова спецификация в `docs/editor/`.\n- [x] Добавлены automated tests, покрывающие новое поведение.\n- [x] Готова документация реализации в `docs/editor/`.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- UI gate перед началом editor work: `powershell -ExecutionPolicy Bypass -File tools\\Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki` прошёл: UI/Text public types `48`, все строки имеют статус `Supported`.\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorRunWorkflowTests\" --no-restore -m:1` упал с exit code `2`, потому что editor executable ещё не поддерживал `--run-workflow-smoke`.\n- Green phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorRunWorkflowTests\" --no-restore -m:1` прошёл: `1/1`.\n- Прямой smoke-run `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --run-workflow-smoke .temp\\editor-run-workflow` прошёл и вывел `ProjectRunExitCode=0`, `CurrentSceneRunExitCode=0`, `CurrentSceneRunScene=scenes/alternate.scene.json`, `RuntimeStackTraceContains=True`, `ShaderDiagnosticCount=1`, `StopObserved=True`, `RepeatedRunStopCycles=3`, `ActiveSessionAfterStop=False`, `FramesPerSecond=45`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: tracked source files `492`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: source files scanned `305`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- Повторный UI gate прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `270/270`, runtime smoke `5/5`, golden-data `12/12`.\n- `dotnet build src\\Electron2D.sln -c Release` прошёл: warnings `0`, errors `0`.\n\n## Решения\n\n- `Run Current Scene` передаёт сцену через `ELECTRON2D_CURRENT_SCENE`, чтобы запуск не менял `project.e2d.json` и не пачкал проект при временном запуске.\n- Output console хранит stdout/stderr, а diagnostics store хранит структурированные ошибки. Будущий UI может показать их в отдельных панелях, не меняя model layer.\n- Frame timing пока заполняется через явные samples model layer. Подключение к живому render loop будет задачей постоянного окна редактора.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T05:32:59.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T05:32:59.0000000+00:00",
+  "completedAt": "2026-06-22T05:32:59.0000000+00:00",
+  "acceptedAt": "2026-06-22T05:32:59.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T05:32:59.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -1,0 +1,193 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-8f947dbfef72568f21dec8967e340dd4",
+  "revision": 2,
+  "taskId": "T-0984",
+  "legacyAliases": [],
+  "title": "Увеличить timeout operator workflow для крупных audit ZIP",
+  "description": "## T-0984 [ ] P1: Увеличить timeout operator workflow для крупных audit ZIP\n\n- Создана: 2026-07-06T16:20:00+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходный код: `eng/Electron2D.Build/AuditPackageCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник: `BLOCKERS B3` из `docs/verdicts/release-management/t-0242-audit-r02.md`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - `docs/release-management/audit-package.md` describes the operator workflow evidence timeout contract.\n  - focused test coverage exists before accepting the changed timeout.\n- Stop conditions:\n  - changing the timeout would hide a broken restore/package path instead of allowing a valid large package to finish.\n  - the change would alter browser submit, verdict parsing or audit scope rules.\n- May change:\n  - operator workflow timeout constant and its direct tests/docs.\n  - generated documentation index through `update docs` when `audit-package.md` changes.\n  - `TASKS.md` notes and diary entries for this task.\n- Must not change:\n  - external audit verdict reports, saved audit archives or unrelated audit submit behavior.\n  - public API surface, runtime behavior or generated API data.\n- Required outputs:\n  - operator workflow evidence timeout large enough for full generated API audit ZIP verification.\n  - focused regression proving sidecar `timeout-seconds.txt`, metadata and summary use the documented value.\n  - synchronized domain document and generated documentation index.\n- Required commands:\n  - focused `AuditPackageMessageOperatorWorkflowSidecarTargetsImmutableFinalPayload` integration test.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-contracts`\n  - `git diff --check`\n- External audit:\n  - included with `T-0242` r03 as explicit combined scope because the timeout is required to verify the full generated API payload.\n\n### Самодостаточное описание\n\n`T-0242` генерирует полный набор Godot 4.7 API packets, из-за чего штатный `audit package verify` для operator workflow восстанавливает и сверяет тысячи generated files. Лимит `180` секунд оказался недостаточен для валидного большого пакета: r02 package дошёл до clean verify, но operator evidence вернул timeout до завершения проверки.\n\nОжидаемый результат: operator workflow evidence timeout увеличен до `600` секунд, а сопровождающий ZIP явно фиксирует это значение в summary, `timeout-seconds.txt` и `metadata.json`. Изменение не должно менять сам restore contract, набор проверок, формат verdict-а или browser submit.\n\n### Критерии приёмки\n\n- [ ] `AuditPackageCommand` использует `600` секунд для `audit-package-verify` и `audit-package-message` operator workflow subprocess evidence.\n- [ ] Focused integration test проверяет `timeoutSeconds=600`, `timeout-seconds.txt` и metadata.\n- [ ] `docs/release-management/audit-package.md` описывает `600` секунд и причину для больших audit ZIP.\n- [ ] `update docs --check`, `verify audit-contracts` и `git diff --check` проходят.\n\n### Заметки агента\n\n2026-07-06T16:20:00+03:00 - Создано по blocker `B3` из `T-0242` primary r02: timeout `600` уже реализован и покрыт focused sidecar test, но должен быть явной частью combined audit scope, а не скрытой правкой внутри одиночного `T-0242`.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0011",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`AuditPackageCommand` использует `600` секунд для `audit-package-verify` и `audit-package-message` operator workflow subprocess evidence.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Focused integration test проверяет `timeoutSeconds=600`, `timeout-seconds.txt` и metadata.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`docs/release-management/audit-package.md` описывает `600` секунд и причину для больших audit ZIP.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`update docs --check`, `verify audit-contracts` и `git diff --check` проходят.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T13:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по blocker `B3` из `T-0242` primary r02: timeout `600` уже реализован и покрыт focused sidecar test, но должен быть явной частью combined audit scope, а не скрытой правкой внутри одиночного `T-0242`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "included with `T-0242` r03 as explicit combined scope because the timeout is required to verify the full generated API payload."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0242-audit-r02.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/AuditPackageCommand.cs"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "`docs/release-management/audit-package.md` describes the operator workflow evidence timeout contract.",
+      "focused test coverage exists before accepting the changed timeout."
+    ],
+    "stopConditions": [
+      "changing the timeout would hide a broken restore/package path instead of allowing a valid large package to finish.",
+      "the change would alter browser submit, verdict parsing or audit scope rules."
+    ],
+    "allowedChanges": [
+      "operator workflow timeout constant and its direct tests/docs.",
+      "generated documentation index through `update docs` when `audit-package.md` changes.",
+      "`TASKS.md` notes and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "external audit verdict reports, saved audit archives or unrelated audit submit behavior.",
+      "public API surface, runtime behavior or generated API data."
+    ],
+    "requiredOutputs": [
+      "operator workflow evidence timeout large enough for full generated API audit ZIP verification.",
+      "focused regression proving sidecar `timeout-seconds.txt`, metadata and summary use the documented value.",
+      "synchronized domain document and generated documentation index."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "focused `AuditPackageMessageOperatorWorkflowSidecarTargetsImmutableFinalPayload` integration test.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-contracts`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "included with `T-0242` r03 as explicit combined scope because the timeout is required to verify the full generated API payload.",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 385159,
+      "byteLength": 4212,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "e8396682ad02ef7892396c34b44dff8e7f4fad78e6ac463031907d355924ac84",
+      "markdown": "## T-0984 [ ] P1: Увеличить timeout operator workflow для крупных audit ZIP\n\n- Создана: 2026-07-06T16:20:00+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходный код: `eng/Electron2D.Build/AuditPackageCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник: `BLOCKERS B3` из `docs/verdicts/release-management/t-0242-audit-r02.md`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - `docs/release-management/audit-package.md` describes the operator workflow evidence timeout contract.\n  - focused test coverage exists before accepting the changed timeout.\n- Stop conditions:\n  - changing the timeout would hide a broken restore/package path instead of allowing a valid large package to finish.\n  - the change would alter browser submit, verdict parsing or audit scope rules.\n- May change:\n  - operator workflow timeout constant and its direct tests/docs.\n  - generated documentation index through `update docs` when `audit-package.md` changes.\n  - `TASKS.md` notes and diary entries for this task.\n- Must not change:\n  - external audit verdict reports, saved audit archives or unrelated audit submit behavior.\n  - public API surface, runtime behavior or generated API data.\n- Required outputs:\n  - operator workflow evidence timeout large enough for full generated API audit ZIP verification.\n  - focused regression proving sidecar `timeout-seconds.txt`, metadata and summary use the documented value.\n  - synchronized domain document and generated documentation index.\n- Required commands:\n  - focused `AuditPackageMessageOperatorWorkflowSidecarTargetsImmutableFinalPayload` integration test.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-contracts`\n  - `git diff --check`\n- External audit:\n  - included with `T-0242` r03 as explicit combined scope because the timeout is required to verify the full generated API payload.\n\n### Самодостаточное описание\n\n`T-0242` генерирует полный набор Godot 4.7 API packets, из-за чего штатный `audit package verify` для operator workflow восстанавливает и сверяет тысячи generated files. Лимит `180` секунд оказался недостаточен для валидного большого пакета: r02 package дошёл до clean verify, но operator evidence вернул timeout до завершения проверки.\n\nОжидаемый результат: operator workflow evidence timeout увеличен до `600` секунд, а сопровождающий ZIP явно фиксирует это значение в summary, `timeout-seconds.txt` и `metadata.json`. Изменение не должно менять сам restore contract, набор проверок, формат verdict-а или browser submit.\n\n### Критерии приёмки\n\n- [ ] `AuditPackageCommand` использует `600` секунд для `audit-package-verify` и `audit-package-message` operator workflow subprocess evidence.\n- [ ] Focused integration test проверяет `timeoutSeconds=600`, `timeout-seconds.txt` и metadata.\n- [ ] `docs/release-management/audit-package.md` описывает `600` секунд и причину для больших audit ZIP.\n- [ ] `update docs --check`, `verify audit-contracts` и `git diff --check` проходят.\n\n### Заметки агента\n\n2026-07-06T16:20:00+03:00 - Создано по blocker `B3` из `T-0242` primary r02: timeout `600` уже реализован и покрыт focused sidecar test, но должен быть явной частью combined audit scope, а не скрытой правкой внутри одиночного `T-0242`.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-06T13:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

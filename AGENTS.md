@@ -9,15 +9,19 @@ Detailed sources:
 - Audit package contract: `docs/release-management/audit-package.md`.
 - External auditor request: `docs/release-management/AUDIT-REQUEST.md`.
 
+## Repository Language
+
+- Repository human language: Russian (`ru`).
+- Human-readable taskboard content must follow the detailed language contract in `docs/repository/agent-workflow.md`.
+
 ## Repository Map
 
 - `src/` - production code.
 - `tests/` - integration tests and verifier tests.
 - `eng/` - repository build tool and audit automation.
 - `docs/` - domain documents and durable process contracts.
-- `TASKS.md` - active task board; not a durable source for behavioral rules.
+- `.taskboard/` - canonical machine-readable task board; the board document is `.taskboard/board.e2tasks`.
 - `data/dev-diary/` - append-only agent working diary.
-- `data/completed-tasks/` - monthly archives for accepted tasks.
 - `data/documentation/` - generated local documentation index.
 - `.codex/prompts/` - tracked prompts and workflow models.
 - `.temp/` - local drafts, audit ZIPs, clean checkouts, and conversation state.
@@ -30,6 +34,7 @@ Detailed sources:
 - Audit medium slice: `dotnet run --project eng/Electron2D.Build -- test --integration-slice audit-medium --no-build --no-restore`
 - Audit heavy acceptance slice: `dotnet run --project eng/Electron2D.Build -- test --integration-slice audit-heavy --no-build --no-restore`
 - Audit follow-up verifier: `dotnet run --project eng/Electron2D.Build -- verify audit-followups`
+- Task board verifier: `e2d tasks verify --project . --format json`
 - Docs update/check: `dotnet run --project eng/Electron2D.Build -- update docs`, then `dotnet run --project eng/Electron2D.Build -- update docs --check`
 - Docs verifier: `dotnet run --project eng/Electron2D.Build -- verify docs`
 - License verifier: `dotnet run --project eng/Electron2D.Build -- verify licenses`
@@ -42,7 +47,7 @@ License rule: every tracked hand-written C# source file in `src/`, `tests/`, `en
 - Read `docs/repository/agent-workflow.md` before substantive repository work.
 - More specific `AGENTS.md` or `AGENTS.override.md` files may narrow these rules for subdirectories; follow the closest applicable file.
 - Follow the feature gate from `docs/repository/agent-workflow.md`: domain document, failing or updated test, implementation, green checks, synchronized document.
-- Keep `TASKS.md` and the diary according to `docs/repository/agent-workflow.md`; do not close or archive tasks without explicit user acceptance.
+- Use `e2d tasks` for every task read and mutation; `.taskboard/board.e2tasks` and `.e2task` files must not be edited directly. Keep the diary according to `docs/repository/agent-workflow.md`; do not accept or archive tasks without explicit user acceptance.
 - Treat unknown worktree changes as user work. Do not revert, overwrite, or reformat unrelated changes.
 - Stage, commit, push, tag, or open pull requests only on explicit user request; never push by default.
 - Do not run destructive Git, filesystem, Docker, database, or deployment actions without explicit approval for that exact action.
@@ -54,6 +59,6 @@ License rule: every tracked hand-written C# source file in `src/`, `tests/`, `en
 
 - Requested behavior is implemented and aligned with the relevant domain document.
 - Relevant tests and verifiers passed in the current session.
-- Generated docs, task notes, and diary are synchronized when required.
+- Generated docs, taskboard activity, and diary are synchronized when required.
 - `git diff --check` and required source, docs, and license checks passed, or the blocker is named explicitly.
 - The final response names changed files, exact checks, residual risk, and the commit when one was created.

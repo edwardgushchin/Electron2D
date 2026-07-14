@@ -55,6 +55,7 @@ internal sealed class ReleasePackageCommand(string repositoryRoot, JsonDiagnosti
         ".github/",
         ".temp/",
         ".codex/",
+        ".taskboard/",
         "TASKS.md",
         "dev-diary/",
         "completed-tasks/",
@@ -757,6 +758,7 @@ internal sealed class ReleasePackageCommand(string repositoryRoot, JsonDiagnosti
         }
 
         if (string.Equals(path, "TASKS.md", StringComparison.Ordinal) ||
+            path.StartsWith(".taskboard/", StringComparison.Ordinal) ||
             path.StartsWith(".git/", StringComparison.Ordinal) ||
             path.StartsWith(".github/", StringComparison.Ordinal) ||
             path.StartsWith(".temp/", StringComparison.Ordinal) ||

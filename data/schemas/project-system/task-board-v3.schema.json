@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://electron2d.dev/schemas/project-system/task-board-v3.schema.json",
+  "title": "Electron2D task board v3 schema",
+  "description": "Board-owned allocation, catalog, placement, grouping and attachment policy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format", "version", "boardId", "revision", "idPolicy", "attachmentPolicy",
+    "validationContract", "migration", "tags", "groups", "placements"
+  ],
+  "properties": {
+    "format": { "const": "Electron2D.TaskBoard" },
+    "version": { "const": 3 },
+    "boardId": { "$ref": "#/$defs/stableId" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "idPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prefix", "padding", "nextNumber"],
+      "properties": {
+        "prefix": { "type": "string", "minLength": 1, "maxLength": 32, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
+        "padding": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "nextNumber": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "attachmentPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["perFileByteLimit", "perTaskByteLimit", "boardByteLimit"],
+      "properties": {
+        "perFileByteLimit": { "type": "integer", "minimum": 1 },
+        "perTaskByteLimit": { "type": "integer", "minimum": 1 },
+        "boardByteLimit": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "validationContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semanticValidator", "transitionValidator", "contextBuilder", "executionPolicy", "formatAssertions"],
+      "properties": {
+        "semanticValidator": { "const": "TaskBoardSemanticValidatorV3" },
+        "transitionValidator": { "const": "TaskTransitionValidatorV3" },
+        "contextBuilder": { "const": "AgentContextBuilderV3" },
+        "executionPolicy": { "const": "TaskExecutionPolicyV3" },
+        "formatAssertions": { "const": true }
+      }
+    },
+    "migration": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sourceVersion", "reportPath", "reportSha256", "sourceBoardRevision", "sourceDigests", "migratedAt", "finalized"],
+          "properties": {
+            "sourceVersion": { "const": 2 },
+            "reportPath": { "$ref": "#/$defs/projectRelativePath" },
+            "reportSha256": { "$ref": "#/$defs/sha256" },
+            "sourceBoardRevision": { "type": "integer", "minimum": 1 },
+            "sourceDigests": {
+              "type": "object",
+              "maxProperties": 20000,
+              "propertyNames": { "$ref": "#/$defs/projectRelativePath" },
+              "additionalProperties": { "$ref": "#/$defs/sha256" }
+            },
+            "migratedAt": { "$ref": "#/$defs/dateTime" },
+            "finalized": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["tagId", "name", "color"],
+        "properties": {
+          "tagId": { "$ref": "#/$defs/stableId" },
+          "name": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "\\S" },
+          "color": {
+            "anyOf": [
+              { "enum": ["Gray", "Blue", "Green", "Yellow", "Orange", "Red", "Purple"] },
+              { "type": "string", "pattern": "^#[0-9A-F]{6}$" }
+            ]
+          }
+        }
+      }
+    },
+    "groups": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["groupId", "kind", "title", "description", "parentGroupId", "rank"],
+        "properties": {
+          "groupId": { "$ref": "#/$defs/stableId" },
+          "kind": { "enum": ["Epoch", "Milestone"] },
+          "title": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "\\S" },
+          "description": { "type": "string", "maxLength": 262144 },
+          "parentGroupId": { "$ref": "#/$defs/nullableStableId" },
+          "rank": { "$ref": "#/$defs/rank" }
+        }
+      }
+    },
+    "placements": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["taskUid", "groupId", "rank"],
+        "properties": {
+          "taskUid": { "$ref": "#/$defs/taskUid" },
+          "groupId": { "$ref": "#/$defs/nullableStableId" },
+          "rank": { "$ref": "#/$defs/rank" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "stableId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
+    "nullableStableId": { "oneOf": [{ "$ref": "#/$defs/stableId" }, { "type": "null" }] },
+    "taskUid": { "type": "string", "pattern": "^task-[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+    "rank": { "type": "string", "pattern": "^[0-9]{12}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "dateTime": { "type": "string", "format": "date-time" },
+    "projectRelativePath": { "type": "string", "minLength": 1, "maxLength": 4096, "pattern": "^(?![A-Za-z]:)(?!/)(?!\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))[^\\\\]+$" }
+  }
+}

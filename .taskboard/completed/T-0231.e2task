@@ -1,0 +1,324 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-9e8e9684432a413c77abee4495870300",
+  "revision": 2,
+  "taskId": "T-0231",
+  "legacyAliases": [],
+  "title": "Разделить локальный индекс документации на NDJSON-шарды и добавить SQLite FTS-кэш",
+  "description": "## T-0231 [x] P1: Разделить локальный индекс документации на NDJSON-шарды и добавить SQLite FTS-кэш\n\n- Создана: 2026-06-28T11:22:00+03:00\n- Завершена: 2026-06-28T17:06:20+03:00\n- Принята внешним аудитом: 2026-06-28T17:06:20+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний audit r02 принял комбинированную область `T-0231` + `T-0232` без blocker-ов.\n- Приоритет: P1\n- Зависимости: T-0213, T-0214, T-0232\n- Ссылки:\n  - Доменный документ: `docs/documentation/local-documentation-pipeline.md`\n  - Связанные документы: `docs/cli/e2d-cli.md`; `docs/release-management/ci-matrix.md`; `docs/release-management/audit-package.md`; `docs/releases/0.1.0-preview.md`\n  - Внешние аудиты: `docs/verdicts/documentation/t-0231-audit-r01.md`; `docs/verdicts/documentation/t-0231-audit-r02.md`\n  - Исходный код: `eng/Electron2D.Build/`; `src/Electron2D.Cli/`\n  - Тесты: `tests/Electron2D.Tests.Integration/LocalDocumentationCliTests.cs`; `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n\n### Самодостаточное описание\n\nЛокальный индекс документации переведён с единого большого JSON-массива на небольшой manifest и NDJSON-шарды под `data/documentation/local-docs-index/`. Manifest остаётся отслеживаемым источником структуры, shard-файлы хранят поисковые записи по категориям, а локальный SQLite-кэш с полнотекстовым поиском является пересоздаваемым производным файлом.\n\nКоманды `update docs`, `verify docs` и `update docs --check` проверяют manifest, shard counts, shard hashes, ссылки на API manifest, формат NDJSON, LF-окончания строк и возможность построить SQLite-кэш во временном каталоге. `e2d docs search` и `e2d docs example` используют актуальный SQLite-кэш, если он доступен, и безопасно читают NDJSON-шарды без записи в рабочую копию, если кэш отсутствует или устарел.\n\n### Критерии и результат\n\n- [x] Доменный документ `docs/documentation/local-documentation-pipeline.md` описывает manifest, NDJSON-шарды, SQLite-кэш и fallback-путь CLI.\n- [x] Автоматические тесты покрывают shard-контракт, stale shard detection, SQLite FTS-кэш и CLI fallback при отсутствующем кэше.\n- [x] `data/documentation/electron2d-local-docs-index.json` больше не содержит монолитный массив `entries`.\n- [x] NDJSON-шарды имеют UTF-8 без BOM, LF-окончания строк, одну JSON-запись на строку и стабильную сортировку по `id`.\n- [x] SQLite-кэш является локальным generated artifact и не требуется как tracked-файл чистой копии.\n- [x] `e2d docs search`, `e2d docs example`, `e2d docs type` и `e2d docs member` сохраняют текущий формат `text` и `json`.\n- [x] `verify docs` и `update docs --check` проверяют manifest, shard-файлы и временную сборку SQLite FTS-кэша.\n- [x] Доменные документы, release notes и generated local documentation artifacts синхронизированы с фактическим поведением.\n- [x] Внешний аудит r02 вернул `VERDICT: ACCEPT` без blocker-ов.\n\n### Проверки\n\n- [x] Focused TDD tests прошли: 4/4.\n- [x] Focused docs/CLI tests прошли: 14/14.\n- [x] Focused audit-package tests прошли: 89/89.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify docs` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs --check` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify line-endings` прошёл.\n- [x] CLI `docs search` и `docs example` прошли в evidence внешнего аудита.\n- [x] NuGet vulnerability checks для SQLite-зависимостей прошли.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-Tasks.ps1` прошёл.\n- [x] `git diff --check` прошёл.\n- [x] Внешний аудит `docs/verdicts/documentation/t-0231-audit-r02.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-28T11:22:00+03:00 - Задача создана после обсуждения роста `electron2d-local-docs-index`; ID изменён на `T-0231` по пользовательскому решению.\n\n2026-06-28T12:24:00+03:00 - Worker-реализация и correction worker завершили manifest/shards, SQLite-кэш, CLI fallback, generated artifacts и focused checks.\n\n2026-06-28T16:04:16+03:00 - Внешний аудит r01 вернул `VERDICT: NEEDS_FIXES`: пакет был объявлен как одиночный `T-0231`, но фактически включал обязательную зависимость `T-0232`.\n\n2026-06-28T17:06:20+03:00 - Внешний аудит r02 вернул `VERDICT: ACCEPT`: комбинированная область `T-0231` + `T-0232` явно объявлена через `scopeTaskIds`/`scopeSummary`, previous verdict chain и blocker closure; T-0231 удалена из активного `TASKS.md` и перенесена в этот архив.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0012"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-1581f8a5eb77ad9478e2d4008c9969bc"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-91879f66776584cb850b7cf6b7331634"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-11e66b1f313411dae322eb53c34d9a5c"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ `docs/documentation/local-documentation-pipeline.md` описывает manifest, NDJSON-шарды, SQLite-кэш и fallback-путь CLI.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9e8e9684432a413c77abee4495870300/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Автоматические тесты покрывают shard-контракт, stale shard detection, SQLite FTS-кэш и CLI fallback при отсутствующем кэше.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9e8e9684432a413c77abee4495870300/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`data/documentation/electron2d-local-docs-index.json` больше не содержит монолитный массив `entries`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9e8e9684432a413c77abee4495870300/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "NDJSON-шарды имеют UTF-8 без BOM, LF-окончания строк, одну JSON-запись на строку и стабильную сортировку по `id`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9e8e9684432a413c77abee4495870300/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "SQLite-кэш является локальным generated artifact и не требуется как tracked-файл чистой копии.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9e8e9684432a413c77abee4495870300/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "`e2d docs search`, `e2d docs example`, `e2d docs type` и `e2d docs member` сохраняют текущий формат `text` и `json`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9e8e9684432a413c77abee4495870300/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "`verify docs` и `update docs --check` проверяют manifest, shard-файлы и временную сборку SQLite FTS-кэша.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9e8e9684432a413c77abee4495870300/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Доменные документы, release notes и generated local documentation artifacts синхронизированы с фактическим поведением.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9e8e9684432a413c77abee4495870300/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Внешний аудит r02 вернул `VERDICT: ACCEPT` без blocker-ов.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9e8e9684432a413c77abee4495870300/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-28T08:22:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача создана после обсуждения роста `electron2d-local-docs-index`; ID изменён на `T-0231` по пользовательскому решению."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-28T09:24:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Worker-реализация и correction worker завершили manifest/shards, SQLite-кэш, CLI fallback, generated artifacts и focused checks."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-28T13:04:16.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r01 вернул `VERDICT: NEEDS_FIXES`: пакет был объявлен как одиночный `T-0231`, но фактически включал обязательную зависимость `T-0232`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-28T14:06:20.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r02 вернул `VERDICT: ACCEPT`: комбинированная область `T-0231` + `T-0232` явно объявлена через `scopeTaskIds`/`scopeSummary`, previous verdict chain и blocker closure; T-0231 удалена из активного `TASKS.md` и перенесена в этот архив."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-28T14:06:20.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/documentation/local-docs-index"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/documentation/local-documentation-pipeline.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/release-management/ci-matrix.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/verdicts/documentation/t-0231-audit-r01.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/verdicts/documentation/t-0231-audit-r02.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "eng/Electron2D.Build"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "src/Electron2D.Cli"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/LocalDocumentationCliTests.cs"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 1011626,
+      "byteLength": 6075,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "55061e8b62d5f6d91e5205b54b907ffcdd846d186e2adefe8b6f5a6f5a890c1b",
+      "markdown": "## T-0231 [x] P1: Разделить локальный индекс документации на NDJSON-шарды и добавить SQLite FTS-кэш\n\n- Создана: 2026-06-28T11:22:00+03:00\n- Завершена: 2026-06-28T17:06:20+03:00\n- Принята внешним аудитом: 2026-06-28T17:06:20+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний audit r02 принял комбинированную область `T-0231` + `T-0232` без blocker-ов.\n- Приоритет: P1\n- Зависимости: T-0213, T-0214, T-0232\n- Ссылки:\n  - Доменный документ: `docs/documentation/local-documentation-pipeline.md`\n  - Связанные документы: `docs/cli/e2d-cli.md`; `docs/release-management/ci-matrix.md`; `docs/release-management/audit-package.md`; `docs/releases/0.1.0-preview.md`\n  - Внешние аудиты: `docs/verdicts/documentation/t-0231-audit-r01.md`; `docs/verdicts/documentation/t-0231-audit-r02.md`\n  - Исходный код: `eng/Electron2D.Build/`; `src/Electron2D.Cli/`\n  - Тесты: `tests/Electron2D.Tests.Integration/LocalDocumentationCliTests.cs`; `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n\n### Самодостаточное описание\n\nЛокальный индекс документации переведён с единого большого JSON-массива на небольшой manifest и NDJSON-шарды под `data/documentation/local-docs-index/`. Manifest остаётся отслеживаемым источником структуры, shard-файлы хранят поисковые записи по категориям, а локальный SQLite-кэш с полнотекстовым поиском является пересоздаваемым производным файлом.\n\nКоманды `update docs`, `verify docs` и `update docs --check` проверяют manifest, shard counts, shard hashes, ссылки на API manifest, формат NDJSON, LF-окончания строк и возможность построить SQLite-кэш во временном каталоге. `e2d docs search` и `e2d docs example` используют актуальный SQLite-кэш, если он доступен, и безопасно читают NDJSON-шарды без записи в рабочую копию, если кэш отсутствует или устарел.\n\n### Критерии и результат\n\n- [x] Доменный документ `docs/documentation/local-documentation-pipeline.md` описывает manifest, NDJSON-шарды, SQLite-кэш и fallback-путь CLI.\n- [x] Автоматические тесты покрывают shard-контракт, stale shard detection, SQLite FTS-кэш и CLI fallback при отсутствующем кэше.\n- [x] `data/documentation/electron2d-local-docs-index.json` больше не содержит монолитный массив `entries`.\n- [x] NDJSON-шарды имеют UTF-8 без BOM, LF-окончания строк, одну JSON-запись на строку и стабильную сортировку по `id`.\n- [x] SQLite-кэш является локальным generated artifact и не требуется как tracked-файл чистой копии.\n- [x] `e2d docs search`, `e2d docs example`, `e2d docs type` и `e2d docs member` сохраняют текущий формат `text` и `json`.\n- [x] `verify docs` и `update docs --check` проверяют manifest, shard-файлы и временную сборку SQLite FTS-кэша.\n- [x] Доменные документы, release notes и generated local documentation artifacts синхронизированы с фактическим поведением.\n- [x] Внешний аудит r02 вернул `VERDICT: ACCEPT` без blocker-ов.\n\n### Проверки\n\n- [x] Focused TDD tests прошли: 4/4.\n- [x] Focused docs/CLI tests прошли: 14/14.\n- [x] Focused audit-package tests прошли: 89/89.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify docs` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs --check` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify line-endings` прошёл.\n- [x] CLI `docs search` и `docs example` прошли в evidence внешнего аудита.\n- [x] NuGet vulnerability checks для SQLite-зависимостей прошли.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-Tasks.ps1` прошёл.\n- [x] `git diff --check` прошёл.\n- [x] Внешний аудит `docs/verdicts/documentation/t-0231-audit-r02.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-28T11:22:00+03:00 - Задача создана после обсуждения роста `electron2d-local-docs-index`; ID изменён на `T-0231` по пользовательскому решению.\n\n2026-06-28T12:24:00+03:00 - Worker-реализация и correction worker завершили manifest/shards, SQLite-кэш, CLI fallback, generated artifacts и focused checks.\n\n2026-06-28T16:04:16+03:00 - Внешний аудит r01 вернул `VERDICT: NEEDS_FIXES`: пакет был объявлен как одиночный `T-0231`, но фактически включал обязательную зависимость `T-0232`.\n\n2026-06-28T17:06:20+03:00 - Внешний аудит r02 вернул `VERDICT: ACCEPT`: комбинированная область `T-0231` + `T-0232` явно объявлена через `scopeTaskIds`/`scopeSummary`, previous verdict chain и blocker closure; T-0231 удалена из активного `TASKS.md` и перенесена в этот архив.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-28T08:22:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-28T14:06:20.0000000+00:00",
+  "completedAt": "2026-06-28T14:06:20.0000000+00:00",
+  "acceptedAt": "2026-06-28T14:06:20.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-28T14:06:20.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

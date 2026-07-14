@@ -1,0 +1,105 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-6b13eea89dc2837c1a70e486d40b15c7",
+  "revision": 2,
+  "taskId": "T-0041",
+  "legacyAliases": [],
+  "title": "Реализовать serializer для сцен, ресурсов, arrays, dictionaries, enums, nullable и пользовательских `Resource`",
+  "description": "# T-0041 [x] P0: Реализовать serializer для сцен, ресурсов, arrays, dictionaries, enums, nullable и пользовательских `Resource`\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T07:17:00+03:00\n- Статус: завершена\n- Коммит: `T-0041: реализовать scene resource serialization`\n\n## Итог\n\nРеализован внутренний file-level serializer baseline для сцен, ресурсов и переносимых property values. Добавлены stable JSON documents `Electron2D.SerializedResource` и `Electron2D.SceneFile`, typed property value model, custom `Resource` round-trip, arrays, dictionaries, enums, nullable и отдельные resource reference slots для внешних и внутренних ресурсов.\n\n## Проверенное поведение\n\n- `SerializedPropertyValue` поддерживает `Variant`, `Array`, `Dictionary`, `Enum`, `Nullable` и `Resource` reference slots.\n- `SerializedResourceTextSerializer` пишет stable JSON resource document с UID, type, path, external/internal references и properties.\n- `SceneFileTextSerializer` пишет stable JSON scene document с nodes, parent/owner ids, persistent groups, properties и resource references.\n- `ResourceObjectSerializer.Capture()` создаёт document из public get/set properties custom `Resource`.\n- `ResourceObjectSerializer.Instantiate()` восстанавливает custom `Resource` через parameterless constructor и сохраняет arrays, dictionaries, enum и nullable значения.\n- `load -> modify -> save -> load` для scene document сохраняет values и references.\n- Public API не расширялся: public types осталось `47`.\n\n## Документация\n\n- Добавлена спецификация `docs/resources/scene-resource-serialization.md`.\n- Добавлена справка `docs/resources/scene-resource-serialization.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены `PackedScene`, `Variant` serialization, resource file docs, `README.md`, `CHANGELOG.md` и `RELEASE-NOTES.md`.\n\n## Проверки\n\n- Red-state integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SceneResourceSerializationTests\" --no-restore -m:1` упал на отсутствующих serializer baseline типах.\n- Red-state golden-data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --filter \"FullyQualifiedName~SerializedResourceGoldenTests\" --no-restore -m:1` не был завершён из-за блокировки сборочного процесса после параллельного запуска; после `dotnet build-server shutdown` проверка была перезапущена.\n- Focused green integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SceneResourceSerializationTests\" --no-restore -m:1` - прошло, 2 теста.\n- Focused green golden-data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --filter \"FullyQualifiedName~SerializedResourceGoldenTests\" --no-restore -m:1` - прошло, 1 тест.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit `59`, integration `105`, runtime smoke `5`, golden data `11`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types `47`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло для tracked files до staging; staged check выполняется перед commit.\n- `git diff --check` - прошло; предупреждения были только о будущей нормализации переносов строк Git под Windows.\n\n## Заметки агента\n\nЗадача намеренно не добавляет public `ResourceLoader`/`ResourceSaver` и не подключает file-level serializer к public `PackedScene`. AOT-safe metadata registry без reflection остаётся отдельной задачей `T-0043`. Resource references сохраняются как slots, но automatic reference resolution при `ResourceObjectSerializer.Instantiate()` ещё не реализован.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0020"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T04:17:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/resources/scene-resource-serialization.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 145530,
+      "byteLength": 4533,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "855fa8860359bb2c011e10e54a3a8373b7d45757366bf6f475f1e29a69f54119",
+      "markdown": "# T-0041 [x] P0: Реализовать serializer для сцен, ресурсов, arrays, dictionaries, enums, nullable и пользовательских `Resource`\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T07:17:00+03:00\n- Статус: завершена\n- Коммит: `T-0041: реализовать scene resource serialization`\n\n## Итог\n\nРеализован внутренний file-level serializer baseline для сцен, ресурсов и переносимых property values. Добавлены stable JSON documents `Electron2D.SerializedResource` и `Electron2D.SceneFile`, typed property value model, custom `Resource` round-trip, arrays, dictionaries, enums, nullable и отдельные resource reference slots для внешних и внутренних ресурсов.\n\n## Проверенное поведение\n\n- `SerializedPropertyValue` поддерживает `Variant`, `Array`, `Dictionary`, `Enum`, `Nullable` и `Resource` reference slots.\n- `SerializedResourceTextSerializer` пишет stable JSON resource document с UID, type, path, external/internal references и properties.\n- `SceneFileTextSerializer` пишет stable JSON scene document с nodes, parent/owner ids, persistent groups, properties и resource references.\n- `ResourceObjectSerializer.Capture()` создаёт document из public get/set properties custom `Resource`.\n- `ResourceObjectSerializer.Instantiate()` восстанавливает custom `Resource` через parameterless constructor и сохраняет arrays, dictionaries, enum и nullable значения.\n- `load -> modify -> save -> load` для scene document сохраняет values и references.\n- Public API не расширялся: public types осталось `47`.\n\n## Документация\n\n- Добавлена спецификация `docs/resources/scene-resource-serialization.md`.\n- Добавлена справка `docs/resources/scene-resource-serialization.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены `PackedScene`, `Variant` serialization, resource file docs, `README.md`, `CHANGELOG.md` и `RELEASE-NOTES.md`.\n\n## Проверки\n\n- Red-state integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SceneResourceSerializationTests\" --no-restore -m:1` упал на отсутствующих serializer baseline типах.\n- Red-state golden-data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --filter \"FullyQualifiedName~SerializedResourceGoldenTests\" --no-restore -m:1` не был завершён из-за блокировки сборочного процесса после параллельного запуска; после `dotnet build-server shutdown` проверка была перезапущена.\n- Focused green integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SceneResourceSerializationTests\" --no-restore -m:1` - прошло, 2 теста.\n- Focused green golden-data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --filter \"FullyQualifiedName~SerializedResourceGoldenTests\" --no-restore -m:1` - прошло, 1 тест.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit `59`, integration `105`, runtime smoke `5`, golden data `11`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types `47`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло для tracked files до staging; staged check выполняется перед commit.\n- `git diff --check` - прошло; предупреждения были только о будущей нормализации переносов строк Git под Windows.\n\n## Заметки агента\n\nЗадача намеренно не добавляет public `ResourceLoader`/`ResourceSaver` и не подключает file-level serializer к public `PackedScene`. AOT-safe metadata registry без reflection остаётся отдельной задачей `T-0043`. Resource references сохраняются как slots, но automatic reference resolution при `ResourceObjectSerializer.Instantiate()` ещё не реализован.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T04:17:00.0000000+00:00",
+  "completedAt": "2026-06-21T04:17:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T04:17:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T04:17:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

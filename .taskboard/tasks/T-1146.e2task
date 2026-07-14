@@ -1,0 +1,188 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-24bfdab6175b617296e0a23d7a34faab",
+  "revision": 2,
+  "taskId": "T-1146",
+  "legacyAliases": [],
+  "title": "Сделать координатный CDP-клик единой подготовленной транзакцией",
+  "description": "## T-1146 [ ] P1: Сделать координатный CDP-клик единой подготовленной транзакцией\n\n- Создана: 2026-07-10T23:06:34+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-1137\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходник: `eng/Electron2D.Build/AuditSubmitCodexChromeCommand.cs`\n  - Проверки: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник finding-а: `docs/verdicts/release-management/t-1137-audit-control-r39.md`, `FOLLOW_UP_FINDING F1`\n\n### Execution contract\n\n- Task type: browser input transaction hardening without changing audit routing or report semantics.\n- Ready-to-start:\n  - task state is `open`;\n  - `T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;\n  - no other task is `in progress`.\n- Stop conditions:\n  - implementation retries any mouse phase after an ambiguous dispatch result;\n  - work changes upload, Send, report extraction or clipboard contracts;\n  - gesture cannot remain in one attached CDP session without browser-extension changes outside current scope.\n- May change:\n  - internal preparation and dispatch sequence in `ClickAtAsync`;\n  - existing typed ordinary-copy/gesture lifecycle assertions;\n  - the browser-automation section of the audit contract.\n- Must not change:\n  - selector ownership, single copy-click policy or final report validation;\n  - public Electron2D runtime API;\n  - retry behavior of unrelated read-only CDP operations.\n- Required outputs:\n  - exactly one reattach/preparation before `mouseMoved`;\n  - `mouseMoved`, `mousePressed`, `mouseReleased` dispatched in the same CDP session without intermediate recovery;\n  - any ambiguous failure after dispatch begins terminates fail-closed without replay.\n- Required commands:\n  - `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`\n  - existing focused ordinary-copy/CDP recovery tests\n  - `dotnet run --project eng/Electron2D.Build -- verify audit-contracts`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: required only if this work is folded into an active audited browser-safety scope; otherwise not required by default.\n\n### Internal substrate acceptance contract\n\n- Input boundary: one resolved current-turn copy-button point and one attached audit tab.\n- Transaction invariant: preparation occurs before the gesture; all three mouse events share one session and are never replayed.\n- Failure policy: any failure after the first dispatch aborts the gesture and propagates one deterministic diagnostic.\n- Consumer boundary: controlled ordinary copy uses the same typed click path and retains exactly one logical click.\n- Regression boundary: read-only CDP recovery remains available outside the non-retriable gesture.\n\n### Самодостаточное описание\n\n`ClickAtAsync` сейчас вызывает `ExecuteCdpAsync(... allowTransientRecovery: false)` отдельно для `mouseMoved`, `mousePressed` и `mouseReleased`. Политика для non-retried action подготавливает CDP перед каждым вызовом, поэтому session может смениться между pressed и released. Задача должна выполнить одно восстановление до начала жеста, затем отправить все три команды через одну session без повторов.\n\n### Критерии приёмки\n\n- [ ] Trace жеста имеет порядок `recover, moved, pressed, released` без промежуточного recover.\n- [ ] Ошибка после `pressed` не повторяет ни одну фазу.\n- [ ] Single logical copy-click contract и current-turn ownership сохранены.\n- [ ] Build/audit-contract/license/whitespace checks проходят.\n\n### Подзадачи\n\n- [ ] Выделить подготовленную non-retriable CDP transaction boundary.\n- [ ] Расширить существующий typed driver test последовательностью gesture phases.\n- [ ] Реализовать единый session dispatch и fail-closed ошибку.\n- [ ] Выполнить обязательные проверки.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: r39 локализовал три отдельных preparation перед фазами одного жеста.\n- Ещё отсутствует: единая transaction boundary и исполняемая проверка отсутствия intermediate recovery.\n- Принято аудитом: отсутствует; r39 классифицировал finding как неблокирующий follow-up.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r39.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-1146\n  - rationale: Gesture-session hardening не доказывает неправильный текущий verdict и вынесено в отдельную P1-задачу с fail-closed контрактом.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r40.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-1146\n  - rationale: r40 повторяет тот же CDP gesture-session finding и прямо подтверждает T-1146 как отдельного владельца hardening.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0011",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-94ca0395565920c2776d3693d2df82fe"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Trace жеста имеет порядок `recover, moved, pressed, released` без промежуточного recover.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Ошибка после `pressed` не повторяет ни одну фазу.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Single logical copy-click contract и current-turn ownership сохранены.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Build/audit-contract/license/whitespace checks проходят.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required only if this work is folded into an active audited browser-safety scope; otherwise not required by default."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-1137-audit-control-r39.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/AuditSubmitCodexChromeCommand.cs"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "browser input transaction hardening without changing audit routing or report semantics.",
+    "readyToStart": [
+      "task state is `open`;",
+      "`T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;",
+      "no other task is `in progress`."
+    ],
+    "stopConditions": [
+      "implementation retries any mouse phase after an ambiguous dispatch result;",
+      "work changes upload, Send, report extraction or clipboard contracts;",
+      "gesture cannot remain in one attached CDP session without browser-extension changes outside current scope."
+    ],
+    "allowedChanges": [
+      "internal preparation and dispatch sequence in `ClickAtAsync`;",
+      "existing typed ordinary-copy/gesture lifecycle assertions;",
+      "the browser-automation section of the audit contract."
+    ],
+    "forbiddenChanges": [
+      "selector ownership, single copy-click policy or final report validation;",
+      "public Electron2D runtime API;",
+      "retry behavior of unrelated read-only CDP operations."
+    ],
+    "requiredOutputs": [
+      "exactly one reattach/preparation before `mouseMoved`;",
+      "`mouseMoved`, `mousePressed`, `mouseReleased` dispatched in the same CDP session without intermediate recovery;",
+      "any ambiguous failure after dispatch begins terminates fail-closed without replay."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "existing focused ordinary-copy/CDP recovery tests",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify audit-contracts`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 15497771,
+      "byteLength": 5757,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "7b6eb482de6dfa1e9781c16528b4462efe053284371552b194a3b0056c9a2d56",
+      "markdown": "## T-1146 [ ] P1: Сделать координатный CDP-клик единой подготовленной транзакцией\n\n- Создана: 2026-07-10T23:06:34+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-1137\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходник: `eng/Electron2D.Build/AuditSubmitCodexChromeCommand.cs`\n  - Проверки: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник finding-а: `docs/verdicts/release-management/t-1137-audit-control-r39.md`, `FOLLOW_UP_FINDING F1`\n\n### Execution contract\n\n- Task type: browser input transaction hardening without changing audit routing or report semantics.\n- Ready-to-start:\n  - task state is `open`;\n  - `T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;\n  - no other task is `in progress`.\n- Stop conditions:\n  - implementation retries any mouse phase after an ambiguous dispatch result;\n  - work changes upload, Send, report extraction or clipboard contracts;\n  - gesture cannot remain in one attached CDP session without browser-extension changes outside current scope.\n- May change:\n  - internal preparation and dispatch sequence in `ClickAtAsync`;\n  - existing typed ordinary-copy/gesture lifecycle assertions;\n  - the browser-automation section of the audit contract.\n- Must not change:\n  - selector ownership, single copy-click policy or final report validation;\n  - public Electron2D runtime API;\n  - retry behavior of unrelated read-only CDP operations.\n- Required outputs:\n  - exactly one reattach/preparation before `mouseMoved`;\n  - `mouseMoved`, `mousePressed`, `mouseReleased` dispatched in the same CDP session without intermediate recovery;\n  - any ambiguous failure after dispatch begins terminates fail-closed without replay.\n- Required commands:\n  - `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`\n  - existing focused ordinary-copy/CDP recovery tests\n  - `dotnet run --project eng/Electron2D.Build -- verify audit-contracts`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: required only if this work is folded into an active audited browser-safety scope; otherwise not required by default.\n\n### Internal substrate acceptance contract\n\n- Input boundary: one resolved current-turn copy-button point and one attached audit tab.\n- Transaction invariant: preparation occurs before the gesture; all three mouse events share one session and are never replayed.\n- Failure policy: any failure after the first dispatch aborts the gesture and propagates one deterministic diagnostic.\n- Consumer boundary: controlled ordinary copy uses the same typed click path and retains exactly one logical click.\n- Regression boundary: read-only CDP recovery remains available outside the non-retriable gesture.\n\n### Самодостаточное описание\n\n`ClickAtAsync` сейчас вызывает `ExecuteCdpAsync(... allowTransientRecovery: false)` отдельно для `mouseMoved`, `mousePressed` и `mouseReleased`. Политика для non-retried action подготавливает CDP перед каждым вызовом, поэтому session может смениться между pressed и released. Задача должна выполнить одно восстановление до начала жеста, затем отправить все три команды через одну session без повторов.\n\n### Критерии приёмки\n\n- [ ] Trace жеста имеет порядок `recover, moved, pressed, released` без промежуточного recover.\n- [ ] Ошибка после `pressed` не повторяет ни одну фазу.\n- [ ] Single logical copy-click contract и current-turn ownership сохранены.\n- [ ] Build/audit-contract/license/whitespace checks проходят.\n\n### Подзадачи\n\n- [ ] Выделить подготовленную non-retriable CDP transaction boundary.\n- [ ] Расширить существующий typed driver test последовательностью gesture phases.\n- [ ] Реализовать единый session dispatch и fail-closed ошибку.\n- [ ] Выполнить обязательные проверки.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: r39 локализовал три отдельных preparation перед фазами одного жеста.\n- Ещё отсутствует: единая transaction boundary и исполняемая проверка отсутствия intermediate recovery.\n- Принято аудитом: отсутствует; r39 классифицировал finding как неблокирующий follow-up.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r39.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-1146\n  - rationale: Gesture-session hardening не доказывает неправильный текущий verdict и вынесено в отдельную P1-задачу с fail-closed контрактом.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r40.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-1146\n  - rationale: r40 повторяет тот же CDP gesture-session finding и прямо подтверждает T-1146 как отдельного владельца hardening.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-10T20:06:34.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -1,0 +1,308 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-24711ad56f044089b3c0ce9a67e8be3e",
+  "revision": 3,
+  "taskId": "T-1223",
+  "legacyAliases": [],
+  "title": "Заменить кнопку с тремя точками в колонках на локальный фильтр",
+  "description": "В заголовке каждой статусной колонки вместо кнопки `⋮` должен появиться фильтр с тем же внешним видом и возможностями, что у глобального фильтра доски. По нажатию открывается локальная панель с выбором приоритета и нескольких тегов из общего каталога. Состояние хранится отдельно для каждой колонки и влияет только на карточки этой колонки; остальные колонки не перерисовываются по её локальным условиям. Глобальный поиск, глобальные приоритет и теги, переключатель архива и локальные условия объединяются логическим `AND`, поэтому локальный фильтр только дополнительно сужает уже видимый набор. Счётчик в заголовке и `+ N ещё` рассчитываются по отфильтрованным карточкам. Действие `⋮`, которое сейчас раскрывает весь preview, удаляется; раскрытие длинного списка остаётся доступно через существующую кнопку `+ N ещё`. Активный локальный фильтр получает badge количества измерений от 0 до 2, сохраняется при сворачивании колонки и обновлении snapshot, а исчезнувшие теги удаляются из выбора. Фильтрация остаётся локальным состоянием представления и не меняет задачи, статусы, rank или `.taskboard`.",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0002",
+    "tag-0003",
+    "tag-0009",
+    "tag-0013"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "assignee": null,
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [
+    {
+      "relationId": "relation-column-filter-global-filter",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-759832a0f0c44542bd4d18de09b24bba"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-column-filter-control",
+      "description": "В заголовке каждой из шести статусных колонок кнопка `⋮` и её действие «раскрыть всё» отсутствуют. На том же месте находится локализованная SVG-кнопка фильтра с tooltip, доступным именем и badge активных измерений; существующая кнопка сворачивания колонки остаётся отдельной.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-column-filter-scope",
+      "description": "У каждой колонки есть независимый выбор приоритета и нескольких тегов. Изменение фильтра одной колонки не меняет локальные условия и набор карточек остальных колонок; выбранные теги внутри колонки используют пересечение всех значений.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-column-filter-composition",
+      "description": "Локальный фильтр дополнительно сужает результат глобального поиска, глобального приоритета, глобальных тегов и archive toggle через логическое `AND`. Счётчик колонки, пустое состояние и `+ N ещё` используют итоговый отфильтрованный набор, а status/rank и canonical task data не меняются.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-column-filter-state",
+      "description": "Выбор хранится по canonical status, переживает `renderBoard`, сворачивание и refresh, сохраняет доступные tagId и удаляет только исчезнувшие определения каталога. Badge считает приоритет и непустой набор тегов как два независимых измерения и не зависит от числа выбранных тегов.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-column-filter-popover",
+      "description": "Панель повторяет локализацию, тему, keyboard navigation и multi-select семантику глобального фильтра, не расширяет колонку и не обрезается на минимальной ширине. Одновременно открыта не более чем одна глобальная или локальная панель; `Escape`, outside click и выбор другой колонки закрывают предыдущую панель без сброса значений и возвращают предсказуемый focus.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-column-filter-verification",
+      "description": "Доменный документ обновлён до production-кода; RED/GREEN tests покрывают независимость шести состояний, объединение с глобальными условиями, синхронизацию тегов, count/preview и доступность. Полный unit-набор, typecheck, VSIX и FFmpeg-снимки установленного расширения подтверждают закрытую и открытую панели, активный badge и отсутствие overflow.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [],
+  "auditRuns": [],
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "links": [
+    {
+      "linkId": "link-column-filter-domain",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-column-filter-html",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webviewHtml.ts"
+    },
+    {
+      "linkId": "link-column-filter-webview",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "link-column-filter-model",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/model.ts"
+    },
+    {
+      "linkId": "link-column-filter-styles",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.css"
+    },
+    {
+      "linkId": "link-column-filter-localization",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/localization.ts"
+    },
+    {
+      "linkId": "link-column-filter-tests",
+      "kind": "Directory",
+      "value": "src/Electron2D.VsCode/test/unit"
+    }
+  ],
+  "executionContract": {
+    "taskType": "локальная фильтрация карточек внутри статусной колонки VS Code Task Board",
+    "readyToStart": [
+      "Зависимая `T-1218` принята человеком, а семантика глобального фильтра по приоритету и нескольким тегам считается устойчивой основой для повторного использования.",
+      "`docs/editor/project-tasks-board.md` до production-кода определяет область локального фильтра, объединение с глобальными условиями, count/preview и правила popover/focus.",
+      "До реализации добавлены падающие tests для per-status state, matching composition, refresh synchronization, DOM controls и адаптивного layout."
+    ],
+    "stopConditions": [
+      "Фильтрация требует mutation задач, статусов, rank, labels, каталога тегов или ручного редактирования `.taskboard`.",
+      "Нельзя изолировать состояние по колонкам либо корректно объединить локальные условия с глобальным поиском, фильтрами и archive toggle.",
+      "Локальная панель расходится с keyboard, localization или multi-select поведением глобального фильтра и требует двух независимых несовместимых реализаций.",
+      "Popover нельзя показать на минимальной ширине колонки без изменения min/fluid/max геометрии доски или без реальной FFmpeg-проверки."
+    ],
+    "allowedChanges": [
+      "Доменный документ, model/webview/HTML/CSS/localization VS Code Task Board и связанные unit tests.",
+      "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник."
+    ],
+    "forbiddenChanges": [
+      "Изменение TaskBoard schema, CLI writer boundary, lifecycle, placement/rank, содержимого задач или каталога тегов.",
+      "Несвязанный рефакторинг карточек, Task Details, drag-and-drop, toolbar или расширение локального фильтра новыми измерениями сверх глобальной панели.",
+      "Сохранение presentation state в `.taskboard`, автоматическая приёмка зависимой задачи или ручное редактирование `.e2task`/`.e2tasks`."
+    ],
+    "requiredOutputs": [
+      "Шесть независимых локальных фильтров в заголовках колонок вместо `⋮`, с приоритетом, multi-select тегами и badge активных измерений.",
+      "Единая matching-семантика глобальных и локальных условий, корректные count/preview и устойчивое состояние при refresh без taskboard mutations.",
+      "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+    ],
+    "commands": [
+      {
+        "commandId": "cmd-column-filter-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "cmd-column-filter-typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "cmd-column-filter-package",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "cmd-column-filter-real-window-capture",
+        "kind": "Process",
+        "executable": "python",
+        "arguments": [
+          "eng/tools/capture_window.py",
+          "--title",
+          "Visual Studio Code",
+          "--output",
+          ".temp/taskboard-column-filter-real.png"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Windows"
+        ],
+        "timeoutSeconds": 120,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "ExternalEffect"
+        ]
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [
+    {
+      "attachmentId": "A-0001",
+      "displayName": "codex-clipboard-883cf00e-e9b8-4492-844c-464c05a5bb3b.png",
+      "relativePath": ".taskboard/attachments/task-24711ad56f044089b3c0ce9a67e8be3e/A-0001/4dfdae11534e02e20663acaf45bc286688fbf68796d11cd8150f8203a20555d5.png",
+      "mediaType": "image/png",
+      "byteLength": 12530,
+      "sha256": "4dfdae11534e02e20663acaf45bc286688fbf68796d11cd8150f8203a20555d5",
+      "addedAt": "2026-07-13T18:25:22.9886494+00:00",
+      "addedBy": "cli",
+      "derivatives": [
+        {
+          "derivativeId": "derivative-extractedtext",
+          "kind": "ExtractedText",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "4dfdae11534e02e20663acaf45bc286688fbf68796d11cd8150f8203a20555d5",
+          "extractor": null,
+          "createdAt": "2026-07-13T18:25:22.9886494+00:00"
+        },
+        {
+          "derivativeId": "derivative-ocr",
+          "kind": "Ocr",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "4dfdae11534e02e20663acaf45bc286688fbf68796d11cd8150f8203a20555d5",
+          "extractor": null,
+          "createdAt": "2026-07-13T18:25:22.9886494+00:00"
+        },
+        {
+          "derivativeId": "derivative-preview",
+          "kind": "Preview",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "4dfdae11534e02e20663acaf45bc286688fbf68796d11cd8150f8203a20555d5",
+          "extractor": null,
+          "createdAt": "2026-07-13T18:25:22.9886494+00:00"
+        }
+      ]
+    }
+  ],
+  "previewAttachmentId": "A-0001",
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-13T18:25:07.3128676+00:00",
+  "updatedAt": "2026-07-13T18:25:26.1994320+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null
+}

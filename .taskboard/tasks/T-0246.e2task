@@ -1,0 +1,251 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-a9dc106b3357162a2b473b8e01e91ad3",
+  "revision": 2,
+  "taskId": "T-0246",
+  "legacyAliases": [],
+  "title": "Зафиксировать матрицу внутренних слоёв Windows/Linux/macOS/Android/iOS/WebAssembly browser",
+  "description": "## T-0246 [ ] P0: Зафиксировать матрицу внутренних слоёв Windows/Linux/macOS/Android/iOS/WebAssembly browser\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0245\n- Ссылки:\n  - Доменный документ: `docs/runtime/godot-47-public-api-platform-backend-matrix.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/runtime/godot-47-public-api-platform-backend-matrix.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/runtime/godot-47-public-api-platform-backend-matrix.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. Матрица определяет, какие внутренние слои обязательны для 0.1-preview: SDL GPU rendering, SDL_image, SDL_ttf, SDL_mixer, SDL_shadercross, filesystem, windows, input devices, audio, network и устойчивые диагностические сообщения для временно неподдержанных platform paths.\n\n`Web/WebAssembly` является обязательным runtime/platform diagnostic target для `0.1-preview`. Матрица должна различать desktop runtime+editor targets Windows/Linux/macOS и runtime-only targets Android/iOS/WebAssembly browser; Web нельзя переводить в `Deferred`/`Experimental` целиком через manual public API profile.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Исполняемый контракт\n\n- Должны появиться или обновиться: `docs/runtime/godot-47-public-api-platform-backend-matrix.md`, `data/runtime/public-api-backend-matrix.json`, `tests/Electron2D.Tests.Integration/PublicApiBackendMatrixTests.cs` and verifier route in `eng/Electron2D.Build`.\n- Обязательные команды: `dotnet run --project eng/Electron2D.Build -- verify public-api-backend-matrix` and `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~PublicApiBackendMatrix\" --no-restore -v:minimal`.\n- RED-before-GREEN: test сначала падает на missing mandatory platform, missing backend owner, missing consumer task, missing mandatory `Web/WebAssembly` runtime target or wrong editor/runtime role, stale JSON artifact or missing diagnostic code.\n- Diagnostic codes: `E2D-PUBLICAPI-BACKEND-0001` missing mandatory backend capability, `E2D-PUBLICAPI-BACKEND-0002` Web/WebAssembly missing from mandatory runtime targets or has the wrong editor/runtime role, `E2D-PUBLICAPI-BACKEND-0003` matrix artifact stale.\n- Consumer proof: `T-0247`-`T-0253`, `T-0972`-`T-0979` and `T-0980` must reference capability IDs from `data/runtime/public-api-backend-matrix.json`.\n- Запрещено: changing `src/Electron2D/**`, adding public API members, adding native binaries or implementing platform runtime behavior in this matrix task.\n\n### Критерии приёмки\n\n- [ ] Появился или обновлён доменный документ `docs/runtime/godot-47-public-api-platform-backend-matrix.md` с таблицей, где Windows/Linux/macOS помечены как `runtime+editor`, Android/iOS/WebAssembly browser — как `runtime-only`, а также указаны обязательные внутренние слои, owners, consumer task IDs, diagnostic codes and unsupported/deferred route через manual public API profile.\n- [ ] Появился machine-readable artifact `data/runtime/public-api-backend-matrix.json`, который содержит `platforms`, `platformRoles`, `backendCapabilities`, `requiredForTasks`, `diagnostics` и явно помечает `Web/WebAssembly` как `mandatory-runtime-only`, а не `deferred` или `experimental`.\n- [ ] Добавлен сначала падающий test `tests/Electron2D.Tests.Integration/PublicApiBackendMatrixTests.cs`, который проверяет: все задачи `T-0247`-`T-0253` покрыты матрицей, `T-0972`-`T-0980` могут ссылаться на matrix artifact, `Web/WebAssembly` входит в mandatory runtime target set и не имеет editor target role.\n- [ ] Команда `dotnet run --project eng/Electron2D.Build -- verify public-api-backend-matrix` проходит и падает с `E2D-PUBLICAPI-BACKEND-0001`, если обязательная возможность не имеет owner/consumer; с `E2D-PUBLICAPI-BACKEND-0002`, если Web отсутствует в mandatory runtime targets или помечен как editor target; с `E2D-PUBLICAPI-BACKEND-0003`, если JSON artifact устарел относительно документа.\n- [ ] Первое подтверждение использования: `T-0247`, `T-0248`, `T-0250`, `T-0251`, `T-0252`, `T-0253` и ready gates `T-0972`-`T-0979` ссылаются на конкретные capability IDs из `data/runtime/public-api-backend-matrix.json`, а не на свободный текст.\n- [ ] Запрещено менять `src/Electron2D/**`, добавлять public API members, native binaries или platform runtime implementations в этой задаче; допустимы только `docs/runtime/godot-47-public-api-platform-backend-matrix.md`, `data/runtime/public-api-backend-matrix.json`, verifier code/tests в `eng/` и `tests/`, а также синхронизация docs index.\n\n### Подзадачи\n\n- [ ] Создать/обновить `docs/runtime/godot-47-public-api-platform-backend-matrix.md` и `data/runtime/public-api-backend-matrix.json`.\n- [ ] Добавить RED test `PublicApiBackendMatrixTests` на missing owner, missing consumer, stale JSON и отсутствующий или неверно помеченный mandatory runtime Web.\n- [ ] Реализовать verifier command `verify public-api-backend-matrix` с diagnostic codes `E2D-PUBLICAPI-BACKEND-0001`-`0003`.\n- [ ] Привязать downstream tasks/gates к capability IDs матрицы.\n- [ ] Запустить `dotnet run --project eng/Electron2D.Build -- verify public-api-backend-matrix`, `dotnet run --project eng/Electron2D.Build -- verify docs`, `git diff --check` и записать вывод в заметки задачи.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0014",
+    "tag-0018",
+    "tag-0031",
+    "tag-0032",
+    "tag-0033",
+    "tag-0034",
+    "tag-0035",
+    "tag-0036",
+    "tag-0037"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fab4705fe4a1db467903c0bc500995a7"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Появился или обновлён доменный документ `docs/runtime/godot-47-public-api-platform-backend-matrix.md` с таблицей, где Windows/Linux/macOS помечены как `runtime+editor`, Android/iOS/WebAssembly browser — как `runtime-only`, а также указаны обязательные внутренние слои, owners, consumer task IDs, diagnostic codes and unsupported/deferred route через manual public API profile.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Появился machine-readable artifact `data/runtime/public-api-backend-matrix.json`, который содержит `platforms`, `platformRoles`, `backendCapabilities`, `requiredForTasks`, `diagnostics` и явно помечает `Web/WebAssembly` как `mandatory-runtime-only`, а не `deferred` или `experimental`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Добавлен сначала падающий test `tests/Electron2D.Tests.Integration/PublicApiBackendMatrixTests.cs`, который проверяет: все задачи `T-0247`-`T-0253` покрыты матрицей, `T-0972`-`T-0980` могут ссылаться на matrix artifact, `Web/WebAssembly` входит в mandatory runtime target set и не имеет editor target role.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Команда `dotnet run --project eng/Electron2D.Build -- verify public-api-backend-matrix` проходит и падает с `E2D-PUBLICAPI-BACKEND-0001`, если обязательная возможность не имеет owner/consumer; с `E2D-PUBLICAPI-BACKEND-0002`, если Web отсутствует в mandatory runtime targets или помечен как editor target; с `E2D-PUBLICAPI-BACKEND-0003`, если JSON artifact устарел относительно документа.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Первое подтверждение использования: `T-0247`, `T-0248`, `T-0250`, `T-0251`, `T-0252`, `T-0253` и ready gates `T-0972`-`T-0979` ссылаются на конкретные capability IDs из `data/runtime/public-api-backend-matrix.json`, а не на свободный текст.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Запрещено менять `src/Electron2D/**`, добавлять public API members, native binaries или platform runtime implementations в этой задаче; допустимы только `docs/runtime/godot-47-public-api-platform-backend-matrix.md`, `data/runtime/public-api-backend-matrix.json`, verifier code/tests в `eng/` и `tests/`, а также синхронизация docs index.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate unless task criteria explicitly require primary/control audit"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "Web/WebAssembly"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "data/runtime/public-api-backend-matrix.json"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/runtime/godot-47-public-api-platform-backend-matrix.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "eng/Electron2D.Build"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "src/Electron2D/**"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/PublicApiBackendMatrixTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tooling",
+    "readyToStart": [
+      "task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/runtime/godot-47-public-api-platform-backend-matrix.md describes the tool or policy contract.",
+      "add RED verifier/test coverage before changing implementation when tooling behavior changes."
+    ],
+    "stopConditions": [
+      "the change would define public API surface manually or close behavior owned by a public class task.",
+      "missing dependency, platform prerequisite or generated input prevents deterministic verifier output."
+    ],
+    "allowedChanges": [
+      "tooling, verifier, generated-report plumbing and docs named by this task.",
+      "tests under `tests/` that prove the tooling contract.",
+      "`TASKS.md` notes and diary evidence."
+    ],
+    "forbiddenChanges": [
+      "production runtime behavior outside this tooling contract.",
+      "generated artifacts by hand when a generator/verifier owns them.",
+      "unrelated task statuses or release scope."
+    ],
+    "requiredOutputs": [
+      "docs/runtime/godot-47-public-api-platform-backend-matrix.md",
+      "focused verifier/test evidence named by the task.",
+      "synchronized generated docs/index artifacts when docs are changed."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify public-api-backend-matrix",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~PublicApiBackendMatrix\" --no-restore -v:minimal",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 481390,
+      "byteLength": 12252,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "a37121f042987a13d1ea61f787b8af226ab42583272259a7122cf60019420727",
+      "markdown": "## T-0246 [ ] P0: Зафиксировать матрицу внутренних слоёв Windows/Linux/macOS/Android/iOS/WebAssembly browser\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0245\n- Ссылки:\n  - Доменный документ: `docs/runtime/godot-47-public-api-platform-backend-matrix.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/runtime/godot-47-public-api-platform-backend-matrix.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/runtime/godot-47-public-api-platform-backend-matrix.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. Матрица определяет, какие внутренние слои обязательны для 0.1-preview: SDL GPU rendering, SDL_image, SDL_ttf, SDL_mixer, SDL_shadercross, filesystem, windows, input devices, audio, network и устойчивые диагностические сообщения для временно неподдержанных platform paths.\n\n`Web/WebAssembly` является обязательным runtime/platform diagnostic target для `0.1-preview`. Матрица должна различать desktop runtime+editor targets Windows/Linux/macOS и runtime-only targets Android/iOS/WebAssembly browser; Web нельзя переводить в `Deferred`/`Experimental` целиком через manual public API profile.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Исполняемый контракт\n\n- Должны появиться или обновиться: `docs/runtime/godot-47-public-api-platform-backend-matrix.md`, `data/runtime/public-api-backend-matrix.json`, `tests/Electron2D.Tests.Integration/PublicApiBackendMatrixTests.cs` and verifier route in `eng/Electron2D.Build`.\n- Обязательные команды: `dotnet run --project eng/Electron2D.Build -- verify public-api-backend-matrix` and `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~PublicApiBackendMatrix\" --no-restore -v:minimal`.\n- RED-before-GREEN: test сначала падает на missing mandatory platform, missing backend owner, missing consumer task, missing mandatory `Web/WebAssembly` runtime target or wrong editor/runtime role, stale JSON artifact or missing diagnostic code.\n- Diagnostic codes: `E2D-PUBLICAPI-BACKEND-0001` missing mandatory backend capability, `E2D-PUBLICAPI-BACKEND-0002` Web/WebAssembly missing from mandatory runtime targets or has the wrong editor/runtime role, `E2D-PUBLICAPI-BACKEND-0003` matrix artifact stale.\n- Consumer proof: `T-0247`-`T-0253`, `T-0972`-`T-0979` and `T-0980` must reference capability IDs from `data/runtime/public-api-backend-matrix.json`.\n- Запрещено: changing `src/Electron2D/**`, adding public API members, adding native binaries or implementing platform runtime behavior in this matrix task.\n\n### Критерии приёмки\n\n- [ ] Появился или обновлён доменный документ `docs/runtime/godot-47-public-api-platform-backend-matrix.md` с таблицей, где Windows/Linux/macOS помечены как `runtime+editor`, Android/iOS/WebAssembly browser — как `runtime-only`, а также указаны обязательные внутренние слои, owners, consumer task IDs, diagnostic codes and unsupported/deferred route через manual public API profile.\n- [ ] Появился machine-readable artifact `data/runtime/public-api-backend-matrix.json`, который содержит `platforms`, `platformRoles`, `backendCapabilities`, `requiredForTasks`, `diagnostics` и явно помечает `Web/WebAssembly` как `mandatory-runtime-only`, а не `deferred` или `experimental`.\n- [ ] Добавлен сначала падающий test `tests/Electron2D.Tests.Integration/PublicApiBackendMatrixTests.cs`, который проверяет: все задачи `T-0247`-`T-0253` покрыты матрицей, `T-0972`-`T-0980` могут ссылаться на matrix artifact, `Web/WebAssembly` входит в mandatory runtime target set и не имеет editor target role.\n- [ ] Команда `dotnet run --project eng/Electron2D.Build -- verify public-api-backend-matrix` проходит и падает с `E2D-PUBLICAPI-BACKEND-0001`, если обязательная возможность не имеет owner/consumer; с `E2D-PUBLICAPI-BACKEND-0002`, если Web отсутствует в mandatory runtime targets или помечен как editor target; с `E2D-PUBLICAPI-BACKEND-0003`, если JSON artifact устарел относительно документа.\n- [ ] Первое подтверждение использования: `T-0247`, `T-0248`, `T-0250`, `T-0251`, `T-0252`, `T-0253` и ready gates `T-0972`-`T-0979` ссылаются на конкретные capability IDs из `data/runtime/public-api-backend-matrix.json`, а не на свободный текст.\n- [ ] Запрещено менять `src/Electron2D/**`, добавлять public API members, native binaries или platform runtime implementations в этой задаче; допустимы только `docs/runtime/godot-47-public-api-platform-backend-matrix.md`, `data/runtime/public-api-backend-matrix.json`, verifier code/tests в `eng/` и `tests/`, а также синхронизация docs index.\n\n### Подзадачи\n\n- [ ] Создать/обновить `docs/runtime/godot-47-public-api-platform-backend-matrix.md` и `data/runtime/public-api-backend-matrix.json`.\n- [ ] Добавить RED test `PublicApiBackendMatrixTests` на missing owner, missing consumer, stale JSON и отсутствующий или неверно помеченный mandatory runtime Web.\n- [ ] Реализовать verifier command `verify public-api-backend-matrix` с diagnostic codes `E2D-PUBLICAPI-BACKEND-0001`-`0003`.\n- [ ] Привязать downstream tasks/gates к capability IDs матрицы.\n- [ ] Запустить `dotnet run --project eng/Electron2D.Build -- verify public-api-backend-matrix`, `dotnet run --project eng/Electron2D.Build -- verify docs`, `git diff --check` и записать вывод в заметки задачи.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

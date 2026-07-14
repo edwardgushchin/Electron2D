@@ -1,0 +1,185 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-26dcf6721b2de005178aa1b72bdda457",
+  "revision": 2,
+  "taskId": "T-0992",
+  "legacyAliases": [],
+  "title": "Приоритизировать diagnostics manual API profile в `update api-manifest`",
+  "description": "## T-0992 [ ] P3: Приоритизировать diagnostics manual API profile в `update api-manifest`\n\n- Создана: 2026-07-08T18:11:00+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-0990\n- Ссылки:\n  - Доменный документ: `docs/documentation/api-manifest.md`\n  - Исходный код: `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник follow-up: `docs/verdicts/release-management/t-0990-audit-r05.md`\n\n### Execution contract\n\n- Task type: tooling-diagnostics-hardening\n- Ready-to-start:\n  - task state is `open`.\n  - manual API profile contract remains owned by `T-0990`.\n  - a focused RED test can create an invalid manual profile while runtime still exports public types.\n- Stop conditions:\n  - the change would approve or reject public API types instead of improving diagnostics.\n  - the change would weaken fail-fast behavior for exported public types missing `approved`.\n- May change:\n  - `update api-manifest --check` diagnostic ordering/aggregation and direct tests/docs.\n  - generated local documentation index if docs are updated.\n  - task notes and diary for this task.\n- Must not change:\n  - runtime public API implementation.\n  - owner approval decisions in `data/api/electron2d-public-api-profile.json`.\n  - saved audit reports.\n- Required outputs:\n  - invalid manual profile diagnostics are printed before or alongside unapproved export diagnostics in `update api-manifest --check`.\n  - focused regression covering invalid profile plus exported runtime public type.\n- Required commands:\n  - focused `update api-manifest --check` diagnostic regression.\n  - `dotnet run --project eng/Electron2D.Build -- verify audit-followups`\n  - `git diff --check`\n- External audit:\n  - not required unless bundled with a parent API tooling package.\n\n### Самодостаточное описание\n\nr05 primary audit for `T-0990` found a diagnostic debt: `update api-manifest --check` can read and accumulate manual profile validation errors, but the exported-type gate may return `E2D-BUILD-API-PROFILE-UNAPPROVED-EXPORT` first when runtime exports public types. `verify api-compatibility` already prints profile validation errors, and required empty-profile fail-fast behavior is proven; this task improves diagnostic completeness for `update api-manifest`.\n\n### Internal substrate acceptance contract\n\n- Profile shape/decision diagnostics stay visible even when exported runtime public types are unapproved.\n- The command remains fail-closed.\n- The fix is diagnostic-only and does not change public API inclusion decisions.\n\n### Критерии приёмки\n\n- [ ] Focused test covers invalid profile plus exported runtime public type.\n- [ ] `update api-manifest --check` reports the relevant `E2D-BUILD-API-PROFILE-*` validation diagnostic.\n- [ ] Existing empty-profile fail-fast diagnostics remain intact.\n\n### Подзадачи\n\n- [ ] Add RED regression for invalid manual profile diagnostics in `update api-manifest --check`.\n- [ ] Adjust diagnostic ordering/aggregation in build-tool profile checks.\n- [ ] Update docs if command diagnostics contract changes.\n- [ ] Run focused checks, `verify audit-followups` and `git diff --check`.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r01.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-new\n  - target: T-0992\n  - rationale: Primary audit r01 classified hidden invalid-profile diagnostics in `update api-manifest --check` as P3 diagnostics hardening. Current `T-0990` fail-closed behavior is proven, so this task tracks diagnostic completeness separately.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r02.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-new\n  - target: T-0992\n  - rationale: Primary audit r02 repeated the same `update api-manifest --check` diagnostics finding. `T-0992` owns diagnostic completeness across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r03.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-new\n  - target: T-0992\n  - rationale: Primary audit r03 repeated the same `update api-manifest --check` diagnostics finding. `T-0992` owns diagnostic completeness across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r04.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-new\n  - target: T-0992\n  - rationale: Primary audit r04 repeated the same `update api-manifest --check` diagnostics finding. `T-0992` owns diagnostic completeness across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r05.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-new\n  - target: T-0992\n  - rationale: Primary audit r05 classified hidden invalid-profile diagnostics in `update api-manifest --check` as P3 diagnostics hardening. Current `T-0990` fail-closed behavior is proven, so this task tracks diagnostic completeness separately.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r06.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0992\n  - rationale: Primary audit r06 repeated the same `update api-manifest --check` diagnostics finding and explicitly pointed to existing `T-0992`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r07.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0992\n  - rationale: Accepted primary audit r07 repeated the same `update api-manifest --check` diagnostics finding and explicitly pointed to existing `T-0992`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r08.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0992\n  - rationale: Primary audit r08 repeated the same `update api-manifest --check` diagnostics finding and explicitly pointed to existing `T-0992`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r09.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0992\n  - rationale: Accepted primary audit r09 repeated the same `update api-manifest --check` diagnostics finding and explicitly pointed to existing `T-0992`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r10.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0992\n  - rationale: Accepted primary audit r10 repeated the same `update api-manifest --check` diagnostics finding and explicitly pointed to existing `T-0992`; no new task is needed.\n\n### Заметки агента\n\n2026-07-08T18:11:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F2` из `docs/verdicts/release-management/t-0990-audit-r05.md`; finding перенесён в P3 API manifest diagnostics hardening.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P3",
+  "tagIds": [
+    "tag-0011",
+    "tag-0015",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-90476c714273240a7f2ca627a532aab3"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Focused test covers invalid profile plus exported runtime public type.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`update api-manifest --check` reports the relevant `E2D-BUILD-API-PROFILE-*` validation diagnostic.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Existing empty-profile fail-fast diagnostics remain intact.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-08T15:11:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F2` из `docs/verdicts/release-management/t-0990-audit-r05.md`; finding перенесён в P3 API manifest diagnostics hardening."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required unless bundled with a parent API tooling package."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "data/api/electron2d-public-api-profile.json"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/documentation/api-manifest.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0990-audit-r05.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/RepositoryPolicyVerifiers.cs"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tooling-diagnostics-hardening",
+    "readyToStart": [
+      "task state is `open`.",
+      "manual API profile contract remains owned by `T-0990`.",
+      "a focused RED test can create an invalid manual profile while runtime still exports public types."
+    ],
+    "stopConditions": [
+      "the change would approve or reject public API types instead of improving diagnostics.",
+      "the change would weaken fail-fast behavior for exported public types missing `approved`."
+    ],
+    "allowedChanges": [
+      "`update api-manifest --check` diagnostic ordering/aggregation and direct tests/docs.",
+      "generated local documentation index if docs are updated.",
+      "task notes and diary for this task."
+    ],
+    "forbiddenChanges": [
+      "runtime public API implementation.",
+      "owner approval decisions in `data/api/electron2d-public-api-profile.json`.",
+      "saved audit reports."
+    ],
+    "requiredOutputs": [
+      "invalid manual profile diagnostics are printed before or alongside unapproved export diagnostics in `update api-manifest --check`.",
+      "focused regression covering invalid profile plus exported runtime public type."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "focused `update api-manifest --check` diagnostic regression.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify audit-followups`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 424487,
+      "byteLength": 7208,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "69d8712abc583875cb0dc65e9c50912f8c88ee4dc25ba392cf9f06b9df518f82",
+      "markdown": "## T-0992 [ ] P3: Приоритизировать diagnostics manual API profile в `update api-manifest`\n\n- Создана: 2026-07-08T18:11:00+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-0990\n- Ссылки:\n  - Доменный документ: `docs/documentation/api-manifest.md`\n  - Исходный код: `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник follow-up: `docs/verdicts/release-management/t-0990-audit-r05.md`\n\n### Execution contract\n\n- Task type: tooling-diagnostics-hardening\n- Ready-to-start:\n  - task state is `open`.\n  - manual API profile contract remains owned by `T-0990`.\n  - a focused RED test can create an invalid manual profile while runtime still exports public types.\n- Stop conditions:\n  - the change would approve or reject public API types instead of improving diagnostics.\n  - the change would weaken fail-fast behavior for exported public types missing `approved`.\n- May change:\n  - `update api-manifest --check` diagnostic ordering/aggregation and direct tests/docs.\n  - generated local documentation index if docs are updated.\n  - task notes and diary for this task.\n- Must not change:\n  - runtime public API implementation.\n  - owner approval decisions in `data/api/electron2d-public-api-profile.json`.\n  - saved audit reports.\n- Required outputs:\n  - invalid manual profile diagnostics are printed before or alongside unapproved export diagnostics in `update api-manifest --check`.\n  - focused regression covering invalid profile plus exported runtime public type.\n- Required commands:\n  - focused `update api-manifest --check` diagnostic regression.\n  - `dotnet run --project eng/Electron2D.Build -- verify audit-followups`\n  - `git diff --check`\n- External audit:\n  - not required unless bundled with a parent API tooling package.\n\n### Самодостаточное описание\n\nr05 primary audit for `T-0990` found a diagnostic debt: `update api-manifest --check` can read and accumulate manual profile validation errors, but the exported-type gate may return `E2D-BUILD-API-PROFILE-UNAPPROVED-EXPORT` first when runtime exports public types. `verify api-compatibility` already prints profile validation errors, and required empty-profile fail-fast behavior is proven; this task improves diagnostic completeness for `update api-manifest`.\n\n### Internal substrate acceptance contract\n\n- Profile shape/decision diagnostics stay visible even when exported runtime public types are unapproved.\n- The command remains fail-closed.\n- The fix is diagnostic-only and does not change public API inclusion decisions.\n\n### Критерии приёмки\n\n- [ ] Focused test covers invalid profile plus exported runtime public type.\n- [ ] `update api-manifest --check` reports the relevant `E2D-BUILD-API-PROFILE-*` validation diagnostic.\n- [ ] Existing empty-profile fail-fast diagnostics remain intact.\n\n### Подзадачи\n\n- [ ] Add RED regression for invalid manual profile diagnostics in `update api-manifest --check`.\n- [ ] Adjust diagnostic ordering/aggregation in build-tool profile checks.\n- [ ] Update docs if command diagnostics contract changes.\n- [ ] Run focused checks, `verify audit-followups` and `git diff --check`.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r01.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-new\n  - target: T-0992\n  - rationale: Primary audit r01 classified hidden invalid-profile diagnostics in `update api-manifest --check` as P3 diagnostics hardening. Current `T-0990` fail-closed behavior is proven, so this task tracks diagnostic completeness separately.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r02.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-new\n  - target: T-0992\n  - rationale: Primary audit r02 repeated the same `update api-manifest --check` diagnostics finding. `T-0992` owns diagnostic completeness across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r03.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-new\n  - target: T-0992\n  - rationale: Primary audit r03 repeated the same `update api-manifest --check` diagnostics finding. `T-0992` owns diagnostic completeness across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r04.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-new\n  - target: T-0992\n  - rationale: Primary audit r04 repeated the same `update api-manifest --check` diagnostics finding. `T-0992` owns diagnostic completeness across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r05.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-new\n  - target: T-0992\n  - rationale: Primary audit r05 classified hidden invalid-profile diagnostics in `update api-manifest --check` as P3 diagnostics hardening. Current `T-0990` fail-closed behavior is proven, so this task tracks diagnostic completeness separately.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r06.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0992\n  - rationale: Primary audit r06 repeated the same `update api-manifest --check` diagnostics finding and explicitly pointed to existing `T-0992`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r07.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0992\n  - rationale: Accepted primary audit r07 repeated the same `update api-manifest --check` diagnostics finding and explicitly pointed to existing `T-0992`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r08.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0992\n  - rationale: Primary audit r08 repeated the same `update api-manifest --check` diagnostics finding and explicitly pointed to existing `T-0992`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r09.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0992\n  - rationale: Accepted primary audit r09 repeated the same `update api-manifest --check` diagnostics finding and explicitly pointed to existing `T-0992`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r10.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0992\n  - rationale: Accepted primary audit r10 repeated the same `update api-manifest --check` diagnostics finding and explicitly pointed to existing `T-0992`; no new task is needed.\n\n### Заметки агента\n\n2026-07-08T18:11:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F2` из `docs/verdicts/release-management/t-0990-audit-r05.md`; finding перенесён в P3 API manifest diagnostics hardening.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-08T15:11:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

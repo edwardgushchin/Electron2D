@@ -513,12 +513,21 @@ internal sealed class TaskService
         this.workspace = workspace;
     }
 
-    public IReadOnlyList<string> SupportedCommands => Commands;
+    public IReadOnlyList<string> SupportedCommands => IsV3 ? ["task_list", "task_get"] : Commands;
 
     public IReadOnlyList<ProjectTask> List()
     {
+        if (IsV3)
+        {
+            var snapshot = new TaskBoardV3DiskStore(workspace.ProjectRoot).Verify();
+            var all = snapshot.ActiveTasks.Concat(snapshot.CompletedTasks).ToArray();
+            return snapshot.ActiveTasks.Select(task => TaskBoardV3DiskStore.CreateCompatibilityTask(task, all))
+                .OrderBy(task => task.TaskId, StringComparer.Ordinal)
+                .ToArray();
+        }
+
         return workspace.Documents.Documents
-            .Where(document => document.Path.StartsWith(".electron2d/tasks/", StringComparison.Ordinal) &&
+            .Where(document => document.Path.StartsWith(ProjectTaskStorage.ActiveTasksDirectory + "/", StringComparison.Ordinal) &&
                 document.Path.EndsWith(".e2task", StringComparison.Ordinal))
             .Select(document => ProjectTaskSerializer.DeserializeTask(document.Path, document.Text))
             .OrderBy(task => task.Rank, StringComparer.Ordinal)
@@ -528,14 +537,23 @@ internal sealed class TaskService
 
     public ProjectTask Get(string taskId)
     {
+        if (IsV3)
+        {
+            var snapshot = new TaskBoardV3DiskStore(workspace.ProjectRoot).Verify();
+            var all = snapshot.ActiveTasks.Concat(snapshot.CompletedTasks).ToArray();
+            var task = all.Single(item => item["taskId"]!.GetValue<string>() == taskId);
+            return TaskBoardV3DiskStore.CreateCompatibilityTask(task, all);
+        }
+
         return workspace.Tasks.GetTask(taskId);
     }
 
     public ToolingOperationResult SubmitForAcceptance(ToolingTaskStatusRequest request)
     {
+        if (IsV3) return RejectV3(request.TaskId, request.OperationId, "task_submit_for_acceptance");
         var result = workspace.Tasks.ChangeStatus(new ProjectTaskStatusChangeRequest(
             request.TaskId,
-            ProjectTaskStatus.AwaitingAcceptance,
+            ProjectTaskStatus.Review,
             request.ExpectedRevision,
             request.OperationId,
             request.UndoGroupId,
@@ -545,6 +563,7 @@ internal sealed class TaskService
 
     public ToolingOperationResult Accept(ToolingTaskStatusRequest request)
     {
+        if (IsV3) return RejectV3(request.TaskId, request.OperationId, "task_accept");
         var result = workspace.Tasks.ChangeStatus(new ProjectTaskStatusChangeRequest(
             request.TaskId,
             ProjectTaskStatus.Done,
@@ -557,6 +576,7 @@ internal sealed class TaskService
 
     public ToolingOperationResult RequestChanges(ToolingTaskStatusRequest request, string reason)
     {
+        if (IsV3) return RejectV3(request.TaskId, request.OperationId, "task_request_changes");
         var result = workspace.Tasks.RequestChanges(new ProjectTaskAcceptanceRequest(
             request.TaskId,
             request.ExpectedRevision,
@@ -569,6 +589,7 @@ internal sealed class TaskService
 
     public ToolingOperationResult Cancel(ToolingTaskStatusRequest request)
     {
+        if (IsV3) return RejectV3(request.TaskId, request.OperationId, "task_cancel");
         var result = workspace.Tasks.ChangeStatus(new ProjectTaskStatusChangeRequest(
             request.TaskId,
             ProjectTaskStatus.Cancelled,
@@ -581,6 +602,7 @@ internal sealed class TaskService
 
     public ToolingOperationResult AppendActivity(ToolingTaskActivityRequest request)
     {
+        if (IsV3) return RejectV3(request.TaskId, request.OperationId, "task_append_activity");
         var result = workspace.Tasks.AddActivity(new ProjectTaskActivityRequest(
             request.TaskId,
             request.Kind,
@@ -614,6 +636,7 @@ internal sealed class TaskService
     {
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(mutate);
+        if (IsV3) return RejectV3(request.TaskId, request.OperationId, operationKind);
 
         if (!request.Context.HasCapability(OperationCapability.TaskWrite))
         {
@@ -637,6 +660,18 @@ internal sealed class TaskService
             request.UndoGroupId,
             [WorkspaceTransactionDocumentEdit.ReplaceText(path, request.ExpectedRevision, ProjectTaskSerializer.Serialize(task))]));
         return ToolingOperationResult.FromTransaction(result, operationKind, request.TaskId);
+    }
+
+    private bool IsV3 => TaskBoardV3DiskStore.IsV3(workspace.ProjectRoot);
+
+    private ToolingOperationResult RejectV3(string taskId, string operationId, string operationKind)
+    {
+        var rejected = ProjectTaskMutationResult.Rejected(
+            Get(taskId),
+            operationId,
+            CreateTaskDiagnostic("E2D-TASK-0002", "TaskBoard v3 is mutated only through `e2d tasks`; Tooling and MCP are read-only consumers."),
+            workspace);
+        return ToolingOperationResult.FromTask(rejected, operationKind);
     }
 
     private static void AddDistinct(List<string> values, string value)

@@ -127,7 +127,7 @@ Project Manager в `Electron2D.Editor` отвечает за первый раб
 
 Project Manager создаёт проект через общий `ProjectTemplateCreator` из `Electron2D.ProjectSystem`, используя `data/templates/electron2d-empty/`:
 
-- копирует `Electron2D.Empty.csproj`, `Program.cs`, `Scripts/MainScene.cs`, `project.e2d.json`, `scenes/main.scene.json`, `README.md`, `AGENTS.md`, `.gitignore`, `.codex/skills/` и `.electron2d/tasks/`;
+- копирует `Electron2D.Empty.csproj`, `Program.cs`, `Scripts/MainScene.cs`, `project.e2d.json`, `scenes/main.scene.json`, `README.md`, `AGENTS.md`, `.gitignore`, `.codex/skills/` и `.taskboard/`;
 - пропускает `.template.config/`, потому что это metadata для `dotnet new`, а не часть созданного проекта;
 - переименовывает `.csproj` под имя проекта;
 - переименовывает `project.e2d.json` в `<ProjectName>.e2d`;
@@ -141,7 +141,7 @@ Project Manager создаёт проект через общий `ProjectTempla
 
 Если `git` недоступен, файлы проекта остаются созданными, а create result получает warning diagnostic `E2D-PROJECT-0003`. На машине с доступным `git` после создания существует каталог `.git/`.
 
-Project Manager не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/` в пользовательском проекте. Canonical task storage находится в `.electron2d/tasks/`.
+Project Manager не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/` в пользовательском проекте. Canonical task storage находится в `.taskboard/`.
 
 ## Открытие проекта
 

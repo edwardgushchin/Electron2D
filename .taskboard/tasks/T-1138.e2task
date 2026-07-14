@@ -1,0 +1,261 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-949c1a9ab570ad2e2397dc1d6b8af46b",
+  "revision": 2,
+  "taskId": "T-1138",
+  "legacyAliases": [],
+  "title": "Исправить сопоставление XML-документации перегруженных conversion operators в API manifest generator",
+  "description": "## T-1138 [ ] P1: Исправить сопоставление XML-документации перегруженных conversion operators в API manifest generator\n\n- Создана: 2026-07-09T23:31:32+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0242, T-1137\n- Ссылки:\n  - Доменный документ: `docs/documentation/api-manifest.md`\n  - Генератор: `eng/Electron2D.ApiManifestGenerator/Program.cs`\n  - Исходная XML-документация: `src/Electron2D/Core/Variant/Variant.cs`\n  - Сгенерированные потребители: `data/api/electron2d-api-manifest.json`; `data/documentation/`; `.github/wiki/`\n  - Тесты: `tests/Electron2D.Tests.Integration/ApiManifestTests.cs`; `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник finding: `docs/verdicts/release-management/t-1137-audit-r04.md`, `FOLLOW_UP_FINDING F1`\n\n### Execution contract\n\n- Task type: API manifest generator metadata-resolution fix.\n- Ready-to-start:\n  - task state is `open`;\n  - dependencies `T-0242` and `T-1137` are accepted/closed or have saved `ACCEPT` evidence where applicable;\n  - no other task is `in progress`.\n- Stop conditions:\n  - proposed work changes runtime `Variant` conversion behavior or public signatures;\n  - work expands into full `Variant` class parity or unrelated XML documentation cleanup;\n  - exact XML member identity cannot be derived without changing the generated packet contract.\n- May change:\n  - overload resolution in `eng/Electron2D.ApiManifestGenerator/`;\n  - the existing focused API-manifest tests and fixtures;\n  - `docs/documentation/api-manifest.md` and generated manifest/local-docs/Wiki artifacts.\n- Must not change:\n  - runtime conversion semantics in `src/Electron2D/Core/Variant/Variant.cs` except source XML wording proven incorrect independently;\n  - manual public API profile decisions;\n  - unrelated generated summaries or public class acceptance states.\n- Required outputs:\n  - overload-aware XML member lookup for conversion operators using exact signatures;\n  - distinct summaries for `Variant.op_Implicit(bool)`, `Variant.op_Implicit(ElectronObject?)` and `Variant.op_Implicit(NodePath)`;\n  - no ambiguous first-by-method-name fallback that assigns one overload's summary to sibling overloads;\n  - synchronized API manifest, local documentation index and Wiki output.\n- Required commands:\n  - `dotnet build eng/Electron2D.ApiManifestGenerator/Electron2D.ApiManifestGenerator.csproj --no-restore -v:minimal`\n  - focused existing `ApiManifestTests` coverage for exact conversion-operator summaries\n  - `dotnet run --project eng/Electron2D.Build -- update api-manifest --check`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- verify public-api-documentation --wiki-path .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: not required by default; use it only if the task's implementation changes the durable generator contract beyond exact overload identity.\n\n### Internal substrate acceptance contract\n\n- Input boundary: exact CLR method signature and corresponding XML documentation member identifier, including conversion-operator parameter types and nullable reference annotations as represented by the compiler XML file.\n- Resolution invariant: each exported overload resolves only its own XML member; overloaded methods never inherit documentation from the first sibling with the same simple name.\n- Failure policy: an unresolved or ambiguous exact identifier produces missing-documentation evidence or a deterministic diagnostic, never a plausible but unrelated summary.\n- Consumer boundary: API manifest, generated local documentation index and generated Wiki must receive the same resolved summary.\n- Regression boundary: existing non-overloaded methods and properties retain their current documentation mapping.\n\n### Самодостаточное описание\n\nExternal audit r04 обнаружил, что исходный XML-комментарий `Variant.op_Implicit(ElectronObject?)` корректен, но generated manifest и local docs index назначают ему Boolean-summary. Тот же текст повторяется у всех перегрузок `Variant.op_Implicit`, потому `FindDoc` при неудачном точном поиске выбирает первый XML-элемент только по имени метода. Задача должна исправить identity lookup в генераторе без изменения runtime `Variant` и без расширения текущей `T-1137`.\n\n### Критерии приёмки\n\n- [ ] Доменный документ фиксирует точный overload-aware XML lookup и failure policy.\n- [ ] Существующий focused generator test различает summaries для `bool`, `ElectronObject?` и `NodePath` conversion operators.\n- [ ] Генератор использует точную сигнатуру и не выбирает первый sibling только по имени перегруженного метода.\n- [ ] API manifest, local docs index и Wiki пересобраны и содержат корректные distinct summaries.\n- [ ] Обязательные build/docs/license/whitespace проверки проходят в текущей сессии.\n\n### Подзадачи\n\n- [ ] Зафиксировать ожидаемый exact-member lookup в `docs/documentation/api-manifest.md`.\n- [ ] Обновить существующее focused test coverage и подтвердить RED на текущем генераторе.\n- [ ] Реализовать минимальный overload-aware lookup и получить GREEN.\n- [ ] Перегенерировать manifest/local docs/Wiki и выполнить обязательные проверки.\n\n### Текущее подтверждение (`Current evidence`)\n\n#### Выполнено локально\n\n- Saved r04 report локализует дефект в `FindDoc` и показывает ошибочные summaries в generated manifest.\n\n#### Ещё отсутствует\n\n- Точный mapping XML member IDs для перегруженных conversion operators.\n- Поведенческая проверка трёх distinct summaries и синхронизированные generated consumers.\n\n#### Принято аудитом\n\n- Отсутствует; r04 классифицировал finding как отдельный неблокирующий follow-up для `T-1137`.\n\n### Заметки агента\n\n2026-07-09T23:31:32+03:00 - Создано из actionable `FOLLOW_UP_FINDING F1` saved report `docs/verdicts/release-management/t-1137-audit-r04.md`. Реализация намеренно не входит в r05 closure; наличие zero-context active task закрывает follow-up ownership для `verify audit-followups`.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-r04.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-1138\n  - rationale: Дефект overload-aware XML lookup не входит в runtime/profile scope `T-1137`; для него создана отдельная zero-context задача с доменным документом, исходниками, тестовой поверхностью и критериями приёмки.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0012",
+    "tag-0015",
+    "tag-0018",
+    "tag-0019"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-94ca0395565920c2776d3693d2df82fe"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ фиксирует точный overload-aware XML lookup и failure policy.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Существующий focused generator test различает summaries для `bool`, `ElectronObject?` и `NodePath` conversion operators.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Генератор использует точную сигнатуру и не выбирает первый sibling только по имени перегруженного метода.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "API manifest, local docs index и Wiki пересобраны и содержат корректные distinct summaries.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Обязательные build/docs/license/whitespace проверки проходят в текущей сессии.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-09T20:31:32.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано из actionable `FOLLOW_UP_FINDING F1` saved report `docs/verdicts/release-management/t-1137-audit-r04.md`. Реализация намеренно не входит в r05 closure; наличие zero-context active task закрывает follow-up ownership для `verify audit-followups`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required by default; use it only if the task's implementation changes the durable generator contract beyond exact overload identity."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": ".github/wiki"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/documentation/api-manifest.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-1137-audit-r04.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "eng/Electron2D.ApiManifestGenerator"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "eng/Electron2D.ApiManifestGenerator/Program.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "src/Electron2D/Core/Variant/Variant.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ApiManifestTests.cs"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "API manifest generator metadata-resolution fix.",
+    "readyToStart": [
+      "task state is `open`;",
+      "dependencies `T-0242` and `T-1137` are accepted/closed or have saved `ACCEPT` evidence where applicable;",
+      "no other task is `in progress`."
+    ],
+    "stopConditions": [
+      "proposed work changes runtime `Variant` conversion behavior or public signatures;",
+      "work expands into full `Variant` class parity or unrelated XML documentation cleanup;",
+      "exact XML member identity cannot be derived without changing the generated packet contract."
+    ],
+    "allowedChanges": [
+      "overload resolution in `eng/Electron2D.ApiManifestGenerator/`;",
+      "the existing focused API-manifest tests and fixtures;",
+      "`docs/documentation/api-manifest.md` and generated manifest/local-docs/Wiki artifacts."
+    ],
+    "forbiddenChanges": [
+      "runtime conversion semantics in `src/Electron2D/Core/Variant/Variant.cs` except source XML wording proven incorrect independently;",
+      "manual public API profile decisions;",
+      "unrelated generated summaries or public class acceptance states."
+    ],
+    "requiredOutputs": [
+      "overload-aware XML member lookup for conversion operators using exact signatures;",
+      "distinct summaries for `Variant.op_Implicit(bool)`, `Variant.op_Implicit(ElectronObject?)` and `Variant.op_Implicit(NodePath)`;",
+      "no ambiguous first-by-method-name fallback that assigns one overload's summary to sibling overloads;",
+      "synchronized API manifest, local documentation index and Wiki output."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet build eng/Electron2D.ApiManifestGenerator/Electron2D.ApiManifestGenerator.csproj --no-restore -v:minimal`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "focused existing `ApiManifestTests` coverage for exact conversion-operator summaries",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update api-manifest --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify public-api-documentation --wiki-path .github/wiki`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0008",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 15449619,
+      "byteLength": 7763,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "e33291eedbf8e6cd10308f960961d88932318a28eb1d1c8d083c139ea1dbe993",
+      "markdown": "## T-1138 [ ] P1: Исправить сопоставление XML-документации перегруженных conversion operators в API manifest generator\n\n- Создана: 2026-07-09T23:31:32+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0242, T-1137\n- Ссылки:\n  - Доменный документ: `docs/documentation/api-manifest.md`\n  - Генератор: `eng/Electron2D.ApiManifestGenerator/Program.cs`\n  - Исходная XML-документация: `src/Electron2D/Core/Variant/Variant.cs`\n  - Сгенерированные потребители: `data/api/electron2d-api-manifest.json`; `data/documentation/`; `.github/wiki/`\n  - Тесты: `tests/Electron2D.Tests.Integration/ApiManifestTests.cs`; `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник finding: `docs/verdicts/release-management/t-1137-audit-r04.md`, `FOLLOW_UP_FINDING F1`\n\n### Execution contract\n\n- Task type: API manifest generator metadata-resolution fix.\n- Ready-to-start:\n  - task state is `open`;\n  - dependencies `T-0242` and `T-1137` are accepted/closed or have saved `ACCEPT` evidence where applicable;\n  - no other task is `in progress`.\n- Stop conditions:\n  - proposed work changes runtime `Variant` conversion behavior or public signatures;\n  - work expands into full `Variant` class parity or unrelated XML documentation cleanup;\n  - exact XML member identity cannot be derived without changing the generated packet contract.\n- May change:\n  - overload resolution in `eng/Electron2D.ApiManifestGenerator/`;\n  - the existing focused API-manifest tests and fixtures;\n  - `docs/documentation/api-manifest.md` and generated manifest/local-docs/Wiki artifacts.\n- Must not change:\n  - runtime conversion semantics in `src/Electron2D/Core/Variant/Variant.cs` except source XML wording proven incorrect independently;\n  - manual public API profile decisions;\n  - unrelated generated summaries or public class acceptance states.\n- Required outputs:\n  - overload-aware XML member lookup for conversion operators using exact signatures;\n  - distinct summaries for `Variant.op_Implicit(bool)`, `Variant.op_Implicit(ElectronObject?)` and `Variant.op_Implicit(NodePath)`;\n  - no ambiguous first-by-method-name fallback that assigns one overload's summary to sibling overloads;\n  - synchronized API manifest, local documentation index and Wiki output.\n- Required commands:\n  - `dotnet build eng/Electron2D.ApiManifestGenerator/Electron2D.ApiManifestGenerator.csproj --no-restore -v:minimal`\n  - focused existing `ApiManifestTests` coverage for exact conversion-operator summaries\n  - `dotnet run --project eng/Electron2D.Build -- update api-manifest --check`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- verify public-api-documentation --wiki-path .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: not required by default; use it only if the task's implementation changes the durable generator contract beyond exact overload identity.\n\n### Internal substrate acceptance contract\n\n- Input boundary: exact CLR method signature and corresponding XML documentation member identifier, including conversion-operator parameter types and nullable reference annotations as represented by the compiler XML file.\n- Resolution invariant: each exported overload resolves only its own XML member; overloaded methods never inherit documentation from the first sibling with the same simple name.\n- Failure policy: an unresolved or ambiguous exact identifier produces missing-documentation evidence or a deterministic diagnostic, never a plausible but unrelated summary.\n- Consumer boundary: API manifest, generated local documentation index and generated Wiki must receive the same resolved summary.\n- Regression boundary: existing non-overloaded methods and properties retain their current documentation mapping.\n\n### Самодостаточное описание\n\nExternal audit r04 обнаружил, что исходный XML-комментарий `Variant.op_Implicit(ElectronObject?)` корректен, но generated manifest и local docs index назначают ему Boolean-summary. Тот же текст повторяется у всех перегрузок `Variant.op_Implicit`, потому `FindDoc` при неудачном точном поиске выбирает первый XML-элемент только по имени метода. Задача должна исправить identity lookup в генераторе без изменения runtime `Variant` и без расширения текущей `T-1137`.\n\n### Критерии приёмки\n\n- [ ] Доменный документ фиксирует точный overload-aware XML lookup и failure policy.\n- [ ] Существующий focused generator test различает summaries для `bool`, `ElectronObject?` и `NodePath` conversion operators.\n- [ ] Генератор использует точную сигнатуру и не выбирает первый sibling только по имени перегруженного метода.\n- [ ] API manifest, local docs index и Wiki пересобраны и содержат корректные distinct summaries.\n- [ ] Обязательные build/docs/license/whitespace проверки проходят в текущей сессии.\n\n### Подзадачи\n\n- [ ] Зафиксировать ожидаемый exact-member lookup в `docs/documentation/api-manifest.md`.\n- [ ] Обновить существующее focused test coverage и подтвердить RED на текущем генераторе.\n- [ ] Реализовать минимальный overload-aware lookup и получить GREEN.\n- [ ] Перегенерировать manifest/local docs/Wiki и выполнить обязательные проверки.\n\n### Текущее подтверждение (`Current evidence`)\n\n#### Выполнено локально\n\n- Saved r04 report локализует дефект в `FindDoc` и показывает ошибочные summaries в generated manifest.\n\n#### Ещё отсутствует\n\n- Точный mapping XML member IDs для перегруженных conversion operators.\n- Поведенческая проверка трёх distinct summaries и синхронизированные generated consumers.\n\n#### Принято аудитом\n\n- Отсутствует; r04 классифицировал finding как отдельный неблокирующий follow-up для `T-1137`.\n\n### Заметки агента\n\n2026-07-09T23:31:32+03:00 - Создано из actionable `FOLLOW_UP_FINDING F1` saved report `docs/verdicts/release-management/t-1137-audit-r04.md`. Реализация намеренно не входит в r05 closure; наличие zero-context active task закрывает follow-up ownership для `verify audit-followups`.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-r04.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-1138\n  - rationale: Дефект overload-aware XML lookup не входит в runtime/profile scope `T-1137`; для него создана отдельная zero-context задача с доменным документом, исходниками, тестовой поверхностью и критериями приёмки.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-09T20:31:32.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

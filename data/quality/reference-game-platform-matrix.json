@@ -86,7 +86,7 @@
         "resources"
       ],
       "editorMetadataRoots": [
-        ".electron2d/tasks"
+        ".taskboard"
       ],
       "verifier": "dotnet run --project eng/Electron2D.Build -- verify platformer",
       "expectedRuntimeTargets": [

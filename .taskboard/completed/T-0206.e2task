@@ -1,0 +1,270 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-adc9a5d3f59b549da434990279d27e2a",
+  "revision": 2,
+  "taskId": "T-0206",
+  "legacyAliases": [],
+  "title": "Перевести repository automation с PowerShell на C#",
+  "description": "## T-0206 [x] P0: Перевести repository automation с PowerShell на C#\n\n- Создана: 2026-06-24T14:32:00+03:00\n- Завершена: 2026-07-01T12:22:51+03:00\n- Принята внешним аудитом: 2026-07-01T12:22:51+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний аудит r03 принял финальное закрытие tracking-задачи полной миграции репозиторной автоматизации на внутренний C#-инструмент `eng/Electron2D.Build`.\n- Приоритет: P0\n- Зависимости: нет\n- Ссылки:\n  - Доменный документ: `docs/release-management/ci-matrix.md`; `docs/release-management/release-packaging.md`\n  - Исходный код: `eng/Electron2D.Build/Program.cs`; `eng/Electron2D.Build/RepositoryWorkflowVerifiers.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Пересоздаваемый индекс документации: `data/documentation/electron2d-local-docs-index.json`; `data/documentation/local-docs-index/documentation.ndjson`\n  - Внешний аудит с исправлениями: `docs/verdicts/release-management/t-0206-audit-r02.md`\n  - Финальный внешний аудит: `docs/verdicts/release-management/t-0206-audit-r03.md`\n\n### Самодостаточное описание\n\nЗадача закрыла общий tracking переноса репозиторной автоматизации с PowerShell на C#. Дочерние задачи уже перевели CI, тестовый запускатель, документационные проверки, API/Wiki/license/manifest-проверки, локальную сборку релизных архивов и детерминированный audit package на `eng/Electron2D.Build`.\n\nФинальное изменение добавило строгую C#-проверку `verify no-powershell-workflows`: она проверяет отслеживаемые Git пути из рабочей области репозитория, отказывает при активных `tools/*.ps1`, `pwsh`, `.ps1` и PowerShell-командах, а исторические или миграционные упоминания принимает только по точному пути и SHA-256 строки после `Trim()`. Отдельный диагностический вызов `verify no-powershell-workflows allowed-mentions` выводит разрешённые строки с `path`, `lineNumber` и `message`, но возвращает ненулевой код, если в той же области есть активное нарушение.\n\n### Критерии и результат\n\n- [x] `T-0207`, `T-0208`, `T-0209`, `T-0210` и `T-0228` закрыты и приняты внешним аудитом.\n- [x] C#-проверка подтверждает отсутствие активных PowerShell-команд в отслеживаемых рабочих путях репозитория.\n- [x] Диагностический вызов показывает только явно разрешённые исторические, миграционные и отказные строки.\n- [x] После `VERDICT: NEEDS_FIXES` r02 устранены лишние изменения состояния чужих задач, широкие текстовые эвристики разрешающего списка и недостающие тесты на смешанные строки.\n- [x] Внешний аудит r03 вернул `VERDICT: ACCEPT`.\n\n### Проверки\n\n- [x] `dotnet build eng\\Electron2D.Build\\Electron2D.Build.csproj -v:minimal` прошёл.\n- [x] `dotnet build tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj -v:minimal` прошёл.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~T0210BuildToolVerifiesNoPowerShellWorkflowsInCurrentRepository|FullyQualifiedName~VerifyNoPowerShellWorkflowsReportsAllowlistedMentionsInDiagnosticMode|FullyQualifiedName~VerifyNoPowerShellWorkflowsRejectsActiveWorkflowFixture|FullyQualifiedName~VerifyNoPowerShellWorkflowsRejectsActiveCommandInAllowlistBoundaryFixture|FullyQualifiedName~VerifyNoPowerShellWorkflowsDiagnosticModeRejectsActiveWorkflowFixture|FullyQualifiedName~VerifyNoPowerShellWorkflowsIgnoresUntrackedDrafts\" --no-build --no-restore -v:minimal` прошёл: 9/9.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify no-powershell-workflows` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify no-powershell-workflows allowed-mentions` прошёл и сообщил 52 разрешённые строки.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs --check` прошёл после пересоздания индекса.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify docs` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify licenses` прошёл для 661 исходного C# файла.\n- [x] `powershell -ExecutionPolicy Bypass -File tools/Verify-SourceLicenseHeaders.ps1` не прошёл, потому что устаревший `tools/Verify-SourceLicenseHeaders.ps1` отсутствует после миграции; действующая проверка лицензий находится в `eng/Electron2D.Build`.\n- [x] `git diff --check` прошёл.\n- [x] `audit package r03` прошёл и создал `.temp/audit/T-0206-audit-r03.zip` с operator workflow sidecar.\n- [x] `audit package verify r03` прошёл на отдельной clean repo `.temp/audit-clean/T-0206-r03`.\n- [x] `audit submit r03` сохранил `docs/verdicts/release-management/t-0206-audit-r03.md` через штатный recovery `--download-report-only`; первая непустая строка файла - `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-07-01T10:55:00+03:00 - Начата финализация `T-0206`; исходный `HEAD` и audit baseline зафиксированы как `a4fd5c471d8a7ed749f7964be3bfbd229bcb9484`, домен задачи - `release-management`.\n\n2026-07-01T12:12:00+03:00 - Внешний аудит r02 вернул `VERDICT: NEEDS_FIXES`; исправления ограничены областью `T-0206` и закрыли blocker-ы B1-B3.\n\n2026-07-01T12:22:51+03:00 - Внешний аудит r03 вернул `VERDICT: ACCEPT`; после этого новые audit ZIP не собирались, `T-0206` удалена из активного `TASKS.md`, а архивная запись сохранена в `data/completed-tasks/2026/07 Июль.md`.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`T-0207`, `T-0208`, `T-0209`, `T-0210` и `T-0228` закрыты и приняты внешним аудитом.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-adc9a5d3f59b549da434990279d27e2a/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "C#-проверка подтверждает отсутствие активных PowerShell-команд в отслеживаемых рабочих путях репозитория.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-adc9a5d3f59b549da434990279d27e2a/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Диагностический вызов показывает только явно разрешённые исторические, миграционные и отказные строки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-adc9a5d3f59b549da434990279d27e2a/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "После `VERDICT: NEEDS_FIXES` r02 устранены лишние изменения состояния чужих задач, широкие текстовые эвристики разрешающего списка и недостающие тесты на смешанные строки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-adc9a5d3f59b549da434990279d27e2a/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Внешний аудит r03 вернул `VERDICT: ACCEPT`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-adc9a5d3f59b549da434990279d27e2a/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-01T07:55:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Начата финализация `T-0206`; исходный `HEAD` и audit baseline зафиксированы как `a4fd5c471d8a7ed749f7964be3bfbd229bcb9484`, домен задачи - `release-management`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-01T09:12:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r02 вернул `VERDICT: NEEDS_FIXES`; исправления ограничены областью `T-0206` и закрыли blocker-ы B1-B3."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-01T09:22:51.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r03 вернул `VERDICT: ACCEPT`; после этого новые audit ZIP не собирались, `T-0206` удалена из активного `TASKS.md`, а архивная запись сохранена в `data/completed-tasks/2026/07 Июль.md`."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-07-01T09:22:51.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".temp/audit-clean/T-0206-r03"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": ".temp/audit/T-0206-audit-r03.zip"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/completed-tasks/2026/07 Июль.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "data/documentation/local-docs-index/documentation.ndjson"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/release-management/ci-matrix.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/release-management/release-packaging.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0206-audit-r02.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0206-audit-r03.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "eng/Electron2D.Build"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/Program.cs"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/RepositoryWorkflowVerifiers.cs"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "tools/*.ps1"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "tools/Verify-SourceLicenseHeaders.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "powershell -ExecutionPolicy Bypass -File tools/Verify-SourceLicenseHeaders.ps1",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/07 Июль.md",
+      "byteOffset": 7474,
+      "byteLength": 6910,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "0c4b2ed9cc5d79dd7997fa6866a379cac3988bd3a20846a295048291d9197b98",
+      "markdown": "## T-0206 [x] P0: Перевести repository automation с PowerShell на C#\n\n- Создана: 2026-06-24T14:32:00+03:00\n- Завершена: 2026-07-01T12:22:51+03:00\n- Принята внешним аудитом: 2026-07-01T12:22:51+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний аудит r03 принял финальное закрытие tracking-задачи полной миграции репозиторной автоматизации на внутренний C#-инструмент `eng/Electron2D.Build`.\n- Приоритет: P0\n- Зависимости: нет\n- Ссылки:\n  - Доменный документ: `docs/release-management/ci-matrix.md`; `docs/release-management/release-packaging.md`\n  - Исходный код: `eng/Electron2D.Build/Program.cs`; `eng/Electron2D.Build/RepositoryWorkflowVerifiers.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Пересоздаваемый индекс документации: `data/documentation/electron2d-local-docs-index.json`; `data/documentation/local-docs-index/documentation.ndjson`\n  - Внешний аудит с исправлениями: `docs/verdicts/release-management/t-0206-audit-r02.md`\n  - Финальный внешний аудит: `docs/verdicts/release-management/t-0206-audit-r03.md`\n\n### Самодостаточное описание\n\nЗадача закрыла общий tracking переноса репозиторной автоматизации с PowerShell на C#. Дочерние задачи уже перевели CI, тестовый запускатель, документационные проверки, API/Wiki/license/manifest-проверки, локальную сборку релизных архивов и детерминированный audit package на `eng/Electron2D.Build`.\n\nФинальное изменение добавило строгую C#-проверку `verify no-powershell-workflows`: она проверяет отслеживаемые Git пути из рабочей области репозитория, отказывает при активных `tools/*.ps1`, `pwsh`, `.ps1` и PowerShell-командах, а исторические или миграционные упоминания принимает только по точному пути и SHA-256 строки после `Trim()`. Отдельный диагностический вызов `verify no-powershell-workflows allowed-mentions` выводит разрешённые строки с `path`, `lineNumber` и `message`, но возвращает ненулевой код, если в той же области есть активное нарушение.\n\n### Критерии и результат\n\n- [x] `T-0207`, `T-0208`, `T-0209`, `T-0210` и `T-0228` закрыты и приняты внешним аудитом.\n- [x] C#-проверка подтверждает отсутствие активных PowerShell-команд в отслеживаемых рабочих путях репозитория.\n- [x] Диагностический вызов показывает только явно разрешённые исторические, миграционные и отказные строки.\n- [x] После `VERDICT: NEEDS_FIXES` r02 устранены лишние изменения состояния чужих задач, широкие текстовые эвристики разрешающего списка и недостающие тесты на смешанные строки.\n- [x] Внешний аудит r03 вернул `VERDICT: ACCEPT`.\n\n### Проверки\n\n- [x] `dotnet build eng\\Electron2D.Build\\Electron2D.Build.csproj -v:minimal` прошёл.\n- [x] `dotnet build tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj -v:minimal` прошёл.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~T0210BuildToolVerifiesNoPowerShellWorkflowsInCurrentRepository|FullyQualifiedName~VerifyNoPowerShellWorkflowsReportsAllowlistedMentionsInDiagnosticMode|FullyQualifiedName~VerifyNoPowerShellWorkflowsRejectsActiveWorkflowFixture|FullyQualifiedName~VerifyNoPowerShellWorkflowsRejectsActiveCommandInAllowlistBoundaryFixture|FullyQualifiedName~VerifyNoPowerShellWorkflowsDiagnosticModeRejectsActiveWorkflowFixture|FullyQualifiedName~VerifyNoPowerShellWorkflowsIgnoresUntrackedDrafts\" --no-build --no-restore -v:minimal` прошёл: 9/9.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify no-powershell-workflows` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify no-powershell-workflows allowed-mentions` прошёл и сообщил 52 разрешённые строки.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs --check` прошёл после пересоздания индекса.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify docs` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify licenses` прошёл для 661 исходного C# файла.\n- [x] `powershell -ExecutionPolicy Bypass -File tools/Verify-SourceLicenseHeaders.ps1` не прошёл, потому что устаревший `tools/Verify-SourceLicenseHeaders.ps1` отсутствует после миграции; действующая проверка лицензий находится в `eng/Electron2D.Build`.\n- [x] `git diff --check` прошёл.\n- [x] `audit package r03` прошёл и создал `.temp/audit/T-0206-audit-r03.zip` с operator workflow sidecar.\n- [x] `audit package verify r03` прошёл на отдельной clean repo `.temp/audit-clean/T-0206-r03`.\n- [x] `audit submit r03` сохранил `docs/verdicts/release-management/t-0206-audit-r03.md` через штатный recovery `--download-report-only`; первая непустая строка файла - `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-07-01T10:55:00+03:00 - Начата финализация `T-0206`; исходный `HEAD` и audit baseline зафиксированы как `a4fd5c471d8a7ed749f7964be3bfbd229bcb9484`, домен задачи - `release-management`.\n\n2026-07-01T12:12:00+03:00 - Внешний аудит r02 вернул `VERDICT: NEEDS_FIXES`; исправления ограничены областью `T-0206` и закрыли blocker-ы B1-B3.\n\n2026-07-01T12:22:51+03:00 - Внешний аудит r03 вернул `VERDICT: ACCEPT`; после этого новые audit ZIP не собирались, `T-0206` удалена из активного `TASKS.md`, а архивная запись сохранена в `data/completed-tasks/2026/07 Июль.md`.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-24T11:32:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-07-01T09:22:51.0000000+00:00",
+  "completedAt": "2026-07-01T09:22:51.0000000+00:00",
+  "acceptedAt": "2026-07-01T09:22:51.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-07-01T09:22:51.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -2634,14 +2634,14 @@ public sealed class RepositoryBuildToolTests
     [InlineData("project.e2d.json", "\"text\"\n", "E2D-BUILD-PROJECT-TEMPLATE-PROJECT-MANIFEST")]
     [InlineData("project.e2d.json", "42\n", "E2D-BUILD-PROJECT-TEMPLATE-PROJECT-MANIFEST")]
     [InlineData("project.e2d.json", "{}\n", "E2D-BUILD-PROJECT-TEMPLATE-PROJECT-MANIFEST")]
-    [InlineData(".electron2d/tasks/board.e2tasks", "[]\n", "E2D-BUILD-PROJECT-TEMPLATE-TASK-BOARD")]
-    [InlineData(".electron2d/tasks/board.e2tasks", "\"text\"\n", "E2D-BUILD-PROJECT-TEMPLATE-TASK-BOARD")]
-    [InlineData(".electron2d/tasks/board.e2tasks", "42\n", "E2D-BUILD-PROJECT-TEMPLATE-TASK-BOARD")]
-    [InlineData(".electron2d/tasks/board.e2tasks", "{}\n", "E2D-BUILD-PROJECT-TEMPLATE-TASK-BOARD")]
-    [InlineData(".electron2d/tasks/welcome.e2task", "[]\n", "E2D-BUILD-PROJECT-TEMPLATE-WELCOME-TASK")]
-    [InlineData(".electron2d/tasks/welcome.e2task", "\"text\"\n", "E2D-BUILD-PROJECT-TEMPLATE-WELCOME-TASK")]
-    [InlineData(".electron2d/tasks/welcome.e2task", "42\n", "E2D-BUILD-PROJECT-TEMPLATE-WELCOME-TASK")]
-    [InlineData(".electron2d/tasks/welcome.e2task", "{}\n", "E2D-BUILD-PROJECT-TEMPLATE-WELCOME-TASK")]
+    [InlineData(".taskboard/board.e2tasks", "[]\n", "E2D-BUILD-PROJECT-TEMPLATE-TASK-BOARD")]
+    [InlineData(".taskboard/board.e2tasks", "\"text\"\n", "E2D-BUILD-PROJECT-TEMPLATE-TASK-BOARD")]
+    [InlineData(".taskboard/board.e2tasks", "42\n", "E2D-BUILD-PROJECT-TEMPLATE-TASK-BOARD")]
+    [InlineData(".taskboard/board.e2tasks", "{}\n", "E2D-BUILD-PROJECT-TEMPLATE-TASK-BOARD")]
+    [InlineData(".taskboard/tasks/welcome.e2task", "[]\n", "E2D-BUILD-PROJECT-TEMPLATE-WELCOME-TASK")]
+    [InlineData(".taskboard/tasks/welcome.e2task", "\"text\"\n", "E2D-BUILD-PROJECT-TEMPLATE-WELCOME-TASK")]
+    [InlineData(".taskboard/tasks/welcome.e2task", "42\n", "E2D-BUILD-PROJECT-TEMPLATE-WELCOME-TASK")]
+    [InlineData(".taskboard/tasks/welcome.e2task", "{}\n", "E2D-BUILD-PROJECT-TEMPLATE-WELCOME-TASK")]
     public async Task VerifyProjectTemplateRejectsInvalidJsonRootAndMissingRequiredFields(string relativePath, string json, string expectedCode)
     {
         using var workspace = CreateManifestFixture("project-template-json-root");
@@ -6072,9 +6072,11 @@ public sealed class RepositoryBuildToolTests
         AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT", "T-0001.patch");
     }
 
-    [Fact]
+    [Theory]
     [Trait("AuditTier", "Medium")]
-    public async Task AuditSubmitControlAuditRejectsTaskLedgerBeforeBrowserLaunch()
+    [InlineData(".taskboard/tasks/T-0001.e2task")]
+    [InlineData("TASKS.md")]
+    public async Task AuditSubmitControlAuditRejectsTaskLedgerBeforeBrowserLaunch(string taskLedgerPath)
     {
         using var workspace = TemporaryDirectory.Create("audit-submit-control-task-ledger-context");
         WriteAuditSubmitZip(
@@ -6082,12 +6084,12 @@ public sealed class RepositoryBuildToolTests
             "T-0001-audit-r02.zip",
             repoFilePaths:
             [
-                "TASKS.md"
+                taskLedgerPath
             ],
             extraEntries:
             [
                 (
-                    "repo-after/TASKS.md",
+                    $"repo-after/{taskLedgerPath}",
                     """
                     # Tasks
 
@@ -6116,7 +6118,7 @@ public sealed class RepositoryBuildToolTests
             @"\\.\pipe\electron2d-audit-submit-missing-pipe");
 
         Assert.NotEqual(0, submit.ExitCode);
-        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT", "TASKS.md");
+        AssertDiagnosticCode(submit, "E2D-BUILD-AUDIT-SUBMIT-CONTROL-CONTEXT", taskLedgerPath);
     }
 
     [Theory]
@@ -8543,15 +8545,97 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("docs/verdicts/release-management/t-0238-audit-r02.md", failing.Stdout, StringComparison.Ordinal);
         Assert.Contains("F2", failing.Stdout, StringComparison.Ordinal);
 
-        AppendText(
+        AppendAuditFollowupTaskDescription(
             workspace.Root,
-            "TASKS.md",
             CreateAuditFollowupClosure("docs/verdicts/release-management/t-0238-audit-r02.md", "F2", "tracked-existing"));
 
         var passing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
 
         Assert.Equal(0, passing.ExitCode);
         AssertDiagnosticCode(passing, "E2D-BUILD-AUDIT-FOLLOWUPS-PASSED");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
+    public async Task AuditWorkflowVerifyAuditFollowupsReadsActiveTaskboardTasksWithoutLegacyMarkdown()
+    {
+        const string reportPath = "docs/verdicts/release-management/t-0238-audit-r01.md";
+        using var workspace = CreateAuditFollowupTaskboardFixture(
+            "audit-followups-active-taskboard",
+            CreateAuditFollowupClosure(reportPath, "F1", "tracked-existing"),
+            completed: false,
+            (reportPath, CreateAcceptedFollowupReport("F1")));
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-AUDIT-FOLLOWUPS-PASSED");
+        Assert.DoesNotContain("TASKS.md", result.Stdout, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
+    public async Task AuditWorkflowVerifyAuditFollowupsReadsTaskActivityComments()
+    {
+        const string reportPath = "docs/verdicts/release-management/t-0238-audit-r01.md";
+        using var workspace = CreateAuditFollowupTaskboardFixture(
+            "audit-followups-activity",
+            string.Empty,
+            completed: false,
+            (reportPath, CreateAcceptedFollowupReport("F1")));
+        WriteAuditFollowupTaskFile(
+            workspace.Root,
+            description: string.Empty,
+            activityPayload: CreateAuditFollowupClosure(reportPath, "F1", "tracked-existing"));
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-AUDIT-FOLLOWUPS-PASSED");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
+    public async Task AuditWorkflowVerifyAuditFollowupsReadsV3ConversationAndTypedActivity()
+    {
+        const string conversationReport = "docs/verdicts/release-management/t-0238-audit-r01.md";
+        const string activityReport = "docs/verdicts/release-management/t-0238-audit-r02.md";
+        using var workspace = CreateAuditFollowupTaskboardFixture(
+            "audit-followups-v3-context",
+            string.Empty,
+            completed: false,
+            (conversationReport, CreateAcceptedFollowupReport("F1")),
+            (activityReport, CreateAcceptedFollowupReport("F2")));
+        WriteAuditFollowupV3TaskFile(
+            workspace.Root,
+            CreateAuditFollowupClosure(conversationReport, "F1", "tracked-existing"),
+            CreateAuditFollowupClosure(activityReport, "F2", "tracked-new"));
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-AUDIT-FOLLOWUPS-PASSED");
+    }
+
+    [Fact]
+    [Trait("AuditTier", "Medium")]
+    public async Task AuditWorkflowVerifyAuditFollowupsReadsMigratedLegacyFragments()
+    {
+        const string reportPath = "docs/verdicts/release-management/t-0238-audit-r01.md";
+        using var workspace = CreateAuditFollowupTaskboardFixture(
+            "audit-followups-legacy-fragment",
+            string.Empty,
+            completed: false,
+            (reportPath, CreateAcceptedFollowupReport("F1")));
+        WriteAuditFollowupTaskFile(
+            workspace.Root,
+            description: string.Empty,
+            legacyMarkdown: CreateAuditFollowupClosure(reportPath, "F1", "tracked-existing"));
+
+        var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
+
+        Assert.Equal(0, result.ExitCode);
+        AssertDiagnosticCode(result, "E2D-BUILD-AUDIT-FOLLOWUPS-PASSED");
     }
 
     [Fact]
@@ -8563,10 +8647,10 @@ public sealed class RepositoryBuildToolTests
             "audit-followups-completed-archive",
             string.Empty,
             (reportPath, CreateAcceptedFollowupReport("F1")));
-        WriteText(
+        WriteAuditFollowupTaskFile(
             workspace.Root,
-            "data/completed-tasks/2026/07 July.md",
-            CreateAuditFollowupClosure(reportPath, "F1", "tracked-existing"));
+            CreateAuditFollowupClosure(reportPath, "F1", "tracked-existing"),
+            completed: true);
 
         var result = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
 
@@ -8590,9 +8674,8 @@ public sealed class RepositoryBuildToolTests
         AssertDiagnosticCode(failing, "E2D-BUILD-AUDIT-FOLLOWUP-UNCLOSED");
         Assert.Contains("docs/verdicts/release-management/t-0238-audit-control-r01.md", failing.Stdout, StringComparison.Ordinal);
 
-        AppendText(
+        AppendAuditFollowupTaskDescription(
             workspace.Root,
-            "TASKS.md",
             CreateAuditFollowupClosure("docs/verdicts/release-management/t-0238-audit-control-r01.md", "F1", "duplicate"));
 
         var passing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
@@ -8616,9 +8699,8 @@ public sealed class RepositoryBuildToolTests
         Assert.NotEqual(0, failing.ExitCode);
         AssertDiagnosticCode(failing, "E2D-BUILD-AUDIT-FOLLOWUP-UNCLOSED");
 
-        AppendText(
+        AppendAuditFollowupTaskDescription(
             workspace.Root,
-            "TASKS.md",
             CreateAuditFollowupClosure(reportPath, "F1", "tracked-new"));
 
         var passing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
@@ -8650,9 +8732,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("OUT_OF_SCOPE_NOTE", failing.Stdout, StringComparison.Ordinal);
         Assert.Contains("N1", failing.Stdout, StringComparison.Ordinal);
 
-        AppendText(
+        AppendAuditFollowupTaskDescription(
             workspace.Root,
-            "TASKS.md",
             CreateAuditFollowupClosure(reportPath, "N1", "tracked-new"));
 
         var passing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
@@ -8683,9 +8764,8 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("INFO_NOTE", failing.Stdout, StringComparison.Ordinal);
         Assert.Contains("I1", failing.Stdout, StringComparison.Ordinal);
 
-        AppendText(
+        AppendAuditFollowupTaskDescription(
             workspace.Root,
-            "TASKS.md",
             CreateAuditFollowupClosure(reportPath, "I1", "tracked-existing"));
 
         var passing = await RunBuildToolFromDirectoryAsync(workspace.Root, "verify", "audit-followups");
@@ -8725,9 +8805,8 @@ public sealed class RepositoryBuildToolTests
         Assert.NotEqual(0, failing.ExitCode);
         AssertDiagnosticCode(failing, "E2D-BUILD-AUDIT-FOLLOWUP-ACCEPTED-RISK");
 
-        WriteText(
+        WriteAuditFollowupTaskFile(
             workspace.Root,
-            "TASKS.md",
             CreateAuditFollowupClosure(
                 "docs/verdicts/release-management/t-0238-audit-r01.md",
                 "F1",
@@ -9140,7 +9219,7 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("Локальный индекс документации `data/documentation/**` не должен индексировать `docs/verdicts/**`", text, StringComparison.Ordinal);
         Assert.Contains("активные контекстные артефакты контрольного ZIP", text, StringComparison.Ordinal);
         Assert.Contains("`repo-after/data/documentation/**`", text, StringComparison.Ordinal);
-        Assert.Contains("`TASKS.md` и `data/dev-diary/**` запрещены как mutable process-history files", text, StringComparison.Ordinal);
+        Assert.Contains("`.taskboard/**`, legacy `TASKS.md` и `data/dev-diary/**` запрещены как mutable process-history files", text, StringComparison.Ordinal);
         Assert.Contains("Обычные repo-owned source/test files под `repo-after/**` могут содержать синтетические fixture paths", text, StringComparison.Ordinal);
         Assert.Contains("Исторические снимки `repo-before/**`, а также удалённые и контекстные строки patch", text, StringComparison.Ordinal);
         Assert.Contains("добавленные строки patch для context-bearing paths остаются запрещены", text, StringComparison.Ordinal);
@@ -9296,6 +9375,10 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("## Core Commands", agents, StringComparison.Ordinal);
         Assert.Contains("## Guardrails", agents, StringComparison.Ordinal);
         Assert.Contains("## Done Means", agents, StringComparison.Ordinal);
+        Assert.Contains(".taskboard/board.e2tasks", agents, StringComparison.Ordinal);
+        Assert.Contains("e2d tasks", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("TASKS.md", agents, StringComparison.Ordinal);
+        Assert.DoesNotContain("data/completed-tasks/", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("unsupported concern", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("failed disproof", agents, StringComparison.Ordinal);
         Assert.DoesNotContain("metadata.previousVerdictChain", agents, StringComparison.Ordinal);
@@ -9322,6 +9405,11 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("metadata.previousVerdictChain", agentWorkflow, StringComparison.Ordinal);
         Assert.Contains("audit-loop-stabilization", agentWorkflow, StringComparison.Ordinal);
         Assert.Contains("Subagent prompt must include", agentWorkflow, StringComparison.Ordinal);
+        Assert.Contains(".taskboard/board.e2tasks", agentWorkflow, StringComparison.Ordinal);
+        Assert.Contains("e2d tasks", agentWorkflow, StringComparison.Ordinal);
+        Assert.Contains("CLI is the only public writer", agentWorkflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("TASKS.md", agentWorkflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("data/completed-tasks/", agentWorkflow, StringComparison.Ordinal);
         Assert.DoesNotContain("# Рабочий протокол", agentWorkflow, StringComparison.Ordinal);
         Assert.DoesNotContain("## Приоритет", agentWorkflow, StringComparison.Ordinal);
         Assert.DoesNotContain("## Язык", agentWorkflow, StringComparison.Ordinal);
@@ -9347,7 +9435,10 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("`.codex/prompts/goal-task-workflow.md`", goalPrompt, StringComparison.Ordinal);
         Assert.DoesNotContain("\\Electron2D\\", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("goal-task-workflow.md", goalPrompt, StringComparison.Ordinal);
-        Assert.Contains("TASKS.md", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains(".taskboard/board.e2tasks", goalPrompt, StringComparison.Ordinal);
+        Assert.Contains("e2d tasks", goalPrompt, StringComparison.Ordinal);
+        Assert.DoesNotContain("TASKS.md", goalPrompt, StringComparison.Ordinal);
+        Assert.DoesNotContain("completed-tasks", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("дневник", goalPrompt, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("VERDICT: ACCEPT", goalPrompt, StringComparison.Ordinal);
         Assert.Contains("Conventional Commit", goalPrompt, StringComparison.Ordinal);
@@ -9367,6 +9458,10 @@ public sealed class RepositoryBuildToolTests
         Assert.Contains("audit-loop-stabilization", goalWorkflow, StringComparison.Ordinal);
         Assert.Contains("previousVerdictChain", goalWorkflow, StringComparison.Ordinal);
         Assert.Contains("blockerClosureList", goalWorkflow, StringComparison.Ordinal);
+        Assert.Contains(".taskboard/board.e2tasks", goalWorkflow, StringComparison.Ordinal);
+        Assert.Contains("e2d tasks", goalWorkflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("TASKS.md", goalWorkflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("completed-tasks", goalWorkflow, StringComparison.Ordinal);
         Assert.Contains("routing and the complete browser sequence belong to the tool", goalWorkflow, StringComparison.Ordinal);
         Assert.DoesNotContain("нажать", goalWorkflow, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("загрузить файл", goalWorkflow, StringComparison.OrdinalIgnoreCase);
@@ -18202,8 +18297,8 @@ public sealed class RepositoryBuildToolTests
             WriteText(workspace.Root, $"{templateRoot}/.codex/skills/{skill}/SKILL.md", $"---\nname: {skill}\n---\n");
         }
 
-        WriteText(workspace.Root, $"{templateRoot}/.electron2d/tasks/board.e2tasks", "{ \"format\": \"Electron2D.TaskBoard\" }\n");
-        WriteText(workspace.Root, $"{templateRoot}/.electron2d/tasks/welcome.e2task", "{ \"format\": \"Electron2D.TaskFile\", \"status\": \"Backlog\" }\n");
+        WriteText(workspace.Root, $"{templateRoot}/.taskboard/board.e2tasks", "{ \"format\": \"Electron2D.TaskBoard\" }\n");
+        WriteText(workspace.Root, $"{templateRoot}/.taskboard/tasks/welcome.e2task", "{ \"format\": \"Electron2D.TaskFile\", \"status\": \"Ready\" }\n");
         return workspace;
     }
 
@@ -18408,15 +18503,116 @@ public sealed class RepositoryBuildToolTests
         string tasksText,
         params (string Path, string Report)[] reports)
     {
+        return CreateAuditFollowupTaskboardFixture(name, tasksText, completed: false, reports);
+    }
+
+    private static TemporaryDirectory CreateAuditFollowupTaskboardFixture(
+        string name,
+        string taskText,
+        bool completed,
+        params (string Path, string Report)[] reports)
+    {
         var workspace = TemporaryDirectory.Create(name);
         CreateRepositoryRootMarkers(workspace.Root);
-        WriteText(workspace.Root, "TASKS.md", "# Tasks\n\n" + tasksText.TrimStart());
+        WriteText(workspace.Root, ".taskboard/board.e2tasks", """
+        {
+          "format": "Electron2D.TaskBoard",
+          "version": 2,
+          "boardId": "fixture-board",
+          "revision": 1,
+          "groups": [],
+          "placements": []
+        }
+        """);
+        WriteAuditFollowupTaskFile(workspace.Root, taskText, completed);
         foreach (var report in reports)
         {
             WriteText(workspace.Root, report.Path, report.Report);
         }
 
         return workspace;
+    }
+
+    private static void WriteAuditFollowupTaskFile(
+        string root,
+        string description,
+        bool completed = false,
+        string? activityPayload = null,
+        string? legacyMarkdown = null)
+    {
+        var taskDocument = new JsonObject
+        {
+            ["format"] = "Electron2D.TaskFile",
+            ["version"] = 2,
+            ["taskUid"] = "fixture-task-uid",
+            ["revision"] = 1,
+            ["taskId"] = "T-9999",
+            ["description"] = description,
+            ["activity"] = new JsonArray(),
+            ["legacySourceFragments"] = new JsonArray()
+        };
+        if (activityPayload is not null)
+        {
+            ((JsonArray)taskDocument["activity"]!).Add(new JsonObject { ["payload"] = activityPayload });
+        }
+
+        if (legacyMarkdown is not null)
+        {
+            ((JsonArray)taskDocument["legacySourceFragments"]!).Add(new JsonObject { ["markdown"] = legacyMarkdown });
+        }
+
+        var directory = completed ? "completed" : "tasks";
+        WriteText(root, $".taskboard/{directory}/T-9999.e2task", taskDocument.ToJsonString());
+    }
+
+    private static void WriteAuditFollowupV3TaskFile(
+        string root,
+        string conversationMarkdown,
+        string activityText)
+    {
+        var taskDocument = new JsonObject
+        {
+            ["format"] = "Electron2D.TaskFile",
+            ["version"] = 3,
+            ["taskUid"] = "fixture-task-uid",
+            ["revision"] = 1,
+            ["taskId"] = "T-9999",
+            ["description"] = string.Empty,
+            ["conversation"] = new JsonObject
+            {
+                ["lastMessageSequence"] = 1,
+                ["messages"] = new JsonArray(new JsonObject
+                {
+                    ["content"] = new JsonArray(new JsonObject
+                    {
+                        ["kind"] = "Markdown",
+                        ["markdown"] = conversationMarkdown
+                    })
+                }),
+                ["contextCheckpoints"] = new JsonArray()
+            },
+            ["activity"] = new JsonArray(new JsonObject
+            {
+                ["kind"] = "Legacy",
+                ["payload"] = new JsonObject
+                {
+                    ["sourceKind"] = "Comment",
+                    ["text"] = activityText
+                }
+            }),
+            ["legacySourceFragments"] = new JsonArray()
+        };
+        WriteText(root, ".taskboard/tasks/T-9999.e2task", taskDocument.ToJsonString());
+    }
+
+    private static void AppendAuditFollowupTaskDescription(string root, string text)
+    {
+        var relativePath = ".taskboard/tasks/T-9999.e2task";
+        var fullPath = Path.Combine(root, relativePath.Replace('/', Path.DirectorySeparatorChar));
+        var taskDocument = JsonNode.Parse(File.ReadAllText(fullPath, Encoding.UTF8))!.AsObject();
+        taskDocument["description"] =
+            (taskDocument["description"]?.GetValue<string>() ?? string.Empty) + text;
+        WriteText(root, relativePath, taskDocument.ToJsonString());
     }
 
     private static TemporaryDirectory CreateAuditContractFixture()
@@ -18605,6 +18801,7 @@ public sealed class RepositoryBuildToolTests
               ],
               "forbiddenPathsChecked": [
                 "TASKS.md",
+                ".taskboard/",
                 "dev-diary/",
                 "completed-tasks/",
                 "data/dev-diary/",
@@ -18650,6 +18847,7 @@ public sealed class RepositoryBuildToolTests
             .Select(item => item.GetString())
             .ToArray();
         Assert.Contains("TASKS.md", forbidden);
+        Assert.Contains(".taskboard/", forbidden);
         Assert.Contains("dev-diary/", forbidden);
         Assert.Contains("completed-tasks/", forbidden);
         Assert.Contains("data/dev-diary/", forbidden);
@@ -18677,6 +18875,7 @@ public sealed class RepositoryBuildToolTests
             normalized.StartsWith(".github/", StringComparison.Ordinal) ||
             normalized.StartsWith(".temp/", StringComparison.Ordinal) ||
             normalized.StartsWith(".codex/", StringComparison.Ordinal) ||
+            normalized.StartsWith(".taskboard/", StringComparison.Ordinal) ||
             normalized.StartsWith("dev-diary/", StringComparison.Ordinal) ||
             normalized.StartsWith("completed-tasks/", StringComparison.Ordinal) ||
             normalized.StartsWith("data/dev-diary/", StringComparison.Ordinal) ||

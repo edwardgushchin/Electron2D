@@ -66,9 +66,9 @@ Remember: This is **AI-native development**. In StellarDown, Spec-Kit outputs ar
 For this repository, `spec-driven-development` is a planning/spec-generation workflow, not a replacement for the repo task, diary, test, and documentation rules.
 
 - It complements `test-driven-development`; it does not compete with or replace the implementation pipeline.
-- Active project work is tracked in `TASKS.md`.
-- Development context is recorded in `dev-diary/`.
-- Accepted/closed history is archived in `completed-tasks/YYYY/MM Месяц.md`, grouped by completion month.
+- Active project work is tracked in `.taskboard/board.e2tasks` and `.e2task` documents, accessed and mutated only through `e2d tasks`.
+- Development context is recorded in `data/dev-diary/`.
+- Accepted or cancelled work is archived through `e2d tasks archive` under `.taskboard/completed/` after the required human decision.
 - `/speckit.*` names in this skill are upstream Spec-Kit workflow labels or host-provided aliases, not repository-local custom commands by default.
 - If the current runtime does not expose `/speckit.*`, use the equivalent `specify` CLI steps or describe the same workflow phase in natural language.
 
@@ -85,7 +85,7 @@ There is no separate canonical `specifications` tree and no separate canonical `
 
 Before implementing any task:
 
-1. Read `AGENTS.md`, `TASKS.md`, the relevant domain document under `docs/<domain>/`, and the latest relevant `dev-diary/` or `completed-tasks/` context.
+1. Read `AGENTS.md`, inspect the task through `e2d tasks get <task-id> --project . --format json`, read `.taskboard/board.e2tasks` through `e2d tasks board`, then read the relevant domain document under `docs/<domain>/` and the latest relevant `data/dev-diary/` context.
 2. Update or create the domain document before implementation.
 3. Only after the document is clear, move through SDD / Spec-Kit planning and then the TDD implementation path.
 
@@ -103,7 +103,7 @@ When something is ambiguous:
 
 ### Handoff Back To Implementation
 
-When planning/spec-generation artifacts are ready, continue through the integrated `test-driven-development` pipeline: domain document -> failing tests -> implementation -> green tests -> final domain document update when needed -> diary/task update.
+When planning/spec-generation artifacts are ready, continue through the integrated `test-driven-development` pipeline: domain document -> failing tests -> implementation -> green tests -> final domain document update when needed -> diary update and task activity/status update through `e2d tasks`.
 
 Recommended layout for Spec-Kit artifacts:
 - Feature folders: `.temp/spec-kit/<###-feature-name>/`

@@ -1,0 +1,456 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-ac06248aab0e5010e9fb1040165d2ac0",
+  "revision": 2,
+  "taskId": "T-0159",
+  "legacyAliases": [],
+  "title": "Реализовать C# language services и IntelliSense для Script workspace",
+  "description": "## T-0159 - Реализовать C# language services и IntelliSense для Script workspace\n\n- Закрыта: 2026-06-23T06:49:00+03:00\n- Коммит: `45a2383 feat: add script language services model`\n- Спецификация:\n  - `docs/scripting/editor-script-workflow.md`\n  - `docs/editor/godot4-editor-reference.md`\n- Документация:\n  - `docs/scripting/editor-language-services.md`\n  - `docs/scripting/editor-script-workflow.md`\n  - `docs/editor/script-workspace.md`\n  - `docs/editor/editor-project-shell.md`\n  - `docs/README.md`\n- Исходный код и тесты:\n  - `src/Electron2D.CSharpLanguageServices/`\n  - `src/Electron2D.Editor/Scripting/EditorScriptLanguageServicesSmoke.cs`\n  - `src/Electron2D.Editor/Scripting/EditorScriptLanguageServicesSmokeResult.cs`\n  - `src/Electron2D.Editor/Scripting/EditorScriptLanguageServicesVisualHarness.cs`\n  - `src/Electron2D.Editor/Program.cs`\n  - `src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs`\n  - `tests/Electron2D.Tests.Integration/EditorScriptLanguageServicesTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nРеализована отдельная сборка `Electron2D.CSharpLanguageServices` для C# language services `Script` workspace. Сборка работает внутри процесса `Electron2D.Editor`, использует Roslyn semantic model, не входит в runtime assembly, не живёт в UI-коде редактора и не запускает отдельный language-service process.\n\nSmoke-модель принимает live `CodeDocument` с unsaved text и request identity `ProjectId`, `DocumentId`, `DocumentRevision`, `SemanticVersion`, `ConfigurationHash`. Completion, signature help, hover/Quick Info, live diagnostics, definition, references, rename, formatting и code action используют текущий in-memory buffer; `WorkspaceSnapshot` остаётся только для build/test/run/debug и пакетного анализа.\n\n### Критерии и результат\n\n- [x] Autocomplete работает для типов, методов, свойств, events и локальных переменных.\n- [x] Completion включает API Electron2D из текущего 2D-профиля.\n- [x] Signature help показывает активный параметр.\n- [x] Hover/Quick Info показывает XML documentation.\n- [x] Live compiler diagnostics появляются без ручного build и ведут к строке ошибки.\n- [x] Поддержаны go to definition, find references и rename symbol.\n- [x] Поддержаны document formatting, basic code actions и добавление недостающего `using`.\n- [x] Навигация по классам, методам и свойствам текущего файла представлена через source spans текущего C# document.\n- [x] Semantic model учитывает unsaved C# buffers через live `CodeDocument`.\n- [x] `WorkspaceSnapshot` используется только для build/test/run/debug и пакетного анализа, а не для completion, hover, diagnostics или navigation.\n- [x] Language services реализованы в отдельном `Electron2D.CSharpLanguageServices` assembly, работающем внутри Editor process; отдельный language-service process не входит в `0.1.0`.\n- [x] Language services не находятся в runtime assembly, Editor UI или `Electron2D.Tooling`; baseline - Roslyn.\n- [x] Каждый request/result содержит `ProjectId`, `DocumentId`, `DocumentRevision`, `SemanticVersion` и `ConfigurationHash`; устаревший ответ отбрасывается, если buffer изменился.\n- [x] Реализованы cancellation предыдущих запросов, debounce live diagnostics и reload marker после изменения package/project configuration.\n- [x] Semantic model failures возвращают structured diagnostic `E2D-SCRIPT-0003`.\n- [x] Добавлен integration test для completion, diagnostics, hover, definition, references, rename и unsaved buffer.\n- [x] Создан screenshot `.temp/script-language-services/visual/script-language-services.png`; проведён visual review placement popup/panel, читаемости текста, keyboard/current-selection state и соответствия `docs/editor/godot4-editor-reference.md`.\n- [x] Документация фактического поведения обновлена.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorScriptLanguageServicesTests\"` упал ожидаемо на отсутствующей `--script-language-services-smoke`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorScriptLanguageServicesTests\"` прошёл `1/1`.\n- Visual smoke: `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --script-language-services-smoke .temp\\script-language-services` прошёл и создал PNG/JSON artifacts.\n- Visual review: screenshot открыт агентом; подтверждены active `Script` workspace, completion popup рядом с caret, hover/Quick Info panel, signature help, diagnostics panel `CS0103`, right `Language Services`, отсутствие text overflow и отсутствие `3D`, `AssetLib`, GDScript UI.\n- Focused Editor regression: первый запуск превысил timeout и не засчитан; зависший testhost текущего запуска остановлен. Повторный `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Editor\" -m:1` прошёл `36/36`.\n- Build: `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`.\n- Verifiers: `Verify-SourceLicenseHeaders.ps1`, `Verify-LocalDocumentation.ps1`, `Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki`, `Verify-SourceDomainLayout.ps1`, `Verify-CanonicalGoalAlignment.ps1` прошли.\n- Full tests: `tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `400/400`, runtime smoke `5/5`, golden-data `12/12`.\n\n### Решения\n\n- Language services работают внутри Editor process без отдельного language-service process, потому что для `0.1.0` спецификация требует простую process boundary и не описывает IPC/restart/crash recovery.\n- Сервис вынесен из UI-кода редактора в отдельную сборку, чтобы будущие Tooling/MCP adapters могли использовать тот же semantic core без копирования UI-модели.\n- Stale result, cancellation и debounce представлены machine-readable flags в smoke result, чтобы следующие задачи могли подключать реальные async-запросы без смены публичного Editor contract.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0159 [ ] P0: Реализовать C# language services и IntelliSense для Script workspace\n\n- Создана: 2026-06-22T15:20:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0153, T-0158\n- Ссылки:\n  - Спецификация: `docs/scripting/editor-script-workflow.md`\n  - Документация: `docs/scripting/`; `docs/editor/`\n  - Исходный код: `src/Electron2D.CSharpLanguageServices/`; `src/Electron2D.Editor/`; `tests/`\n\n### Самодостаточное описание\n\nНужно подключить project-aware C# language services для `Script` workspace. Это не словарное дополнение текста: semantic model работает с актуальными unsaved `CodeDocument` через versioned Roslyn workspace и учитывает `.csproj`, project references, Electron2D assemblies, NuGet dependencies, conditional compilation symbols, source-generated API и build configuration.\n\n### Критерии приёмки\n\n- [ ] Autocomplete работает для типов, методов, свойств, events и локальных переменных.\n- [ ] Completion включает API Electron2D из текущего 2D-профиля.\n- [ ] Signature help показывает активный параметр.\n- [ ] Hover/Quick Info показывает XML documentation.\n- [ ] Live compiler diagnostics появляются без ручного build и ведут к строке ошибки.\n- [ ] Поддержаны go to definition, find references и rename symbol.\n- [ ] Поддержаны document formatting, basic code actions и добавление недостающего `using`.\n- [ ] Навигация по классам, методам и свойствам текущего файла работает.\n- [ ] Semantic model учитывает unsaved C# buffers через live Roslyn Workspace, синхронизированный с `CodeDocument`.\n- [ ] `WorkspaceSnapshot` используется только для build/test/run/debug и пакетного анализа, а не для completion, hover, diagnostics или navigation.\n- [ ] Language services реализованы в отдельном `Electron2D.CSharpLanguageServices` assembly, работающем внутри Editor process; отдельный language-service process не входит в `0.1.0`.\n- [ ] Language services не находятся в runtime assembly, Editor UI или `Electron2D.Tooling`; baseline - Roslyn.\n- [ ] Каждый request/result содержит `ProjectId`, `DocumentId`, `DocumentRevision`, `SemanticVersion` и `ConfigurationHash`; устаревший ответ отбрасывается, если buffer изменился.\n- [ ] Реализованы cancellation предыдущих запросов, debounce live diagnostics и reload после изменения `.csproj`, `Directory.Build.props`, `Directory.Build.targets`, `global.json` и package references.\n- [ ] Semantic model failures возвращают structured diagnostics.\n- [ ] Добавлены tests для completion, diagnostics, hover, definition, references, rename и unsaved buffer.\n- [ ] Создан и сохранён screenshot окна `Electron2D.Editor` с видимыми completion, hover/Quick Info или diagnostics UI; проведён анализ placement popup/panel, читаемости текста, keyboard interaction и соответствия `docs/editor/godot4-editor-reference.md`.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: IntelliSense, подсветка, автодополнение и diagnostics являются обязательной частью `Script` workspace `0.1.0`.\n\n2026-06-23T06:12:00+03:00 - Задача взята в работу после закрытия `T-0158`; `T-0160` ждёт `T-0159` и `T-0163`, `T-0161` ждёт `T-0159`/`T-0160`, `T-0128` ждёт `T-0159`/`T-0160`/`T-0161`. Перед production-кодом нужно уточнить проверяемый минимум Roslyn-backed language services, добавить red tests, сохранить screenshot artifact completion/hover/diagnostics UI и проверить его по `docs/editor/godot4-editor-reference.md`.\n```\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-8f9de83d456b281aabdaa6b0dbd08764"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-e5eaeda9f60b48d4eec518dfe00fff72"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Autocomplete работает для типов, методов, свойств, events и локальных переменных.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Completion включает API Electron2D из текущего 2D-профиля.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Signature help показывает активный параметр.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Hover/Quick Info показывает XML documentation.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Live compiler diagnostics появляются без ручного build и ведут к строке ошибки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Поддержаны go to definition, find references и rename symbol.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Поддержаны document formatting, basic code actions и добавление недостающего `using`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Навигация по классам, методам и свойствам текущего файла представлена через source spans текущего C# document.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Semantic model учитывает unsaved C# buffers через live `CodeDocument`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "`WorkspaceSnapshot` используется только для build/test/run/debug и пакетного анализа, а не для completion, hover, diagnostics или navigation.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Language services реализованы в отдельном `Electron2D.CSharpLanguageServices` assembly, работающем внутри Editor process; отдельный language-service process не входит в `0.1.0`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Language services не находятся в runtime assembly, Editor UI или `Electron2D.Tooling`; baseline - Roslyn.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-013",
+      "description": "Каждый request/result содержит `ProjectId`, `DocumentId`, `DocumentRevision`, `SemanticVersion` и `ConfigurationHash`; устаревший ответ отбрасывается, если buffer изменился.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-014",
+      "description": "Реализованы cancellation предыдущих запросов, debounce live diagnostics и reload marker после изменения package/project configuration.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-015",
+      "description": "Semantic model failures возвращают structured diagnostic `E2D-SCRIPT-0003`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-016",
+      "description": "Добавлен integration test для completion, diagnostics, hover, definition, references, rename и unsaved buffer.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-017",
+      "description": "Создан screenshot `.temp/script-language-services/visual/script-language-services.png`; проведён visual review placement popup/panel, читаемости текста, keyboard/current-selection state и соответствия `docs/editor/godot4-editor-reference.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-018",
+      "description": "Документация фактического поведения обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-019",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ac06248aab0e5010e9fb1040165d2ac0/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T03:12:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача взята в работу после закрытия `T-0158`; `T-0160` ждёт `T-0159` и `T-0163`, `T-0161` ждёт `T-0159`/`T-0160`, `T-0128` ждёт `T-0159`/`T-0160`/`T-0161`. Перед production-кодом нужно уточнить проверяемый минимум Roslyn-backed language services, добавить red tests, сохранить screenshot artifact completion/hover/diagnostics UI и проверить его по `docs/editor/godot4-editor-reference.md`."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-23T03:49:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".temp/script-language-services/visual/script-language-services.png"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "36/36"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "400/400"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/README.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/editor/editor-project-shell.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/editor/godot4-editor-reference.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/editor/script-workspace.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "Directory",
+      "value": "docs/scripting"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "docs/scripting/editor-language-services.md"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "docs/scripting/editor-script-workflow.md"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "Directory",
+      "value": "src/Electron2D.CSharpLanguageServices"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Program.cs"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Scripting/EditorScriptLanguageServicesSmoke.cs"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Scripting/EditorScriptLanguageServicesSmokeResult.cs"
+    },
+    {
+      "linkId": "link-0022",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Scripting/EditorScriptLanguageServicesVisualHarness.cs"
+    },
+    {
+      "linkId": "link-0023",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs"
+    },
+    {
+      "linkId": "link-0024",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0025",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorScriptLanguageServicesTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 774725,
+      "byteLength": 11972,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "2f63090fe536a23d8735c2ef3b12b30905dffc3cc32629119f16578b9401a459",
+      "markdown": "## T-0159 - Реализовать C# language services и IntelliSense для Script workspace\n\n- Закрыта: 2026-06-23T06:49:00+03:00\n- Коммит: `45a2383 feat: add script language services model`\n- Спецификация:\n  - `docs/scripting/editor-script-workflow.md`\n  - `docs/editor/godot4-editor-reference.md`\n- Документация:\n  - `docs/scripting/editor-language-services.md`\n  - `docs/scripting/editor-script-workflow.md`\n  - `docs/editor/script-workspace.md`\n  - `docs/editor/editor-project-shell.md`\n  - `docs/README.md`\n- Исходный код и тесты:\n  - `src/Electron2D.CSharpLanguageServices/`\n  - `src/Electron2D.Editor/Scripting/EditorScriptLanguageServicesSmoke.cs`\n  - `src/Electron2D.Editor/Scripting/EditorScriptLanguageServicesSmokeResult.cs`\n  - `src/Electron2D.Editor/Scripting/EditorScriptLanguageServicesVisualHarness.cs`\n  - `src/Electron2D.Editor/Program.cs`\n  - `src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs`\n  - `tests/Electron2D.Tests.Integration/EditorScriptLanguageServicesTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nРеализована отдельная сборка `Electron2D.CSharpLanguageServices` для C# language services `Script` workspace. Сборка работает внутри процесса `Electron2D.Editor`, использует Roslyn semantic model, не входит в runtime assembly, не живёт в UI-коде редактора и не запускает отдельный language-service process.\n\nSmoke-модель принимает live `CodeDocument` с unsaved text и request identity `ProjectId`, `DocumentId`, `DocumentRevision`, `SemanticVersion`, `ConfigurationHash`. Completion, signature help, hover/Quick Info, live diagnostics, definition, references, rename, formatting и code action используют текущий in-memory buffer; `WorkspaceSnapshot` остаётся только для build/test/run/debug и пакетного анализа.\n\n### Критерии и результат\n\n- [x] Autocomplete работает для типов, методов, свойств, events и локальных переменных.\n- [x] Completion включает API Electron2D из текущего 2D-профиля.\n- [x] Signature help показывает активный параметр.\n- [x] Hover/Quick Info показывает XML documentation.\n- [x] Live compiler diagnostics появляются без ручного build и ведут к строке ошибки.\n- [x] Поддержаны go to definition, find references и rename symbol.\n- [x] Поддержаны document formatting, basic code actions и добавление недостающего `using`.\n- [x] Навигация по классам, методам и свойствам текущего файла представлена через source spans текущего C# document.\n- [x] Semantic model учитывает unsaved C# buffers через live `CodeDocument`.\n- [x] `WorkspaceSnapshot` используется только для build/test/run/debug и пакетного анализа, а не для completion, hover, diagnostics или navigation.\n- [x] Language services реализованы в отдельном `Electron2D.CSharpLanguageServices` assembly, работающем внутри Editor process; отдельный language-service process не входит в `0.1.0`.\n- [x] Language services не находятся в runtime assembly, Editor UI или `Electron2D.Tooling`; baseline - Roslyn.\n- [x] Каждый request/result содержит `ProjectId`, `DocumentId`, `DocumentRevision`, `SemanticVersion` и `ConfigurationHash`; устаревший ответ отбрасывается, если buffer изменился.\n- [x] Реализованы cancellation предыдущих запросов, debounce live diagnostics и reload marker после изменения package/project configuration.\n- [x] Semantic model failures возвращают structured diagnostic `E2D-SCRIPT-0003`.\n- [x] Добавлен integration test для completion, diagnostics, hover, definition, references, rename и unsaved buffer.\n- [x] Создан screenshot `.temp/script-language-services/visual/script-language-services.png`; проведён visual review placement popup/panel, читаемости текста, keyboard/current-selection state и соответствия `docs/editor/godot4-editor-reference.md`.\n- [x] Документация фактического поведения обновлена.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorScriptLanguageServicesTests\"` упал ожидаемо на отсутствующей `--script-language-services-smoke`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorScriptLanguageServicesTests\"` прошёл `1/1`.\n- Visual smoke: `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --script-language-services-smoke .temp\\script-language-services` прошёл и создал PNG/JSON artifacts.\n- Visual review: screenshot открыт агентом; подтверждены active `Script` workspace, completion popup рядом с caret, hover/Quick Info panel, signature help, diagnostics panel `CS0103`, right `Language Services`, отсутствие text overflow и отсутствие `3D`, `AssetLib`, GDScript UI.\n- Focused Editor regression: первый запуск превысил timeout и не засчитан; зависший testhost текущего запуска остановлен. Повторный `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Editor\" -m:1` прошёл `36/36`.\n- Build: `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`.\n- Verifiers: `Verify-SourceLicenseHeaders.ps1`, `Verify-LocalDocumentation.ps1`, `Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki`, `Verify-SourceDomainLayout.ps1`, `Verify-CanonicalGoalAlignment.ps1` прошли.\n- Full tests: `tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `400/400`, runtime smoke `5/5`, golden-data `12/12`.\n\n### Решения\n\n- Language services работают внутри Editor process без отдельного language-service process, потому что для `0.1.0` спецификация требует простую process boundary и не описывает IPC/restart/crash recovery.\n- Сервис вынесен из UI-кода редактора в отдельную сборку, чтобы будущие Tooling/MCP adapters могли использовать тот же semantic core без копирования UI-модели.\n- Stale result, cancellation и debounce представлены machine-readable flags в smoke result, чтобы следующие задачи могли подключать реальные async-запросы без смены публичного Editor contract.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0159 [ ] P0: Реализовать C# language services и IntelliSense для Script workspace\n\n- Создана: 2026-06-22T15:20:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0153, T-0158\n- Ссылки:\n  - Спецификация: `docs/scripting/editor-script-workflow.md`\n  - Документация: `docs/scripting/`; `docs/editor/`\n  - Исходный код: `src/Electron2D.CSharpLanguageServices/`; `src/Electron2D.Editor/`; `tests/`\n\n### Самодостаточное описание\n\nНужно подключить project-aware C# language services для `Script` workspace. Это не словарное дополнение текста: semantic model работает с актуальными unsaved `CodeDocument` через versioned Roslyn workspace и учитывает `.csproj`, project references, Electron2D assemblies, NuGet dependencies, conditional compilation symbols, source-generated API и build configuration.\n\n### Критерии приёмки\n\n- [ ] Autocomplete работает для типов, методов, свойств, events и локальных переменных.\n- [ ] Completion включает API Electron2D из текущего 2D-профиля.\n- [ ] Signature help показывает активный параметр.\n- [ ] Hover/Quick Info показывает XML documentation.\n- [ ] Live compiler diagnostics появляются без ручного build и ведут к строке ошибки.\n- [ ] Поддержаны go to definition, find references и rename symbol.\n- [ ] Поддержаны document formatting, basic code actions и добавление недостающего `using`.\n- [ ] Навигация по классам, методам и свойствам текущего файла работает.\n- [ ] Semantic model учитывает unsaved C# buffers через live Roslyn Workspace, синхронизированный с `CodeDocument`.\n- [ ] `WorkspaceSnapshot` используется только для build/test/run/debug и пакетного анализа, а не для completion, hover, diagnostics или navigation.\n- [ ] Language services реализованы в отдельном `Electron2D.CSharpLanguageServices` assembly, работающем внутри Editor process; отдельный language-service process не входит в `0.1.0`.\n- [ ] Language services не находятся в runtime assembly, Editor UI или `Electron2D.Tooling`; baseline - Roslyn.\n- [ ] Каждый request/result содержит `ProjectId`, `DocumentId`, `DocumentRevision`, `SemanticVersion` и `ConfigurationHash`; устаревший ответ отбрасывается, если buffer изменился.\n- [ ] Реализованы cancellation предыдущих запросов, debounce live diagnostics и reload после изменения `.csproj`, `Directory.Build.props`, `Directory.Build.targets`, `global.json` и package references.\n- [ ] Semantic model failures возвращают structured diagnostics.\n- [ ] Добавлены tests для completion, diagnostics, hover, definition, references, rename и unsaved buffer.\n- [ ] Создан и сохранён screenshot окна `Electron2D.Editor` с видимыми completion, hover/Quick Info или diagnostics UI; проведён анализ placement popup/panel, читаемости текста, keyboard interaction и соответствия `docs/editor/godot4-editor-reference.md`.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: IntelliSense, подсветка, автодополнение и diagnostics являются обязательной частью `Script` workspace `0.1.0`.\n\n2026-06-23T06:12:00+03:00 - Задача взята в работу после закрытия `T-0158`; `T-0160` ждёт `T-0159` и `T-0163`, `T-0161` ждёт `T-0159`/`T-0160`, `T-0128` ждёт `T-0159`/`T-0160`/`T-0161`. Перед production-кодом нужно уточнить проверяемый минимум Roslyn-backed language services, добавить red tests, сохранить screenshot artifact completion/hover/diagnostics UI и проверить его по `docs/editor/godot4-editor-reference.md`.\n```\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T12:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-23T03:49:00.0000000+00:00",
+  "completedAt": "2026-06-23T03:49:00.0000000+00:00",
+  "acceptedAt": "2026-06-23T03:49:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-23T03:49:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

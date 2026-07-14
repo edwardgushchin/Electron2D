@@ -1,0 +1,347 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-e8ac79cb3b9d4f2499468962cf365ede",
+  "revision": 1,
+  "taskId": "T-1237",
+  "legacyAliases": [],
+  "title": "Добавить «Вернуть на доработку» в приёмку задачи",
+  "description": "В нижней панели Task Details для задачи со статусом Review рядом с зелёной кнопкой «Принять» нужно показать второе действие — «Вернуть на доработку». Нажатие открывает нативное окно VS Code для обязательного ввода причины; отмена или пустой текст не меняют задачу. После подтверждения Extension Host использует существующий доверенный канал человеческого решения и актуальную ревизию: при необходимости сначала переводит внутреннюю проверку в Submitted, затем выполняет request-changes, возвращает задачу в InProgress и перечитывает каноническое состояние. Введённая причина должна без подмены шаблонным текстом сохраниться в immutable AcceptanceResult, отображаться в активности и входить в data.agentContext.activity при следующем e2d tasks get, чтобы исполнитель получил её как часть контекста задачи. Это продолжение T-1209: кнопка «Принять» и её ограничения сохраняются, но единственное действие приёмки заменяется явным выбором принять или вернуть результат.",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0002",
+    "tag-0003",
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "assignee": null,
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "review-footer-actions",
+      "description": "Нижняя панель активной задачи со статусом Review показывает две доступные с клавиатуры локализованные кнопки: вторичную «Вернуть на доработку» и зелёную «Принять» справа; в других статусах новое действие не появляется, а существующие ограничения кнопки «Принять» сохраняются.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "required-rework-reason",
+      "description": "Нажатие «Вернуть на доработку» открывает нативное поле ввода с понятной русской подписью и обязательной непустой причиной. Отмена окна или строка из пробелов не запускает submit, request-changes и локальное изменение интерфейса.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "trusted-return-workflow",
+      "description": "После ввода и подтверждения причины Extension Host в общей сериализованной очереди использует trusted-human bridge: для InternalReview сначала выполняет submit и передаёт полученную ревизию в request-changes, а для Submitted не повторяет submit. Успех переводит задачу в InProgress с acceptanceState ChangesRequested и обновляет интерфейс только после канонического чтения; conflict и другие ошибки показываются стандартным уведомлением VS Code.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "reason-in-agent-context",
+      "description": "Введённая пользователем причина сохраняется в канонической записи AcceptanceResult с decision ChangesRequested, видна во вкладке «Активность» и возвращается командой e2d tasks get в data.canonicalTask.activity и data.agentContext.activity, поэтому следующая работа агента получает замечание в контексте задачи.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "regression-and-real-window-proof",
+      "description": "RED/GREEN тесты покрывают обе кнопки, локализацию, обязательный ввод, отмену, allowlist сообщения, оба состояния Review, передачу точной причины и её присутствие в agentContext. Полный набор unit-тестов, typecheck, Extension Host tests, сборка VSIX, проверки документации и FFmpeg-снимок установленного расширения подтверждают результат в реальном окне VS Code.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "lastActivitySequence": 1,
+  "activity": [
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-14T10:08:12.2804603+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      },
+      "sequence": 1
+    }
+  ],
+  "auditRuns": [],
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "workspaceChanges": {
+    "baseRevision": null,
+    "currentRevision": null,
+    "files": []
+  },
+  "links": [
+    {
+      "linkId": "link-return-rework-domain",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-return-rework-context-domain",
+      "kind": "File",
+      "value": "docs/project-system/project-task-manager.md"
+    },
+    {
+      "linkId": "link-return-rework-webview",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "link-return-rework-extension",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/extension.ts"
+    },
+    {
+      "linkId": "link-return-rework-security",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/security.ts"
+    },
+    {
+      "linkId": "link-return-rework-localization",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/localization.ts"
+    },
+    {
+      "linkId": "link-return-rework-unit-tests",
+      "kind": "Directory",
+      "value": "src/Electron2D.VsCode/test/unit"
+    },
+    {
+      "linkId": "link-return-rework-extension-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/suite/index.ts"
+    },
+    {
+      "linkId": "link-return-rework-cli-test",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "действие возврата на доработку в потоке человеческой приёмки VS Code Task Board",
+    "readyToStart": [
+      "Родительская задача T-1147 принята, а текущая реализация T-1209 показывает в footer задачи Review только кнопку «Принять».",
+      "Публичная операция request-changes и доверенный human-decision bridge уже сохраняют непустую причину в AcceptanceResult; реализация начинается с обновления docs/editor/project-tasks-board.md и падающих тестов."
+    ],
+    "stopConditions": [
+      "Изменение требует ослабить trusted-human capability, разрешить webview или обычному агенту напрямую принимать решение либо передавать полномочие через argv.",
+      "Причину можно сохранить только ручной правкой .taskboard, отдельной неконтекстной заметкой или потерей исходной immutable activity.",
+      "Возврат из InternalReview невозможно выполнить revision-aware через существующий submit/request-changes workflow без изменения канонической модели приёмки."
+    ],
+    "allowedChanges": [
+      "Доменный документ VS Code Task Board и уточнение существующего контракта контекста задачи.",
+      "Footer, стили, локализация, typed webview messages, Extension Host orchestration и существующий trusted CLI bridge в src/Electron2D.VsCode.",
+      "Целевые unit/Extension Host/.NET integration tests, generated docs index, устанавливаемый VSIX, локальный FFmpeg-артефакт, task activity и append-only дневник."
+    ],
+    "forbiddenChanges": [
+      "Ручное редактирование .taskboard, ослабление schema/transition/CAS validation или добавление второго writer для задач.",
+      "Автоматический возврат без явного непустого ввода и подтверждения пользователя либо подмена причины заранее заданной строкой.",
+      "Изменение статусов, принятие или возврат посторонних задач, несвязанный рефакторинг доски и визуальная проверка только на fixture/headless render."
+    ],
+    "requiredOutputs": [
+      "Две локализованные кнопки решения в footer Review-задачи и нативное обязательное поле причины возврата.",
+      "Revision-aware workflow InternalReview/Submitted → InProgress/ChangesRequested через существующий trusted-human bridge с каноническим refresh и fail-closed errors.",
+      "Доказательство сохранения причины в AcceptanceResult и data.agentContext.activity, синхронизированные документы и тесты, собранный VSIX и FFmpeg-снимок реального окна."
+    ],
+    "commands": [
+      {
+        "commandId": "cmd-return-rework-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "cmd-return-rework-typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "cmd-return-rework-extension-host",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:extension"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Windows"
+        ],
+        "timeoutSeconds": 900,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "Network",
+          "ExternalEffect"
+        ]
+      },
+      {
+        "commandId": "cmd-return-rework-cli-context",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "test",
+          "tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+          "--filter",
+          "FullyQualifiedName~TasksCliHumanBridgeCanRequestChangesButRejectsMismatchedCapability",
+          "--no-restore",
+          "-v:minimal"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "cmd-return-rework-package",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "cmd-return-rework-docs-check",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "run",
+          "--project",
+          "eng/Electron2D.Build",
+          "--",
+          "update",
+          "docs",
+          "--check"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "cmd-return-rework-capture",
+        "kind": "Process",
+        "executable": "python",
+        "arguments": [
+          "eng/tools/capture_window.py",
+          "--title",
+          "Visual Studio Code",
+          "--output",
+          ".temp/taskboard-return-for-rework-real.png"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Windows"
+        ],
+        "timeoutSeconds": 120,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "ExternalEffect"
+        ]
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-14T10:08:12.2804603+00:00",
+  "updatedAt": "2026-07-14T10:08:12.2804603+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null
+}

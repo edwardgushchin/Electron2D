@@ -1,0 +1,262 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-6e1088ab0e5bff54d81278aab3c7ac54",
+  "revision": 2,
+  "taskId": "T-0172",
+  "legacyAliases": [],
+  "title": "Отслеживать runtime UI gaps для дальнейшего видимого UI редактора",
+  "description": "## T-0172 [ ] P0: Отслеживать runtime UI gaps для дальнейшего видимого UI редактора\n\n- Создана: 2026-06-24T01:21:00+03:00\n- Состояние: tracking\n- Приоритет: P0\n- Execution class: `tracking`\n- Scheduling tier: `next`\n- Зависимости: T-0171\n- Дочерние задачи: T-0176, T-0177, T-0178, T-0179\n- Ссылки:\n  - Доменный документ: `docs/ui/basic-controls.md`; `docs/ui/control-layout-core.md`; `docs/ui/containers.md`; `docs/editor/editor-project-shell.md`\n  - Исходный код: `src/Electron2D/Graphics/UI/Control.cs`; `src/Electron2D/Graphics/UI/Label.cs`; `src/Electron2D/Graphics/UI/Controls/Button.cs`; `src/Electron2D/Graphics/UI/Container.cs`; `src/Electron2D/Graphics/UI/BoxContainer.cs`; `src/Electron2D/Graphics/UI/Theme.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/BasicControlInteractionTests.cs`; `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`\n\n### Execution contract\n\n- Task type: tracking\n- Ready-to-start:\n  - можно начинать только для синхронизации child task list, dependency/status notes or parent current evidence.\n  - все production changes должны быть перенесены в named child tasks before implementation.\n- Stop conditions:\n  - требуется изменить production code, tests, generated artifacts, runtime behavior or public docs beyond status/dependency bookkeeping.\n  - child tasks are missing, blocked or not accepted but parent is being marked complete.\n- May change:\n  - `TASKS.md` status/dependency/current evidence notes for T-0172 and its explicitly listed children.\n  - diary entries and lightweight planning notes.\n- Must not change:\n  - production source, tests, generated artifacts, public API behavior, runtime/editor implementation or child task scope.\n- Required outputs:\n  - updated child-task status summary in `TASKS.md`.\n  - current evidence explaining which children remain open/blocked/accepted.\n  - diary entry with no-production-change confirmation.\n- Required commands:\n  - `git diff --check`\n- External audit:\n  - inherited; tracking tasks do not request audit packages directly\n\n### Самодостаточное описание\n\nУточнённый dogfooding-контракт разрешает `Electron2D.Editor` пользоваться internal host API, но видимый интерфейс редактора обязан проходить через общий runtime UI stack. `T-0171` принята без закрытия всех перечисленных gaps; эта tracking-задача держит общий контекст и считается завершённой только после приёмки дочерних задач `T-0176`-`T-0179`. Конкретное production-изменение нужно выполнять в дочерней задаче, а не в `T-0172`.\n\nБлокирующие gaps:\n\n- тема и шрифт по умолчанию, чтобы обычный `Label` и `Button` могли показывать текст без локального обхода `ShellFont` в `Electron2D.Editor`;\n- render clipping для `Control.ClipContents`, а не только ограничение GUI hit-testing;\n- text wrapping, overrun и ellipsis для `Label`/текстовых controls;\n- hover/focus/pressed/disabled visual states и redraw при смене hover;\n- allocation-free layout критический путь выполнения для `Container` и `BoxContainer` без LINQ/массивов каждый кадр;\n- follow-up после первых пяти пунктов: `ScrollContainer`, popup/modal focus, keyboard navigation, DPI scaling и split containers.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] `T-0176` принята пользователем.\n- [ ] `T-0177` принята пользователем.\n- [ ] `T-0178` принята пользователем.\n- [ ] `T-0179` принята пользователем.\n- [ ] Ни одна задача видимого UI редактора не обходит отсутствующие runtime UI возможности editor-only renderer, hit-test, focus, clipping или input routing.\n\n### Подзадачи\n\n- [ ] Держать `T-0176`-`T-0179` в актуальном порядке зависимостей.\n- [ ] Не принимать задачи видимого UI редактора, если они обходят незакрытую runtime UI возможность.\n- [ ] После приёмки дочерних задач обновить итоговый статус `T-0172`.\n\n### Заметки агента\n\n2026-06-24T01:21:00+03:00 - Задача заведена как follow-up после уточнения dogfooding-контракта: internal editor host допустим, но runtime UI gaps должны закрываться в общем UI stack, а не editor-only workaround.\n\n2026-06-24T02:06:00+03:00 - После приёмки `T-0171` формулировка уточнена: `T-0172` не блокирует принятую `T-0171`, а блокирует последующие функции видимого UI редактора, которые нуждаются в перечисленных runtime UI возможностях.\n\n2026-06-24T02:20:00+03:00 - По диагнозу пользователя `T-0172` оставлена как umbrella-задача по основе runtime UI. Исполнение разбито на gate-задачи `T-0176`-`T-0179`: тема/шрифты/иконки, текст/clipping/scrolling/DPI, interaction states/focus и настольные элементы управления. Задачи уровня редактора `T-0180`-`T-0183` зависят от этих gates и не должны заменять их editor-only drawing или отдельным hit-test.\n\n2026-06-24T03:20:00+03:00 - Задача переведена в состояние `tracking`: production объём перенесён в `T-0176`-`T-0179`, чтобы первая дочерняя задача не зависела от закрытия родительского эпика.\n\n2026-07-05T12:09:05+03:00 - Возвращено в `open`, чтобы в `TASKS.md` не было нескольких `in progress`; текущая активная работа идёт по task-plan fixes публичного API.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ee12f004f6e22d73d20dce15f4947609"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`T-0176` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`T-0177` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`T-0178` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`T-0179` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Ни одна задача видимого UI редактора не обходит отсутствующие runtime UI возможности editor-only renderer, hit-test, focus, clipping или input routing.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T22:21:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача заведена как follow-up после уточнения dogfooding-контракта: internal editor host допустим, но runtime UI gaps должны закрываться в общем UI stack, а не editor-only workaround."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T23:06:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "После приёмки `T-0171` формулировка уточнена: `T-0172` не блокирует принятую `T-0171`, а блокирует последующие функции видимого UI редактора, которые нуждаются в перечисленных runtime UI возможностях."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "По диагнозу пользователя `T-0172` оставлена как umbrella-задача по основе runtime UI. Исполнение разбито на gate-задачи `T-0176`-`T-0179`: тема/шрифты/иконки, текст/clipping/scrolling/DPI, interaction states/focus и настольные элементы управления. Задачи уровня редактора `T-0180`-`T-0183` зависят от этих gates и не должны заменять их editor-only drawing или отдельным hit-test."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T00:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача переведена в состояние `tracking`: production объём перенесён в `T-0176`-`T-0179`, чтобы первая дочерняя задача не зависела от закрытия родительского эпика."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T09:09:05.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Возвращено в `open`, чтобы в `TASKS.md` не было нескольких `in progress`; текущая активная работа идёт по task-plan fixes публичного API."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "inherited; tracking tasks do not request audit packages directly"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/editor/editor-project-shell.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/ui/basic-controls.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/ui/containers.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/ui/control-layout-core.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/UI/BoxContainer.cs"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/UI/Container.cs"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/UI/Control.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/UI/Controls/Button.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/UI/Label.cs"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/UI/Theme.cs"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/BasicControlInteractionTests.cs"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tracking",
+    "readyToStart": [
+      "можно начинать только для синхронизации child task list, dependency/status notes or parent current evidence.",
+      "все production changes должны быть перенесены в named child tasks before implementation."
+    ],
+    "stopConditions": [
+      "требуется изменить production code, tests, generated artifacts, runtime behavior or public docs beyond status/dependency bookkeeping.",
+      "child tasks are missing, blocked or not accepted but parent is being marked complete."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` status/dependency/current evidence notes for T-0172 and its explicitly listed children.",
+      "diary entries and lightweight planning notes."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, public API behavior, runtime/editor implementation or child task scope."
+    ],
+    "requiredOutputs": [
+      "updated child-task status summary in `TASKS.md`.",
+      "current evidence explaining which children remain open/blocked/accepted.",
+      "diary entry with no-production-change confirmation."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "inherited; tracking tasks do not request audit packages directly",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 82925,
+      "byteLength": 8287,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "4e5dcf4b2b06dda3c666a569a93c539320175e0e9d58fa35c5c56ae81b78c50e",
+      "markdown": "## T-0172 [ ] P0: Отслеживать runtime UI gaps для дальнейшего видимого UI редактора\n\n- Создана: 2026-06-24T01:21:00+03:00\n- Состояние: tracking\n- Приоритет: P0\n- Execution class: `tracking`\n- Scheduling tier: `next`\n- Зависимости: T-0171\n- Дочерние задачи: T-0176, T-0177, T-0178, T-0179\n- Ссылки:\n  - Доменный документ: `docs/ui/basic-controls.md`; `docs/ui/control-layout-core.md`; `docs/ui/containers.md`; `docs/editor/editor-project-shell.md`\n  - Исходный код: `src/Electron2D/Graphics/UI/Control.cs`; `src/Electron2D/Graphics/UI/Label.cs`; `src/Electron2D/Graphics/UI/Controls/Button.cs`; `src/Electron2D/Graphics/UI/Container.cs`; `src/Electron2D/Graphics/UI/BoxContainer.cs`; `src/Electron2D/Graphics/UI/Theme.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/BasicControlInteractionTests.cs`; `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`\n\n### Execution contract\n\n- Task type: tracking\n- Ready-to-start:\n  - можно начинать только для синхронизации child task list, dependency/status notes or parent current evidence.\n  - все production changes должны быть перенесены в named child tasks before implementation.\n- Stop conditions:\n  - требуется изменить production code, tests, generated artifacts, runtime behavior or public docs beyond status/dependency bookkeeping.\n  - child tasks are missing, blocked or not accepted but parent is being marked complete.\n- May change:\n  - `TASKS.md` status/dependency/current evidence notes for T-0172 and its explicitly listed children.\n  - diary entries and lightweight planning notes.\n- Must not change:\n  - production source, tests, generated artifacts, public API behavior, runtime/editor implementation or child task scope.\n- Required outputs:\n  - updated child-task status summary in `TASKS.md`.\n  - current evidence explaining which children remain open/blocked/accepted.\n  - diary entry with no-production-change confirmation.\n- Required commands:\n  - `git diff --check`\n- External audit:\n  - inherited; tracking tasks do not request audit packages directly\n\n### Самодостаточное описание\n\nУточнённый dogfooding-контракт разрешает `Electron2D.Editor` пользоваться internal host API, но видимый интерфейс редактора обязан проходить через общий runtime UI stack. `T-0171` принята без закрытия всех перечисленных gaps; эта tracking-задача держит общий контекст и считается завершённой только после приёмки дочерних задач `T-0176`-`T-0179`. Конкретное production-изменение нужно выполнять в дочерней задаче, а не в `T-0172`.\n\nБлокирующие gaps:\n\n- тема и шрифт по умолчанию, чтобы обычный `Label` и `Button` могли показывать текст без локального обхода `ShellFont` в `Electron2D.Editor`;\n- render clipping для `Control.ClipContents`, а не только ограничение GUI hit-testing;\n- text wrapping, overrun и ellipsis для `Label`/текстовых controls;\n- hover/focus/pressed/disabled visual states и redraw при смене hover;\n- allocation-free layout критический путь выполнения для `Container` и `BoxContainer` без LINQ/массивов каждый кадр;\n- follow-up после первых пяти пунктов: `ScrollContainer`, popup/modal focus, keyboard navigation, DPI scaling и split containers.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] `T-0176` принята пользователем.\n- [ ] `T-0177` принята пользователем.\n- [ ] `T-0178` принята пользователем.\n- [ ] `T-0179` принята пользователем.\n- [ ] Ни одна задача видимого UI редактора не обходит отсутствующие runtime UI возможности editor-only renderer, hit-test, focus, clipping или input routing.\n\n### Подзадачи\n\n- [ ] Держать `T-0176`-`T-0179` в актуальном порядке зависимостей.\n- [ ] Не принимать задачи видимого UI редактора, если они обходят незакрытую runtime UI возможность.\n- [ ] После приёмки дочерних задач обновить итоговый статус `T-0172`.\n\n### Заметки агента\n\n2026-06-24T01:21:00+03:00 - Задача заведена как follow-up после уточнения dogfooding-контракта: internal editor host допустим, но runtime UI gaps должны закрываться в общем UI stack, а не editor-only workaround.\n\n2026-06-24T02:06:00+03:00 - После приёмки `T-0171` формулировка уточнена: `T-0172` не блокирует принятую `T-0171`, а блокирует последующие функции видимого UI редактора, которые нуждаются в перечисленных runtime UI возможностях.\n\n2026-06-24T02:20:00+03:00 - По диагнозу пользователя `T-0172` оставлена как umbrella-задача по основе runtime UI. Исполнение разбито на gate-задачи `T-0176`-`T-0179`: тема/шрифты/иконки, текст/clipping/scrolling/DPI, interaction states/focus и настольные элементы управления. Задачи уровня редактора `T-0180`-`T-0183` зависят от этих gates и не должны заменять их editor-only drawing или отдельным hit-test.\n\n2026-06-24T03:20:00+03:00 - Задача переведена в состояние `tracking`: production объём перенесён в `T-0176`-`T-0179`, чтобы первая дочерняя задача не зависела от закрытия родительского эпика.\n\n2026-07-05T12:09:05+03:00 - Возвращено в `open`, чтобы в `TASKS.md` не было нескольких `in progress`; текущая активная работа идёт по task-plan fixes публичного API.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T22:21:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

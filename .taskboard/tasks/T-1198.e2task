@@ -1,0 +1,408 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-70a70102c63d4a26b1bfb5a0a6b5e379",
+  "revision": 16,
+  "taskId": "T-1198",
+  "legacyAliases": [],
+  "title": "Реализовать визуальный drag-and-drop карточек с освобождением места",
+  "description": "Заменить нативный HTML5 draggable в VS Code Task Board на собственную pointer-based сортировку. После преодоления порога движения карточка сохраняет исходный размер, отображается поверх доски и следует за курсором; в списке остаётся placeholder той же высоты, который перемещается при пересечении середины соседних карточек, а остальные карточки плавно освобождают место. Поддержать mouse, touch и pen, автопрокрутку у границ доски, отмену по Escape/pointercancel/потере окна и восстановление focus/DOM state. Обычный click без переноса продолжает открывать задачу. Перенос разрешён только внутри колонки текущего эффективного статуса и изменяет исключительно placement groupId/rank через существующий e2d tasks move contract; status, readiness и acceptanceState не меняются. Применять оптимистичную позицию и откатывать её при CLI/revision error со стандартным VS Code alert. Обновить docs/editor/project-tasks-board.md, unit-модель сортировки, layout/security tests и Extension Host сценарий; выполнить unit, typecheck, Extension Host, VSIX package/install и реальную FFmpeg-проверку.",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0002",
+    "tag-0003",
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-06dc282ac1764658889c24a39a09e715"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-9f8df07699d948d285cdaa7fc75657d2"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-03beb043f63d43e88bf09d91d5bf3601"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-2d545f325af14c0eba479b78078e1c90"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "input-cancel-autoscroll",
+      "description": "Mouse, touch и pen используют Pointer Events; обычный click открывает задачу, края запускают автопрокрутку, Escape/pointercancel/потеря окна полностью восстанавливают DOM, focus и исходную позицию.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "placement-only-rollback",
+      "description": "Drop разрешён только внутри effective-status колонки, изменяет только groupId/rank через e2d tasks move, применяет оптимистичную позицию и откатывает её со стандартным VS Code alert при CLI/revision error.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "verification",
+      "description": "Доменный документ и TDD regression покрывают sortable model/layout/input/recovery; unit, typecheck, Extension Host, VSIX package/install и реальный FFmpeg capture проходят.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "visual-sort",
+      "description": "После порога движения карточка следует за pointer, сохраняет геометрию; placeholder той же высоты переставляется между карточками, а соседние карточки плавно освобождают место.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      },
+      "sequence": 1
+    },
+    {
+      "activityEntryId": "activity-b6d97bda72954e8eac84aedb5d5baa82",
+      "sequence": 2,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T12:48:13.5322396+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 15,
+        "toRevision": 16,
+        "activitySequence": 2,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/links",
+            "oldValue": [],
+            "value": [
+              {
+                "linkId": "link-editor-contract",
+                "kind": "File",
+                "value": "docs/editor/project-tasks-board.md"
+              },
+              {
+                "linkId": "link-webview-source",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/src/webview.ts"
+              },
+              {
+                "linkId": "link-webview-layout-tests",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+              },
+              {
+                "linkId": "link-vscode-package",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/package.json"
+              }
+            ]
+          },
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "general",
+              "readyToStart": [],
+              "stopConditions": [],
+              "allowedChanges": [],
+              "forbiddenChanges": [],
+              "requiredOutputs": [],
+              "commands": [],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "feature",
+              "readyToStart": [
+                "Задача остаётся в Ready без незавершённых зависимостей или ручных блокеров.",
+                "Текущий HTML5 drag-and-drop и placement-only e2d tasks move contract воспроизведены тестом."
+              ],
+              "stopConditions": [
+                "Решение требует межколоночного status transition или изменения readiness/acceptanceState.",
+                "Pointer-based сортировка не может безопасно восстановить DOM/focus после отмены или CLI conflict."
+              ],
+              "allowedChanges": [
+                "VS Code webview pointer sorting, layout/security tests, Extension Host scenario и доменный документ.",
+                "VSIX package/install и реальная визуальная проверка через штатный FFmpeg helper."
+              ],
+              "forbiddenChanges": [
+                "Изменение canonical status, readiness, acceptanceState или placement-only e2d tasks move.",
+                "Прямое редактирование .taskboard или обход CLI writer boundary."
+              ],
+              "requiredOutputs": [
+                "Pointer-based drag с placeholder, анимацией освобождения места, autoscroll и корректной отменой.",
+                "Оптимистичное placement-only перемещение с rollback и стандартным VS Code alert.",
+                "RED/GREEN unit, typecheck, Extension Host, VSIX и реальный FFmpeg-снимок."
+              ],
+              "commands": [
+                {
+                  "commandId": "command-vscode-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 600,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "command-vscode-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 600,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "command-vscode-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 600,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "90cd41747046e6ab4e3dfc7c5962b77d38f7ad70289af4909921fd1b06659785",
+        "afterTaskCoreDigest": "8761713d39129a4f6a90d4c93fb613215d601ff9d7be74dd3a7813c0e0175e58"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-editor-contract",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-webview-source",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "link-webview-layout-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+    },
+    {
+      "linkId": "link-vscode-package",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/package.json"
+    }
+  ],
+  "executionContract": {
+    "taskType": "feature",
+    "readyToStart": [
+      "Задача остаётся в Ready без незавершённых зависимостей или ручных блокеров.",
+      "Текущий HTML5 drag-and-drop и placement-only e2d tasks move contract воспроизведены тестом."
+    ],
+    "stopConditions": [
+      "Решение требует межколоночного status transition или изменения readiness/acceptanceState.",
+      "Pointer-based сортировка не может безопасно восстановить DOM/focus после отмены или CLI conflict."
+    ],
+    "allowedChanges": [
+      "VS Code webview pointer sorting, layout/security tests, Extension Host scenario и доменный документ.",
+      "VSIX package/install и реальная визуальная проверка через штатный FFmpeg helper."
+    ],
+    "forbiddenChanges": [
+      "Изменение canonical status, readiness, acceptanceState или placement-only e2d tasks move.",
+      "Прямое редактирование .taskboard или обход CLI writer boundary."
+    ],
+    "requiredOutputs": [
+      "Pointer-based drag с placeholder, анимацией освобождения места, autoscroll и корректной отменой.",
+      "Оптимистичное placement-only перемещение с rollback и стандартным VS Code alert.",
+      "RED/GREEN unit, typecheck, Extension Host, VSIX и реальный FFmpeg-снимок."
+    ],
+    "commands": [
+      {
+        "commandId": "command-vscode-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "command-vscode-typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "command-vscode-package",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-12T19:59:06.5950472+00:00",
+  "updatedAt": "2026-07-14T12:48:13.5322396+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "activity-762dce61bbfa4e12a5a791fbaf6d0d73",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-12T20:30:44.9324028+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Задача дополнена родителем T-1147, зависимостями T-1176, T-1178 и T-1193, а также тегами Task Board, VS Code и UI/UX. Структурированные поля executionContract и linkedArtifacts пока нельзя заполнить через публичный e2d tasks: текущая команда update изменяет только основные скалярные поля. Прямая правка .e2task запрещена. До начала реализации необходимо добавить и проверить revision-aware CLI-команды для этих полей, затем сохранить тип задачи, условия старта и остановки, границы изменений, обязательные результаты, команды и связанные пути в их канонических полях."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": [],
+  "workspaceChanges": {
+    "baseRevision": null,
+    "currentRevision": null,
+    "files": []
+  },
+  "lastActivitySequence": 2
+}

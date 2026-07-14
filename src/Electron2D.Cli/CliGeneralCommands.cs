@@ -25,6 +25,9 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Electron2D.Mcp;
@@ -69,7 +72,8 @@ internal static partial class Electron2DCommandLine
         "build",
         "run",
         "test",
-        "export"
+        "export",
+        "tasks"
     ];
 
     private const string DefaultSceneTestManifestPath = "tests/electron2d.scene-tests.json";
@@ -82,6 +86,12 @@ internal static partial class Electron2DCommandLine
         CliExecutionContext context)
     {
         var options = CliOptions.Parse(group, args);
+        if (string.Equals(group, "tasks", StringComparison.Ordinal) && !options.Help)
+        {
+            options = options.WithTaskInput(context.Input);
+        }
+        options = options.WithCancellationToken(context.CancellationToken);
+
         if (options.Help)
         {
             WriteGroupHelp(group, output);
@@ -105,7 +115,7 @@ internal static partial class Electron2DCommandLine
             "project" => RunProject(options, output, error),
             "api" => RunApi(options, output, error),
             "mcp" => RunMcp(options, output, error, context),
-            "tasks" => RunTasks(options, output, error),
+            "tasks" => RunTasks(options, output, error, context),
             "context" => RunContext(options, output, error, context),
             "doctor" => RunDoctor(options, output, error),
             "workspace" => RunWorkspace(options, output, error, context),
@@ -1411,7 +1421,7 @@ internal static partial class Electron2DCommandLine
         output.WriteLine($"Usage: e2d {group} [command] [options]");
         output.WriteLine();
         var formatHelp = string.Equals(group, "tasks", StringComparison.Ordinal)
-            ? "--format text|markdown"
+            ? "--format text|json|markdown"
             : string.Equals(group, "context", StringComparison.Ordinal)
                 ? "--format text|json"
             : "--format text|json|jsonl|sarif";
@@ -1435,7 +1445,7 @@ internal static partial class Electron2DCommandLine
             "validate" => "  <default>             Validate a project and emit text, JSON or SARIF diagnostics.",
             "docs" => "  search|type|member|example",
             "api" => "  compare-godot <type>  Compare one API type against the approved Electron2D 0.1-preview 2D profile.",
-            "tasks" => "  export                Write a Markdown report from `.electron2d/tasks/*.e2task`.",
+            "tasks" => "  init|board|list|get|create|update|move|set-status\n  submit|accept|request-changes|cancel|reopen\n  archive|unarchive|delete\n  comment|context|criterion|parent|dependency|group|attachment|tag\n  verify|normalize|migrate|export  Manage the canonical `.taskboard`.",
             "context" => "  build                 Write a compact static context pack to `.electron2d/context/`.",
             _ => "  Reserved for a later Preview task."
         };
@@ -3630,24 +3640,80 @@ internal static partial class Electron2DCommandLine
 
 internal sealed class CliExecutionContext
 {
-    private CliExecutionContext(DateTimeOffset nowUtc, EditorSessionRegistry? sessionRegistry)
+    private const string CodexDesktopOriginator = "Codex Desktop";
+
+    private CliExecutionContext(
+        DateTimeOffset nowUtc,
+        EditorSessionRegistry? sessionRegistry,
+        TextReader input,
+        string? humanCapability,
+        string humanActorId,
+        string taskActorId,
+        string taskActorKind,
+        CancellationToken cancellationToken)
     {
         NowUtc = nowUtc;
         SessionRegistry = sessionRegistry;
+        Input = input;
+        HumanCapability = humanCapability;
+        HumanActorId = humanActorId;
+        TaskActorId = taskActorId;
+        TaskActorKind = taskActorKind;
+        CancellationToken = cancellationToken;
     }
 
     public DateTimeOffset NowUtc { get; }
 
     public EditorSessionRegistry? SessionRegistry { get; }
 
-    public static CliExecutionContext Default()
+    public TextReader Input { get; }
+
+    public string? HumanCapability { get; }
+
+    public string HumanActorId { get; }
+
+    public string TaskActorId { get; }
+
+    public string TaskActorKind { get; }
+
+    public CancellationToken CancellationToken { get; }
+
+    public static CliExecutionContext Default(CancellationToken cancellationToken = default)
     {
-        return new CliExecutionContext(DateTimeOffset.UtcNow, sessionRegistry: null);
+        var isCodexDesktop = string.Equals(
+            Environment.GetEnvironmentVariable("CODEX_INTERNAL_ORIGINATOR_OVERRIDE"),
+            CodexDesktopOriginator,
+            StringComparison.OrdinalIgnoreCase);
+        return new CliExecutionContext(
+            DateTimeOffset.UtcNow,
+            sessionRegistry: null,
+            Console.In,
+            Environment.GetEnvironmentVariable("E2D_TASKBOARD_HUMAN_CAPABILITY"),
+            $"vscode:{Environment.UserName}",
+            isCodexDesktop ? "Codex" : "cli",
+            isCodexDesktop ? "Agent" : "Cli",
+            cancellationToken);
     }
 
-    public static CliExecutionContext ForTests(DateTimeOffset nowUtc, EditorSessionRegistry? sessionRegistry = null)
+    public static CliExecutionContext ForTests(
+        DateTimeOffset nowUtc,
+        EditorSessionRegistry? sessionRegistry = null,
+        TextReader? input = null,
+        string? humanCapability = null,
+        string humanActorId = "test-human",
+        string taskActorId = "cli",
+        string taskActorKind = "Cli",
+        CancellationToken cancellationToken = default)
     {
-        return new CliExecutionContext(nowUtc, sessionRegistry);
+        return new CliExecutionContext(
+            nowUtc,
+            sessionRegistry,
+            input ?? TextReader.Null,
+            humanCapability,
+            humanActorId,
+            taskActorId,
+            taskActorKind,
+            cancellationToken);
     }
 }
 
@@ -3670,7 +3736,69 @@ internal enum CliRoute
 
 internal sealed class CliOptions
 {
+    private const int MaximumTaskInputBytes = 1024 * 1024;
+
+    private static readonly IReadOnlyDictionary<string, string> TaskInputFields =
+        new ReadOnlyDictionary<string, string>(new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["title"] = "--title",
+            ["description"] = "--description",
+            ["priority"] = "--priority",
+            ["deadline"] = "--deadline",
+            ["clearDeadline"] = "--clear-deadline",
+            ["name"] = "--name",
+            ["color"] = "--color",
+            ["tag"] = "--tag",
+            ["tagId"] = "--tag",
+            ["assignTo"] = "--assign-to",
+            ["assignee"] = "--assignee",
+            ["status"] = "--status",
+            ["criterion"] = "--criterion",
+            ["criterionId"] = "--criterion",
+            ["reason"] = "--reason",
+            ["expectedRevision"] = "--expected-revision",
+            ["expectedTaskRevision"] = "--expected-revision",
+            ["expectedParentRevision"] = "--expected-parent-revision",
+            ["expectedBoardRevision"] = "--expected-board-revision",
+            ["includeArchived"] = "--include-archived",
+            ["group"] = "--group",
+            ["groupId"] = "--group",
+            ["rank"] = "--rank",
+            ["parent"] = "--parent",
+            ["parentGroupId"] = "--parent",
+            ["parentTaskId"] = "--parent",
+            ["dependsOn"] = "--depends-on",
+            ["kind"] = "--kind",
+            ["text"] = "--text",
+            ["file"] = "--file",
+            ["attachment"] = "--attachment",
+            ["attachmentId"] = "--attachment",
+            ["derivative"] = "--derivative",
+            ["derivativeId"] = "--derivative",
+            ["confirm"] = "--confirm",
+            ["reportSha"] = "--report-sha",
+            ["apply"] = "--apply",
+            ["finalize"] = "--finalize",
+            ["operationId"] = "--operation-id",
+            ["lockTimeoutMs"] = "--lock-timeout-ms",
+            ["lockBackoffMs"] = "--lock-backoff-ms"
+        });
+
+    private static readonly IReadOnlySet<string> StructuredTaskInputFields =
+        new HashSet<string>(StringComparer.Ordinal)
+        {
+            "executionContract",
+            "acceptanceCriteria",
+            "links",
+            "tagIds",
+            "tagUpdates",
+            "parentTaskUid",
+            "relations"
+        };
+
     private readonly IReadOnlyDictionary<string, string> options;
+    private readonly JsonObject? structuredTaskInput;
+    private readonly CancellationToken cancellationToken;
 
     private CliOptions(
         string group,
@@ -3682,7 +3810,9 @@ internal sealed class CliOptions
         bool headless,
         bool help,
         IReadOnlyList<string> values,
-        IReadOnlyDictionary<string, string> options)
+        IReadOnlyDictionary<string, string> options,
+        JsonObject? structuredTaskInput = null,
+        CancellationToken cancellationToken = default)
     {
         Group = group;
         Format = format;
@@ -3694,6 +3824,8 @@ internal sealed class CliOptions
         Help = help;
         Values = values;
         this.options = options;
+        this.structuredTaskInput = structuredTaskInput;
+        this.cancellationToken = cancellationToken;
     }
 
     public string Group { get; }
@@ -3805,12 +3937,94 @@ internal sealed class CliOptions
             headless,
             help,
             values,
-            new ReadOnlyDictionary<string, string>(options));
+            new ReadOnlyDictionary<string, string>(options),
+            structuredTaskInput: null);
     }
 
     public string? GetOption(string name)
     {
         return options.TryGetValue(name, out var value) ? value : null;
+    }
+
+    public CliOptions WithCancellationToken(CancellationToken value)
+    {
+        return new CliOptions(
+            Group,
+            Format,
+            ProjectRoot,
+            Quiet,
+            Verbose,
+            DryRun,
+            Headless,
+            Help,
+            Values,
+            options,
+            structuredTaskInput,
+            value);
+    }
+
+    public CliOptions WithTaskInput(TextReader standardInput)
+    {
+        var inputSource = GetOption("--input");
+        if (inputSource is null)
+        {
+            return this;
+        }
+
+        try
+        {
+            var inputBytes = ReadTaskInput(inputSource, standardInput);
+            var input = JsonNode.Parse(inputBytes) as JsonObject;
+            if (input is null)
+            {
+                throw TaskInputError("Task input must be a JSON object.");
+            }
+
+            var merged = new Dictionary<string, string>(options, StringComparer.OrdinalIgnoreCase);
+            var structured = new JsonObject();
+            foreach (var property in input)
+            {
+                if (TaskInputFields.TryGetValue(property.Key, out var optionName))
+                {
+                    if (merged.ContainsKey(optionName))
+                    {
+                        throw TaskInputError($"Task input field '{property.Key}' conflicts with option '{optionName}'.");
+                    }
+
+                    merged[optionName] = ReadTaskInputScalar(property.Key, property.Value);
+                    continue;
+                }
+
+                if (!StructuredTaskInputFields.Contains(property.Key))
+                {
+                    throw TaskInputError($"Task input field '{property.Key}' is not allowed.");
+                }
+
+                structured[property.Key] = property.Value?.DeepClone() ??
+                    throw TaskInputError($"Task input field '{property.Key}' cannot be null.");
+            }
+
+            return new CliOptions(
+                Group,
+                Format,
+                ProjectRoot,
+                Quiet,
+                Verbose,
+                DryRun,
+                Headless,
+                Help,
+                Values,
+                new ReadOnlyDictionary<string, string>(merged),
+                structured);
+        }
+        catch (CliCommandException)
+        {
+            throw;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or JsonException or InvalidOperationException)
+        {
+            throw TaskInputError($"Task input could not be read: {exception.Message}");
+        }
     }
 
     public string RequireOption(string name, string message)
@@ -3820,6 +4034,71 @@ internal sealed class CliOptions
             this,
             message,
             Electron2DCommandLine.CreateCliDiagnostic("E2D-CLI-0002", message));
+    }
+
+    public JsonObject? GetStructuredTaskInput()
+    {
+        return structuredTaskInput?.DeepClone().AsObject();
+    }
+
+    public TaskBoardWriteOptions CreateTaskBoardWriteOptions(string command)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(command);
+        var timeoutMilliseconds = ReadBoundedWriterOption("--lock-timeout-ms", defaultValue: 10_000, maximum: 10_000);
+        var backoffMilliseconds = ReadBoundedWriterOption("--lock-backoff-ms", defaultValue: 25, maximum: 250);
+        TaskBoardOperationIdentity? operation = null;
+        if (GetOption("--operation-id") is { } operationId)
+        {
+            var excluded = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "--format", "--project", "--quiet", "--verbose", "--input",
+                "--operation-id", "--lock-timeout-ms", "--lock-backoff-ms"
+            };
+            var canonicalOptions = new JsonObject();
+            foreach (var option in options.Where(item => !excluded.Contains(item.Key)).OrderBy(item => item.Key, StringComparer.Ordinal))
+            {
+                canonicalOptions[option.Key] = option.Value;
+            }
+
+            var payload = new JsonObject
+            {
+                ["command"] = command,
+                ["values"] = new JsonArray(Values.Select(value => (JsonNode)value).ToArray()),
+                ["options"] = canonicalOptions,
+                ["structuredInput"] = structuredTaskInput?.DeepClone()
+            };
+            var bytes = Encoding.UTF8.GetBytes(payload.ToJsonString());
+            operation = new TaskBoardOperationIdentity(
+                operationId,
+                command,
+                Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant());
+        }
+
+        return new TaskBoardWriteOptions(
+            TimeSpan.FromMilliseconds(timeoutMilliseconds),
+            TimeSpan.FromMilliseconds(backoffMilliseconds),
+            TimeSpan.FromMilliseconds(Math.Max(backoffMilliseconds, Math.Min(250, backoffMilliseconds * 8))),
+            cancellationToken,
+            Operation: operation);
+    }
+
+    private int ReadBoundedWriterOption(string name, int defaultValue, int maximum)
+    {
+        if (GetOption(name) is not { } value)
+        {
+            return defaultValue;
+        }
+
+        if (!int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var parsed) || parsed < 1 || parsed > maximum)
+        {
+            throw new CliCommandException(
+                string.Join(' ', new[] { Group }.Concat(Values)),
+                this,
+                $"{name} must be an integer between 1 and {maximum}.",
+                Electron2DCommandLine.CreateCliDiagnostic("E2D-CLI-0002", $"{name} must be an integer between 1 and {maximum}."));
+        }
+
+        return parsed;
     }
 
     public long RequireInt64(string name, string message)
@@ -3844,6 +4123,92 @@ internal sealed class CliOptions
         return items[++index];
     }
 
+    private static byte[] ReadTaskInput(string inputSource, TextReader standardInput)
+    {
+        if (string.Equals(inputSource, "-", StringComparison.Ordinal))
+        {
+            var buffer = new char[4096];
+            var builder = new StringBuilder();
+            var utf8ByteCount = 0;
+            while (true)
+            {
+                var count = standardInput.Read(buffer, 0, buffer.Length);
+                if (count == 0)
+                {
+                    break;
+                }
+
+                utf8ByteCount += Encoding.UTF8.GetByteCount(buffer, 0, count);
+                if (utf8ByteCount > MaximumTaskInputBytes)
+                {
+                    throw new InvalidOperationException($"Task input exceeds {MaximumTaskInputBytes} bytes.");
+                }
+
+                builder.Append(buffer, 0, count);
+            }
+
+            return Encoding.UTF8.GetBytes(builder.ToString());
+        }
+
+        var fullPath = Path.GetFullPath(inputSource);
+        var file = new FileInfo(fullPath);
+        if (!file.Exists)
+        {
+            throw new IOException($"Task input file '{inputSource}' was not found.");
+        }
+
+        if ((file.Attributes & FileAttributes.ReparsePoint) != 0)
+        {
+            throw new IOException("Task input file must not be a reparse point.");
+        }
+
+        if (file.Length > MaximumTaskInputBytes)
+        {
+            throw new IOException($"Task input exceeds {MaximumTaskInputBytes} bytes.");
+        }
+
+        return File.ReadAllBytes(fullPath);
+    }
+
+    private string ReadTaskInputScalar(string propertyName, JsonNode? node)
+    {
+        if (node is not JsonValue value)
+        {
+            throw TaskInputError($"Task input field '{propertyName}' must be a scalar value.");
+        }
+
+        if (value.TryGetValue<string>(out var text))
+        {
+            return text;
+        }
+
+        if (value.TryGetValue<bool>(out var boolean))
+        {
+            return boolean ? bool.TrueString.ToLowerInvariant() : bool.FalseString.ToLowerInvariant();
+        }
+
+        if (value.TryGetValue<long>(out var integer))
+        {
+            return integer.ToString(CultureInfo.InvariantCulture);
+        }
+
+        if (value.TryGetValue<decimal>(out var number))
+        {
+            return number.ToString(CultureInfo.InvariantCulture);
+        }
+
+        throw TaskInputError($"Task input field '{propertyName}' must be a string, number or boolean.");
+    }
+
+    private CliCommandException TaskInputError(string message)
+    {
+        return new CliCommandException(
+            string.Join(' ', new[] { Group }.Concat(Values)),
+            this,
+            message,
+            Electron2DCommandLine.CreateCliDiagnostic("E2D-CLI-0002", message));
+    }
+
     private static CliOptions Placeholder(string group)
     {
         return new CliOptions(
@@ -3856,7 +4221,8 @@ internal sealed class CliOptions
             headless: false,
             help: false,
             [],
-            new ReadOnlyDictionary<string, string>(new Dictionary<string, string>()));
+            new ReadOnlyDictionary<string, string>(new Dictionary<string, string>()),
+            structuredTaskInput: null);
     }
 }
 

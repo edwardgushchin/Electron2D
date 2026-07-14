@@ -1,0 +1,1047 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "revision": 81,
+  "taskId": "T-1147",
+  "legacyAliases": [],
+  "title": "Ввести CLI TaskManager, единый `.taskboard` и VS Code Task Board",
+  "description": "Довести единый Agent-native TaskBoard v3 Electron2D до приёмки. Каноническое состояние репозитория, шаблонов и пользовательских проектов хранится в .taskboard; единственным публичным writer остаётся e2d tasks с optimistic CAS, atomic transactions, schema/semantic/transition validation и lossless conversation/activity/attachments/context. Публичный schema inventory содержит только task-file-v3.schema.json и task-board-v3.schema.json; v2 поддерживается исключительно внутренним migration reader для детерминированного v2→v3 cutover и не публикуется как актуальный контракт. Tooling, MCP, Editor и VS Code используют общий CLI/command application, legacy Markdown sources после доказанной миграции не являются источником истины, а installable VSIX показывает рабочую доску в editor area.",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0001",
+    "tag-0009",
+    "tag-0017",
+    "tag-0018",
+    "tag-0020",
+    "tag-0026",
+    "tag-0029"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-be9db2bbcef2fdd32e3978b12680dbc4"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-60ea4453cf953b559613c396f0b93484"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-86ecd5b1c9fbe0b5fb43d6208d15a35d"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ нормативно описывает TaskFile/TaskBoard v3, lossless Agent-native context, CLI-only mutation boundary и v2 только как migration input; публичные v2 schema-файлы удалены.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "docs/project-system/project-task-manager.md"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "RED/GREEN tests покрывают v3 schema, storage, semantic/transition invariants, CAS/atomic recovery, CRUD, lifecycle, dependencies, conversation, attachments, audit/context и migration compatibility.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "tests/Electron2D.Tests.Integration/TaskBoardV3ContractTests.cs"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "e2d tasks реализует v3 command surface со stable JSON envelope, dry-run, stdin payload, optimistic revisions, structured diagnostics и единственным writer contract.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.Cli/ProjectTasksCli.cs"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Tooling, MCP, Editor и VS Code используют общий проверяемый command contract и не создают обходной writer для .taskboard.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "tests/Electron2D.Tests.Integration/ToolingServiceBoundaryTests.cs"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Миграция v2→v3 и legacy Markdown сохраняет исходные bytes/digests/provenance, детерминированно исправляет утверждённые anomalies, проходит semantic verify и идемпотентна.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "tests/Electron2D.Tests.Integration/LegacyTaskboardMigrationTests.cs"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "После verified cutover рабочие roots используют только TaskBoard v3 в .taskboard; legacy task sources и публичные task-file-v2/task-board-v2 schemas отсутствуют.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "tests/Electron2D.Tests.Integration/SolutionLayoutTests.cs"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "VS Code extension проходит typecheck, unit и Extension Host tests, VSIX inventory/package/install и real-runtime visual verification рабочей editor-area доски.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Доменные документы, CLI/Editor docs, templates, release exclusions, generated indexes, license, taskboard verify и whitespace gates синхронизированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "data/documentation/electron2d-local-docs-index.json"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-10T21:27:33.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Первый TDD-срез подтвердил RED на legacy `.electron2d/tasks`/v1 shape и GREEN на canonical `.taskboard` paths, v2 identity/revision metadata, execution/attachment/legacy fields и groups/placements без status columns. Второй RED/GREEN запретил отсутствующую dependency. Первый CLI RED/GREEN добавил `e2d tasks init --format json`, canonical directories, board и transient-only `.gitignore`; help теперь объявляет JSON и `--dry-run` для task mutations."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-10T21:42:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "По уточнению пользователя canonical board path исправлен на `.taskboard/board.e2tasks` во всём новом contract/code/tests. Подтверждены отдельными RED/GREEN-срезами `tasks create`, `list/get/update`, `dependency add`, `comment add`, status readiness gate, `cancel/archive/unarchive/reopen`, `verify` и v2 Markdown export; mutations требуют expected task revision и выполняются под cross-process lock. Полный command surface, recoverable multi-file journal, migration/cutover и VS Code extension ещё не завершены."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-10T21:45:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Опубликованы JSON Schema draft 2020-12 для TaskFile v2 и TaskBoard v2 после отдельного RED; focused task regression прошёл `8/8`, license verifier подтвердил 664 C# files, `git diff --check` прошёл. Это промежуточный GREEN, а не acceptance: остаются transaction recovery, остальной CLI, migration/cutover, adapters и VS Code."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-10T21:56:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Следующие RED/GREEN-срезы добавили board snapshot, Epoch/Milestone groups, placement move, parent cycle guard, dependency removal, durable staged transaction recovery, tracked attachments с hash/limits и guarded hard delete. Совокупный focused regression прошёл `16/16`. Migration/cutover, remaining command/input/human bridge surface, adapters и VS Code всё ещё не завершены."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-10T22:03:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "TaskBoard wire shape дополнен `idPolicy`, `attachmentPolicy` и migration metadata с source digests, diagnostics и board-owned legacy fragments; storage RED/GREEN прошёл `1/1`. CLI help синхронизирован с реализованными command families после отдельного RED/GREEN `1/1`; licenses 664 files и `git diff --check` снова зелёные."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0006",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-10T22:07:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Fence-aware migration parser прошёл synthetic BOM/CRLF/fenced-heading reconstruction и реальный corpus golden: 941 active + 202 completed, 1143 unique IDs, 1146 contiguous fragments, exact source bytes, 8036 dependency refs после двух allowlisted repairs, 46 groups, 941 placements, три stale и пять ungrouped. Migration tests `3/3`; apply/finalize ещё запрещены до structured merge/report/idempotence gates."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0007",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-10T22:19:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Migration records конвертируются в 1143 serializer-valid TaskFile v2 с UID/status/audit/parent/dependency/contracts/criteria/activity/links/aliases. `tasks migrate` получил deterministic dry-run report, digest-guarded transactional apply, idempotent повтор и drift-blocked finalize; migration/CLI suite прошёл `8/8`. Реальный finalize отложен до перевода всех consumers/verifiers/workflow."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0008",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-10T22:37:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Consumer cutover перевёл Tooling/MCP workspace paths (`21/21`), project template/creator/verifier, Context Pack guidance, Platformer board/tasks/verifier и Windows/release exclusions на `.taskboard` v2. `e2d tasks verify` для Platformer, `verify project-template`, `verify platformer`, licenses 664 tracked files и whitespace прошли. Repository workflow/audit follow-up и VS Code extension ещё остаются."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0009",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-10T23:24:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Repository workflow, root `AGENTS.md`, goal prompts и локальные skills переведены на CLI-only task state; `verify audit-followups` читает closure notes только из `.taskboard/tasks` и `.taskboard/completed`, focused aggregate прошёл `11/11`, `verify audit-contracts` зелёный. Реализован безопасный `tasks --input <file|->` со scalar allowlist, лимитом 1 MiB, приоритетом CLI options и fail-closed запретом служебных полей; RED/GREEN тест прошёл `1/1`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0010",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-10T23:24:30.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Добавлен `src/Electron2D.VsCode`: Trello-like editor-area WebviewPanel с восемью status columns, Epoch/Milestone grouping, filters, details, dependency/criteria/activity/attachment views, CLI-backed create/edit/move/comment/attachment/archive actions, watchers, optimistic revisions и trusted human acceptance bridge. `npm ci`, typecheck, unit `16/16`, VS Code Insiders Extension Host и VSIX package inventory прошли; визуальная проверка через in-app Browser не выполнена из-за отсутствующих bootstrap assets, а stable Extension Host не запускался из-за пользовательского installer mutex. Эти ограничения не ослабляют автоматические contract/Extension Host проверки и остаются residual evidence до пользовательской визуальной приёмки."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0011",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-10T23:25:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Средний taskmanager regression перед real cutover прошёл `31/32`; единственный ожидаемый RED — repository layout, который требует уже созданную `.taskboard/board.e2tasks` и отсутствие legacy task files. Следующий шаг — deterministic dry-run/apply/idempotence/finalize с exact report digest, затем финальные verifiers/docs/license/whitespace gates."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required by default for implementation; a release gate may request a separate audit package after all local checks are green."
+      }
+    },
+    {
+      "activityEntryId": "activity-f76f3f9505f340b4ac508d024b5e637c",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T19:48:05.8093843+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/description",
+            "value": "Довести единый Agent-native TaskBoard v3 Electron2D до приёмки. Каноническое состояние репозитория, шаблонов и пользовательских проектов хранится в .taskboard; единственным публичным writer остаётся e2d tasks с optimistic CAS, atomic transactions, schema/semantic/transition validation и lossless conversation/activity/attachments/context. Публичный schema inventory содержит только task-file-v3.schema.json и task-board-v3.schema.json; v2 поддерживается исключительно внутренним migration reader для детерминированного v2→v3 cutover и не публикуется как актуальный контракт. Tooling, MCP, Editor и VS Code используют общий CLI/command application, legacy Markdown sources после доказанной миграции не являются источником истины, а installable VSIX показывает рабочую доску в editor area."
+          },
+          {
+            "op": "replace",
+            "path": "/acceptanceCriteria",
+            "value": [
+              {
+                "criterionId": "criterion-001",
+                "description": "Доменный документ нормативно описывает TaskFile/TaskBoard v3, lossless Agent-native context, CLI-only mutation boundary и v2 только как migration input; публичные v2 schema-файлы удалены.",
+                "state": "Open",
+                "evidence": []
+              },
+              {
+                "criterionId": "criterion-002",
+                "description": "RED/GREEN tests покрывают v3 schema, storage, semantic/transition invariants, CAS/atomic recovery, CRUD, lifecycle, dependencies, conversation, attachments, audit/context и migration compatibility.",
+                "state": "Open",
+                "evidence": []
+              },
+              {
+                "criterionId": "criterion-003",
+                "description": "e2d tasks реализует v3 command surface со stable JSON envelope, dry-run, stdin payload, optimistic revisions, structured diagnostics и единственным writer contract.",
+                "state": "Open",
+                "evidence": []
+              },
+              {
+                "criterionId": "criterion-004",
+                "description": "Tooling, MCP, Editor и VS Code используют общий проверяемый command contract и не создают обходной writer для .taskboard.",
+                "state": "Open",
+                "evidence": []
+              },
+              {
+                "criterionId": "criterion-005",
+                "description": "Миграция v2→v3 и legacy Markdown сохраняет исходные bytes/digests/provenance, детерминированно исправляет утверждённые anomalies, проходит semantic verify и идемпотентна.",
+                "state": "Open",
+                "evidence": []
+              },
+              {
+                "criterionId": "criterion-006",
+                "description": "После verified cutover рабочие roots используют только TaskBoard v3 в .taskboard; legacy task sources и публичные task-file-v2/task-board-v2 schemas отсутствуют.",
+                "state": "Open",
+                "evidence": []
+              },
+              {
+                "criterionId": "criterion-007",
+                "description": "VS Code extension проходит typecheck, unit и Extension Host tests, VSIX inventory/package/install и real-runtime visual verification рабочей editor-area доски.",
+                "state": "Open",
+                "evidence": []
+              },
+              {
+                "criterionId": "criterion-008",
+                "description": "Доменные документы, CLI/Editor docs, templates, release exclusions, generated indexes, license, taskboard verify и whitespace gates синхронизированы.",
+                "state": "Open",
+                "evidence": []
+              }
+            ]
+          },
+          {
+            "op": "replace",
+            "path": "/links",
+            "value": [
+              {
+                "linkId": "link-v3-0001",
+                "kind": "File",
+                "value": ".taskboard/board.e2tasks"
+              },
+              {
+                "linkId": "link-v3-0002",
+                "kind": "Directory",
+                "value": ".taskboard/tasks"
+              },
+              {
+                "linkId": "link-v3-0003",
+                "kind": "Directory",
+                "value": ".taskboard/completed"
+              },
+              {
+                "linkId": "link-v3-0004",
+                "kind": "File",
+                "value": "data/schemas/project-system/task-file-v3.schema.json"
+              },
+              {
+                "linkId": "link-v3-0005",
+                "kind": "File",
+                "value": "data/schemas/project-system/task-board-v3.schema.json"
+              },
+              {
+                "linkId": "link-v3-0006",
+                "kind": "File",
+                "value": "docs/project-system/project-task-manager.md"
+              },
+              {
+                "linkId": "link-v3-0007",
+                "kind": "File",
+                "value": "docs/cli/e2d-cli.md"
+              },
+              {
+                "linkId": "link-v3-0008",
+                "kind": "File",
+                "value": "docs/editor/project-tasks-board.md"
+              },
+              {
+                "linkId": "link-v3-0009",
+                "kind": "Directory",
+                "value": "src/Electron2D.ProjectSystem"
+              },
+              {
+                "linkId": "link-v3-0010",
+                "kind": "Directory",
+                "value": "src/Electron2D.Cli"
+              },
+              {
+                "linkId": "link-v3-0011",
+                "kind": "Directory",
+                "value": "src/Electron2D.Tooling"
+              },
+              {
+                "linkId": "link-v3-0012",
+                "kind": "Directory",
+                "value": "src/Electron2D.Mcp"
+              },
+              {
+                "linkId": "link-v3-0013",
+                "kind": "Directory",
+                "value": "src/Electron2D.VsCode"
+              },
+              {
+                "linkId": "link-v3-0014",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/ProjectTaskManagerTests.cs"
+              },
+              {
+                "linkId": "link-v3-0015",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+              },
+              {
+                "linkId": "link-v3-0016",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/TaskBoardV3ContractTests.cs"
+              },
+              {
+                "linkId": "link-v3-0017",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/LegacyTaskboardMigrationTests.cs"
+              },
+              {
+                "linkId": "link-v3-0018",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix"
+              }
+            ]
+          }
+        ],
+        "beforeTaskCoreDigest": "d646c610953ed5c17246bad46c7517a46b695b781a931977c1a05a44ac8123f3",
+        "afterTaskCoreDigest": "b26d166109f27888b7b62c4ae2451201fb0521276cbcccfd5c60e4e5bf603050"
+      }
+    },
+    {
+      "activityEntryId": "activity-2be120817ef045f1b1fd7a89c7ff7fb4",
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T19:51:25.6632860+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "InProgress",
+        "next": "Review",
+        "reason": "Реализация, v3 cutover, проверки и evidence завершены; передача на пользовательскую приёмку."
+      }
+    },
+    {
+      "activityEntryId": "activity-c1c1fbac975d4602b19079ac1d2ac465",
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T19:51:36.4338861+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Все актуализированные v3-критерии Passed с evidence; задача готова к решению владельца."
+      }
+    },
+    {
+      "activityEntryId": "activity-baf25e09bc1a4df8bcfe68f81a20b184",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T21:17:34.0938617+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/links",
+            "value": [
+              {
+                "linkId": "link-v3-0001",
+                "kind": "File",
+                "value": ".taskboard/board.e2tasks"
+              },
+              {
+                "linkId": "link-v3-0004",
+                "kind": "File",
+                "value": "data/schemas/project-system/task-file-v3.schema.json"
+              },
+              {
+                "linkId": "link-v3-0005",
+                "kind": "File",
+                "value": "data/schemas/project-system/task-board-v3.schema.json"
+              },
+              {
+                "linkId": "link-v3-0006",
+                "kind": "File",
+                "value": "docs/project-system/project-task-manager.md"
+              },
+              {
+                "linkId": "link-v3-0007",
+                "kind": "File",
+                "value": "docs/cli/e2d-cli.md"
+              },
+              {
+                "linkId": "link-v3-0008",
+                "kind": "File",
+                "value": "docs/editor/project-tasks-board.md"
+              },
+              {
+                "linkId": "link-v3-0009",
+                "kind": "File",
+                "value": "src/Electron2D.ProjectSystem/Tasks/TaskBoardV3DiskStore.cs"
+              },
+              {
+                "linkId": "link-v3-0010",
+                "kind": "File",
+                "value": "src/Electron2D.Cli/ProjectTasksCli.cs"
+              },
+              {
+                "linkId": "link-v3-0011",
+                "kind": "File",
+                "value": "src/Electron2D.Tooling/ToolingServices.cs"
+              },
+              {
+                "linkId": "link-v3-0012",
+                "kind": "File",
+                "value": "src/Electron2D.Mcp/McpServerSession.cs"
+              },
+              {
+                "linkId": "link-v3-0013",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/src/extension.ts"
+              },
+              {
+                "linkId": "link-v3-0014",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/ProjectTaskManagerTests.cs"
+              },
+              {
+                "linkId": "link-v3-0015",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+              },
+              {
+                "linkId": "link-v3-0016",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/TaskBoardV3ContractTests.cs"
+              },
+              {
+                "linkId": "link-v3-0017",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/LegacyTaskboardMigrationTests.cs"
+              },
+              {
+                "linkId": "link-v3-0018",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix"
+              }
+            ]
+          }
+        ],
+        "beforeTaskCoreDigest": "b26d166109f27888b7b62c4ae2451201fb0521276cbcccfd5c60e4e5bf603050",
+        "afterTaskCoreDigest": "f263105c471d82863c1cec5864ff7fa95778ae75d47ccec6dd19a2b681f8060f"
+      }
+    },
+    {
+      "activityEntryId": "activity-c881dd9eff4342efb0d2214c144f0da3",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T21:17:57.1431902+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/links",
+            "value": [
+              {
+                "linkId": "link-v3-0001",
+                "kind": "File",
+                "value": ".taskboard/board.e2tasks"
+              },
+              {
+                "linkId": "link-v3-0002",
+                "kind": "Directory",
+                "value": ".taskboard/tasks"
+              },
+              {
+                "linkId": "link-v3-0003",
+                "kind": "Directory",
+                "value": ".taskboard/completed"
+              },
+              {
+                "linkId": "link-v3-0004",
+                "kind": "File",
+                "value": "data/schemas/project-system/task-file-v3.schema.json"
+              },
+              {
+                "linkId": "link-v3-0005",
+                "kind": "File",
+                "value": "data/schemas/project-system/task-board-v3.schema.json"
+              },
+              {
+                "linkId": "link-v3-0006",
+                "kind": "File",
+                "value": "docs/project-system/project-task-manager.md"
+              },
+              {
+                "linkId": "link-v3-0007",
+                "kind": "File",
+                "value": "docs/cli/e2d-cli.md"
+              },
+              {
+                "linkId": "link-v3-0008",
+                "kind": "File",
+                "value": "docs/editor/project-tasks-board.md"
+              },
+              {
+                "linkId": "link-v3-0009",
+                "kind": "Directory",
+                "value": "src/Electron2D.ProjectSystem"
+              },
+              {
+                "linkId": "link-v3-0010",
+                "kind": "Directory",
+                "value": "src/Electron2D.Cli"
+              },
+              {
+                "linkId": "link-v3-0011",
+                "kind": "Directory",
+                "value": "src/Electron2D.Tooling"
+              },
+              {
+                "linkId": "link-v3-0012",
+                "kind": "Directory",
+                "value": "src/Electron2D.Mcp"
+              },
+              {
+                "linkId": "link-v3-0013",
+                "kind": "Directory",
+                "value": "src/Electron2D.VsCode"
+              },
+              {
+                "linkId": "link-v3-0014",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/ProjectTaskManagerTests.cs"
+              },
+              {
+                "linkId": "link-v3-0015",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+              },
+              {
+                "linkId": "link-v3-0016",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/TaskBoardV3ContractTests.cs"
+              },
+              {
+                "linkId": "link-v3-0017",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/LegacyTaskboardMigrationTests.cs"
+              },
+              {
+                "linkId": "link-v3-0018",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix"
+              }
+            ]
+          }
+        ],
+        "beforeTaskCoreDigest": "f263105c471d82863c1cec5864ff7fa95778ae75d47ccec6dd19a2b681f8060f",
+        "afterTaskCoreDigest": "b26d166109f27888b7b62c4ae2451201fb0521276cbcccfd5c60e4e5bf603050"
+      }
+    },
+    {
+      "activityEntryId": "activity-d3bf9dbf71d649779ba4a4abefc5c0aa",
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-13T21:39:17.2287736+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "╨Ч╨░╨┤╨░╤З╨░ ╨┐╤А╨╕╨╜╤П╤В╨░ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╨╡╨╝ ╨▓ VS Code Task Board.",
+        "authorityActorId": "vscode:eduar",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-v3-0001",
+      "kind": "File",
+      "value": ".taskboard/board.e2tasks"
+    },
+    {
+      "linkId": "link-v3-0002",
+      "kind": "Directory",
+      "value": ".taskboard/tasks"
+    },
+    {
+      "linkId": "link-v3-0003",
+      "kind": "Directory",
+      "value": ".taskboard/completed"
+    },
+    {
+      "linkId": "link-v3-0004",
+      "kind": "File",
+      "value": "data/schemas/project-system/task-file-v3.schema.json"
+    },
+    {
+      "linkId": "link-v3-0005",
+      "kind": "File",
+      "value": "data/schemas/project-system/task-board-v3.schema.json"
+    },
+    {
+      "linkId": "link-v3-0006",
+      "kind": "File",
+      "value": "docs/project-system/project-task-manager.md"
+    },
+    {
+      "linkId": "link-v3-0007",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "link-v3-0008",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-v3-0009",
+      "kind": "Directory",
+      "value": "src/Electron2D.ProjectSystem"
+    },
+    {
+      "linkId": "link-v3-0010",
+      "kind": "Directory",
+      "value": "src/Electron2D.Cli"
+    },
+    {
+      "linkId": "link-v3-0011",
+      "kind": "Directory",
+      "value": "src/Electron2D.Tooling"
+    },
+    {
+      "linkId": "link-v3-0012",
+      "kind": "Directory",
+      "value": "src/Electron2D.Mcp"
+    },
+    {
+      "linkId": "link-v3-0013",
+      "kind": "Directory",
+      "value": "src/Electron2D.VsCode"
+    },
+    {
+      "linkId": "link-v3-0014",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ProjectTaskManagerTests.cs"
+    },
+    {
+      "linkId": "link-v3-0015",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+    },
+    {
+      "linkId": "link-v3-0016",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/TaskBoardV3ContractTests.cs"
+    },
+    {
+      "linkId": "link-v3-0017",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/LegacyTaskboardMigrationTests.cs"
+    },
+    {
+      "linkId": "link-v3-0018",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix"
+    }
+  ],
+  "executionContract": {
+    "taskType": "cross-cutting taskboard foundation, repository workflow migration and IDE integration.",
+    "readyToStart": [
+      "task state is `in progress`;",
+      "`T-0154`, `T-0155` and `T-0156` are accepted/closed;",
+      "no other task is `in progress`;",
+      "domain contract is updated before the first production-code change."
+    ],
+    "stopConditions": [
+      "migration cannot reconstruct every legacy Markdown source byte-for-byte;",
+      "a second public writer bypasses `e2d tasks` or edits task storage directly;",
+      "dependency/parent cycles, path containment, attachment limits or human acceptance cannot fail closed;",
+      "cutover would delete legacy sources before an idempotent verified migration."
+    ],
+    "allowedChanges": [
+      "`ProjectTaskManager`, task storage/serialization, CLI, Tooling/MCP task adapters and Editor task-board model;",
+      "repository workflow, task/archive verifiers, project templates, examples and release exclusions;",
+      "a new TypeScript VS Code extension and its build/test/package infrastructure;",
+      "generated local documentation indexes required by synchronized docs."
+    ],
+    "forbiddenChanges": [
+      "unrelated public runtime API or gameplay behavior;",
+      "unrelated active task states, dependencies or acceptance history;",
+      "external audit routing and verdict semantics beyond replacing Markdown task lookups with structured taskboard data;",
+      "legacy task sources before migration parity and source-digest checks pass."
+    ],
+    "requiredOutputs": [
+      "canonical `.taskboard/board.e2tasks`, active/completed `.e2task` files and safe attachment storage;",
+      "full `e2d tasks` command surface with stable JSON envelopes and concurrency protection;",
+      "verified migration from `TASKS.md`, `data/completed-tasks/**` and `.electron2d/tasks/**` with preserved raw Markdown fragments;",
+      "CLI-only repository workflow and synchronized Tooling/MCP/Editor consumers;",
+      "installable, tested platform-neutral VSIX with a Trello-like board in the editor area."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "focused RED/GREEN `dotnet test` filters for task core, CLI and Tooling/MCP contracts;",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`npm ci`, typecheck, unit tests, Extension Host tests and VSIX packaging in `src/Electron2D.VsCode`;",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`;",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`;",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`;",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses`;",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "`e2d tasks verify` after cutover;",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0008",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0009",
+        "kind": "LegacyShell",
+        "text": "dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0010",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- update docs --check",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0011",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify docs",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0012",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 15503528,
+      "byteLength": 14850,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "878906316ddec4255990b3dfd3eba3221ce12e7cff9c5396a0a4975163b356d8",
+      "markdown": "## T-1147 [ ] P0: Ввести CLI TaskManager, единый `.taskboard` и VS Code Task Board\n\n- Создана: 2026-07-11T00:15:49+03:00\n- Состояние: in progress\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `current`\n- Зависимости: T-0154, T-0155, T-0156\n- Ссылки:\n  - Доменный документ: `docs/project-system/project-task-manager.md`; `docs/editor/project-tasks-board.md`; `docs/cli/e2d-cli.md`\n  - Исходный код: `src/Electron2D.ProjectSystem/`; `src/Electron2D.Cli/`; `src/Electron2D.Tooling/`; `src/Electron2D.Mcp/`; `src/Electron2D.VsCode/`\n  - Тесты: `tests/Electron2D.Tests.Integration/ProjectTaskManagerTests.cs`; `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`; `tests/Electron2D.Tests.Integration/ToolingServiceBoundaryTests.cs`\n  - План: attachment `CLI TaskManager и VS Code Task Board для Electron2D` из текущего пользовательского запроса.\n\n### Execution contract\n\n- Task type: cross-cutting taskboard foundation, repository workflow migration and IDE integration.\n- Ready-to-start:\n  - task state is `in progress`;\n  - `T-0154`, `T-0155` and `T-0156` are accepted/closed;\n  - no other task is `in progress`;\n  - domain contract is updated before the first production-code change.\n- Stop conditions:\n  - migration cannot reconstruct every legacy Markdown source byte-for-byte;\n  - a second public writer bypasses `e2d tasks` or edits task storage directly;\n  - dependency/parent cycles, path containment, attachment limits or human acceptance cannot fail closed;\n  - cutover would delete legacy sources before an idempotent verified migration.\n- May change:\n  - `ProjectTaskManager`, task storage/serialization, CLI, Tooling/MCP task adapters and Editor task-board model;\n  - repository workflow, task/archive verifiers, project templates, examples and release exclusions;\n  - a new TypeScript VS Code extension and its build/test/package infrastructure;\n  - generated local documentation indexes required by synchronized docs.\n- Must not change:\n  - unrelated public runtime API or gameplay behavior;\n  - unrelated active task states, dependencies or acceptance history;\n  - external audit routing and verdict semantics beyond replacing Markdown task lookups with structured taskboard data;\n  - legacy task sources before migration parity and source-digest checks pass.\n- Required outputs:\n  - canonical `.taskboard/board.e2tasks`, active/completed `.e2task` files and safe attachment storage;\n  - full `e2d tasks` command surface with stable JSON envelopes and concurrency protection;\n  - verified migration from `TASKS.md`, `data/completed-tasks/**` and `.electron2d/tasks/**` with preserved raw Markdown fragments;\n  - CLI-only repository workflow and synchronized Tooling/MCP/Editor consumers;\n  - installable, tested platform-neutral VSIX with a Trello-like board in the editor area.\n- Required commands:\n  - focused RED/GREEN `dotnet test` filters for task core, CLI and Tooling/MCP contracts;\n  - `npm ci`, typecheck, unit tests, Extension Host tests and VSIX packaging in `src/Electron2D.VsCode`;\n  - `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`;\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`;\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`;\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`;\n  - `e2d tasks verify` after cutover;\n  - `git diff --check`.\n- External audit: not required by default for implementation; a release gate may request a separate audit package after all local checks are green.\n\n### Самодостаточное описание\n\nНужно заменить внутренний Markdown task workflow и существующий пользовательский `.electron2d/tasks` единым машиночитаемым хранилищем `.taskboard`, которым управляет публичный CLI `e2d tasks`. CLI является единственным публичным writer: создание, редактирование, статусы, зависимости, иерархия parent/subtask, эпохи и вехи, комментарии, вложения, приёмка, архивирование, удаление, миграция и проверка должны проходить через один доменный command contract.\n\nTask schema v2 хранит immutable UID, человекочитаемый ID, execution contract, criteria, activity, audit fields, attachment metadata и legacy fragments. Board schema v2 хранит placements/ranks и иерархию `Epoch -> Milestone -> Task`; readiness вычисляется из dependency DAG. `Done` требует человеческой приёмки, а перенос в `.taskboard/completed` выполняется отдельным `archive`.\n\nМиграция обязана сохранить весь старый Markdown в машиночитаемых fragments и доказать побайтовое восстановление каждого источника. Только после проверки counts, source digests, ссылок, DAG, известных ID collisions и повторного idempotent run можно удалить `TASKS.md`, `data/completed-tasks/**` и старые `.electron2d/tasks/**`. `data/dev-diary/**` остаётся отдельным append-only журналом.\n\nVS Code extension является тонким trusted-workspace клиентом CLI: открывает Trello-подобную доску в editor-area `WebviewPanel`, показывает колонки, epoch/milestone swimlanes, dependency tree, task details, comments и attachments, но не пишет task files напрямую.\n\n### Критерии приёмки\n\n- [ ] Доменный документ описывает `.taskboard` schema v2, CLI-only mutation boundary, fixed workflow, DAG/readiness, groups, activity, attachments, archive/delete и migration/cutover contract.\n- [ ] Сначала падающие tests покрывают schema/storage, CRUD, transitions, human acceptance, dependency и parent cycles, groups/order, comments, attachments, conflicts, archive/delete и crash recovery.\n- [ ] `e2d tasks` реализует согласованный command surface, `--format json`, `--dry-run`, expected revisions, stdin payload и stable diagnostics.\n- [ ] Tooling/MCP, Editor board и VS Code используют общий command contract и не создают обходной writer.\n- [ ] Миграция сохраняет все legacy Markdown bytes, формирует deterministic mapping/report, исправляет утверждённые legacy graph/ID anomalies и идемпотентна.\n- [ ] После verified cutover отсутствуют `TASKS.md`, `data/completed-tasks/**` и `.electron2d/tasks/**`; task workflow и verifiers используют только `.taskboard`/CLI.\n- [ ] VS Code extension проходит unit, Extension Host, visual и package inventory checks; VSIX устанавливается и показывает рабочую доску в editor area.\n- [ ] Документация, шаблоны, release exclusions, generated indexes, license и whitespace gates синхронизированы.\n\n### Подзадачи\n\n- [ ] Обновить доменный contract taskboard v2 и CLI/VS Code boundaries.\n- [ ] Добавить и подтвердить RED-тесты core schema/store.\n- [ ] Реализовать core storage, transactions, CRUD и verification.\n- [ ] Реализовать полный CLI и адаптеры Tooling/MCP/Editor.\n- [ ] Реализовать migration parser, parity report и repository cutover.\n- [ ] Перевести workflow, verifiers, templates, examples и release packaging.\n- [ ] Реализовать и проверить VS Code extension/VSIX.\n- [ ] Выполнить requirement-by-requirement completion audit и финальные gates.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: пользователь утвердил подробный implementation plan; существующие `ProjectTaskManager`, `.e2task`/`.e2tasks`, read-only `tasks export` и model-first Editor board подтверждены как база для расширения.\n- Ещё отсутствует: schema v2, CLI mutations, migration/cutover, CLI-only workflow и VS Code extension.\n- Принято аудитом: не применимо; работа начата прямым пользовательским запросом.\n\n2026-07-11T00:27:33+03:00 - Первый TDD-срез подтвердил RED на legacy `.electron2d/tasks`/v1 shape и GREEN на canonical `.taskboard` paths, v2 identity/revision metadata, execution/attachment/legacy fields и groups/placements без status columns. Второй RED/GREEN запретил отсутствующую dependency. Первый CLI RED/GREEN добавил `e2d tasks init --format json`, canonical directories, board и transient-only `.gitignore`; help теперь объявляет JSON и `--dry-run` для task mutations.\n\n2026-07-11T00:42:00+03:00 - По уточнению пользователя canonical board path исправлен на `.taskboard/board.e2tasks` во всём новом contract/code/tests. Подтверждены отдельными RED/GREEN-срезами `tasks create`, `list/get/update`, `dependency add`, `comment add`, status readiness gate, `cancel/archive/unarchive/reopen`, `verify` и v2 Markdown export; mutations требуют expected task revision и выполняются под cross-process lock. Полный command surface, recoverable multi-file journal, migration/cutover и VS Code extension ещё не завершены.\n\n2026-07-11T00:45:00+03:00 - Опубликованы JSON Schema draft 2020-12 для TaskFile v2 и TaskBoard v2 после отдельного RED; focused task regression прошёл `8/8`, license verifier подтвердил 664 C# files, `git diff --check` прошёл. Это промежуточный GREEN, а не acceptance: остаются transaction recovery, остальной CLI, migration/cutover, adapters и VS Code.\n\n2026-07-11T00:56:00+03:00 - Следующие RED/GREEN-срезы добавили board snapshot, Epoch/Milestone groups, placement move, parent cycle guard, dependency removal, durable staged transaction recovery, tracked attachments с hash/limits и guarded hard delete. Совокупный focused regression прошёл `16/16`. Migration/cutover, remaining command/input/human bridge surface, adapters и VS Code всё ещё не завершены.\n\n2026-07-11T01:03:00+03:00 - TaskBoard wire shape дополнен `idPolicy`, `attachmentPolicy` и migration metadata с source digests, diagnostics и board-owned legacy fragments; storage RED/GREEN прошёл `1/1`. CLI help синхронизирован с реализованными command families после отдельного RED/GREEN `1/1`; licenses 664 files и `git diff --check` снова зелёные.\n\n2026-07-11T01:07:00+03:00 - Fence-aware migration parser прошёл synthetic BOM/CRLF/fenced-heading reconstruction и реальный corpus golden: 941 active + 202 completed, 1143 unique IDs, 1146 contiguous fragments, exact source bytes, 8036 dependency refs после двух allowlisted repairs, 46 groups, 941 placements, три stale и пять ungrouped. Migration tests `3/3`; apply/finalize ещё запрещены до structured merge/report/idempotence gates.\n\n2026-07-11T01:19:00+03:00 - Migration records конвертируются в 1143 serializer-valid TaskFile v2 с UID/status/audit/parent/dependency/contracts/criteria/activity/links/aliases. `tasks migrate` получил deterministic dry-run report, digest-guarded transactional apply, idempotent повтор и drift-blocked finalize; migration/CLI suite прошёл `8/8`. Реальный finalize отложен до перевода всех consumers/verifiers/workflow.\n\n2026-07-11T01:37:00+03:00 - Consumer cutover перевёл Tooling/MCP workspace paths (`21/21`), project template/creator/verifier, Context Pack guidance, Platformer board/tasks/verifier и Windows/release exclusions на `.taskboard` v2. `e2d tasks verify` для Platformer, `verify project-template`, `verify platformer`, licenses 664 tracked files и whitespace прошли. Repository workflow/audit follow-up и VS Code extension ещё остаются.\n\n2026-07-11T02:24:00+03:00 - Repository workflow, root `AGENTS.md`, goal prompts и локальные skills переведены на CLI-only task state; `verify audit-followups` читает closure notes только из `.taskboard/tasks` и `.taskboard/completed`, focused aggregate прошёл `11/11`, `verify audit-contracts` зелёный. Реализован безопасный `tasks --input <file|->` со scalar allowlist, лимитом 1 MiB, приоритетом CLI options и fail-closed запретом служебных полей; RED/GREEN тест прошёл `1/1`.\n\n2026-07-11T02:24:30+03:00 - Добавлен `src/Electron2D.VsCode`: Trello-like editor-area WebviewPanel с восемью status columns, Epoch/Milestone grouping, filters, details, dependency/criteria/activity/attachment views, CLI-backed create/edit/move/comment/attachment/archive actions, watchers, optimistic revisions и trusted human acceptance bridge. `npm ci`, typecheck, unit `16/16`, VS Code Insiders Extension Host и VSIX package inventory прошли; визуальная проверка через in-app Browser не выполнена из-за отсутствующих bootstrap assets, а stable Extension Host не запускался из-за пользовательского installer mutex. Эти ограничения не ослабляют автоматические contract/Extension Host проверки и остаются residual evidence до пользовательской визуальной приёмки.\n\n2026-07-11T02:25:00+03:00 - Средний taskmanager regression перед real cutover прошёл `31/32`; единственный ожидаемый RED — repository layout, который требует уже созданную `.taskboard/board.e2tasks` и отсутствие legacy task files. Следующий шаг — deterministic dry-run/apply/idempotence/finalize с exact report digest, затем финальные verifiers/docs/license/whitespace gates.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-10T21:15:49.0000000+00:00",
+  "updatedAt": "2026-07-13T21:39:17.2287736+00:00",
+  "submittedAt": "2026-07-13T19:51:36.4338861+00:00",
+  "completedAt": "2026-07-13T21:39:17.2287736+00:00",
+  "acceptedAt": "2026-07-13T21:39:17.2287736+00:00",
+  "acceptedBy": "vscode:eduar",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 7,
+    "messages": [
+      {
+        "messageId": "activity-aed5bfb6c52740468e883dd3e90b86f5",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T00:14:31.8030406+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Real repository migration finalized: report d5e7d2178eb7ca6423850c1eed0d2e7c49840c1f6cca1be3b7228127e3d24a71; 1143 tasks, 941 active, 202 completed, 1146 preserved fragments, 8036 dependencies and 46 groups. Apply was idempotent, post-finalize tasks verify passed, TASKS.md and data/completed-tasks were removed. Remaining work is final repository verification and documentation synchronization."
+          }
+        ]
+      },
+      {
+        "messageId": "activity-c5397679804e44639f498cff9253f49b",
+        "sequence": 2,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T00:32:32.0387866+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Final local verification is green: taskmanager aggregate 32/32; post-cutover migration golden 5/5; repository layout 2/2; build 0 warnings/errors; audit contracts 12/12; audit follow-ups 90 findings across 227 reports; project-template, Platformer, no-PowerShell, API compatibility, release metadata, docs, 664 license headers and git diff check passed. VS Code typecheck, unit 16/16, Insiders Extension Host and VSIX packaging (8 files, 14.63 KB) passed. Visual in-app Browser verification remains unavailable because bundled bootstrap assets are missing; the task stays InProgress pending explicit human acceptance."
+          }
+        ]
+      },
+      {
+        "messageId": "activity-ab61ba88d69042af9941eb5a71fec349",
+        "sequence": 3,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T08:06:19.3816868+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "VS Code setup completed for the Electron2D workspace: electron2d.electron2d-taskboard@0.1.0 was force-installed from the current VSIX; .vscode/settings.json points electron2d.taskboard.cliPath to the built e2d.exe; the configured CLI successfully returned tasks board JSON. Global user settings were left unchanged."
+          }
+        ]
+      },
+      {
+        "messageId": "activity-93e66ff440ec437ba1922dfb315af7ac",
+        "sequence": 4,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T08:16:15.0235844+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Fixed the user-observed VS Code error 'e2d task command exceeded the 32 MiB output limit'. The full 1143-task board payload was 88.36 MiB. Added tasks board --compact true and lazy tasks get on card open; the real compact payload is 0.98 MiB. Focused CLI test 1/1, TypeScript unit 17/17, typecheck, Insiders Extension Host, VSIX package/install, docs, licenses and taskboard verification passed. The updated VSIX is installed and a new Electron2D VS Code window was opened."
+          }
+        ]
+      },
+      {
+        "messageId": "activity-78663b02ecfb45cb8f854cb4e14ed7bd",
+        "sequence": 5,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T08:26:33.0198045+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Исправлено JSON-экранирование кириллицы: сериализатор пишет читаемый UTF-8, добавлена транзакционная команда `tasks normalize`; нормализованы 1144 файла, повторный запуск изменил 0 файлов, `tasks verify` подтвердил 941 активную и 202 архивные задачи."
+          }
+        ]
+      },
+      {
+        "messageId": "activity-c897afcb74ad4671b60b17d20cc39d1b",
+        "sequence": 6,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T08:34:20.4211404+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Уточнено после пользовательского примера с `\\u0060`: serializer теперь сохраняет напрямую не только кириллицу и backticks, но и printable Unicode/emoji. Финальная `tasks normalize` переписала 2 файла с surrogate pairs; повторный запуск изменил 0 файлов, raw scan по `.taskboard` нашёл 0 последовательностей `\\uXXXX`."
+          }
+        ]
+      },
+      {
+        "messageId": "message-d4a8c35e88e246ecb525a8d38c7e63ae",
+        "sequence": 7,
+        "author": {
+          "actorId": "Codex",
+          "actorKind": "Agent",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-13T19:51:14.0850786+00:00",
+        "replyToMessageId": null,
+        "agentRunId": "run-6a4b498771064b1f95a4b5a3b776e316",
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "T-1147 актуализирована до TaskBoard v3 и готова к пользовательской приёмке. Удалены публичные task-file-v2.schema.json и task-board-v2.schema.json; v2 сохранён только как внутренний migration input. RED/GREEN: отсутствие v2 schemas 0/1 → 1/1, ProjectTaskManager 17/17, aggregate v3/CLI/consumer/migration/layout 149/149. VS Code: typecheck, unit 115/115, Insiders Extension Host code 0, VSIX 11 files / 107.07 KB, установка в stable успешна; real-runtime evidence .temp/taskboard-t1147-real.png. Дополнительно прошли build 0 warnings/errors, docs update/check/verify, licenses 664/664, TaskBoard v3 verify 1020 active / 202 completed и git diff --check."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

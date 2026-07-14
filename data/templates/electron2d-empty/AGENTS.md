@@ -20,7 +20,7 @@ Project structure:
 - `project.e2d.json` stores project settings.
 - `scenes/` stores scene files.
 - `Scripts/` stores C# gameplay code.
-- `.electron2d/tasks/` stores ProjectTaskManager task documents.
+- `.taskboard/` stores ProjectTaskManager task documents; mutate them only through `e2d tasks`.
 - `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/context/`, `.electron2d/session/` and `.electron2d/user/` are generated or local-only working directories.
 
 Rules for agents:
@@ -30,6 +30,6 @@ Rules for agents:
 - Keep stable UID values intact unless the documented operation intentionally creates a new object.
 - Run `e2d validate --project .` after changing project files.
 - Do not use external API members outside the approved Electron2D Godot 4.7 public API contract. Use `e2d api compare-godot <type>` to check whether a type is approved by the current Electron2D public API profile. The command checks only manual profile approval; it does not prove full Godot 4.7 strict parity, which requires separate parity evidence.
-- Use ProjectTaskManager through Editor, Tooling or MCP. Do not edit task storage files directly.
+- Read and mutate ProjectTaskManager only through `e2d tasks`; Editor, Tooling and MCP are read-only consumers of the same CLI contract. Do not edit task storage files directly.
 - Link changes, tests, diagnostics, jobs and artifacts to the active task when the workflow exposes that operation.
-- Submit completed agent work for human acceptance with `task_submit_for_acceptance`; do not mark work as accepted for the user.
+- Submit completed agent work for human acceptance with `e2d tasks submit`; do not mark work as accepted for the user.

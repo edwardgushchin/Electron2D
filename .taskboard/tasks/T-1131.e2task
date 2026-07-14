@@ -1,0 +1,249 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-536d2c84c9e918689bcb4b9c2d891014",
+  "revision": 2,
+  "taskId": "T-1131",
+  "legacyAliases": [],
+  "title": "Зафиксировать запрет/непубличность `AABB` в публичном API Electron2D",
+  "description": "## T-1131 [ ] P0: Зафиксировать запрет/непубличность `AABB` в публичном API Electron2D\n\n- Создана: 2026-07-09T16:35:00+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `leaf-public-api`\n- Scheduling tier: `later`\n- Зависимости: T-0241, T-0242, T-0243, T-0245, T-0254\n- Ссылки:\n  - Доменный документ: `docs/math/godot-47-aabb.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.22 Дополнительные runtime/editor публичные узлы`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - `docs/math/godot-47-aabb.md` is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets or the approved Electron2D scoped contract.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - Node3D, Transform3D, 3D scenes, 3D mesh pipeline, VisualShader, RD or unsupported spatial math semantics.\n  - standard .NET primitive/collection semantics outside the explicit Electron2D Variant-compatible contract.\n- Required outputs:\n  - `docs/math/godot-47-aabb.md`\n  - profile, ClassDB/API-filtering and verifier evidence that the class is not exported publicly.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к группе `2.22 Дополнительные runtime/editor публичные узлы`. Цель - зафиксировать для `AABB` утверждённый контракт `unsupported` в слое `forbidden 3D spatial math API`.\n\nAABB запрещён как 3D bounding-box math; для Electron2D используется Rect2/Rect2I, а Vector3/Vector4 остаются только data-only числовыми типами.\n\n### Источники и сгенерированные описания API\n\n- Версия Godot: `4.7-stable`.\n- Официальная справка Godot по классу или built-in типу: `https://docs.godotengine.org/en/stable/classes/`.\n- Доменный документ: `docs/math/godot-47-aabb.md`.\n- Сгенерированные описания API Godot и Electron2D находятся в `data/api/`; ручной список members в `TASKS.md` не является источником истины.\n\n### Что входит в задачу\n\n- Зафиксировать `AABB` в public API profile согласно утверждённому решению и синхронизировать доменный документ, API manifest/diff и generated docs.\n- Доказать совпадение с утверждённой поверхностью через отчёт о расхождениях и проверку `T-0243`, а также через проверки поведения `T-0244` или утверждённые строки `Deferred`/`Unsupported`.\n- Обновить тесты или verifier-сценарии до production-изменений.\n- Зафиксировать выбранный срез выполнения в заметках задачи и дневнике перед production-изменениями.\n\n### Что не входит в задачу\n\n- Node3D, Transform3D, 3D scene graph, 3D mesh pipeline, VisualShader, RD resources and unsupported spatial math semantics.\n- Публичный API, которого нет в сгенерированном описании Godot `4.7-stable` или утверждённом Electron2D scoped contract.\n- Перевод задачи в closed/accepted без явного пользовательского acceptance.\n\n### First implementation slice\n\nЭта задача остаётся class/contract done gate для `AABB`, но один goal-агент не обязан закрывать весь класс за одну итерацию.\n\n- `A-api-surface`: сгенерировать/обновить API packet, XML docs, manifest/diff и compile-time/API verifier evidence без обещания полного runtime поведения.\n- `B-core-behavior`: закрыть основной пользовательский happy path и ошибки либо подтвердить `Unsupported` фильтрацию.\n- `C-substrate-integration`: привязать `AABB` к настоящему внутреннему runtime/editor/tooling слою и покрыть lifecycle/resource/platform integration.\n- `D-performance-lifetime-platform`: подтвердить производительность, отсутствие утечек и платформенные различия.\n- `GATE-class-done`: подтвердить, что срезы `A`-`D` закрыты или имеют утверждённые `Deferred`/`Unsupported`, затем запускать `verify public-api-done --class AABB` or owning contract verifier.\n\n### Критерии приёмки\n\n- [ ] Сгенерированное описание API или утверждённый mapping/filtering contract создан через `T-0242`/`T-0243` и привязан к Godot `4.7-stable`.\n- [ ] До рабочего кода добавлены сначала падающие тесты или verifier-сценарии.\n- [ ] Рабочая реализация или фильтрация `AABB` опирается на настоящий внутренний слой.\n- [ ] Полная документация `AABB` синхронизирована.\n- [ ] Проверки запускаются в текущей сессии и фиксируются в дневнике.\n\n### Подзадачи\n\n- [ ] Сгенерировать/обновить описание API или mapping/filtering evidence.\n- [ ] Обновить доменный документ `docs/math/godot-47-aabb.md`.\n- [ ] Добавить сначала падающие тесты или verifier-сценарии.\n- [ ] Реализовать рабочий код или явную public API фильтрацию минимальным срезом.\n- [ ] Обновить XML-документацию, полную документацию, generated docs и заметки задачи после зелёных проверок.\n\n### Заметки агента\n\n2026-07-09T16:35:00+03:00 - Создано по запросу пользователя: `AABB` зафиксирован в manual public API profile как `unsupported` для слоя `forbidden 3D spatial math API`; profile approval/ban не закрывает реализацию и поведенческие проверки.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0015",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fab4705fe4a1db467903c0bc500995a7"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c0723930d7fbe7fa15273fedf161e45a"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Сгенерированное описание API или утверждённый mapping/filtering contract создан через `T-0242`/`T-0243` и привязан к Godot `4.7-stable`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "До рабочего кода добавлены сначала падающие тесты или verifier-сценарии.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Рабочая реализация или фильтрация `AABB` опирается на настоящий внутренний слой.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Полная документация `AABB` синхронизирована.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Проверки запускаются в текущей сессии и фиксируются в дневнике.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-09T13:35:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя: `AABB` зафиксирован в manual public API profile как `unsupported` для слоя `forbidden 3D spatial math API`; profile approval/ban не закрывает реализацию и поведенческие проверки."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required for final acceptance unless a parent gate explicitly owns audit evidence"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "2.22 Дополнительные runtime/editor публичные узлы"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/math/godot-47-aabb.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Uri",
+      "value": "https://docs.godotengine.org/en/stable/classes/"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.",
+      "`docs/math/godot-47-aabb.md` is current and RED tests/verifiers can be added before production changes."
+    ],
+    "stopConditions": [
+      "implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets or the approved Electron2D scoped contract.",
+      "tests, domain document or generated source-of-truth artifacts are missing or stale.",
+      "a shortcut would introduce facade, stub, hidden fallback or undocumented behavior."
+    ],
+    "allowedChanges": [
+      "files named in this task's `Ссылки` block and their owning tests/docs.",
+      "generated artifacts only through their owning generator/verifier.",
+      "`TASKS.md` notes/current evidence and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.",
+      "Node3D, Transform3D, 3D scenes, 3D mesh pipeline, VisualShader, RD or unsupported spatial math semantics.",
+      "standard .NET primitive/collection semantics outside the explicit Electron2D Variant-compatible contract."
+    ],
+    "requiredOutputs": [
+      "`docs/math/godot-47-aabb.md`",
+      "profile, ClassDB/API-filtering and verifier evidence that the class is not exported publicly.",
+      "synchronized XML/docs/API/generated documentation evidence when public surface or docs change.",
+      "task notes/current evidence and diary entry with exact command results."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required for final acceptance unless a parent gate explicitly owns audit evidence",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 15400592,
+      "byteLength": 8149,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "ca478b7edfad834d7776be017f6a32321c68e3854cb830d3eaf33cd90586bf02",
+      "markdown": "## T-1131 [ ] P0: Зафиксировать запрет/непубличность `AABB` в публичном API Electron2D\n\n- Создана: 2026-07-09T16:35:00+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `leaf-public-api`\n- Scheduling tier: `later`\n- Зависимости: T-0241, T-0242, T-0243, T-0245, T-0254\n- Ссылки:\n  - Доменный документ: `docs/math/godot-47-aabb.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.22 Дополнительные runtime/editor публичные узлы`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - `docs/math/godot-47-aabb.md` is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets or the approved Electron2D scoped contract.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - Node3D, Transform3D, 3D scenes, 3D mesh pipeline, VisualShader, RD or unsupported spatial math semantics.\n  - standard .NET primitive/collection semantics outside the explicit Electron2D Variant-compatible contract.\n- Required outputs:\n  - `docs/math/godot-47-aabb.md`\n  - profile, ClassDB/API-filtering and verifier evidence that the class is not exported publicly.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к группе `2.22 Дополнительные runtime/editor публичные узлы`. Цель - зафиксировать для `AABB` утверждённый контракт `unsupported` в слое `forbidden 3D spatial math API`.\n\nAABB запрещён как 3D bounding-box math; для Electron2D используется Rect2/Rect2I, а Vector3/Vector4 остаются только data-only числовыми типами.\n\n### Источники и сгенерированные описания API\n\n- Версия Godot: `4.7-stable`.\n- Официальная справка Godot по классу или built-in типу: `https://docs.godotengine.org/en/stable/classes/`.\n- Доменный документ: `docs/math/godot-47-aabb.md`.\n- Сгенерированные описания API Godot и Electron2D находятся в `data/api/`; ручной список members в `TASKS.md` не является источником истины.\n\n### Что входит в задачу\n\n- Зафиксировать `AABB` в public API profile согласно утверждённому решению и синхронизировать доменный документ, API manifest/diff и generated docs.\n- Доказать совпадение с утверждённой поверхностью через отчёт о расхождениях и проверку `T-0243`, а также через проверки поведения `T-0244` или утверждённые строки `Deferred`/`Unsupported`.\n- Обновить тесты или verifier-сценарии до production-изменений.\n- Зафиксировать выбранный срез выполнения в заметках задачи и дневнике перед production-изменениями.\n\n### Что не входит в задачу\n\n- Node3D, Transform3D, 3D scene graph, 3D mesh pipeline, VisualShader, RD resources and unsupported spatial math semantics.\n- Публичный API, которого нет в сгенерированном описании Godot `4.7-stable` или утверждённом Electron2D scoped contract.\n- Перевод задачи в closed/accepted без явного пользовательского acceptance.\n\n### First implementation slice\n\nЭта задача остаётся class/contract done gate для `AABB`, но один goal-агент не обязан закрывать весь класс за одну итерацию.\n\n- `A-api-surface`: сгенерировать/обновить API packet, XML docs, manifest/diff и compile-time/API verifier evidence без обещания полного runtime поведения.\n- `B-core-behavior`: закрыть основной пользовательский happy path и ошибки либо подтвердить `Unsupported` фильтрацию.\n- `C-substrate-integration`: привязать `AABB` к настоящему внутреннему runtime/editor/tooling слою и покрыть lifecycle/resource/platform integration.\n- `D-performance-lifetime-platform`: подтвердить производительность, отсутствие утечек и платформенные различия.\n- `GATE-class-done`: подтвердить, что срезы `A`-`D` закрыты или имеют утверждённые `Deferred`/`Unsupported`, затем запускать `verify public-api-done --class AABB` or owning contract verifier.\n\n### Критерии приёмки\n\n- [ ] Сгенерированное описание API или утверждённый mapping/filtering contract создан через `T-0242`/`T-0243` и привязан к Godot `4.7-stable`.\n- [ ] До рабочего кода добавлены сначала падающие тесты или verifier-сценарии.\n- [ ] Рабочая реализация или фильтрация `AABB` опирается на настоящий внутренний слой.\n- [ ] Полная документация `AABB` синхронизирована.\n- [ ] Проверки запускаются в текущей сессии и фиксируются в дневнике.\n\n### Подзадачи\n\n- [ ] Сгенерировать/обновить описание API или mapping/filtering evidence.\n- [ ] Обновить доменный документ `docs/math/godot-47-aabb.md`.\n- [ ] Добавить сначала падающие тесты или verifier-сценарии.\n- [ ] Реализовать рабочий код или явную public API фильтрацию минимальным срезом.\n- [ ] Обновить XML-документацию, полную документацию, generated docs и заметки задачи после зелёных проверок.\n\n### Заметки агента\n\n2026-07-09T16:35:00+03:00 - Создано по запросу пользователя: `AABB` зафиксирован в manual public API profile как `unsupported` для слоя `forbidden 3D spatial math API`; profile approval/ban не закрывает реализацию и поведенческие проверки.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-09T13:35:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

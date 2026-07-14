@@ -1,0 +1,254 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-5aaefc9fa199dc27d3e622910580514b",
+  "revision": 2,
+  "taskId": "T-0983",
+  "legacyAliases": [],
+  "title": "Нормализовать method signatures в generated API manifest",
+  "description": "## T-0983 [ ] P1: Нормализовать method signatures в generated API manifest\n\n- Создана: 2026-07-06T03:26:00+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0241, T-0242\n- Ссылки:\n  - Доменный документ: `docs/documentation/api-manifest.md`\n  - Исходный код: `eng/Electron2D.ApiManifestGenerator/Program.cs`\n  - Сгенерированные данные: `data/api/electron2d-api-manifest.json`\n  - Тесты: `tests/Electron2D.Tests.Integration/ApiManifestTests.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник: `RISKS_AND_NOTES` из `docs/verdicts/release-management/t-0241-audit-control-r07.md`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - `docs/documentation/api-manifest.md` is current and a focused RED test or verifier can be added before generator changes.\n- Stop conditions:\n  - fixing signatures would require changing the generated public API source data outside the manifest formatting path.\n  - the change would hide methods from the manifest instead of producing one canonical method signature string.\n  - the change would broaden into generated API descriptions cleanup already tracked by another task without an explicit scope update.\n- May change:\n  - API manifest generator signature formatting and owning tests/docs.\n  - generated `data/api/electron2d-api-manifest.json` and documentation index through their generators.\n  - `TASKS.md` notes and diary entries for this task.\n- Must not change:\n  - public runtime API surface or implementation behavior.\n  - external audit verdict reports, saved audit archives or unrelated audit submit behavior.\n  - broader generated API description cleanup such as enum backing fields unless this task is explicitly expanded.\n- Required outputs:\n  - canonical method `signature` format in `data/api/electron2d-api-manifest.json` without duplicated parameter lists or duplicated `()`.\n  - RED/GREEN focused test that rejects method signatures matching duplicate call shapes such as `\\)\\(` or `\\(\\)\\(\\)`.\n  - synchronized domain document/generated manifest/docs evidence and task/diary notes.\n- Required commands:\n  - `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`\n  - focused integration test for API manifest method signatures.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update api-manifest --wiki-path .github/wiki --check`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify api-compatibility --wiki-path .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify licenses` when C# source changes.\n  - `git diff --check`\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence.\n\n### Самодостаточное описание\n\nControl audit `T-0241` r07 принял задачу, но нашёл follow-up в generated API manifest: у method entries поле `signature` содержит дублированную параметрическую часть, например `public System.Single GetPlayingSpeed()()` или `public Electron2D.Error AddAnimation(...)(...)`. Это ухудшает пригодность manifest для внешних инструментов, API сравнения и документации, но не блокировало root-contract задачу `T-0241`.\n\nОжидаемый результат: generator пишет для каждого метода ровно один канонический signature format, без повторной пары скобок и без второго списка параметров. Manifest, Wiki/API reference и тестовые фикстуры должны быть синхронизированы с новым форматом.\n\n### Internal substrate acceptance contract\n\n- Method signatures are deterministic and canonical across generated manifest entries.\n- Existing method identity, parameter metadata and API compatibility checks remain intact.\n- The fix is limited to manifest/documentation formatting and does not add, remove or implement public runtime API members.\n- The verifier/test fails closed on duplicate method call shapes in generated manifest data.\n\n### Критерии приёмки\n\n- [ ] `docs/documentation/api-manifest.md` documents the canonical method signature format.\n- [ ] Focused tests fail on duplicate shapes such as `GetPlayingSpeed()()` and `AddAnimation(...)(...)`.\n- [ ] `data/api/electron2d-api-manifest.json` has no method `signature` matching duplicated parameter-list patterns.\n- [ ] Wiki/API reference and generated docs remain synchronized after generator output changes.\n- [ ] `verify audit-followups` passes with the closure note from `T-0241` control r07.\n\n### Подзадачи\n\n- [ ] Add a RED regression for duplicate method signature call shapes in generated API manifest entries.\n- [ ] Fix `eng/Electron2D.ApiManifestGenerator/Program.cs` signature construction.\n- [ ] Regenerate API manifest and generated documentation artifacts through owning commands.\n- [ ] Update domain documentation if the public manifest contract changes.\n- [ ] Run focused tests, API manifest check, docs checks, license verifier when needed, `verify audit-followups` and `git diff --check`.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-control-r07.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0983\n  - rationale: Control audit `T-0241` r07 accepted the current task and classified duplicate generated method signatures as a separate P1 API manifest/tooling follow-up. `T-0983` tracks a zero-context fix without expanding the accepted `T-0241` scope.\n\n### Заметки агента\n\n2026-07-06T03:26:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0241-audit-control-r07.md`; control r07 содержит `VERDICT: ACCEPT`, а finding не блокирует T-0241.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0011",
+    "tag-0015",
+    "tag-0016",
+    "tag-0019"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`docs/documentation/api-manifest.md` documents the canonical method signature format.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Focused tests fail on duplicate shapes such as `GetPlayingSpeed()()` and `AddAnimation(...)(...)`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`data/api/electron2d-api-manifest.json` has no method `signature` matching duplicated parameter-list patterns.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Wiki/API reference and generated docs remain synchronized after generator output changes.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`verify audit-followups` passes with the closure note from `T-0241` control r07.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T00:26:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0241-audit-control-r07.md`; control r07 содержит `VERDICT: ACCEPT`, а finding не блокирует T-0241."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required for final acceptance unless a parent gate explicitly owns audit evidence."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/documentation/api-manifest.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0241-audit-control-r07.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "eng/Electron2D.ApiManifestGenerator/Program.cs"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ApiManifestTests.cs"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.",
+      "`docs/documentation/api-manifest.md` is current and a focused RED test or verifier can be added before generator changes."
+    ],
+    "stopConditions": [
+      "fixing signatures would require changing the generated public API source data outside the manifest formatting path.",
+      "the change would hide methods from the manifest instead of producing one canonical method signature string.",
+      "the change would broaden into generated API descriptions cleanup already tracked by another task without an explicit scope update."
+    ],
+    "allowedChanges": [
+      "API manifest generator signature formatting and owning tests/docs.",
+      "generated `data/api/electron2d-api-manifest.json` and documentation index through their generators.",
+      "`TASKS.md` notes and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "public runtime API surface or implementation behavior.",
+      "external audit verdict reports, saved audit archives or unrelated audit submit behavior.",
+      "broader generated API description cleanup such as enum backing fields unless this task is explicitly expanded."
+    ],
+    "requiredOutputs": [
+      "canonical method `signature` format in `data/api/electron2d-api-manifest.json` without duplicated parameter lists or duplicated `()`.",
+      "RED/GREEN focused test that rejects method signatures matching duplicate call shapes such as `\\)\\(` or `\\(\\)\\(\\)`.",
+      "synchronized domain document/generated manifest/docs evidence and task/diary notes."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "focused integration test for API manifest method signatures.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update api-manifest --wiki-path .github/wiki --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify api-compatibility --wiki-path .github/wiki`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0008",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify licenses` when C# source changes.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0009",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0010",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required for final acceptance unless a parent gate explicitly owns audit evidence.",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 378485,
+      "byteLength": 6674,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "fda5b0df92da6130bd768dd7449bd5ed2acfe001b9bbd720edc1887b8dff0eda",
+      "markdown": "## T-0983 [ ] P1: Нормализовать method signatures в generated API manifest\n\n- Создана: 2026-07-06T03:26:00+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0241, T-0242\n- Ссылки:\n  - Доменный документ: `docs/documentation/api-manifest.md`\n  - Исходный код: `eng/Electron2D.ApiManifestGenerator/Program.cs`\n  - Сгенерированные данные: `data/api/electron2d-api-manifest.json`\n  - Тесты: `tests/Electron2D.Tests.Integration/ApiManifestTests.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник: `RISKS_AND_NOTES` из `docs/verdicts/release-management/t-0241-audit-control-r07.md`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - `docs/documentation/api-manifest.md` is current and a focused RED test or verifier can be added before generator changes.\n- Stop conditions:\n  - fixing signatures would require changing the generated public API source data outside the manifest formatting path.\n  - the change would hide methods from the manifest instead of producing one canonical method signature string.\n  - the change would broaden into generated API descriptions cleanup already tracked by another task without an explicit scope update.\n- May change:\n  - API manifest generator signature formatting and owning tests/docs.\n  - generated `data/api/electron2d-api-manifest.json` and documentation index through their generators.\n  - `TASKS.md` notes and diary entries for this task.\n- Must not change:\n  - public runtime API surface or implementation behavior.\n  - external audit verdict reports, saved audit archives or unrelated audit submit behavior.\n  - broader generated API description cleanup such as enum backing fields unless this task is explicitly expanded.\n- Required outputs:\n  - canonical method `signature` format in `data/api/electron2d-api-manifest.json` without duplicated parameter lists or duplicated `()`.\n  - RED/GREEN focused test that rejects method signatures matching duplicate call shapes such as `\\)\\(` or `\\(\\)\\(\\)`.\n  - synchronized domain document/generated manifest/docs evidence and task/diary notes.\n- Required commands:\n  - `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`\n  - focused integration test for API manifest method signatures.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update api-manifest --wiki-path .github/wiki --check`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify api-compatibility --wiki-path .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify licenses` when C# source changes.\n  - `git diff --check`\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence.\n\n### Самодостаточное описание\n\nControl audit `T-0241` r07 принял задачу, но нашёл follow-up в generated API manifest: у method entries поле `signature` содержит дублированную параметрическую часть, например `public System.Single GetPlayingSpeed()()` или `public Electron2D.Error AddAnimation(...)(...)`. Это ухудшает пригодность manifest для внешних инструментов, API сравнения и документации, но не блокировало root-contract задачу `T-0241`.\n\nОжидаемый результат: generator пишет для каждого метода ровно один канонический signature format, без повторной пары скобок и без второго списка параметров. Manifest, Wiki/API reference и тестовые фикстуры должны быть синхронизированы с новым форматом.\n\n### Internal substrate acceptance contract\n\n- Method signatures are deterministic and canonical across generated manifest entries.\n- Existing method identity, parameter metadata and API compatibility checks remain intact.\n- The fix is limited to manifest/documentation formatting and does not add, remove or implement public runtime API members.\n- The verifier/test fails closed on duplicate method call shapes in generated manifest data.\n\n### Критерии приёмки\n\n- [ ] `docs/documentation/api-manifest.md` documents the canonical method signature format.\n- [ ] Focused tests fail on duplicate shapes such as `GetPlayingSpeed()()` and `AddAnimation(...)(...)`.\n- [ ] `data/api/electron2d-api-manifest.json` has no method `signature` matching duplicated parameter-list patterns.\n- [ ] Wiki/API reference and generated docs remain synchronized after generator output changes.\n- [ ] `verify audit-followups` passes with the closure note from `T-0241` control r07.\n\n### Подзадачи\n\n- [ ] Add a RED regression for duplicate method signature call shapes in generated API manifest entries.\n- [ ] Fix `eng/Electron2D.ApiManifestGenerator/Program.cs` signature construction.\n- [ ] Regenerate API manifest and generated documentation artifacts through owning commands.\n- [ ] Update domain documentation if the public manifest contract changes.\n- [ ] Run focused tests, API manifest check, docs checks, license verifier when needed, `verify audit-followups` and `git diff --check`.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-control-r07.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0983\n  - rationale: Control audit `T-0241` r07 accepted the current task and classified duplicate generated method signatures as a separate P1 API manifest/tooling follow-up. `T-0983` tracks a zero-context fix without expanding the accepted `T-0241` scope.\n\n### Заметки агента\n\n2026-07-06T03:26:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0241-audit-control-r07.md`; control r07 содержит `VERDICT: ACCEPT`, а finding не блокирует T-0241.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-06T00:26:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

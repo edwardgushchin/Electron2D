@@ -1,0 +1,237 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "platformer-board",
+  "taskUid": "task-T-0221",
+  "revision": 1,
+  "taskId": "T-0221",
+  "legacyAliases": [],
+  "title": "Восстановить performance gate для настоящего Platformer и RuntimeHost",
+  "description": "Ссылки:\n  - Доменный документ: `docs/quality/performance-verification.md`\n  - Доменный документ: `docs/release-management/performance-budgets.md`\n  - Доменный документ: `docs/examples/platformer.md`\n  - Legacy verifier: `tools/Verify-ReferencePerformance.ps1`\n  - C# performance command: `eng/Electron2D.Build`\n  - Artifact: `data/quality/performance-reference-metrics.json`\n  - Тесты: `tests/Electron2D.Tests.Integration/ReferencePerformanceVerificationTests.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RuntimeHostTests.cs`\n\n`T-0102` уже находится в локальном архиве как выполненная задача, но повторный аудит показал, что текущий performance gate нельзя считать достаточным: он опирается на статический artifact и короткие маркеры, а не доказывает реальную производительность интерактивного Platformer. Новый gate должен заново открыть рабочий scope без переписывания архивной истории `T-0102`.\n\nНужное поведение: generic runner, metrics schema, timeout и structured diagnostics принадлежат `T-0215`; эта задача владеет Platformer scenario, threshold policy, warm-up/measurement policy и evidence. Release-сборка настоящего Platformer измеряется в окне 1280x720. После прогрева не меньше 10 секунд выполняется измерение не меньше 60 секунд. Gate фиксирует P50/P95/P99 frame time, steady-state managed allocations, рост managed/private memory, GC collections, `input`, `physics`, `process`, `render-plan`, `submit`, `present`, количество draw commands, batches и texture switches. `0 B/frame` означает отсутствие повторяющихся управляемых выделений памяти .NET на каждом кадре после прогрева.",
+  "status": "Blocked",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "performance",
+    "platformer",
+    "reference-game",
+    "version:0.1.0-preview"
+  ],
+  "deadline": null,
+  "createdBy": "repository-task-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-T-0223"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-T-0225"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "t-0221-criterion-01",
+      "description": "До изменения кода `docs/quality/performance-verification.md` описывает новый live measurement contract и явно помечает прежний static artifact как недостаточный для текущего аудита.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0221-criterion-02",
+      "description": "`T-0215` предоставляет C# performance runner, metrics schema, timeout и structured diagnostics; `T-0221` не создаёт новый PowerShell-only gate поверх будущего C# tooling.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0221-criterion-03",
+      "description": "Добавлены сначала падающие tests, которые не дают пройти gate на текущем `RuntimeHost` с per-frame framebuffer allocation и post-render sleep.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0221-criterion-04",
+      "description": "C# performance command из `T-0215` запускает свежий measurement run, привязанный к commit/build identity, а не только читает старый JSON.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0221-criterion-05",
+      "description": "Обязательный сценарий `Platformer` запускается в Release, 1280x720, с warm-up не меньше 10 секунд и measurement window не меньше 60 секунд.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0221-criterion-06",
+      "description": "Artifact фиксирует CPU, GPU, RAM, OS build, graphics driver, power plan, debugger attached = false, window visibility/focus и VSync/frame limiter mode.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0221-criterion-07",
+      "description": "Artifact фиксирует Release commit SHA, build identity и точный command line.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0221-criterion-08",
+      "description": "Artifact описывает метод измерения allocations и memory counters.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0221-criterion-09",
+      "description": "Gate требует `p95FrameTimeMs <= 16.67`, фиксирует `p50`, `p95`, `p99`, `average`, `min`, `max` и итоговый pass/fail.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0221-criterion-10",
+      "description": "Gate требует `steadyManagedAllocatedBytesPerFrame = 0` после прогрева и проверяет отсутствие постоянного роста managed memory.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0221-criterion-11",
+      "description": "Artifact включает slope managed/private memory, missed-frame count, Gen0/Gen1/Gen2 collections во время measurement window, draw commands, batches, texture switches и time breakdown `input`/`physics`/`process`/`render-plan`/`submit`/`present`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0221-criterion-12",
+      "description": "Artifact содержит пути к screenshot/video/metrics evidence и не засчитывает пустой или визуально рассогласованный кадр.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0221-criterion-13",
+      "description": "`T-0093` и `T-0104` не могут быть приняты, если этот gate не прошёл на актуальном Platformer.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "t-0221-criterion-14",
+      "description": "После зелёных проверок доменный документ и artifact обновлены фактическими командами и результатами.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [
+    {
+      "blockerId": "blocker-0001",
+      "kind": "External",
+      "reason": "Перенесено из v2: External",
+      "state": "Active",
+      "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+      "createdBy": "repository-task-migration",
+      "resolvedAt": null,
+      "resolvedBy": null
+    }
+  ],
+  "activity": [
+    {
+      "activityEntryId": "activity-t-0221-001",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+      "kind": "Comment",
+      "payload": {
+        "markdown": "2026-06-24T19:20:00+03:00 - Создано как восстановление performance gate после повторного аудита. Архивную `T-0102` не переписывать; новая задача блокирует `T-0093` и release gate до реального измерения."
+      }
+    },
+    {
+      "activityEntryId": "activity-t-0221-002",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-24T16:45:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "Decision",
+        "text": "2026-06-24T19:45:00+03:00 - Ownership уточнён по аудиту пользователя: `T-0215` владеет generic C# performance runner, metrics schema, timeout и structured diagnostics; `T-0221` владеет Platformer scenario, thresholds, warm-up/measurement policy и evidence."
+      }
+    },
+    {
+      "activityEntryId": "activity-t-0221-migrated-to-project-board",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-30T09:21:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "Decision",
+        "text": "2026-06-30T12:21:00+03:00 - Задача перенесена из корневого TASKS.md в ProjectTaskManager проекта Platformer по T-0234. Исторический текст, критерии и зависимости сохранены в этом .e2task документе."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Uri",
+      "value": "repository-task:T-0215"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Node",
+      "value": "data/quality/performance-reference-metrics.json"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Node",
+      "value": "docs/examples/platformer.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Node",
+      "value": "docs/quality/performance-verification.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Node",
+      "value": "docs/release-management/performance-budgets.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Node",
+      "value": "eng/Electron2D.Build"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Node",
+      "value": "tests/Electron2D.Tests.Integration/ReferencePerformanceVerificationTests.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Node",
+      "value": "tests/Electron2D.Tests.Integration/RuntimeHostTests.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Node",
+      "value": "tools/Verify-ReferencePerformance.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": "not-required"
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+  "updatedAt": "2026-06-30T09:21:00.0000000+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null
+}

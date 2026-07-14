@@ -1,0 +1,368 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-cf91448fa8d648bab5a50f14b966c58a",
+  "revision": 11,
+  "taskId": "T-1150",
+  "legacyAliases": [],
+  "title": "Удалить legacy поле descriptionMarkdown из TaskManager",
+  "description": "## Контекст\n\nКанонические TaskFile/TaskBoard v2, CLI snapshots и VS Code DTO используют legacy key `descriptionMarkdown`. Пользователь требует удалить его.\n\n## Объём\n\n- Каноническое поле задачи и group — `description`.\n- Удалить legacy key из serializer, schemas, CLI input/output и VS Code model.\n- Оставить только read-compatibility для существующего repository snapshot до транзакционной нормализации.\n- Нормализовать `.taskboard`, template и Platformer taskboards через штатный task API/serializer path.\n- Синхронизировать tests/docs/generated docs и установленный VSIX.\n\n## Критерии приёмки\n\n- Новые TaskFile/TaskBoard JSON содержат `description` и не содержат legacy key.\n- CLI full task snapshots и VS Code details используют `description`; compact cards по-прежнему не включают heavy description.\n- JSON schemas требуют `description` и запрещают старый key.\n- Existing legacy snapshot читается только для migration, затем `tasks normalize` транзакционно переписывает его без revision/activity changes.\n- Repository raw scan не находит legacy key в canonical taskboards.\n- Focused C#/TS tests, docs, licenses, task verify и VSIX checks проходят.\n\n## Execution contract\n\nМенять только task description naming contract, migration compatibility, связанные consumers/tests/docs/taskboards. Не менять semantic task content и revisions.",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0009",
+    "tag-0018",
+    "tag-0029"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "legacy-accepted-result",
+      "description": "Результат был принят до введения обязательных критериев TaskBoard v3.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cf91448fa8d648bab5a50f14b966c58a/activity/activity-d881345afeb14e0f85a8327fa66b94dc"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-b1a4874bd4814b74b90c14280d712725",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T08:58:05.2256840+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Ready."
+      },
+      "sequence": 1
+    },
+    {
+      "activityEntryId": "activity-289bc8765075487f9ab9e061c164ae45",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T08:58:05.8563380+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to InProgress."
+      },
+      "sequence": 2
+    },
+    {
+      "activityEntryId": "activity-83cb1dc2216747c09abd1ca7934f0ad4",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T09:10:18.5168099+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Review."
+      },
+      "sequence": 3
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      },
+      "sequence": 4
+    },
+    {
+      "activityEntryId": "activity-0b59e0b11bae4663b6555bc2643b59fd",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-13T21:00:19.9441965+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Задача принята пользователем в VS Code Task Board."
+      },
+      "sequence": 5
+    },
+    {
+      "activityEntryId": "activity-d881345afeb14e0f85a8327fa66b94dc",
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-13T21:00:20.9824558+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "╨Ч╨░╨┤╨░╤З╨░ ╨┐╤А╨╕╨╜╤П╤В╨░ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╨╡╨╝ ╨▓ VS Code Task Board.",
+        "authorityActorId": "vscode:eduar",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      },
+      "sequence": 6
+    },
+    {
+      "activityEntryId": "activity-bedcc303415d4e9193406763727e36d1",
+      "sequence": 7,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T12:44:57.6532468+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 10,
+        "toRevision": 11,
+        "activitySequence": 7,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/links",
+            "oldValue": [],
+            "value": [
+              {
+                "linkId": "link-task-manager-contract",
+                "kind": "File",
+                "value": "docs/project-system/project-task-manager.md"
+              },
+              {
+                "linkId": "link-editor-contract",
+                "kind": "File",
+                "value": "docs/editor/project-tasks-board.md"
+              },
+              {
+                "linkId": "link-taskboard-contract-tests",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/TaskBoardV3ContractTests.cs"
+              },
+              {
+                "linkId": "link-cli-workflow-tests",
+                "kind": "File",
+                "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+              }
+            ]
+          },
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "general",
+              "readyToStart": [],
+              "stopConditions": [],
+              "allowedChanges": [],
+              "forbiddenChanges": [],
+              "requiredOutputs": [],
+              "commands": [],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "verification",
+              "readyToStart": [
+                "Принятый терминальный результат сопоставлен с актуальным TaskBoard v3 contract."
+              ],
+              "stopConditions": [
+                "Изменение затрагивает acceptance audit, критерии или lifecycle принятой задачи."
+              ],
+              "allowedChanges": [
+                "Только typed links и execution contract через revision-aware e2d tasks update."
+              ],
+              "forbiddenChanges": [
+                "Изменение критериев, статуса, acceptanceState, acceptedAt, acceptedBy или immutable activity."
+              ],
+              "requiredOutputs": [
+                "Сохранённый Done/Accepted lifecycle и актуальные структурированные ссылки."
+              ],
+              "commands": [
+                {
+                  "commandId": "command-taskboard-verify",
+                  "kind": "Process",
+                  "executable": "e2d",
+                  "arguments": [
+                    "tasks",
+                    "verify",
+                    "--project",
+                    ".",
+                    "--format",
+                    "json"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "d538c87cf9d6523ff8d7ed0e6de2405af1fee59aeb19e76f0c30fa8f6f3b4cf4",
+        "afterTaskCoreDigest": "111a2ddd249a27977513858e6aa954366ec7a51331bef40920b132449288e372"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-task-manager-contract",
+      "kind": "File",
+      "value": "docs/project-system/project-task-manager.md"
+    },
+    {
+      "linkId": "link-editor-contract",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-taskboard-contract-tests",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/TaskBoardV3ContractTests.cs"
+    },
+    {
+      "linkId": "link-cli-workflow-tests",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "verification",
+    "readyToStart": [
+      "Принятый терминальный результат сопоставлен с актуальным TaskBoard v3 contract."
+    ],
+    "stopConditions": [
+      "Изменение затрагивает acceptance audit, критерии или lifecycle принятой задачи."
+    ],
+    "allowedChanges": [
+      "Только typed links и execution contract через revision-aware e2d tasks update."
+    ],
+    "forbiddenChanges": [
+      "Изменение критериев, статуса, acceptanceState, acceptedAt, acceptedBy или immutable activity."
+    ],
+    "requiredOutputs": [
+      "Сохранённый Done/Accepted lifecycle и актуальные структурированные ссылки."
+    ],
+    "commands": [
+      {
+        "commandId": "command-taskboard-verify",
+        "kind": "Process",
+        "executable": "e2d",
+        "arguments": [
+          "tasks",
+          "verify",
+          "--project",
+          ".",
+          "--format",
+          "json"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-11T08:58:04.5513201+00:00",
+  "updatedAt": "2026-07-14T12:44:57.6532468+00:00",
+  "submittedAt": "2026-07-13T21:00:19.9441965+00:00",
+  "completedAt": "2026-07-13T21:00:20.9824558+00:00",
+  "acceptedAt": "2026-07-13T21:00:20.9824558+00:00",
+  "acceptedBy": "vscode:eduar",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 2,
+    "messages": [
+      {
+        "messageId": "activity-e85aa5a3fc8a4095a15d1c3256dbe5d9",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T09:10:17.8963425+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Canonical task/group description key заменён на `description` во всех serializers, schemas, CLI snapshots/input allowlist, audit-followup verifier и VS Code DTO. Legacy reader сохранён только для одноразовой миграции. `tasks normalize` переписал root 1147, template 1 и Platformer 6 файлов без revision/activity changes; repeat changed 0, key-level scan всех canonical taskboards дал 0. Focused C# 18/18 total across serializer/CLI/audit/reference slices, VS Code unit 21/21, typecheck, Extension Host exit 0, VSIX install, audit-followups 90/227, project-template, Platformer, docs и licenses GREEN."
+          }
+        ]
+      },
+      {
+        "messageId": "activity-199921e431a24880a8b6f29a6ef10a1c",
+        "sequence": 2,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T09:15:40.5307163+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Уточнение строгого cutover: compatibility reader старого description key полностью удалён после миграции всех известных taskboards. Reader теперь требует обязательный `description` и fail closed с `FormatException`; отдельный RED→GREEN test подтверждает отказ legacy TaskFile/TaskBoard. Production/docs/schema содержат 0 упоминаний старого имени; оно осталось только в двух отрицательных regression test files."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": [],
+  "workspaceChanges": {
+    "baseRevision": null,
+    "currentRevision": null,
+    "files": []
+  },
+  "lastActivitySequence": 7
+}

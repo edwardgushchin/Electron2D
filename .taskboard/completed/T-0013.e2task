@@ -1,0 +1,104 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-e6a1c4982f33668858b7127290629336",
+  "revision": 2,
+  "taskId": "T-0013",
+  "legacyAliases": [],
+  "title": "Стабилизировать сигналы, `Callable`, connect/disconnect и emission semantics",
+  "description": "# T-0013 [x] P0: Стабилизировать сигналы, `Callable`, connect/disconnect и emission semantics\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-20T23:04:00+03:00\n- Статус: завершена\n- Коммит: `T-0013: реализовать сигналы и Callable`\n\n## Итог\n\nРеализован baseline signal/callable для целевого API:\n\n- `Callable`;\n- `Error`;\n- `ConnectFlags`;\n- `Object.AddUserSignal(string signal)`;\n- `Object.HasSignal(string signal)`;\n- `Object.Connect(string signal, Callable callable, ConnectFlags flags = ConnectFlags.None)`;\n- `Object.Disconnect(string signal, Callable callable)`;\n- `Object.IsConnected(string signal, Callable callable)`;\n- `Object.EmitSignal(string signal, params object?[] args)`.\n\n## Проверенное поведение\n\n- Multiple subscribers вызываются в порядке подключения.\n- `Callable.From(Action)` и `Callable.From<T>(Action<T>)` работают для untyped/typed callbacks.\n- `new Callable(Object target, string method)` вызывает public instance method target object.\n- `Disconnect()` во время emission использует stable snapshot: текущий проход завершается, следующий проход учитывает disconnect.\n- Unknown signal возвращает `Error.Unavailable`.\n- Duplicate connection возвращает `Error.AlreadyExists`.\n- Callback exception и mismatch аргументов возвращают `Error.Failed`, но не останавливают остальные callbacks.\n- `Object` не добавляет .NET events в public surface.\n\n## Документация\n\n- Спецификация: `docs/object-model/signals-callable.md`.\n- Справка: `docs/object-model/signals-callable.md`.\n- Обновлены docs index, GitHub Wiki compatibility table, README, changelog и release notes.\n\n## Отличия и будущие задачи\n\n- До `StringName` signal/method names представлены `string`.\n- До `Variant` signal arguments представлены `object?[]`, а `Callable.Call()` возвращает `object?`.\n- `ConnectFlags.Deferred`, `Persist`, `OneShot` и `AppendSourceObject` пока объявлены, но runtime semantics остаются будущими задачами.\n- `Callable.Bind()`, `Unbind()`, `CallDeferred()` и built-in lifecycle signals ещё не реализованы.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` упал на отсутствующих `Callable`, `Error`, `ConnectFlags` и signal API.\n- Green narrow: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 26 тестов.\n- `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --no-restore` - прошло, 5 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 34 теста.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 10.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n\n## Заметки агента\n\nЗадача выполнена через spec -> red tests -> минимальную runtime-реализацию -> документацию фактического поведения.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0011"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-20T20:04:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/object-model/signals-callable.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 30005,
+      "byteLength": 3792,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "78d08356a690b452ea5ac0bdc5a6a73602bb41ce79ed1ad7b3045a4a51573d33",
+      "markdown": "# T-0013 [x] P0: Стабилизировать сигналы, `Callable`, connect/disconnect и emission semantics\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-20T23:04:00+03:00\n- Статус: завершена\n- Коммит: `T-0013: реализовать сигналы и Callable`\n\n## Итог\n\nРеализован baseline signal/callable для целевого API:\n\n- `Callable`;\n- `Error`;\n- `ConnectFlags`;\n- `Object.AddUserSignal(string signal)`;\n- `Object.HasSignal(string signal)`;\n- `Object.Connect(string signal, Callable callable, ConnectFlags flags = ConnectFlags.None)`;\n- `Object.Disconnect(string signal, Callable callable)`;\n- `Object.IsConnected(string signal, Callable callable)`;\n- `Object.EmitSignal(string signal, params object?[] args)`.\n\n## Проверенное поведение\n\n- Multiple subscribers вызываются в порядке подключения.\n- `Callable.From(Action)` и `Callable.From<T>(Action<T>)` работают для untyped/typed callbacks.\n- `new Callable(Object target, string method)` вызывает public instance method target object.\n- `Disconnect()` во время emission использует stable snapshot: текущий проход завершается, следующий проход учитывает disconnect.\n- Unknown signal возвращает `Error.Unavailable`.\n- Duplicate connection возвращает `Error.AlreadyExists`.\n- Callback exception и mismatch аргументов возвращают `Error.Failed`, но не останавливают остальные callbacks.\n- `Object` не добавляет .NET events в public surface.\n\n## Документация\n\n- Спецификация: `docs/object-model/signals-callable.md`.\n- Справка: `docs/object-model/signals-callable.md`.\n- Обновлены docs index, GitHub Wiki compatibility table, README, changelog и release notes.\n\n## Отличия и будущие задачи\n\n- До `StringName` signal/method names представлены `string`.\n- До `Variant` signal arguments представлены `object?[]`, а `Callable.Call()` возвращает `object?`.\n- `ConnectFlags.Deferred`, `Persist`, `OneShot` и `AppendSourceObject` пока объявлены, но runtime semantics остаются будущими задачами.\n- `Callable.Bind()`, `Unbind()`, `CallDeferred()` и built-in lifecycle signals ещё не реализованы.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` упал на отсутствующих `Callable`, `Error`, `ConnectFlags` и signal API.\n- Green narrow: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 26 тестов.\n- `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --no-restore` - прошло, 5 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 34 теста.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 10.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n\n## Заметки агента\n\nЗадача выполнена через spec -> red tests -> минимальную runtime-реализацию -> документацию фактического поведения.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-20T20:04:00.0000000+00:00",
+  "completedAt": "2026-06-20T20:04:00.0000000+00:00",
+  "acceptedAt": "2026-06-20T20:04:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-20T20:04:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

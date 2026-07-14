@@ -155,7 +155,7 @@ public sealed class ExternalChangeSynchronizerTests
     {
         using var workspace = CreateWorkspace(
             "tasks",
-            (ProjectTaskStorage.GetTaskDocumentPath("task-alpha"), TaskText("task-alpha", ProjectTaskStatus.AwaitingAcceptance)));
+            (ProjectTaskStorage.GetTaskDocumentPath("task-alpha"), TaskText("task-alpha", ProjectTaskStatus.Review, submitted: true)));
         var synchronizer = CreateSynchronizer(workspace);
         var incoming = CreateTask("task-alpha", ProjectTaskStatus.Done);
         incoming.CompletedAt = FixedInstant.AddHours(1);
@@ -163,7 +163,7 @@ public sealed class ExternalChangeSynchronizerTests
         incoming.AcceptedBy = "agent-spoof";
         incoming.AcceptanceState = ProjectTaskAcceptanceState.Accepted;
         File.WriteAllText(
-            Path.Combine(workspace.ProjectRoot, ".electron2d", "tasks", "task-alpha.e2task"),
+            Path.Combine(workspace.ProjectRoot, ".taskboard", "tasks", "task-alpha.e2task"),
             ProjectTaskSerializer.Serialize(incoming));
 
         synchronizer.Notify(ExternalFileChangeEvent.Changed(
@@ -173,7 +173,7 @@ public sealed class ExternalChangeSynchronizerTests
 
         Assert.Contains(rejected.Diagnostics, diagnostic => diagnostic.Code == "E2D-TASK-0002");
         Assert.Equal("pending-conflict", workspace.ImportState.States[ProjectTaskStorage.GetTaskDocumentPath("task-alpha")]);
-        Assert.Equal(ProjectTaskStatus.AwaitingAcceptance, workspace.Tasks.GetTask("task-alpha").Status);
+        Assert.Equal(ProjectTaskStatus.Review, workspace.Tasks.GetTask("task-alpha").Status);
         var rejectedImport = Assert.Single(rejected.ImportRecords);
         Assert.Equal(PrincipalKind.ExternalFile, rejectedImport.PrincipalKind);
         Assert.Contains(OperationCapability.TaskEditUnprivilegedFields, rejectedImport.Capabilities);
@@ -195,7 +195,7 @@ public sealed class ExternalChangeSynchronizerTests
                 "editor-test")));
         Assert.True(dirty.Succeeded);
         File.WriteAllText(
-            Path.Combine(workspace.ProjectRoot, ".electron2d", "tasks", "task-alpha.e2task"),
+            Path.Combine(workspace.ProjectRoot, ".taskboard", "tasks", "task-alpha.e2task"),
             TaskText("task-alpha", ProjectTaskStatus.InProgress));
 
         synchronizer.Notify(ExternalFileChangeEvent.Changed(
@@ -204,7 +204,7 @@ public sealed class ExternalChangeSynchronizerTests
         var conflict = synchronizer.Drain(FixedInstant.AddMilliseconds(550));
 
         Assert.Contains(conflict.Diagnostics, diagnostic => diagnostic.Code is "E2D-TOOLING-0002" or "E2D-TASK-0002");
-        Assert.Equal(ProjectTaskStatus.AwaitingAcceptance, workspace.Tasks.GetTask("task-alpha").Status);
+        Assert.Equal(ProjectTaskStatus.Review, workspace.Tasks.GetTask("task-alpha").Status);
         Assert.Contains("Local editor note.", workspace.Documents.GetByPath(ProjectTaskStorage.GetTaskDocumentPath("task-alpha")).Text, StringComparison.Ordinal);
     }
 
@@ -395,12 +395,12 @@ public sealed class ExternalChangeSynchronizerTests
             """;
     }
 
-    private static string TaskText(string taskId, ProjectTaskStatus status)
+    private static string TaskText(string taskId, ProjectTaskStatus status, bool submitted = false)
     {
-        return ProjectTaskSerializer.Serialize(CreateTask(taskId, status));
+        return ProjectTaskSerializer.Serialize(CreateTask(taskId, status, submitted));
     }
 
-    private static ProjectTask CreateTask(string taskId, ProjectTaskStatus status)
+    private static ProjectTask CreateTask(string taskId, ProjectTaskStatus status, bool submitted = false)
     {
         var task = new ProjectTask
         {
@@ -414,8 +414,8 @@ public sealed class ExternalChangeSynchronizerTests
             CreatedBy = "user-1",
             CreatedAt = FixedInstant,
             UpdatedAt = FixedInstant,
-            SubmittedAt = status == ProjectTaskStatus.AwaitingAcceptance ? FixedInstant.AddMinutes(5) : null,
-            AcceptanceState = status == ProjectTaskStatus.AwaitingAcceptance
+            SubmittedAt = submitted ? FixedInstant.AddMinutes(5) : null,
+            AcceptanceState = submitted
                 ? ProjectTaskAcceptanceState.Submitted
                 : ProjectTaskAcceptanceState.Open
         };

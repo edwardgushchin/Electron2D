@@ -1,0 +1,251 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-90e082646399f3153c57a11fbe2652a8",
+  "revision": 2,
+  "taskId": "T-0250",
+  "legacyAliases": [],
+  "title": "Проверить Box2D.NET и закрепить внутренний слой 2D-физики",
+  "description": "## T-0250 [ ] P0: Проверить Box2D.NET и закрепить внутренний слой 2D-физики\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0246\n- Ссылки:\n  - Доменный документ: `docs/physics/godot-47-public-api-physics2dbackend-decision.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/physics/godot-47-public-api-physics2dbackend-decision.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/physics/godot-47-public-api-physics2dbackend-decision.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. Нужно доказать, что Box2D.NET поддерживает нужные платформы и API-shape для Godot-like 2D physics; если нет, задача должна зафиксировать fallback contract собственного внутреннего слоя физики до реализации `PhysicsServer2D`.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Первичные потребители результата\n\n- `PhysicsServer2D`, `World2D` и задачам direct state/query нужны возможности жизненного цикла world/space/body/shape во внутреннем слое физики.\n- `Area2D`, `PhysicsBody2D`, `CharacterBody2D`, `RigidBody2D` и joints требуют подтверждения collision, query и fixed-timestep integration.\n- Классы `Shape2D` требуют преобразование shape, владение и диагностику invalid-shape.\n- Первое подтверждение должно доказать поддержку Box2D.NET или утверждённый запасной адаптер до закрытия публичных классов физики.\n\nДоменный документ должен развернуть этот список в таблицу: публичная задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Исполняемый контракт\n\n- Должны появиться или обновиться: `docs/physics/godot-47-public-api-physics2dbackend-decision.md`, `data/physics/physics2d-backend-decision.json`, `tests/Electron2D.Tests.Integration/Physics2DBackendDecisionTests.cs` and verifier route in `eng/Electron2D.Build`.\n- Обязательная команда: `dotnet run --project eng/Electron2D.Build -- verify physics2d-backend-decision`; focused proof: `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Physics2DBackendDecision\" --no-restore -v:minimal`.\n- RED-before-GREEN: test сначала падает, если Box2D.NET support matrix не доказана для Windows/Linux/macOS/Android/iOS/WebAssembly browser, если нет fallback decision, если отсутствуют required shape/body/query capabilities, или если fixed-timestep determinism не имеет tolerance contract.\n- Diagnostic codes: `E2D-PHYSICS2D-0001` Box2D.NET package/platform unsupported, `E2D-PHYSICS2D-0002` required shape/body capability missing, `E2D-PHYSICS2D-0003` fixed timestep determinism drift, `E2D-PHYSICS2D-0004` fallback adapter decision missing.\n- Consumer proof: `PhysicsServer2D`, `World2D`, `Shape2D`, `Area2D`, `CharacterBody2D`, `RigidBody2D`, direct query tasks and physics ready gate `T-0978` must map to capability IDs from `data/physics/physics2d-backend-decision.json`.\n- Запрещено: реализовывать public physics classes, менять gameplay-visible collision behavior, добавлять собственный physics engine без failed Box2D.NET evidence and explicit fallback decision, трогать rendering/audio/network/UI.\n\n### Internal substrate acceptance contract\n\n- `T-0250` has deterministic init/success and fail-closed diagnostics in the domain document, including a stable `E2D-*` code family when runtime failure is possible.\n- First consumer proof names the public task, required internal capability and first test/report that proves the consumer uses this substrate instead of a fallback.\n- Resource lifetime, cache, handle or subscription counters return to baseline after the smallest create/use/dispose scenario applicable to this substrate.\n- Unsupported platform/backend paths return documented diagnostics and do not silently degrade into stubs or no-op behavior.\n- This task does not define public methods/properties/signals/enums; public behavior remains owned by the concrete public API tasks.\n### Критерии приёмки\n\n- [ ] `data/physics/physics2d-backend-decision.json` фиксирует chosen backend, package/version, supported target matrix, required capabilities, determinism tolerance, fallback status, consumer task IDs and diagnostic codes.\n- [ ] `Physics2DBackendDecisionTests` проверяет positive Box2D.NET capability set and negative missing package/platform/capability/fallback scenarios.\n- [ ] `verify physics2d-backend-decision` проходит or fails with `E2D-PHYSICS2D-0001`-`0004` and exact remediation.\n- [ ] Доменный документ содержит decision record: use Box2D.NET, fallback adapter, or blocked evidence; no ambiguous “можем написать свой движок” remains without criteria.\n- [ ] Public physics tasks consume the decision artifact but do not become dependencies of the decision verifier in a cycle.\n- [ ] В diff нет public physics API implementation and no broad engine behavior changes.\n\n### Подзадачи\n\n- [ ] Создать/обновить backend decision JSON and domain decision record.\n- [ ] Добавить RED tests for missing package/platform/capability/fallback and determinism tolerance.\n- [ ] Реализовать `verify physics2d-backend-decision` with `E2D-PHYSICS2D-0001`-`0004`.\n- [ ] Привязать physics public tasks and `T-0978` к capability IDs without dependency cycles.\n- [ ] Запустить verifier, focused tests, docs checks and `git diff --check`.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0013",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a9dc106b3357162a2b473b8e01e91ad3"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`data/physics/physics2d-backend-decision.json` фиксирует chosen backend, package/version, supported target matrix, required capabilities, determinism tolerance, fallback status, consumer task IDs and diagnostic codes.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`Physics2DBackendDecisionTests` проверяет positive Box2D.NET capability set and negative missing package/platform/capability/fallback scenarios.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`verify physics2d-backend-decision` проходит or fails with `E2D-PHYSICS2D-0001`-`0004` and exact remediation.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Доменный документ содержит decision record: use Box2D.NET, fallback adapter, or blocked evidence; no ambiguous “можем написать свой движок” remains without criteria.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Public physics tasks consume the decision artifact but do not become dependencies of the decision verifier in a cycle.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "В diff нет public physics API implementation and no broad engine behavior changes.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required for final acceptance unless a parent gate explicitly owns audit evidence"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/physics/physics2d-backend-decision.json"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/physics/godot-47-public-api-physics2dbackend-decision.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "eng/Electron2D.Build"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Physics2DBackendDecisionTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.",
+      "docs/physics/godot-47-public-api-physics2dbackend-decision.md is current and RED tests/verifiers can be added before production changes."
+    ],
+    "stopConditions": [
+      "implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.",
+      "tests, domain document or generated source-of-truth artifacts are missing or stale.",
+      "a shortcut would introduce facade, stub, hidden fallback or undocumented behavior."
+    ],
+    "allowedChanges": [
+      "files named in this task's `Ссылки` block and their owning tests/docs.",
+      "generated artifacts only through their owning generator/verifier.",
+      "`TASKS.md` notes/current evidence and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.",
+      "public API surface not present in generated Godot 4.7 packets.",
+      "unrelated formatting, dependency graph or metadata churn."
+    ],
+    "requiredOutputs": [
+      "docs/physics/godot-47-public-api-physics2dbackend-decision.md",
+      "RED/GREEN test or verifier evidence for the selected slice.",
+      "synchronized XML/docs/API/generated documentation evidence when public surface or docs change.",
+      "task notes/current evidence and diary entry with exact command results."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify physics2d-backend-decision",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Physics2DBackendDecision\" --no-restore -v:minimal",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required for final acceptance unless a parent gate explicitly owns audit evidence",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 528435,
+      "byteLength": 12556,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "b0a1e026cfcbc9d0f9193f7485120c9ddfbc368fcd8869e9710ab59ea9506b34",
+      "markdown": "## T-0250 [ ] P0: Проверить Box2D.NET и закрепить внутренний слой 2D-физики\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0246\n- Ссылки:\n  - Доменный документ: `docs/physics/godot-47-public-api-physics2dbackend-decision.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/physics/godot-47-public-api-physics2dbackend-decision.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/physics/godot-47-public-api-physics2dbackend-decision.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. Нужно доказать, что Box2D.NET поддерживает нужные платформы и API-shape для Godot-like 2D physics; если нет, задача должна зафиксировать fallback contract собственного внутреннего слоя физики до реализации `PhysicsServer2D`.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Первичные потребители результата\n\n- `PhysicsServer2D`, `World2D` и задачам direct state/query нужны возможности жизненного цикла world/space/body/shape во внутреннем слое физики.\n- `Area2D`, `PhysicsBody2D`, `CharacterBody2D`, `RigidBody2D` и joints требуют подтверждения collision, query и fixed-timestep integration.\n- Классы `Shape2D` требуют преобразование shape, владение и диагностику invalid-shape.\n- Первое подтверждение должно доказать поддержку Box2D.NET или утверждённый запасной адаптер до закрытия публичных классов физики.\n\nДоменный документ должен развернуть этот список в таблицу: публичная задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Исполняемый контракт\n\n- Должны появиться или обновиться: `docs/physics/godot-47-public-api-physics2dbackend-decision.md`, `data/physics/physics2d-backend-decision.json`, `tests/Electron2D.Tests.Integration/Physics2DBackendDecisionTests.cs` and verifier route in `eng/Electron2D.Build`.\n- Обязательная команда: `dotnet run --project eng/Electron2D.Build -- verify physics2d-backend-decision`; focused proof: `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Physics2DBackendDecision\" --no-restore -v:minimal`.\n- RED-before-GREEN: test сначала падает, если Box2D.NET support matrix не доказана для Windows/Linux/macOS/Android/iOS/WebAssembly browser, если нет fallback decision, если отсутствуют required shape/body/query capabilities, или если fixed-timestep determinism не имеет tolerance contract.\n- Diagnostic codes: `E2D-PHYSICS2D-0001` Box2D.NET package/platform unsupported, `E2D-PHYSICS2D-0002` required shape/body capability missing, `E2D-PHYSICS2D-0003` fixed timestep determinism drift, `E2D-PHYSICS2D-0004` fallback adapter decision missing.\n- Consumer proof: `PhysicsServer2D`, `World2D`, `Shape2D`, `Area2D`, `CharacterBody2D`, `RigidBody2D`, direct query tasks and physics ready gate `T-0978` must map to capability IDs from `data/physics/physics2d-backend-decision.json`.\n- Запрещено: реализовывать public physics classes, менять gameplay-visible collision behavior, добавлять собственный physics engine без failed Box2D.NET evidence and explicit fallback decision, трогать rendering/audio/network/UI.\n\n### Internal substrate acceptance contract\n\n- `T-0250` has deterministic init/success and fail-closed diagnostics in the domain document, including a stable `E2D-*` code family when runtime failure is possible.\n- First consumer proof names the public task, required internal capability and first test/report that proves the consumer uses this substrate instead of a fallback.\n- Resource lifetime, cache, handle or subscription counters return to baseline after the smallest create/use/dispose scenario applicable to this substrate.\n- Unsupported platform/backend paths return documented diagnostics and do not silently degrade into stubs or no-op behavior.\n- This task does not define public methods/properties/signals/enums; public behavior remains owned by the concrete public API tasks.\n### Критерии приёмки\n\n- [ ] `data/physics/physics2d-backend-decision.json` фиксирует chosen backend, package/version, supported target matrix, required capabilities, determinism tolerance, fallback status, consumer task IDs and diagnostic codes.\n- [ ] `Physics2DBackendDecisionTests` проверяет positive Box2D.NET capability set and negative missing package/platform/capability/fallback scenarios.\n- [ ] `verify physics2d-backend-decision` проходит or fails with `E2D-PHYSICS2D-0001`-`0004` and exact remediation.\n- [ ] Доменный документ содержит decision record: use Box2D.NET, fallback adapter, or blocked evidence; no ambiguous “можем написать свой движок” remains without criteria.\n- [ ] Public physics tasks consume the decision artifact but do not become dependencies of the decision verifier in a cycle.\n- [ ] В diff нет public physics API implementation and no broad engine behavior changes.\n\n### Подзадачи\n\n- [ ] Создать/обновить backend decision JSON and domain decision record.\n- [ ] Добавить RED tests for missing package/platform/capability/fallback and determinism tolerance.\n- [ ] Реализовать `verify physics2d-backend-decision` with `E2D-PHYSICS2D-0001`-`0004`.\n- [ ] Привязать physics public tasks and `T-0978` к capability IDs without dependency cycles.\n- [ ] Запустить verifier, focused tests, docs checks and `git diff --check`.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

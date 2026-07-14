@@ -578,6 +578,12 @@ internal sealed class ExternalChangeSynchronizer
     {
         try
         {
+            if (IsV3TaskboardDocument(text))
+            {
+                ValidateV3TaskboardDocument(text);
+                return;
+            }
+
             if (relativePath.EndsWith(".e2task", StringComparison.Ordinal))
             {
                 ProjectTaskSerializer.DeserializeTask(relativePath, text);
@@ -604,7 +610,12 @@ internal sealed class ExternalChangeSynchronizer
         var operationId = BuildOperationId("external-task-import", relativePath);
         var undoGroupId = BuildUndoGroupId("external-task-import", relativePath);
 
-        if (relativePath.EndsWith(".e2tasks", StringComparison.Ordinal))
+        if (IsV3TaskboardDocument(text))
+        {
+            ValidateV3TaskboardDocument(text);
+        }
+
+        if (relativePath.EndsWith(".e2tasks", StringComparison.Ordinal) || IsV3TaskboardDocument(text))
         {
             var transaction = workspace.Transactions.Apply(new WorkspaceTransactionRequest(
                 operationId,
@@ -656,6 +667,33 @@ internal sealed class ExternalChangeSynchronizer
         else
         {
             workspace.ImportState.SetState(relativePath, "pending-conflict");
+        }
+    }
+
+    private static bool IsV3TaskboardDocument(string text)
+    {
+        try
+        {
+            return JsonNode.Parse(text) is JsonObject root &&
+                root["version"]?.GetValue<int>() == 3 &&
+                root["format"]?.GetValue<string>() is "Electron2D.TaskFile" or "Electron2D.TaskBoard";
+        }
+        catch (JsonException)
+        {
+            return false;
+        }
+    }
+
+    private static void ValidateV3TaskboardDocument(string text)
+    {
+        var root = JsonNode.Parse(text) as JsonObject ?? throw new FormatException("TaskBoard v3 document must be an object.");
+        if (root["format"]?.GetValue<string>() == "Electron2D.TaskFile")
+        {
+            TaskBoardV3SchemaValidator.ValidateTask(root);
+        }
+        else
+        {
+            TaskBoardV3SchemaValidator.ValidateBoard(root);
         }
     }
 

@@ -30,7 +30,7 @@ Windows x64 export должен превратить локальный Electron
 - `rendererProfile`: `Standard`, `Compatibility` или `Automatic`;
 - display mode берётся из project settings: windowed или fullscreen;
 - output layout обязан содержать project-specific executable entry point, resource pack manifest и несколько runtime resource packages;
-- рядом с executable запрещены source-layout файлы и каталоги проекта: `project.e2d.json`, `export_presets.e2export.json`, `scenes/`, `assets/`, `resources/`, `.electron2d/tasks/**`;
+- рядом с executable запрещены source-layout файлы и каталоги проекта: `project.e2d.json`, `export_presets.e2export.json`, `scenes/`, `assets/`, `resources/`, `.taskboard/**`;
 - `project.e2d.json`, scenes, assets и resources должны попадать в пакеты `packs/**/*.e2dpkg`, а manifest `electron2d.pack.json` должен описывать, какие package files нужны проекту и отдельным сценам.
 
 Pack layout должен быть расширяемым:
@@ -152,7 +152,7 @@ Planner не запускает внешние процессы. Он строи
 - required output files: project-specific `.exe`, `electron2d.pack.json` and `packs/**/*.e2dpkg`.
 - resource pack manifest: `electron2d.pack.json`;
 - package files: `packs/project.e2dpkg`, per-scene `packs/scenes/*.e2dpkg`, asset group packages and `packs/resources.e2dpkg`;
-- forbidden loose files next to executable: `project.e2d.json`, `export_presets.e2export.json`, `assets/`, `resources/`, `scenes/`, `.electron2d/tasks/**`.
+- forbidden loose files next to executable: `project.e2d.json`, `export_presets.e2export.json`, `assets/`, `resources/`, `scenes/`, `.taskboard/**`.
 
 ## Validation
 

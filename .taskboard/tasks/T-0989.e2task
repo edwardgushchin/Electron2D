@@ -1,0 +1,215 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-551028e63c73c6f009aaad9d184f68c2",
+  "revision": 2,
+  "taskId": "T-0989",
+  "legacyAliases": [],
+  "title": "Уточнить masking terminal Windows paths со spaced segments",
+  "description": "## T-0989 [ ] P3: Уточнить masking terminal Windows paths со spaced segments\n\n- Создана: 2026-07-07T12:47:00+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `tooling`\n- Scheduling tier: `later`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Источник follow-up: `docs/verdicts/release-management/t-0242-audit-control-r14.md`\n  - Исходный код: `eng/Electron2D.Build/ApiMatrixCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n\n### Execution contract\n\n- Task type: tooling-hardening\n- Ready-to-start:\n  - `T-0242` имеет saved primary и clean-control `VERDICT: ACCEPT`.\n  - Можно добавить focused regression для terminal drive-root paths со spaced segments без изменения generated packet schema.\n- Stop conditions:\n  - изменение требует менять public API packet shape, canonical Electron2D enum/operator representation или Godot source baseline;\n  - generated Godot packets меняются из-за внешнего source drift, а не из-за deterministic masking behavior;\n  - проверка начинает маскировать обычную Godot punctuation вроде `range(n: int)`, `A:4` или `X:Y aspect ratio`.\n- May change:\n  - tokenizer/masking logic для Windows path summaries in `ApiMatrixCommand`;\n  - focused tests для terminal spaced-segment paths в обычном тексте и BBCode;\n  - domain documentation if masking contract changes.\n- Must not change:\n  - API packet schema, public C# naming decisions, enum/operator canonical representation;\n  - official Godot source snapshot version;\n  - accepted audit reports or historical evidence files.\n- Required outputs:\n  - terminal synthetic drive-root path ending with `Program Files` is fully replaced by `<windows-absolute-path>` without residual `Files` tail;\n  - terminal synthetic drive-root path ending with `Program Files (x86)` is fully replaced without residual `(x86)` tail;\n  - same cases work inside Godot BBCode code spans;\n  - existing punctuation false-positive regressions remain green.\n- Required commands:\n  - focused API generator regression test for terminal spaced-segment paths;\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- api generate-class-packets --check`;\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify docs`;\n  - `git diff --check`.\n- External audit:\n  - required only when this hardening is included in a later audit-managed package scope.\n\n### Самодостаточное описание\n\nClean-control r14 for `T-0242` accepted the current generated API packet foundation but found a P3 hardening gap in Windows path masking. Current tokenizer masks the real generated Godot 4.7 artifacts and covered paths with a following subdirectory, but an additional terminal spaced segment case should be pinned by regression tests: a synthetic drive-root path ending directly at `Program Files` or `Program Files (x86)` must not leave residual text after `<windows-absolute-path>`.\n\n### Критерии приёмки\n\n- [ ] Focused regression covers terminal synthetic drive-root path ending in `Program Files` in ordinary text.\n- [ ] Focused regression covers terminal synthetic drive-root path ending in `Program Files (x86)` in ordinary text.\n- [ ] Focused regression covers the same terminal spaced-segment forms inside Godot BBCode code spans.\n- [ ] Generated Godot summaries do not contain residual `<windows-absolute-path> Files` or `<windows-absolute-path> Files (x86)` tails.\n- [ ] Existing punctuation cases `range(n: int)`, `A:4`, `X:Y aspect ratio` and drive-colon quote punctuation stay unmasked.\n\n### Подзадачи\n\n- [ ] Add RED regression for terminal spaced-segment masking.\n- [ ] Tighten `FindWindowsAbsolutePathEnd` / `WhitespaceContinuesWindowsPath` without broadening false positives.\n- [ ] Regenerate or check class packets as required.\n- [ ] Run focused generator tests and required docs/whitespace checks.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0242-audit-control-r14.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0989\n  - rationale: Clean-control `T-0242` r14 classifies terminal spaced-segment Windows path masking as a future P3 hardening gap, not a blocker for current generated Godot 4.7 packets. `T-0989` tracks the focused regression and implementation.\n\n### Заметки агента\n\n2026-07-07T12:47:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0242-audit-control-r14.md`; finding перенесён в отдельный P3 hardening task без изменения принятого `T-0242` package scope.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P3",
+  "tagIds": [
+    "tag-0011",
+    "tag-0018",
+    "tag-0023",
+    "tag-0031"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Focused regression covers terminal synthetic drive-root path ending in `Program Files` in ordinary text.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Focused regression covers terminal synthetic drive-root path ending in `Program Files (x86)` in ordinary text.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Focused regression covers the same terminal spaced-segment forms inside Godot BBCode code spans.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Generated Godot summaries do not contain residual `<windows-absolute-path> Files` or `<windows-absolute-path> Files (x86)` tails.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Existing punctuation cases `range(n: int)`, `A:4`, `X:Y aspect ratio` and drive-colon quote punctuation stay unmasked.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-07T09:47:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0242-audit-control-r14.md`; finding перенесён в отдельный P3 hardening task без изменения принятого `T-0242` package scope."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required only when this hardening is included in a later audit-managed package scope."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0242-audit-control-r14.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/ApiMatrixCommand.cs"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tooling-hardening",
+    "readyToStart": [
+      "`T-0242` имеет saved primary и clean-control `VERDICT: ACCEPT`.",
+      "Можно добавить focused regression для terminal drive-root paths со spaced segments без изменения generated packet schema."
+    ],
+    "stopConditions": [
+      "изменение требует менять public API packet shape, canonical Electron2D enum/operator representation или Godot source baseline;",
+      "generated Godot packets меняются из-за внешнего source drift, а не из-за deterministic masking behavior;",
+      "проверка начинает маскировать обычную Godot punctuation вроде `range(n: int)`, `A:4` или `X:Y aspect ratio`."
+    ],
+    "allowedChanges": [
+      "tokenizer/masking logic для Windows path summaries in `ApiMatrixCommand`;",
+      "focused tests для terminal spaced-segment paths в обычном тексте и BBCode;",
+      "domain documentation if masking contract changes."
+    ],
+    "forbiddenChanges": [
+      "API packet schema, public C# naming decisions, enum/operator canonical representation;",
+      "official Godot source snapshot version;",
+      "accepted audit reports or historical evidence files."
+    ],
+    "requiredOutputs": [
+      "terminal synthetic drive-root path ending with `Program Files` is fully replaced by `<windows-absolute-path>` without residual `Files` tail;",
+      "terminal synthetic drive-root path ending with `Program Files (x86)` is fully replaced without residual `(x86)` tail;",
+      "same cases work inside Godot BBCode code spans;",
+      "existing punctuation false-positive regressions remain green."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "focused API generator regression test for terminal spaced-segment paths;",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- api generate-class-packets --check`;",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify docs`;",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build --no-build --no-restore -- api generate-class-packets --check",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify docs",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required only when this hardening is included in a later audit-managed package scope.",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 411972,
+      "byteLength": 4955,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "faf482dbfc55bec32f7f6d7a55c3c04d6d107524a2508f9de156fde7537fe66e",
+      "markdown": "## T-0989 [ ] P3: Уточнить masking terminal Windows paths со spaced segments\n\n- Создана: 2026-07-07T12:47:00+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `tooling`\n- Scheduling tier: `later`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Источник follow-up: `docs/verdicts/release-management/t-0242-audit-control-r14.md`\n  - Исходный код: `eng/Electron2D.Build/ApiMatrixCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n\n### Execution contract\n\n- Task type: tooling-hardening\n- Ready-to-start:\n  - `T-0242` имеет saved primary и clean-control `VERDICT: ACCEPT`.\n  - Можно добавить focused regression для terminal drive-root paths со spaced segments без изменения generated packet schema.\n- Stop conditions:\n  - изменение требует менять public API packet shape, canonical Electron2D enum/operator representation или Godot source baseline;\n  - generated Godot packets меняются из-за внешнего source drift, а не из-за deterministic masking behavior;\n  - проверка начинает маскировать обычную Godot punctuation вроде `range(n: int)`, `A:4` или `X:Y aspect ratio`.\n- May change:\n  - tokenizer/masking logic для Windows path summaries in `ApiMatrixCommand`;\n  - focused tests для terminal spaced-segment paths в обычном тексте и BBCode;\n  - domain documentation if masking contract changes.\n- Must not change:\n  - API packet schema, public C# naming decisions, enum/operator canonical representation;\n  - official Godot source snapshot version;\n  - accepted audit reports or historical evidence files.\n- Required outputs:\n  - terminal synthetic drive-root path ending with `Program Files` is fully replaced by `<windows-absolute-path>` without residual `Files` tail;\n  - terminal synthetic drive-root path ending with `Program Files (x86)` is fully replaced without residual `(x86)` tail;\n  - same cases work inside Godot BBCode code spans;\n  - existing punctuation false-positive regressions remain green.\n- Required commands:\n  - focused API generator regression test for terminal spaced-segment paths;\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- api generate-class-packets --check`;\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify docs`;\n  - `git diff --check`.\n- External audit:\n  - required only when this hardening is included in a later audit-managed package scope.\n\n### Самодостаточное описание\n\nClean-control r14 for `T-0242` accepted the current generated API packet foundation but found a P3 hardening gap in Windows path masking. Current tokenizer masks the real generated Godot 4.7 artifacts and covered paths with a following subdirectory, but an additional terminal spaced segment case should be pinned by regression tests: a synthetic drive-root path ending directly at `Program Files` or `Program Files (x86)` must not leave residual text after `<windows-absolute-path>`.\n\n### Критерии приёмки\n\n- [ ] Focused regression covers terminal synthetic drive-root path ending in `Program Files` in ordinary text.\n- [ ] Focused regression covers terminal synthetic drive-root path ending in `Program Files (x86)` in ordinary text.\n- [ ] Focused regression covers the same terminal spaced-segment forms inside Godot BBCode code spans.\n- [ ] Generated Godot summaries do not contain residual `<windows-absolute-path> Files` or `<windows-absolute-path> Files (x86)` tails.\n- [ ] Existing punctuation cases `range(n: int)`, `A:4`, `X:Y aspect ratio` and drive-colon quote punctuation stay unmasked.\n\n### Подзадачи\n\n- [ ] Add RED regression for terminal spaced-segment masking.\n- [ ] Tighten `FindWindowsAbsolutePathEnd` / `WhitespaceContinuesWindowsPath` without broadening false positives.\n- [ ] Regenerate or check class packets as required.\n- [ ] Run focused generator tests and required docs/whitespace checks.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0242-audit-control-r14.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0989\n  - rationale: Clean-control `T-0242` r14 classifies terminal spaced-segment Windows path masking as a future P3 hardening gap, not a blocker for current generated Godot 4.7 packets. `T-0989` tracks the focused regression and implementation.\n\n### Заметки агента\n\n2026-07-07T12:47:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0242-audit-control-r14.md`; finding перенесён в отдельный P3 hardening task без изменения принятого `T-0242` package scope.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-07T09:47:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

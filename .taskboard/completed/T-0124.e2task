@@ -1,0 +1,311 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-551cfe4874db76aaf43972792df9bd63",
+  "revision": 2,
+  "taskId": "T-0124",
+  "legacyAliases": [],
+  "title": "Реализовать runtime scene inspection и debug bridge для Editor RuntimeController",
+  "description": "# T-0124: Реализовать runtime scene inspection и debug bridge для Editor RuntimeController\n\n- Статус: завершена\n- Завершена: 2026-06-22T22:43:00+03:00\n- Приоритет: P0\n- Коммит: `4e3442f`\n\n## Ссылки\n\n- Спецификация: `docs/runtime/runtime-debug-bridge.md`; `docs/runtime/headless-runtime-automation.md`; `docs/architecture/ai-friendly-workflow.md`\n- Документация: `docs/runtime/runtime-debug-bridge.md`; `docs/runtime/headless-runtime-automation.md`; `docs/cli/e2d-cli.md`; `docs/mcp/mcp-server.md`\n- Исходный код: `src/Electron2D.ProjectSystem/Runtime/RuntimeDebugBridge.cs`; `src/Electron2D.Cli/RuntimeDebugCli.cs`; `src/Electron2D.Cli/CliGeneralCommands.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/RuntimeDebugBridgeTests.cs`\n\n## Итог\n\n- Добавлена спецификация runtime debug bridge и implementation documentation.\n- В `Electron2D.ProjectSystem` добавлен shared `RuntimeDebugBridge` для deterministic preview session.\n- Bridge поддерживает `HeadlessPreview` и `EditorAttachedPreview` session kinds, `Running`/`Paused`/`Stopped` state, pause/resume/stop, frame step, physics step, input injection, deterministic screenshot, metrics, Remote Scene Tree и inspect node.\n- Runtime inspection доступен только в development/debug mode; production mode возвращает `E2D-RUNTIME-0001`.\n- Попытка arbitrary runtime node mutation через bridge явно отклоняется `E2D-RUNTIME-0001` и не меняет snapshot.\n- Добавлен CLI route `e2d run debug --format json` с session, scene tree, inspected node, metrics, diagnostics и screenshot metadata.\n- CLI/MCP specs/docs обновлены: будущие runtime MCP tools и visible Editor RuntimeController должны подключаться к этому shared bridge contract.\n- Local documentation index обновлён.\n\n## Критерии приёмки\n\n- [x] Runtime inspection доступен только в development/debug режимах.\n- [x] CLI, MCP и Editor могут читать scene tree, node properties, metrics и screenshot через один debug bridge contract; текущий CLI route реализован, MCP/Editor привязки документированы для следующих задач.\n- [x] Runtime pause/step не ломает deterministic tests.\n- [x] Debug bridge поддерживает `EditorAttachedPreview` session kind и Remote Scene Tree payload для будущего visible play session.\n- [x] Изменение runtime-состояния ограничено: arbitrary node property mutation запрещён и возвращает structured diagnostic.\n- [x] Документация debug bridge обновлена.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~RuntimeDebugBridgeTests` упал ожидаемо на отсутствии `RuntimeDebugSession`/bridge API.\n- Green focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~RuntimeDebugBridgeTests` прошёл `4/4`.\n- Focused regression phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~RuntimeDebugBridgeTests|FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests|FullyQualifiedName~Electron2DCliWorkflowTests|FullyQualifiedName~DiagnosticsCoreTests\"` прошёл `24/24`.\n- `git diff --check` прошёл без whitespace errors, только с предупреждениями о будущей нормализации LF/CRLF.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для `549` tracked source files.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- Первый `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` упал на transient Microsoft Defender file lock внутри `dotnet run` в `LocalDocumentationCliTests`; focused `LocalDocumentationCliTests` после этого прошёл `3/3`.\n- Повторный `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `361/361`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл.\n\n## Решения\n\n- Первая реализация не запускает настоящий game process и не создаёт visible Editor viewport; это остаётся scope `T-0144`, но будет использовать уже введённый session/tree/metrics/screenshot payload.\n- Screenshot является deterministic placeholder PNG до подключения настоящего renderer output.\n- Runtime debug bridge наблюдает и управляет execution state, но не меняет serialized project data и не обходит transaction layer.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0124 [ ] P0: Реализовать runtime scene inspection и debug bridge для Editor RuntimeController\n\n- Создана: 2026-06-21T00:17:01+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0121, T-0123\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/runtime/`\n  - Документация: `docs/runtime/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D.Cli/`; `tests/`\n\n### Самодостаточное описание\n\nНужно дать агенту и Editor наблюдаемое состояние запущенной игры: `runtime tree`, `inspect`, `metrics`, `screenshot`, `pause`, `step`. Debug bridge должен читать scene tree, exported properties, transforms, visibility, animation state, physics contacts, Input Map state, logs и frame capture.\n\nDebug bridge должен интегрироваться с Editor RuntimeController и отдельным game process, чтобы разработчик видел запуск, а падение игры не роняло Editor.\n\n### Критерии приёмки\n\n- [ ] Runtime inspection доступен только в development/debug режимах.\n- [ ] CLI, MCP и Editor могут читать scene tree, node properties, metrics и screenshot через один debug bridge.\n- [ ] Runtime pause/step не ломает deterministic tests.\n- [ ] Debug bridge поддерживает Editor-attached visible play session и Remote Scene Tree.\n- [ ] Изменение runtime-состояния ограничено или явно запрещено в `0.1`.\n- [ ] Документация debug bridge обновлена.\n\n### Заметки агента\n\nСоздано из AI-friendly архитектурного файла: агент должен проверять фактическое состояние игры, а не делать вывод только по коду.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:02:00+03:00 - Уточнение пользователя: debug bridge является P0, потому что AI должен управлять наблюдаемым тестовым запуском, а разработчик должен видеть ход проверки в Editor.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-1959002fea1eeebdb9f08c6ed22aca4a"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-d3894b87fa689de1f315ad477c1eadd2"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Runtime inspection доступен только в development/debug режимах.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-551cfe4874db76aaf43972792df9bd63/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "CLI, MCP и Editor могут читать scene tree, node properties, metrics и screenshot через один debug bridge contract; текущий CLI route реализован, MCP/Editor привязки документированы для следующих задач.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-551cfe4874db76aaf43972792df9bd63/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Runtime pause/step не ломает deterministic tests.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-551cfe4874db76aaf43972792df9bd63/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Debug bridge поддерживает `EditorAttachedPreview` session kind и Remote Scene Tree payload для будущего visible play session.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-551cfe4874db76aaf43972792df9bd63/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Изменение runtime-состояния ограничено: arbitrary node property mutation запрещён и возвращает structured diagnostic.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-551cfe4874db76aaf43972792df9bd63/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Документация debug bridge обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-551cfe4874db76aaf43972792df9bd63/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T07:24:54.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:02:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: debug bridge является P0, потому что AI должен управлять наблюдаемым тестовым запуском, а разработчик должен видеть ход проверки в Editor."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:05:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T19:43:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "24/24"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "3/3"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "361/361"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "4/4"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/architecture/ai-friendly-workflow.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/mcp/mcp-server.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "docs/runtime"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/runtime/headless-runtime-automation.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/runtime/runtime-debug-bridge.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "Directory",
+      "value": "src/Electron2D.Cli"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/CliGeneralCommands.cs"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/RuntimeDebugCli.cs"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Runtime/RuntimeDebugBridge.cs"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RuntimeDebugBridgeTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 712608,
+      "byteLength": 8321,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "988fb677c941f26f2c3ec582dbce264c302a2963ef94d30f1cc6f9debb5a9c77",
+      "markdown": "# T-0124: Реализовать runtime scene inspection и debug bridge для Editor RuntimeController\n\n- Статус: завершена\n- Завершена: 2026-06-22T22:43:00+03:00\n- Приоритет: P0\n- Коммит: `4e3442f`\n\n## Ссылки\n\n- Спецификация: `docs/runtime/runtime-debug-bridge.md`; `docs/runtime/headless-runtime-automation.md`; `docs/architecture/ai-friendly-workflow.md`\n- Документация: `docs/runtime/runtime-debug-bridge.md`; `docs/runtime/headless-runtime-automation.md`; `docs/cli/e2d-cli.md`; `docs/mcp/mcp-server.md`\n- Исходный код: `src/Electron2D.ProjectSystem/Runtime/RuntimeDebugBridge.cs`; `src/Electron2D.Cli/RuntimeDebugCli.cs`; `src/Electron2D.Cli/CliGeneralCommands.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/RuntimeDebugBridgeTests.cs`\n\n## Итог\n\n- Добавлена спецификация runtime debug bridge и implementation documentation.\n- В `Electron2D.ProjectSystem` добавлен shared `RuntimeDebugBridge` для deterministic preview session.\n- Bridge поддерживает `HeadlessPreview` и `EditorAttachedPreview` session kinds, `Running`/`Paused`/`Stopped` state, pause/resume/stop, frame step, physics step, input injection, deterministic screenshot, metrics, Remote Scene Tree и inspect node.\n- Runtime inspection доступен только в development/debug mode; production mode возвращает `E2D-RUNTIME-0001`.\n- Попытка arbitrary runtime node mutation через bridge явно отклоняется `E2D-RUNTIME-0001` и не меняет snapshot.\n- Добавлен CLI route `e2d run debug --format json` с session, scene tree, inspected node, metrics, diagnostics и screenshot metadata.\n- CLI/MCP specs/docs обновлены: будущие runtime MCP tools и visible Editor RuntimeController должны подключаться к этому shared bridge contract.\n- Local documentation index обновлён.\n\n## Критерии приёмки\n\n- [x] Runtime inspection доступен только в development/debug режимах.\n- [x] CLI, MCP и Editor могут читать scene tree, node properties, metrics и screenshot через один debug bridge contract; текущий CLI route реализован, MCP/Editor привязки документированы для следующих задач.\n- [x] Runtime pause/step не ломает deterministic tests.\n- [x] Debug bridge поддерживает `EditorAttachedPreview` session kind и Remote Scene Tree payload для будущего visible play session.\n- [x] Изменение runtime-состояния ограничено: arbitrary node property mutation запрещён и возвращает structured diagnostic.\n- [x] Документация debug bridge обновлена.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~RuntimeDebugBridgeTests` упал ожидаемо на отсутствии `RuntimeDebugSession`/bridge API.\n- Green focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~RuntimeDebugBridgeTests` прошёл `4/4`.\n- Focused regression phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~RuntimeDebugBridgeTests|FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests|FullyQualifiedName~Electron2DCliWorkflowTests|FullyQualifiedName~DiagnosticsCoreTests\"` прошёл `24/24`.\n- `git diff --check` прошёл без whitespace errors, только с предупреждениями о будущей нормализации LF/CRLF.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для `549` tracked source files.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- Первый `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` упал на transient Microsoft Defender file lock внутри `dotnet run` в `LocalDocumentationCliTests`; focused `LocalDocumentationCliTests` после этого прошёл `3/3`.\n- Повторный `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `361/361`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл.\n\n## Решения\n\n- Первая реализация не запускает настоящий game process и не создаёт visible Editor viewport; это остаётся scope `T-0144`, но будет использовать уже введённый session/tree/metrics/screenshot payload.\n- Screenshot является deterministic placeholder PNG до подключения настоящего renderer output.\n- Runtime debug bridge наблюдает и управляет execution state, но не меняет serialized project data и не обходит transaction layer.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0124 [ ] P0: Реализовать runtime scene inspection и debug bridge для Editor RuntimeController\n\n- Создана: 2026-06-21T00:17:01+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0121, T-0123\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/runtime/`\n  - Документация: `docs/runtime/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D.Cli/`; `tests/`\n\n### Самодостаточное описание\n\nНужно дать агенту и Editor наблюдаемое состояние запущенной игры: `runtime tree`, `inspect`, `metrics`, `screenshot`, `pause`, `step`. Debug bridge должен читать scene tree, exported properties, transforms, visibility, animation state, physics contacts, Input Map state, logs и frame capture.\n\nDebug bridge должен интегрироваться с Editor RuntimeController и отдельным game process, чтобы разработчик видел запуск, а падение игры не роняло Editor.\n\n### Критерии приёмки\n\n- [ ] Runtime inspection доступен только в development/debug режимах.\n- [ ] CLI, MCP и Editor могут читать scene tree, node properties, metrics и screenshot через один debug bridge.\n- [ ] Runtime pause/step не ломает deterministic tests.\n- [ ] Debug bridge поддерживает Editor-attached visible play session и Remote Scene Tree.\n- [ ] Изменение runtime-состояния ограничено или явно запрещено в `0.1`.\n- [ ] Документация debug bridge обновлена.\n\n### Заметки агента\n\nСоздано из AI-friendly архитектурного файла: агент должен проверять фактическое состояние игры, а не делать вывод только по коду.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:02:00+03:00 - Уточнение пользователя: debug bridge является P0, потому что AI должен управлять наблюдаемым тестовым запуском, а разработчик должен видеть ход проверки в Editor.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T21:17:01.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T19:43:00.0000000+00:00",
+  "completedAt": "2026-06-22T19:43:00.0000000+00:00",
+  "acceptedAt": "2026-06-22T19:43:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T19:43:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

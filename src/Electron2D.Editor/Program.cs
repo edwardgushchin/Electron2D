@@ -1169,7 +1169,7 @@ internal static class Program
             Console.WriteLine($"StaleMarkers={Join(job.StaleMarkers)}");
             Console.WriteLine($"GroupedUndoAvailable={snapshot.GroupedUndoAvailable}");
             Console.WriteLine($"UndoGroupId={snapshot.UndoGroupId}");
-            Console.WriteLine($"AwaitingAcceptanceActionAvailable={snapshot.AwaitingAcceptanceActionAvailable}");
+            Console.WriteLine($"SubmitForAcceptanceActionAvailable={snapshot.SubmitForAcceptanceActionAvailable}");
             Console.WriteLine($"DoneActionAvailable={snapshot.DoneActionAvailable}");
             Console.WriteLine($"DockPlacement={snapshot.DockState.Placement}");
             Console.WriteLine($"DockPersisted={snapshot.DockState.Persisted}");
@@ -1181,7 +1181,7 @@ internal static class Program
 
             return result.TextOverflowCount == 0 &&
                 result.ForbiddenActionMatchCount == 0 &&
-                snapshot.AwaitingAcceptanceActionAvailable &&
+                snapshot.SubmitForAcceptanceActionAvailable &&
                 !snapshot.DoneActionAvailable &&
                 snapshot.GroupedUndoAvailable &&
                 result.ScreenshotReviewed

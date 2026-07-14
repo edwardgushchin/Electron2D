@@ -80,9 +80,9 @@ Origin        = ExternalImport
 
 Внешний task-import должен идти через `TaskTransitionValidator` и `TaskAcceptanceService`, включая future migrations, CLI import и crash recovery. Direct file edit не может принять задачу за человека, менять audit fields или выполнять privileged transitions:
 
-- `AwaitingAcceptance -> Done`;
+- `Review` + `Submitted -> Done`;
 - `Done -> Ready`;
-- `Cancelled -> Backlog`.
+- `Cancelled -> Ready`.
 
 Попытка такого изменения возвращает structured diagnostic, переводит путь в `pending-conflict` или pending-import state и не затирает dirty task document.
 

@@ -141,7 +141,7 @@ Rename и move определяются по `ObjectUid`, а не по имен�
 - plain text;
 - generated files, включая `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/context/`, `.electron2d/session/`, `bin/`, `obj/` и paths с `/generated/`;
 - binary assets through `ClassifyBinary()`;
-- editor metadata under `.electron2d/tasks/` and `.electron2d/user/`.
+- editor metadata under `.taskboard/` and `.electron2d/user/`.
 
 Generated and binary flags are explicit, so future merge policy can reject unsafe automatic merges before touching file contents.
 

@@ -1,0 +1,766 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-e90028bd825447509b4a17d92806d3cb",
+  "revision": 28,
+  "taskId": "T-1242",
+  "legacyAliases": [],
+  "title": "Добавить machine-readable workspace scopes всем задачам Task Board на приёмке",
+  "description": "У 65 задач с тегом Task Board в состоянии Review/Submitted execution contract содержит только человекочитаемые allowedChanges и не имеет обязательной записи path:<glob>. Из-за этого human accept fail-closed блокируется E2D-TASK-V3-WORKSPACE-SCOPE, хотя критерии пройдены и workspace diff пустой. Нужно вывести узкие scopes из typed links и фактических command outputs каждой задачи, сохранить lifecycle/evidence и повторно проверить весь Submitted-набор. Широкий path:** и прямое редактирование .taskboard запрещены. Ошибочный инвариант предыдущего аудита T-1241 нужно явно исправить в activity.",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0018",
+    "tag-0013",
+    "tag-0026",
+    "tag-0029"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "assignee": null,
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "complete-submitted-inventory",
+      "description": "Все задачи Task Board в Review/Submitted проверены по машинному инварианту allowedChanges.Any(path:<glob>), а исходный и итоговый counts зафиксированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "data/dev-diary/2026/07 Июль/14-07-2026.md"
+        }
+      ]
+    },
+    {
+      "criterionId": "narrow-derived-scopes",
+      "description": "Каждая выявленная задача получила один или несколько узких path:<glob>, выведенных из её typed links, существующих каталогов и обязательных generated outputs; path:** не используется.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": ".temp/taskboard-t1242-add-path-scopes.ps1"
+        }
+      ]
+    },
+    {
+      "criterionId": "lifecycle-and-evidence-preserved",
+      "description": "Обновления меняют только execution contract/activity: Review/Submitted, Passed-критерии, blockers и пустой workspace diff сохраняются.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "data/dev-diary/2026/07 Июль/14-07-2026.md"
+        }
+      ]
+    },
+    {
+      "criterionId": "prior-audit-corrected",
+      "description": "В T-1241 добавлена явная Agent-note о пропущенном machine-readable инварианте и итоговом исправлении без переписывания исторической activity.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "data/dev-diary/2026/07 Июль/14-07-2026.md"
+        }
+      ]
+    },
+    {
+      "criterionId": "final-contract-verification",
+      "description": "Финальный аудит не находит Review/Submitted задач Task Board без path:<glob>; e2d tasks verify и git diff --check проходят.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "data/dev-diary/2026/07 Июль/14-07-2026.md"
+        }
+      ]
+    },
+    {
+      "criterionId": "shared-diary-scope",
+      "description": "Каждая задача Task Board в Review/Submitted допускает обязательный append-only дневник через machine-readable path:data/dev-diary/**; приёмка T-1178 и полный аудит не дают E2D-TASK-V3-WORKSPACE-SCOPE для дневника.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": ".temp/taskboard-t1242-add-diary-scopes.ps1"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "lastActivitySequence": 19,
+  "activity": [
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-14T13:34:53.1722680+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      },
+      "sequence": 1
+    },
+    {
+      "activityEntryId": "activity-6371d08b096140a98fb616614bbc9027",
+      "sequence": 2,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:35:03.5326214+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "427a8f787e9f733dbe19ea48c3d9e18ced3c91c897998a03e7ac361049a6261e",
+        "afterDigest": "fd0c0047b23211a7093ad54021873d9decc2f3aa35add12c774850b1054b7fa0",
+        "workspaceChanges": {
+          "baseRevision": "workspace:e12a9ff768a7379898492edf649338768da577e57f9f6d239843ec4481326cf9",
+          "currentRevision": "workspace:e12a9ff768a7379898492edf649338768da577e57f9f6d239843ec4481326cf9",
+          "files": []
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-3882c55454124068a17a050152795b9d",
+      "sequence": 3,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:35:03.5326214+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Ready",
+        "next": "InProgress",
+        "reason": "Начинаю пакетное исправление 65 Submitted-задач с отсутствующими machine-readable path scopes."
+      }
+    },
+    {
+      "activityEntryId": "activity-8dc5c0dfb59d468fbba4832d106e7248",
+      "sequence": 4,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:54:44.9727535+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "fd0c0047b23211a7093ad54021873d9decc2f3aa35add12c774850b1054b7fa0",
+        "afterDigest": "757d2bd8e5db7c0ff8b997b76e9495d6353ce6872b2883cddbcc93d566e12257",
+        "workspaceChanges": {
+          "baseRevision": "workspace:e12a9ff768a7379898492edf649338768da577e57f9f6d239843ec4481326cf9",
+          "currentRevision": "workspace:aa58b0e5968fd04276c9daaaaac1468425a49543055f9b2983d85cc9eedb41b6",
+          "files": [
+            {
+              "path": "data/dev-diary/2026/07 Июль/14-07-2026.md",
+              "changeKind": "Modified",
+              "previousPath": null,
+              "baseSha256": "df951089ff11fc2d80143f39da0718a352955aebb7359bb8bcccb1ad2f626eaf",
+              "currentSha256": "a799f05c62c4c933124fb09b930aabfa4eb1161572e28e6aa6bf9a885d978386",
+              "firstChangedAt": "2026-07-14T13:54:44.9727535+00:00",
+              "lastChangedAt": "2026-07-14T13:54:44.9727535+00:00",
+              "agentRunIds": [
+                "run-d8164dc30d8a4e38870eac6398055cee"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-39281a00ec2340d3a33a3c5a472b35fc",
+      "sequence": 5,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:54:44.9727535+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "InProgress",
+        "next": "Review",
+        "reason": "Статус изменён через CLI."
+      }
+    },
+    {
+      "activityEntryId": "activity-2bebf5eb16fb4ab28b365b276ff141b7",
+      "sequence": 6,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:55:01.4427508+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "757d2bd8e5db7c0ff8b997b76e9495d6353ce6872b2883cddbcc93d566e12257",
+        "afterDigest": "eb3763f3a8c9ec73f02e7397fa6dc10d2c5d92988744394af7743a3dcc841739",
+        "workspaceChanges": {
+          "baseRevision": "workspace:e12a9ff768a7379898492edf649338768da577e57f9f6d239843ec4481326cf9",
+          "currentRevision": "workspace:aa58b0e5968fd04276c9daaaaac1468425a49543055f9b2983d85cc9eedb41b6",
+          "files": [
+            {
+              "path": "data/dev-diary/2026/07 Июль/14-07-2026.md",
+              "changeKind": "Modified",
+              "previousPath": null,
+              "baseSha256": "df951089ff11fc2d80143f39da0718a352955aebb7359bb8bcccb1ad2f626eaf",
+              "currentSha256": "a799f05c62c4c933124fb09b930aabfa4eb1161572e28e6aa6bf9a885d978386",
+              "firstChangedAt": "2026-07-14T13:54:44.9727535+00:00",
+              "lastChangedAt": "2026-07-14T13:55:01.4427508+00:00",
+              "agentRunIds": [
+                "run-d8164dc30d8a4e38870eac6398055cee"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-d7ff800a82c341a2a3d789a1aac4ce24",
+      "sequence": 7,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:55:01.4427508+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Передано на приёмку."
+      }
+    },
+    {
+      "activityEntryId": "activity-5648759abfae476ca451d2d7a5f44218",
+      "sequence": 8,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:58:24.4296296+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "eb3763f3a8c9ec73f02e7397fa6dc10d2c5d92988744394af7743a3dcc841739",
+        "afterDigest": "5c304540126b7eed665a8b398356479f713cefa7c9f8c72328a29d4c66a6a470",
+        "workspaceChanges": {
+          "baseRevision": "workspace:e12a9ff768a7379898492edf649338768da577e57f9f6d239843ec4481326cf9",
+          "currentRevision": "workspace:d725722900cbbabc54fafd4495d15ec6da01dc5ab9d052bf58e6b0978dfc5792",
+          "files": [
+            {
+              "path": "data/dev-diary/2026/07 Июль/14-07-2026.md",
+              "changeKind": "Modified",
+              "previousPath": null,
+              "baseSha256": "df951089ff11fc2d80143f39da0718a352955aebb7359bb8bcccb1ad2f626eaf",
+              "currentSha256": "be6b30c65cc26ce1cb420d8033ecd1dbeed13755d0dbdf423ead7b9d56901862",
+              "firstChangedAt": "2026-07-14T13:54:44.9727535+00:00",
+              "lastChangedAt": "2026-07-14T13:58:24.4296296+00:00",
+              "agentRunIds": [
+                "run-d8164dc30d8a4e38870eac6398055cee"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-f779f6e87f7b430d9b8ff378c7a4ec77",
+      "sequence": 9,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:58:24.4296296+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Передано на приёмку."
+      }
+    },
+    {
+      "activityEntryId": "activity-e66b766509094300909cff2c187bd9c1",
+      "sequence": 10,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:06:12.4118082+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "InProgress",
+        "reason": "Статус изменён через CLI."
+      }
+    },
+    {
+      "activityEntryId": "activity-0c0c302482e64e1a93c2f7d03e280ab8",
+      "sequence": 11,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:06:16.4640977+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 18,
+        "toRevision": 19,
+        "activitySequence": 11,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/acceptanceCriteria",
+            "oldValue": [
+              {
+                "criterionId": "complete-submitted-inventory",
+                "description": "Все задачи Task Board в Review/Submitted проверены по машинному инварианту allowedChanges.Any(path:<glob>), а исходный и итоговый counts зафиксированы."
+              },
+              {
+                "criterionId": "narrow-derived-scopes",
+                "description": "Каждая выявленная задача получила один или несколько узких path:<glob>, выведенных из её typed links, существующих каталогов и обязательных generated outputs; path:** не используется."
+              },
+              {
+                "criterionId": "lifecycle-and-evidence-preserved",
+                "description": "Обновления меняют только execution contract/activity: Review/Submitted, Passed-критерии, blockers и пустой workspace diff сохраняются."
+              },
+              {
+                "criterionId": "prior-audit-corrected",
+                "description": "В T-1241 добавлена явная Agent-note о пропущенном machine-readable инварианте и итоговом исправлении без переписывания исторической activity."
+              },
+              {
+                "criterionId": "final-contract-verification",
+                "description": "Финальный аудит не находит Review/Submitted задач Task Board без path:<glob>; e2d tasks verify и git diff --check проходят."
+              }
+            ],
+            "value": [
+              {
+                "criterionId": "complete-submitted-inventory",
+                "description": "Все задачи Task Board в Review/Submitted проверены по машинному инварианту allowedChanges.Any(path:<glob>), а исходный и итоговый counts зафиксированы."
+              },
+              {
+                "criterionId": "narrow-derived-scopes",
+                "description": "Каждая выявленная задача получила один или несколько узких path:<glob>, выведенных из её typed links, существующих каталогов и обязательных generated outputs; path:** не используется."
+              },
+              {
+                "criterionId": "lifecycle-and-evidence-preserved",
+                "description": "Обновления меняют только execution contract/activity: Review/Submitted, Passed-критерии, blockers и пустой workspace diff сохраняются."
+              },
+              {
+                "criterionId": "prior-audit-corrected",
+                "description": "В T-1241 добавлена явная Agent-note о пропущенном machine-readable инварианте и итоговом исправлении без переписывания исторической activity."
+              },
+              {
+                "criterionId": "final-contract-verification",
+                "description": "Финальный аудит не находит Review/Submitted задач Task Board без path:<glob>; e2d tasks verify и git diff --check проходят."
+              },
+              {
+                "criterionId": "shared-diary-scope",
+                "description": "Каждая задача Task Board в Review/Submitted допускает обязательный append-only дневник через machine-readable path:data/dev-diary/**; приёмка T-1178 и полный аудит не дают E2D-TASK-V3-WORKSPACE-SCOPE для дневника."
+              }
+            ]
+          }
+        ],
+        "beforeTaskCoreDigest": "7f32c07ceba85abba6938ddd0ff6f61d90cd896395368440f09ebf3942841098",
+        "afterTaskCoreDigest": "096ba867523070d0ea6ba09fdee36f4410519825ac26200cf8da464ab02ea592"
+      }
+    },
+    {
+      "activityEntryId": "activity-b1552e9a3c46406180d589336a47908c",
+      "sequence": 12,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:16:58.1815159+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "5c304540126b7eed665a8b398356479f713cefa7c9f8c72328a29d4c66a6a470",
+        "afterDigest": "6efef29b5243f42c9b484ef66a3c52f24e26e7e68cf9e418a743723c1c893d3c",
+        "workspaceChanges": {
+          "baseRevision": "workspace:e12a9ff768a7379898492edf649338768da577e57f9f6d239843ec4481326cf9",
+          "currentRevision": "workspace:e1f65983927e35132979192c236bcf78109a2686ced13f653f3640960f7ad59e",
+          "files": [
+            {
+              "path": "data/dev-diary/2026/07 Июль/14-07-2026.md",
+              "changeKind": "Modified",
+              "previousPath": null,
+              "baseSha256": "df951089ff11fc2d80143f39da0718a352955aebb7359bb8bcccb1ad2f626eaf",
+              "currentSha256": "7a5500fd7eae148744f0b9af9b4cf51590c34c5a88140281113b4f2c169ab9dd",
+              "firstChangedAt": "2026-07-14T13:54:44.9727535+00:00",
+              "lastChangedAt": "2026-07-14T14:16:58.1815159+00:00",
+              "agentRunIds": [
+                "run-26aabb06e08f4476b371e97ac017698a",
+                "run-3c250be0744546d08e07d3f3a2aee0e8",
+                "run-d8164dc30d8a4e38870eac6398055cee"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-d4f05bce85b94b0d9f396ea7b6e11e1f",
+      "sequence": 13,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:16:58.1815159+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "InProgress",
+        "next": "Review",
+        "reason": "Статус изменён через CLI."
+      }
+    },
+    {
+      "activityEntryId": "activity-92ab0a31e27548798f48f6f46272f593",
+      "sequence": 14,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:17:08.5189960+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "6efef29b5243f42c9b484ef66a3c52f24e26e7e68cf9e418a743723c1c893d3c",
+        "afterDigest": "f11cb6551eaccd868caa7e74ef7dfeff4a45d7fc4d1b04647337b07a6ba07870",
+        "workspaceChanges": {
+          "baseRevision": "workspace:e12a9ff768a7379898492edf649338768da577e57f9f6d239843ec4481326cf9",
+          "currentRevision": "workspace:e1f65983927e35132979192c236bcf78109a2686ced13f653f3640960f7ad59e",
+          "files": [
+            {
+              "path": "data/dev-diary/2026/07 Июль/14-07-2026.md",
+              "changeKind": "Modified",
+              "previousPath": null,
+              "baseSha256": "df951089ff11fc2d80143f39da0718a352955aebb7359bb8bcccb1ad2f626eaf",
+              "currentSha256": "7a5500fd7eae148744f0b9af9b4cf51590c34c5a88140281113b4f2c169ab9dd",
+              "firstChangedAt": "2026-07-14T13:54:44.9727535+00:00",
+              "lastChangedAt": "2026-07-14T14:17:08.5189960+00:00",
+              "agentRunIds": [
+                "run-26aabb06e08f4476b371e97ac017698a",
+                "run-3c250be0744546d08e07d3f3a2aee0e8",
+                "run-d8164dc30d8a4e38870eac6398055cee"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-56991741f6de4f72a9d034e5063b9335",
+      "sequence": 15,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:17:08.5189960+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Передано на приёмку."
+      }
+    },
+    {
+      "activityEntryId": "activity-9f2355b2eb924c2d958644c3edfc57af",
+      "sequence": 16,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:20:20.1488084+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "f11cb6551eaccd868caa7e74ef7dfeff4a45d7fc4d1b04647337b07a6ba07870",
+        "afterDigest": "113f1cb6e0053b42d62bd1cb3c20481d2c178b9a7f979342749f5a5133942452",
+        "workspaceChanges": {
+          "baseRevision": "workspace:e12a9ff768a7379898492edf649338768da577e57f9f6d239843ec4481326cf9",
+          "currentRevision": "workspace:d8e5f64b9f21766f2a4b190ac8f33158d57f328e934a7d05c1ac6b73b8c0aa46",
+          "files": [
+            {
+              "path": "data/dev-diary/2026/07 Июль/14-07-2026.md",
+              "changeKind": "Modified",
+              "previousPath": null,
+              "baseSha256": "df951089ff11fc2d80143f39da0718a352955aebb7359bb8bcccb1ad2f626eaf",
+              "currentSha256": "28e24336334bfe06c8228b3f28770f5af0a5c70a80bc7cb15526864ec562129b",
+              "firstChangedAt": "2026-07-14T13:54:44.9727535+00:00",
+              "lastChangedAt": "2026-07-14T14:20:20.1488084+00:00",
+              "agentRunIds": [
+                "run-26aabb06e08f4476b371e97ac017698a",
+                "run-3c250be0744546d08e07d3f3a2aee0e8",
+                "run-d8164dc30d8a4e38870eac6398055cee"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-06ddc9716ea147ba929d5c54c1ebf09e",
+      "sequence": 17,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:20:20.1488084+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Передано на приёмку."
+      }
+    },
+    {
+      "activityEntryId": "activity-375789f1908e4bd693b517605e2f48ba",
+      "sequence": 18,
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-14T14:25:57.5368535+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "113f1cb6e0053b42d62bd1cb3c20481d2c178b9a7f979342749f5a5133942452",
+        "afterDigest": "18773578dbd40c2c63a99ae93fdf29cedb563b6f4542b4148acec007053763d7",
+        "workspaceChanges": {
+          "baseRevision": "workspace:e12a9ff768a7379898492edf649338768da577e57f9f6d239843ec4481326cf9",
+          "currentRevision": "workspace:d8e5f64b9f21766f2a4b190ac8f33158d57f328e934a7d05c1ac6b73b8c0aa46",
+          "files": [
+            {
+              "path": "data/dev-diary/2026/07 Июль/14-07-2026.md",
+              "changeKind": "Modified",
+              "previousPath": null,
+              "baseSha256": "df951089ff11fc2d80143f39da0718a352955aebb7359bb8bcccb1ad2f626eaf",
+              "currentSha256": "28e24336334bfe06c8228b3f28770f5af0a5c70a80bc7cb15526864ec562129b",
+              "firstChangedAt": "2026-07-14T13:54:44.9727535+00:00",
+              "lastChangedAt": "2026-07-14T14:25:57.5368535+00:00",
+              "agentRunIds": [
+                "run-26aabb06e08f4476b371e97ac017698a",
+                "run-3c250be0744546d08e07d3f3a2aee0e8",
+                "run-d8164dc30d8a4e38870eac6398055cee"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-4a7613f991dc40f4a07dcd539ead9f31",
+      "sequence": 19,
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-14T14:25:57.5368535+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Задача принята пользователем в VS Code Task Board.",
+        "authorityActorId": "vscode:eduar",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    }
+  ],
+  "auditRuns": [],
+  "conversation": {
+    "lastMessageSequence": 3,
+    "messages": [
+      {
+        "messageId": "message-8cc83b0cb70b4e6b8cb6a8e4d431231e",
+        "sequence": 1,
+        "author": {
+          "actorId": "Codex",
+          "actorKind": "Agent",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-14T13:54:41.3091807+00:00",
+        "replyToMessageId": null,
+        "agentRunId": "run-d8164dc30d8a4e38870eac6398055cee",
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Исправление завершено. Точный inventory: 65 задач Task Board в Review/Submitted без machine-readable path scope. Всем 65 через canonical revision-aware update добавлено 298 узких path:<glob>, выведенных из typed links; path:** не добавлялся. Итоговый аудит 71 Review/Submitted задач: missing path scopes = 0; исходные 65 сохранили lifecycle, Passed-критерии и отсутствие blockers. В T-1241 добавлена correction-note о неверном предикате прежнего аудита. e2d tasks verify и git diff --check прошли."
+          }
+        ]
+      },
+      {
+        "messageId": "message-26a6794c8e7841189d20cada61dbe0c2",
+        "sequence": 2,
+        "author": {
+          "actorId": "Codex",
+          "actorKind": "Agent",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-14T14:06:19.2997595+00:00",
+        "replyToMessageId": null,
+        "agentRunId": "run-26aabb06e08f4476b371e97ac017698a",
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Возврат на доработку: проверка T-1178 выявила пропущенный общий workspace scope для обязательного append-only дневника. Предыдущий batch добавлял только task-specific links; исправление расширено на все текущие Review/Submitted задачи Task Board без path:data/dev-diary/**."
+          }
+        ]
+      },
+      {
+        "messageId": "message-fb3021b23ca34940ad696fffe5c13516",
+        "sequence": 3,
+        "author": {
+          "actorId": "Codex",
+          "actorKind": "Agent",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-14T14:16:53.8812730+00:00",
+        "replyToMessageId": null,
+        "agentRunId": "run-3c250be0744546d08e07d3f3a2aee0e8",
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Доработка после T-1178 завершена: всем 68 текущим Review/Submitted задачам Task Board без общего diary scope добавлен path:data/dev-diary/**. Финальный inventory: missing diary scopes = 0. Submit-refresh T-1178 в dry-run успешно принял изменённый дневник, diagnostics 0; lifecycle Review/Submitted, 4/4 Passed и blockers 0 сохранены."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "workspaceChanges": {
+    "baseRevision": "workspace:e12a9ff768a7379898492edf649338768da577e57f9f6d239843ec4481326cf9",
+    "currentRevision": "workspace:d8e5f64b9f21766f2a4b190ac8f33158d57f328e934a7d05c1ac6b73b8c0aa46",
+    "files": [
+      {
+        "path": "data/dev-diary/2026/07 Июль/14-07-2026.md",
+        "changeKind": "Modified",
+        "previousPath": null,
+        "baseSha256": "df951089ff11fc2d80143f39da0718a352955aebb7359bb8bcccb1ad2f626eaf",
+        "currentSha256": "28e24336334bfe06c8228b3f28770f5af0a5c70a80bc7cb15526864ec562129b",
+        "firstChangedAt": "2026-07-14T13:54:44.9727535+00:00",
+        "lastChangedAt": "2026-07-14T14:25:57.5368535+00:00",
+        "agentRunIds": [
+          "run-26aabb06e08f4476b371e97ac017698a",
+          "run-3c250be0744546d08e07d3f3a2aee0e8",
+          "run-d8164dc30d8a4e38870eac6398055cee"
+        ]
+      }
+    ]
+  },
+  "links": [
+    {
+      "linkId": "link-workflow",
+      "kind": "File",
+      "value": "docs/repository/agent-workflow.md"
+    },
+    {
+      "linkId": "link-task-manager",
+      "kind": "File",
+      "value": "docs/project-system/project-task-manager.md"
+    },
+    {
+      "linkId": "link-workspace-validator",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Tasks/TaskBoardV3WorkspaceChanges.cs"
+    },
+    {
+      "linkId": "link-contract-tests",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/TaskBoardV3ContractTests.cs"
+    },
+    {
+      "linkId": "link-diary",
+      "kind": "File",
+      "value": "data/dev-diary/2026/07 Июль/14-07-2026.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "verification",
+    "readyToStart": [
+      "Канонический snapshot и список 65 затронутых Review/Submitted задач получены.",
+      "T-1176 и T-1218 уже подтверждают точную причину и корректный формат исправления."
+    ],
+    "stopConditions": [
+      "Хотя бы для одной задачи невозможно вывести узкий scope из typed links или существующего contract.",
+      "Revision conflict или lifecycle change делает исходный inventory устаревшим.",
+      "Исправление требует path:**, прямой записи .taskboard или изменения production-кода."
+    ],
+    "allowedChanges": [
+      "Только revision-aware execution contract/activity mutations затронутых задач через e2d tasks.",
+      "Append-only дневник и временный audit script.",
+      "path:data/dev-diary/**",
+      "path:.temp/**"
+    ],
+    "forbiddenChanges": [
+      "Прямое редактирование .e2task, .e2tasks или board.e2tasks.",
+      "Широкий path:**, human accept, archive, production-код и доменные документы.",
+      "path:.taskboard/**",
+      "path:.git/**"
+    ],
+    "requiredOutputs": [
+      "Узкие machine-readable scopes у всех 65 задач.",
+      "Повторяемый итоговый аудит с нулём нарушений.",
+      "Correction-note в T-1241 и итоговая запись T-1242."
+    ],
+    "commands": [
+      {
+        "commandId": "command-board-audit",
+        "kind": "Process",
+        "executable": "e2d",
+        "arguments": [
+          "tasks",
+          "board",
+          "--project",
+          ".",
+          "--format",
+          "json",
+          "--include-archived",
+          "true"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "command-taskboard-verify",
+        "kind": "Process",
+        "executable": "e2d",
+        "arguments": [
+          "tasks",
+          "verify",
+          "--project",
+          ".",
+          "--format",
+          "json"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "command-whitespace",
+        "kind": "Process",
+        "executable": "git",
+        "arguments": [
+          "diff",
+          "--check"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 120,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-14T13:34:53.1722680+00:00",
+  "updatedAt": "2026-07-14T14:25:57.5368535+00:00",
+  "submittedAt": "2026-07-14T14:20:20.1488084+00:00",
+  "completedAt": "2026-07-14T14:25:57.5368535+00:00",
+  "acceptedAt": "2026-07-14T14:25:57.5368535+00:00",
+  "acceptedBy": "vscode:eduar",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null
+}

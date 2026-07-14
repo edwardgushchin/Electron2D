@@ -1,0 +1,254 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-735f013fd6f6b703c9d2ef0562435923",
+  "revision": 2,
+  "taskId": "T-0249",
+  "legacyAliases": [],
+  "title": "Зафиксировать HLSL как публичный shader source language",
+  "description": "## T-0249 [ ] P0: Зафиксировать HLSL как публичный shader source language\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0241, T-0246, T-0248\n- Ссылки:\n  - Доменный документ: `docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЗадача является только архитектурным решением (`ADR`) о публичном языке исходного кода шейдеров: Electron2D принимает HLSL как единственный публичный shader authoring language. Godot Shader Language, GDScript shader syntax, GLSL и MSL не становятся публичным authoring path.\n\nГраница задач: `T-0249` не реализует compiler, import pipeline, runtime loader, shader package format, reflection, hot reload, SDL_shadercross invocation or platform output generation. Полный executable shader contract, fixtures, package compilation, target formats and first runtime consumer остаются в `T-0759`.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: `docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md` как ADR-документ и граница с `T-0759`.\n- Граница публичного API: задача не меняет `Shader`, `ShaderMaterial`, `CanvasItemMaterial` и любые generated API packets.\n- Ответственность задачи: зафиксировать policy decision, добавить contract test/verifier, который запрещает публичные Godot Shader Language/GLSL/MSL authoring paths, и связать потребителей с `T-0759`.\n- Подтверждение для потребителей: `Shader`, `ShaderMaterial`, shader import tasks and `T-0759` должны ссылаться на ADR/policy, но не получать реализацию pipeline из `T-0249`.\n\n### Границы задачи\n\n- Цель: принять и зафиксировать одно архитектурное решение - HLSL как публичный shader source language.\n- Входит: ADR-документ, contract test или verifier, diagnostic messages for forbidden public shader languages, links to consumers and `T-0759`.\n- Не входит: compiler/import/runtime pipeline, shader package format, SDL_shadercross invocation, reflection metadata, hot reload, platform output generation, public `Shader`/`ShaderMaterial` implementation and public API changes.\n- Подтверждение приёмки: ADR-документ, passing policy test/verifier, exact diagnostic codes and task notes with commands.\n\n### ADR-контракт\n\n- Должны появиться или обновиться: `docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md` и `tests/Electron2D.Tests.Integration/ShaderLanguagePolicyTests.cs`; verifier route in `eng/Electron2D.Build` допустим только для policy scan, не для shader compilation.\n- Обязательные команды: `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ShaderLanguagePolicy\" --no-restore -v:minimal` и, если verifier route добавлен, `dotnet run --project eng/Electron2D.Build -- verify shader-language-policy`.\n- RED-before-GREEN: test сначала падает, если public docs, samples, import contracts or API-facing metadata допускают Godot Shader Language, `.gdshader`, `shader_type`, GLSL or MSL as public authoring language, или если `T-0249`/`T-0759` boundary не описана.\n- Diagnostic codes: `E2D-SHADER-LANG-0001` Godot Shader Language exposed publicly, `E2D-SHADER-LANG-0002` GLSL/MSL exposed as public source language, `E2D-SHADER-LANG-0003` T-0249 tries to own compiler/import/runtime pipeline, `E2D-SHADER-LANG-0004` `Shader`/`ShaderMaterial` public surface changed by this ADR task.\n- Consumer proof: `Shader`, `ShaderMaterial`, shader import tasks and `T-0759` reference the ADR/policy and explicitly defer executable shader package behavior to `T-0759`.\n- Запрещено: creating shader package compiler, import pipeline, runtime loader, reflection metadata schema, hot reload, SDL_shadercross execution path, public Godot Shader Language parser, or public API changes in `Shader`/`ShaderMaterial`.\n\n### Критерии приёмки\n\n- [ ] `docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md` содержит ADR: decision = HLSL public shader source language; forbidden public authoring languages = Godot Shader Language, GDScript shader syntax, GLSL, MSL; executable owner = `T-0759`.\n- [ ] `ShaderLanguagePolicyTests` проверяет allowed HLSL policy references and negative Godot Shader Language/GLSL/MSL public authoring references, including docs/samples/import contract scan.\n- [ ] `verify shader-language-policy`, если добавлен, выполняет only policy scan and emits `E2D-SHADER-LANG-0001`-`0004` for forbidden public languages, ADR/pipeline overlap, or public `Shader`/`ShaderMaterial` changes.\n- [ ] `T-0759`, `Shader`, `ShaderMaterial` and shader import tasks reference this ADR as policy source and keep executable package/compiler/runtime behavior outside `T-0249`.\n- [ ] В diff нет changes to `src/Electron2D/Graphics/Rendering/Shaders/Shader.cs`, `src/Electron2D/Graphics/Rendering/Materials/ShaderMaterial.cs`, shader compiler/import/runtime files, generated API packets or public API manifests except documentation index updates required by the ADR.\n\n### Подзадачи\n\n- [ ] Обновить ADR-документ `docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md`.\n- [ ] Добавить RED policy test against forbidden public shader authoring syntaxes.\n- [ ] Добавить policy verifier diagnostics `E2D-SHADER-LANG-0001`-`0004`, если test-only coverage недостаточен.\n- [ ] Привязать `T-0759`, `Shader`, `ShaderMaterial` and shader import tasks to the ADR without implementing their behavior here.\n- [ ] Запустить focused policy test, optional policy verifier, docs checks and `git diff --check`.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n2026-07-05T16:53:00+03:00 - Контракт сведён к варианту ADR-only: `T-0249` фиксирует HLSL как public shader authoring policy и запрещает публичные Godot Shader Language/GLSL/MSL paths. Compiler/import/runtime pipeline, shader package, SDL_shadercross execution and first runtime consumer остаются в `T-0759`.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a9dc106b3357162a2b473b8e01e91ad3"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-4f2623e91556270e845d083123ca613f"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md` содержит ADR: decision = HLSL public shader source language; forbidden public authoring languages = Godot Shader Language, GDScript shader syntax, GLSL, MSL; executable owner = `T-0759`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`ShaderLanguagePolicyTests` проверяет allowed HLSL policy references and negative Godot Shader Language/GLSL/MSL public authoring references, including docs/samples/import contract scan.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`verify shader-language-policy`, если добавлен, выполняет only policy scan and emits `E2D-SHADER-LANG-0001`-`0004` for forbidden public languages, ADR/pipeline overlap, or public `Shader`/`ShaderMaterial` changes.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`T-0759`, `Shader`, `ShaderMaterial` and shader import tasks reference this ADR as policy source and keep executable package/compiler/runtime behavior outside `T-0249`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "В diff нет changes to `src/Electron2D/Graphics/Rendering/Shaders/Shader.cs`, `src/Electron2D/Graphics/Rendering/Materials/ShaderMaterial.cs`, shader compiler/import/runtime files, generated API packets or public API manifests except documentation index updates required by the ADR.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T13:53:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Контракт сведён к варианту ADR-only: `T-0249` фиксирует HLSL как public shader authoring policy и запрещает публичные Godot Shader Language/GLSL/MSL paths. Compiler/import/runtime pipeline, shader package, SDL_shadercross execution and first runtime consumer остаются в `T-0759`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate unless task criteria explicitly require primary/control audit"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "eng/Electron2D.Build"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/Materials/ShaderMaterial.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/Shaders/Shader.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ShaderLanguagePolicyTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tooling",
+    "readyToStart": [
+      "task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md describes the tool or policy contract.",
+      "add RED verifier/test coverage before changing implementation when tooling behavior changes."
+    ],
+    "stopConditions": [
+      "the change would define public API surface manually or close behavior owned by a public class task.",
+      "missing dependency, platform prerequisite or generated input prevents deterministic verifier output."
+    ],
+    "allowedChanges": [
+      "tooling, verifier, generated-report plumbing and docs named by this task.",
+      "tests under `tests/` that prove the tooling contract.",
+      "`TASKS.md` notes and diary evidence."
+    ],
+    "forbiddenChanges": [
+      "production runtime behavior outside this tooling contract.",
+      "generated artifacts by hand when a generator/verifier owns them.",
+      "unrelated task statuses or release scope."
+    ],
+    "requiredOutputs": [
+      "docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md",
+      "focused verifier/test evidence named by the task.",
+      "synchronized generated docs/index artifacts when docs are changed."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify shader-language-policy",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ShaderLanguagePolicy\" --no-restore -v:minimal",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 519535,
+      "byteLength": 8900,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "a472229bde2921a9ded6e625ed88c83a813e64576311dd1e1301ab0e4cad5b24",
+      "markdown": "## T-0249 [ ] P0: Зафиксировать HLSL как публичный shader source language\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0241, T-0246, T-0248\n- Ссылки:\n  - Доменный документ: `docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЗадача является только архитектурным решением (`ADR`) о публичном языке исходного кода шейдеров: Electron2D принимает HLSL как единственный публичный shader authoring language. Godot Shader Language, GDScript shader syntax, GLSL и MSL не становятся публичным authoring path.\n\nГраница задач: `T-0249` не реализует compiler, import pipeline, runtime loader, shader package format, reflection, hot reload, SDL_shadercross invocation or platform output generation. Полный executable shader contract, fixtures, package compilation, target formats and first runtime consumer остаются в `T-0759`.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: `docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md` как ADR-документ и граница с `T-0759`.\n- Граница публичного API: задача не меняет `Shader`, `ShaderMaterial`, `CanvasItemMaterial` и любые generated API packets.\n- Ответственность задачи: зафиксировать policy decision, добавить contract test/verifier, который запрещает публичные Godot Shader Language/GLSL/MSL authoring paths, и связать потребителей с `T-0759`.\n- Подтверждение для потребителей: `Shader`, `ShaderMaterial`, shader import tasks and `T-0759` должны ссылаться на ADR/policy, но не получать реализацию pipeline из `T-0249`.\n\n### Границы задачи\n\n- Цель: принять и зафиксировать одно архитектурное решение - HLSL как публичный shader source language.\n- Входит: ADR-документ, contract test или verifier, diagnostic messages for forbidden public shader languages, links to consumers and `T-0759`.\n- Не входит: compiler/import/runtime pipeline, shader package format, SDL_shadercross invocation, reflection metadata, hot reload, platform output generation, public `Shader`/`ShaderMaterial` implementation and public API changes.\n- Подтверждение приёмки: ADR-документ, passing policy test/verifier, exact diagnostic codes and task notes with commands.\n\n### ADR-контракт\n\n- Должны появиться или обновиться: `docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md` и `tests/Electron2D.Tests.Integration/ShaderLanguagePolicyTests.cs`; verifier route in `eng/Electron2D.Build` допустим только для policy scan, не для shader compilation.\n- Обязательные команды: `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ShaderLanguagePolicy\" --no-restore -v:minimal` и, если verifier route добавлен, `dotnet run --project eng/Electron2D.Build -- verify shader-language-policy`.\n- RED-before-GREEN: test сначала падает, если public docs, samples, import contracts or API-facing metadata допускают Godot Shader Language, `.gdshader`, `shader_type`, GLSL or MSL as public authoring language, или если `T-0249`/`T-0759` boundary не описана.\n- Diagnostic codes: `E2D-SHADER-LANG-0001` Godot Shader Language exposed publicly, `E2D-SHADER-LANG-0002` GLSL/MSL exposed as public source language, `E2D-SHADER-LANG-0003` T-0249 tries to own compiler/import/runtime pipeline, `E2D-SHADER-LANG-0004` `Shader`/`ShaderMaterial` public surface changed by this ADR task.\n- Consumer proof: `Shader`, `ShaderMaterial`, shader import tasks and `T-0759` reference the ADR/policy and explicitly defer executable shader package behavior to `T-0759`.\n- Запрещено: creating shader package compiler, import pipeline, runtime loader, reflection metadata schema, hot reload, SDL_shadercross execution path, public Godot Shader Language parser, or public API changes in `Shader`/`ShaderMaterial`.\n\n### Критерии приёмки\n\n- [ ] `docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md` содержит ADR: decision = HLSL public shader source language; forbidden public authoring languages = Godot Shader Language, GDScript shader syntax, GLSL, MSL; executable owner = `T-0759`.\n- [ ] `ShaderLanguagePolicyTests` проверяет allowed HLSL policy references and negative Godot Shader Language/GLSL/MSL public authoring references, including docs/samples/import contract scan.\n- [ ] `verify shader-language-policy`, если добавлен, выполняет only policy scan and emits `E2D-SHADER-LANG-0001`-`0004` for forbidden public languages, ADR/pipeline overlap, or public `Shader`/`ShaderMaterial` changes.\n- [ ] `T-0759`, `Shader`, `ShaderMaterial` and shader import tasks reference this ADR as policy source and keep executable package/compiler/runtime behavior outside `T-0249`.\n- [ ] В diff нет changes to `src/Electron2D/Graphics/Rendering/Shaders/Shader.cs`, `src/Electron2D/Graphics/Rendering/Materials/ShaderMaterial.cs`, shader compiler/import/runtime files, generated API packets or public API manifests except documentation index updates required by the ADR.\n\n### Подзадачи\n\n- [ ] Обновить ADR-документ `docs/rendering/godot-47-public-api-hlsl-shader-pipeline.md`.\n- [ ] Добавить RED policy test against forbidden public shader authoring syntaxes.\n- [ ] Добавить policy verifier diagnostics `E2D-SHADER-LANG-0001`-`0004`, если test-only coverage недостаточен.\n- [ ] Привязать `T-0759`, `Shader`, `ShaderMaterial` and shader import tasks to the ADR without implementing their behavior here.\n- [ ] Запустить focused policy test, optional policy verifier, docs checks and `git diff --check`.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n2026-07-05T16:53:00+03:00 - Контракт сведён к варианту ADR-only: `T-0249` фиксирует HLSL как public shader authoring policy и запрещает публичные Godot Shader Language/GLSL/MSL paths. Compiler/import/runtime pipeline, shader package, SDL_shadercross execution and first runtime consumer остаются в `T-0759`.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -1,0 +1,349 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-ae16b90af93a4555a0963cb5434eefe5",
+  "revision": 2,
+  "taskId": "T-0139",
+  "legacyAliases": [],
+  "title": "Ввести Live `ProjectWorkspace` для Editor, Tooling, MCP и CLI",
+  "description": "# T-0139: Ввести Live `ProjectWorkspace` для Editor, Tooling, MCP и CLI\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: `b025350`\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0139 [ ] P0: Ввести Live `ProjectWorkspace` для Editor, Tooling, MCP и CLI\n\n- Создана: 2026-06-22T11:03:00+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0076, T-0078, T-0079, T-0145, T-0146\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/releases/0.1.0-preview.md`\n  - Документация: `docs/editor/`; `docs/tooling/`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.Tooling/`; `tests/`\n\n### Самодостаточное описание\n\nНужно создать `ProjectWorkspace` — внутреннюю живую модель проекта, которой владеет открытый Editor. Эта модель хранит открытые документы, dirty state, document revisions, persisted revision, command bus, change event stream, operation journal, undo/redo, import/build state и diagnostics. CLI, MCP, CI и тесты должны работать с той же моделью, а не открывать параллельное состояние проекта.\n\n### Критерии приёмки\n\n- [x] Создана спецификация `ProjectWorkspace` с понятным описанием DocumentStore, CommandBus, ChangeEventStream, RevisionStore, OperationJournal, UndoRedo, ImportState, BuildState и DiagnosticsStore.\n- [x] Editor имеет один авторитетный `ProjectWorkspace` на открытый проект.\n- [x] Второй Editor для того же project root получает read-only режим или понятный отказ, а primary owner удерживает lease/heartbeat.\n- [x] Открытые сцены, ресурсы и настройки имеют revision и dirty state.\n- [x] Workspace хранит `documentRevisions`, `persistedRevision`, `dirtyDocuments` и `persistenceState`.\n- [x] OperationJournal поддерживает recovery snapshot dirty-документов, журнал незавершённой транзакции, очистку временных файлов и сообщение о восстановлении после crash.\n- [x] Workspace events проверены in-memory subscribers и fake consumers; конкретные Scene Tree, Inspector, FileSystem dock, viewport, diagnostics и Agent Workspace bindings выполняются в UI/adapter задачах.\n- [x] Headless workspace создаётся тем же кодом без открытого Editor.\n- [x] Добавлены unit/integration tests на открытие проекта, изменение документа, событие изменения, dirty state и revision.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: без живой модели проекта AI и человек будут конкурировать за файлы на диске и терять несохранённые изменения.\n\n2026-06-22T11:03:00+03:00 - Блокер пользователя: AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:24:00+03:00 - Уточнение пользователя: `ProjectWorkspace` должен опираться на document model/UID/parser/structural diff, разделять in-memory и persisted revisions, поддерживать multi-Editor ownership и crash recovery.\n\n2026-06-22T18:17:00+03:00 - Взято в работу после `T-0146`: задача является первой доступной P0 по очереди и не является Editor UI implementation. Перед production-кодом нужно выделить проверяемую спецификацию `ProjectWorkspace`, добавить красные tests и реализовать минимальный internal workspace core поверх `ProjectDocument*` и `Diagnostics.Core`.\n\n2026-06-22T18:32:00+03:00 - Реализовано и готово к human acceptance. Добавлены спецификация `docs/project-system/live-project-workspace.md`, implementation documentation `docs/project-system/live-project-workspace.md`, focused tests `ProjectWorkspaceTests` и internal workspace model `src/Electron2D.ProjectSystem/Workspace/ProjectWorkspace.cs`.\n\nПроверки: красный focused test сначала упал на отсутствующем workspace API; затем прошли `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~ProjectWorkspaceTests`, `git diff --check` с предупреждениями только о будущей LF/CRLF-нормализации Git, `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1`, `dotnet build src\\Electron2D.sln`, `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1`, `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` и `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1`.\n\nCommit: `b025350 feat: add live project workspace core`.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a242ee77ff7971a574520d3cd12a7364"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-cc9ad8b28e56d3f9ecd8e5efa6602736"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-045f5dd70915dce6ceead264e737f449"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5623ef1cecffc6cd840e9e0d4ddf29dc"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-6fa7d2bc25702ed1522f79fb235ac6e4"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создана спецификация `ProjectWorkspace` с понятным описанием DocumentStore, CommandBus, ChangeEventStream, RevisionStore, OperationJournal, UndoRedo, ImportState, BuildState и DiagnosticsStore.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ae16b90af93a4555a0963cb5434eefe5/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Editor имеет один авторитетный `ProjectWorkspace` на открытый проект.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ae16b90af93a4555a0963cb5434eefe5/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Второй Editor для того же project root получает read-only режим или понятный отказ, а primary owner удерживает lease/heartbeat.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ae16b90af93a4555a0963cb5434eefe5/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Открытые сцены, ресурсы и настройки имеют revision и dirty state.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ae16b90af93a4555a0963cb5434eefe5/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Workspace хранит `documentRevisions`, `persistedRevision`, `dirtyDocuments` и `persistenceState`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ae16b90af93a4555a0963cb5434eefe5/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "OperationJournal поддерживает recovery snapshot dirty-документов, журнал незавершённой транзакции, очистку временных файлов и сообщение о восстановлении после crash.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ae16b90af93a4555a0963cb5434eefe5/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Workspace events проверены in-memory subscribers и fake consumers; конкретные Scene Tree, Inspector, FileSystem dock, viewport, diagnostics и Agent Workspace bindings выполняются в UI/adapter задачах.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ae16b90af93a4555a0963cb5434eefe5/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Headless workspace создаётся тем же кодом без открытого Editor.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ae16b90af93a4555a0963cb5434eefe5/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Добавлены unit/integration tests на открытие проекта, изменение документа, событие изменения, dirty state и revision.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ae16b90af93a4555a0963cb5434eefe5/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Документация фактического поведения обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ae16b90af93a4555a0963cb5434eefe5/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Команда проверки задокументирована.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ae16b90af93a4555a0963cb5434eefe5/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:03:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Блокер пользователя: AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:05:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:24:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: `ProjectWorkspace` должен опираться на document model/UID/parser/structural diff, разделять in-memory и persisted revisions, поддерживать multi-Editor ownership и crash recovery."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T15:17:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Взято в работу после `T-0146`: задача является первой доступной P0 по очереди и не является Editor UI implementation. Перед production-кодом нужно выделить проверяемую спецификацию `ProjectWorkspace`, добавить красные tests и реализовать минимальный internal workspace core поверх `ProjectDocument*` и `Diagnostics.Core`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T15:32:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Реализовано и готово к human acceptance. Добавлены спецификация `docs/project-system/live-project-workspace.md`, implementation documentation `docs/project-system/live-project-workspace.md`, focused tests `ProjectWorkspaceTests` и internal workspace model `src/Electron2D.ProjectSystem/Workspace/ProjectWorkspace.cs`."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T18:14:16.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/architecture/ai-friendly-workflow.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/project-system/live-project-workspace.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "docs/tooling"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Workspace/ProjectWorkspace.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "src/Electron2D.Tooling"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 534517,
+      "byteLength": 6617,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "f9b6d6ebc07567cb0eb24f90beec9a34453d5edeff3973baf3415cc6ee5409df",
+      "markdown": "# T-0139: Ввести Live `ProjectWorkspace` для Editor, Tooling, MCP и CLI\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: `b025350`\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0139 [ ] P0: Ввести Live `ProjectWorkspace` для Editor, Tooling, MCP и CLI\n\n- Создана: 2026-06-22T11:03:00+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0076, T-0078, T-0079, T-0145, T-0146\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/releases/0.1.0-preview.md`\n  - Документация: `docs/editor/`; `docs/tooling/`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.Tooling/`; `tests/`\n\n### Самодостаточное описание\n\nНужно создать `ProjectWorkspace` — внутреннюю живую модель проекта, которой владеет открытый Editor. Эта модель хранит открытые документы, dirty state, document revisions, persisted revision, command bus, change event stream, operation journal, undo/redo, import/build state и diagnostics. CLI, MCP, CI и тесты должны работать с той же моделью, а не открывать параллельное состояние проекта.\n\n### Критерии приёмки\n\n- [x] Создана спецификация `ProjectWorkspace` с понятным описанием DocumentStore, CommandBus, ChangeEventStream, RevisionStore, OperationJournal, UndoRedo, ImportState, BuildState и DiagnosticsStore.\n- [x] Editor имеет один авторитетный `ProjectWorkspace` на открытый проект.\n- [x] Второй Editor для того же project root получает read-only режим или понятный отказ, а primary owner удерживает lease/heartbeat.\n- [x] Открытые сцены, ресурсы и настройки имеют revision и dirty state.\n- [x] Workspace хранит `documentRevisions`, `persistedRevision`, `dirtyDocuments` и `persistenceState`.\n- [x] OperationJournal поддерживает recovery snapshot dirty-документов, журнал незавершённой транзакции, очистку временных файлов и сообщение о восстановлении после crash.\n- [x] Workspace events проверены in-memory subscribers и fake consumers; конкретные Scene Tree, Inspector, FileSystem dock, viewport, diagnostics и Agent Workspace bindings выполняются в UI/adapter задачах.\n- [x] Headless workspace создаётся тем же кодом без открытого Editor.\n- [x] Добавлены unit/integration tests на открытие проекта, изменение документа, событие изменения, dirty state и revision.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: без живой модели проекта AI и человек будут конкурировать за файлы на диске и терять несохранённые изменения.\n\n2026-06-22T11:03:00+03:00 - Блокер пользователя: AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:24:00+03:00 - Уточнение пользователя: `ProjectWorkspace` должен опираться на document model/UID/parser/structural diff, разделять in-memory и persisted revisions, поддерживать multi-Editor ownership и crash recovery.\n\n2026-06-22T18:17:00+03:00 - Взято в работу после `T-0146`: задача является первой доступной P0 по очереди и не является Editor UI implementation. Перед production-кодом нужно выделить проверяемую спецификацию `ProjectWorkspace`, добавить красные tests и реализовать минимальный internal workspace core поверх `ProjectDocument*` и `Diagnostics.Core`.\n\n2026-06-22T18:32:00+03:00 - Реализовано и готово к human acceptance. Добавлены спецификация `docs/project-system/live-project-workspace.md`, implementation documentation `docs/project-system/live-project-workspace.md`, focused tests `ProjectWorkspaceTests` и internal workspace model `src/Electron2D.ProjectSystem/Workspace/ProjectWorkspace.cs`.\n\nПроверки: красный focused test сначала упал на отсутствующем workspace API; затем прошли `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~ProjectWorkspaceTests`, `git diff --check` с предупреждениями только о будущей LF/CRLF-нормализации Git, `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1`, `dotnet build src\\Electron2D.sln`, `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1`, `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` и `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1`.\n\nCommit: `b025350 feat: add live project workspace core`.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T08:03:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "completedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

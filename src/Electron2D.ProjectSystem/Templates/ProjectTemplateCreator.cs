@@ -148,53 +148,116 @@ internal static class ProjectTemplateCreator
 
     private static string WriteInitialProjectTasks(string projectPath, DateTimeOffset createdAtUtc)
     {
-        var tasksRoot = Path.Combine(projectPath, ".electron2d", "tasks");
+        var taskboardRoot = Path.Combine(projectPath, ".taskboard");
+        var tasksRoot = Path.Combine(taskboardRoot, "tasks");
         Directory.CreateDirectory(tasksRoot);
+        Directory.CreateDirectory(Path.Combine(taskboardRoot, "completed"));
+        Directory.CreateDirectory(Path.Combine(taskboardRoot, "attachments"));
+        WriteFile(Path.Combine(taskboardRoot, ".gitignore"), TaskBoardDiskStore.TaskboardGitIgnoreText);
 
-        var task = new ProjectTask
+        var timestamp = createdAtUtc.ToString("O", System.Globalization.CultureInfo.InvariantCulture);
+        var task = new JsonObject
         {
-            TaskId = "welcome",
-            Title = "Open the project and run the first scene",
-            Description = "Verify that the newly created Electron2D project opens, validates, builds and runs before adding gameplay.",
-            Status = ProjectTaskStatus.Backlog,
-            Readiness = TaskReadiness.Ready,
-            Priority = "P1",
-            Rank = "1000",
-            CreatedBy = "project-template",
-            CreatedAt = createdAtUtc,
-            UpdatedAt = createdAtUtc,
-            AcceptanceState = ProjectTaskAcceptanceState.Open
+            ["format"] = "Electron2D.TaskFile",
+            ["version"] = 3,
+            ["boardId"] = "board-main",
+            ["taskUid"] = "task-welcome",
+            ["revision"] = 1,
+            ["taskId"] = "welcome",
+            ["legacyAliases"] = new JsonArray(),
+            ["title"] = "Open the project and run the first scene",
+            ["description"] = "Verify that the newly created Electron2D project opens, validates, builds and runs before adding gameplay.",
+            ["status"] = "Ready",
+            ["acceptanceState"] = "NotSubmitted",
+            ["priority"] = "P1",
+            ["tagIds"] = new JsonArray("starter"),
+            ["deadline"] = null,
+            ["createdBy"] = "project-template",
+            ["assignee"] = null,
+            ["parentTaskUid"] = null,
+            ["relations"] = new JsonArray(),
+            ["acceptanceCriteria"] = new JsonArray(new JsonObject
+            {
+                ["criterionId"] = "validate-build-run",
+                ["description"] = "Run e2d validate, dotnet build and e2d run or the Editor Game workspace without errors.",
+                ["state"] = "Open",
+                ["evidence"] = new JsonArray()
+            }),
+            ["blockers"] = new JsonArray(),
+            ["lastActivitySequence"] = 1,
+            ["activity"] = new JsonArray(new JsonObject
+            {
+                ["activityEntryId"] = "activity-template-created",
+                ["sequence"] = 1,
+                ["actorId"] = "project-template",
+                ["actorKind"] = "System",
+                ["createdAt"] = timestamp,
+                ["kind"] = "Decision",
+                ["payload"] = new JsonObject
+                {
+                    ["decision"] = "StarterTaskCreated",
+                    ["rationale"] = "Initial starter task created by the Electron2D project template.",
+                    ["authority"] = "project-template"
+                }
+            }),
+            ["auditRuns"] = new JsonArray(),
+            ["conversation"] = new JsonObject
+            {
+                ["lastMessageSequence"] = 0,
+                ["messages"] = new JsonArray(),
+                ["contextCheckpoints"] = new JsonArray()
+            },
+            ["contextSnapshot"] = null,
+            ["workspaceChanges"] = new JsonObject
+            {
+                ["baseRevision"] = null,
+                ["currentRevision"] = null,
+                ["files"] = new JsonArray()
+            },
+            ["links"] = new JsonArray(),
+            ["executionContract"] = new JsonObject
+            {
+                ["taskType"] = "general",
+                ["readyToStart"] = new JsonArray(),
+                ["stopConditions"] = new JsonArray(),
+                ["allowedChanges"] = new JsonArray(),
+                ["forbiddenChanges"] = new JsonArray(),
+                ["requiredOutputs"] = new JsonArray(),
+                ["commands"] = new JsonArray(),
+                ["externalAudit"] = TaskBoardV3Migration.ConvertExternalAudit(null)
+            },
+            ["attachments"] = new JsonArray(),
+            ["previewAttachmentId"] = null,
+            ["legacySourceFragments"] = new JsonArray(),
+            ["createdAt"] = timestamp,
+            ["updatedAt"] = timestamp,
+            ["submittedAt"] = null,
+            ["completedAt"] = null,
+            ["acceptedAt"] = null,
+            ["acceptedBy"] = null,
+            ["cancelledAt"] = null,
+            ["cancellationReason"] = null,
+            ["archivedAt"] = null,
+            ["archivedBy"] = null
         };
-        task.Labels.Add("starter");
-        task.AcceptanceCriteria.Add(new AcceptanceCriterion(
-            "validate-build-run",
-            "Run e2d validate, dotnet build and e2d run or the Editor Game workspace without errors.",
-            AcceptanceCriterionState.Open,
-            []));
-        task.Activity.Add(new TaskActivityEntry(
-            "activity-template-created",
-            "project-template",
-            PrincipalKind.System,
-            createdAtUtc,
-            TaskActivityKind.Decision,
-            "Initial starter task created by the Electron2D project template."));
+        var board = TaskBoardV3DiskStore.CreateNativeBoard("board-main");
+        board["tags"] = new JsonArray(new JsonObject
+        {
+            ["tagId"] = "starter",
+            ["name"] = "starter",
+            ["color"] = "Gray"
+        });
+        board["placements"] = new JsonArray(new JsonObject
+        {
+            ["taskUid"] = "task-welcome",
+            ["groupId"] = null,
+            ["rank"] = "000000001000"
+        });
+        TaskBoardV3SemanticValidator.Validate(projectPath, board, [task], [], validateAttachmentBlobs: false);
 
-        var board = new TaskBoard(
-            "board-main",
-            [
-                new TaskBoardColumn(ProjectTaskStatus.Backlog, ["welcome"]),
-                new TaskBoardColumn(ProjectTaskStatus.Ready, []),
-                new TaskBoardColumn(ProjectTaskStatus.InProgress, []),
-                new TaskBoardColumn(ProjectTaskStatus.Blocked, []),
-                new TaskBoardColumn(ProjectTaskStatus.Review, []),
-                new TaskBoardColumn(ProjectTaskStatus.AwaitingAcceptance, []),
-                new TaskBoardColumn(ProjectTaskStatus.Done, []),
-                new TaskBoardColumn(ProjectTaskStatus.Cancelled, [])
-            ]);
-
-        WriteFile(Path.Combine(tasksRoot, "welcome.e2task"), ProjectTaskSerializer.Serialize(task));
-        var boardPath = Path.Combine(tasksRoot, "board.e2tasks");
-        WriteFile(boardPath, ProjectTaskSerializer.SerializeBoard(board));
+        WriteFile(Path.Combine(tasksRoot, "welcome.e2task"), TaskBoardV3Migration.Serialize(task));
+        var boardPath = Path.Combine(taskboardRoot, "board.e2tasks");
+        WriteFile(boardPath, TaskBoardV3Migration.Serialize(board));
         return boardPath;
     }
 
@@ -439,7 +502,7 @@ internal static class ProjectTemplateCreator
         - `{{projectName}}.e2d` stores project settings, export presets and reproducibility metadata.
         - `scenes/` stores scene files.
         - `scripts/` stores C# gameplay code.
-        - `.electron2d/tasks/` stores ProjectTaskManager task documents.
+        - `.taskboard/` stores ProjectTaskManager task documents; mutations go through `e2d tasks`.
         - `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/context/`, `.electron2d/session/` and `.electron2d/user/` are generated or local-only working directories.
 
         Rules for agents:
@@ -449,9 +512,9 @@ internal static class ProjectTemplateCreator
         - Keep stable UID values intact unless the documented operation intentionally creates a new object.
         - Run `e2d validate --project .` after changing project files.
         - Do not use external API members outside the approved Electron2D Godot 4.7 public API contract. Use `e2d api compare-godot <type>` to check whether a type is approved by the current Electron2D public API profile. The command checks only manual profile approval; it does not prove full Godot 4.7 strict parity, which requires separate parity evidence.
-        - Use ProjectTaskManager through Editor, Tooling or MCP. Do not edit task storage files directly.
+        - Read and mutate ProjectTaskManager only through `e2d tasks`; Editor, Tooling and MCP are read-only consumers of the same CLI contract. Do not edit task storage files directly.
         - Link changes, tests, diagnostics, jobs and artifacts to the active task when the workflow exposes that operation.
-        - Submit completed agent work for human acceptance with `task_submit_for_acceptance`; do not mark work as accepted for the user.
+        - Submit completed agent work for human acceptance with `e2d tasks submit`; do not mark work as accepted for the user.
         """;
     }
 
@@ -472,7 +535,7 @@ internal static class ProjectTemplateCreator
             "electron2d-gameplay-code" => "Use C# files under `scripts/`, prefer Electron2D APIs from the approved Godot 4.7 public API contract, and verify uncertain APIs with `e2d api compare-godot <type>`.",
             "electron2d-resource-import" => "Add source assets to project folders, let Electron2D rebuild `.electron2d/import-cache/`, and never edit cache artifacts by hand.",
             "electron2d-run-test" => "Run the narrowest useful check first, then `dotnet build`, scene tests or `e2d run --project .` when the change affects runtime behavior.",
-            "electron2d-export" => "Use explicit export presets, keep signing credentials out of project files, and confirm `.electron2d/tasks/` is not included in production packages.",
+            "electron2d-export" => "Use explicit export presets, keep signing credentials out of project files, and confirm `.taskboard/` is not included in production packages.",
             _ => "Follow the project `AGENTS.md` instructions."
         };
 

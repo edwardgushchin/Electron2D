@@ -1,0 +1,119 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "platformer-board",
+  "taskUid": "task-platformer-acceptance",
+  "revision": 1,
+  "taskId": "platformer-acceptance",
+  "legacyAliases": [],
+  "title": "Verify the 0.1.0 Preview Platformer",
+  "description": "Open the project in Electron2D.Editor, inspect the scene/resources/tasks, run the platformer and verify the gameplay loop before accepting this reference game.",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "platformer",
+    "reference-game",
+    "version:0.1.0-preview"
+  ],
+  "deadline": null,
+  "createdBy": "electron2d-platformer",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-T-0166"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "editor-project-contract",
+      "description": "Project Manager opens the project, validation passes, and save/reopen preserves project settings, scenes, resources and task metadata.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "export-presets",
+      "description": "Windows, Linux, macOS, Android, iOS and WebAssembly browser export presets are present and exclude Editor metadata from runtime package contents.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "gameplay-subsystems",
+      "description": "The platformer verifies TileMap, CharacterBody2D, one-way platforms, Camera2D, animation, audio, keyboard, gamepad, touch, pause menu and save progress.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-platformer-created",
+      "actorId": "electron2d-platformer",
+      "actorKind": "System",
+      "createdAt": "2026-06-23T12:12:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "Decision",
+        "text": "Initial acceptance task created with the Platformer project files."
+      }
+    },
+    {
+      "activityEntryId": "activity-platformer-acceptance-changes-requested-t-0234",
+      "actorId": "repository-task-migration",
+      "actorKind": "Agent",
+      "createdAt": "2026-06-30T09:21:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AcceptanceResult",
+        "text": "2026-06-30T12:21:00+03:00 - Предыдущая заявка на приёмку Platformer заблокирована по T-0234: пользователь вернул игру на доработку, а дальнейшая работа ведётся через перенесённые ProjectTaskManager задачи T-0166, T-0221, T-0222, T-0223 и T-0225."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Node",
+      "value": "Platformer.e2d"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Node",
+      "value": "resources/platformer.manifest.json"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Node",
+      "value": "scenes/main.scene.json"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Node",
+      "value": "scripts/PlatformerGame.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": "not-required"
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-06-23T12:12:00.0000000+00:00",
+  "updatedAt": "2026-06-30T09:21:00.0000000+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null
+}

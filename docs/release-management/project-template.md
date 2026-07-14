@@ -80,13 +80,13 @@ data/templates/electron2d-empty/
 - выбранный renderer profile;
 - команды `e2d validate`, `dotnet build`, `dotnet test`, `e2d run`, `e2d export` и `e2d api compare-godot <type>`;
 - явную границу `e2d api compare-godot`: команда проверяет только решение manual profile и не доказывает полную Godot 4.7 strict parity, для которой требуется отдельное parity evidence;
-- структуру проекта: `project.e2d.json`, `scenes/`, `Scripts/`, `.electron2d/tasks/`, `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/user/`;
+- структуру проекта: `project.e2d.json`, `scenes/`, `Scripts/`, `.taskboard/`, `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/user/`;
 - запрет редактировать `.electron2d/import-cache/` и другие generated/local-only каталоги вручную;
 - правило сохранять stable UID и проверять проект через `e2d validate`;
 - предупреждение не использовать внешний API вне утверждённого Electron2D Godot 4.7 public API contract;
 - правило подключаться к активной Editor-сессии, если она открыта;
-- правило использовать `ProjectTaskManager` через Editor, Tooling или MCP, а не прямую правку task storage files;
-- правило отправлять завершённую агентом работу на человеческую приёмку через `task_submit_for_acceptance`.
+- правило читать и изменять `ProjectTaskManager` только через `e2d tasks`, оставляя Editor, Tooling и MCP read-only представлениями того же контракта;
+- правило отправлять завершённую агентом работу на человеческую приёмку через `e2d tasks submit`.
 
 `AGENTS.md` не должен упоминать repository-local `TASKS.md`, `completed-tasks/` или `dev-diary/` как источник задач пользовательского проекта.
 
@@ -104,9 +104,9 @@ data/templates/electron2d-empty/
 
 ### Project tasks storage
 
-Новый проект получает начальную доску `.electron2d/tasks/board.e2tasks` и стартовую задачу `.electron2d/tasks/welcome.e2task`. Эти документы являются `EditorMetadata`: они доступны Editor, Tooling, CLI и MCP, но не являются игровыми ресурсами и не попадают в runtime snapshot или production package contents.
+Новый проект получает нативную TaskBoard v3 `.taskboard/board.e2tasks` с `migration = null` и стартовую задачу `.taskboard/tasks/welcome.e2task`. Связь placement хранится по `taskUid`, task содержит совпадающий `boardId`, typed acceptance criteria/activity и полный непротиворечивый lifecycle. Эти документы являются `EditorMetadata`: они доступны Editor, Tooling, CLI и MCP, но не являются игровыми ресурсами и не попадают в runtime snapshot или production package contents.
 
-Стартовая задача должна быть в статусе `Backlog`, содержать acceptance criteria для первого запуска проекта и использовать canonical formatter `ProjectTaskSerializer`.
+Стартовая задача должна быть в статусе `Ready`, содержать acceptance criteria для первого запуска проекта и записываться canonical v3 formatter без ручного редактирования task storage.
 
 ### `.gitignore` и git init
 
@@ -120,7 +120,7 @@ Template `.gitignore` не должен игнорировать `.electron2d/` 
 .electron2d/user/
 ```
 
-`.electron2d/tasks/` должен быть явно отслеживаемым по умолчанию: в `.gitignore` не должно быть правила, которое скрывает `.electron2d/tasks/`.
+`.taskboard/` должен быть явно отслеживаемым по умолчанию: в `.gitignore` не должно быть правила, которое скрывает `.taskboard/`.
 
 Создание проекта пытается выполнить `git init` в корне нового проекта. Если `git` недоступен или команда завершается ошибкой, создание проекта не откатывает файлы шаблона, но возвращает structured warning с понятным сообщением. Если `git` доступен, после создания должен существовать каталог `.git`.
 
@@ -152,10 +152,10 @@ Verifier должен:
 
 1. подтвердить наличие обязательных файлов шаблона;
 2. проверить JSON-форму `project.e2d.json`;
-3. проверить JSON-форму `.electron2d/tasks/board.e2tasks` и `.electron2d/tasks/welcome.e2task`;
-4. подтвердить наличие `AGENTS.md`, `.gitignore`, пяти стартовых skills и `.electron2d/tasks/`;
+3. проверить JSON-форму `.taskboard/board.e2tasks` и `.taskboard/tasks/welcome.e2task`;
+4. подтвердить наличие `AGENTS.md`, `.gitignore`, пяти стартовых skills и `.taskboard/`;
 5. подтвердить отсутствие `TASKS.md`, `completed-tasks/` и `dev-diary/`;
-6. подтвердить, что `.gitignore` не исключает `.electron2d/tasks/`;
+6. подтвердить, что `.gitignore` не исключает `.taskboard/`;
 7. вернуть структурированные JSON-диагностики.
 
 Эта C#-команда является manifest/shape check, то есть проверкой состава и формы файлов. Для `T-0214` именно она является целевой поверхностью проверки формы шаблона и стартовых manifest-файлов. Полный pack/restore/build/run сценарий остаётся миграционным долгом для будущего C#-маршрута и не входит в текущую поддержанную поверхность проверки `T-0214`.
@@ -176,7 +176,7 @@ Verifier должен:
 data/templates/electron2d-empty/
 ```
 
-Шаблон содержит .NET template metadata, минимальный `.csproj`, `Program.cs`, `Scripts/MainScene.cs`, `project.e2d.json`, `global.json`, `electron2d.lock.json`, пустую сцену `scenes/main.scene.json`, `AGENTS.md`, `.gitignore`, стартовые project-local skills и начальные task documents в `.electron2d/tasks/`.
+Шаблон содержит .NET template metadata, минимальный `.csproj`, `Program.cs`, `Scripts/MainScene.cs`, `project.e2d.json`, `global.json`, `electron2d.lock.json`, пустую сцену `scenes/main.scene.json`, `AGENTS.md`, `.gitignore`, стартовые project-local skills и начальные task documents в `.taskboard/`.
 
 `project.e2d.json` уже использует текущий project settings формат: `Electron2D.ProjectSettings`, `formatVersion: 1`, имя проекта, версию проекта, engine version, main scene, renderer profile, physics tick rate, пустой `input.actions` и display/window defaults.
 
@@ -188,7 +188,7 @@ data/templates/electron2d-empty/
 
 `AGENTS.md` в пользовательском проекте описывает версию Electron2D, .NET SDK, выбранный renderer profile, команды `e2d validate`, `dotnet build`, `dotnet test`, `e2d run`, `e2d export`, `e2d api compare-godot <type>`, структуру проекта, правила stable UID и запрет ручной правки generated/local-only каталогов. Инструкция обязана явно говорить, что `e2d api compare-godot` подтверждает только решение manual profile и не доказывает полную Godot 4.7 strict parity без отдельного parity evidence.
 
-Шаблон не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/`. Для пользовательских задач используется `ProjectTaskManager`: начальная доска хранится в `.electron2d/tasks/board.e2tasks`, стартовая задача — в `.electron2d/tasks/welcome.e2task`.
+Шаблон не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/`. Для пользовательских задач используется `ProjectTaskManager`: начальная доска хранится в `.taskboard/board.e2tasks`, стартовая задача — в `.taskboard/tasks/welcome.e2task`.
 
 Project-local skills находятся в `.codex/skills/`:
 
@@ -198,7 +198,7 @@ Project-local skills находятся в `.codex/skills/`:
 - `electron2d-run-test`;
 - `electron2d-export`.
 
-`.gitignore` игнорирует generated/local-only каталоги `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/context/`, `.electron2d/session/` и `.electron2d/user/`, но не игнорирует `.electron2d/tasks/`.
+`.gitignore` игнорирует generated/local-only каталоги `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/context/`, `.electron2d/session/` и `.electron2d/user/`, но не игнорирует `.taskboard/`.
 
 ## Создание проекта
 
@@ -220,7 +220,7 @@ JSON-результат содержит `projectName`, `projectPath`, `projectS
 dotnet run --project eng/Electron2D.Build -- verify project-template
 ```
 
-Команда выполняет C# manifest/shape check для `data/templates/electron2d-empty`: проверяет обязательные файлы, JSON-форму project settings и стартовых задач, `AGENTS.md`, `.gitignore`, пять starter skills, `.electron2d/tasks/board.e2tasks`, `.electron2d/tasks/welcome.e2task`, отсутствие `TASKS.md`, `completed-tasks/` и `dev-diary/`, а также то, что `.gitignore` не скрывает `.electron2d/tasks/`.
+Команда выполняет C# manifest/shape check для `data/templates/electron2d-empty`: проверяет обязательные файлы, JSON-форму project settings и стартовых задач, `AGENTS.md`, `.gitignore`, пять starter skills, `.taskboard/board.e2tasks`, `.taskboard/tasks/welcome.e2task`, отсутствие `TASKS.md`, `completed-tasks/` и `dev-diary/`, а также то, что `.gitignore` не скрывает `.taskboard/`.
 
 Полный pack/restore/build/run verifier должен быть перенесён в C#-инструмент перед тем, как его можно будет объявить текущим gate. Именно полный verifier должен проверять output запуска созданного проекта:
 

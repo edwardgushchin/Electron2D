@@ -1,0 +1,2909 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-f2514689422f4e239bc023345c77d69f",
+  "revision": 29,
+  "taskId": "T-1225",
+  "legacyAliases": [],
+  "title": "Открывать форму создания задачи по кнопке «Создать задачу»",
+  "description": "Сейчас обычная кнопка «Создать задачу» запускает четыре последовательных `window.prompt` для названия, описания, приоритета и срока. Вместо этого по нажатию должно открываться одно модальное окно внутри VS Code Task Board. В нём пользователь вводит обязательное название, многострочное описание в Markdown, выбирает приоритет с начальным значением `P2` и при необходимости задаёт срок. Кнопки «Создать» и «Отмена», закрытие, backdrop, `Escape` и сочетание `Ctrl+Enter` должны работать предсказуемо и с клавиатуры. До подтверждения никакой taskboard mutation не выполняется. После отправки форма показывает состояние выполнения и закрывается только после успешного ответа Extension Host; при ошибке введённый текст остаётся на месте, чтобы пользователь мог исправить данные или повторить попытку. Создание по-прежнему проходит через allowlisted сообщение Extension Host и публичную команду `e2d tasks create`; webview не пишет `.taskboard` напрямую.",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0002",
+    "tag-0003",
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "assignee": null,
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [
+    {
+      "relationId": "relation-create-form-split-control",
+      "kind": "RelatedTo",
+      "targetTaskUid": "task-68af748bbdbb4e22af2118d57f1ffebb"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-create-form-open",
+      "description": "Нажатие обычной кнопки «Создать задачу» открывает модальное окно. Последовательные `window.prompt` полностью удалены; удалённые ранее split-секция, стрелка и дополнительное меню не возвращаются.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webviewHtml.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-create-form-fields",
+      "description": "Форма содержит обязательное однострочное название, многострочное описание Markdown, выбор `P0`–`P3` с начальным `P2` и необязательный срок в формате даты. «Создать» недоступна для пустого названия; пробелы нормализуются, некорректный срок показывается рядом с полем, не закрывая окно.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webview.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-create-form-submit",
+      "description": "Подтверждение кнопкой или `Ctrl+Enter` отправляет ровно одно allowlisted сообщение и блокирует повторную отправку до ответа. Успех закрывает форму, очищает черновик и обновляет canonical board; ошибка снимает pending-state, сохраняет все введённые значения и показывает понятную диагностику без optimistic task card.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/extension.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-create-form-cancel",
+      "description": "«Отмена», кнопка закрытия, backdrop и `Escape` закрывают форму без CLI-вызова и возвращают focus исходной кнопке. Во время pending-state случайное закрытие не приводит к неизвестному результату или повторному созданию; после явной отмены новый сеанс начинается с пустого черновика и приоритета `P2`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-create-form-accessibility",
+      "description": "Окно имеет корректные `role=dialog`, `aria-modal`, связанный заголовок, видимые labels, управляемый focus и логичный tab order. Русская и английская локализации полны; размеры, прокрутка, ошибки, focus/hover и disabled-state используют тему VS Code и не выходят за viewport на узкой ширине.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": ".temp/taskboard-create-form-real.png"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-create-form-boundary",
+      "description": "Webview передаёт только проверенные title, description, priority и optional deadline; Extension Host использует публичный `e2d tasks create`, а прямой записи `.taskboard` нет. Текст вставляется только как value/textContent, не интерпретируется как HTML и сохраняется дословно после schema/security validation.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/security.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-create-form-verification",
+      "description": "Доменный документ обновлён до production-кода; RED/GREEN tests покрывают открытие обоими triggers, validation, keyboard/focus, cancel, pending/success/error и security parser. Полный unit-набор, typecheck, Extension Host tests, VSIX и FFmpeg-снимок установленного расширения подтверждают реальное окно с заполненной многострочной формой без overflow.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "docs/editor/project-tasks-board.md"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-0a167683e1104cdbb9b2d8313498939f",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T02:28:05.0684588+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "TaskPatchedV3Draft",
+        "text": "{\"patch\":[{\"op\":\"replace\",\"path\":\"/description\",\"value\":\"\\u0421\\u0435\\u0439\\u0447\\u0430\\u0441 \\u043E\\u0431\\u044B\\u0447\\u043D\\u0430\\u044F \\u043A\\u043D\\u043E\\u043F\\u043A\\u0430 \\u00AB\\u0421\\u043E\\u0437\\u0434\\u0430\\u0442\\u044C \\u0437\\u0430\\u0434\\u0430\\u0447\\u0443\\u00BB \\u0437\\u0430\\u043F\\u0443\\u0441\\u043A\\u0430\\u0435\\u0442 \\u0447\\u0435\\u0442\\u044B\\u0440\\u0435 \\u043F\\u043E\\u0441\\u043B\\u0435\\u0434\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044C\\u043D\\u044B\\u0445 \\u0060window.prompt\\u0060 \\u0434\\u043B\\u044F \\u043D\\u0430\\u0437\\u0432\\u0430\\u043D\\u0438\\u044F, \\u043E\\u043F\\u0438\\u0441\\u0430\\u043D\\u0438\\u044F, \\u043F\\u0440\\u0438\\u043E\\u0440\\u0438\\u0442\\u0435\\u0442\\u0430 \\u0438 \\u0441\\u0440\\u043E\\u043A\\u0430. \\u0412\\u043C\\u0435\\u0441\\u0442\\u043E \\u044D\\u0442\\u043E\\u0433\\u043E \\u043F\\u043E \\u043D\\u0430\\u0436\\u0430\\u0442\\u0438\\u044E \\u0434\\u043E\\u043B\\u0436\\u043D\\u043E \\u043E\\u0442\\u043A\\u0440\\u044B\\u0432\\u0430\\u0442\\u044C\\u0441\\u044F \\u043E\\u0434\\u043D\\u043E \\u043C\\u043E\\u0434\\u0430\\u043B\\u044C\\u043D\\u043E\\u0435 \\u043E\\u043A\\u043D\\u043E \\u0432\\u043D\\u0443\\u0442\\u0440\\u0438 VS Code Task Board. \\u0412 \\u043D\\u0451\\u043C \\u043F\\u043E\\u043B\\u044C\\u0437\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044C \\u0432\\u0432\\u043E\\u0434\\u0438\\u0442 \\u043E\\u0431\\u044F\\u0437\\u0430\\u0442\\u0435\\u043B\\u044C\\u043D\\u043E\\u0435 \\u043D\\u0430\\u0437\\u0432\\u0430\\u043D\\u0438\\u0435, \\u043C\\u043D\\u043E\\u0433\\u043E\\u0441\\u0442\\u0440\\u043E\\u0447\\u043D\\u043E\\u0435 \\u043E\\u043F\\u0438\\u0441\\u0430\\u043D\\u0438\\u0435 \\u0432 Markdown, \\u0432\\u044B\\u0431\\u0438\\u0440\\u0430\\u0435\\u0442 \\u043F\\u0440\\u0438\\u043E\\u0440\\u0438\\u0442\\u0435\\u0442 \\u0441 \\u043D\\u0430\\u0447\\u0430\\u043B\\u044C\\u043D\\u044B\\u043C \\u0437\\u043D\\u0430\\u0447\\u0435\\u043D\\u0438\\u0435\\u043C \\u0060P2\\u0060 \\u0438 \\u043F\\u0440\\u0438 \\u043D\\u0435\\u043E\\u0431\\u0445\\u043E\\u0434\\u0438\\u043C\\u043E\\u0441\\u0442\\u0438 \\u0437\\u0430\\u0434\\u0430\\u0451\\u0442 \\u0441\\u0440\\u043E\\u043A. \\u041A\\u043D\\u043E\\u043F\\u043A\\u0438 \\u00AB\\u0421\\u043E\\u0437\\u0434\\u0430\\u0442\\u044C\\u00BB \\u0438 \\u00AB\\u041E\\u0442\\u043C\\u0435\\u043D\\u0430\\u00BB, \\u0437\\u0430\\u043A\\u0440\\u044B\\u0442\\u0438\\u0435, backdrop, \\u0060Escape\\u0060 \\u0438 \\u0441\\u043E\\u0447\\u0435\\u0442\\u0430\\u043D\\u0438\\u0435 \\u0060Ctrl\\u002BEnter\\u0060 \\u0434\\u043E\\u043B\\u0436\\u043D\\u044B \\u0440\\u0430\\u0431\\u043E\\u0442\\u0430\\u0442\\u044C \\u043F\\u0440\\u0435\\u0434\\u0441\\u043A\\u0430\\u0437\\u0443\\u0435\\u043C\\u043E \\u0438 \\u0441 \\u043A\\u043B\\u0430\\u0432\\u0438\\u0430\\u0442\\u0443\\u0440\\u044B. \\u0414\\u043E \\u043F\\u043E\\u0434\\u0442\\u0432\\u0435\\u0440\\u0436\\u0434\\u0435\\u043D\\u0438\\u044F \\u043D\\u0438\\u043A\\u0430\\u043A\\u043E\\u0439 taskboard mutation \\u043D\\u0435 \\u0432\\u044B\\u043F\\u043E\\u043B\\u043D\\u044F\\u0435\\u0442\\u0441\\u044F. \\u041F\\u043E\\u0441\\u043B\\u0435 \\u043E\\u0442\\u043F\\u0440\\u0430\\u0432\\u043A\\u0438 \\u0444\\u043E\\u0440\\u043C\\u0430 \\u043F\\u043E\\u043A\\u0430\\u0437\\u044B\\u0432\\u0430\\u0435\\u0442 \\u0441\\u043E\\u0441\\u0442\\u043E\\u044F\\u043D\\u0438\\u0435 \\u0432\\u044B\\u043F\\u043E\\u043B\\u043D\\u0435\\u043D\\u0438\\u044F \\u0438 \\u0437\\u0430\\u043A\\u0440\\u044B\\u0432\\u0430\\u0435\\u0442\\u0441\\u044F \\u0442\\u043E\\u043B\\u044C\\u043A\\u043E \\u043F\\u043E\\u0441\\u043B\\u0435 \\u0443\\u0441\\u043F\\u0435\\u0448\\u043D\\u043E\\u0433\\u043E \\u043E\\u0442\\u0432\\u0435\\u0442\\u0430 Extension Host; \\u043F\\u0440\\u0438 \\u043E\\u0448\\u0438\\u0431\\u043A\\u0435 \\u0432\\u0432\\u0435\\u0434\\u0451\\u043D\\u043D\\u044B\\u0439 \\u0442\\u0435\\u043A\\u0441\\u0442 \\u043E\\u0441\\u0442\\u0430\\u0451\\u0442\\u0441\\u044F \\u043D\\u0430 \\u043C\\u0435\\u0441\\u0442\\u0435, \\u0447\\u0442\\u043E\\u0431\\u044B \\u043F\\u043E\\u043B\\u044C\\u0437\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044C \\u043C\\u043E\\u0433 \\u0438\\u0441\\u043F\\u0440\\u0430\\u0432\\u0438\\u0442\\u044C \\u0434\\u0430\\u043D\\u043D\\u044B\\u0435 \\u0438\\u043B\\u0438 \\u043F\\u043E\\u0432\\u0442\\u043E\\u0440\\u0438\\u0442\\u044C \\u043F\\u043E\\u043F\\u044B\\u0442\\u043A\\u0443. \\u0421\\u043E\\u0437\\u0434\\u0430\\u043D\\u0438\\u0435 \\u043F\\u043E-\\u043F\\u0440\\u0435\\u0436\\u043D\\u0435\\u043C\\u0443 \\u043F\\u0440\\u043E\\u0445\\u043E\\u0434\\u0438\\u0442 \\u0447\\u0435\\u0440\\u0435\\u0437 allowlisted \\u0441\\u043E\\u043E\\u0431\\u0449\\u0435\\u043D\\u0438\\u0435 Extension Host \\u0438 \\u043F\\u0443\\u0431\\u043B\\u0438\\u0447\\u043D\\u0443\\u044E \\u043A\\u043E\\u043C\\u0430\\u043D\\u0434\\u0443 \\u0060e2d tasks create\\u0060; webview \\u043D\\u0435 \\u043F\\u0438\\u0448\\u0435\\u0442 \\u0060.taskboard\\u0060 \\u043D\\u0430\\u043F\\u0440\\u044F\\u043C\\u0443\\u044E.\"},{\"op\":\"replace\",\"path\":\"/executionContract\",\"value\":{\"taskType\":\"\\u043C\\u043E\\u0434\\u0430\\u043B\\u044C\\u043D\\u0430\\u044F \\u0444\\u043E\\u0440\\u043C\\u0430 \\u0441\\u043E\\u0437\\u0434\\u0430\\u043D\\u0438\\u044F \\u0437\\u0430\\u0434\\u0430\\u0447\\u0438 \\u0432 VS Code Task Board\",\"readyToStart\":[\"\\u0060docs/editor/project-tasks-board.md\\u0060 \\u0434\\u043E production-\\u043A\\u043E\\u0434\\u0430 \\u043E\\u043F\\u0440\\u0435\\u0434\\u0435\\u043B\\u044F\\u0435\\u0442 \\u043F\\u043E\\u043B\\u044F \\u0444\\u043E\\u0440\\u043C\\u044B, lifecycle \\u0447\\u0435\\u0440\\u043D\\u043E\\u0432\\u0438\\u043A\\u0430, validation, pending/success/error, keyboard \\u0438 focus behavior.\",\"\\u0421\\u0443\\u0449\\u0435\\u0441\\u0442\\u0432\\u0443\\u044E\\u0449\\u0438\\u0439 create route \\u043F\\u043E\\u0434\\u0442\\u0432\\u0435\\u0440\\u0436\\u0434\\u0451\\u043D: webview \\u043E\\u0442\\u043F\\u0440\\u0430\\u0432\\u043B\\u044F\\u0435\\u0442 title/description/priority/deadline, Extension Host \\u0432\\u044B\\u043F\\u043E\\u043B\\u043D\\u044F\\u0435\\u0442 \\u043F\\u0443\\u0431\\u043B\\u0438\\u0447\\u043D\\u044B\\u0439 \\u0060e2d tasks create\\u0060; schema \\u0438 lifecycle \\u0437\\u0430\\u0434\\u0430\\u0447\\u0438 \\u043D\\u0435 \\u0440\\u0430\\u0441\\u0448\\u0438\\u0440\\u044F\\u044E\\u0442\\u0441\\u044F.\",\"\\u0414\\u043E \\u0440\\u0435\\u0430\\u043B\\u0438\\u0437\\u0430\\u0446\\u0438\\u0438 \\u0434\\u043E\\u0431\\u0430\\u0432\\u043B\\u0435\\u043D\\u044B \\u043F\\u0430\\u0434\\u0430\\u044E\\u0449\\u0438\\u0435 tests \\u0434\\u043B\\u044F DOM-\\u0444\\u043E\\u0440\\u043C\\u044B, \\u0435\\u0434\\u0438\\u043D\\u0441\\u0442\\u0432\\u0435\\u043D\\u043D\\u043E\\u0439 \\u043A\\u043D\\u043E\\u043F\\u043A\\u0438 \\u0441\\u043E\\u0437\\u0434\\u0430\\u043D\\u0438\\u044F, submit acknowledgement, error retention, localization, security parser \\u0438 responsive layout.\"],\"stopConditions\":[\"\\u0420\\u0435\\u0430\\u043B\\u0438\\u0437\\u0430\\u0446\\u0438\\u044F \\u0442\\u0440\\u0435\\u0431\\u0443\\u0435\\u0442 \\u043F\\u0440\\u044F\\u043C\\u043E\\u0433\\u043E \\u0440\\u0435\\u0434\\u0430\\u043A\\u0442\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u0438\\u044F \\u0060.taskboard\\u0060, \\u043E\\u0431\\u0445\\u043E\\u0434\\u0430 Extension Host allowlist \\u043B\\u0438\\u0431\\u043E \\u0438\\u0437\\u043C\\u0435\\u043D\\u0435\\u043D\\u0438\\u044F TaskBoard schema/lifecycle.\",\"\\u0424\\u043E\\u0440\\u043C\\u0430 \\u0437\\u0430\\u043A\\u0440\\u044B\\u0432\\u0430\\u0435\\u0442\\u0441\\u044F \\u0434\\u043E \\u0438\\u0437\\u0432\\u0435\\u0441\\u0442\\u043D\\u043E\\u0433\\u043E \\u0440\\u0435\\u0437\\u0443\\u043B\\u044C\\u0442\\u0430\\u0442\\u0430 \\u0438 \\u0442\\u0435\\u0440\\u044F\\u0435\\u0442 \\u043F\\u043E\\u043B\\u044C\\u0437\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044C\\u0441\\u043A\\u0438\\u0439 \\u0442\\u0435\\u043A\\u0441\\u0442 \\u043F\\u0440\\u0438 CLI/schema/revision \\u043E\\u0448\\u0438\\u0431\\u043A\\u0435.\",\"\\u0414\\u043B\\u044F \\u0432\\u0432\\u043E\\u0434\\u0430 \\u043E\\u0441\\u0442\\u0430\\u044E\\u0442\\u0441\\u044F \\u0060window.prompt\\u0060, \\u043D\\u0435\\u0431\\u0435\\u0437\\u043E\\u043F\\u0430\\u0441\\u043D\\u044B\\u0439 HTML \\u0438\\u043B\\u0438 \\u043D\\u0435\\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u0435\\u043D\\u043D\\u043E\\u0435 \\u0441\\u043E\\u043E\\u0431\\u0449\\u0435\\u043D\\u0438\\u0435 \\u0438\\u0437 webview.\",\"\\u041C\\u043E\\u0434\\u0430\\u043B\\u044C\\u043D\\u043E\\u0435 \\u043E\\u043A\\u043D\\u043E \\u043D\\u0435\\u043B\\u044C\\u0437\\u044F \\u0441\\u0434\\u0435\\u043B\\u0430\\u0442\\u044C keyboard-accessible \\u0438 \\u0430\\u0434\\u0430\\u043F\\u0442\\u0438\\u0432\\u043D\\u044B\\u043C \\u0431\\u0435\\u0437 \\u043D\\u0430\\u0440\\u0443\\u0448\\u0435\\u043D\\u0438\\u044F Task Details, toolbar \\u0438\\u043B\\u0438 \\u0433\\u0435\\u043E\\u043C\\u0435\\u0442\\u0440\\u0438\\u0438 \\u043E\\u0431\\u044B\\u0447\\u043D\\u043E\\u0439 \\u043A\\u043D\\u043E\\u043F\\u043A\\u0438 \\u0441\\u043E\\u0437\\u0434\\u0430\\u043D\\u0438\\u044F.\"],\"allowedChanges\":[\"\\u0414\\u043E\\u043C\\u0435\\u043D\\u043D\\u044B\\u0439 \\u0434\\u043E\\u043A\\u0443\\u043C\\u0435\\u043D\\u0442, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board \\u0438 \\u0441\\u0432\\u044F\\u0437\\u0430\\u043D\\u043D\\u044B\\u0435 unit/Extension Host tests.\",\"Generated docs index, \\u0443\\u0441\\u0442\\u0430\\u043D\\u0430\\u0432\\u043B\\u0438\\u0432\\u0430\\u0435\\u043C\\u044B\\u0439 VSIX, task activity, \\u043B\\u043E\\u043A\\u0430\\u043B\\u044C\\u043D\\u044B\\u0435 FFmpeg-\\u0430\\u0440\\u0442\\u0435\\u0444\\u0430\\u043A\\u0442\\u044B \\u0438 append-only \\u0434\\u043D\\u0435\\u0432\\u043D\\u0438\\u043A.\"],\"forbiddenChanges\":[\"\\u0418\\u0437\\u043C\\u0435\\u043D\\u0435\\u043D\\u0438\\u0435 CLI create semantics, TaskBoard schema, default task status/acceptance, board placement \\u0438\\u043B\\u0438 \\u043F\\u0440\\u044F\\u043C\\u043E\\u0439 writer \\u0438\\u0437 webview.\",\"\\u041D\\u0435\\u0441\\u0432\\u044F\\u0437\\u0430\\u043D\\u043D\\u044B\\u0439 \\u0440\\u0435\\u0444\\u0430\\u043A\\u0442\\u043E\\u0440\\u0438\\u043D\\u0433 Task Details, \\u043A\\u0430\\u0440\\u0442\\u043E\\u0447\\u0435\\u043A, \\u0444\\u0438\\u043B\\u044C\\u0442\\u0440\\u043E\\u0432, drag-and-drop, \\u0442\\u0435\\u0433\\u043E\\u0432 \\u0438\\u043B\\u0438 lifecycle-\\u0434\\u0435\\u0439\\u0441\\u0442\\u0432\\u0438\\u0439.\",\"\\u0410\\u0432\\u0442\\u043E\\u043C\\u0430\\u0442\\u0438\\u0447\\u0435\\u0441\\u043A\\u0430\\u044F \\u043F\\u0440\\u0438\\u0451\\u043C\\u043A\\u0430 \\u0441\\u043E\\u0437\\u0434\\u0430\\u043D\\u043D\\u043E\\u0439 \\u0437\\u0430\\u0434\\u0430\\u0447\\u0438, \\u0441\\u043E\\u0437\\u0434\\u0430\\u043D\\u0438\\u0435 \\u0434\\u043E \\u044F\\u0432\\u043D\\u043E\\u0433\\u043E submit \\u043B\\u0438\\u0431\\u043E \\u043B\\u043E\\u0433\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u0438\\u0435 \\u0432\\u0432\\u0435\\u0434\\u0451\\u043D\\u043D\\u043E\\u0433\\u043E \\u0442\\u0435\\u043A\\u0441\\u0442\\u0430 \\u0432 diagnostics.\",\"\\u0412\\u043E\\u0437\\u0432\\u0440\\u0430\\u0442 \\u0443\\u0434\\u0430\\u043B\\u0451\\u043D\\u043D\\u043E\\u0439 split-\\u0441\\u0435\\u043A\\u0446\\u0438\\u0438, \\u0441\\u0442\\u0440\\u0435\\u043B\\u043A\\u0438 \\u0438\\u043B\\u0438 \\u0434\\u043E\\u043F\\u043E\\u043B\\u043D\\u0438\\u0442\\u0435\\u043B\\u044C\\u043D\\u043E\\u0433\\u043E \\u043C\\u0435\\u043D\\u044E \\u0443 \\u043A\\u043D\\u043E\\u043F\\u043A\\u0438 \\u0060\\u0421\\u043E\\u0437\\u0434\\u0430\\u0442\\u044C \\u0437\\u0430\\u0434\\u0430\\u0447\\u0443\\u0060.\"],\"requiredOutputs\":[\"\\u0415\\u0434\\u0438\\u043D\\u0430\\u044F \\u043B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u043E\\u0432\\u0430\\u043D\\u043D\\u0430\\u044F \\u043C\\u043E\\u0434\\u0430\\u043B\\u044C\\u043D\\u0430\\u044F \\u0444\\u043E\\u0440\\u043C\\u0430 title/Markdown description/priority/deadline \\u0434\\u043B\\u044F \\u043E\\u0431\\u044B\\u0447\\u043D\\u043E\\u0439 \\u043A\\u043D\\u043E\\u043F\\u043A\\u0438 \\u0441\\u043E\\u0437\\u0434\\u0430\\u043D\\u0438\\u044F \\u0431\\u0435\\u0437 \\u0060window.prompt\\u0060.\",\"\\u0411\\u0435\\u0437\\u043E\\u043F\\u0430\\u0441\\u043D\\u044B\\u0439 \\u043E\\u0434\\u043D\\u043E\\u043A\\u0440\\u0430\\u0442\\u043D\\u044B\\u0439 submit \\u0441 pending/success/error acknowledgement, \\u0441\\u043E\\u0445\\u0440\\u0430\\u043D\\u0435\\u043D\\u0438\\u0435\\u043C \\u0447\\u0435\\u0440\\u043D\\u043E\\u0432\\u0438\\u043A\\u0430 \\u043F\\u0440\\u0438 \\u043E\\u0448\\u0438\\u0431\\u043A\\u0435 \\u0438 canonical refresh \\u043F\\u043E\\u0441\\u043B\\u0435 \\u0443\\u0441\\u043F\\u0435\\u0445\\u0430.\",\"\\u0421\\u0438\\u043D\\u0445\\u0440\\u043E\\u043D\\u0438\\u0437\\u0438\\u0440\\u043E\\u0432\\u0430\\u043D\\u043D\\u044B\\u0439 \\u0434\\u043E\\u043C\\u0435\\u043D\\u043D\\u044B\\u0439 \\u0434\\u043E\\u043A\\u0443\\u043C\\u0435\\u043D\\u0442, RED/GREEN tests, \\u0441\\u043E\\u0431\\u0440\\u0430\\u043D\\u043D\\u044B\\u0439 VSIX \\u0438 FFmpeg-\\u0434\\u043E\\u043A\\u0430\\u0437\\u0430\\u0442\\u0435\\u043B\\u044C\\u0441\\u0442\\u0432\\u043E \\u0438\\u0437 \\u0440\\u0435\\u0430\\u043B\\u044C\\u043D\\u043E\\u0433\\u043E \\u043E\\u043A\\u043D\\u0430 VS Code.\"],\"commands\":[{\"commandId\":\"cmd-create-form-unit\",\"kind\":\"Process\",\"executable\":\"npm\",\"arguments\":[\"run\",\"test:unit\"],\"workingDirectory\":\"src/Electron2D.VsCode\",\"platforms\":[\"Any\"],\"timeoutSeconds\":300,\"expectedExitCodes\":[0],\"confirmation\":\"PolicyDecides\",\"requestedCapabilities\":[\"WorkspaceRead\",\"WorkspaceWrite\"]},{\"commandId\":\"cmd-create-form-typecheck\",\"kind\":\"Process\",\"executable\":\"npm\",\"arguments\":[\"run\",\"typecheck\"],\"workingDirectory\":\"src/Electron2D.VsCode\",\"platforms\":[\"Any\"],\"timeoutSeconds\":300,\"expectedExitCodes\":[0],\"confirmation\":\"PolicyDecides\",\"requestedCapabilities\":[\"WorkspaceRead\"]},{\"commandId\":\"cmd-create-form-extension-host\",\"kind\":\"Process\",\"executable\":\"npm\",\"arguments\":[\"run\",\"test:extension\"],\"workingDirectory\":\"src/Electron2D.VsCode\",\"platforms\":[\"Windows\"],\"timeoutSeconds\":900,\"expectedExitCodes\":[0],\"confirmation\":\"PolicyDecides\",\"requestedCapabilities\":[\"WorkspaceRead\",\"WorkspaceWrite\",\"Network\",\"ExternalEffect\"]},{\"commandId\":\"cmd-create-form-package\",\"kind\":\"Process\",\"executable\":\"npm\",\"arguments\":[\"run\",\"package:vsix\"],\"workingDirectory\":\"src/Electron2D.VsCode\",\"platforms\":[\"Any\"],\"timeoutSeconds\":300,\"expectedExitCodes\":[0],\"confirmation\":\"PolicyDecides\",\"requestedCapabilities\":[\"WorkspaceRead\",\"WorkspaceWrite\"]},{\"commandId\":\"cmd-create-form-real-window-capture\",\"kind\":\"Process\",\"executable\":\"python\",\"arguments\":[\"eng/tools/capture_window.py\",\"--title\",\"Visual Studio Code\",\"--output\",\".temp/taskboard-create-form-real.png\"],\"workingDirectory\":\".\",\"platforms\":[\"Windows\"],\"timeoutSeconds\":120,\"expectedExitCodes\":[0],\"confirmation\":\"PolicyDecides\",\"requestedCapabilities\":[\"WorkspaceRead\",\"WorkspaceWrite\",\"ExternalEffect\"]}],\"externalAudit\":{\"mode\":\"None\",\"independence\":\"NotRequired\",\"instructions\":null,\"requiredVerdicts\":[]}}}],\"beforeTaskCoreDigest\":\"5bca37108bef8685299f2df79760e429ba3e715e348cd7f34ac8456d9adad87c\",\"afterTaskCoreDigest\":\"a2efc1b6de13a84e274fcbb8ba88aa288a66e1ab831f0b73abd47c6941134384\"}"
+      },
+      "sequence": 1
+    },
+    {
+      "activityEntryId": "activity-b3f0af8a52254976aaa5c6831d158540",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T02:28:16.1814775+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "TaskPatchedV3Draft",
+        "text": "{\"patch\":[{\"op\":\"replace\",\"path\":\"/acceptanceCriteria\",\"value\":[{\"criterionId\":\"criterion-create-form-open\",\"description\":\"\\u041D\\u0430\\u0436\\u0430\\u0442\\u0438\\u0435 \\u043E\\u0431\\u044B\\u0447\\u043D\\u043E\\u0439 \\u043A\\u043D\\u043E\\u043F\\u043A\\u0438 \\u00AB\\u0421\\u043E\\u0437\\u0434\\u0430\\u0442\\u044C \\u0437\\u0430\\u0434\\u0430\\u0447\\u0443\\u00BB \\u043E\\u0442\\u043A\\u0440\\u044B\\u0432\\u0430\\u0435\\u0442 \\u043C\\u043E\\u0434\\u0430\\u043B\\u044C\\u043D\\u043E\\u0435 \\u043E\\u043A\\u043D\\u043E. \\u041F\\u043E\\u0441\\u043B\\u0435\\u0434\\u043E\\u0432\\u0430\\u0442\\u0435\\u043B\\u044C\\u043D\\u044B\\u0435 \\u0060window.prompt\\u0060 \\u043F\\u043E\\u043B\\u043D\\u043E\\u0441\\u0442\\u044C\\u044E \\u0443\\u0434\\u0430\\u043B\\u0435\\u043D\\u044B; \\u0443\\u0434\\u0430\\u043B\\u0451\\u043D\\u043D\\u044B\\u0435 \\u0440\\u0430\\u043D\\u0435\\u0435 split-\\u0441\\u0435\\u043A\\u0446\\u0438\\u044F, \\u0441\\u0442\\u0440\\u0435\\u043B\\u043A\\u0430 \\u0438 \\u0434\\u043E\\u043F\\u043E\\u043B\\u043D\\u0438\\u0442\\u0435\\u043B\\u044C\\u043D\\u043E\\u0435 \\u043C\\u0435\\u043D\\u044E \\u043D\\u0435 \\u0432\\u043E\\u0437\\u0432\\u0440\\u0430\\u0449\\u0430\\u044E\\u0442\\u0441\\u044F.\",\"state\":\"Open\",\"evidence\":[]},{\"criterionId\":\"criterion-create-form-fields\",\"description\":\"\\u0424\\u043E\\u0440\\u043C\\u0430 \\u0441\\u043E\\u0434\\u0435\\u0440\\u0436\\u0438\\u0442 \\u043E\\u0431\\u044F\\u0437\\u0430\\u0442\\u0435\\u043B\\u044C\\u043D\\u043E\\u0435 \\u043E\\u0434\\u043D\\u043E\\u0441\\u0442\\u0440\\u043E\\u0447\\u043D\\u043E\\u0435 \\u043D\\u0430\\u0437\\u0432\\u0430\\u043D\\u0438\\u0435, \\u043C\\u043D\\u043E\\u0433\\u043E\\u0441\\u0442\\u0440\\u043E\\u0447\\u043D\\u043E\\u0435 \\u043E\\u043F\\u0438\\u0441\\u0430\\u043D\\u0438\\u0435 Markdown, \\u0432\\u044B\\u0431\\u043E\\u0440 \\u0060P0\\u0060\\u2013\\u0060P3\\u0060 \\u0441 \\u043D\\u0430\\u0447\\u0430\\u043B\\u044C\\u043D\\u044B\\u043C \\u0060P2\\u0060 \\u0438 \\u043D\\u0435\\u043E\\u0431\\u044F\\u0437\\u0430\\u0442\\u0435\\u043B\\u044C\\u043D\\u044B\\u0439 \\u0441\\u0440\\u043E\\u043A \\u0432 \\u0444\\u043E\\u0440\\u043C\\u0430\\u0442\\u0435 \\u0434\\u0430\\u0442\\u044B. \\u00AB\\u0421\\u043E\\u0437\\u0434\\u0430\\u0442\\u044C\\u00BB \\u043D\\u0435\\u0434\\u043E\\u0441\\u0442\\u0443\\u043F\\u043D\\u0430 \\u0434\\u043B\\u044F \\u043F\\u0443\\u0441\\u0442\\u043E\\u0433\\u043E \\u043D\\u0430\\u0437\\u0432\\u0430\\u043D\\u0438\\u044F; \\u043F\\u0440\\u043E\\u0431\\u0435\\u043B\\u044B \\u043D\\u043E\\u0440\\u043C\\u0430\\u043B\\u0438\\u0437\\u0443\\u044E\\u0442\\u0441\\u044F, \\u043D\\u0435\\u043A\\u043E\\u0440\\u0440\\u0435\\u043A\\u0442\\u043D\\u044B\\u0439 \\u0441\\u0440\\u043E\\u043A \\u043F\\u043E\\u043A\\u0430\\u0437\\u044B\\u0432\\u0430\\u0435\\u0442\\u0441\\u044F \\u0440\\u044F\\u0434\\u043E\\u043C \\u0441 \\u043F\\u043E\\u043B\\u0435\\u043C, \\u043D\\u0435 \\u0437\\u0430\\u043A\\u0440\\u044B\\u0432\\u0430\\u044F \\u043E\\u043A\\u043D\\u043E.\",\"state\":\"Open\",\"evidence\":[]},{\"criterionId\":\"criterion-create-form-submit\",\"description\":\"\\u041F\\u043E\\u0434\\u0442\\u0432\\u0435\\u0440\\u0436\\u0434\\u0435\\u043D\\u0438\\u0435 \\u043A\\u043D\\u043E\\u043F\\u043A\\u043E\\u0439 \\u0438\\u043B\\u0438 \\u0060Ctrl\\u002BEnter\\u0060 \\u043E\\u0442\\u043F\\u0440\\u0430\\u0432\\u043B\\u044F\\u0435\\u0442 \\u0440\\u043E\\u0432\\u043D\\u043E \\u043E\\u0434\\u043D\\u043E allowlisted \\u0441\\u043E\\u043E\\u0431\\u0449\\u0435\\u043D\\u0438\\u0435 \\u0438 \\u0431\\u043B\\u043E\\u043A\\u0438\\u0440\\u0443\\u0435\\u0442 \\u043F\\u043E\\u0432\\u0442\\u043E\\u0440\\u043D\\u0443\\u044E \\u043E\\u0442\\u043F\\u0440\\u0430\\u0432\\u043A\\u0443 \\u0434\\u043E \\u043E\\u0442\\u0432\\u0435\\u0442\\u0430. \\u0423\\u0441\\u043F\\u0435\\u0445 \\u0437\\u0430\\u043A\\u0440\\u044B\\u0432\\u0430\\u0435\\u0442 \\u0444\\u043E\\u0440\\u043C\\u0443, \\u043E\\u0447\\u0438\\u0449\\u0430\\u0435\\u0442 \\u0447\\u0435\\u0440\\u043D\\u043E\\u0432\\u0438\\u043A \\u0438 \\u043E\\u0431\\u043D\\u043E\\u0432\\u043B\\u044F\\u0435\\u0442 canonical board; \\u043E\\u0448\\u0438\\u0431\\u043A\\u0430 \\u0441\\u043D\\u0438\\u043C\\u0430\\u0435\\u0442 pending-state, \\u0441\\u043E\\u0445\\u0440\\u0430\\u043D\\u044F\\u0435\\u0442 \\u0432\\u0441\\u0435 \\u0432\\u0432\\u0435\\u0434\\u0451\\u043D\\u043D\\u044B\\u0435 \\u0437\\u043D\\u0430\\u0447\\u0435\\u043D\\u0438\\u044F \\u0438 \\u043F\\u043E\\u043A\\u0430\\u0437\\u044B\\u0432\\u0430\\u0435\\u0442 \\u043F\\u043E\\u043D\\u044F\\u0442\\u043D\\u0443\\u044E \\u0434\\u0438\\u0430\\u0433\\u043D\\u043E\\u0441\\u0442\\u0438\\u043A\\u0443 \\u0431\\u0435\\u0437 optimistic task card.\",\"state\":\"Open\",\"evidence\":[]},{\"criterionId\":\"criterion-create-form-cancel\",\"description\":\"\\u00AB\\u041E\\u0442\\u043C\\u0435\\u043D\\u0430\\u00BB, \\u043A\\u043D\\u043E\\u043F\\u043A\\u0430 \\u0437\\u0430\\u043A\\u0440\\u044B\\u0442\\u0438\\u044F, backdrop \\u0438 \\u0060Escape\\u0060 \\u0437\\u0430\\u043A\\u0440\\u044B\\u0432\\u0430\\u044E\\u0442 \\u0444\\u043E\\u0440\\u043C\\u0443 \\u0431\\u0435\\u0437 CLI-\\u0432\\u044B\\u0437\\u043E\\u0432\\u0430 \\u0438 \\u0432\\u043E\\u0437\\u0432\\u0440\\u0430\\u0449\\u0430\\u044E\\u0442 focus \\u0438\\u0441\\u0445\\u043E\\u0434\\u043D\\u043E\\u0439 \\u043A\\u043D\\u043E\\u043F\\u043A\\u0435. \\u0412\\u043E \\u0432\\u0440\\u0435\\u043C\\u044F pending-state \\u0441\\u043B\\u0443\\u0447\\u0430\\u0439\\u043D\\u043E\\u0435 \\u0437\\u0430\\u043A\\u0440\\u044B\\u0442\\u0438\\u0435 \\u043D\\u0435 \\u043F\\u0440\\u0438\\u0432\\u043E\\u0434\\u0438\\u0442 \\u043A \\u043D\\u0435\\u0438\\u0437\\u0432\\u0435\\u0441\\u0442\\u043D\\u043E\\u043C\\u0443 \\u0440\\u0435\\u0437\\u0443\\u043B\\u044C\\u0442\\u0430\\u0442\\u0443 \\u0438\\u043B\\u0438 \\u043F\\u043E\\u0432\\u0442\\u043E\\u0440\\u043D\\u043E\\u043C\\u0443 \\u0441\\u043E\\u0437\\u0434\\u0430\\u043D\\u0438\\u044E; \\u043F\\u043E\\u0441\\u043B\\u0435 \\u044F\\u0432\\u043D\\u043E\\u0439 \\u043E\\u0442\\u043C\\u0435\\u043D\\u044B \\u043D\\u043E\\u0432\\u044B\\u0439 \\u0441\\u0435\\u0430\\u043D\\u0441 \\u043D\\u0430\\u0447\\u0438\\u043D\\u0430\\u0435\\u0442\\u0441\\u044F \\u0441 \\u043F\\u0443\\u0441\\u0442\\u043E\\u0433\\u043E \\u0447\\u0435\\u0440\\u043D\\u043E\\u0432\\u0438\\u043A\\u0430 \\u0438 \\u043F\\u0440\\u0438\\u043E\\u0440\\u0438\\u0442\\u0435\\u0442\\u0430 \\u0060P2\\u0060.\",\"state\":\"Open\",\"evidence\":[]},{\"criterionId\":\"criterion-create-form-accessibility\",\"description\":\"\\u041E\\u043A\\u043D\\u043E \\u0438\\u043C\\u0435\\u0435\\u0442 \\u043A\\u043E\\u0440\\u0440\\u0435\\u043A\\u0442\\u043D\\u044B\\u0435 \\u0060role=dialog\\u0060, \\u0060aria-modal\\u0060, \\u0441\\u0432\\u044F\\u0437\\u0430\\u043D\\u043D\\u044B\\u0439 \\u0437\\u0430\\u0433\\u043E\\u043B\\u043E\\u0432\\u043E\\u043A, \\u0432\\u0438\\u0434\\u0438\\u043C\\u044B\\u0435 labels, \\u0443\\u043F\\u0440\\u0430\\u0432\\u043B\\u044F\\u0435\\u043C\\u044B\\u0439 focus \\u0438 \\u043B\\u043E\\u0433\\u0438\\u0447\\u043D\\u044B\\u0439 tab order. \\u0420\\u0443\\u0441\\u0441\\u043A\\u0430\\u044F \\u0438 \\u0430\\u043D\\u0433\\u043B\\u0438\\u0439\\u0441\\u043A\\u0430\\u044F \\u043B\\u043E\\u043A\\u0430\\u043B\\u0438\\u0437\\u0430\\u0446\\u0438\\u0438 \\u043F\\u043E\\u043B\\u043D\\u044B; \\u0440\\u0430\\u0437\\u043C\\u0435\\u0440\\u044B, \\u043F\\u0440\\u043E\\u043A\\u0440\\u0443\\u0442\\u043A\\u0430, \\u043E\\u0448\\u0438\\u0431\\u043A\\u0438, focus/hover \\u0438 disabled-state \\u0438\\u0441\\u043F\\u043E\\u043B\\u044C\\u0437\\u0443\\u044E\\u0442 \\u0442\\u0435\\u043C\\u0443 VS Code \\u0438 \\u043D\\u0435 \\u0432\\u044B\\u0445\\u043E\\u0434\\u044F\\u0442 \\u0437\\u0430 viewport \\u043D\\u0430 \\u0443\\u0437\\u043A\\u043E\\u0439 \\u0448\\u0438\\u0440\\u0438\\u043D\\u0435.\",\"state\":\"Open\",\"evidence\":[]},{\"criterionId\":\"criterion-create-form-boundary\",\"description\":\"Webview \\u043F\\u0435\\u0440\\u0435\\u0434\\u0430\\u0451\\u0442 \\u0442\\u043E\\u043B\\u044C\\u043A\\u043E \\u043F\\u0440\\u043E\\u0432\\u0435\\u0440\\u0435\\u043D\\u043D\\u044B\\u0435 title, description, priority \\u0438 optional deadline; Extension Host \\u0438\\u0441\\u043F\\u043E\\u043B\\u044C\\u0437\\u0443\\u0435\\u0442 \\u043F\\u0443\\u0431\\u043B\\u0438\\u0447\\u043D\\u044B\\u0439 \\u0060e2d tasks create\\u0060, \\u0430 \\u043F\\u0440\\u044F\\u043C\\u043E\\u0439 \\u0437\\u0430\\u043F\\u0438\\u0441\\u0438 \\u0060.taskboard\\u0060 \\u043D\\u0435\\u0442. \\u0422\\u0435\\u043A\\u0441\\u0442 \\u0432\\u0441\\u0442\\u0430\\u0432\\u043B\\u044F\\u0435\\u0442\\u0441\\u044F \\u0442\\u043E\\u043B\\u044C\\u043A\\u043E \\u043A\\u0430\\u043A value/textContent, \\u043D\\u0435 \\u0438\\u043D\\u0442\\u0435\\u0440\\u043F\\u0440\\u0435\\u0442\\u0438\\u0440\\u0443\\u0435\\u0442\\u0441\\u044F \\u043A\\u0430\\u043A HTML \\u0438 \\u0441\\u043E\\u0445\\u0440\\u0430\\u043D\\u044F\\u0435\\u0442\\u0441\\u044F \\u0434\\u043E\\u0441\\u043B\\u043E\\u0432\\u043D\\u043E \\u043F\\u043E\\u0441\\u043B\\u0435 schema/security validation.\",\"state\":\"Open\",\"evidence\":[]},{\"criterionId\":\"criterion-create-form-verification\",\"description\":\"\\u0414\\u043E\\u043C\\u0435\\u043D\\u043D\\u044B\\u0439 \\u0434\\u043E\\u043A\\u0443\\u043C\\u0435\\u043D\\u0442 \\u043E\\u0431\\u043D\\u043E\\u0432\\u043B\\u0451\\u043D \\u0434\\u043E production-\\u043A\\u043E\\u0434\\u0430; RED/GREEN tests \\u043F\\u043E\\u043A\\u0440\\u044B\\u0432\\u0430\\u044E\\u0442 \\u043E\\u0442\\u043A\\u0440\\u044B\\u0442\\u0438\\u0435 \\u043E\\u0431\\u043E\\u0438\\u043C\\u0438 triggers, validation, keyboard/focus, cancel, pending/success/error \\u0438 security parser. \\u041F\\u043E\\u043B\\u043D\\u044B\\u0439 unit-\\u043D\\u0430\\u0431\\u043E\\u0440, typecheck, Extension Host tests, VSIX \\u0438 FFmpeg-\\u0441\\u043D\\u0438\\u043C\\u043E\\u043A \\u0443\\u0441\\u0442\\u0430\\u043D\\u043E\\u0432\\u043B\\u0435\\u043D\\u043D\\u043E\\u0433\\u043E \\u0440\\u0430\\u0441\\u0448\\u0438\\u0440\\u0435\\u043D\\u0438\\u044F \\u043F\\u043E\\u0434\\u0442\\u0432\\u0435\\u0440\\u0436\\u0434\\u0430\\u044E\\u0442 \\u0440\\u0435\\u0430\\u043B\\u044C\\u043D\\u043E\\u0435 \\u043E\\u043A\\u043D\\u043E \\u0441 \\u0437\\u0430\\u043F\\u043E\\u043B\\u043D\\u0435\\u043D\\u043D\\u043E\\u0439 \\u043C\\u043D\\u043E\\u0433\\u043E\\u0441\\u0442\\u0440\\u043E\\u0447\\u043D\\u043E\\u0439 \\u0444\\u043E\\u0440\\u043C\\u043E\\u0439 \\u0431\\u0435\\u0437 overflow.\",\"state\":\"Open\",\"evidence\":[]}]}],\"beforeTaskCoreDigest\":\"a2efc1b6de13a84e274fcbb8ba88aa288a66e1ab831f0b73abd47c6941134384\",\"afterTaskCoreDigest\":\"6827ee1f2afca58799e3d52b4984cd4ec34bb988c834a64a784bc6b7fa03ff69\"}"
+      },
+      "sequence": 2
+    },
+    {
+      "activityEntryId": "activity-b0e0b6c03e8a4b218ed2cf16bad0d49a",
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T02:28:18.2400420+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Ready",
+        "next": "InProgress",
+        "reason": "Статус изменён через CLI."
+      },
+      "sequence": 3
+    },
+    {
+      "activityEntryId": "activity-c424a134da8c42b0ad77533fe2d15f7c",
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T02:43:34.4381654+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "InProgress",
+        "next": "Review",
+        "reason": "Статус изменён через CLI."
+      },
+      "sequence": 4
+    },
+    {
+      "activityEntryId": "activity-dfbe3d9faf9046b795c3f8ae633c304f",
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T02:43:40.5229535+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Передано на приёмку."
+      },
+      "sequence": 5
+    },
+    {
+      "activityEntryId": "activity-ddbffbe90d5a485e90a7ad21d4437bc6",
+      "sequence": 6,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:50:19.9149223+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 21,
+        "toRevision": 22,
+        "activitySequence": 6,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник."
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/src/security.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/test/unit/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "8981e43fe1c45c38f42cdacbbc0cc650eab26ba4d30cd5e5b7e470f6277ba779",
+        "afterTaskCoreDigest": "ca38654d5c3deafaba61ddfa4e4f2561c0f07767367aa189c0db69897d025c5d"
+      }
+    },
+    {
+      "activityEntryId": "activity-8c754ee7d4d64dee89fddc51bb8c75df",
+      "sequence": 7,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:13:45.8823823+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 22,
+        "toRevision": 23,
+        "activitySequence": 7,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/src/security.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/test/unit/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/src/security.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/test/unit/**",
+                "path:data/dev-diary/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "ca38654d5c3deafaba61ddfa4e4f2561c0f07767367aa189c0db69897d025c5d",
+        "afterTaskCoreDigest": "d480969f6fab12640ad181037c2eccb5e1cecd7b732cd1a77059466be9dccd02"
+      }
+    },
+    {
+      "activityEntryId": "activity-6859221c9f9f41738357613ea6125767",
+      "sequence": 8,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:41:41.2387793+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 23,
+        "toRevision": 24,
+        "activitySequence": 8,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/src/security.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/test/unit/**",
+                "path:data/dev-diary/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/src/security.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/test/unit/**",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "d480969f6fab12640ad181037c2eccb5e1cecd7b732cd1a77059466be9dccd02",
+        "afterTaskCoreDigest": "4c90094247216912cbb111d673bb8f6aac465056a447067359a410781fa6bc52"
+      }
+    },
+    {
+      "activityEntryId": "activity-76c3a06f09da47b59dc5d99021af1a7e",
+      "sequence": 9,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:51:57.9415540+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 24,
+        "toRevision": 25,
+        "activitySequence": 9,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/src/security.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/test/unit/**",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/src/security.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/test/unit/**",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "4c90094247216912cbb111d673bb8f6aac465056a447067359a410781fa6bc52",
+        "afterTaskCoreDigest": "63dd5cd167aa62edec10e855d5b74dd1733de6bb2b046fe9b3e3208beffd6e3e"
+      }
+    },
+    {
+      "activityEntryId": "activity-dbe7e6c0a04e44ea8524039ba63e4f05",
+      "sequence": 10,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T15:00:26.5439789+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 25,
+        "toRevision": 26,
+        "activitySequence": 10,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/src/security.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/test/unit/**",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/src/security.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/test/unit/**",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**",
+                "path:src/Electron2D.VsCode/src/cli.ts",
+                "path:src/Electron2D.VsCode/test/unit/cli.test.ts"
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "63dd5cd167aa62edec10e855d5b74dd1733de6bb2b046fe9b3e3208beffd6e3e",
+        "afterTaskCoreDigest": "305bd0828dd90d54dd7cf92d0f6b18c03a82e3153d761b4d37a5f430f3a44ea1"
+      }
+    },
+    {
+      "activityEntryId": "activity-6f5c7d142f9f44c7afa1839d072a3e9c",
+      "sequence": 11,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T15:14:32.9540554+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 26,
+        "toRevision": 27,
+        "activitySequence": 11,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/src/security.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/test/unit/**",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**",
+                "path:src/Electron2D.VsCode/src/cli.ts",
+                "path:src/Electron2D.VsCode/test/unit/cli.test.ts"
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/src/security.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/test/unit/**",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**",
+                "path:src/Electron2D.VsCode/src/cli.ts",
+                "path:src/Electron2D.VsCode/test/unit/cli.test.ts",
+                "path:src/Electron2D.VsCode/artifacts/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "305bd0828dd90d54dd7cf92d0f6b18c03a82e3153d761b4d37a5f430f3a44ea1",
+        "afterTaskCoreDigest": "2b36d24d6beeaf065b973a21a3024ec26c192a1925d5f41adf41123d754e258a"
+      }
+    },
+    {
+      "activityEntryId": "activity-caad5d8452304084b48e65df40abc13c",
+      "sequence": 12,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T15:26:02.9960417+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 27,
+        "toRevision": 28,
+        "activitySequence": 12,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/src/security.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/test/unit/**",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**",
+                "path:src/Electron2D.VsCode/src/cli.ts",
+                "path:src/Electron2D.VsCode/test/unit/cli.test.ts",
+                "path:src/Electron2D.VsCode/artifacts/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "модальная форма создания задачи в VS Code Task Board",
+              "readyToStart": [
+                "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+                "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+                "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+              ],
+              "stopConditions": [
+                "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+                "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+                "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+                "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+              ],
+              "allowedChanges": [
+                "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/src/security.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/test/unit/**",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**",
+                "path:src/Electron2D.VsCode/src/cli.ts",
+                "path:src/Electron2D.VsCode/test/unit/cli.test.ts",
+                "path:src/Electron2D.VsCode/artifacts/**",
+                "path:data/documentation/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+                "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+                "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+                "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+              ],
+              "requiredOutputs": [
+                "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+                "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+                "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-create-form-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "Network",
+                    "ExternalEffect"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-create-form-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-create-form-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "2b36d24d6beeaf065b973a21a3024ec26c192a1925d5f41adf41123d754e258a",
+        "afterTaskCoreDigest": "f47b55d859037ae2e45bd9ed09dfbd7453d2e110fd3a5346f00bb2b0191e9452"
+      }
+    },
+    {
+      "activityEntryId": "activity-5164ada1081841f7ad8c8b652d506d98",
+      "sequence": 13,
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-14T17:32:26.5114535+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "427a8f787e9f733dbe19ea48c3d9e18ced3c91c897998a03e7ac361049a6261e",
+        "afterDigest": "b6d55daf30faf2e8f7696de70446b7c773ae54c183e1dcca2944b380bac859a2",
+        "workspaceChanges": {
+          "baseRevision": "workspace:9d91b046806bccd28efd345021311ab7046f609d60dee37cb1ffcee08c962896",
+          "currentRevision": "workspace:9d91b046806bccd28efd345021311ab7046f609d60dee37cb1ffcee08c962896",
+          "files": []
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-a9e60d54f6f94c408c13515acd90c0b0",
+      "sequence": 14,
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-14T17:32:26.5114535+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Задача принята пользователем в VS Code Task Board.",
+        "authorityActorId": "vscode:eduar",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    }
+  ],
+  "auditRuns": [],
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "message-0d9fd0b8193f4d40b986c45b23765bb0",
+        "sequence": 1,
+        "author": {
+          "actorId": "Codex",
+          "actorKind": "Agent",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-14T02:43:31.8769179+00:00",
+        "replyToMessageId": null,
+        "agentRunId": "run-f519803cbcf047ee98b14fcf511b34c1",
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "T-1225 реализована через актуальную единственную кнопку `Создать задачу` без возврата split-меню. Prompt-цепочка удалена; добавлены локализованный accessible dialog, title/Markdown description/P0–P3/deadline validation, focus trap, cancel/reset, один pending submit и Extension Host `createResult` после canonical refresh. Ошибка сохраняет draft и показывается внутри формы; security parser trim-ит title, сохраняет description дословно и отклоняет P4/несуществующие даты.\n\nПроверки текущей сессии: focused RED `89/93` → GREEN `93/93`; unit `141/141`; `npm run typecheck`; Extension Host code `0`; VSIX `11` файлов / `129,93 KB`; built/installed SHA-256 `64772784CD7FFF0F302E9613285B5D121F35150C410228669597A932973437CC`; docs update/check/verify; `e2d tasks verify` valid v3, diagnostics `0`; `git diff --check`. UI Automation подтвердила focus/cancel/reset/default P2, FFmpeg evidence: `.temp/taskboard-create-form-real.png`."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "links": [
+    {
+      "linkId": "link-create-form-domain",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-create-form-html",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webviewHtml.ts"
+    },
+    {
+      "linkId": "link-create-form-webview",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "link-create-form-styles",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.css"
+    },
+    {
+      "linkId": "link-create-form-localization",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/localization.ts"
+    },
+    {
+      "linkId": "link-create-form-security",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/security.ts"
+    },
+    {
+      "linkId": "link-create-form-extension",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/extension.ts"
+    },
+    {
+      "linkId": "link-create-form-tests",
+      "kind": "Directory",
+      "value": "src/Electron2D.VsCode/test/unit"
+    },
+    {
+      "linkId": "link-create-form-extension-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/suite/index.ts"
+    }
+  ],
+  "executionContract": {
+    "taskType": "модальная форма создания задачи в VS Code Task Board",
+    "readyToStart": [
+      "`docs/editor/project-tasks-board.md` до production-кода определяет поля формы, lifecycle черновика, validation, pending/success/error, keyboard и focus behavior.",
+      "Существующий create route подтверждён: webview отправляет title/description/priority/deadline, Extension Host выполняет публичный `e2d tasks create`; schema и lifecycle задачи не расширяются.",
+      "До реализации добавлены падающие tests для DOM-формы, единственной кнопки создания, submit acknowledgement, error retention, localization, security parser и responsive layout."
+    ],
+    "stopConditions": [
+      "Реализация требует прямого редактирования `.taskboard`, обхода Extension Host allowlist либо изменения TaskBoard schema/lifecycle.",
+      "Форма закрывается до известного результата и теряет пользовательский текст при CLI/schema/revision ошибке.",
+      "Для ввода остаются `window.prompt`, небезопасный HTML или непроверенное сообщение из webview.",
+      "Модальное окно нельзя сделать keyboard-accessible и адаптивным без нарушения Task Details, toolbar или геометрии обычной кнопки создания."
+    ],
+    "allowedChanges": [
+      "Доменный документ, webview/HTML/CSS/localization/security/Extension Host VS Code Task Board и связанные unit/Extension Host tests.",
+      "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+      "path:docs/editor/project-tasks-board.md",
+      "path:src/Electron2D.VsCode/src/extension.ts",
+      "path:src/Electron2D.VsCode/src/localization.ts",
+      "path:src/Electron2D.VsCode/src/security.ts",
+      "path:src/Electron2D.VsCode/src/webview.css",
+      "path:src/Electron2D.VsCode/src/webview.ts",
+      "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+      "path:src/Electron2D.VsCode/test/suite/index.ts",
+      "path:src/Electron2D.VsCode/test/unit/**",
+      "path:data/dev-diary/**",
+      "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+      "path:src/Electron2D.VsCode/dist/**",
+      "path:src/Electron2D.VsCode/src/cli.ts",
+      "path:src/Electron2D.VsCode/test/unit/cli.test.ts",
+      "path:src/Electron2D.VsCode/artifacts/**",
+      "path:data/documentation/**"
+    ],
+    "forbiddenChanges": [
+      "Изменение CLI create semantics, TaskBoard schema, default task status/acceptance, board placement или прямой writer из webview.",
+      "Несвязанный рефакторинг Task Details, карточек, фильтров, drag-and-drop, тегов или lifecycle-действий.",
+      "Автоматическая приёмка созданной задачи, создание до явного submit либо логирование введённого текста в diagnostics.",
+      "Возврат удалённой split-секции, стрелки или дополнительного меню у кнопки `Создать задачу`."
+    ],
+    "requiredOutputs": [
+      "Единая локализованная модальная форма title/Markdown description/priority/deadline для обычной кнопки создания без `window.prompt`.",
+      "Безопасный однократный submit с pending/success/error acknowledgement, сохранением черновика при ошибке и canonical refresh после успеха.",
+      "Синхронизированный доменный документ, RED/GREEN tests, собранный VSIX и FFmpeg-доказательство из реального окна VS Code."
+    ],
+    "commands": [
+      {
+        "commandId": "cmd-create-form-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "cmd-create-form-typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "cmd-create-form-extension-host",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:extension"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Windows"
+        ],
+        "timeoutSeconds": 900,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "Network",
+          "ExternalEffect"
+        ]
+      },
+      {
+        "commandId": "cmd-create-form-package",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "cmd-create-form-real-window-capture",
+        "kind": "Process",
+        "executable": "python",
+        "arguments": [
+          "eng/tools/capture_window.py",
+          "--title",
+          "Visual Studio Code",
+          "--output",
+          ".temp/taskboard-create-form-real.png"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Windows"
+        ],
+        "timeoutSeconds": 120,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "ExternalEffect"
+        ]
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-13T18:29:14.8886388+00:00",
+  "updatedAt": "2026-07-14T17:32:26.5114535+00:00",
+  "submittedAt": "2026-07-14T02:43:40.5229535+00:00",
+  "completedAt": "2026-07-14T17:32:26.5114535+00:00",
+  "acceptedAt": "2026-07-14T17:32:26.5114535+00:00",
+  "acceptedBy": "vscode:eduar",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "workspaceChanges": {
+    "baseRevision": "workspace:9d91b046806bccd28efd345021311ab7046f609d60dee37cb1ffcee08c962896",
+    "currentRevision": "workspace:9d91b046806bccd28efd345021311ab7046f609d60dee37cb1ffcee08c962896",
+    "files": []
+  },
+  "lastActivitySequence": 14
+}

@@ -1,0 +1,251 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-92437bdbc1fc5db8b25ed49812edfd57",
+  "revision": 2,
+  "taskId": "T-0941",
+  "legacyAliases": [],
+  "title": "Подготовить Native Dependency Packaging",
+  "description": "## T-0941 [ ] P0: Подготовить Native Dependency Packaging\n\n- Создана: 2026-07-05T03:32:25+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0241, T-0243, T-0245, T-0246\n- Ссылки:\n  - Доменный документ: `docs/quality/godot-47-native-dependency-packaging.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.21 Diagnostics, CI, Packaging And Compatibility Policy`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/quality/godot-47-native-dependency-packaging.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/quality/godot-47-native-dependency-packaging.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЦель - сформировать и проверить `Native Dependency Packaging` как отдельный packaging/distribution contract для Public API 0.1-preview scope.\n\nЗадача не реализует поведение public classes и не добавляет public API. Она владеет только package inventory, platform/RID mapping, native/tooling dependency sources, generated package artifacts, checksum/file-list validation, verifier command, stable failure diagnostics and release/audit evidence.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, platform/RID matrix, package inventory, native dependency source URLs, versions, hashes and license rows.\n- Граница public API: задача упаковывает уже реализованные artifacts и не добавляет public API или runtime behavior.\n- Исполняемый результат: deterministic package generation or verification, file-list/checksum validation, stable failure diagnostics and release/audit evidence.\n- Runtime checks: runtime benchmarks не применяются, если package smoke explicitly не требует runtime execution; это фиксируется в доменном документе.\n\n### Границы задачи\n\n- Цель: подготовить только package/distribution contract `Native Dependency Packaging`, без реализации behavior packaged components.\n- Входит: package inventory, platform/RID mapping, source URL/version/hash/license rows where applicable, deterministic artifact verification and stable diagnostics.\n- Не входит: runtime/backend implementation, public API additions, unrelated platform support and manual package repairs.\n- Подтверждение приёмки: package file list, checksums, verifier output, dependency inventory and release/audit evidence.\n\n### Первичные потребители результата\n\n- Release packaging, audit package verification and platform smoke gates consume package artifacts from `Native Dependency Packaging`.\n- Consumers must receive file-list/checksum validation, dependency inventory and stable failure diagnostics.\n- Доменный документ должен назвать artifact paths, verifier command and release/audit consumer evidence.\n\n### Internal substrate acceptance contract\n\n- `Native Dependency Packaging` has deterministic init/success and fail-closed diagnostics in the domain document, including a stable `E2D-*` code family when runtime failure is possible.\n- First consumer proof names the public task, required internal capability and first test/report that proves the consumer uses this substrate instead of a fallback.\n- Resource lifetime, cache, handle or subscription counters return to baseline after the smallest create/use/dispose scenario applicable to this substrate.\n- Unsupported platform/backend paths return documented diagnostics and do not silently degrade into stubs or no-op behavior.\n- This task does not define public methods/properties/signals/enums; public behavior remains owned by the concrete public API tasks.\n### Критерии приёмки\n\n- [ ] Доменный документ `docs/quality/godot-47-native-dependency-packaging.md` фиксирует task-specific scope `Native Dependency Packaging`, source inventory, generated report/artifact, verifier command, consumers, unsupported/deferred rows and release/audit evidence.\n- [ ] Deterministic generation or verification command воспроизводимо создаёт report/artifact/log для `Native Dependency Packaging` и fails on stale, missing or manually edited outputs.\n- [ ] Package inventory содержит platform/RID mapping, native/tooling dependency source URL, version, hash, license row and expected artifact path where applicable.\n- [ ] Generated artifact validation проверяет schema/file list/checksum/source links as applicable and produces stable diagnostics without secret leakage.\n- [ ] Release/audit consumer evidence показывает, какой gate, package check or report consumes `Native Dependency Packaging` and how failures become actionable.\n- [ ] Runtime benchmarks не требуются, если `Native Dependency Packaging` не запускает runtime path; доменный документ содержит явную not-applicable строку вместо фиктивных замеров критических путей.\n- [ ] Документация, generated documentation index or task notes синхронизированы с фактическим контрактом `Native Dependency Packaging`.\n- [ ] Проверки текущей задачи фиксируются в дневнике: целевые verifier/test commands, нужные проверки сборки, документации и лицензий and `git diff --check`.\n\n### Подзадачи\n\n- [ ] Зафиксировать task-specific source inventory, consumers, generated artifact paths, verifier command and explicit out-of-scope в доменном документе.\n- [ ] Добавить или обновить verifier/test fixtures, которые сначала доказывают текущий разрыв, затем проходят на рабочем generator/check/artifact validation path.\n- [ ] Реализовать deterministic generator/check/report or explicit `Deferred`/`Unsupported` contract for `Native Dependency Packaging` without adding public API.\n- [ ] Проверить generated artifacts, no secret leakage, release/audit evidence and runtime-benchmark applicability decision.\n- [ ] Обновить документацию и выполнить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:32:25+03:00 - Создано по результатам проверки целевого списка: этот явно названный объём раньше не имел отдельной активной задачи в предыдущем срезе ROADMAP.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fab4705fe4a1db467903c0bc500995a7"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a9dc106b3357162a2b473b8e01e91ad3"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ `docs/quality/godot-47-native-dependency-packaging.md` фиксирует task-specific scope `Native Dependency Packaging`, source inventory, generated report/artifact, verifier command, consumers, unsupported/deferred rows and release/audit evidence.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Deterministic generation or verification command воспроизводимо создаёт report/artifact/log для `Native Dependency Packaging` и fails on stale, missing or manually edited outputs.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Package inventory содержит platform/RID mapping, native/tooling dependency source URL, version, hash, license row and expected artifact path where applicable.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Generated artifact validation проверяет schema/file list/checksum/source links as applicable and produces stable diagnostics without secret leakage.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Release/audit consumer evidence показывает, какой gate, package check or report consumes `Native Dependency Packaging` and how failures become actionable.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Runtime benchmarks не требуются, если `Native Dependency Packaging` не запускает runtime path; доменный документ содержит явную not-applicable строку вместо фиктивных замеров критических путей.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Документация, generated documentation index or task notes синхронизированы с фактическим контрактом `Native Dependency Packaging`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Проверки текущей задачи фиксируются в дневнике: целевые verifier/test commands, нужные проверки сборки, документации и лицензий and `git diff --check`.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:32:25.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по результатам проверки целевого списка: этот явно названный объём раньше не имел отдельной активной задачи в предыдущем срезе ROADMAP."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required for final acceptance unless a parent gate explicitly owns audit evidence"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/quality/godot-47-native-dependency-packaging.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.",
+      "docs/quality/godot-47-native-dependency-packaging.md is current and RED tests/verifiers can be added before production changes."
+    ],
+    "stopConditions": [
+      "implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.",
+      "tests, domain document or generated source-of-truth artifacts are missing or stale.",
+      "a shortcut would introduce facade, stub, hidden fallback or undocumented behavior."
+    ],
+    "allowedChanges": [
+      "files named in this task's `Ссылки` block and their owning tests/docs.",
+      "generated artifacts only through their owning generator/verifier.",
+      "`TASKS.md` notes/current evidence and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.",
+      "public API surface not present in generated Godot 4.7 packets.",
+      "unrelated formatting, dependency graph or metadata churn."
+    ],
+    "requiredOutputs": [
+      "docs/quality/godot-47-native-dependency-packaging.md",
+      "RED/GREEN test or verifier evidence for the selected slice.",
+      "synchronized XML/docs/API/generated documentation evidence when public surface or docs change.",
+      "task notes/current evidence and diary entry with exact command results."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required for final acceptance unless a parent gate explicitly owns audit evidence",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 13271749,
+      "byteLength": 8939,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "3ffadc7e37c99404d2e2aa32808591c8398debc7e1c49239a76c897e4f059d8b",
+      "markdown": "## T-0941 [ ] P0: Подготовить Native Dependency Packaging\n\n- Создана: 2026-07-05T03:32:25+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0241, T-0243, T-0245, T-0246\n- Ссылки:\n  - Доменный документ: `docs/quality/godot-47-native-dependency-packaging.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.21 Diagnostics, CI, Packaging And Compatibility Policy`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/quality/godot-47-native-dependency-packaging.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/quality/godot-47-native-dependency-packaging.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЦель - сформировать и проверить `Native Dependency Packaging` как отдельный packaging/distribution contract для Public API 0.1-preview scope.\n\nЗадача не реализует поведение public classes и не добавляет public API. Она владеет только package inventory, platform/RID mapping, native/tooling dependency sources, generated package artifacts, checksum/file-list validation, verifier command, stable failure diagnostics and release/audit evidence.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, platform/RID matrix, package inventory, native dependency source URLs, versions, hashes and license rows.\n- Граница public API: задача упаковывает уже реализованные artifacts и не добавляет public API или runtime behavior.\n- Исполняемый результат: deterministic package generation or verification, file-list/checksum validation, stable failure diagnostics and release/audit evidence.\n- Runtime checks: runtime benchmarks не применяются, если package smoke explicitly не требует runtime execution; это фиксируется в доменном документе.\n\n### Границы задачи\n\n- Цель: подготовить только package/distribution contract `Native Dependency Packaging`, без реализации behavior packaged components.\n- Входит: package inventory, platform/RID mapping, source URL/version/hash/license rows where applicable, deterministic artifact verification and stable diagnostics.\n- Не входит: runtime/backend implementation, public API additions, unrelated platform support and manual package repairs.\n- Подтверждение приёмки: package file list, checksums, verifier output, dependency inventory and release/audit evidence.\n\n### Первичные потребители результата\n\n- Release packaging, audit package verification and platform smoke gates consume package artifacts from `Native Dependency Packaging`.\n- Consumers must receive file-list/checksum validation, dependency inventory and stable failure diagnostics.\n- Доменный документ должен назвать artifact paths, verifier command and release/audit consumer evidence.\n\n### Internal substrate acceptance contract\n\n- `Native Dependency Packaging` has deterministic init/success and fail-closed diagnostics in the domain document, including a stable `E2D-*` code family when runtime failure is possible.\n- First consumer proof names the public task, required internal capability and first test/report that proves the consumer uses this substrate instead of a fallback.\n- Resource lifetime, cache, handle or subscription counters return to baseline after the smallest create/use/dispose scenario applicable to this substrate.\n- Unsupported platform/backend paths return documented diagnostics and do not silently degrade into stubs or no-op behavior.\n- This task does not define public methods/properties/signals/enums; public behavior remains owned by the concrete public API tasks.\n### Критерии приёмки\n\n- [ ] Доменный документ `docs/quality/godot-47-native-dependency-packaging.md` фиксирует task-specific scope `Native Dependency Packaging`, source inventory, generated report/artifact, verifier command, consumers, unsupported/deferred rows and release/audit evidence.\n- [ ] Deterministic generation or verification command воспроизводимо создаёт report/artifact/log для `Native Dependency Packaging` и fails on stale, missing or manually edited outputs.\n- [ ] Package inventory содержит platform/RID mapping, native/tooling dependency source URL, version, hash, license row and expected artifact path where applicable.\n- [ ] Generated artifact validation проверяет schema/file list/checksum/source links as applicable and produces stable diagnostics without secret leakage.\n- [ ] Release/audit consumer evidence показывает, какой gate, package check or report consumes `Native Dependency Packaging` and how failures become actionable.\n- [ ] Runtime benchmarks не требуются, если `Native Dependency Packaging` не запускает runtime path; доменный документ содержит явную not-applicable строку вместо фиктивных замеров критических путей.\n- [ ] Документация, generated documentation index or task notes синхронизированы с фактическим контрактом `Native Dependency Packaging`.\n- [ ] Проверки текущей задачи фиксируются в дневнике: целевые verifier/test commands, нужные проверки сборки, документации и лицензий and `git diff --check`.\n\n### Подзадачи\n\n- [ ] Зафиксировать task-specific source inventory, consumers, generated artifact paths, verifier command and explicit out-of-scope в доменном документе.\n- [ ] Добавить или обновить verifier/test fixtures, которые сначала доказывают текущий разрыв, затем проходят на рабочем generator/check/artifact validation path.\n- [ ] Реализовать deterministic generator/check/report or explicit `Deferred`/`Unsupported` contract for `Native Dependency Packaging` without adding public API.\n- [ ] Проверить generated artifacts, no secret leakage, release/audit evidence and runtime-benchmark applicability decision.\n- [ ] Обновить документацию и выполнить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:32:25+03:00 - Создано по результатам проверки целевого списка: этот явно названный объём раньше не имел отдельной активной задачи в предыдущем срезе ROADMAP.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:32:25.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

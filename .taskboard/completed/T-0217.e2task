@@ -1,0 +1,403 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-cd6c0933b25f6fba0164211846c5744d",
+  "revision": 2,
+  "taskId": "T-0217",
+  "legacyAliases": [],
+  "title": "Починить CI после объединения документации и API surface",
+  "description": "## T-0217 [x] P0: Починить CI после объединения документации и API surface\n\n- Завершена: 2026-06-24T20:37:32+03:00\n- Принята пользователем: 2026-06-24T20:37:32+03:00\n- Архивная причина: пользователь принял задачу после проверки результата.\n\n- Ссылки:\n  - Тест: `tests/Electron2D.Tests.Unit/Box2DPhysicsValidationInfrastructureTests.cs`\n  - Тест: `tests/Electron2D.Tests.Integration/ReferenceGamePlatformMatrixTests.cs`\n  - Тест: `tests/Electron2D.Tests.Integration/ReferencePerformanceVerificationTests.cs`\n  - Тест: `tests/Electron2D.Tests.Integration/ApiManifestTests.cs`\n  - Тест: `tests/Electron2D.Tests.Integration/PowerShellProcess.cs`\n  - Тест: `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`\n  - Доменный документ: `docs/physics/box2d-net-validation.md`\n  - Доменный документ: `docs/examples/reference-game-platform-matrix.md`\n  - Доменный документ: `docs/quality/performance-verification.md`\n  - CI run: `https://github.com/edwardgushchin/Electron2D/actions/runs/28101528685`\n  - CI run: `https://github.com/edwardgushchin/Electron2D/actions/runs/28104617437`\n  - CI run: `https://github.com/edwardgushchin/Electron2D/actions/runs/28106093943`\n  - CI run: `https://github.com/edwardgushchin/Electron2D/actions/runs/28107484108`\n  - CI run: `https://github.com/edwardgushchin/Electron2D/actions/runs/28107996447`\n\n### Самодостаточное описание\n\nCI на Windows, Linux и macOS падает после commit `034963c`. Первый видимый сбой находится в `Box2DPhysicsValidationInfrastructureTests.RepositoryContainsBox2DPhysicsCandidateValidationGate`: тест всё ещё ищет старые пути `docs/specifications/physics/box2d-net-validation.md` и `docs/documentation/physics/box2d-net-validation.md`, хотя после объединения документации канонический файл находится в `docs/physics/box2d-net-validation.md`.\n\nЛокальный полный прогон дополнительно показывает рассинхрон после объединения доменных документов и изменения публичного API: несколько integration tests смотрят в старые `docs/specifications/**` или `docs/documentation/**` пути, активные reference gates всё ещё требуют отвергнутый `ui-heavy-reference`, а API manifest/Wiki не описывают текущие публичные типы `ImageTexture` и `ProcessMode`.\n\nПовторный CI run для commit `9faa53a` прошёл начальные verifier-ы и упал в `Run tests`: Linux/macOS не могут стартовать hardcoded `powershell`, Android fake ADB создан как Windows `.cmd`, а визуальные smoke-тесты с настоящим окном и screenshot-артефактами идут в обычном headless CI вместо baseline-прогона.\n\nCI run для commit `d888873` подтвердил, что macOS проходит `Run tests`, но падает на `Verify-LocalDocumentation.ps1` из-за различий `ConvertTo-Json` и порядка сортировки между Windows PowerShell и PowerShell 7. Ubuntu доходит до двух verifier wrapper tests, которые вызывают visual `Verify-ReferencePlatformer.ps1` и требуют `WindowCreated=True`; Windows оставляет один flaky live Roslyn workspace parity test.\n\nCI run для commit `d71735c` довёл Ubuntu и macOS до success, но Windows упал на `Verify-LocalDocumentation.ps1`: raw SHA256 в generated index зависит от CRLF/LF checkout. Хеши документационных текстовых источников нужно считать после нормализации line endings.\n\n### Критерии и результат\n\n- [x] Тест проверяет единый доменный документ `docs/physics/box2d-net-validation.md`.\n- [x] Старые папки `docs/specifications/...` и `docs/documentation/physics/...` не возвращаются.\n- [x] Integration tests используют актуальные доменные пути `docs/<domain>/...`.\n- [x] `reference-game-platform-matrix` и `reference-performance` больше не требуют `ui-heavy-reference` как активный CI gate.\n- [x] API manifest и GitHub Wiki compatibility/reference pages описывают текущие публичные типы `ImageTexture` и `ProcessMode`.\n- [x] Integration tests, запускающие PowerShell verifier scripts, выбирают доступный shell host на Windows, Linux и macOS.\n- [x] Android fake ADB в CLI tests создаётся кроссплатформенно, а не только как `.cmd`.\n- [x] Визуальные smoke-тесты, требующие настоящего окна, screenshot или video device, помечены `Category=Baseline` и не входят в обычный `Run-Tests.ps1`.\n- [x] Visual reference Platformer verifier wrappers и live Roslyn workspace parity test вынесены в `Category=Baseline`, потому что обычный CI не даёт стабильное окно/runner state для этих проверок.\n- [x] Local documentation index generator использует ordinal sorting, а `-Check` сравнивает распарсенный JSON, чтобы Windows PowerShell и PowerShell 7 не расходились из-за pretty-print или escape-style.\n- [x] Local documentation index hashes нормализуют CRLF/LF, чтобы Windows checkout не расходился с Linux/macOS.\n- [x] Локально проходит focused unit test `Box2DPhysicsValidationInfrastructureTests`.\n- [x] Локально проходят focused tests для PowerShell verifier runner и Android fake ADB.\n- [x] Локально проходит `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"Category!=Baseline\" --no-restore -m:1`.\n- [x] Локально проходит `tools\\Run-Tests.ps1`.\n- [x] Локально проходит `tools\\Verify-LocalDocumentation.ps1` через Windows PowerShell и PowerShell 7 (`pwsh`).\n- [x] Локально проходят API/Wiki/documentation/verifier checks, которые соответствуют CI до platform-specific Linux/macOS export.\n- [x] После commit/push новый GitHub Actions run больше не падает на этой ошибке.\n\n### Подзадачи\n\n- [x] Проверить логи GitHub Actions.\n- [x] Исправить path contract в unit test.\n- [x] Исправить stale domain-doc paths в integration tests.\n- [x] Исключить `ui-heavy-reference` из активных matrix/performance gates до отдельной `T-0211`.\n- [x] Обновить API compatibility, manifest, generated Wiki API pages и local documentation index.\n- [x] Выполнить focused tests и полный `tools\\Run-Tests.ps1`.\n- [x] Разнести визуальные smoke-тесты и headless CI tests через `Category=Baseline`.\n- [x] Исправить cross-platform запуск PowerShell verifier scripts из integration tests.\n- [x] Исправить fake ADB для macOS/Linux.\n- [x] Стабилизировать `Verify-LocalDocumentation.ps1` для `pwsh`.\n- [x] Нормализовать line endings перед SHA256 в local documentation index.\n- [x] Исключить visual Platformer verifier wrappers и flaky live Roslyn workspace parity из обычного CI-фильтра.\n- [x] Commit/push и проверить новый CI run.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0012"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Тест проверяет единый доменный документ `docs/physics/box2d-net-validation.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Старые папки `docs/specifications/...` и `docs/documentation/physics/...` не возвращаются.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Integration tests используют актуальные доменные пути `docs/<domain>/...`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`reference-game-platform-matrix` и `reference-performance` больше не требуют `ui-heavy-reference` как активный CI gate.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "API manifest и GitHub Wiki compatibility/reference pages описывают текущие публичные типы `ImageTexture` и `ProcessMode`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Integration tests, запускающие PowerShell verifier scripts, выбирают доступный shell host на Windows, Linux и macOS.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Android fake ADB в CLI tests создаётся кроссплатформенно, а не только как `.cmd`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Визуальные smoke-тесты, требующие настоящего окна, screenshot или video device, помечены `Category=Baseline` и не входят в обычный `Run-Tests.ps1`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Visual reference Platformer verifier wrappers и live Roslyn workspace parity test вынесены в `Category=Baseline`, потому что обычный CI не даёт стабильное окно/runner state для этих проверок.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Local documentation index generator использует ordinal sorting, а `-Check` сравнивает распарсенный JSON, чтобы Windows PowerShell и PowerShell 7 не расходились из-за pretty-print или escape-style.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Local documentation index hashes нормализуют CRLF/LF, чтобы Windows checkout не расходился с Linux/macOS.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Локально проходит focused unit test `Box2DPhysicsValidationInfrastructureTests`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-013",
+      "description": "Локально проходят focused tests для PowerShell verifier runner и Android fake ADB.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-014",
+      "description": "Локально проходит `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"Category!=Baseline\" --no-restore -m:1`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-015",
+      "description": "Локально проходит `tools\\Run-Tests.ps1`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-016",
+      "description": "Локально проходит `tools\\Verify-LocalDocumentation.ps1` через Windows PowerShell и PowerShell 7 (`pwsh`).",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-017",
+      "description": "Локально проходят API/Wiki/documentation/verifier checks, которые соответствуют CI до platform-specific Linux/macOS export.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-018",
+      "description": "После commit/push новый GitHub Actions run больше не падает на этой ошибке.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-cd6c0933b25f6fba0164211846c5744d/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-24T17:37:32.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/<domain>/..."
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/documentation/**"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/documentation/physics/..."
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/documentation/physics/box2d-net-validation.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/examples/reference-game-platform-matrix.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/physics/box2d-net-validation.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/quality/performance-verification.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/specifications/**"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/specifications/..."
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/specifications/physics/box2d-net-validation.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Uri",
+      "value": "https://github.com/edwardgushchin/Electron2D/actions/runs/28101528685"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "Uri",
+      "value": "https://github.com/edwardgushchin/Electron2D/actions/runs/28104617437"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "Uri",
+      "value": "https://github.com/edwardgushchin/Electron2D/actions/runs/28106093943"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "Uri",
+      "value": "https://github.com/edwardgushchin/Electron2D/actions/runs/28107484108"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "Uri",
+      "value": "https://github.com/edwardgushchin/Electron2D/actions/runs/28107996447"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ApiManifestTests.cs"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/PowerShellProcess.cs"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ReferenceGamePlatformMatrixTests.cs"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ReferencePerformanceVerificationTests.cs"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Unit/Box2DPhysicsValidationInfrastructureTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 922406,
+      "byteLength": 7992,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "ba3a73427a538e3e6799a46b354463bc3b30b0b5c49fbe78713ed7cf0e94acf3",
+      "markdown": "## T-0217 [x] P0: Починить CI после объединения документации и API surface\n\n- Завершена: 2026-06-24T20:37:32+03:00\n- Принята пользователем: 2026-06-24T20:37:32+03:00\n- Архивная причина: пользователь принял задачу после проверки результата.\n\n- Ссылки:\n  - Тест: `tests/Electron2D.Tests.Unit/Box2DPhysicsValidationInfrastructureTests.cs`\n  - Тест: `tests/Electron2D.Tests.Integration/ReferenceGamePlatformMatrixTests.cs`\n  - Тест: `tests/Electron2D.Tests.Integration/ReferencePerformanceVerificationTests.cs`\n  - Тест: `tests/Electron2D.Tests.Integration/ApiManifestTests.cs`\n  - Тест: `tests/Electron2D.Tests.Integration/PowerShellProcess.cs`\n  - Тест: `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`\n  - Доменный документ: `docs/physics/box2d-net-validation.md`\n  - Доменный документ: `docs/examples/reference-game-platform-matrix.md`\n  - Доменный документ: `docs/quality/performance-verification.md`\n  - CI run: `https://github.com/edwardgushchin/Electron2D/actions/runs/28101528685`\n  - CI run: `https://github.com/edwardgushchin/Electron2D/actions/runs/28104617437`\n  - CI run: `https://github.com/edwardgushchin/Electron2D/actions/runs/28106093943`\n  - CI run: `https://github.com/edwardgushchin/Electron2D/actions/runs/28107484108`\n  - CI run: `https://github.com/edwardgushchin/Electron2D/actions/runs/28107996447`\n\n### Самодостаточное описание\n\nCI на Windows, Linux и macOS падает после commit `034963c`. Первый видимый сбой находится в `Box2DPhysicsValidationInfrastructureTests.RepositoryContainsBox2DPhysicsCandidateValidationGate`: тест всё ещё ищет старые пути `docs/specifications/physics/box2d-net-validation.md` и `docs/documentation/physics/box2d-net-validation.md`, хотя после объединения документации канонический файл находится в `docs/physics/box2d-net-validation.md`.\n\nЛокальный полный прогон дополнительно показывает рассинхрон после объединения доменных документов и изменения публичного API: несколько integration tests смотрят в старые `docs/specifications/**` или `docs/documentation/**` пути, активные reference gates всё ещё требуют отвергнутый `ui-heavy-reference`, а API manifest/Wiki не описывают текущие публичные типы `ImageTexture` и `ProcessMode`.\n\nПовторный CI run для commit `9faa53a` прошёл начальные verifier-ы и упал в `Run tests`: Linux/macOS не могут стартовать hardcoded `powershell`, Android fake ADB создан как Windows `.cmd`, а визуальные smoke-тесты с настоящим окном и screenshot-артефактами идут в обычном headless CI вместо baseline-прогона.\n\nCI run для commit `d888873` подтвердил, что macOS проходит `Run tests`, но падает на `Verify-LocalDocumentation.ps1` из-за различий `ConvertTo-Json` и порядка сортировки между Windows PowerShell и PowerShell 7. Ubuntu доходит до двух verifier wrapper tests, которые вызывают visual `Verify-ReferencePlatformer.ps1` и требуют `WindowCreated=True`; Windows оставляет один flaky live Roslyn workspace parity test.\n\nCI run для commit `d71735c` довёл Ubuntu и macOS до success, но Windows упал на `Verify-LocalDocumentation.ps1`: raw SHA256 в generated index зависит от CRLF/LF checkout. Хеши документационных текстовых источников нужно считать после нормализации line endings.\n\n### Критерии и результат\n\n- [x] Тест проверяет единый доменный документ `docs/physics/box2d-net-validation.md`.\n- [x] Старые папки `docs/specifications/...` и `docs/documentation/physics/...` не возвращаются.\n- [x] Integration tests используют актуальные доменные пути `docs/<domain>/...`.\n- [x] `reference-game-platform-matrix` и `reference-performance` больше не требуют `ui-heavy-reference` как активный CI gate.\n- [x] API manifest и GitHub Wiki compatibility/reference pages описывают текущие публичные типы `ImageTexture` и `ProcessMode`.\n- [x] Integration tests, запускающие PowerShell verifier scripts, выбирают доступный shell host на Windows, Linux и macOS.\n- [x] Android fake ADB в CLI tests создаётся кроссплатформенно, а не только как `.cmd`.\n- [x] Визуальные smoke-тесты, требующие настоящего окна, screenshot или video device, помечены `Category=Baseline` и не входят в обычный `Run-Tests.ps1`.\n- [x] Visual reference Platformer verifier wrappers и live Roslyn workspace parity test вынесены в `Category=Baseline`, потому что обычный CI не даёт стабильное окно/runner state для этих проверок.\n- [x] Local documentation index generator использует ordinal sorting, а `-Check` сравнивает распарсенный JSON, чтобы Windows PowerShell и PowerShell 7 не расходились из-за pretty-print или escape-style.\n- [x] Local documentation index hashes нормализуют CRLF/LF, чтобы Windows checkout не расходился с Linux/macOS.\n- [x] Локально проходит focused unit test `Box2DPhysicsValidationInfrastructureTests`.\n- [x] Локально проходят focused tests для PowerShell verifier runner и Android fake ADB.\n- [x] Локально проходит `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"Category!=Baseline\" --no-restore -m:1`.\n- [x] Локально проходит `tools\\Run-Tests.ps1`.\n- [x] Локально проходит `tools\\Verify-LocalDocumentation.ps1` через Windows PowerShell и PowerShell 7 (`pwsh`).\n- [x] Локально проходят API/Wiki/documentation/verifier checks, которые соответствуют CI до platform-specific Linux/macOS export.\n- [x] После commit/push новый GitHub Actions run больше не падает на этой ошибке.\n\n### Подзадачи\n\n- [x] Проверить логи GitHub Actions.\n- [x] Исправить path contract в unit test.\n- [x] Исправить stale domain-doc paths в integration tests.\n- [x] Исключить `ui-heavy-reference` из активных matrix/performance gates до отдельной `T-0211`.\n- [x] Обновить API compatibility, manifest, generated Wiki API pages и local documentation index.\n- [x] Выполнить focused tests и полный `tools\\Run-Tests.ps1`.\n- [x] Разнести визуальные smoke-тесты и headless CI tests через `Category=Baseline`.\n- [x] Исправить cross-platform запуск PowerShell verifier scripts из integration tests.\n- [x] Исправить fake ADB для macOS/Linux.\n- [x] Стабилизировать `Verify-LocalDocumentation.ps1` для `pwsh`.\n- [x] Нормализовать line endings перед SHA256 в local documentation index.\n- [x] Исключить visual Platformer verifier wrappers и flaky live Roslyn workspace parity из обычного CI-фильтра.\n- [x] Commit/push и проверить новый CI run.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-24T17:37:32.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-24T17:37:32.0000000+00:00",
+  "completedAt": "2026-06-24T17:37:32.0000000+00:00",
+  "acceptedAt": "2026-06-24T17:37:32.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-24T17:37:32.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

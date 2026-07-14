@@ -1,0 +1,332 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-8e52952cba61ed3d7ecd770cd7ab01d9",
+  "revision": 2,
+  "taskId": "T-0104",
+  "legacyAliases": [],
+  "title": "Провести полный release candidate gate для `0.1-preview`",
+  "description": "## T-0104 [ ] P0: Провести полный release candidate gate для `0.1-preview`\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `gate`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0093, T-0096, T-0097, T-0103, T-0111, T-0113, T-0128, T-0189, T-0980\n- Внешние блокеры: ProjectTaskManager Platformer в `examples/platformer/.electron2d/tasks/` (`T-0222`, `T-0223`, `T-0225`, `T-0221`, `T-0166`).\n- Ссылки:\n  - Upstream commit: нет\n  - Спецификация: `docs/releases/0.1-preview.md`; `docs/quality/`\n  - Документация: `docs/quality/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`\n\n### Execution contract\n\n- Task type: gate\n- Ready-to-start:\n  - dependencies and child evidence are closed, accepted or explicitly represented as blockers.\n  - gate commands and domain document for T-0104 are known before running checks.\n- Stop conditions:\n  - missing evidence belongs to a child/leaf task rather than the gate tooling.\n  - fixing the issue would change production behavior outside this gate's verifier/report ownership.\n- May change:\n  - gate report/check artifacts named by task criteria.\n  - verifier/report tooling owned by this gate.\n  - `TASKS.md` notes and diary evidence for T-0104.\n- Must not change:\n  - leaf implementation, subsystem backend, platform runtime behavior or sibling task acceptance state.\n- Required outputs:\n  - gate report or current evidence section naming pass/fail/blockers.\n  - links to commands, logs and owning tasks for blockers.\n- Required commands:\n  - exact gate commands named in this task or docs/releases/0.1-preview.md.\n  - `git diff --check`\n- External audit:\n  - required when this gate is the acceptance boundary; otherwise inherited from parent gate\n\n### Самодостаточное описание\n\nЗадача относится к домену «Производительность, стабильность и релизный gate». Цель - Провести полный release candidate gate для `0.1-preview`. Текущее состояние: нет формализованного performance, leak, soak и release candidate gate, хотя спецификация требует доказать стабильность данных, FPS и ресурсную чистоту. Ожидаемый результат: результат должен закрыть релизный контракт `0.1-preview`, быть проверяемым автоматическими тестами или документированной проверкой и соответствовать критериям: сторонний разработчик может пройти путь install -> project -> scene -> C# code -> run -> debug -> export -> play.\n\nВажное решение из документации: релиз готов только после проверок FPS, отсутствия постоянных allocations, отсутствия утечек и устойчивости save/load/import cycles. Ограничение для агента: не засчитывать узкий smoke test как доказательство полного release gate. Не менять несвязанные файлы, не расширять объём за пределы `0.1-preview`, не закрывать задачу без проверяемого результата и не подменять обязательные тесты или документацию устным утверждением.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Release candidate commit SHA, version, build number и source branch зафиксированы в gate artifact до запуска проверок.\n- [ ] Точный набор команд release gate зафиксирован в доменном документе и выполнен в указанном порядке.\n- [ ] Сторонний разработчик может пройти путь install -> project -> scene -> C# code -> run -> debug -> export -> play.\n- [ ] Итоговый release manifest содержит список artifacts, hashes, платформенную матрицу, preview projects, smoke/soak results, blocked checks и одно общее решение `pass`/`fail`.\n- [ ] Editor co-development и headless AI acceptance benchmarks из `T-0128` пройдены и включены в release gate.\n- [ ] Финальный Editor gate `T-0189` пройден, если `0.1-preview` сохраняет требование пути через зрелый Editor UI.\n- [ ] Release packages и draft release workflow из `T-0111` готовы до проверки пути install -> project -> scene -> code -> run -> debug -> export -> play.\n- [ ] Финальный контроль публичного API 0.1-preview `T-0980` пройден: весь ROADMAP §2 закрыт либо имеет явный контракт `Deferred`/`Unsupported`, а матрица API, проверка совпадения API, эталонные проверки поведения, документация и платформенные отчёты приложены к релизному рубежу.\n- [ ] `Platformer` из canonical release matrix подтверждён как валидный проект `Electron2D.Editor`: Project Manager open, project validation, save/reopen, run/debug/export и package contents checks прошли.\n- [ ] Release gate не засчитывает `Platformer`, пока не пройдены реальный игровой вертикальный срез `T-0222`, black-box acceptance `T-0223`, visual/screenshot gate `T-0225` и live performance gate `T-0221`.\n- [ ] Production package contents для всех release targets проверены и не содержат `.electron2d/tasks/**` или другие `EditorMetadata` в desktop distribution, mobile package, browser package или runtime asset pack.\n- [ ] Если задача меняет код, готов или обновлен доменный документ в `docs/<domain>/`, соответствующий фактическому изменению.\n- [ ] Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.\n- [ ] Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, тот же доменный документ в `docs/<domain>/` отражает фактический результат изменения кода.\n- [ ] Команда тестирования или проверки задокументирована.\n\n### Подзадачи\n\n- [ ] Уточнить контракт задачи по связанным спецификациям и текущему коду.\n  - [ ] Сверить требования `0.1-preview`, архитектурный стек и доменную спецификацию.\n    - [ ] Зафиксировать расхождения, ограничения и неочевидные решения в дневнике разработки.\n- [ ] Подготовить минимальное изменение, которое закрывает критерии приёмки.\n  - [ ] Добавить или обновить автоматические проверки до изменения рабочего кода, если задача меняет поведение.\n    - [ ] Убедиться, что проверка действительно покрывает заявленный критерий, а не только счастливый путь.\n- [ ] Завершить реализацию, документацию и проверку.\n  - [ ] Обновить `docs/quality/`, если задача меняет исполняемое поведение или публичный контракт.\n    - [ ] Записать итоговые команды проверки и результат в дневник разработки.\n\n### Заметки агента\n\n2026-06-24T19:20:00+03:00 - Release gate дополнительно заблокирован повторным аудитом Platformer/FPS. Старый static performance artifact и текущий subsystem fixture не являются доказательством релизной готовности; нужен fresh gate `T-0221` поверх исправленного runtime и настоящей игры.\n\n2026-06-30T12:21:00+03:00 - По `T-0234` Platformer-зависимости release gate перенесены в проектный `ProjectTaskManager`; `T-0104` проверяет их как внешний блокер через доску `examples/platformer/.electron2d/tasks/board.e2tasks`.\n\n2026-06-24T19:45:00+03:00 - Dependency graph усилен после аудита пользователя: `T-0104` не может доказывать путь install -> project -> scene -> code -> run -> debug -> export -> play без `T-0111` release packages/draft workflow и `T-0189` финального Editor gate. Если зрелый Editor будет выведен из `0.1-preview`, это должно быть отдельным решением с изменением dependency graph.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0013",
+    "tag-0028",
+    "tag-0030"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-dbf174044edbc1ab187520713d752ab7"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-031efc7b6303b8a124e23e9cbe920996"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-8556828aa9bd5e0cbab718b3ef01fec5"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-478938f993ab7c35ac7b588d3949c2c3"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3bbb28bfba56372a4d59aeba67285fd1"
+    },
+    {
+      "relationId": "relation-0006",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-308729f61c8d7a9bf0eab285bfd764d1"
+    },
+    {
+      "relationId": "relation-0007",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-969764c0e5c793422d2a8c90bec4750a"
+    },
+    {
+      "relationId": "relation-0008",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-151cd34d6b49681531bb1f9db9198973"
+    },
+    {
+      "relationId": "relation-0009",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-e166470cc2495db289c4cdf0c02aab8c"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Release candidate commit SHA, version, build number и source branch зафиксированы в gate artifact до запуска проверок.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Точный набор команд release gate зафиксирован в доменном документе и выполнен в указанном порядке.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Сторонний разработчик может пройти путь install -> project -> scene -> C# code -> run -> debug -> export -> play.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Итоговый release manifest содержит список artifacts, hashes, платформенную матрицу, preview projects, smoke/soak results, blocked checks и одно общее решение `pass`/`fail`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Editor co-development и headless AI acceptance benchmarks из `T-0128` пройдены и включены в release gate.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Финальный Editor gate `T-0189` пройден, если `0.1-preview` сохраняет требование пути через зрелый Editor UI.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Release packages и draft release workflow из `T-0111` готовы до проверки пути install -> project -> scene -> code -> run -> debug -> export -> play.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Финальный контроль публичного API 0.1-preview `T-0980` пройден: весь ROADMAP §2 закрыт либо имеет явный контракт `Deferred`/`Unsupported`, а матрица API, проверка совпадения API, эталонные проверки поведения, документация и платформенные отчёты приложены к релизному рубежу.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "`Platformer` из canonical release matrix подтверждён как валидный проект `Electron2D.Editor`: Project Manager open, project validation, save/reopen, run/debug/export и package contents checks прошли.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Release gate не засчитывает `Platformer`, пока не пройдены реальный игровой вертикальный срез `T-0222`, black-box acceptance `T-0223`, visual/screenshot gate `T-0225` и live performance gate `T-0221`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Production package contents для всех release targets проверены и не содержат `.electron2d/tasks/**` или другие `EditorMetadata` в desktop distribution, mobile package, browser package или runtime asset pack.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Если задача меняет код, готов или обновлен доменный документ в `docs/<domain>/`, соответствующий фактическому изменению.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-013",
+      "description": "Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-014",
+      "description": "Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, тот же доменный документ в `docs/<domain>/` отражает фактический результат изменения кода.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-015",
+      "description": "Команда тестирования или проверки задокументирована.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Release gate дополнительно заблокирован повторным аудитом Platformer/FPS. Старый static performance artifact и текущий subsystem fixture не являются доказательством релизной готовности; нужен fresh gate `T-0221` поверх исправленного runtime и настоящей игры."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T16:45:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Dependency graph усилен после аудита пользователя: `T-0104` не может доказывать путь install -> project -> scene -> code -> run -> debug -> export -> play без `T-0111` release packages/draft workflow и `T-0189` финального Editor gate. Если зрелый Editor будет выведен из `0.1-preview`, это должно быть отдельным решением с изменением dependency graph."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T09:21:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "По `T-0234` Platformer-зависимости release gate перенесены в проектный `ProjectTaskManager`; `T-0104` проверяет их как внешний блокер через доску `examples/platformer/.electron2d/tasks/board.e2tasks`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required when this gate is the acceptance boundary; otherwise inherited from parent gate"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".electron2d/tasks/**"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "docs/<domain>"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Directory",
+      "value": "docs/quality"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/releases/0.1-preview.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "examples"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "examples/platformer/.electron2d/tasks"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "examples/platformer/.electron2d/tasks/board.e2tasks"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "src/Electron2D/Runtime"
+    }
+  ],
+  "executionContract": {
+    "taskType": "gate",
+    "readyToStart": [
+      "dependencies and child evidence are closed, accepted or explicitly represented as blockers.",
+      "gate commands and domain document for T-0104 are known before running checks."
+    ],
+    "stopConditions": [
+      "missing evidence belongs to a child/leaf task rather than the gate tooling.",
+      "fixing the issue would change production behavior outside this gate's verifier/report ownership."
+    ],
+    "allowedChanges": [
+      "gate report/check artifacts named by task criteria.",
+      "verifier/report tooling owned by this gate.",
+      "`TASKS.md` notes and diary evidence for T-0104."
+    ],
+    "forbiddenChanges": [
+      "leaf implementation, subsystem backend, platform runtime behavior or sibling task acceptance state."
+    ],
+    "requiredOutputs": [
+      "gate report or current evidence section naming pass/fail/blockers.",
+      "links to commands, logs and owning tasks for blockers."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "exact gate commands named in this task or docs/releases/0.1-preview.md.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required when this gate is the acceptance boundary; otherwise inherited from parent gate",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 31723,
+      "byteLength": 11371,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "fb805d9acd0632f304b51c4cb9b84051a2271e3d79a9a95df1ab94f0c08dec77",
+      "markdown": "## T-0104 [ ] P0: Провести полный release candidate gate для `0.1-preview`\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `gate`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0093, T-0096, T-0097, T-0103, T-0111, T-0113, T-0128, T-0189, T-0980\n- Внешние блокеры: ProjectTaskManager Platformer в `examples/platformer/.electron2d/tasks/` (`T-0222`, `T-0223`, `T-0225`, `T-0221`, `T-0166`).\n- Ссылки:\n  - Upstream commit: нет\n  - Спецификация: `docs/releases/0.1-preview.md`; `docs/quality/`\n  - Документация: `docs/quality/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`\n\n### Execution contract\n\n- Task type: gate\n- Ready-to-start:\n  - dependencies and child evidence are closed, accepted or explicitly represented as blockers.\n  - gate commands and domain document for T-0104 are known before running checks.\n- Stop conditions:\n  - missing evidence belongs to a child/leaf task rather than the gate tooling.\n  - fixing the issue would change production behavior outside this gate's verifier/report ownership.\n- May change:\n  - gate report/check artifacts named by task criteria.\n  - verifier/report tooling owned by this gate.\n  - `TASKS.md` notes and diary evidence for T-0104.\n- Must not change:\n  - leaf implementation, subsystem backend, platform runtime behavior or sibling task acceptance state.\n- Required outputs:\n  - gate report or current evidence section naming pass/fail/blockers.\n  - links to commands, logs and owning tasks for blockers.\n- Required commands:\n  - exact gate commands named in this task or docs/releases/0.1-preview.md.\n  - `git diff --check`\n- External audit:\n  - required when this gate is the acceptance boundary; otherwise inherited from parent gate\n\n### Самодостаточное описание\n\nЗадача относится к домену «Производительность, стабильность и релизный gate». Цель - Провести полный release candidate gate для `0.1-preview`. Текущее состояние: нет формализованного performance, leak, soak и release candidate gate, хотя спецификация требует доказать стабильность данных, FPS и ресурсную чистоту. Ожидаемый результат: результат должен закрыть релизный контракт `0.1-preview`, быть проверяемым автоматическими тестами или документированной проверкой и соответствовать критериям: сторонний разработчик может пройти путь install -> project -> scene -> C# code -> run -> debug -> export -> play.\n\nВажное решение из документации: релиз готов только после проверок FPS, отсутствия постоянных allocations, отсутствия утечек и устойчивости save/load/import cycles. Ограничение для агента: не засчитывать узкий smoke test как доказательство полного release gate. Не менять несвязанные файлы, не расширять объём за пределы `0.1-preview`, не закрывать задачу без проверяемого результата и не подменять обязательные тесты или документацию устным утверждением.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Release candidate commit SHA, version, build number и source branch зафиксированы в gate artifact до запуска проверок.\n- [ ] Точный набор команд release gate зафиксирован в доменном документе и выполнен в указанном порядке.\n- [ ] Сторонний разработчик может пройти путь install -> project -> scene -> C# code -> run -> debug -> export -> play.\n- [ ] Итоговый release manifest содержит список artifacts, hashes, платформенную матрицу, preview projects, smoke/soak results, blocked checks и одно общее решение `pass`/`fail`.\n- [ ] Editor co-development и headless AI acceptance benchmarks из `T-0128` пройдены и включены в release gate.\n- [ ] Финальный Editor gate `T-0189` пройден, если `0.1-preview` сохраняет требование пути через зрелый Editor UI.\n- [ ] Release packages и draft release workflow из `T-0111` готовы до проверки пути install -> project -> scene -> code -> run -> debug -> export -> play.\n- [ ] Финальный контроль публичного API 0.1-preview `T-0980` пройден: весь ROADMAP §2 закрыт либо имеет явный контракт `Deferred`/`Unsupported`, а матрица API, проверка совпадения API, эталонные проверки поведения, документация и платформенные отчёты приложены к релизному рубежу.\n- [ ] `Platformer` из canonical release matrix подтверждён как валидный проект `Electron2D.Editor`: Project Manager open, project validation, save/reopen, run/debug/export и package contents checks прошли.\n- [ ] Release gate не засчитывает `Platformer`, пока не пройдены реальный игровой вертикальный срез `T-0222`, black-box acceptance `T-0223`, visual/screenshot gate `T-0225` и live performance gate `T-0221`.\n- [ ] Production package contents для всех release targets проверены и не содержат `.electron2d/tasks/**` или другие `EditorMetadata` в desktop distribution, mobile package, browser package или runtime asset pack.\n- [ ] Если задача меняет код, готов или обновлен доменный документ в `docs/<domain>/`, соответствующий фактическому изменению.\n- [ ] Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.\n- [ ] Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, тот же доменный документ в `docs/<domain>/` отражает фактический результат изменения кода.\n- [ ] Команда тестирования или проверки задокументирована.\n\n### Подзадачи\n\n- [ ] Уточнить контракт задачи по связанным спецификациям и текущему коду.\n  - [ ] Сверить требования `0.1-preview`, архитектурный стек и доменную спецификацию.\n    - [ ] Зафиксировать расхождения, ограничения и неочевидные решения в дневнике разработки.\n- [ ] Подготовить минимальное изменение, которое закрывает критерии приёмки.\n  - [ ] Добавить или обновить автоматические проверки до изменения рабочего кода, если задача меняет поведение.\n    - [ ] Убедиться, что проверка действительно покрывает заявленный критерий, а не только счастливый путь.\n- [ ] Завершить реализацию, документацию и проверку.\n  - [ ] Обновить `docs/quality/`, если задача меняет исполняемое поведение или публичный контракт.\n    - [ ] Записать итоговые команды проверки и результат в дневник разработки.\n\n### Заметки агента\n\n2026-06-24T19:20:00+03:00 - Release gate дополнительно заблокирован повторным аудитом Platformer/FPS. Старый static performance artifact и текущий subsystem fixture не являются доказательством релизной готовности; нужен fresh gate `T-0221` поверх исправленного runtime и настоящей игры.\n\n2026-06-30T12:21:00+03:00 - По `T-0234` Platformer-зависимости release gate перенесены в проектный `ProjectTaskManager`; `T-0104` проверяет их как внешний блокер через доску `examples/platformer/.electron2d/tasks/board.e2tasks`.\n\n2026-06-24T19:45:00+03:00 - Dependency graph усилен после аудита пользователя: `T-0104` не может доказывать путь install -> project -> scene -> code -> run -> debug -> export -> play без `T-0111` release packages/draft workflow и `T-0189` финального Editor gate. Если зрелый Editor будет выведен из `0.1-preview`, это должно быть отдельным решением с изменением dependency graph.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

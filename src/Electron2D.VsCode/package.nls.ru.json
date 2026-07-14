@@ -1,0 +1,12 @@
+{
+  "extension.displayName": "Доска задач Electron2D",
+  "extension.description": "Доверенная доска задач VS Code для проектов Electron2D.",
+  "capability.untrusted": "Расширение запускает локальный CLI e2d проекта, поэтому требует доверия к рабочей области.",
+  "capability.virtual": "Для доски задач Electron2D требуются локальная файловая система и CLI.",
+  "command.openTaskBoard": "Открыть доску задач",
+  "command.category": "Electron2D",
+  "viewContainer.title": "Доска задач",
+  "view.name": "Задачи",
+  "configuration.title": "Доска задач Electron2D",
+  "configuration.cliPath.description": "Абсолютный путь к e2d. Если поле пустое, расширение находит e2d через PATH."
+}

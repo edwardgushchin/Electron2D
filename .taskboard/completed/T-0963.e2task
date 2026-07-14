@@ -1,0 +1,249 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-323b82f08ba3754ad5d546301ebf3ea8",
+  "revision": 2,
+  "taskId": "T-0963",
+  "legacyAliases": [],
+  "title": "Подготовить Unsupported/Deferred API Contract",
+  "description": "## T-0963 [~] P0: Подготовить Unsupported/Deferred API Contract\n\n- Создана: 2026-07-05T03:34:32+03:00\n- Архивирована: 2026-07-09T22:55:00+03:00\n- Архивная причина: superseded owner decision; задача не выполнялась и не закрывает acceptance criteria, потому что публичный API Electron2D уже определён в `data/api/electron2d-public-api-profile.json`.\n- Принята пользователем: не применимо; задача архивирована как невыполненная и неактуальная.\n- Состояние: superseded / невыполнена\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0241, T-0242, T-0243, T-0245\n- Ссылки:\n  - Доменный документ: `docs/runtime/godot-47-unsupported-deferred-api-contract.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0.2 Deferred, Unsupported And Compatibility Contracts`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/runtime/godot-47-unsupported-deferred-api-contract.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/runtime/godot-47-unsupported-deferred-api-contract.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЦель - подготовить `Unsupported/Deferred API Contract` как отдельную атомарную задачу для одного агента: один named contract, один bounded deliverable, один набор acceptance checks.\n\nКонтракт должен явно маркировать NotSupported, Deferred, 3DOnly и PlatformSpecific paths, чтобы отсутствующий API не пропадал молча. `EditorOnly` не является синонимом unsupported/deferred: editor-only элементы, нужные будущему `Electron2D.Editor`, остаются обязательным editor-scope для Windows/Linux/macOS; в Android/iOS/WebAssembly browser runtime-only exports они должны иметь устойчивую platform-specific диагностику или явную assembly boundary, а не исчезать из плана.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ фиксирует `Unsupported/Deferred API Contract`, зависимости, explicit non-goals и проверяемый acceptance contract.\n- [ ] `EditorOnly` строки отделены от `Deferred`/`Unsupported`: они являются обязательным editor-scope для будущего `Electron2D.Editor` на Windows/Linux/macOS и не могут быть глобально исключены из публичной матрицы API.\n- [ ] WebAssembly browser не может быть глобально отложен или исключён через manual public API profile; допустимы только точечные `PlatformSpecific`/`Unsupported` строки для конкретных API members, которые реально неприменимы в browser runtime.\n- [ ] Задача не расширяется на соседние классы, независимые внутренние слои или несколько несвязанные результаты без предварительного разделения на новые задачи.\n- [ ] До рабочего кода добавлены сначала падающие тесты или проверочные сценарии или documented контрольный рубеж решения, который доказывает текущий разрыв.\n- [ ] Реализация или путь решения настоящие; если поведение неподдержано или отложено, это явно описано, а не спрятано за пустыми ветками или заглушками.\n- [ ] Документация, манифест API, сгенерированная документация и заметки задачи синхронизированы с фактическим контрактом.\n\n### Подзадачи\n\n- [ ] Зафиксировать contract и non-goals в доменном документе.\n- [ ] Добавить сначала падающие тесты, проверяющую команду и замер для целевого разрыва.\n- [ ] Реализовать рабочий путь или documented контрольный рубеж решения.\n- [ ] Выполнить релевантные проверки и обновить notes.\n\n### Заметки агента\n\n2026-07-05T03:34:32+03:00 - Создано после проверки атомарности: явно названный контракт из целевого списка не должен оставаться скрытым внутри широкой задачи по шейдерам или базовой подготовке.\n\n2026-07-09T22:45:00+03:00 - Superseded by owner decision: отдельная задача T-0963 больше не нужна, потому что публичный API Electron2D уже определён в data/api/electron2d-public-api-profile.json. Deferred/Unsupported решения теперь утверждаются строками manual profile, а не отдельной задачей.\n\n\n---\n\n",
+  "status": "Cancelled",
+  "acceptanceState": "Cancelled",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fab4705fe4a1db467903c0bc500995a7"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ фиксирует `Unsupported/Deferred API Contract`, зависимости, explicit non-goals и проверяемый acceptance contract.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`EditorOnly` строки отделены от `Deferred`/`Unsupported`: они являются обязательным editor-scope для будущего `Electron2D.Editor` на Windows/Linux/macOS и не могут быть глобально исключены из публичной матрицы API.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "WebAssembly browser не может быть глобально отложен или исключён через manual public API profile; допустимы только точечные `PlatformSpecific`/`Unsupported` строки для конкретных API members, которые реально неприменимы в browser runtime.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Задача не расширяется на соседние классы, независимые внутренние слои или несколько несвязанные результаты без предварительного разделения на новые задачи.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "До рабочего кода добавлены сначала падающие тесты или проверочные сценарии или documented контрольный рубеж решения, который доказывает текущий разрыв.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Реализация или путь решения настоящие; если поведение неподдержано или отложено, это явно описано, а не спрятано за пустыми ветками или заглушками.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Документация, манифест API, сгенерированная документация и заметки задачи синхронизированы с фактическим контрактом.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:34:32.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано после проверки атомарности: явно названный контракт из целевого списка не должен оставаться скрытым внутри широкой задачи по шейдерам или базовой подготовке."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-09T19:45:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Superseded by owner decision: отдельная задача T-0963 больше не нужна, потому что публичный API Electron2D уже определён в data/api/electron2d-public-api-profile.json. Deferred/Unsupported решения теперь утверждаются строками manual profile, а не отдельной задачей."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate unless task criteria explicitly require primary/control audit"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "Unsupported/Deferred API Contract"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/api/electron2d-public-api-profile.json"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/runtime/godot-47-unsupported-deferred-api-contract.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tooling",
+    "readyToStart": [
+      "task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/runtime/godot-47-unsupported-deferred-api-contract.md describes the tool or policy contract.",
+      "add RED verifier/test coverage before changing implementation when tooling behavior changes."
+    ],
+    "stopConditions": [
+      "the change would define public API surface manually or close behavior owned by a public class task.",
+      "missing dependency, platform prerequisite or generated input prevents deterministic verifier output."
+    ],
+    "allowedChanges": [
+      "tooling, verifier, generated-report plumbing and docs named by this task.",
+      "tests under `tests/` that prove the tooling contract.",
+      "`TASKS.md` notes and diary evidence."
+    ],
+    "forbiddenChanges": [
+      "production runtime behavior outside this tooling contract.",
+      "generated artifacts by hand when a generator/verifier owns them.",
+      "unrelated task statuses or release scope."
+    ],
+    "requiredOutputs": [
+      "docs/runtime/godot-47-unsupported-deferred-api-contract.md",
+      "focused verifier/test evidence named by the task.",
+      "synchronized generated docs/index artifacts when docs are changed."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/07 Июль.md",
+      "byteOffset": 484924,
+      "byteLength": 10275,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "47488f36cbfac199cdbb691b0c3b650b7139971039415885733078347408e7da",
+      "markdown": "## T-0963 [~] P0: Подготовить Unsupported/Deferred API Contract\n\n- Создана: 2026-07-05T03:34:32+03:00\n- Архивирована: 2026-07-09T22:55:00+03:00\n- Архивная причина: superseded owner decision; задача не выполнялась и не закрывает acceptance criteria, потому что публичный API Electron2D уже определён в `data/api/electron2d-public-api-profile.json`.\n- Принята пользователем: не применимо; задача архивирована как невыполненная и неактуальная.\n- Состояние: superseded / невыполнена\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0241, T-0242, T-0243, T-0245\n- Ссылки:\n  - Доменный документ: `docs/runtime/godot-47-unsupported-deferred-api-contract.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0.2 Deferred, Unsupported And Compatibility Contracts`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/runtime/godot-47-unsupported-deferred-api-contract.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/runtime/godot-47-unsupported-deferred-api-contract.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЦель - подготовить `Unsupported/Deferred API Contract` как отдельную атомарную задачу для одного агента: один named contract, один bounded deliverable, один набор acceptance checks.\n\nКонтракт должен явно маркировать NotSupported, Deferred, 3DOnly и PlatformSpecific paths, чтобы отсутствующий API не пропадал молча. `EditorOnly` не является синонимом unsupported/deferred: editor-only элементы, нужные будущему `Electron2D.Editor`, остаются обязательным editor-scope для Windows/Linux/macOS; в Android/iOS/WebAssembly browser runtime-only exports они должны иметь устойчивую platform-specific диагностику или явную assembly boundary, а не исчезать из плана.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ фиксирует `Unsupported/Deferred API Contract`, зависимости, explicit non-goals и проверяемый acceptance contract.\n- [ ] `EditorOnly` строки отделены от `Deferred`/`Unsupported`: они являются обязательным editor-scope для будущего `Electron2D.Editor` на Windows/Linux/macOS и не могут быть глобально исключены из публичной матрицы API.\n- [ ] WebAssembly browser не может быть глобально отложен или исключён через manual public API profile; допустимы только точечные `PlatformSpecific`/`Unsupported` строки для конкретных API members, которые реально неприменимы в browser runtime.\n- [ ] Задача не расширяется на соседние классы, независимые внутренние слои или несколько несвязанные результаты без предварительного разделения на новые задачи.\n- [ ] До рабочего кода добавлены сначала падающие тесты или проверочные сценарии или documented контрольный рубеж решения, который доказывает текущий разрыв.\n- [ ] Реализация или путь решения настоящие; если поведение неподдержано или отложено, это явно описано, а не спрятано за пустыми ветками или заглушками.\n- [ ] Документация, манифест API, сгенерированная документация и заметки задачи синхронизированы с фактическим контрактом.\n\n### Подзадачи\n\n- [ ] Зафиксировать contract и non-goals в доменном документе.\n- [ ] Добавить сначала падающие тесты, проверяющую команду и замер для целевого разрыва.\n- [ ] Реализовать рабочий путь или documented контрольный рубеж решения.\n- [ ] Выполнить релевантные проверки и обновить notes.\n\n### Заметки агента\n\n2026-07-05T03:34:32+03:00 - Создано после проверки атомарности: явно названный контракт из целевого списка не должен оставаться скрытым внутри широкой задачи по шейдерам или базовой подготовке.\n\n2026-07-09T22:45:00+03:00 - Superseded by owner decision: отдельная задача T-0963 больше не нужна, потому что публичный API Electron2D уже определён в data/api/electron2d-public-api-profile.json. Deferred/Unsupported решения теперь утверждаются строками manual profile, а не отдельной задачей.\n\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:34:32.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": "2026-07-09T19:55:00.0000000+00:00",
+  "cancellationReason": "Legacy task was cancelled before migration.",
+  "archivedAt": "2026-07-09T19:55:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -1,0 +1,155 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-a1aa9558b3b3d04bad9f6cee7389f3a2",
+  "revision": 2,
+  "taskId": "T-0065",
+  "legacyAliases": [],
+  "title": "Реализовать `Tween`, easing, pause/resume и callbacks after completion",
+  "description": "# T-0065: Реализовать `Tween`, easing, pause/resume и callbacks after completion\n\n- Статус: завершена\n- Завершена: 2026-06-21T12:57:00+03:00\n- Приоритет: P1\n- Зависимости: T-0064\n- Домен: Анимация\n\n## Исходная цель\n\nРеализовать runtime baseline для `Tween`, чтобы `0.1.0 Preview` поддерживал deterministic property tweening, easing, pause/resume, stop/kill, manual step и callbacks after completion.\n\n## Что сделано\n\n- Добавлен публичный `Tween : RefCounted`.\n- Добавлены `Tween.TransitionType` и `Tween.EaseType`.\n- Добавлен публичный base type `Tweener`.\n- Добавлены публичные `PropertyTweener`, `CallbackTweener` и `IntervalTweener`.\n- `SceneTree.CreateTween()` создаёт valid tween и регистрирует его в tree processing.\n- `Node.CreateTween()` создаёт tween через текущий `SceneTree` и привязывает его к node lifetime.\n- `SceneTree.ProcessFrame()` теперь обрабатывает active tweens после node process callbacks и до draw traversal.\n- `TweenProperty()` поддерживает property paths вида `Position` и `Position:X`, public property/field lookup, first-start initial value capture и interpolation для integer, floating-point, `Vector2`, `Color`.\n- `TweenInterval()` добавляет time-only step.\n- `TweenCallback()` вызывает `Callable` в sequence order.\n- `Pause()`, `Play()`, `Stop()`, `Kill()` и `CustomStep()` реализуют deterministic time control.\n- `finished` и `step_finished` signals испускаются при естественном завершении sequence и отдельных steps.\n- `Kill()` invalidates tween без callbacks и без `finished`.\n- Добавлены specification, implementation documentation, Wiki/API compatibility rows, release baseline update и public type guard updates.\n\n## Важные решения\n\n- Standalone `new Tween()` остаётся invalid: signals зарегистрированы, но tweeners можно добавлять только к tween, созданному через tree/node.\n- Bound tween не двигается, пока bound node detached from tree; tween остаётся valid, а `IsRunning()` возвращает `false`.\n- `Stop()` сбрасывает elapsed time и sequence index, но не откатывает target property и не заставляет property tweener заново захватывать initial value.\n- Reflection lookup для property tweeners оставлен как runtime baseline с trim warning suppression; metadata-backed путь остаётся будущей задачей.\n- Zero-duration callback после step, завершившегося ровно на границе frame delta, исполняется на следующем process/custom step, чтобы границы step completion были предсказуемыми.\n\n## Изменённые файлы\n\n- `src/Electron2D/Runtime/Animation/Tween.cs`\n- `src/Electron2D/Core/SceneTree/SceneTree.cs`\n- `src/Electron2D/Core/SceneTree/Node.cs`\n- `tests/Electron2D.Tests.Integration/TweenTests.cs`\n- `tests/Electron2D.Tests.Unit/CleanRuntimeBaselineTests.cs`\n- `docs/animation/tween-baseline.md`\n- `docs/animation/tween-baseline.md`\n- `docs/README.md`\n- `docs/README.md`\n- `docs/releases/0.1.0-preview.md`\n- `docs/release-management/api-compatibility.md`\n- `.github/wiki/API-Compatibility.md`\n\n## Проверки\n\n- Red-state: `dotnet test src\\Electron2D.sln --filter \"FullyQualifiedName~TweenTests\" --no-restore` ожидаемо упал на compile errors из-за отсутствующих `SceneTree.CreateTween()`, `Node.CreateTween()` и `Electron2D.Tween`.\n- Focused green: `dotnet test src\\Electron2D.sln --filter \"FullyQualifiedName~TweenTests\" --no-restore` прошёл: `5` passed.\n- Public type guard: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~CleanRuntimeBaselineTests\" --no-restore` прошёл: `1` passed.\n- API compatibility: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` прошёл, public types `106`.\n- AOT metadata: `powershell -ExecutionPolicy Bypass -File tools\\Verify-AotMetadataSafety.ps1` прошёл; остались прежние trim warnings в `Callable`, `PackedScene` и `SceneTree`, новых warnings из `Tween` нет.\n- Full runner: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `60`, integration `172`, runtime smoke `5`, golden data `11`.\n- Whitespace: `git diff --check` прошёл; Git вывел только предупреждения о будущей нормализации переносов строк под Windows.\n- Documentation wording: проверка добавленных строк текущего diff не нашла запрещённых публичных формулировок.\n\n## Ограничения\n\n- Parallel tween groups, loops, subtween, await integration, physics process mode и scene-tree pause modes не входят в этот baseline.\n- Editor timeline остаётся отдельной задачей анимационного домена.\n- Reflection-based property lookup должен быть заменён на metadata-backed путь в будущей задаче AOT/tooling домена.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5657f3dbdc318e0324cc3742d20b6170"
+    }
+  ],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T09:57:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/wiki/API-Compatibility.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/README.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/animation/tween-baseline.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "src/Electron2D/Core/SceneTree/Node.cs"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "src/Electron2D/Core/SceneTree/SceneTree.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Animation/Tween.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/TweenTests.cs"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Unit/CleanRuntimeBaselineTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 240450,
+      "byteLength": 5558,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "c40ef700ea5325cd86fe1734f9c20d9970752e8f45410e33b86c90127c50896e",
+      "markdown": "# T-0065: Реализовать `Tween`, easing, pause/resume и callbacks after completion\n\n- Статус: завершена\n- Завершена: 2026-06-21T12:57:00+03:00\n- Приоритет: P1\n- Зависимости: T-0064\n- Домен: Анимация\n\n## Исходная цель\n\nРеализовать runtime baseline для `Tween`, чтобы `0.1.0 Preview` поддерживал deterministic property tweening, easing, pause/resume, stop/kill, manual step и callbacks after completion.\n\n## Что сделано\n\n- Добавлен публичный `Tween : RefCounted`.\n- Добавлены `Tween.TransitionType` и `Tween.EaseType`.\n- Добавлен публичный base type `Tweener`.\n- Добавлены публичные `PropertyTweener`, `CallbackTweener` и `IntervalTweener`.\n- `SceneTree.CreateTween()` создаёт valid tween и регистрирует его в tree processing.\n- `Node.CreateTween()` создаёт tween через текущий `SceneTree` и привязывает его к node lifetime.\n- `SceneTree.ProcessFrame()` теперь обрабатывает active tweens после node process callbacks и до draw traversal.\n- `TweenProperty()` поддерживает property paths вида `Position` и `Position:X`, public property/field lookup, first-start initial value capture и interpolation для integer, floating-point, `Vector2`, `Color`.\n- `TweenInterval()` добавляет time-only step.\n- `TweenCallback()` вызывает `Callable` в sequence order.\n- `Pause()`, `Play()`, `Stop()`, `Kill()` и `CustomStep()` реализуют deterministic time control.\n- `finished` и `step_finished` signals испускаются при естественном завершении sequence и отдельных steps.\n- `Kill()` invalidates tween без callbacks и без `finished`.\n- Добавлены specification, implementation documentation, Wiki/API compatibility rows, release baseline update и public type guard updates.\n\n## Важные решения\n\n- Standalone `new Tween()` остаётся invalid: signals зарегистрированы, но tweeners можно добавлять только к tween, созданному через tree/node.\n- Bound tween не двигается, пока bound node detached from tree; tween остаётся valid, а `IsRunning()` возвращает `false`.\n- `Stop()` сбрасывает elapsed time и sequence index, но не откатывает target property и не заставляет property tweener заново захватывать initial value.\n- Reflection lookup для property tweeners оставлен как runtime baseline с trim warning suppression; metadata-backed путь остаётся будущей задачей.\n- Zero-duration callback после step, завершившегося ровно на границе frame delta, исполняется на следующем process/custom step, чтобы границы step completion были предсказуемыми.\n\n## Изменённые файлы\n\n- `src/Electron2D/Runtime/Animation/Tween.cs`\n- `src/Electron2D/Core/SceneTree/SceneTree.cs`\n- `src/Electron2D/Core/SceneTree/Node.cs`\n- `tests/Electron2D.Tests.Integration/TweenTests.cs`\n- `tests/Electron2D.Tests.Unit/CleanRuntimeBaselineTests.cs`\n- `docs/animation/tween-baseline.md`\n- `docs/animation/tween-baseline.md`\n- `docs/README.md`\n- `docs/README.md`\n- `docs/releases/0.1.0-preview.md`\n- `docs/release-management/api-compatibility.md`\n- `.github/wiki/API-Compatibility.md`\n\n## Проверки\n\n- Red-state: `dotnet test src\\Electron2D.sln --filter \"FullyQualifiedName~TweenTests\" --no-restore` ожидаемо упал на compile errors из-за отсутствующих `SceneTree.CreateTween()`, `Node.CreateTween()` и `Electron2D.Tween`.\n- Focused green: `dotnet test src\\Electron2D.sln --filter \"FullyQualifiedName~TweenTests\" --no-restore` прошёл: `5` passed.\n- Public type guard: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~CleanRuntimeBaselineTests\" --no-restore` прошёл: `1` passed.\n- API compatibility: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` прошёл, public types `106`.\n- AOT metadata: `powershell -ExecutionPolicy Bypass -File tools\\Verify-AotMetadataSafety.ps1` прошёл; остались прежние trim warnings в `Callable`, `PackedScene` и `SceneTree`, новых warnings из `Tween` нет.\n- Full runner: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `60`, integration `172`, runtime smoke `5`, golden data `11`.\n- Whitespace: `git diff --check` прошёл; Git вывел только предупреждения о будущей нормализации переносов строк под Windows.\n- Documentation wording: проверка добавленных строк текущего diff не нашла запрещённых публичных формулировок.\n\n## Ограничения\n\n- Parallel tween groups, loops, subtween, await integration, physics process mode и scene-tree pause modes не входят в этот baseline.\n- Editor timeline остаётся отдельной задачей анимационного домена.\n- Reflection-based property lookup должен быть заменён на metadata-backed путь в будущей задаче AOT/tooling домена.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-21T09:57:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T09:57:00.0000000+00:00",
+  "completedAt": "2026-06-21T09:57:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T09:57:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T09:57:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

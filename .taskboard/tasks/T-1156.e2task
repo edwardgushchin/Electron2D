@@ -1,0 +1,133 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-bee482df52644feea2de2c8cfd31c3ad",
+  "revision": 9,
+  "taskId": "T-1156",
+  "legacyAliases": [],
+  "title": "Устранить конфликт загрузки VS Code sidebar",
+  "description": "## Контекст\n\nActivity Bar sidebar иногда показывает `Task list unavailable: Task command failed. E2D-CLI-0002`, хотя editor board уже загружен. TreeView и WebviewPanel одновременно запускают compact `tasks board`; каждый CLI process создаёт TaskBoardDiskStore, constructor берёт exclusive `.taskboard/.lock`, поэтому concurrent read может упасть `Taskboard is locked by another writer`. Заголовок container также дублируется как `Electron2D Task Board: Task Board`.\n\n## Критерии приёмки\n\n- Одновременные compact board reads одного workspace/CLI coalesce в один in-flight Promise/process.\n- После завершения или ошибки shared request удаляется, следующий refresh запускает новый read.\n- Mutation и `tasks get` не coalesce с board read.\n- Sidebar и editor panel используют общий board-read broker и не конфликтуют на `.lock`.\n- Activity Bar container title — `Task Board`, list view name — `Tasks`, без прежнего дублирования.\n- CLI diagnostic остаётся видимым при реальной ошибке, но transient self-contention не ломает список.\n- Unit, typecheck, Extension Host, VSIX packaging/install проходят.\n\n## Execution contract\n\nМенять VS Code extension/tests/manifest, domain document, task evidence и append-only diary. Не менять TaskManager lifecycle или taskboard data вручную.",
+  "status": "Review",
+  "acceptanceState": "InternalReview",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0010",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "shared-board-read",
+      "description": "Sidebar and editor share concurrent compact board reads without self-lock failures.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-af2c86b5499d4a02bac258ac42e82728",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T10:54:39.8316989+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Ready."
+      }
+    },
+    {
+      "activityEntryId": "activity-eea34c9c6e3540d3b7f7ec2cc50b9961",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T10:54:40.8306584+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to InProgress."
+      }
+    },
+    {
+      "activityEntryId": "activity-f26ef028df1d439da933a824df340d08",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T11:01:05.9617500+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Review."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-11T10:54:25.0860320+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "activity-6b1fd4ac275246f2bf7fb1b2372df7df",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T11:01:05.2372781+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Sidebar failure reproduced with three concurrent compact reads: 2 success, 1 E2D-CLI-0002; single read stable at 882070 characters. Root cause: each TaskBoardDiskStore constructor takes exclusive .taskboard/.lock for recovery. Added InFlightRequestBroker keyed by workspace/executable, exact compact-read detection, settled release, and limited retry only for Taskboard is locked diagnostic. tasks get/mutations remain separate. Manifest container renamed Task Board, view Tasks. RED 24/26 → GREEN 26/26; typecheck GREEN; Extension Host exit 0. VSIX 9 files/17.93 KB installed stable 0.1.0. Docs/licenses GREEN. Visual control unavailable os error 3."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

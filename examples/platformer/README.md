@@ -22,4 +22,4 @@ Local verification from the repository root:
 powershell -ExecutionPolicy Bypass -File tools\Verify-Platformer.ps1
 ```
 
-The project intentionally keeps `.electron2d/tasks/**` as Editor metadata. Export and runtime packaging checks must exclude that metadata from production asset contents.
+The project intentionally keeps `.taskboard/**` as Editor metadata. Export and runtime packaging checks must exclude that metadata from production asset contents.

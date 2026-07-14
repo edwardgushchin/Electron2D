@@ -1,0 +1,367 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-dbf174044edbc1ab187520713d752ab7",
+  "revision": 2,
+  "taskId": "T-0093",
+  "legacyAliases": [],
+  "title": "Настроить платформенную быструю проверку первого уровня и 30-минутные длительные прогоны для preview projects",
+  "description": "## T-0093 [ ] P0: Настроить платформенную быструю проверку первого уровня и 30-минутные длительные прогоны для preview projects\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0088, T-0089, T-0090, T-0091, T-0092, T-0094, T-0136, T-0224\n- Внешние блокеры: ProjectTaskManager Platformer в `examples/platformer/.electron2d/tasks/` (`T-0222`, `T-0223`, `T-0225`, `T-0221`, `T-0166`).\n- Ссылки:\n  - Upstream commit: нет\n  - Спецификация: `docs/releases/0.1-preview.md`; `docs/export/`\n  - Документация: `docs/export/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0093.\n  - blocker artifact `data/quality/blockers/T-0093.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/releases/0.1-preview.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0093.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0093.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЗадача относится к домену «Export pipeline и платформы». Цель - настроить быструю платформенную проверку первого уровня и 30-минутные длительные прогоны для приёмочных проектов из релизной матрицы, включая `Platformer` после переименования. Текущее состояние: единый export pipeline и обязательный набор быстрых и длительных проверок нужно синхронизировать через `T-0224`, потому что матрица запуска и экспорта включает Windows, Linux, macOS, Android, iOS и WebAssembly browser, а платформы редактора ограничены desktop. Ожидаемый результат: результат должен закрыть релизный контракт `0.1-preview`, быть проверяемым автоматическими тестами или документированной проверкой и соответствовать критериям: каждая обязательная preview-платформа проверяет запуск, рендеринг, ввод, звук, ресурсы, переключение сцены, сохранение данных, паузу, возобновление и завершение.\n\nВажное решение из документации: поддержка платформы означает не только сборку, но запуск приложения, рендер, ввод, звук, ресурсы, сохранение данных, жизненный цикл и завершение. Ограничение для агента: не выполнять подписание, установку или публикацию с реальными учётными данными; отсутствующие SDK и учётные данные должны давать понятную ошибку. Не менять несвязанные файлы, не расширять объём за пределы `0.1-preview`, не закрывать задачу без проверяемого результата и не подменять обязательные тесты или документацию устным утверждением.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Platform matrix зафиксирована в доменном документе и различает `runtimeTargets` Windows/Linux/macOS/Android/iOS/WebAssembly browser, desktop `editorTargets` Windows/Linux/macOS и release verification tier `0.1-preview`; для каждой обязательной preview-платформы указаны architecture, host prerequisites и expected smoke/soak commands.\n- [ ] Каждая обязательная preview-платформа проверяет запуск, рендеринг, ввод, звук, ресурсы, переключение сцены, сохранение данных, паузу, возобновление и завершение.\n- [ ] Soak threshold описывает длительность 30 минут, допустимый рост памяти, допустимый FPS/frametime диапазон, crash/hang criteria и итоговый pass/fail rule.\n- [ ] Artifact schema фиксирует stdout/stderr, JSON summary, screenshots или runtime probes, memory samples, package manifest и blocked-environment диагностические сообщения.\n- [ ] Smoke/soak запускаются на валидных проектах `Electron2D.Editor` из canonical release matrix, включая `Platformer` после `T-0212`, а не на standalone demo или surrogate.\n- [ ] Перед smoke/soak подтверждено, что `Platformer` больше не является smoke-fixture подсистем: игровой цикл, geometry/camera/HUD alignment, collectible/checkpoint/death/goal path, black-box acceptance и visual gate приняты по `T-0222`, `T-0223` и `T-0225`.\n- [ ] Production package contents для каждой платформы проверяет, что `.electron2d/tasks/**` и другие `EditorMetadata` не включены в runtime asset pack, APK, AAB, app bundle, browser package или desktop distribution.\n- [ ] Если задача меняет код, готов или обновлен доменный документ в `docs/<domain>/`, соответствующий фактическому изменению.\n- [ ] Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.\n- [ ] Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, тот же доменный документ в `docs/<domain>/` отражает фактический результат изменения кода.\n- [ ] Команда тестирования или проверки задокументирована.\n\n### Подзадачи\n\n- [ ] Уточнить контракт задачи по связанным спецификациям и текущему коду.\n  - [ ] Сверить требования `0.1-preview`, архитектурный стек и доменную спецификацию.\n    - [ ] Зафиксировать расхождения, ограничения и неочевидные решения в дневнике разработки.\n- [ ] Подготовить минимальное изменение, которое закрывает критерии приёмки.\n  - [ ] Добавить или обновить автоматические проверки до изменения рабочего кода, если задача меняет поведение.\n    - [ ] Убедиться, что проверка действительно покрывает заявленный критерий, а не только счастливый путь.\n- [ ] Завершить реализацию, документацию и проверку.\n  - [ ] Обновить `docs/export/`, если задача меняет исполняемое поведение или публичный контракт.\n    - [ ] Записать итоговые команды проверки и результат в дневник разработки.\n\n### Заметки агента\n\n2026-06-22T00:49:00+03:00 - Задача заблокирована до готовности законченных preview projects и реальных ассетов. Tier 1 smoke/soak должен проверять launch, rendering, input, audio, resources, scene switch, save data, pause/resume и shutdown на полноценном проекте из release matrix, а не на временном demo или surrogate с placeholder resources.\n\n2026-06-22T01:26:00+03:00 - Пользователь перенёс примеры игр в самый последний этап `0.1-preview`, поэтому `T-0093` остаётся заблокированной до финальной фазы preview projects. Не заменять smoke/soak временным demo.\n\n2026-06-24T14:32:00+03:00 - После rejection README/release объём и решения удалить UI-heavy не использовать формулировки «две reference games» или «обе reference games». Проверки должны ссылаться на `Platformer` и canonical release matrix.\n\n2026-06-23T16:31:00+03:00 - Историческое состояние до уточнения целей preview: `T-0094`, `T-0095` и `T-0096` закрыты, но `T-0093` всё ещё заблокирована зависимостью `T-0092`: без iOS device/simulator smoke нельзя считать Tier 1 platform smoke/soak полным.\n\n2026-06-24T13:36:00+03:00 - УСТАРЕЛО в части формулировки runtime matrix: эта заметка ограничила обязательный preview smoke Windows/Linux/macOS/Android и вывела iOS из зависимостей `T-0093`, но не должна читаться как исключение iOS из runtime/export targets. Актуальное решение для task-плана от 2026-07-05: iOS остаётся полноценным runtime/export target; Web/WebAssembly является обязательным runtime/export target для `0.1-preview`; редактор обязателен только на Windows/Linux/macOS, а Android/iOS/WebAssembly browser являются runtime-only targets.\n\n2026-06-24T19:20:00+03:00 - Повторный аудит пользователя заблокировал `T-0093`: текущий `Platformer` не считается законченной игрой, а `RuntimeHost` даёт тяжёлый per-frame rendering path и некорректный frame pacing. До smoke/soak нужны `T-0219`, `T-0220`, `T-0221`, `T-0222`, `T-0223`, `T-0224` и `T-0225`.\n\n2026-06-30T12:21:00+03:00 - По `T-0234` активные Platformer-задачи перенесены в проектный `ProjectTaskManager`; в этом корневом task-е они остаются внешним блокером через `examples/platformer/.electron2d/tasks/board.e2tasks`, а не локальными зависимостями корневого `TASKS.md`.\n\n2026-06-24T22:12:00+03:00 - После отказа принять `T-0224` в зависимости `T-0093` возвращена `T-0092`. Пока `releaseVerificationTargets` содержит Windows/Linux/macOS/Android/iOS/WebAssembly browser, iOS-проверка на macOS/Xcode является обязательной частью критического пути, а blocked artifact не может быть бессрочным обходом перед финальным релизным проходом.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0013"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5b7fe099d83b5731948c1eafffb4743c"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-1399557de1d2d196576b4f910eeff665"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-df225f419630e08a17635405038d1831"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-30aad3c6eed44ba6d3e269545e5c12db"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-0d9053724147fcd7f2af1f1bc95fdefd"
+    },
+    {
+      "relationId": "relation-0006",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fa66ba4f1f2df02b1a8c90a7b45b719d"
+    },
+    {
+      "relationId": "relation-0007",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-12ecc8d37119c0d796ba8b7fabb77806"
+    },
+    {
+      "relationId": "relation-0008",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ad05c3cc286456fa74fa8fbefaa72327"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Platform matrix зафиксирована в доменном документе и различает `runtimeTargets` Windows/Linux/macOS/Android/iOS/WebAssembly browser, desktop `editorTargets` Windows/Linux/macOS и release verification tier `0.1-preview`; для каждой обязательной preview-платформы указаны architecture, host prerequisites и expected smoke/soak commands.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Каждая обязательная preview-платформа проверяет запуск, рендеринг, ввод, звук, ресурсы, переключение сцены, сохранение данных, паузу, возобновление и завершение.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Soak threshold описывает длительность 30 минут, допустимый рост памяти, допустимый FPS/frametime диапазон, crash/hang criteria и итоговый pass/fail rule.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Artifact schema фиксирует stdout/stderr, JSON summary, screenshots или runtime probes, memory samples, package manifest и blocked-environment диагностические сообщения.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Smoke/soak запускаются на валидных проектах `Electron2D.Editor` из canonical release matrix, включая `Platformer` после `T-0212`, а не на standalone demo или surrogate.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Перед smoke/soak подтверждено, что `Platformer` больше не является smoke-fixture подсистем: игровой цикл, geometry/camera/HUD alignment, collectible/checkpoint/death/goal path, black-box acceptance и visual gate приняты по `T-0222`, `T-0223` и `T-0225`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Production package contents для каждой платформы проверяет, что `.electron2d/tasks/**` и другие `EditorMetadata` не включены в runtime asset pack, APK, AAB, app bundle, browser package или desktop distribution.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Если задача меняет код, готов или обновлен доменный документ в `docs/<domain>/`, соответствующий фактическому изменению.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, тот же доменный документ в `docs/<domain>/` отражает фактический результат изменения кода.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Команда тестирования или проверки задокументирована.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-21T21:49:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача заблокирована до готовности законченных preview projects и реальных ассетов. Tier 1 smoke/soak должен проверять launch, rendering, input, audio, resources, scene switch, save data, pause/resume и shutdown на полноценном проекте из release matrix, а не на временном demo или surrogate с placeholder resources."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-21T22:26:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Пользователь перенёс примеры игр в самый последний этап `0.1-preview`, поэтому `T-0093` остаётся заблокированной до финальной фазы preview projects. Не заменять smoke/soak временным demo."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T13:31:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Историческое состояние до уточнения целей preview: `T-0094`, `T-0095` и `T-0096` закрыты, но `T-0093` всё ещё заблокирована зависимостью `T-0092`: без iOS device/simulator smoke нельзя считать Tier 1 platform smoke/soak полным."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T10:36:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "УСТАРЕЛО в части формулировки runtime matrix: эта заметка ограничила обязательный preview smoke Windows/Linux/macOS/Android и вывела iOS из зависимостей `T-0093`, но не должна читаться как исключение iOS из runtime/export targets. Актуальное решение для task-плана от 2026-07-05: iOS остаётся полноценным runtime/export target; Web/WebAssembly является обязательным runtime/export target для `0.1-preview`; редактор обязателен только на Windows/Linux/macOS, а Android/iOS/WebAssembly browser являются runtime-only targets."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T11:32:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "После rejection README/release объём и решения удалить UI-heavy не использовать формулировки «две reference games» или «обе reference games». Проверки должны ссылаться на `Platformer` и canonical release matrix."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0006",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Повторный аудит пользователя заблокировал `T-0093`: текущий `Platformer` не считается законченной игрой, а `RuntimeHost` даёт тяжёлый per-frame rendering path и некорректный frame pacing. До smoke/soak нужны `T-0219`, `T-0220`, `T-0221`, `T-0222`, `T-0223`, `T-0224` и `T-0225`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0008",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T19:12:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "После отказа принять `T-0224` в зависимости `T-0093` возвращена `T-0092`. Пока `releaseVerificationTargets` содержит Windows/Linux/macOS/Android/iOS/WebAssembly browser, iOS-проверка на macOS/Xcode является обязательной частью критического пути, а blocked artifact не может быть бессрочным обходом перед финальным релизным проходом."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0007",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T09:21:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "По `T-0234` активные Platformer-задачи перенесены в проектный `ProjectTaskManager`; в этом корневом task-е они остаются внешним блокером через `examples/platformer/.electron2d/tasks/board.e2tasks`, а не локальными зависимостями корневого `TASKS.md`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".electron2d/tasks/**"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/dev-diary"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/quality/blockers/T-0093.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "docs/<domain>"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "docs/export"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/releases/0.1-preview.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "examples"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "examples/platformer/.electron2d/tasks"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "examples/platformer/.electron2d/tasks/board.e2tasks"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "src/Electron2D/Runtime"
+    }
+  ],
+  "executionContract": {
+    "taskType": "blocked-environment",
+    "readyToStart": [
+      "только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.",
+      "перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate."
+    ],
+    "stopConditions": [
+      "dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.",
+      "требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.",
+      "задача просит audit package без отдельной blocker-report задачи."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` blocker/current evidence notes for T-0093.",
+      "blocker artifact `data/quality/blockers/T-0093.md`, если нужен отдельный отчёт.",
+      "дневник `data/dev-diary/` и связанный доменный документ docs/releases/0.1-preview.md только для уточнения blocker-а."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.",
+      "unrelated task statuses, dependency graph or release scope."
+    ],
+    "requiredOutputs": [
+      "blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.",
+      "blocker artifact `data/quality/blockers/T-0093.md` when diagnostics need a durable file.",
+      "diary entry with exact commands or host checks that proved the block."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 16100,
+      "byteLength": 15623,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "7780cc83470be3f8270870071e247443d41ff6ae385c60baea7c28fd56b89f39",
+      "markdown": "## T-0093 [ ] P0: Настроить платформенную быструю проверку первого уровня и 30-минутные длительные прогоны для preview projects\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0088, T-0089, T-0090, T-0091, T-0092, T-0094, T-0136, T-0224\n- Внешние блокеры: ProjectTaskManager Platformer в `examples/platformer/.electron2d/tasks/` (`T-0222`, `T-0223`, `T-0225`, `T-0221`, `T-0166`).\n- Ссылки:\n  - Upstream commit: нет\n  - Спецификация: `docs/releases/0.1-preview.md`; `docs/export/`\n  - Документация: `docs/export/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0093.\n  - blocker artifact `data/quality/blockers/T-0093.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/releases/0.1-preview.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0093.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0093.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЗадача относится к домену «Export pipeline и платформы». Цель - настроить быструю платформенную проверку первого уровня и 30-минутные длительные прогоны для приёмочных проектов из релизной матрицы, включая `Platformer` после переименования. Текущее состояние: единый export pipeline и обязательный набор быстрых и длительных проверок нужно синхронизировать через `T-0224`, потому что матрица запуска и экспорта включает Windows, Linux, macOS, Android, iOS и WebAssembly browser, а платформы редактора ограничены desktop. Ожидаемый результат: результат должен закрыть релизный контракт `0.1-preview`, быть проверяемым автоматическими тестами или документированной проверкой и соответствовать критериям: каждая обязательная preview-платформа проверяет запуск, рендеринг, ввод, звук, ресурсы, переключение сцены, сохранение данных, паузу, возобновление и завершение.\n\nВажное решение из документации: поддержка платформы означает не только сборку, но запуск приложения, рендер, ввод, звук, ресурсы, сохранение данных, жизненный цикл и завершение. Ограничение для агента: не выполнять подписание, установку или публикацию с реальными учётными данными; отсутствующие SDK и учётные данные должны давать понятную ошибку. Не менять несвязанные файлы, не расширять объём за пределы `0.1-preview`, не закрывать задачу без проверяемого результата и не подменять обязательные тесты или документацию устным утверждением.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Platform matrix зафиксирована в доменном документе и различает `runtimeTargets` Windows/Linux/macOS/Android/iOS/WebAssembly browser, desktop `editorTargets` Windows/Linux/macOS и release verification tier `0.1-preview`; для каждой обязательной preview-платформы указаны architecture, host prerequisites и expected smoke/soak commands.\n- [ ] Каждая обязательная preview-платформа проверяет запуск, рендеринг, ввод, звук, ресурсы, переключение сцены, сохранение данных, паузу, возобновление и завершение.\n- [ ] Soak threshold описывает длительность 30 минут, допустимый рост памяти, допустимый FPS/frametime диапазон, crash/hang criteria и итоговый pass/fail rule.\n- [ ] Artifact schema фиксирует stdout/stderr, JSON summary, screenshots или runtime probes, memory samples, package manifest и blocked-environment диагностические сообщения.\n- [ ] Smoke/soak запускаются на валидных проектах `Electron2D.Editor` из canonical release matrix, включая `Platformer` после `T-0212`, а не на standalone demo или surrogate.\n- [ ] Перед smoke/soak подтверждено, что `Platformer` больше не является smoke-fixture подсистем: игровой цикл, geometry/camera/HUD alignment, collectible/checkpoint/death/goal path, black-box acceptance и visual gate приняты по `T-0222`, `T-0223` и `T-0225`.\n- [ ] Production package contents для каждой платформы проверяет, что `.electron2d/tasks/**` и другие `EditorMetadata` не включены в runtime asset pack, APK, AAB, app bundle, browser package или desktop distribution.\n- [ ] Если задача меняет код, готов или обновлен доменный документ в `docs/<domain>/`, соответствующий фактическому изменению.\n- [ ] Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.\n- [ ] Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, тот же доменный документ в `docs/<domain>/` отражает фактический результат изменения кода.\n- [ ] Команда тестирования или проверки задокументирована.\n\n### Подзадачи\n\n- [ ] Уточнить контракт задачи по связанным спецификациям и текущему коду.\n  - [ ] Сверить требования `0.1-preview`, архитектурный стек и доменную спецификацию.\n    - [ ] Зафиксировать расхождения, ограничения и неочевидные решения в дневнике разработки.\n- [ ] Подготовить минимальное изменение, которое закрывает критерии приёмки.\n  - [ ] Добавить или обновить автоматические проверки до изменения рабочего кода, если задача меняет поведение.\n    - [ ] Убедиться, что проверка действительно покрывает заявленный критерий, а не только счастливый путь.\n- [ ] Завершить реализацию, документацию и проверку.\n  - [ ] Обновить `docs/export/`, если задача меняет исполняемое поведение или публичный контракт.\n    - [ ] Записать итоговые команды проверки и результат в дневник разработки.\n\n### Заметки агента\n\n2026-06-22T00:49:00+03:00 - Задача заблокирована до готовности законченных preview projects и реальных ассетов. Tier 1 smoke/soak должен проверять launch, rendering, input, audio, resources, scene switch, save data, pause/resume и shutdown на полноценном проекте из release matrix, а не на временном demo или surrogate с placeholder resources.\n\n2026-06-22T01:26:00+03:00 - Пользователь перенёс примеры игр в самый последний этап `0.1-preview`, поэтому `T-0093` остаётся заблокированной до финальной фазы preview projects. Не заменять smoke/soak временным demo.\n\n2026-06-24T14:32:00+03:00 - После rejection README/release объём и решения удалить UI-heavy не использовать формулировки «две reference games» или «обе reference games». Проверки должны ссылаться на `Platformer` и canonical release matrix.\n\n2026-06-23T16:31:00+03:00 - Историческое состояние до уточнения целей preview: `T-0094`, `T-0095` и `T-0096` закрыты, но `T-0093` всё ещё заблокирована зависимостью `T-0092`: без iOS device/simulator smoke нельзя считать Tier 1 platform smoke/soak полным.\n\n2026-06-24T13:36:00+03:00 - УСТАРЕЛО в части формулировки runtime matrix: эта заметка ограничила обязательный preview smoke Windows/Linux/macOS/Android и вывела iOS из зависимостей `T-0093`, но не должна читаться как исключение iOS из runtime/export targets. Актуальное решение для task-плана от 2026-07-05: iOS остаётся полноценным runtime/export target; Web/WebAssembly является обязательным runtime/export target для `0.1-preview`; редактор обязателен только на Windows/Linux/macOS, а Android/iOS/WebAssembly browser являются runtime-only targets.\n\n2026-06-24T19:20:00+03:00 - Повторный аудит пользователя заблокировал `T-0093`: текущий `Platformer` не считается законченной игрой, а `RuntimeHost` даёт тяжёлый per-frame rendering path и некорректный frame pacing. До smoke/soak нужны `T-0219`, `T-0220`, `T-0221`, `T-0222`, `T-0223`, `T-0224` и `T-0225`.\n\n2026-06-30T12:21:00+03:00 - По `T-0234` активные Platformer-задачи перенесены в проектный `ProjectTaskManager`; в этом корневом task-е они остаются внешним блокером через `examples/platformer/.electron2d/tasks/board.e2tasks`, а не локальными зависимостями корневого `TASKS.md`.\n\n2026-06-24T22:12:00+03:00 - После отказа принять `T-0224` в зависимости `T-0093` возвращена `T-0092`. Пока `releaseVerificationTargets` содержит Windows/Linux/macOS/Android/iOS/WebAssembly browser, iOS-проверка на macOS/Xcode является обязательной частью критического пути, а blocked artifact не может быть бессрочным обходом перед финальным релизным проходом.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

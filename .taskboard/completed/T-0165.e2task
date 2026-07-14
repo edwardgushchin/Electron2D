@@ -1,0 +1,279 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-98db476c492e3eda0f80405f6a464de3",
+  "revision": 2,
+  "taskId": "T-0165",
+  "legacyAliases": [],
+  "title": "Реализовать реальное окно `Electron2D.Editor` и переаттестовать visible UI tasks",
+  "description": "## T-0165 [x] P0: Реализовать реальное окно `Electron2D.Editor` и переаттестовать visible UI tasks\n\n- Закрыта: 2026-06-23T11:18:00+03:00\n- Создана: 2026-06-23T10:25:00+03:00\n- Приоритет: P0\n- Состояние: closed\n- Commit: `e8d6acc feat: add editor real window smoke`\n- Спецификация:\n  - `docs/editor/editor-project-shell.md`\n  - `docs/editor/godot4-editor-reference.md`\n- Документация:\n  - `docs/editor/editor-project-shell.md`\n  - `docs/editor/editor-shell-layout.md`\n- Исходный код и тесты:\n  - `src/Electron2D.Editor/Electron2D.Editor.csproj`\n  - `src/Electron2D.Editor/Program.cs`\n  - `src/Electron2D.Editor/Shell/EditorShellVisualHarness.cs`\n  - `src/Electron2D.Editor/Shell/EditorWindowSmoke.cs`\n  - `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nИсправлен acceptance gap по visible `Electron2D.Editor` UI: прежние model-first PNG/JSON harness artifacts больше не являются единственным доказательством пользовательского окна. Обычный запуск `Electron2D.Editor` без smoke-флагов теперь открывает desktop window и остаётся в event loop до закрытия. Добавлен `--window-smoke <work-root>`, который создаёт окно `Electron2D.Editor`, показывает shell frame, сохраняет screenshot/analysis artifact и завершает smoke без зависания.\n\n`--window-smoke` также переаттестует visible UI layers `T-0157`, `T-0150`, `T-0155`, `T-0158`, `T-0159`, `T-0160` и `T-0161`: каждый layer frame из существующего harness показывается через real-window presenter и записывается в общий `reattestedVisibleLayers` list со статусом `presentedInWindow=True`.\n\n### Выполненные критерии\n\n- [x] Спецификация Editor project shell обновлена: обычный запуск без smoke-флагов больше не считается достаточным, если он не создаёт окно.\n- [x] Добавлен red integration test `EditorWindowSmokeRunCreatesRealWindowAndWritesVisualArtifacts`; до реализации он падал на отсутствующем `--window-smoke` с exit code `2`.\n- [x] Добавлен второй red step: тест требовал `ReattestedVisibleLayers`, который до реализации отсутствовал.\n- [x] `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --window-smoke .temp\\editor-window-smoke` создаёт окно `Electron2D.Editor`, отрисовывает shell UI и завершает smoke без зависания.\n- [x] Smoke artifact содержит screenshot настоящего окна, размер окна, selected workspace, rendered frame, pointer/keyboard interaction result и отсутствие text overflow.\n- [x] Переаттестованы visible UI слои `T-0157`, `T-0150`, `T-0155`, `T-0158`, `T-0159`, `T-0160`, `T-0161` одним комбинированным сценарием с явной разбивкой по слоям и analysis.\n- [x] Screenshot review выполнен для основного window smoke и layer screenshots; layout читаем, controls находятся в ожидаемых областях, text overflow не виден, `3D`/`AssetLib`/GDScript UI отсутствуют.\n- [x] Implementation documentation описывает фактический window host, smoke mode, ограничения, artifacts и команды проверки.\n\n### Проверки\n\n- `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorWindowSmokeRunCreatesRealWindowAndWritesVisualArtifacts\"` - прошёл.\n- `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --window-smoke .temp\\editor-window-smoke` - прошёл; `WindowCreated=True`, `FramePresented=True`, `ReattestedVisibleLayers=T-0157|T-0150|T-0155|T-0158|T-0159|T-0160|T-0161`.\n- `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectShellTests|FullyQualifiedName~EditorShellLayoutTests|FullyQualifiedName~EditorAgentWorkspacePanelTests|FullyQualifiedName~EditorProjectTasksBoardTests|FullyQualifiedName~EditorScriptWorkspaceTests|FullyQualifiedName~EditorScriptLanguageServicesTests|FullyQualifiedName~EditorManagedDebuggerTests|FullyQualifiedName~ScriptDebugToolingParityTests\"` - прошёл `13/13`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошёл для `623` tracked source files после staging.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` - прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-LocalDocumentationIndex.ps1` - обновил локальный индекс документации.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` - прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошёл: unit `92/92`, integration `414/414`, runtime smoke `5/5`, golden-data `12/12`.\n- `dotnet build src\\Electron2D.sln -c Release` - прошёл с warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CanonicalGoalAlignment.ps1` - прошёл.\n- `git diff --cached --check` - прошёл перед commit.\n- Post-commit `git status --short --branch` - clean tracked worktree, `main...origin/main [ahead 2]`.\n\n### Заметки\n\nЗадача закрыта автоматически в рамках Goal run: пользователь заранее разрешил закрывать задачи после выполнения acceptance criteria и зелёных проверок. `TASKS.md`, `completed-tasks/`, `dev-diary/` и `.temp/editor-window-smoke` остаются local-only и не входят в commit.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Спецификация Editor project shell обновлена: обычный запуск без smoke-флагов больше не считается достаточным, если он не создаёт окно.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-98db476c492e3eda0f80405f6a464de3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Добавлен red integration test `EditorWindowSmokeRunCreatesRealWindowAndWritesVisualArtifacts`; до реализации он падал на отсутствующем `--window-smoke` с exit code `2`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-98db476c492e3eda0f80405f6a464de3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Добавлен второй red step: тест требовал `ReattestedVisibleLayers`, который до реализации отсутствовал.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-98db476c492e3eda0f80405f6a464de3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --window-smoke .temp\\editor-window-smoke` создаёт окно `Electron2D.Editor`, отрисовывает shell UI и завершает smoke без зависания.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-98db476c492e3eda0f80405f6a464de3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Smoke artifact содержит screenshot настоящего окна, размер окна, selected workspace, rendered frame, pointer/keyboard interaction result и отсутствие text overflow.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-98db476c492e3eda0f80405f6a464de3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Переаттестованы visible UI слои `T-0157`, `T-0150`, `T-0155`, `T-0158`, `T-0159`, `T-0160`, `T-0161` одним комбинированным сценарием с явной разбивкой по слоям и analysis.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-98db476c492e3eda0f80405f6a464de3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Screenshot review выполнен для основного window smoke и layer screenshots; layout читаем, controls находятся в ожидаемых областях, text overflow не виден, `3D`/`AssetLib`/GDScript UI отсутствуют.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-98db476c492e3eda0f80405f6a464de3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Implementation documentation описывает фактический window host, smoke mode, ограничения, artifacts и команды проверки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-98db476c492e3eda0f80405f6a464de3/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-23T08:18:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".temp/editor-window-smoke"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "13/13"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "414/414"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "completed-tasks"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "dev-diary"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/editor/editor-project-shell.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/editor/editor-shell-layout.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/editor/godot4-editor-reference.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "main...origin/main [ahead 2]"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Electron2D.Editor.csproj"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Program.cs"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Shell/EditorShellVisualHarness.cs"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Shell/EditorWindowSmoke.cs"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 611130,
+      "byteLength": 6359,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "25d343a56efefd71450798e234d04371c041d8bdc9a8145e5e678018446b3435",
+      "markdown": "## T-0165 [x] P0: Реализовать реальное окно `Electron2D.Editor` и переаттестовать visible UI tasks\n\n- Закрыта: 2026-06-23T11:18:00+03:00\n- Создана: 2026-06-23T10:25:00+03:00\n- Приоритет: P0\n- Состояние: closed\n- Commit: `e8d6acc feat: add editor real window smoke`\n- Спецификация:\n  - `docs/editor/editor-project-shell.md`\n  - `docs/editor/godot4-editor-reference.md`\n- Документация:\n  - `docs/editor/editor-project-shell.md`\n  - `docs/editor/editor-shell-layout.md`\n- Исходный код и тесты:\n  - `src/Electron2D.Editor/Electron2D.Editor.csproj`\n  - `src/Electron2D.Editor/Program.cs`\n  - `src/Electron2D.Editor/Shell/EditorShellVisualHarness.cs`\n  - `src/Electron2D.Editor/Shell/EditorWindowSmoke.cs`\n  - `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nИсправлен acceptance gap по visible `Electron2D.Editor` UI: прежние model-first PNG/JSON harness artifacts больше не являются единственным доказательством пользовательского окна. Обычный запуск `Electron2D.Editor` без smoke-флагов теперь открывает desktop window и остаётся в event loop до закрытия. Добавлен `--window-smoke <work-root>`, который создаёт окно `Electron2D.Editor`, показывает shell frame, сохраняет screenshot/analysis artifact и завершает smoke без зависания.\n\n`--window-smoke` также переаттестует visible UI layers `T-0157`, `T-0150`, `T-0155`, `T-0158`, `T-0159`, `T-0160` и `T-0161`: каждый layer frame из существующего harness показывается через real-window presenter и записывается в общий `reattestedVisibleLayers` list со статусом `presentedInWindow=True`.\n\n### Выполненные критерии\n\n- [x] Спецификация Editor project shell обновлена: обычный запуск без smoke-флагов больше не считается достаточным, если он не создаёт окно.\n- [x] Добавлен red integration test `EditorWindowSmokeRunCreatesRealWindowAndWritesVisualArtifacts`; до реализации он падал на отсутствующем `--window-smoke` с exit code `2`.\n- [x] Добавлен второй red step: тест требовал `ReattestedVisibleLayers`, который до реализации отсутствовал.\n- [x] `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --window-smoke .temp\\editor-window-smoke` создаёт окно `Electron2D.Editor`, отрисовывает shell UI и завершает smoke без зависания.\n- [x] Smoke artifact содержит screenshot настоящего окна, размер окна, selected workspace, rendered frame, pointer/keyboard interaction result и отсутствие text overflow.\n- [x] Переаттестованы visible UI слои `T-0157`, `T-0150`, `T-0155`, `T-0158`, `T-0159`, `T-0160`, `T-0161` одним комбинированным сценарием с явной разбивкой по слоям и analysis.\n- [x] Screenshot review выполнен для основного window smoke и layer screenshots; layout читаем, controls находятся в ожидаемых областях, text overflow не виден, `3D`/`AssetLib`/GDScript UI отсутствуют.\n- [x] Implementation documentation описывает фактический window host, smoke mode, ограничения, artifacts и команды проверки.\n\n### Проверки\n\n- `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorWindowSmokeRunCreatesRealWindowAndWritesVisualArtifacts\"` - прошёл.\n- `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --window-smoke .temp\\editor-window-smoke` - прошёл; `WindowCreated=True`, `FramePresented=True`, `ReattestedVisibleLayers=T-0157|T-0150|T-0155|T-0158|T-0159|T-0160|T-0161`.\n- `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectShellTests|FullyQualifiedName~EditorShellLayoutTests|FullyQualifiedName~EditorAgentWorkspacePanelTests|FullyQualifiedName~EditorProjectTasksBoardTests|FullyQualifiedName~EditorScriptWorkspaceTests|FullyQualifiedName~EditorScriptLanguageServicesTests|FullyQualifiedName~EditorManagedDebuggerTests|FullyQualifiedName~ScriptDebugToolingParityTests\"` - прошёл `13/13`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошёл для `623` tracked source files после staging.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` - прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-LocalDocumentationIndex.ps1` - обновил локальный индекс документации.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` - прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошёл: unit `92/92`, integration `414/414`, runtime smoke `5/5`, golden-data `12/12`.\n- `dotnet build src\\Electron2D.sln -c Release` - прошёл с warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CanonicalGoalAlignment.ps1` - прошёл.\n- `git diff --cached --check` - прошёл перед commit.\n- Post-commit `git status --short --branch` - clean tracked worktree, `main...origin/main [ahead 2]`.\n\n### Заметки\n\nЗадача закрыта автоматически в рамках Goal run: пользователь заранее разрешил закрывать задачи после выполнения acceptance criteria и зелёных проверок. `TASKS.md`, `completed-tasks/`, `dev-diary/` и `.temp/editor-window-smoke` остаются local-only и не входят в commit.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T07:25:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-23T08:18:00.0000000+00:00",
+  "completedAt": "2026-06-23T08:18:00.0000000+00:00",
+  "acceptedAt": "2026-06-23T08:18:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-23T08:18:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

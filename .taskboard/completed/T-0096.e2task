@@ -1,0 +1,258 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-031efc7b6303b8a124e23e9cbe920996",
+  "revision": 2,
+  "taskId": "T-0096",
+  "legacyAliases": [],
+  "title": "Обеспечить сборку обеих reference games из одной кодовой базы на пяти платформах",
+  "description": "## T-0096 [x] P1: Обеспечить сборку обеих reference games из одной кодовой базы на пяти платформах\n\n- Завершена: 2026-06-23T16:27:00+03:00\n- Коммит: `f137429 feat: add reference game platform matrix`\n- Спецификация: `docs/examples/reference-game-platform-matrix.md`; `docs/releases/0.1.0-preview.md`\n- Документация: `docs/examples/reference-game-platform-matrix.md`; `docs/examples/reference-platformer.md`; `docs/examples/ui-heavy-reference.md`\n- Исходный код, тесты и данные:\n  - `tools/Verify-ReferenceGamePlatformMatrix.ps1`\n  - `data/quality/reference-game-platform-matrix.json`\n  - `tests/Electron2D.Tests.Integration/ReferenceGamePlatformMatrixTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nДобавлен общий gate для двух reference games. Проверка запускает `Verify-ReferencePlatformer.ps1` и `Verify-UiHeavyReference.ps1`, затем валидирует tracked matrix artifact и подтверждает, что оба проекта остаются обычными проектами `Electron2D.Editor`, используют один target set и не имеют platform-specific gameplay fork-а в `Scripts/`, `scenes/`, `resources/` или `assets/`.\n\nХотя исходное название задачи говорило о пяти платформах, актуальная релизная спецификация расширила обязательный target set до шести: Windows, Linux, macOS, Android, iOS и WebAssembly browser.\n\n### Критерии и результат\n\n- [x] Создана спецификация `docs/examples/reference-game-platform-matrix.md`.\n- [x] Добавлен focused test, который до реализации упал на отсутствующих verifier и matrix artifact.\n- [x] `tools/Verify-ReferenceGamePlatformMatrix.ps1` запускает оба project verifier-а.\n- [x] `data/quality/reference-game-platform-matrix.json` фиксирует оба reference project и шесть targets.\n- [x] Verifier проверяет разрешённые platform-specific отличия: export preset metadata, renderer profile, icons/branding, signing references, storefront metadata и browser hosting metadata.\n- [x] Verifier проверяет отсутствие platform-specific игрового fork-а и отсутствие repository workflow files внутри reference projects.\n- [x] Implementation documentation и local docs index обновлены.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ReferenceGamePlatformMatrixTests\"` упал ожидаемо `3/5` на отсутствующих `tools/Verify-ReferenceGamePlatformMatrix.ps1` и `data/quality/reference-game-platform-matrix.json`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ReferenceGamePlatformMatrixTests\"` прошёл `5/5`.\n- Standalone verifier: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReferenceGamePlatformMatrix.ps1` прошёл; validated projects `2`, targets `6`.\n- Documentation: `Update-LocalDocumentationIndex.ps1` и `Verify-LocalDocumentation.ps1` прошли.\n- Source checks: `Verify-SourceLicenseHeaders.ps1` прошёл для `647` tracked source files; `Verify-SourceDomainLayout.ps1` прошёл для `320` source files.\n- Release build: `dotnet build src\\Electron2D.sln -c Release` прошёл с warnings `0`, errors `0`.\n\n### Решения\n\n- `T-0096` закрывает shared-codebase/export-preset gate, а не реальный запуск на каждом устройстве.\n- iOS/macOS hardware verification, 30-minute soak и финальный release candidate path остаются отдельными задачами `T-0092`, `T-0093` и `T-0104`.\n\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создана спецификация `docs/examples/reference-game-platform-matrix.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-031efc7b6303b8a124e23e9cbe920996/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Добавлен focused test, который до реализации упал на отсутствующих verifier и matrix artifact.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-031efc7b6303b8a124e23e9cbe920996/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`tools/Verify-ReferenceGamePlatformMatrix.ps1` запускает оба project verifier-а.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-031efc7b6303b8a124e23e9cbe920996/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`data/quality/reference-game-platform-matrix.json` фиксирует оба reference project и шесть targets.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-031efc7b6303b8a124e23e9cbe920996/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Verifier проверяет разрешённые platform-specific отличия: export preset metadata, renderer profile, icons/branding, signing references, storefront metadata и browser hosting metadata.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-031efc7b6303b8a124e23e9cbe920996/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Verifier проверяет отсутствие platform-specific игрового fork-а и отсутствие repository workflow files внутри reference projects.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-031efc7b6303b8a124e23e9cbe920996/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Implementation documentation и local docs index обновлены.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-031efc7b6303b8a124e23e9cbe920996/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-031efc7b6303b8a124e23e9cbe920996/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-23T13:27:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "3/5"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Directory",
+      "value": "Scripts"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "assets"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "data/quality/reference-game-platform-matrix.json"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/examples/reference-game-platform-matrix.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/examples/reference-platformer.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/examples/ui-heavy-reference.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "resources"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "Directory",
+      "value": "scenes"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ReferenceGamePlatformMatrixTests.cs"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "tools/Verify-ReferenceGamePlatformMatrix.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 874948,
+      "byteLength": 4153,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "a3e09216c5f7191625d0a2ccb495ceb55d62fe25619bf9b051f43399944ad24d",
+      "markdown": "## T-0096 [x] P1: Обеспечить сборку обеих reference games из одной кодовой базы на пяти платформах\n\n- Завершена: 2026-06-23T16:27:00+03:00\n- Коммит: `f137429 feat: add reference game platform matrix`\n- Спецификация: `docs/examples/reference-game-platform-matrix.md`; `docs/releases/0.1.0-preview.md`\n- Документация: `docs/examples/reference-game-platform-matrix.md`; `docs/examples/reference-platformer.md`; `docs/examples/ui-heavy-reference.md`\n- Исходный код, тесты и данные:\n  - `tools/Verify-ReferenceGamePlatformMatrix.ps1`\n  - `data/quality/reference-game-platform-matrix.json`\n  - `tests/Electron2D.Tests.Integration/ReferenceGamePlatformMatrixTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nДобавлен общий gate для двух reference games. Проверка запускает `Verify-ReferencePlatformer.ps1` и `Verify-UiHeavyReference.ps1`, затем валидирует tracked matrix artifact и подтверждает, что оба проекта остаются обычными проектами `Electron2D.Editor`, используют один target set и не имеют platform-specific gameplay fork-а в `Scripts/`, `scenes/`, `resources/` или `assets/`.\n\nХотя исходное название задачи говорило о пяти платформах, актуальная релизная спецификация расширила обязательный target set до шести: Windows, Linux, macOS, Android, iOS и WebAssembly browser.\n\n### Критерии и результат\n\n- [x] Создана спецификация `docs/examples/reference-game-platform-matrix.md`.\n- [x] Добавлен focused test, который до реализации упал на отсутствующих verifier и matrix artifact.\n- [x] `tools/Verify-ReferenceGamePlatformMatrix.ps1` запускает оба project verifier-а.\n- [x] `data/quality/reference-game-platform-matrix.json` фиксирует оба reference project и шесть targets.\n- [x] Verifier проверяет разрешённые platform-specific отличия: export preset metadata, renderer profile, icons/branding, signing references, storefront metadata и browser hosting metadata.\n- [x] Verifier проверяет отсутствие platform-specific игрового fork-а и отсутствие repository workflow files внутри reference projects.\n- [x] Implementation documentation и local docs index обновлены.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ReferenceGamePlatformMatrixTests\"` упал ожидаемо `3/5` на отсутствующих `tools/Verify-ReferenceGamePlatformMatrix.ps1` и `data/quality/reference-game-platform-matrix.json`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ReferenceGamePlatformMatrixTests\"` прошёл `5/5`.\n- Standalone verifier: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReferenceGamePlatformMatrix.ps1` прошёл; validated projects `2`, targets `6`.\n- Documentation: `Update-LocalDocumentationIndex.ps1` и `Verify-LocalDocumentation.ps1` прошли.\n- Source checks: `Verify-SourceLicenseHeaders.ps1` прошёл для `647` tracked source files; `Verify-SourceDomainLayout.ps1` прошёл для `320` source files.\n- Release build: `dotnet build src\\Electron2D.sln -c Release` прошёл с warnings `0`, errors `0`.\n\n### Решения\n\n- `T-0096` закрывает shared-codebase/export-preset gate, а не реальный запуск на каждом устройстве.\n- iOS/macOS hardware verification, 30-minute soak и финальный release candidate path остаются отдельными задачами `T-0092`, `T-0093` и `T-0104`.\n\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T13:27:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-23T13:27:00.0000000+00:00",
+  "completedAt": "2026-06-23T13:27:00.0000000+00:00",
+  "acceptedAt": "2026-06-23T13:27:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-23T13:27:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

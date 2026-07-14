@@ -1,0 +1,110 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-83a77b71eee0166e0fe7fdab36f12dba",
+  "revision": 2,
+  "taskId": "T-0009",
+  "legacyAliases": [],
+  "title": "Довести `Node` и `SceneTree` до lifecycle baseline",
+  "description": "# T-0009 [x] P0: Довести `Node` и `SceneTree` до lifecycle baseline\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-20T22:28:00+03:00\n- Статус: завершена\n- Коммит: `T-0009: реализовать Node и SceneTree lifecycle`\n\n## Итог\n\nРеализован первый lifecycle baseline целевого API без compatibility layer и без legacy Unity-like API:\n\n- `Electron2D.Node`;\n- `Electron2D.SceneTree`;\n- `Electron2D.InputEvent`.\n\n`Node` получил `Name`, `Parent`, `AddChild(Node)`, `RemoveChild(Node)`, `GetChildCount()`, `IsInsideTree()`, `GetTree()` и callbacks `_EnterTree()`, `_Ready()`, `_Process(double)`, `_PhysicsProcess(double)`, `_Input(InputEvent)`, `_ExitTree()`.\n\n`SceneTree` создаёт `Root`, вводит его в дерево и предоставляет внутренние методы обхода для тестов и будущего runtime-кода редактора: `ProcessFrame(double)`, `PhysicsFrame(double)`, `DispatchInput(InputEvent)`.\n\n## Проверенное поведение\n\n- Добавление node к `SceneTree.Root` вызывает `_EnterTree()` и `_Ready()`.\n- Subtree получает `_EnterTree()` сверху вниз и `_Ready()` снизу вверх.\n- `_Ready()` вызывается для node один раз.\n- `_Process()`, `_PhysicsProcess()` и `_Input()` идут сверху вниз.\n- `RemoveChild()` вызывает `_ExitTree()` снизу вверх и очищает `Parent`/`GetTree()` у удалённого subtree root.\n- Исключение из пользовательского callback сохраняется во внутреннюю диагностическую запись и не останавливает обход соседних node.\n- Публичная поверхность runtime обновлена и остаётся целевой: legacy component/SpriteRenderer/Unity-like API не возвращались.\n\n## Документация\n\n- Спецификация: `docs/object-model/node-scene-tree-lifecycle.md`.\n- Справка: `docs/object-model/node-scene-tree-lifecycle.md`.\n- Wiki source: `.github/wiki/API-Compatibility.md`.\n- Release records: `README.md`, `CHANGELOG.md`, `RELEASE-NOTES.md`.\n\n## Отличия и будущие задачи\n\n- `SceneTree.Root` временно является `Node`; `Viewport`/`Window` root остаётся будущей задачей.\n- Ownership, reparent, `QueueFree`, node paths, deferred calls и pause/process modes остаются в следующих задачах.\n- Диагностический API пока внутренний; публичная модель диагностики остаётся в `T-0016`.\n- Полный XML documentation gate и 100% coverage gate остаются в `T-0106` и `T-0108`.\n\n## Проверки\n\n- `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 6 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 14 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 6.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n\n## Заметки агента\n\nЗадача выполнена test-first: сначала были добавлены спецификация и integration/runtime smoke проверки, затем минимальная runtime-реализация и документация фактического поведения.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-20T19:28:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/wiki/API-Compatibility.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/object-model/node-scene-tree-lifecycle.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 14997,
+      "byteLength": 3965,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "2748e772b231d401da41f36890b858d8076d53410bdad49f0bbaca409d072b39",
+      "markdown": "# T-0009 [x] P0: Довести `Node` и `SceneTree` до lifecycle baseline\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-20T22:28:00+03:00\n- Статус: завершена\n- Коммит: `T-0009: реализовать Node и SceneTree lifecycle`\n\n## Итог\n\nРеализован первый lifecycle baseline целевого API без compatibility layer и без legacy Unity-like API:\n\n- `Electron2D.Node`;\n- `Electron2D.SceneTree`;\n- `Electron2D.InputEvent`.\n\n`Node` получил `Name`, `Parent`, `AddChild(Node)`, `RemoveChild(Node)`, `GetChildCount()`, `IsInsideTree()`, `GetTree()` и callbacks `_EnterTree()`, `_Ready()`, `_Process(double)`, `_PhysicsProcess(double)`, `_Input(InputEvent)`, `_ExitTree()`.\n\n`SceneTree` создаёт `Root`, вводит его в дерево и предоставляет внутренние методы обхода для тестов и будущего runtime-кода редактора: `ProcessFrame(double)`, `PhysicsFrame(double)`, `DispatchInput(InputEvent)`.\n\n## Проверенное поведение\n\n- Добавление node к `SceneTree.Root` вызывает `_EnterTree()` и `_Ready()`.\n- Subtree получает `_EnterTree()` сверху вниз и `_Ready()` снизу вверх.\n- `_Ready()` вызывается для node один раз.\n- `_Process()`, `_PhysicsProcess()` и `_Input()` идут сверху вниз.\n- `RemoveChild()` вызывает `_ExitTree()` снизу вверх и очищает `Parent`/`GetTree()` у удалённого subtree root.\n- Исключение из пользовательского callback сохраняется во внутреннюю диагностическую запись и не останавливает обход соседних node.\n- Публичная поверхность runtime обновлена и остаётся целевой: legacy component/SpriteRenderer/Unity-like API не возвращались.\n\n## Документация\n\n- Спецификация: `docs/object-model/node-scene-tree-lifecycle.md`.\n- Справка: `docs/object-model/node-scene-tree-lifecycle.md`.\n- Wiki source: `.github/wiki/API-Compatibility.md`.\n- Release records: `README.md`, `CHANGELOG.md`, `RELEASE-NOTES.md`.\n\n## Отличия и будущие задачи\n\n- `SceneTree.Root` временно является `Node`; `Viewport`/`Window` root остаётся будущей задачей.\n- Ownership, reparent, `QueueFree`, node paths, deferred calls и pause/process modes остаются в следующих задачах.\n- Диагностический API пока внутренний; публичная модель диагностики остаётся в `T-0016`.\n- Полный XML documentation gate и 100% coverage gate остаются в `T-0106` и `T-0108`.\n\n## Проверки\n\n- `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 6 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 14 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 6.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n\n## Заметки агента\n\nЗадача выполнена test-first: сначала были добавлены спецификация и integration/runtime smoke проверки, затем минимальная runtime-реализация и документация фактического поведения.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-20T19:28:00.0000000+00:00",
+  "completedAt": "2026-06-20T19:28:00.0000000+00:00",
+  "acceptedAt": "2026-06-20T19:28:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-20T19:28:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

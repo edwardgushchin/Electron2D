@@ -1,0 +1,524 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-d752a70ea330ca3e0b8c9cc745ecd129",
+  "revision": 2,
+  "taskId": "T-0219",
+  "legacyAliases": [],
+  "title": "Заменить интерактивный runtime rendering path на переиспользуемую подачу кадров",
+  "description": "## T-0219 [x] P0: Заменить интерактивный runtime rendering path на переиспользуемую подачу кадров\n\n- Создана: 2026-06-24T19:20:00+03:00\n- Завершена: 2026-06-25T20:01:03+03:00\n- Принята пользователем: 2026-06-25T20:01:03+03:00\n- Архивная причина: пользователь принял задачу; блокирующих замечаний по последнему внешнему аудиту не осталось.\n- Приоритет: P0\n- Зависимости: нет\n- Ссылки:\n  - Доменный документ: `docs/runtime/project-runtime-runner.md`\n  - Доменный документ: `docs/rendering/rendering-server.md`\n  - Доменный документ: `docs/rendering/canvas-item-render-queue.md`\n  - Доменный документ: `docs/rendering/texture-resource-baseline.md`\n  - Внешние аудиты: `docs/verdicts/runtime/t-0219-runtime-presenter-audit.md`; `docs/verdicts/runtime/t-0219-runtime-presenter-review-2026-06-25.md`; `docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md`; `docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md`; `docs/verdicts/runtime/t-0219-runtime-presenter-terminal-fault-injection-audit-2026-06-25.md`; `docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-isolation-audit-2026-06-25.md`; `docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-test-scope-audit-2026-06-25.md`\n  - Исходный код: `src/Electron2D/Runtime/Application/RuntimeHost.cs`; `src/Electron2D/Runtime/Application/RuntimeFramePresenter.cs`; `src/Electron2D/Runtime/Application/RuntimeSdlRendererFramePresenter.cs`; `src/Electron2D/Runtime/Application/RuntimeShaderCrossService.cs`; `src/Electron2D/Runtime/Application/RuntimeTextureResolver.cs`; `src/Electron2D/Graphics/Rendering/SdlGpuRenderingBackend.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RuntimeHostTests.cs`; `tests/Electron2D.Tests.Integration/CanvasItemRenderQueueTests.cs`; `tests/Electron2D.Tests.Integration/SdlGpuLifecycleTests.cs`; `tests/Electron2D.Tests.Integration/SdlGpuStartupPolicyTests.cs`\n\n### Самодостаточное описание\n\nПовторный аудит Platformer показал, что основной FPS blocker находился в `RuntimeHost`: интерактивный запуск каждый кадр создавал новый `RuntimePixelCanvas`, управляемый RGBA-буфер кадра, временный ресурс показа кадра и программно растеризовал команды. Такой горячий путь кадра создавал крупные выделения памяти и не мог быть базой для приёмочной игры.\n\nПринятый результат: интерактивный `e2d run` использует общий путь отрисовки через `RenderingServer`/внутренний модуль показа кадра. Основной путь идёт через SDL GPU с реальными graphics pipelines, render pass и draw-вызовами. `SDL_Renderer` остаётся запасным интерактивным `presenter` для платформ или драйверов без рабочего GPU-пути. PNG-снимок создаётся из активного пути показа кадра: через чтение GPU-текстуры в основном пути или через `RenderReadPixels` в запасном пути. `RuntimePreviewFrameRasterizer` не подменяет обычное сохранение PNG.\n\n### Критерии приёмки\n\n- [x] До изменения кода обновлены доменные документы runtime/rendering: описан интерактивный переиспользуемый путь показа кадра, границы PNG-снимка и запрет покадрового выделения `framebuffer`.\n- [x] Добавлены tests или verifier checks, которые ловят покадровые выделения, закрепление управляемого массива, пересоздание ресурса показа кадра, чтение PNG каждый интерактивный кадр и неограниченный рост внутренних диагностических коллекций.\n- [x] Интерактивный `FrameLimit == 0` не использует `RuntimePreviewFrameRasterizer.Render(...)` как основной renderer.\n- [x] Обычный интерактивный путь идёт через `CanvasSubmissionContext`/`CanvasItemRenderPlan` и общий модуль показа кадра, а не через отдельную ручную pixel-rasterization ветку в `RuntimeHost`.\n- [x] Persistent textures, vertex/transfer buffers и submission resources переиспользуются между кадрами при неизменном размере окна.\n- [x] Texture upload cache предотвращает повторную загрузку неизменных texture resources каждый кадр, повторно загружает текстуру после изменения content revision, не сохраняет в кеше texture, upload которой не был успешно отправлен, и учитывает `TextureUploads` только после commit.\n- [x] Render commands группируются через render queue/batching по texture/material/blend state без нарушения порядка отрисовки; fallback честно сообщает фактические draw-вызовы отдельно от плановых пакетов.\n- [x] Resize contract разделяет observed resize, пересоздание engine-owned resources и backend/swapchain reconfiguration; диагностические счётчики отражают фактически созданные и пересозданные ресурсы без фиктивных значений.\n- [x] Shutdown корректно освобождает renderer/presentation resources.\n- [x] PNG-снимок в интерактивном `FrameLimit == 0` читается один раз для заданного `ScreenshotPath`, а не каждый кадр до закрытия окна.\n- [x] В steady state внутри активного `presenter` нет `new byte[width * height * 4]`, `new RuntimePixelCanvas(width, height)`, `GCHandle.Alloc(...)`, LINQ, неограниченного роста `List` и других управляемых выделений на каждый показ кадра; полный путь построения `CanvasItemRenderPlan` проверяется отдельно в `T-0221`.\n- [x] `RuntimePreviewFrameRasterizer` остаётся ограниченным программным инструментом для проверок; обычный PNG-снимок создаётся из активного `presenter`.\n- [x] `RuntimeHostResult` сообщает draw commands, planned batches, actual draw calls, texture switches, pipeline switches, committed texture uploads/cache hits, выбранный `presenter`, факт запасного пути и предварительные presenter-boundary allocation metrics; полный runtime-frame бюджет остаётся за `T-0221`.\n- [x] Allocation metric измеряет границу `presenter` без двойного учёта capture: минимум 120 кадров прогрева, минимум 600 измеряемых кадров без PNG, `MaxPresenterManagedBytesPerFrame == 0`, отдельная одноразовая метрика `CapturePresenterManagedBytesAllocated` для всего capture-вызова active presenter-а и отсутствие роста внутренних diagnostic collections.\n- [x] Основной и запасной presenter-ы сохраняют ожидаемую геометрию и цвет для текста, texture flip, поворота, круга и непрямоугольного полигона; неподдержанный texture resource возвращает явную ошибку и не маскируется прямоугольником или запасным GPU fallback-ом.\n- [x] Основной и запасной presenter-ы используют общий внутренний resolver для уже поддерживаемых texture resources и не расходятся между собой на `ImageTexture`/`AtlasTexture -> ImageTexture`.\n- [x] Запасной путь включается только для документированных recoverable GPU failures; ошибки данных, invariant-нарушения и ошибки программирования проходят наружу.\n- [x] Recoverable GPU failures типизированы для device/driver/swapchain/device-loss/resource failures, включая command buffer acquisition, submit, fence submit/wait, render pass, copy pass и creation failures; реальные fault-injection tests проходят через `RuntimeGpuFramePresenter.Present()`, до получения swapchain texture command buffer завершается через cancel, после получения swapchain texture - только через допустимую отправку без повторной отмены; ошибки render plan и resource data не маскируются fallback-ом.\n- [x] `SDL_shadercross` инициализируется один раз на процесс через единый runtime-сервис на потоке, владеющем отрисовкой; последовательные `RuntimeHost` sessions не повторяют `Init`/`Quit`, `ShaderCross.Quit()` выполняют `e2d` и `Electron2D.Editor` как владельцы приложения явным shutdown-вызовом на том же потоке, shutdown до первого `Acquire()` тоже терминален, а production `Acquire()` после любого shutdown отклоняется без повторного `Init()`.\n- [x] Focused tests не оставляют process-wide `SDL_shadercross` state, влияющий на последующие GPU-presenter tests; терминальные сценарии используют изолированный `UseApiForTests` scope, который не вызывает `Quit()` у прежнего `RuntimeShaderCrossLifetime`, сохраняет уже существующее initialized или terminal state до scope и поддерживает вложенные fake scopes без повторного `Init()` прежнего lifetime.\n- [x] Все pending transfer buffers освобождаются при ошибке отправки кадра, при `Dispose()` и перед очисткой очереди upload; submit/fence failures не оставляют staged cache и освобождают native texture/transfer handles ровно один раз.\n- [x] MSL shader `code_size` передаётся в байтах, а не как длина UTF-16 строки C#.\n- [x] Противоречащий fallback-тест исправлен; указанная focused-команда завершается с 0 failed и 0 errors, а фактическое количество тестов фиксируется в evidence.\n- [x] После зелёных проверок те же доменные документы обновлены фактическим поведением, ограничениями и командами проверки.\n- [x] Запущены focused runtime/rendering tests, source license verifier и `git diff --check`; результат записан в дневник разработки.\n\n### Подзадачи\n\n- [x] Зафиксировать новый rendering contract в `docs/runtime/` и `docs/rendering/`.\n- [x] Добавить red tests на per-frame allocation/presentation churn.\n- [x] Вынести ordinary PNG path из preview rasterizer и подключить переиспользуемый interactive renderer.\n- [x] Исправить diagnostics для render submit/present, фактических draw-вызовов, counters ресурсов и allocation counters.\n- [x] Убрать чтение PNG каждый интерактивный кадр и неограниченный рост lifecycle log.\n- [x] Исправить content revision/cache invalidation, transform geometry, recoverable GPU failure mapping, shadercross lifetime/terminal state, committed upload diagnostics и MSL `code_size`.\n- [x] Выполнить focused проверки и обновить документы по фактическому поведению.\n\n### Заметки агента\n\n2026-06-24T19:20:00+03:00 - Создано по повторному аудиту пользователя. Не называть текущий Platformer готовым и не строить performance/smoke gates поверх runtime path, который создаёт framebuffer и presentation resource каждый кадр.\n\n2026-06-25T19:39:00+03:00 - Закрыт последний внешний аудит `docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-test-scope-audit-2026-06-25.md`: `RuntimeShaderCrossService` теперь держит постоянный production `RuntimeShaderCrossLifetime`, а `UseApiForTests` временно подставляет отдельный fake lifetime, не вызывает `Quit()` у прежнего lifetime и возвращает его предшествующее initialized или terminal state. Новые regression tests сначала падали 2/2, после исправления прошли 2/2; все `RuntimeShaderCrossService` tests прошли 8/8, focused runtime/rendering suite прошёл 63/63.\n\n2026-06-25T20:01:03+03:00 - Пользователь принял `T-0219`; задача удалена из активного `TASKS.md` и перенесена в этот архив. `T-0220` открыта как следующий runtime-шаг.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "До изменения кода обновлены доменные документы runtime/rendering: описан интерактивный переиспользуемый путь показа кадра, границы PNG-снимка и запрет покадрового выделения `framebuffer`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Добавлены tests или verifier checks, которые ловят покадровые выделения, закрепление управляемого массива, пересоздание ресурса показа кадра, чтение PNG каждый интерактивный кадр и неограниченный рост внутренних диагностических коллекций.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Интерактивный `FrameLimit == 0` не использует `RuntimePreviewFrameRasterizer.Render(...)` как основной renderer.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Обычный интерактивный путь идёт через `CanvasSubmissionContext`/`CanvasItemRenderPlan` и общий модуль показа кадра, а не через отдельную ручную pixel-rasterization ветку в `RuntimeHost`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Persistent textures, vertex/transfer buffers и submission resources переиспользуются между кадрами при неизменном размере окна.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Texture upload cache предотвращает повторную загрузку неизменных texture resources каждый кадр, повторно загружает текстуру после изменения content revision, не сохраняет в кеше texture, upload которой не был успешно отправлен, и учитывает `TextureUploads` только после commit.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Render commands группируются через render queue/batching по texture/material/blend state без нарушения порядка отрисовки; fallback честно сообщает фактические draw-вызовы отдельно от плановых пакетов.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Resize contract разделяет observed resize, пересоздание engine-owned resources и backend/swapchain reconfiguration; диагностические счётчики отражают фактически созданные и пересозданные ресурсы без фиктивных значений.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Shutdown корректно освобождает renderer/presentation resources.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "PNG-снимок в интерактивном `FrameLimit == 0` читается один раз для заданного `ScreenshotPath`, а не каждый кадр до закрытия окна.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "В steady state внутри активного `presenter` нет `new byte[width * height * 4]`, `new RuntimePixelCanvas(width, height)`, `GCHandle.Alloc(...)`, LINQ, неограниченного роста `List` и других управляемых выделений на каждый показ кадра; полный путь построения `CanvasItemRenderPlan` проверяется отдельно в `T-0221`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "`RuntimePreviewFrameRasterizer` остаётся ограниченным программным инструментом для проверок; обычный PNG-снимок создаётся из активного `presenter`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-013",
+      "description": "`RuntimeHostResult` сообщает draw commands, planned batches, actual draw calls, texture switches, pipeline switches, committed texture uploads/cache hits, выбранный `presenter`, факт запасного пути и предварительные presenter-boundary allocation metrics; полный runtime-frame бюджет остаётся за `T-0221`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-014",
+      "description": "Allocation metric измеряет границу `presenter` без двойного учёта capture: минимум 120 кадров прогрева, минимум 600 измеряемых кадров без PNG, `MaxPresenterManagedBytesPerFrame == 0`, отдельная одноразовая метрика `CapturePresenterManagedBytesAllocated` для всего capture-вызова active presenter-а и отсутствие роста внутренних diagnostic collections.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-015",
+      "description": "Основной и запасной presenter-ы сохраняют ожидаемую геометрию и цвет для текста, texture flip, поворота, круга и непрямоугольного полигона; неподдержанный texture resource возвращает явную ошибку и не маскируется прямоугольником или запасным GPU fallback-ом.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-016",
+      "description": "Основной и запасной presenter-ы используют общий внутренний resolver для уже поддерживаемых texture resources и не расходятся между собой на `ImageTexture`/`AtlasTexture -> ImageTexture`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-017",
+      "description": "Запасной путь включается только для документированных recoverable GPU failures; ошибки данных, invariant-нарушения и ошибки программирования проходят наружу.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-018",
+      "description": "Recoverable GPU failures типизированы для device/driver/swapchain/device-loss/resource failures, включая command buffer acquisition, submit, fence submit/wait, render pass, copy pass и creation failures; реальные fault-injection tests проходят через `RuntimeGpuFramePresenter.Present()`, до получения swapchain texture command buffer завершается через cancel, после получения swapchain texture - только через допустимую отправку без повторной отмены; ошибки render plan и resource data не маскируются fallback-ом.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-019",
+      "description": "`SDL_shadercross` инициализируется один раз на процесс через единый runtime-сервис на потоке, владеющем отрисовкой; последовательные `RuntimeHost` sessions не повторяют `Init`/`Quit`, `ShaderCross.Quit()` выполняют `e2d` и `Electron2D.Editor` как владельцы приложения явным shutdown-вызовом на том же потоке, shutdown до первого `Acquire()` тоже терминален, а production `Acquire()` после любого shutdown отклоняется без повторного `Init()`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-020",
+      "description": "Focused tests не оставляют process-wide `SDL_shadercross` state, влияющий на последующие GPU-presenter tests; терминальные сценарии используют изолированный `UseApiForTests` scope, который не вызывает `Quit()` у прежнего `RuntimeShaderCrossLifetime`, сохраняет уже существующее initialized или terminal state до scope и поддерживает вложенные fake scopes без повторного `Init()` прежнего lifetime.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-021",
+      "description": "Все pending transfer buffers освобождаются при ошибке отправки кадра, при `Dispose()` и перед очисткой очереди upload; submit/fence failures не оставляют staged cache и освобождают native texture/transfer handles ровно один раз.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-022",
+      "description": "MSL shader `code_size` передаётся в байтах, а не как длина UTF-16 строки C#.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-023",
+      "description": "Противоречащий fallback-тест исправлен; указанная focused-команда завершается с 0 failed и 0 errors, а фактическое количество тестов фиксируется в evidence.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-024",
+      "description": "После зелёных проверок те же доменные документы обновлены фактическим поведением, ограничениями и командами проверки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-025",
+      "description": "Запущены focused runtime/rendering tests, source license verifier и `git diff --check`; результат записан в дневник разработки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-d752a70ea330ca3e0b8c9cc745ecd129/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по повторному аудиту пользователя. Не называть текущий Platformer готовым и не строить performance/smoke gates поверх runtime path, который создаёт framebuffer и presentation resource каждый кадр."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-25T16:39:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Закрыт последний внешний аудит `docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-test-scope-audit-2026-06-25.md`: `RuntimeShaderCrossService` теперь держит постоянный production `RuntimeShaderCrossLifetime`, а `UseApiForTests` временно подставляет отдельный fake lifetime, не вызывает `Quit()` у прежнего lifetime и возвращает его предшествующее initialized или terminal state. Новые regression tests сначала падали 2/2, после исправления прошли 2/2; все `RuntimeShaderCrossService` tests прошли 8/8, focused runtime/rendering suite прошёл 63/63."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-25T17:01:03.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Пользователь принял `T-0219`; задача удалена из активного `TASKS.md` и перенесена в этот архив. `T-0220` открыта как следующий runtime-шаг."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-25T17:01:03.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "docs/rendering"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/rendering/canvas-item-render-queue.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/rendering/rendering-server.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/rendering/texture-resource-baseline.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "docs/runtime"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/runtime/project-runtime-runner.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/verdicts/runtime/t-0219-runtime-presenter-audit.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/verdicts/runtime/t-0219-runtime-presenter-review-2026-06-25.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-isolation-audit-2026-06-25.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-test-scope-audit-2026-06-25.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/verdicts/runtime/t-0219-runtime-presenter-terminal-fault-injection-audit-2026-06-25.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/SdlGpuRenderingBackend.cs"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Application/RuntimeFramePresenter.cs"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Application/RuntimeHost.cs"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Application/RuntimeSdlRendererFramePresenter.cs"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Application/RuntimeShaderCrossService.cs"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "File",
+      "value": "src/Electron2D/Runtime/Application/RuntimeTextureResolver.cs"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/CanvasItemRenderQueueTests.cs"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RuntimeHostTests.cs"
+    },
+    {
+      "linkId": "link-0022",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/SdlGpuLifecycleTests.cs"
+    },
+    {
+      "linkId": "link-0023",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/SdlGpuStartupPolicyTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 950729,
+      "byteLength": 14491,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "f283549ffb35b83193c35c5f87042afe75558c18a56b6477c3568e44df021f46",
+      "markdown": "## T-0219 [x] P0: Заменить интерактивный runtime rendering path на переиспользуемую подачу кадров\n\n- Создана: 2026-06-24T19:20:00+03:00\n- Завершена: 2026-06-25T20:01:03+03:00\n- Принята пользователем: 2026-06-25T20:01:03+03:00\n- Архивная причина: пользователь принял задачу; блокирующих замечаний по последнему внешнему аудиту не осталось.\n- Приоритет: P0\n- Зависимости: нет\n- Ссылки:\n  - Доменный документ: `docs/runtime/project-runtime-runner.md`\n  - Доменный документ: `docs/rendering/rendering-server.md`\n  - Доменный документ: `docs/rendering/canvas-item-render-queue.md`\n  - Доменный документ: `docs/rendering/texture-resource-baseline.md`\n  - Внешние аудиты: `docs/verdicts/runtime/t-0219-runtime-presenter-audit.md`; `docs/verdicts/runtime/t-0219-runtime-presenter-review-2026-06-25.md`; `docs/verdicts/runtime/t-0219-runtime-presenter-reaudit-2026-06-25.md`; `docs/verdicts/runtime/t-0219-runtime-presenter-lifecycle-error-audit-2026-06-25.md`; `docs/verdicts/runtime/t-0219-runtime-presenter-terminal-fault-injection-audit-2026-06-25.md`; `docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-isolation-audit-2026-06-25.md`; `docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-test-scope-audit-2026-06-25.md`\n  - Исходный код: `src/Electron2D/Runtime/Application/RuntimeHost.cs`; `src/Electron2D/Runtime/Application/RuntimeFramePresenter.cs`; `src/Electron2D/Runtime/Application/RuntimeSdlRendererFramePresenter.cs`; `src/Electron2D/Runtime/Application/RuntimeShaderCrossService.cs`; `src/Electron2D/Runtime/Application/RuntimeTextureResolver.cs`; `src/Electron2D/Graphics/Rendering/SdlGpuRenderingBackend.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RuntimeHostTests.cs`; `tests/Electron2D.Tests.Integration/CanvasItemRenderQueueTests.cs`; `tests/Electron2D.Tests.Integration/SdlGpuLifecycleTests.cs`; `tests/Electron2D.Tests.Integration/SdlGpuStartupPolicyTests.cs`\n\n### Самодостаточное описание\n\nПовторный аудит Platformer показал, что основной FPS blocker находился в `RuntimeHost`: интерактивный запуск каждый кадр создавал новый `RuntimePixelCanvas`, управляемый RGBA-буфер кадра, временный ресурс показа кадра и программно растеризовал команды. Такой горячий путь кадра создавал крупные выделения памяти и не мог быть базой для приёмочной игры.\n\nПринятый результат: интерактивный `e2d run` использует общий путь отрисовки через `RenderingServer`/внутренний модуль показа кадра. Основной путь идёт через SDL GPU с реальными graphics pipelines, render pass и draw-вызовами. `SDL_Renderer` остаётся запасным интерактивным `presenter` для платформ или драйверов без рабочего GPU-пути. PNG-снимок создаётся из активного пути показа кадра: через чтение GPU-текстуры в основном пути или через `RenderReadPixels` в запасном пути. `RuntimePreviewFrameRasterizer` не подменяет обычное сохранение PNG.\n\n### Критерии приёмки\n\n- [x] До изменения кода обновлены доменные документы runtime/rendering: описан интерактивный переиспользуемый путь показа кадра, границы PNG-снимка и запрет покадрового выделения `framebuffer`.\n- [x] Добавлены tests или verifier checks, которые ловят покадровые выделения, закрепление управляемого массива, пересоздание ресурса показа кадра, чтение PNG каждый интерактивный кадр и неограниченный рост внутренних диагностических коллекций.\n- [x] Интерактивный `FrameLimit == 0` не использует `RuntimePreviewFrameRasterizer.Render(...)` как основной renderer.\n- [x] Обычный интерактивный путь идёт через `CanvasSubmissionContext`/`CanvasItemRenderPlan` и общий модуль показа кадра, а не через отдельную ручную pixel-rasterization ветку в `RuntimeHost`.\n- [x] Persistent textures, vertex/transfer buffers и submission resources переиспользуются между кадрами при неизменном размере окна.\n- [x] Texture upload cache предотвращает повторную загрузку неизменных texture resources каждый кадр, повторно загружает текстуру после изменения content revision, не сохраняет в кеше texture, upload которой не был успешно отправлен, и учитывает `TextureUploads` только после commit.\n- [x] Render commands группируются через render queue/batching по texture/material/blend state без нарушения порядка отрисовки; fallback честно сообщает фактические draw-вызовы отдельно от плановых пакетов.\n- [x] Resize contract разделяет observed resize, пересоздание engine-owned resources и backend/swapchain reconfiguration; диагностические счётчики отражают фактически созданные и пересозданные ресурсы без фиктивных значений.\n- [x] Shutdown корректно освобождает renderer/presentation resources.\n- [x] PNG-снимок в интерактивном `FrameLimit == 0` читается один раз для заданного `ScreenshotPath`, а не каждый кадр до закрытия окна.\n- [x] В steady state внутри активного `presenter` нет `new byte[width * height * 4]`, `new RuntimePixelCanvas(width, height)`, `GCHandle.Alloc(...)`, LINQ, неограниченного роста `List` и других управляемых выделений на каждый показ кадра; полный путь построения `CanvasItemRenderPlan` проверяется отдельно в `T-0221`.\n- [x] `RuntimePreviewFrameRasterizer` остаётся ограниченным программным инструментом для проверок; обычный PNG-снимок создаётся из активного `presenter`.\n- [x] `RuntimeHostResult` сообщает draw commands, planned batches, actual draw calls, texture switches, pipeline switches, committed texture uploads/cache hits, выбранный `presenter`, факт запасного пути и предварительные presenter-boundary allocation metrics; полный runtime-frame бюджет остаётся за `T-0221`.\n- [x] Allocation metric измеряет границу `presenter` без двойного учёта capture: минимум 120 кадров прогрева, минимум 600 измеряемых кадров без PNG, `MaxPresenterManagedBytesPerFrame == 0`, отдельная одноразовая метрика `CapturePresenterManagedBytesAllocated` для всего capture-вызова active presenter-а и отсутствие роста внутренних diagnostic collections.\n- [x] Основной и запасной presenter-ы сохраняют ожидаемую геометрию и цвет для текста, texture flip, поворота, круга и непрямоугольного полигона; неподдержанный texture resource возвращает явную ошибку и не маскируется прямоугольником или запасным GPU fallback-ом.\n- [x] Основной и запасной presenter-ы используют общий внутренний resolver для уже поддерживаемых texture resources и не расходятся между собой на `ImageTexture`/`AtlasTexture -> ImageTexture`.\n- [x] Запасной путь включается только для документированных recoverable GPU failures; ошибки данных, invariant-нарушения и ошибки программирования проходят наружу.\n- [x] Recoverable GPU failures типизированы для device/driver/swapchain/device-loss/resource failures, включая command buffer acquisition, submit, fence submit/wait, render pass, copy pass и creation failures; реальные fault-injection tests проходят через `RuntimeGpuFramePresenter.Present()`, до получения swapchain texture command buffer завершается через cancel, после получения swapchain texture - только через допустимую отправку без повторной отмены; ошибки render plan и resource data не маскируются fallback-ом.\n- [x] `SDL_shadercross` инициализируется один раз на процесс через единый runtime-сервис на потоке, владеющем отрисовкой; последовательные `RuntimeHost` sessions не повторяют `Init`/`Quit`, `ShaderCross.Quit()` выполняют `e2d` и `Electron2D.Editor` как владельцы приложения явным shutdown-вызовом на том же потоке, shutdown до первого `Acquire()` тоже терминален, а production `Acquire()` после любого shutdown отклоняется без повторного `Init()`.\n- [x] Focused tests не оставляют process-wide `SDL_shadercross` state, влияющий на последующие GPU-presenter tests; терминальные сценарии используют изолированный `UseApiForTests` scope, который не вызывает `Quit()` у прежнего `RuntimeShaderCrossLifetime`, сохраняет уже существующее initialized или terminal state до scope и поддерживает вложенные fake scopes без повторного `Init()` прежнего lifetime.\n- [x] Все pending transfer buffers освобождаются при ошибке отправки кадра, при `Dispose()` и перед очисткой очереди upload; submit/fence failures не оставляют staged cache и освобождают native texture/transfer handles ровно один раз.\n- [x] MSL shader `code_size` передаётся в байтах, а не как длина UTF-16 строки C#.\n- [x] Противоречащий fallback-тест исправлен; указанная focused-команда завершается с 0 failed и 0 errors, а фактическое количество тестов фиксируется в evidence.\n- [x] После зелёных проверок те же доменные документы обновлены фактическим поведением, ограничениями и командами проверки.\n- [x] Запущены focused runtime/rendering tests, source license verifier и `git diff --check`; результат записан в дневник разработки.\n\n### Подзадачи\n\n- [x] Зафиксировать новый rendering contract в `docs/runtime/` и `docs/rendering/`.\n- [x] Добавить red tests на per-frame allocation/presentation churn.\n- [x] Вынести ordinary PNG path из preview rasterizer и подключить переиспользуемый interactive renderer.\n- [x] Исправить diagnostics для render submit/present, фактических draw-вызовов, counters ресурсов и allocation counters.\n- [x] Убрать чтение PNG каждый интерактивный кадр и неограниченный рост lifecycle log.\n- [x] Исправить content revision/cache invalidation, transform geometry, recoverable GPU failure mapping, shadercross lifetime/terminal state, committed upload diagnostics и MSL `code_size`.\n- [x] Выполнить focused проверки и обновить документы по фактическому поведению.\n\n### Заметки агента\n\n2026-06-24T19:20:00+03:00 - Создано по повторному аудиту пользователя. Не называть текущий Platformer готовым и не строить performance/smoke gates поверх runtime path, который создаёт framebuffer и presentation resource каждый кадр.\n\n2026-06-25T19:39:00+03:00 - Закрыт последний внешний аудит `docs/verdicts/runtime/t-0219-runtime-presenter-shadercross-test-scope-audit-2026-06-25.md`: `RuntimeShaderCrossService` теперь держит постоянный production `RuntimeShaderCrossLifetime`, а `UseApiForTests` временно подставляет отдельный fake lifetime, не вызывает `Quit()` у прежнего lifetime и возвращает его предшествующее initialized или terminal state. Новые regression tests сначала падали 2/2, после исправления прошли 2/2; все `RuntimeShaderCrossService` tests прошли 8/8, focused runtime/rendering suite прошёл 63/63.\n\n2026-06-25T20:01:03+03:00 - Пользователь принял `T-0219`; задача удалена из активного `TASKS.md` и перенесена в этот архив. `T-0220` открыта как следующий runtime-шаг.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-24T16:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-25T17:01:03.0000000+00:00",
+  "completedAt": "2026-06-25T17:01:03.0000000+00:00",
+  "acceptedAt": "2026-06-25T17:01:03.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-25T17:01:03.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -20,7 +20,7 @@
 
 `e2d context build` создаёт компактный статический snapshot проекта для автономного AI-агента, CI или клиента без постоянного подключения к открытому Editor. Snapshot - это сохранённый на диск снимок выбранных сведений о проекте на момент выполнения команды. Он может устареть сразу после изменения scene, resource, settings, script или task documents и не заменяет живые MCP resources активной Editor-сессии.
 
-Команда является read-only по отношению к исходным игровым документам: она не открывает `ProjectWorkspace` на запись, не создаёт undo group, не меняет `.electron2d/tasks/*.e2task`, scene/resource files, scripts, import cache или task activity. Единственные создаваемые файлы находятся в `.electron2d/context/`.
+Команда является read-only по отношению к исходным игровым документам: она не открывает `ProjectWorkspace` на запись, не создаёт undo group, не меняет `.taskboard/*.e2task`, scene/resource files, scripts, import cache или task activity. Единственные создаваемые файлы находятся в `.electron2d/context/`.
 
 ## CLI contract
 
@@ -75,7 +75,7 @@ e2d context build --project <path> --format json
 
 `diagnostics.json` содержит summary проверок context build, skipped paths по категориям, parse diagnostics и security diagnostics. Значения секретов не попадают в diagnostics; если secret-like ключ найден, выводится только redacted path/category.
 
-`conventions.md` содержит краткие правила для AI-агента: context pack является snapshot, generated/local-only working directories нельзя редактировать вручную, canonical tasks лежат в `.electron2d/tasks/`, а перед изменениями нужно читать актуальные project instructions.
+`conventions.md` содержит краткие правила для AI-агента: context pack является snapshot, generated/local-only working directories нельзя редактировать вручную, canonical tasks лежат в `.taskboard/`, а перед изменениями нужно читать актуальные project instructions.
 
 ## Security and size policy
 
@@ -121,7 +121,7 @@ Context pack не должен включать:
 - `scene-index.json` - список `*.scene.json`, node names/types/groups и scene external resource references.
 - `resource-graph.json` - `.e2res` files, resource type/uid и references из scenes к resources.
 - `diagnostics.json` - summary context build, категории пропущенных файлов и parse/security diagnostics без значений секретов.
-- `conventions.md` - краткие правила для агента: snapshot нужно пересобирать, generated working directories нельзя редактировать вручную, canonical tasks лежат в `.electron2d/tasks/`.
+- `conventions.md` - краткие правила для агента: snapshot нужно пересобирать, generated working directories нельзя редактировать вручную, canonical tasks лежат в `.taskboard/`.
 
 ## Исключения и безопасность
 

@@ -351,7 +351,8 @@ internal static class WindowsPackageBuilder
 
     private static bool IsForbiddenPackageEntry(string entryName)
     {
-        return entryName.StartsWith(".electron2d/tasks/", StringComparison.Ordinal)
+        return entryName.StartsWith(".taskboard/", StringComparison.Ordinal)
+            || entryName.StartsWith(".electron2d/tasks/", StringComparison.Ordinal)
             || entryName.Equals("export_presets.e2export.json", StringComparison.Ordinal)
             || entryName.EndsWith(".cs", StringComparison.OrdinalIgnoreCase)
             || entryName.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase);

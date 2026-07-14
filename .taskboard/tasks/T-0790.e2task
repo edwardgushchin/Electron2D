@@ -1,0 +1,260 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-94ce730ba889b859caca358c9bf4209e",
+  "revision": 2,
+  "taskId": "T-0790",
+  "legacyAliases": [],
+  "title": "Подготовить Emoji/Fallback Strategy",
+  "description": "## T-0790 [ ] P0: Подготовить Emoji/Fallback Strategy\n\n- Создана: 2026-07-05T03:32:25+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-0241, T-0242, T-0243, T-0245, T-0248, T-0253\n- Ссылки:\n  - Доменный документ: `docs/ui/godot-47-emoji-fallback-strategy.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.6.1 Text, Font And UI Runtime Subsystems`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/ui/godot-47-emoji-fallback-strategy.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/ui/godot-47-emoji-fallback-strategy.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЦель - подготовить `Emoji/Fallback Strategy` как отдельный продуктовый срез подсистемы, внутренней реализации и проверок, без которого объектные задачи, совместимые с Godot 4.7, останутся фасадами.\n\nСрез нужен, чтобы TextServer, Font, Theme, RichTextLabel, TextEdit, CodeEdit, Control и dialog/window UI не были набором визуальных заглушек.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Первичные потребители результата\n\n- Публичным задачам текста, шрифтов и UI нужны возможности shaping, glyph, theme, layout, focus или input, определённые этой подсистемой.\n- `TextServer`, `Font*`, `TextLine`, `TextParagraph`, labels и text editors являются первичными потребителями, где это применимо.\n- Подтверждение для потребителей должно включать фикстуры Unicode, fallback, theme и layout, а также негативные случаи отсутствующего шрифта, темы или ввода.\n- Задачи подсистем не закрывают полное публичное поведение controls или классов шрифтов.\n\nДоменный документ должен развернуть этот список в таблицу: публичная задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Internal substrate acceptance contract\n\n- `Emoji/Fallback Strategy` has deterministic init/success and fail-closed diagnostics in the domain document, including a stable `E2D-*` code family when runtime failure is possible.\n- First consumer proof names the public task, required internal capability and first test/report that proves the consumer uses this substrate instead of a fallback.\n- Resource lifetime, cache, handle or subscription counters return to baseline after the smallest create/use/dispose scenario applicable to this substrate.\n- Unsupported platform/backend paths return documented diagnostics and do not silently degrade into stubs or no-op behavior.\n- This task does not define public methods/properties/signals/enums; public behavior remains owned by the concrete public API tasks.\n### Критерии приёмки\n\n- [ ] Доменный документ `docs/ui/godot-47-emoji-fallback-strategy.md` фиксирует границы `Emoji/Fallback Strategy`, зависимости, поведение на платформах, контракт неподдержанного или отложенного поведения и связь с объектными задачами.\n- [ ] Задача атомарна для одного исполнителя: один публичный тип или один названный контракт внутреннего слоя либо подсистемы. Нельзя расширять её на соседние классы, независимые внутренние слои или несколько несвязанных результатов без предварительного разделения на новые задачи.\n- [ ] До рабочего кода добавлены сначала падающие тесты или проверочные сценарии, которые доказывают текущий разрыв и затем становятся проходящими.\n- [ ] Реализация настоящая, производительная, без неописанных пустых веток, заглушек, утечек, зависаний на критических путях выполнения и скрытых синхронных блокировок.\n- [ ] Добавлены бенчмарки или проверки выделений памяти и производительности для поведения в среде выполнения или на критических путях; для чисто документальных задач указано, почему бенчмарк неприменим.\n- [ ] XML-документация и полная документация, манифест API, сгенерированная документация и заметки задачи синхронизированы с фактическим контрактом.\n- [ ] Проверки текущей задачи фиксируются в дневнике: целевые тесты и проверки, нужные проверки сборки, документации и лицензий и `git diff --check`.\n\n### Подзадачи\n\n- [ ] Зафиксировать источник истины, границу сгенерированных описаний и внутреннего слоя, явные нецели и подтверждение для потребителей в доменном документе; публичная поверхность не копировать вручную.\n- [ ] Добавить сначала падающие тесты, проверяющие команды и замеры перед рабочим кодом.\n- [ ] Реализовать минимальный рабочий путь или явный контракт `Deferred`/`Unsupported`, если задача является контрольным рубежом решения.\n- [ ] Обновить документацию и выполнить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:32:25+03:00 - Создано по результатам проверки целевого списка: этот явно названный объём раньше не имел отдельной активной задачи в предыдущем срезе ROADMAP.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fab4705fe4a1db467903c0bc500995a7"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-4f2623e91556270e845d083123ca613f"
+    },
+    {
+      "relationId": "relation-0006",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-1e12be331f0d804a0785e6a872bfd6ec"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ `docs/ui/godot-47-emoji-fallback-strategy.md` фиксирует границы `Emoji/Fallback Strategy`, зависимости, поведение на платформах, контракт неподдержанного или отложенного поведения и связь с объектными задачами.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Задача атомарна для одного исполнителя: один публичный тип или один названный контракт внутреннего слоя либо подсистемы. Нельзя расширять её на соседние классы, независимые внутренние слои или несколько несвязанных результатов без предварительного разделения на новые задачи.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "До рабочего кода добавлены сначала падающие тесты или проверочные сценарии, которые доказывают текущий разрыв и затем становятся проходящими.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Реализация настоящая, производительная, без неописанных пустых веток, заглушек, утечек, зависаний на критических путях выполнения и скрытых синхронных блокировок.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Добавлены бенчмарки или проверки выделений памяти и производительности для поведения в среде выполнения или на критических путях; для чисто документальных задач указано, почему бенчмарк неприменим.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "XML-документация и полная документация, манифест API, сгенерированная документация и заметки задачи синхронизированы с фактическим контрактом.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Проверки текущей задачи фиксируются в дневнике: целевые тесты и проверки, нужные проверки сборки, документации и лицензий и `git diff --check`.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:32:25.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по результатам проверки целевого списка: этот явно названный объём раньше не имел отдельной активной задачи в предыдущем срезе ROADMAP."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required for final acceptance unless a parent gate explicitly owns audit evidence"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "Emoji/Fallback Strategy"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/ui/godot-47-emoji-fallback-strategy.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.",
+      "docs/ui/godot-47-emoji-fallback-strategy.md is current and RED tests/verifiers can be added before production changes."
+    ],
+    "stopConditions": [
+      "implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.",
+      "tests, domain document or generated source-of-truth artifacts are missing or stale.",
+      "a shortcut would introduce facade, stub, hidden fallback or undocumented behavior."
+    ],
+    "allowedChanges": [
+      "files named in this task's `Ссылки` block and their owning tests/docs.",
+      "generated artifacts only through their owning generator/verifier.",
+      "`TASKS.md` notes/current evidence and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.",
+      "public API surface not present in generated Godot 4.7 packets.",
+      "unrelated formatting, dependency graph or metadata churn."
+    ],
+    "requiredOutputs": [
+      "docs/ui/godot-47-emoji-fallback-strategy.md",
+      "RED/GREEN test or verifier evidence for the selected slice.",
+      "synchronized XML/docs/API/generated documentation evidence when public surface or docs change.",
+      "task notes/current evidence and diary entry with exact command results."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required for final acceptance unless a parent gate explicitly owns audit evidence",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 11445941,
+      "byteLength": 12056,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "f73ecf50e30097fb56a3deecec50081c61fd80b42d8c716f0dd8f14b6f679d2c",
+      "markdown": "## T-0790 [ ] P0: Подготовить Emoji/Fallback Strategy\n\n- Создана: 2026-07-05T03:32:25+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-0241, T-0242, T-0243, T-0245, T-0248, T-0253\n- Ссылки:\n  - Доменный документ: `docs/ui/godot-47-emoji-fallback-strategy.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.6.1 Text, Font And UI Runtime Subsystems`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/ui/godot-47-emoji-fallback-strategy.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/ui/godot-47-emoji-fallback-strategy.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЦель - подготовить `Emoji/Fallback Strategy` как отдельный продуктовый срез подсистемы, внутренней реализации и проверок, без которого объектные задачи, совместимые с Godot 4.7, останутся фасадами.\n\nСрез нужен, чтобы TextServer, Font, Theme, RichTextLabel, TextEdit, CodeEdit, Control и dialog/window UI не были набором визуальных заглушек.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Первичные потребители результата\n\n- Публичным задачам текста, шрифтов и UI нужны возможности shaping, glyph, theme, layout, focus или input, определённые этой подсистемой.\n- `TextServer`, `Font*`, `TextLine`, `TextParagraph`, labels и text editors являются первичными потребителями, где это применимо.\n- Подтверждение для потребителей должно включать фикстуры Unicode, fallback, theme и layout, а также негативные случаи отсутствующего шрифта, темы или ввода.\n- Задачи подсистем не закрывают полное публичное поведение controls или классов шрифтов.\n\nДоменный документ должен развернуть этот список в таблицу: публичная задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Internal substrate acceptance contract\n\n- `Emoji/Fallback Strategy` has deterministic init/success and fail-closed diagnostics in the domain document, including a stable `E2D-*` code family when runtime failure is possible.\n- First consumer proof names the public task, required internal capability and first test/report that proves the consumer uses this substrate instead of a fallback.\n- Resource lifetime, cache, handle or subscription counters return to baseline after the smallest create/use/dispose scenario applicable to this substrate.\n- Unsupported platform/backend paths return documented diagnostics and do not silently degrade into stubs or no-op behavior.\n- This task does not define public methods/properties/signals/enums; public behavior remains owned by the concrete public API tasks.\n### Критерии приёмки\n\n- [ ] Доменный документ `docs/ui/godot-47-emoji-fallback-strategy.md` фиксирует границы `Emoji/Fallback Strategy`, зависимости, поведение на платформах, контракт неподдержанного или отложенного поведения и связь с объектными задачами.\n- [ ] Задача атомарна для одного исполнителя: один публичный тип или один названный контракт внутреннего слоя либо подсистемы. Нельзя расширять её на соседние классы, независимые внутренние слои или несколько несвязанных результатов без предварительного разделения на новые задачи.\n- [ ] До рабочего кода добавлены сначала падающие тесты или проверочные сценарии, которые доказывают текущий разрыв и затем становятся проходящими.\n- [ ] Реализация настоящая, производительная, без неописанных пустых веток, заглушек, утечек, зависаний на критических путях выполнения и скрытых синхронных блокировок.\n- [ ] Добавлены бенчмарки или проверки выделений памяти и производительности для поведения в среде выполнения или на критических путях; для чисто документальных задач указано, почему бенчмарк неприменим.\n- [ ] XML-документация и полная документация, манифест API, сгенерированная документация и заметки задачи синхронизированы с фактическим контрактом.\n- [ ] Проверки текущей задачи фиксируются в дневнике: целевые тесты и проверки, нужные проверки сборки, документации и лицензий и `git diff --check`.\n\n### Подзадачи\n\n- [ ] Зафиксировать источник истины, границу сгенерированных описаний и внутреннего слоя, явные нецели и подтверждение для потребителей в доменном документе; публичная поверхность не копировать вручную.\n- [ ] Добавить сначала падающие тесты, проверяющие команды и замеры перед рабочим кодом.\n- [ ] Реализовать минимальный рабочий путь или явный контракт `Deferred`/`Unsupported`, если задача является контрольным рубежом решения.\n- [ ] Обновить документацию и выполнить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:32:25+03:00 - Создано по результатам проверки целевого списка: этот явно названный объём раньше не имел отдельной активной задачи в предыдущем срезе ROADMAP.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:32:25.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

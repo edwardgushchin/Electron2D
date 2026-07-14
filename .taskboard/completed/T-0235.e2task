@@ -1,0 +1,278 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-0baf0daf67fe1f9f1a129cf735c223a9",
+  "revision": 2,
+  "taskId": "T-0235",
+  "legacyAliases": [],
+  "title": "Устойчиво извлекать внешний audit submit отчёт из конкретного чата",
+  "description": "## T-0235 [x] P0: Устойчиво извлекать внешний audit submit отчёт из конкретного чата\n\n- Создана: 2026-06-30T14:25:00+03:00\n- Завершена: 2026-06-30T16:13:00+03:00\n- Принята внешним аудитом: 2026-06-30T16:13:00+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний audit r05 принял исправления штатного `audit submit`, включая восстановление по конкретному URL чата, sidecar восстановления, current-frame-first extraction, безопасное восстановление CDP-связи для чтения и строгую диагностику `REPORT_INVALID`.\n- Приоритет: P0\n- Зависимости: T-0233, T-0234\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходный код: `eng/Electron2D.Build/AuditSubmitCommand.cs`\n  - Исходный код: `eng/Electron2D.Build/AuditSubmitCodexChromeCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Предыдущий внешний аудит: `docs/verdicts/release-management/t-0235-audit-r03.md`\n  - Принятый промежуточный внешний аудит: `docs/verdicts/release-management/t-0235-audit-r04.md`\n  - Финальный внешний аудит: `docs/verdicts/release-management/t-0235-audit-r05.md`\n\n### Самодостаточное описание\n\nПри закрытии `T-0234` штатный `audit submit` несколько раз мешал нормальному accept-loop: режим `--download-report-only` принимал общий project URL вместо конкретного URL чата, после отправки ZIP не оставался URL для восстановления, глобальные Deep Research targets из других вкладок могли вмешиваться в выбор отчёта, временный detach CDP-связи прерывал безопасные операции чтения, а строгий Markdown-валидатор не объяснял конкретную причину `REPORT_INVALID`.\n\nЗадача закрепила восстановимый и детерминированный путь: `--download-report-only` отклоняет ссылки без `/c/<conversation-id>`; обычный submit после отправки ZIP ждёт конкретный URL чата и пишет временный sidecar `.temp/audit/<task-id>/conversation-url-rNN.txt`; извлечение Markdown сначала использует frame текущей вкладки и только затем резервные target/page пути; временные CDP-сбои повторяются только для операций чтения; DOM-клики отправки и экспорта не повторяются как безопасные; `REPORT_INVALID` сообщает точную причину отказа.\n\nДополнительно после r04 исправлен локальный validator `CLOSURE_DECISION`: внешний отчёт явно написал «Текущее изменение можно закрывать», и r05 закрепил, что такая фраза является явным разрешением закрыть изменение, тогда как неявное `Accepted.` по-прежнему не принимается.\n\n### Критерии и результат\n\n- [x] `docs/release-management/audit-package.md` фиксирует контракт current-page-first extraction, конкретного `/c/<conversation-id>` для `--download-report-only`, sidecar восстановления, safe CDP recovery и детальных причин `REPORT_INVALID`.\n- [x] Focused tests покрывают URL validation, приоритет текущего frame перед чужими targets, запись и reject sidecar, безопасный target/frame recovery, подробную диагностику `REPORT_INVALID` и явную русскоязычную closure-фразу.\n- [x] `--download-report-only` отклоняет project/root/foreign URL до подключения к браузеру.\n- [x] Обычный submit пишет sidecar с concrete conversation URL после отправки ZIP.\n- [x] Видимый Deep Research iframe без usable CDP frame context не блокирует fallback.\n- [x] DOM-клики отправки и экспорта не повторяются через read-recovery.\n- [x] Внешний аудит r05 вернул `VERDICT: ACCEPT`.\n\n### Проверки\n\n- [x] Red-run `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~AuditSubmit\"` сначала упал 8/37 на новых требованиях.\n- [x] `dotnet build tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj -v:minimal` прошёл без предупреждений и ошибок.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~AuditSubmit\" --no-build --no-restore` прошёл: 40/40.\n- [x] `dotnet build eng\\Electron2D.Build\\Electron2D.Build.csproj -v:minimal` прошёл без предупреждений и ошибок.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs --check` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify docs` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл.\n- [x] `git diff --check` прошёл с предупреждением Git о будущей LF-нормализации `docs/release-management/audit-package.md`.\n- [x] `audit package r05` и отдельный `audit package verify r05` прошли.\n- [x] Внешний аудит `docs/verdicts/release-management/t-0235-audit-r05.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-30T14:25:00+03:00 - Задача создана по принятому пользователем плану исправить шесть причин сбоев `audit submit`, проявившихся при `T-0234`, и довести само исправление через внешний audit-loop.\n\n2026-06-30T15:29:00+03:00 - Внешний аудит r03 вернул `VERDICT: NEEDS_FIXES`: sidecar мог отсутствовать без явной ошибки, visible iframe без usable frame context блокировал fallback, а часть проверок была только source-inspection.\n\n2026-06-30T15:56:00+03:00 - Внешний аудит r04 вернул `VERDICT: ACCEPT`, но штатный локальный validator сначала не сохранил отчёт из-за узкой проверки `CLOSURE_DECISION`; добавлен focused test на явное закрытие текущего изменения.\n\n2026-06-30T16:13:00+03:00 - Внешний аудит r05 вернул `VERDICT: ACCEPT`; `T-0235` удалена из активного `TASKS.md` и перенесена в monthly archive.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-2deb50c6aedb0d88818281ece43ebf03"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a197e914202c56d1883b45b2011d1a63"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`docs/release-management/audit-package.md` фиксирует контракт current-page-first extraction, конкретного `/c/<conversation-id>` для `--download-report-only`, sidecar восстановления, safe CDP recovery и детальных причин `REPORT_INVALID`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0baf0daf67fe1f9f1a129cf735c223a9/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Focused tests покрывают URL validation, приоритет текущего frame перед чужими targets, запись и reject sidecar, безопасный target/frame recovery, подробную диагностику `REPORT_INVALID` и явную русскоязычную closure-фразу.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0baf0daf67fe1f9f1a129cf735c223a9/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`--download-report-only` отклоняет project/root/foreign URL до подключения к браузеру.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0baf0daf67fe1f9f1a129cf735c223a9/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Обычный submit пишет sidecar с concrete conversation URL после отправки ZIP.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0baf0daf67fe1f9f1a129cf735c223a9/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Видимый Deep Research iframe без usable CDP frame context не блокирует fallback.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0baf0daf67fe1f9f1a129cf735c223a9/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "DOM-клики отправки и экспорта не повторяются через read-recovery.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0baf0daf67fe1f9f1a129cf735c223a9/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Внешний аудит r05 вернул `VERDICT: ACCEPT`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-0baf0daf67fe1f9f1a129cf735c223a9/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T11:25:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача создана по принятому пользователем плану исправить шесть причин сбоев `audit submit`, проявившихся при `T-0234`, и довести само исправление через внешний audit-loop."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T12:29:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r03 вернул `VERDICT: NEEDS_FIXES`: sidecar мог отсутствовать без явной ошибки, visible iframe без usable frame context блокировал fallback, а часть проверок была только source-inspection."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T12:56:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r04 вернул `VERDICT: ACCEPT`, но штатный локальный validator сначала не сохранил отчёт из-за узкой проверки `CLOSURE_DECISION`; добавлен focused test на явное закрытие текущего изменения."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T13:13:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r05 вернул `VERDICT: ACCEPT`; `T-0235` удалена из активного `TASKS.md` и перенесена в monthly archive."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-30T13:13:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".temp/audit/<task-id>/conversation-url-rNN.txt"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Resource",
+      "value": "/c/<conversation-id>"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0235-audit-r03.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0235-audit-r04.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0235-audit-r05.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/AuditSubmitCodexChromeCommand.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/AuditSubmitCommand.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 1050813,
+      "byteLength": 7378,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "8f5ce51db8ffcfdf3e27c6edf5dd17a19b94372ffa29729d8230ffc95c9e8c58",
+      "markdown": "## T-0235 [x] P0: Устойчиво извлекать внешний audit submit отчёт из конкретного чата\n\n- Создана: 2026-06-30T14:25:00+03:00\n- Завершена: 2026-06-30T16:13:00+03:00\n- Принята внешним аудитом: 2026-06-30T16:13:00+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний audit r05 принял исправления штатного `audit submit`, включая восстановление по конкретному URL чата, sidecar восстановления, current-frame-first extraction, безопасное восстановление CDP-связи для чтения и строгую диагностику `REPORT_INVALID`.\n- Приоритет: P0\n- Зависимости: T-0233, T-0234\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходный код: `eng/Electron2D.Build/AuditSubmitCommand.cs`\n  - Исходный код: `eng/Electron2D.Build/AuditSubmitCodexChromeCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Предыдущий внешний аудит: `docs/verdicts/release-management/t-0235-audit-r03.md`\n  - Принятый промежуточный внешний аудит: `docs/verdicts/release-management/t-0235-audit-r04.md`\n  - Финальный внешний аудит: `docs/verdicts/release-management/t-0235-audit-r05.md`\n\n### Самодостаточное описание\n\nПри закрытии `T-0234` штатный `audit submit` несколько раз мешал нормальному accept-loop: режим `--download-report-only` принимал общий project URL вместо конкретного URL чата, после отправки ZIP не оставался URL для восстановления, глобальные Deep Research targets из других вкладок могли вмешиваться в выбор отчёта, временный detach CDP-связи прерывал безопасные операции чтения, а строгий Markdown-валидатор не объяснял конкретную причину `REPORT_INVALID`.\n\nЗадача закрепила восстановимый и детерминированный путь: `--download-report-only` отклоняет ссылки без `/c/<conversation-id>`; обычный submit после отправки ZIP ждёт конкретный URL чата и пишет временный sidecar `.temp/audit/<task-id>/conversation-url-rNN.txt`; извлечение Markdown сначала использует frame текущей вкладки и только затем резервные target/page пути; временные CDP-сбои повторяются только для операций чтения; DOM-клики отправки и экспорта не повторяются как безопасные; `REPORT_INVALID` сообщает точную причину отказа.\n\nДополнительно после r04 исправлен локальный validator `CLOSURE_DECISION`: внешний отчёт явно написал «Текущее изменение можно закрывать», и r05 закрепил, что такая фраза является явным разрешением закрыть изменение, тогда как неявное `Accepted.` по-прежнему не принимается.\n\n### Критерии и результат\n\n- [x] `docs/release-management/audit-package.md` фиксирует контракт current-page-first extraction, конкретного `/c/<conversation-id>` для `--download-report-only`, sidecar восстановления, safe CDP recovery и детальных причин `REPORT_INVALID`.\n- [x] Focused tests покрывают URL validation, приоритет текущего frame перед чужими targets, запись и reject sidecar, безопасный target/frame recovery, подробную диагностику `REPORT_INVALID` и явную русскоязычную closure-фразу.\n- [x] `--download-report-only` отклоняет project/root/foreign URL до подключения к браузеру.\n- [x] Обычный submit пишет sidecar с concrete conversation URL после отправки ZIP.\n- [x] Видимый Deep Research iframe без usable CDP frame context не блокирует fallback.\n- [x] DOM-клики отправки и экспорта не повторяются через read-recovery.\n- [x] Внешний аудит r05 вернул `VERDICT: ACCEPT`.\n\n### Проверки\n\n- [x] Red-run `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~AuditSubmit\"` сначала упал 8/37 на новых требованиях.\n- [x] `dotnet build tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj -v:minimal` прошёл без предупреждений и ошибок.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~AuditSubmit\" --no-build --no-restore` прошёл: 40/40.\n- [x] `dotnet build eng\\Electron2D.Build\\Electron2D.Build.csproj -v:minimal` прошёл без предупреждений и ошибок.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs --check` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify docs` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл.\n- [x] `git diff --check` прошёл с предупреждением Git о будущей LF-нормализации `docs/release-management/audit-package.md`.\n- [x] `audit package r05` и отдельный `audit package verify r05` прошли.\n- [x] Внешний аудит `docs/verdicts/release-management/t-0235-audit-r05.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-30T14:25:00+03:00 - Задача создана по принятому пользователем плану исправить шесть причин сбоев `audit submit`, проявившихся при `T-0234`, и довести само исправление через внешний audit-loop.\n\n2026-06-30T15:29:00+03:00 - Внешний аудит r03 вернул `VERDICT: NEEDS_FIXES`: sidecar мог отсутствовать без явной ошибки, visible iframe без usable frame context блокировал fallback, а часть проверок была только source-inspection.\n\n2026-06-30T15:56:00+03:00 - Внешний аудит r04 вернул `VERDICT: ACCEPT`, но штатный локальный validator сначала не сохранил отчёт из-за узкой проверки `CLOSURE_DECISION`; добавлен focused test на явное закрытие текущего изменения.\n\n2026-06-30T16:13:00+03:00 - Внешний аудит r05 вернул `VERDICT: ACCEPT`; `T-0235` удалена из активного `TASKS.md` и перенесена в monthly archive.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-30T11:25:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-30T13:13:00.0000000+00:00",
+  "completedAt": "2026-06-30T13:13:00.0000000+00:00",
+  "acceptedAt": "2026-06-30T13:13:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-30T13:13:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

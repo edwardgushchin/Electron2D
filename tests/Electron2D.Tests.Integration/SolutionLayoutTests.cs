@@ -39,7 +39,7 @@ public sealed class SolutionLayoutTests
         Assert.True(Directory.Exists(Path.Combine(root, "data", "templates", "electron2d-empty")));
         Assert.True(Directory.Exists(Path.Combine(root, "data", "assets", "reference-games")));
         Assert.True(Directory.Exists(Path.Combine(root, "data", "schemas")));
-        Assert.True(Directory.Exists(Path.Combine(root, "data", "completed-tasks")));
+        Assert.True(Directory.Exists(Path.Combine(root, ".taskboard")));
         Assert.True(Directory.Exists(Path.Combine(root, "data", "dev-diary")));
         Assert.False(Directory.Exists(Path.Combine(root, "templates")));
         Assert.False(Directory.Exists(Path.Combine(root, "assets")));
@@ -50,14 +50,17 @@ public sealed class SolutionLayoutTests
     }
 
     [Fact]
-    public void RepositoryTracksWorkMaterialsUnderDataOnly()
+    public void RepositoryTracksTaskboardAndDiaryWithoutLegacyTaskFiles()
     {
         var root = FindRepositoryRoot();
         var repositoryFiles = GetRepositoryFilesVisibleToGit();
-        Assert.Contains("TASKS.md", repositoryFiles);
-        Assert.Contains(repositoryFiles, file => file.StartsWith("data/completed-tasks/", StringComparison.Ordinal));
+        Assert.Contains(".taskboard/board.e2tasks", repositoryFiles);
+        Assert.Contains(repositoryFiles, file => file.StartsWith(".taskboard/tasks/", StringComparison.Ordinal));
+        Assert.Contains(repositoryFiles, file => file.StartsWith(".taskboard/completed/", StringComparison.Ordinal));
         Assert.Contains(repositoryFiles, file => file.StartsWith("data/dev-diary/", StringComparison.Ordinal));
         Assert.Contains(repositoryFiles, file => file.StartsWith("data/schemas/", StringComparison.Ordinal));
+        Assert.DoesNotContain("TASKS.md", repositoryFiles);
+        Assert.DoesNotContain(repositoryFiles, file => file.StartsWith("data/completed-tasks/", StringComparison.Ordinal));
 
         var forbidden = new[]
         {

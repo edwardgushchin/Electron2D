@@ -1,0 +1,121 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-c38628dbd0c93e5127f08d9925c6e225",
+  "revision": 2,
+  "taskId": "T-0001",
+  "legacyAliases": [],
+  "title": "Согласовать релизный backlog `0.1.0 Preview` и трассировку задач к спецификациям",
+  "description": "# T-0001: Согласовать релизный backlog `0.1.0 Preview` и трассировку задач к спецификациям\n\n- Статус: завершена\n- Завершена: 2026-06-20T20:05:00+03:00\n- Коммит: `T-0001: перезапустить 0.1.0 с чистого baseline`\n- Основание: пользователь явно отменил продолжение legacy-направления, потребовал сохранить прежнюю работу в отдельной ветке, вернуть `main` к `4007f36bf6857b33d6fc8cf614732f92e839287d`, удалить старый `src/Electron2D/` и писать движок заново.\n\n## Итог\n\n- Вся работа после `4007f36bf6857b33d6fc8cf614732f92e839287d` сохранена в локальной ветке `private/pre-rewrite-backup-2026-06-20`.\n- `main` возвращён к `4007f36bf6857b33d6fc8cf614732f92e839287d`.\n- Старый каталог `src/Electron2D/` удалён полностью.\n- Релизная спецификация уточняет новый baseline: `0.1.0 Preview` пишется с нуля, без Unity-like component history, без compatibility layer и без публичных API вне согласованного целевого 2D API-поднабора.\n- Документация реализации фиксирует пустой runtime baseline.\n\n## Проверки\n\n- `git log --oneline --ancestry-path 4007f36bf6857b33d6fc8cf614732f92e839287d..private/pre-rewrite-backup-2026-06-20` подтвердил, что backup-ветка содержит цепочку выполненных ранее задач и отдельный backup-коммит.\n- `git reset --hard 4007f36bf6857b33d6fc8cf614732f92e839287d` успешно вернул `main` к требуемому baseline.\n- `Test-Path src/Electron2D` после удаления возвращает `False`.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-20T17:05:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "Test-Path src/Electron2D"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "private/pre-rewrite-backup-2026-06-20"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "git log --oneline --ancestry-path 4007f36bf6857b33d6fc8cf614732f92e839287d..private/pre-rewrite-backup-2026-06-20",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 290,
+      "byteLength": 1967,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "e047c81b3f006b7a75c1138fba82762e216e97df32580eb723d5bc81369a3961",
+      "markdown": "# T-0001: Согласовать релизный backlog `0.1.0 Preview` и трассировку задач к спецификациям\n\n- Статус: завершена\n- Завершена: 2026-06-20T20:05:00+03:00\n- Коммит: `T-0001: перезапустить 0.1.0 с чистого baseline`\n- Основание: пользователь явно отменил продолжение legacy-направления, потребовал сохранить прежнюю работу в отдельной ветке, вернуть `main` к `4007f36bf6857b33d6fc8cf614732f92e839287d`, удалить старый `src/Electron2D/` и писать движок заново.\n\n## Итог\n\n- Вся работа после `4007f36bf6857b33d6fc8cf614732f92e839287d` сохранена в локальной ветке `private/pre-rewrite-backup-2026-06-20`.\n- `main` возвращён к `4007f36bf6857b33d6fc8cf614732f92e839287d`.\n- Старый каталог `src/Electron2D/` удалён полностью.\n- Релизная спецификация уточняет новый baseline: `0.1.0 Preview` пишется с нуля, без Unity-like component history, без compatibility layer и без публичных API вне согласованного целевого 2D API-поднабора.\n- Документация реализации фиксирует пустой runtime baseline.\n\n## Проверки\n\n- `git log --oneline --ancestry-path 4007f36bf6857b33d6fc8cf614732f92e839287d..private/pre-rewrite-backup-2026-06-20` подтвердил, что backup-ветка содержит цепочку выполненных ранее задач и отдельный backup-коммит.\n- `git reset --hard 4007f36bf6857b33d6fc8cf614732f92e839287d` успешно вернул `main` к требуемому baseline.\n- `Test-Path src/Electron2D` после удаления возвращает `False`.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T17:05:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-20T17:05:00.0000000+00:00",
+  "completedAt": "2026-06-20T17:05:00.0000000+00:00",
+  "acceptedAt": "2026-06-20T17:05:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-20T17:05:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

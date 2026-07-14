@@ -1,0 +1,328 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-87432465f9ca500ace92dd670ec79481",
+  "revision": 2,
+  "taskId": "T-0116",
+  "legacyAliases": [],
+  "title": "Реализовать `e2d` CLI для headless, CI и маршрутизации в активный Editor",
+  "description": "# T-0116 [x] P0: Реализовать `e2d` CLI для headless, CI и маршрутизации в активный Editor\n\n- Статус: завершена\n- Завершена: 2026-06-22T20:42:06+03:00\n- Коммит: `062f396` (`feat: add preview cli routing contract`)\n\n## Ссылки\n\n- Спецификация: `docs/cli/e2d-cli.md`; `docs/architecture/ai-friendly-workflow.md`; `docs/tooling/editor-session-discovery.md`; `docs/tooling/tooling-service-boundary.md`; `docs/project-system/workspace-jobs.md`\n- Документация: `docs/cli/e2d-cli.md`; `docs/diagnostics/diagnostics-core.md`; `docs/README.md`\n- Исходный код: `src/Electron2D.Cli/`; `src/Electron2D.Tooling/`; `src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`; `tests/Electron2D.Tests.Integration/LocalDocumentationCliTests.cs`\n\n## Самодостаточное описание\n\nCLI `e2d` получил проверяемую Preview-основу для headless/CI workflow и маршрутизации изменяющих команд в active Editor workspace. Текущий scope фиксирует общий parser, help для обязательных групп, stable JSON/JSONL envelope, generic `workspace transaction`, job-backed команды `import/build/run/test/export`, stable CLI diagnostics и route selection через `EditorSessionRegistry`.\n\n## Что сделано\n\n- Добавлена целевая спецификация `docs/cli/e2d-cli.md`.\n- `Electron2D.Cli` получил ссылки на `Electron2D.ProjectSystem` и `Electron2D.Tooling`.\n- Добавлен `CliExecutionContext` для in-process tests и будущего adapter wiring.\n- Root/group help показывает обязательные command groups и common flags.\n- `workspace transaction` поддерживает `--project`, `--path`, `--expected-revision`, `--text`, `--dry-run`, `--headless` и stable JSON output.\n- При active Editor registry команда routed в active `ProjectWorkspace` через `ProjectToolingHost`; при headless route используется `HeadlessCommit`.\n- `import`, `build`, `run`, `test`, `export` создают `WorkspaceJob` и пишут JSONL queued event с snapshot identity fields.\n- Unsupported groups/subcommands возвращают stable diagnostic `E2D-CLI-0001`.\n- Добавлены diagnostic codes `E2D-CLI-0001`, `E2D-CLI-0002`, `E2D-CLI-0003`.\n- Существующие `docs search/type/member/example` продолжили работать.\n- Добавлена implementation documentation `docs/cli/e2d-cli.md`.\n\n## Критерии приёмки\n\n- [x] Все команды имеют `--help`, `--format text|json|jsonl`, `--quiet`, `--verbose`, `--project <path>`.\n- [x] Все изменяющие команды имеют `--dry-run` и возвращают список затронутых файлов.\n- [x] JSON/JSONL output стабилен и покрыт integration tests.\n- [x] CLI JSONL для import/build/test/export/run потребляет job event stream из `T-0147` и сохраняет `InputSnapshotId`, `InputWorkspaceRevision`, `InputContentRevision`, `InputDocumentRevisions`, `InputBuildConfigurationHash` и `stale` markers.\n- [x] Ошибки имеют стабильные коды вида `E2D-AREA-0000`.\n- [x] CLI не требует GUI runtime для validate/build/test/export.\n- [x] CLI обнаруживает активную Editor-сессию и направляет изменяющие команды в неё либо явно сообщает, что требуется headless-режим.\n- [x] CLI не теряет unsaved изменения открытого Editor и не перезаписывает dirty документы напрямую с диска.\n- [x] CLI поддерживает generic workspace transaction/scene patch path для операций, которым не нужна отдельная удобная команда.\n- [x] Документация CLI обновлена.\n- [x] Команда проверки задокументирована.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DCliWorkflowTests` падал на отсутствующем `CliExecutionContext`.\n- Green focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DCliWorkflowTests` прошёл `9/9`.\n- Regression focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Electron2DCliWorkflowTests|FullyQualifiedName~LocalDocumentationCliTests\"` прошёл `12/12`.\n- `git diff --check` прошёл с предупреждениями только о будущей нормализации LF/CRLF.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: `536` tracked source files.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `333/333`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: `305` source files.\n\n## Решения\n\n- `T-0116` реализует Preview CLI contract и route selection, но не закрывает удобные scene/resource commands, `api compare-godot`, реальный `mcp serve`, `context build`, полноценный `doctor` или реальные import/build/run/test/export toolchains.\n- JSONL job stream сейчас фиксирует queued event и snapshot identity; progress/completion events должны подключаться вместе с реальными toolchain runners.\n- Local workflow files `TASKS.md`, `completed-tasks/` и `dev-diary/` остаются ignored/local-only и не входят в commit.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Все команды имеют `--help`, `--format text|json|jsonl`, `--quiet`, `--verbose`, `--project <path>`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-87432465f9ca500ace92dd670ec79481/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Все изменяющие команды имеют `--dry-run` и возвращают список затронутых файлов.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-87432465f9ca500ace92dd670ec79481/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "JSON/JSONL output стабилен и покрыт integration tests.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-87432465f9ca500ace92dd670ec79481/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "CLI JSONL для import/build/test/export/run потребляет job event stream из `T-0147` и сохраняет `InputSnapshotId`, `InputWorkspaceRevision`, `InputContentRevision`, `InputDocumentRevisions`, `InputBuildConfigurationHash` и `stale` markers.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-87432465f9ca500ace92dd670ec79481/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Ошибки имеют стабильные коды вида `E2D-AREA-0000`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-87432465f9ca500ace92dd670ec79481/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "CLI не требует GUI runtime для validate/build/test/export.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-87432465f9ca500ace92dd670ec79481/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "CLI обнаруживает активную Editor-сессию и направляет изменяющие команды в неё либо явно сообщает, что требуется headless-режим.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-87432465f9ca500ace92dd670ec79481/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "CLI не теряет unsaved изменения открытого Editor и не перезаписывает dirty документы напрямую с диска.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-87432465f9ca500ace92dd670ec79481/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "CLI поддерживает generic workspace transaction/scene patch path для операций, которым не нужна отдельная удобная команда.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-87432465f9ca500ace92dd670ec79481/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Документация CLI обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-87432465f9ca500ace92dd670ec79481/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Команда проверки задокументирована.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-87432465f9ca500ace92dd670ec79481/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T17:42:06.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "333/333"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "9/9"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "completed-tasks"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "dev-diary"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs search/type/member/example"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/README.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/architecture/ai-friendly-workflow.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/diagnostics/diagnostics-core.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/project-system/workspace-jobs.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "docs/tooling/editor-session-discovery.md"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "docs/tooling/tooling-service-boundary.md"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "import/build/run/test/export"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "Directory",
+      "value": "src/Electron2D.Cli"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "Directory",
+      "value": "src/Electron2D.Tooling"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/LocalDocumentationCliTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 469008,
+      "byteLength": 6375,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "03b2d326f6b2e575e1985ecadd1dbc2e3c8bdf20bf703b9904a9ac9e3bb82014",
+      "markdown": "# T-0116 [x] P0: Реализовать `e2d` CLI для headless, CI и маршрутизации в активный Editor\n\n- Статус: завершена\n- Завершена: 2026-06-22T20:42:06+03:00\n- Коммит: `062f396` (`feat: add preview cli routing contract`)\n\n## Ссылки\n\n- Спецификация: `docs/cli/e2d-cli.md`; `docs/architecture/ai-friendly-workflow.md`; `docs/tooling/editor-session-discovery.md`; `docs/tooling/tooling-service-boundary.md`; `docs/project-system/workspace-jobs.md`\n- Документация: `docs/cli/e2d-cli.md`; `docs/diagnostics/diagnostics-core.md`; `docs/README.md`\n- Исходный код: `src/Electron2D.Cli/`; `src/Electron2D.Tooling/`; `src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`; `tests/Electron2D.Tests.Integration/LocalDocumentationCliTests.cs`\n\n## Самодостаточное описание\n\nCLI `e2d` получил проверяемую Preview-основу для headless/CI workflow и маршрутизации изменяющих команд в active Editor workspace. Текущий scope фиксирует общий parser, help для обязательных групп, stable JSON/JSONL envelope, generic `workspace transaction`, job-backed команды `import/build/run/test/export`, stable CLI diagnostics и route selection через `EditorSessionRegistry`.\n\n## Что сделано\n\n- Добавлена целевая спецификация `docs/cli/e2d-cli.md`.\n- `Electron2D.Cli` получил ссылки на `Electron2D.ProjectSystem` и `Electron2D.Tooling`.\n- Добавлен `CliExecutionContext` для in-process tests и будущего adapter wiring.\n- Root/group help показывает обязательные command groups и common flags.\n- `workspace transaction` поддерживает `--project`, `--path`, `--expected-revision`, `--text`, `--dry-run`, `--headless` и stable JSON output.\n- При active Editor registry команда routed в active `ProjectWorkspace` через `ProjectToolingHost`; при headless route используется `HeadlessCommit`.\n- `import`, `build`, `run`, `test`, `export` создают `WorkspaceJob` и пишут JSONL queued event с snapshot identity fields.\n- Unsupported groups/subcommands возвращают stable diagnostic `E2D-CLI-0001`.\n- Добавлены diagnostic codes `E2D-CLI-0001`, `E2D-CLI-0002`, `E2D-CLI-0003`.\n- Существующие `docs search/type/member/example` продолжили работать.\n- Добавлена implementation documentation `docs/cli/e2d-cli.md`.\n\n## Критерии приёмки\n\n- [x] Все команды имеют `--help`, `--format text|json|jsonl`, `--quiet`, `--verbose`, `--project <path>`.\n- [x] Все изменяющие команды имеют `--dry-run` и возвращают список затронутых файлов.\n- [x] JSON/JSONL output стабилен и покрыт integration tests.\n- [x] CLI JSONL для import/build/test/export/run потребляет job event stream из `T-0147` и сохраняет `InputSnapshotId`, `InputWorkspaceRevision`, `InputContentRevision`, `InputDocumentRevisions`, `InputBuildConfigurationHash` и `stale` markers.\n- [x] Ошибки имеют стабильные коды вида `E2D-AREA-0000`.\n- [x] CLI не требует GUI runtime для validate/build/test/export.\n- [x] CLI обнаруживает активную Editor-сессию и направляет изменяющие команды в неё либо явно сообщает, что требуется headless-режим.\n- [x] CLI не теряет unsaved изменения открытого Editor и не перезаписывает dirty документы напрямую с диска.\n- [x] CLI поддерживает generic workspace transaction/scene patch path для операций, которым не нужна отдельная удобная команда.\n- [x] Документация CLI обновлена.\n- [x] Команда проверки задокументирована.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DCliWorkflowTests` падал на отсутствующем `CliExecutionContext`.\n- Green focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DCliWorkflowTests` прошёл `9/9`.\n- Regression focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Electron2DCliWorkflowTests|FullyQualifiedName~LocalDocumentationCliTests\"` прошёл `12/12`.\n- `git diff --check` прошёл с предупреждениями только о будущей нормализации LF/CRLF.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: `536` tracked source files.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `333/333`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: `305` source files.\n\n## Решения\n\n- `T-0116` реализует Preview CLI contract и route selection, но не закрывает удобные scene/resource commands, `api compare-godot`, реальный `mcp serve`, `context build`, полноценный `doctor` или реальные import/build/run/test/export toolchains.\n- JSONL job stream сейчас фиксирует queued event и snapshot identity; progress/completion events должны подключаться вместе с реальными toolchain runners.\n- Local workflow files `TASKS.md`, `completed-tasks/` и `dev-diary/` остаются ignored/local-only и не входят в commit.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T17:42:06.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T17:42:06.0000000+00:00",
+  "completedAt": "2026-06-22T17:42:06.0000000+00:00",
+  "acceptedAt": "2026-06-22T17:42:06.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T17:42:06.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

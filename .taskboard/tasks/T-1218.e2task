@@ -1,0 +1,695 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-759832a0f0c44542bd4d18de09b24bba",
+  "revision": 24,
+  "taskId": "T-1218",
+  "legacyAliases": [],
+  "title": "Добавить фильтр по тегам в VS Code Task Board",
+  "description": "Существующий filter popover VS Code Task Board содержит только выбор приоритета. Нужно добавить локализованный компактный multi-select по актуальному общему каталогу тегов: пользователь может выбрать несколько тегов, видит их имена, а локальное состояние хранит canonical tagId. Задача проходит tag-фильтр, только если содержит все выбранные tagId; tag dimension объединяется логическим AND с текстовым поиском, priority и archive-toggle. Badge считает активные dimensions, поэтому любое непустое множество тегов добавляет одну единицу. Refresh сохраняет существующие выбранные tagId и удаляет из выбора только исчезнувшие определения. Клик внутри панели позволяет выбрать несколько значений подряд, а клик по рабочей поверхности или в любом месте вне фильтров закрывает внутренний список и весь filter popover без сброса выбора. Фильтрация остаётся локальным presentation state без taskboard mutations.",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P2",
+  "tagIds": [
+    "tag-0001",
+    "tag-0002",
+    "tag-0003",
+    "tag-0009",
+    "tag-0013"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "assignee": null,
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "catalog-tag-select",
+      "description": "Filter popover под выбором приоритета показывает локализованный компактный multi-select «Теги»: закрытое состояние обозначает отсутствие выбора, один тег или количество выбранных тегов; раскрытый список строится из актуального общего каталога доски, показывает имена и позволяет независимо выбрать несколько canonical tagId.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webviewHtml.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "combined-filter-semantics",
+      "description": "Непустой набор тегов оставляет только задачи, чьи labels содержат каждый выбранный tagId; tag dimension объединяется логическим AND с текстовым поиском, приоритетом и archive-toggle, не меняя status, placement или canonical данные задач.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/model.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "refresh-and-count",
+      "description": "Badge кнопки «Фильтры» показывает число активных dimensions от 0 до 2: любое непустое множество тегов считается одной dimension. При refresh сохраняются все выбранные tagId, существующие в новом каталоге, а исчезнувшие удаляются из набора независимо от остальных.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webview.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "localized-accessible-layout",
+      "description": "Русская и английская локализации содержат подписи «Теги»/«Tags», «Все теги»/«All tags» и счётчик выбранных тегов; trigger и listbox имеют связанную label, aria-multiselectable/aria-selected, keyboard navigation и VS Code themed layout без выхода за filter popover.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/localization.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "outside-click-close",
+      "description": "Клики внутри filter popover не закрывают его и позволяют выбрать несколько тегов подряд; pointerdown вне кнопки и панели фильтров, включая рабочую поверхность доски, закрывает внутренний tag popup и внешний filter popover, сохраняя выбранные значения.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webview.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "verification",
+      "description": "Model/HTML/layout/localization tests проходят через ожидаемый RED и GREEN; полный unit-набор, typecheck, VSIX и FFmpeg-снимок установленного расширения подтверждают выбор нескольких тегов, их пересечение и комбинацию с приоритетом.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": ".temp/taskboard-t1218-multi-tag-priority-filter.png"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-7de090d7828f4917a02f9e9a13f8bbf5",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-13T16:05:21.9715714+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Ready",
+        "next": "InProgress",
+        "reason": "Статус изменён через CLI."
+      },
+      "sequence": 1
+    },
+    {
+      "activityEntryId": "activity-cf0455c621e74f698d5442365f35b90d",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-13T16:25:41.6210598+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "InProgress",
+        "next": "Review",
+        "reason": "Реализация и все шесть критериев проверены; задача передана на внутреннее ревью без автоматической приёмки."
+      },
+      "sequence": 2
+    },
+    {
+      "activityEntryId": "activity-7b5b26e4790747138754bd30afc9bba3",
+      "sequence": 3,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:11:21.7957033+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "427a8f787e9f733dbe19ea48c3d9e18ced3c91c897998a03e7ac361049a6261e",
+        "afterDigest": "e7ee80c13dfd9549e87f810b920df35aa77a8e989e237313b94c36c455938c84",
+        "workspaceChanges": {
+          "baseRevision": "workspace:e395df255f9cb8f9f9782d2c95a61675951b946141d0ba359c549d1411c9d5a1",
+          "currentRevision": "workspace:e395df255f9cb8f9f9782d2c95a61675951b946141d0ba359c549d1411c9d5a1",
+          "files": []
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-cda929f471b34cb1a22d7324e4139cdf",
+      "sequence": 4,
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:11:21.7957033+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Актуальный контракт, typed evidence и все критерии проверены в рамках T-1241; результат передан пользователю без создания human acceptance."
+      }
+    },
+    {
+      "activityEntryId": "activity-b2f0ac8848ff475d80c6759b3dcc72bf",
+      "sequence": 5,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:26:02.6397429+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 21,
+        "toRevision": 22,
+        "activitySequence": 5,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "локальная фильтрация VS Code Task Board по общему каталогу тегов",
+              "readyToStart": [
+                "Пользовательский снимок фиксирует filter popover только с выбором приоритета и явный запрос добавить фильтр по тегам.",
+                "Compact BoardView уже содержит canonical task labels и общий каталог tags, поэтому функция не требует новых CLI reads или mutations."
+              ],
+              "stopConditions": [
+                "Для фильтрации требуется менять canonical taskboard, назначение тегов или выполнять mutation при выборе option.",
+                "Невозможно сохранить пересечение нескольких тегов и AND-семантику с текстом, priority и archive-toggle либо проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, model/webview/HTML/CSS/localization VS Code Task Board и связанные unit tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник."
+              ],
+              "forbiddenChanges": [
+                "Изменение каталога тегов, labels задач, taskboard lifecycle, CLI writer boundary или schema v3.",
+                "Ручное редактирование .taskboard, несвязанный рефакторинг toolbar/cards/details или новый backend route."
+              ],
+              "requiredOutputs": [
+                "Локализованный tag multi-select из currentView.tags и безопасная синхронизация множества выбранных tagId при refresh.",
+                "Пересечение выбранных tags, AND-фильтрация text + priority + tag dimension + archive и корректный badge количества активных structured filters.",
+                "RED/GREEN tests, синхронизированный доменный документ, собранный VSIX и реальный FFmpeg-снимок filter popover и отфильтрованной доски."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-tag-filter-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-tag-filter-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-tag-filter-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "локальная фильтрация VS Code Task Board по общему каталогу тегов",
+              "readyToStart": [
+                "Пользовательский снимок фиксирует filter popover только с выбором приоритета и явный запрос добавить фильтр по тегам.",
+                "Compact BoardView уже содержит canonical task labels и общий каталог tags, поэтому функция не требует новых CLI reads или mutations."
+              ],
+              "stopConditions": [
+                "Для фильтрации требуется менять canonical taskboard, назначение тегов или выполнять mutation при выборе option.",
+                "Невозможно сохранить пересечение нескольких тегов и AND-семантику с текстом, priority и archive-toggle либо проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, model/webview/HTML/CSS/localization VS Code Task Board и связанные unit tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/model.ts",
+                "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/test/unit/**",
+                "path:src/Electron2D.VsCode/dist/**",
+                "path:src/Electron2D.VsCode/*.vsix",
+                "path:data/documentation/**",
+                "path:data/dev-diary/**",
+                "path:.temp/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение каталога тегов, labels задач, taskboard lifecycle, CLI writer boundary или schema v3.",
+                "Ручное редактирование .taskboard, несвязанный рефакторинг toolbar/cards/details или новый backend route."
+              ],
+              "requiredOutputs": [
+                "Локализованный tag multi-select из currentView.tags и безопасная синхронизация множества выбранных tagId при refresh.",
+                "Пересечение выбранных tags, AND-фильтрация text + priority + tag dimension + archive и корректный badge количества активных structured filters.",
+                "RED/GREEN tests, синхронизированный доменный документ, собранный VSIX и реальный FFmpeg-снимок filter popover и отфильтрованной доски."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-tag-filter-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-tag-filter-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-tag-filter-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "3e9d80b38fafcf67cbedcbb244d3b9ff630b5723d121c9f8b0e1703666fdf40e",
+        "afterTaskCoreDigest": "3566cfcc346aba4462818e14217c9445e3a56590378c404e1ef9e6e962499034"
+      }
+    },
+    {
+      "activityEntryId": "activity-9fe92c6a9a9d486c86d3f3996df64d3b",
+      "sequence": 6,
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-14T13:28:36.3106165+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "e7ee80c13dfd9549e87f810b920df35aa77a8e989e237313b94c36c455938c84",
+        "afterDigest": "e37f6fe927235a6bd5d3ed50bb3c2c7d127b0c3663d5cc3d93ad3aecc6015f15",
+        "workspaceChanges": {
+          "baseRevision": "workspace:e395df255f9cb8f9f9782d2c95a61675951b946141d0ba359c549d1411c9d5a1",
+          "currentRevision": "workspace:a57d221a79dafaf91f7f039ceb47452c899ac1b9e57be9619554d8ac42acfe61",
+          "files": [
+            {
+              "path": "data/dev-diary/2026/07 Июль/14-07-2026.md",
+              "changeKind": "Modified",
+              "previousPath": null,
+              "baseSha256": "5bb70de13765b90dca45918459f8784d0792f26e35bd037496437ab987f1271c",
+              "currentSha256": "c9a9c3fc1450af867e31ae031c233479cc25fe9cf9c92cbd3b132c24440277dc",
+              "firstChangedAt": "2026-07-14T13:28:36.3106165+00:00",
+              "lastChangedAt": "2026-07-14T13:28:36.3106165+00:00",
+              "agentRunIds": [
+                "run-479a80d664644771acee6028739c4b09"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-b0db2501a1d64b2ca10bb2d4da2c686e",
+      "sequence": 7,
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-14T13:28:36.3106165+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Задача принята пользователем в VS Code Task Board.",
+        "authorityActorId": "vscode:eduar",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    }
+  ],
+  "conversation": {
+    "lastMessageSequence": 2,
+    "messages": [
+      {
+        "messageId": "message-3d2ccc2f563642cfa6dbf7199f1eacd3",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-13T16:25:22.6993709+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Реализация завершена с учётом уточнений пользователя: фильтр поддерживает несколько тегов с пересечением всех выбранных tagId; клики внутри позволяют выбирать подряд, а pointerdown по рабочей поверхности закрывает внутренний список и внешний popover без сброса. RED 0/4 → GREEN 4/4; unit 110/110; typecheck; VSIX 11 файлов, 106,95 KB; установка в stable VS Code; docs update/check/verify; licenses 664. Реальные FFmpeg-снимки: .temp/taskboard-t1218-multi-tag-filter-open.png, .temp/taskboard-t1218-multi-tag-priority-filter.png, .temp/taskboard-t1218-outside-click-closed.png."
+          }
+        ]
+      },
+      {
+        "messageId": "message-308cd45c33594a70ac88f6333ce21e8e",
+        "sequence": 2,
+        "author": {
+          "actorId": "Codex",
+          "actorKind": "Agent",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-14T13:26:22.4862870+00:00",
+        "replyToMessageId": null,
+        "agentRunId": "run-479a80d664644771acee6028739c4b09",
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Исправлен устаревший execution contract: к двум человекочитаемым allowedChanges добавлены 12 точных machine-readable path:<glob> scopes для фактических docs/source/tests/generated/visual/diary артефактов T-1218. Workspace diff пустой; Review/Submitted, 6/6 Passed и blockers 0 сохранены. Ошибка E2D-TASK-V3-WORKSPACE-SCOPE больше не должна блокировать штатное human accept после обновления панели."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "links": [
+    {
+      "linkId": "link-tag-filter-domain",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-tag-filter-html",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webviewHtml.ts"
+    },
+    {
+      "linkId": "link-tag-filter-webview",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "link-tag-filter-model",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/model.ts"
+    },
+    {
+      "linkId": "link-tag-filter-localization",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/localization.ts"
+    },
+    {
+      "linkId": "link-tag-filter-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit"
+    }
+  ],
+  "executionContract": {
+    "taskType": "локальная фильтрация VS Code Task Board по общему каталогу тегов",
+    "readyToStart": [
+      "Пользовательский снимок фиксирует filter popover только с выбором приоритета и явный запрос добавить фильтр по тегам.",
+      "Compact BoardView уже содержит canonical task labels и общий каталог tags, поэтому функция не требует новых CLI reads или mutations."
+    ],
+    "stopConditions": [
+      "Для фильтрации требуется менять canonical taskboard, назначение тегов или выполнять mutation при выборе option.",
+      "Невозможно сохранить пересечение нескольких тегов и AND-семантику с текстом, priority и archive-toggle либо проверить установленный VSIX реальным FFmpeg-захватом."
+    ],
+    "allowedChanges": [
+      "Доменный документ, model/webview/HTML/CSS/localization VS Code Task Board и связанные unit tests.",
+      "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+      "path:docs/editor/project-tasks-board.md",
+      "path:src/Electron2D.VsCode/src/model.ts",
+      "path:src/Electron2D.VsCode/src/webviewHtml.ts",
+      "path:src/Electron2D.VsCode/src/webview.ts",
+      "path:src/Electron2D.VsCode/src/webview.css",
+      "path:src/Electron2D.VsCode/src/localization.ts",
+      "path:src/Electron2D.VsCode/test/unit/**",
+      "path:src/Electron2D.VsCode/dist/**",
+      "path:src/Electron2D.VsCode/*.vsix",
+      "path:data/documentation/**",
+      "path:data/dev-diary/**",
+      "path:.temp/**"
+    ],
+    "forbiddenChanges": [
+      "Изменение каталога тегов, labels задач, taskboard lifecycle, CLI writer boundary или schema v3.",
+      "Ручное редактирование .taskboard, несвязанный рефакторинг toolbar/cards/details или новый backend route."
+    ],
+    "requiredOutputs": [
+      "Локализованный tag multi-select из currentView.tags и безопасная синхронизация множества выбранных tagId при refresh.",
+      "Пересечение выбранных tags, AND-фильтрация text + priority + tag dimension + archive и корректный badge количества активных structured filters.",
+      "RED/GREEN tests, синхронизированный доменный документ, собранный VSIX и реальный FFmpeg-снимок filter popover и отфильтрованной доски."
+    ],
+    "commands": [
+      {
+        "commandId": "cmd-tag-filter-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "cmd-tag-filter-typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "cmd-tag-filter-package",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [
+    {
+      "attachmentId": "A-0001",
+      "displayName": "codex-clipboard-03aafc02-3f5e-424a-bfcd-f67d18f0095d.png",
+      "relativePath": ".taskboard/attachments/task-759832a0f0c44542bd4d18de09b24bba/A-0001/e8936547b2869f35a02424db19541e0b56be33894880bbf369d61c1d6dd2826a.png",
+      "mediaType": "image/png",
+      "byteLength": 5328,
+      "sha256": "e8936547b2869f35a02424db19541e0b56be33894880bbf369d61c1d6dd2826a",
+      "addedAt": "2026-07-13T16:05:07.4344642+00:00",
+      "addedBy": "cli",
+      "derivatives": [
+        {
+          "derivativeId": "derivative-extractedtext",
+          "kind": "ExtractedText",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "e8936547b2869f35a02424db19541e0b56be33894880bbf369d61c1d6dd2826a",
+          "extractor": null,
+          "createdAt": "2026-07-13T16:05:07.4344642+00:00"
+        },
+        {
+          "derivativeId": "derivative-ocr",
+          "kind": "Ocr",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "e8936547b2869f35a02424db19541e0b56be33894880bbf369d61c1d6dd2826a",
+          "extractor": null,
+          "createdAt": "2026-07-13T16:05:07.4344642+00:00"
+        },
+        {
+          "derivativeId": "derivative-preview",
+          "kind": "Preview",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "e8936547b2869f35a02424db19541e0b56be33894880bbf369d61c1d6dd2826a",
+          "extractor": null,
+          "createdAt": "2026-07-13T16:05:07.4344642+00:00"
+        }
+      ]
+    }
+  ],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-13T16:04:31.5207077+00:00",
+  "updatedAt": "2026-07-14T13:28:36.3106165+00:00",
+  "submittedAt": "2026-07-14T13:11:21.7957033+00:00",
+  "completedAt": "2026-07-14T13:28:36.3106165+00:00",
+  "acceptedAt": "2026-07-14T13:28:36.3106165+00:00",
+  "acceptedBy": "vscode:eduar",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "auditRuns": [],
+  "workspaceChanges": {
+    "baseRevision": "workspace:e395df255f9cb8f9f9782d2c95a61675951b946141d0ba359c549d1411c9d5a1",
+    "currentRevision": "workspace:a57d221a79dafaf91f7f039ceb47452c899ac1b9e57be9619554d8ac42acfe61",
+    "files": [
+      {
+        "path": "data/dev-diary/2026/07 Июль/14-07-2026.md",
+        "changeKind": "Modified",
+        "previousPath": null,
+        "baseSha256": "5bb70de13765b90dca45918459f8784d0792f26e35bd037496437ab987f1271c",
+        "currentSha256": "c9a9c3fc1450af867e31ae031c233479cc25fe9cf9c92cbd3b132c24440277dc",
+        "firstChangedAt": "2026-07-14T13:28:36.3106165+00:00",
+        "lastChangedAt": "2026-07-14T13:28:36.3106165+00:00",
+        "agentRunIds": [
+          "run-479a80d664644771acee6028739c4b09"
+        ]
+      }
+    ]
+  },
+  "lastActivitySequence": 7
+}

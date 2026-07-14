@@ -1,0 +1,229 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-a0edca4f5caaee9a37b8afcc788d2bbc",
+  "revision": 2,
+  "taskId": "T-0187",
+  "legacyAliases": [],
+  "title": "Подключить specialized editors к живому интерфейсу после 2D-среза",
+  "description": "## T-0187 [ ] P0: Подключить specialized editors к живому интерфейсу после 2D-среза\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: tracking\n- Приоритет: P0\n- Execution class: `tracking`\n- Scheduling tier: `later`\n- Зависимости: T-0183\n- Дочерние задачи: T-0202, T-0203, T-0204, T-0205\n- Ссылки:\n  - Доменный документ: `docs/editor/specialized-editors.md`; `docs/animation/spriteframes-animatedsprite2d.md`; `docs/rendering/tilemap-layer-runtime-api.md`; `docs/animation/animation-player-tracks.md`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D/`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorSpecializedEditorsTests.cs`; `tests/Electron2D.Tests.Integration/SpriteFramesAnimatedSprite2DTests.cs`; `tests/Electron2D.Tests.Integration/TileMapLayerRuntimeTests.cs`; `tests/Electron2D.Tests.Integration/AnimationPlayerTracksTests.cs`\n\n### Execution contract\n\n- Task type: tracking\n- Ready-to-start:\n  - можно начинать только для синхронизации child task list, dependency/status notes or parent current evidence.\n  - все production changes должны быть перенесены в named child tasks before implementation.\n- Stop conditions:\n  - требуется изменить production code, tests, generated artifacts, runtime behavior or public docs beyond status/dependency bookkeeping.\n  - child tasks are missing, blocked or not accepted but parent is being marked complete.\n- May change:\n  - `TASKS.md` status/dependency/current evidence notes for T-0187 and its explicitly listed children.\n  - diary entries and lightweight planning notes.\n- Must not change:\n  - production source, tests, generated artifacts, public API behavior, runtime/editor implementation or child task scope.\n- Required outputs:\n  - updated child-task status summary in `TASKS.md`.\n  - current evidence explaining which children remain open/blocked/accepted.\n  - diary entry with no-production-change confirmation.\n- Required commands:\n  - `git diff --check`\n- External audit:\n  - inherited; tracking tasks do not request audit packages directly\n\n### Самодостаточное описание\n\nSpecialized editors для `SpriteFrames`, `TileMap` и `AnimationPlayer` должны открываться внутри `2D` workspace и использовать тот же shell, docks, bottom panel, command/document/undo services и runtime controls. Эта tracking-задача не исполняется одним большим объём: каждый specialized editor и общий integration gate вынесены в дочерние задачи.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] `T-0202` принята пользователем.\n- [ ] `T-0203` принята пользователем.\n- [ ] `T-0204` принята пользователем.\n- [ ] `T-0205` принята пользователем.\n- [ ] Specialized editors не становятся отдельными утилитами и не создают собственный временный UI framework.\n\n### Подзадачи\n\n- [ ] Вести зависимости `SpriteFrames`, `TileMap`, `AnimationPlayer` и integration gate.\n- [ ] После приёмки дочерних задач обновить итоговый статус `T-0187`.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - До `T-0183` эти редакторы не полировать визуально, чтобы не размножать временные tabs и property rows.\n\n2026-06-24T03:20:00+03:00 - Приоритет поднят до P0, потому что `T-0189` остаётся P0-gate и зависит от этой задачи. Перед реализацией стоит разделить объём на `SpriteFrames`, `TileMap`, `AnimationPlayer` и общий integration gate.\n\n2026-06-24T03:49:00+03:00 - Задача переведена в `tracking`; дочерние production-задачи: `T-0202` SpriteFrames, `T-0203` TileMap, `T-0204` AnimationPlayer, `T-0205` integration gate.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-7f7b64a98f3293d7a7fe897551a30cfc"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`T-0202` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`T-0203` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`T-0204` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`T-0205` принята пользователем.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Specialized editors не становятся отдельными утилитами и не создают собственный временный UI framework.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "До `T-0183` эти редакторы не полировать визуально, чтобы не размножать временные tabs и property rows."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T00:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Приоритет поднят до P0, потому что `T-0189` остаётся P0-gate и зависит от этой задачи. Перед реализацией стоит разделить объём на `SpriteFrames`, `TileMap`, `AnimationPlayer` и общий integration gate."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T00:49:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача переведена в `tracking`; дочерние production-задачи: `T-0202` SpriteFrames, `T-0203` TileMap, `T-0204` AnimationPlayer, `T-0205` integration gate."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "inherited; tracking tasks do not request audit packages directly"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/animation/animation-player-tracks.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/animation/spriteframes-animatedsprite2d.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/editor/specialized-editors.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/rendering/tilemap-layer-runtime-api.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/AnimationPlayerTracksTests.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorSpecializedEditorsTests.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/SpriteFramesAnimatedSprite2DTests.cs"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/TileMapLayerRuntimeTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tracking",
+    "readyToStart": [
+      "можно начинать только для синхронизации child task list, dependency/status notes or parent current evidence.",
+      "все production changes должны быть перенесены в named child tasks before implementation."
+    ],
+    "stopConditions": [
+      "требуется изменить production code, tests, generated artifacts, runtime behavior or public docs beyond status/dependency bookkeeping.",
+      "child tasks are missing, blocked or not accepted but parent is being marked complete."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` status/dependency/current evidence notes for T-0187 and its explicitly listed children.",
+      "diary entries and lightweight planning notes."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, public API behavior, runtime/editor implementation or child task scope."
+    ],
+    "requiredOutputs": [
+      "updated child-task status summary in `TASKS.md`.",
+      "current evidence explaining which children remain open/blocked/accepted.",
+      "diary entry with no-production-change confirmation."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "inherited; tracking tasks do not request audit packages directly",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 201450,
+      "byteLength": 5937,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "601a89b4c0599b71486455cf8167aada1f3c5dd2bc1d9a5e2ca829f0213f58ba",
+      "markdown": "## T-0187 [ ] P0: Подключить specialized editors к живому интерфейсу после 2D-среза\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: tracking\n- Приоритет: P0\n- Execution class: `tracking`\n- Scheduling tier: `later`\n- Зависимости: T-0183\n- Дочерние задачи: T-0202, T-0203, T-0204, T-0205\n- Ссылки:\n  - Доменный документ: `docs/editor/specialized-editors.md`; `docs/animation/spriteframes-animatedsprite2d.md`; `docs/rendering/tilemap-layer-runtime-api.md`; `docs/animation/animation-player-tracks.md`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D/`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorSpecializedEditorsTests.cs`; `tests/Electron2D.Tests.Integration/SpriteFramesAnimatedSprite2DTests.cs`; `tests/Electron2D.Tests.Integration/TileMapLayerRuntimeTests.cs`; `tests/Electron2D.Tests.Integration/AnimationPlayerTracksTests.cs`\n\n### Execution contract\n\n- Task type: tracking\n- Ready-to-start:\n  - можно начинать только для синхронизации child task list, dependency/status notes or parent current evidence.\n  - все production changes должны быть перенесены в named child tasks before implementation.\n- Stop conditions:\n  - требуется изменить production code, tests, generated artifacts, runtime behavior or public docs beyond status/dependency bookkeeping.\n  - child tasks are missing, blocked or not accepted but parent is being marked complete.\n- May change:\n  - `TASKS.md` status/dependency/current evidence notes for T-0187 and its explicitly listed children.\n  - diary entries and lightweight planning notes.\n- Must not change:\n  - production source, tests, generated artifacts, public API behavior, runtime/editor implementation or child task scope.\n- Required outputs:\n  - updated child-task status summary in `TASKS.md`.\n  - current evidence explaining which children remain open/blocked/accepted.\n  - diary entry with no-production-change confirmation.\n- Required commands:\n  - `git diff --check`\n- External audit:\n  - inherited; tracking tasks do not request audit packages directly\n\n### Самодостаточное описание\n\nSpecialized editors для `SpriteFrames`, `TileMap` и `AnimationPlayer` должны открываться внутри `2D` workspace и использовать тот же shell, docks, bottom panel, command/document/undo services и runtime controls. Эта tracking-задача не исполняется одним большим объём: каждый specialized editor и общий integration gate вынесены в дочерние задачи.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] `T-0202` принята пользователем.\n- [ ] `T-0203` принята пользователем.\n- [ ] `T-0204` принята пользователем.\n- [ ] `T-0205` принята пользователем.\n- [ ] Specialized editors не становятся отдельными утилитами и не создают собственный временный UI framework.\n\n### Подзадачи\n\n- [ ] Вести зависимости `SpriteFrames`, `TileMap`, `AnimationPlayer` и integration gate.\n- [ ] После приёмки дочерних задач обновить итоговый статус `T-0187`.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - До `T-0183` эти редакторы не полировать визуально, чтобы не размножать временные tabs и property rows.\n\n2026-06-24T03:20:00+03:00 - Приоритет поднят до P0, потому что `T-0189` остаётся P0-gate и зависит от этой задачи. Перед реализацией стоит разделить объём на `SpriteFrames`, `TileMap`, `AnimationPlayer` и общий integration gate.\n\n2026-06-24T03:49:00+03:00 - Задача переведена в `tracking`; дочерние production-задачи: `T-0202` SpriteFrames, `T-0203` TileMap, `T-0204` AnimationPlayer, `T-0205` integration gate.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

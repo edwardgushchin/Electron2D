@@ -1,0 +1,252 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-c1168ce3c83f3a40e9b21637a6205f18",
+  "revision": 2,
+  "taskId": "T-0247",
+  "legacyAliases": [],
+  "title": "Подготовить внутренний слой SDL GPU для публичного 2D API",
+  "description": "## T-0247 [ ] P0: Подготовить внутренний слой SDL GPU для публичного 2D API\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0246\n- Ссылки:\n  - Доменный документ: `docs/rendering/godot-47-public-api-sdl-gpu-rendering-backend.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/rendering/godot-47-public-api-sdl-gpu-rendering-backend.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/rendering/godot-47-public-api-sdl-gpu-rendering-backend.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. Внутренний слой отрисовки должен быть рабочим путём для `CanvasItem`, текстур, материалов, HLSL-шейдеров, вывода в viewport/window, группировки команд, жизненного цикла ресурсов и проверки отсутствия утечек GPU/CPU-памяти.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Первичные потребители результата\n\n- `RenderingServer`, `CanvasItem` и `Viewport` требуют device, swapchain/window target, command buffer и возможности render pass.\n- `Texture2D`, `ImageTexture` и `ViewportTexture` требуют upload/download/staging текстур, sampler и управление жизненным циклом ресурсов.\n- `Shader`, `ShaderMaterial` и `CanvasItemMaterial` требуют загрузку shader package, кэш pipeline и подтверждение привязки uniform/material.\n- Первое подтверждение должно включать эталонный результат отрисовки, диагностику утечек и жизненного цикла ресурсов и минимум один интеграционный тест реального потребителя.\n\nДоменный документ должен развернуть этот список в таблицу: публичная задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Исполняемый контракт\n\n- Должны появиться или обновиться: `docs/rendering/godot-47-public-api-sdl-gpu-rendering-backend.md`, `data/rendering/sdl-gpu-backend-contract.json`, focused tests `tests/Electron2D.Tests.Integration/SdlGpuRenderingBackendTests.cs` и, при реализации кода, внутренние файлы только под `src/Electron2D/Graphics/Rendering/Internal/SdlGpu/` или существующим rendering backend ownership.\n- Обязательная команда: `dotnet run --project eng/Electron2D.Build -- verify sdl-gpu-backend`; для первого consumer proof также нужен focused test `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SdlGpuRenderingBackend\" --no-restore -v:minimal`.\n- RED-before-GREEN: тест сначала падает на отсутствующем device/swapchain contract, отсутствующей texture upload/readback policy, отсутствующем shader package binding или отсутствии leak/lifetime counters.\n- Diagnostic codes: `E2D-RENDER-SDLGPU-0001` device/swapchain unavailable, `E2D-RENDER-SDLGPU-0002` shader package missing/invalid, `E2D-RENDER-SDLGPU-0003` texture upload/readback unsupported, `E2D-RENDER-SDLGPU-0004` resource lifetime leak detected.\n- Consumer proof: минимум один интеграционный тест должен пройти через реальный consumer `RenderingServer`/`CanvasItem`/`Viewport` и один texture/material consumer (`Texture2D`/`ImageTexture`/`ShaderMaterial`) без прямого bypass к внутренним test-only API.\n- Запрещено: менять public API signatures, добавлять Godot Shader Language/GLSL/MSL как public authoring language, править UI/editor/filesystem/network/audio/physics задачи ради прохождения rendering tests, скрывать отсутствующий GPU path за no-op renderer.\n\n### Internal substrate acceptance contract\n\n- SDL GPU device init succeeds in supported headless/real-window mode or returns stable `E2D-RENDER-SDLGPU-0001`/`E2D-RENDER-*` diagnostics with host/platform details.\n- Swapchain/window target smoke renders a deterministic frame and records the exact backend/profile used.\n- Texture upload/download policy is documented, tested and explicit about unsupported readback paths.\n- GPU resource lifetime counters return to zero after a create/upload/draw/dispose scenario.\n- Shader package and pipeline cache failures return stable diagnostics, not fallback rendering.\n- First consumer test proves `Texture2D`/`CanvasItem` smoke uses this backend and not the fallback renderer.\n### Критерии приёмки\n\n- [ ] `data/rendering/sdl-gpu-backend-contract.json` перечисляет device, window/swapchain, command buffer, render pass, texture upload/readback, sampler cache, shader package binding, pipeline cache, resource lifetime counters and platform diagnostics.\n- [ ] `SdlGpuRenderingBackendTests` содержит RED cases для missing device, missing shader package, unsupported texture format/readback, leak counter mismatch и no-op renderer regression.\n- [ ] `verify sdl-gpu-backend` проходит на поддержанном окружении или выдаёт один из `E2D-RENDER-SDLGPU-0001`-`0004` с platform/context без секретов.\n- [ ] Golden rendering evidence создан для минимального `CanvasItem` draw, texture draw and material/shader binding path; blank frame/no-op frame считается fail.\n- [ ] Downstream tasks `Texture2D`, `ImageTexture`, `Shader`, `ShaderMaterial`, `CanvasItem`, `Viewport` имеют документированный integration route на этот backend, но их public API behavior не закрывается в `T-0247`.\n- [ ] В diff нет public API additions и нет изменений вне rendering backend/domain/test/verifier/docs-index файлов без отдельной задачи.\n\n### Подзадачи\n\n- [ ] Зафиксировать contract JSON и domain table для `RenderingServer`, `CanvasItem`, `Viewport`, texture and material consumers.\n- [ ] Добавить RED tests и verifier diagnostics `E2D-RENDER-SDLGPU-0001`-`0004`.\n- [ ] Реализовать минимальный non-noop SDL GPU path: device/swapchain, command submission, texture upload, shader/material binding and lifetime counters.\n- [ ] Добавить golden rendering/leak evidence для первого public consumer.\n- [ ] Запустить `verify sdl-gpu-backend`, focused integration test, docs checks and `git diff --check`.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0015",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a9dc106b3357162a2b473b8e01e91ad3"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`data/rendering/sdl-gpu-backend-contract.json` перечисляет device, window/swapchain, command buffer, render pass, texture upload/readback, sampler cache, shader package binding, pipeline cache, resource lifetime counters and platform diagnostics.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`SdlGpuRenderingBackendTests` содержит RED cases для missing device, missing shader package, unsupported texture format/readback, leak counter mismatch и no-op renderer regression.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`verify sdl-gpu-backend` проходит на поддержанном окружении или выдаёт один из `E2D-RENDER-SDLGPU-0001`-`0004` с platform/context без секретов.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Golden rendering evidence создан для минимального `CanvasItem` draw, texture draw and material/shader binding path; blank frame/no-op frame считается fail.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Downstream tasks `Texture2D`, `ImageTexture`, `Shader`, `ShaderMaterial`, `CanvasItem`, `Viewport` имеют документированный integration route на этот backend, но их public API behavior не закрывается в `T-0247`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "В diff нет public API additions и нет изменений вне rendering backend/domain/test/verifier/docs-index файлов без отдельной задачи.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required for final acceptance unless a parent gate explicitly owns audit evidence"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/rendering/sdl-gpu-backend-contract.json"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/rendering/godot-47-public-api-sdl-gpu-rendering-backend.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "src/Electron2D/Graphics/Rendering/Internal/SdlGpu"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/SdlGpuRenderingBackendTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.",
+      "docs/rendering/godot-47-public-api-sdl-gpu-rendering-backend.md is current and RED tests/verifiers can be added before production changes."
+    ],
+    "stopConditions": [
+      "implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.",
+      "tests, domain document or generated source-of-truth artifacts are missing or stale.",
+      "a shortcut would introduce facade, stub, hidden fallback or undocumented behavior."
+    ],
+    "allowedChanges": [
+      "files named in this task's `Ссылки` block and their owning tests/docs.",
+      "generated artifacts only through their owning generator/verifier.",
+      "`TASKS.md` notes/current evidence and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.",
+      "public API surface not present in generated Godot 4.7 packets.",
+      "unrelated formatting, dependency graph or metadata churn."
+    ],
+    "requiredOutputs": [
+      "docs/rendering/godot-47-public-api-sdl-gpu-rendering-backend.md",
+      "RED/GREEN test or verifier evidence for the selected slice.",
+      "synchronized XML/docs/API/generated documentation evidence when public surface or docs change.",
+      "task notes/current evidence and diary entry with exact command results."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify sdl-gpu-backend",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SdlGpuRenderingBackend\" --no-restore -v:minimal",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required for final acceptance unless a parent gate explicitly owns audit evidence",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 493642,
+      "byteLength": 13396,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "6a2ef9df4cd77d895854748ebf7ea506c8c18a50a2a61c67a4e7124221d4d674",
+      "markdown": "## T-0247 [ ] P0: Подготовить внутренний слой SDL GPU для публичного 2D API\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0246\n- Ссылки:\n  - Доменный документ: `docs/rendering/godot-47-public-api-sdl-gpu-rendering-backend.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/rendering/godot-47-public-api-sdl-gpu-rendering-backend.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/rendering/godot-47-public-api-sdl-gpu-rendering-backend.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. Внутренний слой отрисовки должен быть рабочим путём для `CanvasItem`, текстур, материалов, HLSL-шейдеров, вывода в viewport/window, группировки команд, жизненного цикла ресурсов и проверки отсутствия утечек GPU/CPU-памяти.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Первичные потребители результата\n\n- `RenderingServer`, `CanvasItem` и `Viewport` требуют device, swapchain/window target, command buffer и возможности render pass.\n- `Texture2D`, `ImageTexture` и `ViewportTexture` требуют upload/download/staging текстур, sampler и управление жизненным циклом ресурсов.\n- `Shader`, `ShaderMaterial` и `CanvasItemMaterial` требуют загрузку shader package, кэш pipeline и подтверждение привязки uniform/material.\n- Первое подтверждение должно включать эталонный результат отрисовки, диагностику утечек и жизненного цикла ресурсов и минимум один интеграционный тест реального потребителя.\n\nДоменный документ должен развернуть этот список в таблицу: публичная задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Исполняемый контракт\n\n- Должны появиться или обновиться: `docs/rendering/godot-47-public-api-sdl-gpu-rendering-backend.md`, `data/rendering/sdl-gpu-backend-contract.json`, focused tests `tests/Electron2D.Tests.Integration/SdlGpuRenderingBackendTests.cs` и, при реализации кода, внутренние файлы только под `src/Electron2D/Graphics/Rendering/Internal/SdlGpu/` или существующим rendering backend ownership.\n- Обязательная команда: `dotnet run --project eng/Electron2D.Build -- verify sdl-gpu-backend`; для первого consumer proof также нужен focused test `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SdlGpuRenderingBackend\" --no-restore -v:minimal`.\n- RED-before-GREEN: тест сначала падает на отсутствующем device/swapchain contract, отсутствующей texture upload/readback policy, отсутствующем shader package binding или отсутствии leak/lifetime counters.\n- Diagnostic codes: `E2D-RENDER-SDLGPU-0001` device/swapchain unavailable, `E2D-RENDER-SDLGPU-0002` shader package missing/invalid, `E2D-RENDER-SDLGPU-0003` texture upload/readback unsupported, `E2D-RENDER-SDLGPU-0004` resource lifetime leak detected.\n- Consumer proof: минимум один интеграционный тест должен пройти через реальный consumer `RenderingServer`/`CanvasItem`/`Viewport` и один texture/material consumer (`Texture2D`/`ImageTexture`/`ShaderMaterial`) без прямого bypass к внутренним test-only API.\n- Запрещено: менять public API signatures, добавлять Godot Shader Language/GLSL/MSL как public authoring language, править UI/editor/filesystem/network/audio/physics задачи ради прохождения rendering tests, скрывать отсутствующий GPU path за no-op renderer.\n\n### Internal substrate acceptance contract\n\n- SDL GPU device init succeeds in supported headless/real-window mode or returns stable `E2D-RENDER-SDLGPU-0001`/`E2D-RENDER-*` diagnostics with host/platform details.\n- Swapchain/window target smoke renders a deterministic frame and records the exact backend/profile used.\n- Texture upload/download policy is documented, tested and explicit about unsupported readback paths.\n- GPU resource lifetime counters return to zero after a create/upload/draw/dispose scenario.\n- Shader package and pipeline cache failures return stable diagnostics, not fallback rendering.\n- First consumer test proves `Texture2D`/`CanvasItem` smoke uses this backend and not the fallback renderer.\n### Критерии приёмки\n\n- [ ] `data/rendering/sdl-gpu-backend-contract.json` перечисляет device, window/swapchain, command buffer, render pass, texture upload/readback, sampler cache, shader package binding, pipeline cache, resource lifetime counters and platform diagnostics.\n- [ ] `SdlGpuRenderingBackendTests` содержит RED cases для missing device, missing shader package, unsupported texture format/readback, leak counter mismatch и no-op renderer regression.\n- [ ] `verify sdl-gpu-backend` проходит на поддержанном окружении или выдаёт один из `E2D-RENDER-SDLGPU-0001`-`0004` с platform/context без секретов.\n- [ ] Golden rendering evidence создан для минимального `CanvasItem` draw, texture draw and material/shader binding path; blank frame/no-op frame считается fail.\n- [ ] Downstream tasks `Texture2D`, `ImageTexture`, `Shader`, `ShaderMaterial`, `CanvasItem`, `Viewport` имеют документированный integration route на этот backend, но их public API behavior не закрывается в `T-0247`.\n- [ ] В diff нет public API additions и нет изменений вне rendering backend/domain/test/verifier/docs-index файлов без отдельной задачи.\n\n### Подзадачи\n\n- [ ] Зафиксировать contract JSON и domain table для `RenderingServer`, `CanvasItem`, `Viewport`, texture and material consumers.\n- [ ] Добавить RED tests и verifier diagnostics `E2D-RENDER-SDLGPU-0001`-`0004`.\n- [ ] Реализовать минимальный non-noop SDL GPU path: device/swapchain, command submission, texture upload, shader/material binding and lifetime counters.\n- [ ] Добавить golden rendering/leak evidence для первого public consumer.\n- [ ] Запустить `verify sdl-gpu-backend`, focused integration test, docs checks and `git diff --check`.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

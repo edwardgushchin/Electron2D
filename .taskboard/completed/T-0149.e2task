@@ -1,0 +1,317 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-1c1adf72314055547ce42a90cfe71be7",
+  "revision": 2,
+  "taskId": "T-0149",
+  "legacyAliases": [],
+  "title": "Реализовать agent process profiles и MCP bootstrap из Editor",
+  "description": "## T-0149 - Реализовать agent process profiles и MCP bootstrap из Editor\n\n- Закрыта: 2026-06-23T01:56:00+03:00\n- Коммит: `402fd1f feat: add editor agent process bootstrap`\n- Спецификация:\n  - `docs/architecture/agent-native-workflow.md`\n- Документация:\n  - `docs/editor/agent-process-bootstrap.md`\n  - `docs/tooling/editor-session-discovery.md`\n  - `docs/mcp/mcp-server.md`\n  - `docs/diagnostics/diagnostics-core.md`\n- Исходный код и тесты:\n  - `src/Electron2D.Tooling/EditorAgentProcessBootstrap.cs`\n  - `src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs`\n  - `src/Electron2D.ProjectSystem/Workspace/ProjectWorkspace.cs`\n  - `tests/Electron2D.Tests.Integration/EditorAgentBootstrapTests.cs`\n\n### Сводка\n\nРеализован internal bootstrap layer для запуска локальных agent profiles из active Editor session. Слой создаёт `AgentSessionId`, временный MCP config вне project root, ephemeral token с expiry, безопасный process start plan без shell/token leaks, handshake через `EditorSessionRegistry` как `Mcp` adapter и model-only Agent Workspace state (`Starting`, `Connected`, `Disconnected`, `HandshakeError`, `TokenExpired`). Реальные облачные AI-провайдеры в тестах не запускаются: production path использует `IAgentProcessLauncher`, focused tests используют fake launcher.\n\n### Критерии и результат\n\n- [x] Editor-side bootstrapper создаёт agent session id, local endpoint из active Editor descriptor и ephemeral token.\n- [x] Temporary MCP configuration создаётся вне project files/project root; token не попадает в process arguments, environment values, status text, diagnostics или project files.\n- [x] Agent process start plan использует project root как working directory, `UseShellExecute = false` и fake launcher в тестах.\n- [x] Handshake подключается к active Editor route, читает open documents, dirty documents, document revisions, diagnostics и selection resource availability.\n- [x] Agent Workspace model state показывает `Connected`, `Disconnected`, handshake errors и token expiry.\n- [x] Внешняя команда подключения документирована через `ELECTRON2D_MCP_CONFIG` и `ELECTRON2D_AGENT_SESSION_ID`.\n- [x] Добавлены tests без запуска реальных облачных AI-провайдеров.\n- [x] Документация фактического поведения обновлена.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~EditorAgentBootstrapTests` упал ожидаемо на отсутствующих `EditorAgentProcessBootstrapper`, `IAgentProcessLauncher`, `AgentProcessStartPlan`, `AgentProcessLaunchResult`, `IAgentTokenGenerator`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~EditorAgentBootstrapTests` прошёл `3/3` без warnings.\n- Documentation: `powershell -ExecutionPolicy Bypass -File tools\\Update-LocalDocumentationIndex.ps1`; `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1`; `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошли.\n- Source/build: `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для `560` tracked source files; `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`.\n- Focused regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorAgentBootstrapTests|FullyQualifiedName~EditorSessionDiscoveryTests|FullyQualifiedName~Electron2DMcpServerTests|FullyQualifiedName~ToolingServiceBoundaryTests|FullyQualifiedName~DiagnosticsCoreTests\"` прошёл `25/25`.\n- Guards: `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1`; `powershell -ExecutionPolicy Bypass -File tools\\Verify-CanonicalGoalAlignment.ps1` прошли.\n- Full tests: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `385/385`, runtime smoke `5/5`, golden-data `12/12`.\n\n### Решения\n\n- Bootstrap реализован как internal Tooling слой, чтобы будущий Editor UI, MCP adapter и tests использовали один контракт без зависимости от конкретного AI-провайдера.\n- Ephemeral token хранится только во временном config file, потому что arguments, environment и status text часто попадают в logs или history.\n- `Disconnect` не освобождает primary Editor lease: отключение агента не должно закрывать или переводить Editor в headless режим.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0149 [ ] P0: Реализовать agent process profiles и MCP bootstrap из Editor\n\n- Создана: 2026-06-22T11:24:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0119, T-0141, T-0147\n- Ссылки:\n  - Спецификация: `docs/architecture/agent-native-workflow.md`\n  - Документация: `docs/editor/`; `docs/mcp/`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.Mcp/`; `tests/`\n\n### Самодостаточное описание\n\nНужно запускать локальные agent profiles (`codex`, `opencode`, `claude code`) так, чтобы процесс автоматически подключался к active Editor session через session-scoped MCP configuration. Без MCP handshake Agent Workspace остаётся обычным терминалом.\n\n### Критерии приёмки\n\n- [ ] Editor создаёт agent session id, local endpoint и ephemeral token.\n- [ ] Temporary MCP configuration создаётся вне project files и не попадает в logs/shell history.\n- [ ] Agent process стартует в project root и проходит MCP handshake.\n- [ ] После handshake агент читает текущую сцену, selection, revisions, dirty documents и diagnostics.\n- [ ] Agent Workspace показывает `Connected`, `Disconnected`, handshake errors и token expiry.\n- [ ] Для внешнего агента документирована команда подключения к существующей сессии.\n- [ ] Добавлены tests без реального запуска облачных AI-провайдеров.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: агент, запущенный из Editor, обязан подключаться к Editor-hosted Agent Gateway, а не просто открываться в терминале.\n```\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-18095a0a589821d7a54d5aa661bab2da"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-1b64237407257be35cfb0af78ed250ac"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a129b3843ed32ad18bc5c86dd3b48ede"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Editor-side bootstrapper создаёт agent session id, local endpoint из active Editor descriptor и ephemeral token.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1c1adf72314055547ce42a90cfe71be7/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Temporary MCP configuration создаётся вне project files/project root; token не попадает в process arguments, environment values, status text, diagnostics или project files.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1c1adf72314055547ce42a90cfe71be7/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Agent process start plan использует project root как working directory, `UseShellExecute = false` и fake launcher в тестах.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1c1adf72314055547ce42a90cfe71be7/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Handshake подключается к active Editor route, читает open documents, dirty documents, document revisions, diagnostics и selection resource availability.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1c1adf72314055547ce42a90cfe71be7/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Agent Workspace model state показывает `Connected`, `Disconnected`, handshake errors и token expiry.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1c1adf72314055547ce42a90cfe71be7/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Внешняя команда подключения документирована через `ELECTRON2D_MCP_CONFIG` и `ELECTRON2D_AGENT_SESSION_ID`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1c1adf72314055547ce42a90cfe71be7/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Добавлены tests без запуска реальных облачных AI-провайдеров.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1c1adf72314055547ce42a90cfe71be7/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Документация фактического поведения обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1c1adf72314055547ce42a90cfe71be7/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1c1adf72314055547ce42a90cfe71be7/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T22:56:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "25/25"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "3/3"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "385/385"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/architecture/agent-native-workflow.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/diagnostics/diagnostics-core.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/editor/agent-process-bootstrap.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "docs/mcp"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/mcp/mcp-server.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/tooling/editor-session-discovery.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "Directory",
+      "value": "src/Electron2D.Mcp"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Workspace/ProjectWorkspace.cs"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "src/Electron2D.Tooling/EditorAgentProcessBootstrap.cs"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorAgentBootstrapTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 748073,
+      "byteLength": 7452,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "1a6adcd5da48d2174e90c98a04906820ac88185d8962176e11cfc53497928fec",
+      "markdown": "## T-0149 - Реализовать agent process profiles и MCP bootstrap из Editor\n\n- Закрыта: 2026-06-23T01:56:00+03:00\n- Коммит: `402fd1f feat: add editor agent process bootstrap`\n- Спецификация:\n  - `docs/architecture/agent-native-workflow.md`\n- Документация:\n  - `docs/editor/agent-process-bootstrap.md`\n  - `docs/tooling/editor-session-discovery.md`\n  - `docs/mcp/mcp-server.md`\n  - `docs/diagnostics/diagnostics-core.md`\n- Исходный код и тесты:\n  - `src/Electron2D.Tooling/EditorAgentProcessBootstrap.cs`\n  - `src/Electron2D.ProjectSystem/Diagnostics/DiagnosticsCore.cs`\n  - `src/Electron2D.ProjectSystem/Workspace/ProjectWorkspace.cs`\n  - `tests/Electron2D.Tests.Integration/EditorAgentBootstrapTests.cs`\n\n### Сводка\n\nРеализован internal bootstrap layer для запуска локальных agent profiles из active Editor session. Слой создаёт `AgentSessionId`, временный MCP config вне project root, ephemeral token с expiry, безопасный process start plan без shell/token leaks, handshake через `EditorSessionRegistry` как `Mcp` adapter и model-only Agent Workspace state (`Starting`, `Connected`, `Disconnected`, `HandshakeError`, `TokenExpired`). Реальные облачные AI-провайдеры в тестах не запускаются: production path использует `IAgentProcessLauncher`, focused tests используют fake launcher.\n\n### Критерии и результат\n\n- [x] Editor-side bootstrapper создаёт agent session id, local endpoint из active Editor descriptor и ephemeral token.\n- [x] Temporary MCP configuration создаётся вне project files/project root; token не попадает в process arguments, environment values, status text, diagnostics или project files.\n- [x] Agent process start plan использует project root как working directory, `UseShellExecute = false` и fake launcher в тестах.\n- [x] Handshake подключается к active Editor route, читает open documents, dirty documents, document revisions, diagnostics и selection resource availability.\n- [x] Agent Workspace model state показывает `Connected`, `Disconnected`, handshake errors и token expiry.\n- [x] Внешняя команда подключения документирована через `ELECTRON2D_MCP_CONFIG` и `ELECTRON2D_AGENT_SESSION_ID`.\n- [x] Добавлены tests без запуска реальных облачных AI-провайдеров.\n- [x] Документация фактического поведения обновлена.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~EditorAgentBootstrapTests` упал ожидаемо на отсутствующих `EditorAgentProcessBootstrapper`, `IAgentProcessLauncher`, `AgentProcessStartPlan`, `AgentProcessLaunchResult`, `IAgentTokenGenerator`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~EditorAgentBootstrapTests` прошёл `3/3` без warnings.\n- Documentation: `powershell -ExecutionPolicy Bypass -File tools\\Update-LocalDocumentationIndex.ps1`; `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1`; `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошли.\n- Source/build: `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для `560` tracked source files; `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`.\n- Focused regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorAgentBootstrapTests|FullyQualifiedName~EditorSessionDiscoveryTests|FullyQualifiedName~Electron2DMcpServerTests|FullyQualifiedName~ToolingServiceBoundaryTests|FullyQualifiedName~DiagnosticsCoreTests\"` прошёл `25/25`.\n- Guards: `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1`; `powershell -ExecutionPolicy Bypass -File tools\\Verify-CanonicalGoalAlignment.ps1` прошли.\n- Full tests: `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `385/385`, runtime smoke `5/5`, golden-data `12/12`.\n\n### Решения\n\n- Bootstrap реализован как internal Tooling слой, чтобы будущий Editor UI, MCP adapter и tests использовали один контракт без зависимости от конкретного AI-провайдера.\n- Ephemeral token хранится только во временном config file, потому что arguments, environment и status text часто попадают в logs или history.\n- `Disconnect` не освобождает primary Editor lease: отключение агента не должно закрывать или переводить Editor в headless режим.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0149 [ ] P0: Реализовать agent process profiles и MCP bootstrap из Editor\n\n- Создана: 2026-06-22T11:24:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0119, T-0141, T-0147\n- Ссылки:\n  - Спецификация: `docs/architecture/agent-native-workflow.md`\n  - Документация: `docs/editor/`; `docs/mcp/`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.Mcp/`; `tests/`\n\n### Самодостаточное описание\n\nНужно запускать локальные agent profiles (`codex`, `opencode`, `claude code`) так, чтобы процесс автоматически подключался к active Editor session через session-scoped MCP configuration. Без MCP handshake Agent Workspace остаётся обычным терминалом.\n\n### Критерии приёмки\n\n- [ ] Editor создаёт agent session id, local endpoint и ephemeral token.\n- [ ] Temporary MCP configuration создаётся вне project files и не попадает в logs/shell history.\n- [ ] Agent process стартует в project root и проходит MCP handshake.\n- [ ] После handshake агент читает текущую сцену, selection, revisions, dirty documents и diagnostics.\n- [ ] Agent Workspace показывает `Connected`, `Disconnected`, handshake errors и token expiry.\n- [ ] Для внешнего агента документирована команда подключения к существующей сессии.\n- [ ] Добавлены tests без реального запуска облачных AI-провайдеров.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: агент, запущенный из Editor, обязан подключаться к Editor-hosted Agent Gateway, а не просто открываться в терминале.\n```\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T08:24:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T22:56:00.0000000+00:00",
+  "completedAt": "2026-06-22T22:56:00.0000000+00:00",
+  "acceptedAt": "2026-06-22T22:56:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T22:56:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

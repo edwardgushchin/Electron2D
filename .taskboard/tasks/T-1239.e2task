@@ -1,0 +1,400 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-512cce9b60a14d988e59c70f29e772c7",
+  "revision": 1,
+  "taskId": "T-1239",
+  "legacyAliases": [],
+  "title": "Исключить сырой JSON из активности для всех видов событий",
+  "description": "На реальной задаче T-1222 событие WorkspaceChangesUpdated отображается во вкладке «Активность» как сырой JSON с digest/revision. Дефект повторяется, потому что модель расширения хранит kind и payload как произвольные строки, а formatActivityPayload имеет точечные ветки только для StatusChange и TaskPatched; предыдущие исправления T-1157 и T-1232 закрыли отдельные симптомы, но не полноту контракта.\n\nНужно ввести единый типизированный реестр представления всех канонических видов activity из TaskBoard v3. Для каждого вида реестр задаёт локализованное название, безопасное краткое описание, поисковый текст, семантический признак системного события и при необходимости явно раскрываемые технические детали. WorkspaceChangesUpdated должен показывать понятную сводку изменений без SHA/digest и сырого JSON, а переключатель «Системные» должен классифицировать его по виду события, а не по actorKind.\n\nКанонический payload остаётся неизменным для аудита и CLI. Неизвестный вид или повреждённый payload должен давать безопасный человекочитаемый fallback без вывода сырого JSON/HTML в основной ленте. Исчерпывающий contract-тест обязан сопоставлять enum activity kind из data/schemas/project-system/task-file-v3.schema.json с реестром, парсерами и локализациями, чтобы добавление нового вида без presenter завершалось RED.",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0001",
+    "tag-0002",
+    "tag-0003",
+    "tag-0008",
+    "tag-0010",
+    "tag-0026"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "assignee": null,
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "typed-activity-presentation-registry",
+      "description": "Модель разбирает kind на границе данных и использует единый типизированный реестр presenter для каждого канонического вида activity; прежние Comment и AgentSummary после миграции также имеют явное представление.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "localized-human-summaries",
+      "description": "Для каждого вида события определены ru/en название, безопасная краткая сводка и поисковый текст; WorkspaceChangesUpdated показывает число и виды затронутых файлов без digest, revision и сырого JSON.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "semantic-system-filtering",
+      "description": "Признак системного события определяется семантикой вида/metadata presenter, а не только actorKind; WorkspaceChangesUpdated скрывается при выключенном переключателе «Системные».",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "safe-fallback-and-canonical-payload",
+      "description": "Неизвестный вид или некорректный payload не выводит сырой JSON, HTML либо escape-последовательности в основной ленте; канонический технический payload не изменяется и остаётся доступен для аудита/CLI или явного раскрытия деталей.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "exhaustive-schema-contract",
+      "description": "Автоматический тест читает enum видов activity из task-file-v3.schema.json и требует точного покрытия реестром, парсерами и локализациями; новый вид без presenter гарантированно завершает проверку RED.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "regression-and-real-window-proof",
+      "description": "Unit и Extension Host regressions покрывают все виды, поиск, системный фильтр и fallback; VSIX проходит упаковку, а FFmpeg-запись реального окна VS Code на T-1222 подтверждает читаемое WorkspaceChangesUpdated без сырого JSON.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "lastActivitySequence": 1,
+  "activity": [
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-14T11:22:01.7291402+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      },
+      "sequence": 1
+    }
+  ],
+  "auditRuns": [],
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "workspaceChanges": {
+    "baseRevision": null,
+    "currentRevision": null,
+    "files": []
+  },
+  "links": [
+    {
+      "linkId": "link-activity-ui-domain",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-activity-domain",
+      "kind": "File",
+      "value": "docs/project-system/project-task-manager.md"
+    },
+    {
+      "linkId": "link-activity-schema",
+      "kind": "File",
+      "value": "data/schemas/project-system/task-file-v3.schema.json"
+    },
+    {
+      "linkId": "link-activity-validation",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Tasks/TaskBoardV3Validation.cs"
+    },
+    {
+      "linkId": "link-activity-model",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/model.ts"
+    },
+    {
+      "linkId": "link-activity-webview",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "link-activity-localization",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/localization.ts"
+    },
+    {
+      "linkId": "link-activity-unit-tests",
+      "kind": "Directory",
+      "value": "src/Electron2D.VsCode/test/unit"
+    },
+    {
+      "linkId": "link-activity-extension-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/suite/index.ts"
+    }
+  ],
+  "executionContract": {
+    "taskType": "сквозное исправление presentation contract для Activity VS Code Task Board",
+    "readyToStart": [
+      "Родительская T-1147 принята; T-1222 содержит реальное воспроизведение WorkspaceChangesUpdated с сырым JSON.",
+      "T-1157 и T-1232 документируют точечные исправления StatusChange и TaskPatched, поэтому RED должен проверять полноту всех видов по машинной схеме."
+    ],
+    "stopConditions": [
+      "Исправление требует заменить канонический payload локализованным текстом, изменить TaskBoard v3 schema или lifecycle задач.",
+      "Невозможно синхронизировать покрытие с единым машинно-читаемым перечнем видов и завершать проверку fail closed.",
+      "Fallback по-прежнему выводит сырой JSON/HTML либо системность определяется только личностью автора."
+    ],
+    "allowedChanges": [
+      "Связанные доменные документы и generated documentation index.",
+      "VS Code model, activity registry/parser, webview, localization, CSS, unit и Extension Host тесты.",
+      "Schema-to-presenter contract test, VSIX и FFmpeg evidence, task activity и append-only дневник."
+    ],
+    "forbiddenChanges": [
+      "Изменение канонического payload, schema, lifecycle или исторических activity.",
+      "Точечная ветка только для WorkspaceChangesUpdated без общего исчерпывающего контракта.",
+      "Ручное редактирование .taskboard, несвязанный рефакторинг и fixture-only визуальная приёмка."
+    ],
+    "requiredOutputs": [
+      "Типизированный исчерпывающий реестр представления каждого канонического вида activity.",
+      "Читаемое WorkspaceChangesUpdated, семантический системный фильтр и безопасный fallback без сырого JSON.",
+      "RED/GREEN schema-to-presenter regression, проверенный VSIX и FFmpeg evidence реального окна VS Code."
+    ],
+    "commands": [
+      {
+        "commandId": "cmd-activity-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-activity-typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-activity-extension",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:extension"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 1200,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "ExternalEffect"
+        ],
+        "confirmation": "HumanRequired"
+      },
+      {
+        "commandId": "cmd-activity-package",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 1200,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-activity-docs-check",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "run",
+          "--project",
+          "eng/Electron2D.Build",
+          "--",
+          "update",
+          "docs",
+          "--check"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-activity-docs-verify",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "run",
+          "--project",
+          "eng/Electron2D.Build",
+          "--",
+          "verify",
+          "docs"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-activity-capture",
+        "kind": "Process",
+        "executable": "python",
+        "arguments": [
+          "eng/tools/capture_window.py",
+          "--title",
+          "Visual Studio Code",
+          "--output",
+          ".temp/taskboard-activity-presentation-registry-real.png"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "ExternalEffect"
+        ],
+        "confirmation": "HumanRequired"
+      },
+      {
+        "commandId": "cmd-activity-taskboard-verify",
+        "kind": "Process",
+        "executable": "e2d",
+        "arguments": [
+          "tasks",
+          "verify",
+          "--project",
+          ".",
+          "--format",
+          "json"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-activity-whitespace",
+        "kind": "Process",
+        "executable": "git",
+        "arguments": [
+          "diff",
+          "--check"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 120,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-14T11:22:01.7291402+00:00",
+  "updatedAt": "2026-07-14T11:22:01.7291402+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null
+}

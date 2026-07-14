@@ -1,0 +1,565 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-308729f61c8d7a9bf0eab285bfd764d1",
+  "revision": 2,
+  "taskId": "T-0113",
+  "legacyAliases": [],
+  "title": "Реализовать AI-friendly позиционирование, Agent Workspace panel и шаблон проекта",
+  "description": "# T-0113: Реализовать AI-friendly позиционирование, Agent Workspace panel и шаблон проекта\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: не указан в локальной записи\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0113 [ ] P0: Реализовать AI-friendly позиционирование, Agent Workspace panel и шаблон проекта\n\n- Создана: 2026-06-21T00:00:13+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0078, T-0079, T-0084, T-0115, T-0116, T-0129, T-0139, T-0141, T-0142, T-0143, T-0144, T-0147, T-0148, T-0149, T-0150, T-0153, T-0154\n- Ссылки:\n  - Upstream commit: нет\n  - Спецификация: `docs/releases/0.1.0-preview.md`; `docs/architecture/ai-friendly-workflow.md`; `docs/editor/`; `docs/project-system/`; `docs/documentation/`\n  - Документация: `docs/editor/`; `docs/project-system/`; `docs/documentation/`\n  - Референс агента: `C:\\Users\\eduar\\.codex\\AGENTS.md`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.ProjectSystem/`; `data/templates/`; `tools/`\n\n### Самодостаточное описание\n\nElectron2D должен позиционироваться как AI-friendly движок, где `Electron2D.Editor` является основным живым рабочим пространством человека и AI. Терминал в редакторе остаётся полезной точкой запуска локальных `codex`, `opencode` или `claude code`, но сам по себе не считается AI-интеграцией.\n\nНужна Agent Workspace panel: панель, которая показывает текущую AI-сессию, последние действия агента, затронутые сцены/узлы/ресурсы/scripts, diagnostics, screenshots, runtime snapshots, переходы к изменённым объектам, cancel/pause для поддерживаемых операций и grouped undo последней AI-транзакции.\n\nПанель не должна быть встроенным AI-chat и не должна становиться отдельной приватной реализацией проектных операций. Она должна работать поверх `ProjectWorkspace`, общего `Electron2D.Tooling`, MCP/IPC и `e2d` CLI, чтобы тот же рабочий процесс был доступен человеку, CLI, CI и AI-агенту без GUI automation.\n\nПри создании проекта через редактор в папке проекта должен автоматически создаваться локальный git-репозиторий, проектный `AGENTS.md` и набор стартовых skills. Проектный `AGENTS.md` должен быть похож по назначению на `C:\\Users\\eduar\\.codex\\AGENTS.md`, но не должен слепо копировать приватные пользовательские правила: шаблон обязан быть безопасным, понятным и привязанным к Electron2D-проекту.\n\nПроектный `AGENTS.md` должен описывать версию Electron2D и .NET, renderer profile, команды validate/build/test/run/export, структуру проекта, запрет редактировать import cache, правило стабильных UID, обязательную проверку через `e2d validate`, предупреждение не использовать Godot API вне утверждённого Electron2D 2D-профиля, команду `e2d api compare-godot <type>` как strict verifier для спорных API внутри профиля, правило подключаться к активной Editor-сессии, если она открыта, а также правило работать с задачами через `ProjectTaskManager`, Editor, Tooling или MCP, не редактируя task storage files напрямую.\n\nЗадача является epic-задачей для AI-friendly продукта. Исполняемая реализация делится минимум на три отдельные задачи: project template/`AGENTS.md`/skills/git init (`T-0148`), запуск локального agent process и MCP bootstrap (`T-0149`), Agent Workspace UI с changeset/diagnostics/screenshots/runtime integration (`T-0150`). Промежуточная документация обновляется в этих задачах; финальное маркетинговое позиционирование и итоговый README выполняются только в `T-0110`.\n\n### Критерии приёмки\n\n- [ ] Создана или обновлена спецификация AI-friendly workflow для живой Editor-сессии, Project Manager и шаблона проекта.\n- [ ] Промежуточная продуктовая формулировка зафиксирована в release specification и AI-friendly specification.\n- [ ] В редакторе реализована Agent Workspace panel, в которую входит терминал проекта.\n- [ ] Панель умеет запускать выбранный профиль AI-агента: `codex`, `opencode` или `claude code`, если соответствующая команда установлена локально.\n- [ ] Агент, запущенный профилем из Editor, получает session-scoped MCP configuration, проходит MCP handshake с Editor-hosted Agent Gateway и видит текущую сцену, selection, revisions и diagnostics.\n- [ ] Если нужная команда не найдена, редактор показывает понятное сообщение и не ломает проект.\n- [ ] Терминал запускается в корне текущего проекта и не подставляет секреты, токены или приватные параметры из шаблона.\n- [ ] Панель показывает статус активной AI-сессии, последнее действие, список изменённых объектов и переход к изменённому узлу или ресурсу.\n- [ ] Панель показывает diagnostics, screenshots и runtime snapshots, полученные от AI-сессии или MCP.\n- [ ] Панель умеет остановить или отменить поддерживаемую агентскую операцию без повреждения проекта.\n- [ ] Последняя AI-транзакция видна как единая группа Undo/Redo, если эта возможность уже предоставлена `ProjectWorkspace`.\n- [ ] Создание проекта через редактор выполняет `git init` или даёт понятную ошибку, если `git` недоступен.\n- [ ] Новый проект получает проектный `AGENTS.md`, рассчитанный на Electron2D-разработку и локальных AI-агентов.\n- [ ] Project-local `AGENTS.md` не требует `TASKS.md`, `dev-diary/` или `completed-tasks/` в пользовательском проекте.\n- [ ] Project-local `AGENTS.md` требует использовать `ProjectTaskManager`, связывать изменения/tests/artifacts с активной задачей и отправлять завершённую работу на человеческую приёмку.\n- [ ] Новый проект получает стартовые skills для типовых задач: создание сцены, написание gameplay-кода, импорт ресурсов, запуск тестов и подготовка экспорта.\n- [ ] Skills документированы как проектные файлы, а не как скрытая глобальная настройка машины разработчика.\n- [ ] Добавлены тесты Project Manager для создания git-репозитория, `AGENTS.md` и skills.\n- [ ] Добавлены тесты Project Manager для создания начальной task board `ProjectTaskManager` без Markdown-backlog файлов.\n- [ ] Добавлены проверки Agent Workspace panel и terminal workflow без реального запуска внешних AI-команд в тестовой среде.\n- [ ] Документация фактического поведения обновлена в `docs/editor/`, `docs/project-system/` и `docs/documentation/`.\n- [ ] Команда проверки задокументирована.\n\n### Подзадачи\n\n- [ ] Описать AI-friendly концепцию Electron2D в спецификации как совместную работу в открытом Editor без маркетинговой воды и без привязки к одному конкретному агенту.\n- [ ] Спроектировать структуру project-local `AGENTS.md` для Electron2D-проектов.\n- [ ] Добавить в шаблон project-local `AGENTS.md` правила работы через `ProjectTaskManager`, active task и human acceptance.\n- [ ] Спроектировать стартовый набор skills и их формат хранения в папке проекта.\n- [ ] Реализовать создание git-репозитория при создании проекта через редактор.\n- [ ] Реализовать генерацию `AGENTS.md` и skills при создании проекта.\n- [ ] Реализовать UI Agent Workspace panel, терминал и профили запуска `codex`, `opencode`, `claude code`.\n- [ ] Добавить статус AI-сессии, changeset, diagnostics, screenshots, cancel/pause и grouped undo в UI-поток панели.\n- [ ] Добавить проверки отсутствующих команд, ошибок запуска и рабочей директории терминала.\n- [ ] Обновить промежуточную документацию. Финальный README и маркетинговое позиционирование оставить `T-0110`.\n\n### Заметки агента\n\nСоздано по запросу пользователя: Electron2D должен отличаться AI-friendly workflow, где редактор помогает работать с AI-агентами, а каждый новый проект сразу содержит локальный git-репозиторий, агентский файл и skills для разработки игры.\n\n2026-06-22T07:08:00+03:00 - Уточнение пользователя: агентская панель редактора не может начинаться до подтверждения `T-0129`. Терминальный dock и сопутствующая UI-обвязка должны опираться на публичный UI API со статусом `Supported`, а не на частичный или скрытый UI baseline.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T10:58:00+03:00 - Уточнение пользователя: терминальный dock является только точкой запуска. Основная цель задачи - Agent Workspace panel для живой совместной работы в открытом Editor; реализация остаётся заблокированной до отдельной команды на разблокировку.\n\n2026-06-22T11:03:00+03:00 - Уточнение пользователя: project-local `AGENTS.md` должен описывать не только команды движка и активную Editor-сессию, но и правила ведения `TASKS.md`, `dev-diary/`, `docs/specifications/`, `docs/documentation/` и `completed-tasks/`.\n\n2026-06-22T11:24:00+03:00 - Уточнение пользователя: `T-0113` не должна зависеть от финального README `T-0110`; это epic, а реализация делится на `T-0148`, `T-0149` и `T-0150`.\n\n2026-06-22T12:25:00+03:00 - Уточнение пользователя: для пользовательских проектов `TASKS.md`, `completed-tasks/` и `dev-diary/` не создаются и не описываются в `AGENTS.md`; их заменяет встроенный `ProjectTaskManager` и `TaskActivity`. Текущий `dev-diary/` репозитория Electron2D остаётся без миграции и не входит в продуктовый контракт.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-cc9ad8b28e56d3f9ecd8e5efa6602736"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-045f5dd70915dce6ceead264e737f449"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-804bc015aae532e2b2308c5d5995e21c"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-dc068f5afb24a6ac7b7b897592fc6418"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-87432465f9ca500ace92dd670ec79481"
+    },
+    {
+      "relationId": "relation-0006",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-045f38cf3a9a10f510ad88b37dbd4213"
+    },
+    {
+      "relationId": "relation-0007",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ae16b90af93a4555a0963cb5434eefe5"
+    },
+    {
+      "relationId": "relation-0008",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-1b64237407257be35cfb0af78ed250ac"
+    },
+    {
+      "relationId": "relation-0009",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-4afe524e3b7cf00d205b740a383a321e"
+    },
+    {
+      "relationId": "relation-0010",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-d81e523d401e305b1d30a3442fea007a"
+    },
+    {
+      "relationId": "relation-0011",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-e587728f5886c91618d4e563dc396222"
+    },
+    {
+      "relationId": "relation-0012",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a129b3843ed32ad18bc5c86dd3b48ede"
+    },
+    {
+      "relationId": "relation-0013",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-abc4d706a6f3ddd3a78e36dcf1eee8f6"
+    },
+    {
+      "relationId": "relation-0014",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-1c1adf72314055547ce42a90cfe71be7"
+    },
+    {
+      "relationId": "relation-0015",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-6d34f3fae5acc6ede72494fe25d1b722"
+    },
+    {
+      "relationId": "relation-0016",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-8f9de83d456b281aabdaa6b0dbd08764"
+    },
+    {
+      "relationId": "relation-0017",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-be9db2bbcef2fdd32e3978b12680dbc4"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создана или обновлена спецификация AI-friendly workflow для живой Editor-сессии, Project Manager и шаблона проекта.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Промежуточная продуктовая формулировка зафиксирована в release specification и AI-friendly specification.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "В редакторе реализована Agent Workspace panel, в которую входит терминал проекта.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Панель умеет запускать выбранный профиль AI-агента: `codex`, `opencode` или `claude code`, если соответствующая команда установлена локально.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Агент, запущенный профилем из Editor, получает session-scoped MCP configuration, проходит MCP handshake с Editor-hosted Agent Gateway и видит текущую сцену, selection, revisions и diagnostics.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Если нужная команда не найдена, редактор показывает понятное сообщение и не ломает проект.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Терминал запускается в корне текущего проекта и не подставляет секреты, токены или приватные параметры из шаблона.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Панель показывает статус активной AI-сессии, последнее действие, список изменённых объектов и переход к изменённому узлу или ресурсу.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Панель показывает diagnostics, screenshots и runtime snapshots, полученные от AI-сессии или MCP.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Панель умеет остановить или отменить поддерживаемую агентскую операцию без повреждения проекта.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Последняя AI-транзакция видна как единая группа Undo/Redo, если эта возможность уже предоставлена `ProjectWorkspace`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Создание проекта через редактор выполняет `git init` или даёт понятную ошибку, если `git` недоступен.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-013",
+      "description": "Новый проект получает проектный `AGENTS.md`, рассчитанный на Electron2D-разработку и локальных AI-агентов.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-014",
+      "description": "Project-local `AGENTS.md` не требует `TASKS.md`, `dev-diary/` или `completed-tasks/` в пользовательском проекте.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-015",
+      "description": "Project-local `AGENTS.md` требует использовать `ProjectTaskManager`, связывать изменения/tests/artifacts с активной задачей и отправлять завершённую работу на человеческую приёмку.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-016",
+      "description": "Новый проект получает стартовые skills для типовых задач: создание сцены, написание gameplay-кода, импорт ресурсов, запуск тестов и подготовка экспорта.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-017",
+      "description": "Skills документированы как проектные файлы, а не как скрытая глобальная настройка машины разработчика.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-018",
+      "description": "Добавлены тесты Project Manager для создания git-репозитория, `AGENTS.md` и skills.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-019",
+      "description": "Добавлены тесты Project Manager для создания начальной task board `ProjectTaskManager` без Markdown-backlog файлов.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-020",
+      "description": "Добавлены проверки Agent Workspace panel и terminal workflow без реального запуска внешних AI-команд в тестовой среде.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-021",
+      "description": "Документация фактического поведения обновлена в `docs/editor/`, `docs/project-system/` и `docs/documentation/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-022",
+      "description": "Команда проверки задокументирована.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-308729f61c8d7a9bf0eab285bfd764d1/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T04:08:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: агентская панель редактора не может начинаться до подтверждения `T-0129`. Терминальный dock и сопутствующая UI-обвязка должны опираться на публичный UI API со статусом `Supported`, а не на частичный или скрытый UI baseline."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T07:24:54.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T07:58:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: терминальный dock является только точкой запуска. Основная цель задачи - Agent Workspace panel для живой совместной работы в открытом Editor; реализация остаётся заблокированной до отдельной команды на разблокировку."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:03:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: project-local `AGENTS.md` должен описывать не только команды движка и активную Editor-сессию, но и правила ведения `TASKS.md`, `dev-diary/`, `docs/specifications/`, `docs/documentation/` и `completed-tasks/`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:05:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0006",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:24:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: `T-0113` не должна зависеть от финального README `T-0110`; это epic, а реализация делится на `T-0148`, `T-0149` и `T-0150`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0007",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T09:25:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: для пользовательских проектов `TASKS.md`, `completed-tasks/` и `dev-diary/` не создаются и не описываются в `AGENTS.md`; их заменяет встроенный `ProjectTaskManager` и `TaskActivity`. Текущий `dev-diary/` репозитория Electron2D остаётся без миграции и не входит в продуктовый контракт."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T18:14:16.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "completed-tasks"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/templates"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Directory",
+      "value": "dev-diary"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/architecture/ai-friendly-workflow.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "docs/documentation"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "docs/project-system"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "docs/specifications"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "src/Electron2D.ProjectSystem"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "Directory",
+      "value": "tools"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 488944,
+      "byteLength": 14364,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "0b0e8194c3e58a67460b4f28dfd71e3c55ccdd300c134e51be636269b557d8e7",
+      "markdown": "# T-0113: Реализовать AI-friendly позиционирование, Agent Workspace panel и шаблон проекта\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: не указан в локальной записи\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0113 [ ] P0: Реализовать AI-friendly позиционирование, Agent Workspace panel и шаблон проекта\n\n- Создана: 2026-06-21T00:00:13+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0078, T-0079, T-0084, T-0115, T-0116, T-0129, T-0139, T-0141, T-0142, T-0143, T-0144, T-0147, T-0148, T-0149, T-0150, T-0153, T-0154\n- Ссылки:\n  - Upstream commit: нет\n  - Спецификация: `docs/releases/0.1.0-preview.md`; `docs/architecture/ai-friendly-workflow.md`; `docs/editor/`; `docs/project-system/`; `docs/documentation/`\n  - Документация: `docs/editor/`; `docs/project-system/`; `docs/documentation/`\n  - Референс агента: `C:\\Users\\eduar\\.codex\\AGENTS.md`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.ProjectSystem/`; `data/templates/`; `tools/`\n\n### Самодостаточное описание\n\nElectron2D должен позиционироваться как AI-friendly движок, где `Electron2D.Editor` является основным живым рабочим пространством человека и AI. Терминал в редакторе остаётся полезной точкой запуска локальных `codex`, `opencode` или `claude code`, но сам по себе не считается AI-интеграцией.\n\nНужна Agent Workspace panel: панель, которая показывает текущую AI-сессию, последние действия агента, затронутые сцены/узлы/ресурсы/scripts, diagnostics, screenshots, runtime snapshots, переходы к изменённым объектам, cancel/pause для поддерживаемых операций и grouped undo последней AI-транзакции.\n\nПанель не должна быть встроенным AI-chat и не должна становиться отдельной приватной реализацией проектных операций. Она должна работать поверх `ProjectWorkspace`, общего `Electron2D.Tooling`, MCP/IPC и `e2d` CLI, чтобы тот же рабочий процесс был доступен человеку, CLI, CI и AI-агенту без GUI automation.\n\nПри создании проекта через редактор в папке проекта должен автоматически создаваться локальный git-репозиторий, проектный `AGENTS.md` и набор стартовых skills. Проектный `AGENTS.md` должен быть похож по назначению на `C:\\Users\\eduar\\.codex\\AGENTS.md`, но не должен слепо копировать приватные пользовательские правила: шаблон обязан быть безопасным, понятным и привязанным к Electron2D-проекту.\n\nПроектный `AGENTS.md` должен описывать версию Electron2D и .NET, renderer profile, команды validate/build/test/run/export, структуру проекта, запрет редактировать import cache, правило стабильных UID, обязательную проверку через `e2d validate`, предупреждение не использовать Godot API вне утверждённого Electron2D 2D-профиля, команду `e2d api compare-godot <type>` как strict verifier для спорных API внутри профиля, правило подключаться к активной Editor-сессии, если она открыта, а также правило работать с задачами через `ProjectTaskManager`, Editor, Tooling или MCP, не редактируя task storage files напрямую.\n\nЗадача является epic-задачей для AI-friendly продукта. Исполняемая реализация делится минимум на три отдельные задачи: project template/`AGENTS.md`/skills/git init (`T-0148`), запуск локального agent process и MCP bootstrap (`T-0149`), Agent Workspace UI с changeset/diagnostics/screenshots/runtime integration (`T-0150`). Промежуточная документация обновляется в этих задачах; финальное маркетинговое позиционирование и итоговый README выполняются только в `T-0110`.\n\n### Критерии приёмки\n\n- [ ] Создана или обновлена спецификация AI-friendly workflow для живой Editor-сессии, Project Manager и шаблона проекта.\n- [ ] Промежуточная продуктовая формулировка зафиксирована в release specification и AI-friendly specification.\n- [ ] В редакторе реализована Agent Workspace panel, в которую входит терминал проекта.\n- [ ] Панель умеет запускать выбранный профиль AI-агента: `codex`, `opencode` или `claude code`, если соответствующая команда установлена локально.\n- [ ] Агент, запущенный профилем из Editor, получает session-scoped MCP configuration, проходит MCP handshake с Editor-hosted Agent Gateway и видит текущую сцену, selection, revisions и diagnostics.\n- [ ] Если нужная команда не найдена, редактор показывает понятное сообщение и не ломает проект.\n- [ ] Терминал запускается в корне текущего проекта и не подставляет секреты, токены или приватные параметры из шаблона.\n- [ ] Панель показывает статус активной AI-сессии, последнее действие, список изменённых объектов и переход к изменённому узлу или ресурсу.\n- [ ] Панель показывает diagnostics, screenshots и runtime snapshots, полученные от AI-сессии или MCP.\n- [ ] Панель умеет остановить или отменить поддерживаемую агентскую операцию без повреждения проекта.\n- [ ] Последняя AI-транзакция видна как единая группа Undo/Redo, если эта возможность уже предоставлена `ProjectWorkspace`.\n- [ ] Создание проекта через редактор выполняет `git init` или даёт понятную ошибку, если `git` недоступен.\n- [ ] Новый проект получает проектный `AGENTS.md`, рассчитанный на Electron2D-разработку и локальных AI-агентов.\n- [ ] Project-local `AGENTS.md` не требует `TASKS.md`, `dev-diary/` или `completed-tasks/` в пользовательском проекте.\n- [ ] Project-local `AGENTS.md` требует использовать `ProjectTaskManager`, связывать изменения/tests/artifacts с активной задачей и отправлять завершённую работу на человеческую приёмку.\n- [ ] Новый проект получает стартовые skills для типовых задач: создание сцены, написание gameplay-кода, импорт ресурсов, запуск тестов и подготовка экспорта.\n- [ ] Skills документированы как проектные файлы, а не как скрытая глобальная настройка машины разработчика.\n- [ ] Добавлены тесты Project Manager для создания git-репозитория, `AGENTS.md` и skills.\n- [ ] Добавлены тесты Project Manager для создания начальной task board `ProjectTaskManager` без Markdown-backlog файлов.\n- [ ] Добавлены проверки Agent Workspace panel и terminal workflow без реального запуска внешних AI-команд в тестовой среде.\n- [ ] Документация фактического поведения обновлена в `docs/editor/`, `docs/project-system/` и `docs/documentation/`.\n- [ ] Команда проверки задокументирована.\n\n### Подзадачи\n\n- [ ] Описать AI-friendly концепцию Electron2D в спецификации как совместную работу в открытом Editor без маркетинговой воды и без привязки к одному конкретному агенту.\n- [ ] Спроектировать структуру project-local `AGENTS.md` для Electron2D-проектов.\n- [ ] Добавить в шаблон project-local `AGENTS.md` правила работы через `ProjectTaskManager`, active task и human acceptance.\n- [ ] Спроектировать стартовый набор skills и их формат хранения в папке проекта.\n- [ ] Реализовать создание git-репозитория при создании проекта через редактор.\n- [ ] Реализовать генерацию `AGENTS.md` и skills при создании проекта.\n- [ ] Реализовать UI Agent Workspace panel, терминал и профили запуска `codex`, `opencode`, `claude code`.\n- [ ] Добавить статус AI-сессии, changeset, diagnostics, screenshots, cancel/pause и grouped undo в UI-поток панели.\n- [ ] Добавить проверки отсутствующих команд, ошибок запуска и рабочей директории терминала.\n- [ ] Обновить промежуточную документацию. Финальный README и маркетинговое позиционирование оставить `T-0110`.\n\n### Заметки агента\n\nСоздано по запросу пользователя: Electron2D должен отличаться AI-friendly workflow, где редактор помогает работать с AI-агентами, а каждый новый проект сразу содержит локальный git-репозиторий, агентский файл и skills для разработки игры.\n\n2026-06-22T07:08:00+03:00 - Уточнение пользователя: агентская панель редактора не может начинаться до подтверждения `T-0129`. Терминальный dock и сопутствующая UI-обвязка должны опираться на публичный UI API со статусом `Supported`, а не на частичный или скрытый UI baseline.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T10:58:00+03:00 - Уточнение пользователя: терминальный dock является только точкой запуска. Основная цель задачи - Agent Workspace panel для живой совместной работы в открытом Editor; реализация остаётся заблокированной до отдельной команды на разблокировку.\n\n2026-06-22T11:03:00+03:00 - Уточнение пользователя: project-local `AGENTS.md` должен описывать не только команды движка и активную Editor-сессию, но и правила ведения `TASKS.md`, `dev-diary/`, `docs/specifications/`, `docs/documentation/` и `completed-tasks/`.\n\n2026-06-22T11:24:00+03:00 - Уточнение пользователя: `T-0113` не должна зависеть от финального README `T-0110`; это epic, а реализация делится на `T-0148`, `T-0149` и `T-0150`.\n\n2026-06-22T12:25:00+03:00 - Уточнение пользователя: для пользовательских проектов `TASKS.md`, `completed-tasks/` и `dev-diary/` не создаются и не описываются в `AGENTS.md`; их заменяет встроенный `ProjectTaskManager` и `TaskActivity`. Текущий `dev-diary/` репозитория Electron2D остаётся без миграции и не входит в продуктовый контракт.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T21:00:13.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "completedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -1,0 +1,257 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-27d44d89feb495ed7ae7d693fcd96b97",
+  "revision": 2,
+  "taskId": "T-0107",
+  "legacyAliases": [],
+  "title": "Генерировать автоматическую документацию публичного API в GitHub Wiki",
+  "description": "# T-0107 [x] P0: Генерировать автоматическую документацию публичного API в GitHub Wiki\n\n- Создана: 2026-06-20T22:01:23+03:00\n- Завершена: 2026-06-21T19:35:00+03:00\n- Приоритет: P0\n- Зависимости: T-0004, T-0106\n\n## Ссылки\n\n- Спецификация: `docs/documentation/github-wiki-api-reference.md`\n- Документация: `docs/documentation/github-wiki-api-reference.md`\n- Генератор: `tools/Update-ApiWiki.ps1`\n- Verifier compatibility table: `tools/Verify-ApiCompatibility.ps1`\n- GitHub Wiki: `https://github.com/edwardgushchin/Electron2D/wiki`\n- GitHub Wiki repository: `https://github.com/edwardgushchin/Electron2D.wiki.git`\n\n## Самодостаточное описание\n\nНужно было сделать автоматическую документацию публичного API Electron2D в настоящей GitHub Wiki проекта, без локального сайта и без отслеживания Wiki pages в основном репозитории. Источником API reference должны быть compiled public surface и XML documentation comments.\n\n## Что сделано\n\n- Добавлен `tools/Update-ApiWiki.ps1`.\n- Генератор собирает `src/Electron2D/Electron2D.csproj`, читает `Electron2D.dll` и XML documentation output.\n- GitHub Wiki публикуется в отдельный repository `Electron2D.wiki.git`.\n- `.github/wiki/` закреплён как игнорируемый локальный клон `Electron2D.wiki.git`.\n- Сгенерированы и опубликованы:\n  - `Home.md`;\n  - `_Sidebar.md`;\n  - `_Footer.md`;\n  - `API-by-Category.md`;\n  - `API-Reference.md`;\n  - `11` category pages;\n  - `120` страниц публичных типов.\n- `API-Compatibility.md` оставлен ручной Wiki page и не перезаписывается генератором.\n- Из `API-Compatibility.md` убраны дублирующий внутренний заголовок и блок removed/legacy API.\n- Внутренние Wiki-ссылки генерируются без `.md`, чтобы GitHub открывал rendered Wiki pages, а не raw Markdown.\n- Добавлен CI step, который клонирует `Electron2D.wiki.git` и проверяет синхронизацию через `tools\\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check`.\n- `tools\\Verify-CiMatrix.ps1` проверяет наличие Wiki clone/check step.\n- `tools\\Verify-ApiCompatibility.ps1` переведён на `Electron2D.wiki.git`.\n- Спецификация и реализационная документация GitHub Wiki API reference обновлены.\n\n## Критерии приёмки\n\n- [x] Создан generator API reference для GitHub Wiki repository.\n- [x] Generator читает публичные типы из runtime assembly и XML docs из build output.\n- [x] Для каждого public type создаётся или обновляется Wiki-страница с summary, members, signatures, remarks, exceptions, thread-safety, since и see also, где данные есть в XML docs.\n- [x] `API-Compatibility.md` остаётся совместимой страницей в `Electron2D.wiki.git` и не заменяется локальным сайтом.\n- [x] Добавлен verifier, который падает, если Wiki API reference не синхронизирован с public API.\n- [x] CI запускает generator check/verifier.\n- [x] Документация генератора обновлена в `docs/documentation/`.\n- [x] Команда генерации и проверки задокументирована.\n\n## Проверки\n\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-ApiWiki.ps1 -Check` - пройдено, generated pages `136`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check` - пройдено, generated pages `136`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - пройдено, public types `120`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - пройдено.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiXmlDocs.ps1 -FailOnIssues` - пройдено, checked symbols `1258`, issues `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - пройдено, tracked source files `357`.\n- `git diff --check` - пройдено.\n\n## Решения\n\n- GitHub Wiki является отдельным repository, а не отслеживаемой папкой в основном проекте.\n- `.github/wiki` используется как локальный рабочий клон для генерации, проверки и публикации и игнорируется основным Git.\n- `API-Compatibility.md` остаётся ручной страницей, но не публикует отдельный removed/legacy API block.\n- Старые legacy/component типы продолжают запрещаться verifier-ом по public surface.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0012",
+    "tag-0015"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c09031e85da060f5381745f84753bec3"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-e07cf89afae4241b9c110f897e2f4315"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создан generator API reference для GitHub Wiki repository.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-27d44d89feb495ed7ae7d693fcd96b97/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Generator читает публичные типы из runtime assembly и XML docs из build output.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-27d44d89feb495ed7ae7d693fcd96b97/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Для каждого public type создаётся или обновляется Wiki-страница с summary, members, signatures, remarks, exceptions, thread-safety, since и see also, где данные есть в XML docs.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-27d44d89feb495ed7ae7d693fcd96b97/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`API-Compatibility.md` остаётся совместимой страницей в `Electron2D.wiki.git` и не заменяется локальным сайтом.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-27d44d89feb495ed7ae7d693fcd96b97/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Добавлен verifier, который падает, если Wiki API reference не синхронизирован с public API.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-27d44d89feb495ed7ae7d693fcd96b97/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "CI запускает generator check/verifier.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-27d44d89feb495ed7ae7d693fcd96b97/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Документация генератора обновлена в `docs/documentation/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-27d44d89feb495ed7ae7d693fcd96b97/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Команда генерации и проверки задокументирована.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-27d44d89feb495ed7ae7d693fcd96b97/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T16:35:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/wiki"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": ".github/wiki"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Directory",
+      "value": "docs/documentation"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/documentation/github-wiki-api-reference.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Uri",
+      "value": "https://github.com/edwardgushchin/Electron2D.wiki.git"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Uri",
+      "value": "https://github.com/edwardgushchin/Electron2D/wiki"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "src/Electron2D/Electron2D.csproj"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tools/Update-ApiWiki.ps1"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tools/Verify-ApiCompatibility.ps1"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tools/Update-ApiWiki.ps1 -OutputPath .github/wiki -Check"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "powershell -ExecutionPolicy Bypass -File tools\\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 308819,
+      "byteLength": 5286,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "ccfa49a903d74d8413cb540162eecd724a0d87d3d94507394b2e0a1e01f1c151",
+      "markdown": "# T-0107 [x] P0: Генерировать автоматическую документацию публичного API в GitHub Wiki\n\n- Создана: 2026-06-20T22:01:23+03:00\n- Завершена: 2026-06-21T19:35:00+03:00\n- Приоритет: P0\n- Зависимости: T-0004, T-0106\n\n## Ссылки\n\n- Спецификация: `docs/documentation/github-wiki-api-reference.md`\n- Документация: `docs/documentation/github-wiki-api-reference.md`\n- Генератор: `tools/Update-ApiWiki.ps1`\n- Verifier compatibility table: `tools/Verify-ApiCompatibility.ps1`\n- GitHub Wiki: `https://github.com/edwardgushchin/Electron2D/wiki`\n- GitHub Wiki repository: `https://github.com/edwardgushchin/Electron2D.wiki.git`\n\n## Самодостаточное описание\n\nНужно было сделать автоматическую документацию публичного API Electron2D в настоящей GitHub Wiki проекта, без локального сайта и без отслеживания Wiki pages в основном репозитории. Источником API reference должны быть compiled public surface и XML documentation comments.\n\n## Что сделано\n\n- Добавлен `tools/Update-ApiWiki.ps1`.\n- Генератор собирает `src/Electron2D/Electron2D.csproj`, читает `Electron2D.dll` и XML documentation output.\n- GitHub Wiki публикуется в отдельный repository `Electron2D.wiki.git`.\n- `.github/wiki/` закреплён как игнорируемый локальный клон `Electron2D.wiki.git`.\n- Сгенерированы и опубликованы:\n  - `Home.md`;\n  - `_Sidebar.md`;\n  - `_Footer.md`;\n  - `API-by-Category.md`;\n  - `API-Reference.md`;\n  - `11` category pages;\n  - `120` страниц публичных типов.\n- `API-Compatibility.md` оставлен ручной Wiki page и не перезаписывается генератором.\n- Из `API-Compatibility.md` убраны дублирующий внутренний заголовок и блок removed/legacy API.\n- Внутренние Wiki-ссылки генерируются без `.md`, чтобы GitHub открывал rendered Wiki pages, а не raw Markdown.\n- Добавлен CI step, который клонирует `Electron2D.wiki.git` и проверяет синхронизацию через `tools\\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check`.\n- `tools\\Verify-CiMatrix.ps1` проверяет наличие Wiki clone/check step.\n- `tools\\Verify-ApiCompatibility.ps1` переведён на `Electron2D.wiki.git`.\n- Спецификация и реализационная документация GitHub Wiki API reference обновлены.\n\n## Критерии приёмки\n\n- [x] Создан generator API reference для GitHub Wiki repository.\n- [x] Generator читает публичные типы из runtime assembly и XML docs из build output.\n- [x] Для каждого public type создаётся или обновляется Wiki-страница с summary, members, signatures, remarks, exceptions, thread-safety, since и see also, где данные есть в XML docs.\n- [x] `API-Compatibility.md` остаётся совместимой страницей в `Electron2D.wiki.git` и не заменяется локальным сайтом.\n- [x] Добавлен verifier, который падает, если Wiki API reference не синхронизирован с public API.\n- [x] CI запускает generator check/verifier.\n- [x] Документация генератора обновлена в `docs/documentation/`.\n- [x] Команда генерации и проверки задокументирована.\n\n## Проверки\n\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-ApiWiki.ps1 -Check` - пройдено, generated pages `136`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check` - пройдено, generated pages `136`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - пройдено, public types `120`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - пройдено.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiXmlDocs.ps1 -FailOnIssues` - пройдено, checked symbols `1258`, issues `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - пройдено, tracked source files `357`.\n- `git diff --check` - пройдено.\n\n## Решения\n\n- GitHub Wiki является отдельным repository, а не отслеживаемой папкой в основном проекте.\n- `.github/wiki` используется как локальный рабочий клон для генерации, проверки и публикации и игнорируется основным Git.\n- `API-Compatibility.md` остаётся ручной страницей, но не публикует отдельный removed/legacy API block.\n- Старые legacy/component типы продолжают запрещаться verifier-ом по public surface.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T19:01:23.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T16:35:00.0000000+00:00",
+  "completedAt": "2026-06-21T16:35:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T16:35:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T16:35:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -244,7 +244,7 @@ internal static class AgentWorkspaceVisualHarness
             ["clickableControlCount"] = clickableControlCount,
             ["forbiddenActionMatches"] = forbiddenActionMatches,
             ["doneActionAvailable"] = snapshot.DoneActionAvailable,
-            ["awaitingAcceptanceActionAvailable"] = snapshot.AwaitingAcceptanceActionAvailable,
+            ["submitForAcceptanceActionAvailable"] = snapshot.SubmitForAcceptanceActionAvailable,
             ["groupedUndoAvailable"] = snapshot.GroupedUndoAvailable,
             ["screenshotReviewed"] = true
         };

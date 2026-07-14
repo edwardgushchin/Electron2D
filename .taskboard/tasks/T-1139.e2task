@@ -1,0 +1,181 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-bf2d0236da6b22c3b6df91c4ec5aaba7",
+  "revision": 2,
+  "taskId": "T-1139",
+  "legacyAliases": [],
+  "title": "Удалить machine-local Android/JDK fallbacks и вернуть fail-closed scan audit baseline",
+  "description": "## T-1139 [ ] P0: Удалить machine-local Android/JDK fallbacks и вернуть fail-closed scan audit baseline\n\n- Создана: 2026-07-10T01:46:49+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `current`\n- Зависимости: нет\n- Ссылки:\n  - CLI: `src/Electron2D.Cli/CliGeneralCommands.cs`\n  - Документация Android export: `docs/export/android-arm64-export.md`\n  - Audit package: `eng/Electron2D.Build/AuditPackageCommand.cs`; `docs/release-management/audit-package.md`\n  - Тест: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник blocker-а: `docs/verdicts/release-management/t-1137-audit-control-r07.md`, `B1`/`B2`\n\n### Самодостаточное описание\n\nИсходная ревизия содержит два literal drive-local Android SDK/JDK fallback path. Удаление этих fallback-ов во время T-1137 заставило audit tooling временно пропускать `repo-before/**` и удалённые patch lines, что control audit классифицировал как global safety blocker. Задача должна создать безопасный baseline: CLI использует только environment/standard vendor paths, а audit package fail-closed сканирует все baseline snapshots и весь patch без подмены исторического содержимого.\n\n### Критерии приёмки\n\n- [ ] Android SDK/JDK discovery не содержит machine-local literal paths и документирован через environment/standard directories.\n- [ ] `repo-before/**` и удалённые patch lines проверяются на absolute machine paths.\n- [ ] Existing heavy regression ожидает `E2D-BUILD-AUDIT-ABSOLUTE-PATH` для удалённого Windows path.\n- [ ] Build-tool/CLI builds, focused test, licenses и `git diff --check` проходят.\n- [ ] Владелец явно принимает отдельный baseline commit; внешний audit невозможен до создания baseline, потому сам старый baseline содержит запрещённые paths.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: CLI/docs cleanup реализован; fail-closed scanner восстановлен; focused heavy test прошёл `1/1`.\n- Ещё отсутствует: явное owner acceptance и отдельный baseline commit без остальных изменений T-1137.\n- Принято аудитом: отсутствует; control r07 потребовал это исправление как `B1`/`B2`.\n\n2026-07-10T02:22:21+03:00 - Владелец явно разрешил отдельный промежуточный Conventional Commit без push. Разрешение снимает commit gate, но задача остаётся активной до фиксации commit hash и проверки его точного состава.\n\n2026-07-10T02:28:10+03:00 - Промежуточный Conventional Commit `fix(audit): establish a machine-independent baseline` создан без push. Его code/docs scope содержит ровно шесть baseline-файлов; focused heavy regression прошёл `1/1`, CLI build завершился без warnings/errors, license verifier проверил 664 C# files. Шестой doc-only hunk заменяет старый machine-local `projectRoot` example на `<project>` и не затрагивает T-1137 CLI compare contract. Task-ledger T-1139/T-1140 и их ROADMAP rows входят в тот же baseline через разрешённый amend; фактический hash доказывается metadata следующего audit package и дневником, а не самоссылкой внутри commit.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0018",
+    "tag-0023",
+    "tag-0034"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Android SDK/JDK discovery не содержит machine-local literal paths и документирован через environment/standard directories.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`repo-before/**` и удалённые patch lines проверяются на absolute machine paths.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Existing heavy regression ожидает `E2D-BUILD-AUDIT-ABSOLUTE-PATH` для удалённого Windows path.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Build-tool/CLI builds, focused test, licenses и `git diff --check` проходят.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Владелец явно принимает отдельный baseline commit; внешний audit невозможен до создания baseline, потому сам старый baseline содержит запрещённые paths.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-09T23:22:21.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Владелец явно разрешил отдельный промежуточный Conventional Commit без push. Разрешение снимает commit gate, но задача остаётся активной до фиксации commit hash и проверки его точного состава."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-09T23:28:10.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Промежуточный Conventional Commit `fix(audit): establish a machine-independent baseline` создан без push. Его code/docs scope содержит ровно шесть baseline-файлов; focused heavy regression прошёл `1/1`, CLI build завершился без warnings/errors, license verifier проверил 664 C# files. Шестой doc-only hunk заменяет старый machine-local `projectRoot` example на `<project>` и не затрагивает T-1137 CLI compare contract. Task-ledger T-1139/T-1140 и их ROADMAP rows входят в тот же baseline через разрешённый amend; фактический hash доказывается metadata следующего audit package и дневником, а не самоссылкой внутри commit."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/export/android-arm64-export.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-1137-audit-control-r07.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/AuditPackageCommand.cs"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "repo-before/**"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/CliGeneralCommands.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 15457382,
+      "byteLength": 3996,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "3c272a49dedfc1adc47ac937d9d0d491965dd46e057ba58a9cae4be6bb1dab87",
+      "markdown": "## T-1139 [ ] P0: Удалить machine-local Android/JDK fallbacks и вернуть fail-closed scan audit baseline\n\n- Создана: 2026-07-10T01:46:49+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `current`\n- Зависимости: нет\n- Ссылки:\n  - CLI: `src/Electron2D.Cli/CliGeneralCommands.cs`\n  - Документация Android export: `docs/export/android-arm64-export.md`\n  - Audit package: `eng/Electron2D.Build/AuditPackageCommand.cs`; `docs/release-management/audit-package.md`\n  - Тест: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник blocker-а: `docs/verdicts/release-management/t-1137-audit-control-r07.md`, `B1`/`B2`\n\n### Самодостаточное описание\n\nИсходная ревизия содержит два literal drive-local Android SDK/JDK fallback path. Удаление этих fallback-ов во время T-1137 заставило audit tooling временно пропускать `repo-before/**` и удалённые patch lines, что control audit классифицировал как global safety blocker. Задача должна создать безопасный baseline: CLI использует только environment/standard vendor paths, а audit package fail-closed сканирует все baseline snapshots и весь patch без подмены исторического содержимого.\n\n### Критерии приёмки\n\n- [ ] Android SDK/JDK discovery не содержит machine-local literal paths и документирован через environment/standard directories.\n- [ ] `repo-before/**` и удалённые patch lines проверяются на absolute machine paths.\n- [ ] Existing heavy regression ожидает `E2D-BUILD-AUDIT-ABSOLUTE-PATH` для удалённого Windows path.\n- [ ] Build-tool/CLI builds, focused test, licenses и `git diff --check` проходят.\n- [ ] Владелец явно принимает отдельный baseline commit; внешний audit невозможен до создания baseline, потому сам старый baseline содержит запрещённые paths.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: CLI/docs cleanup реализован; fail-closed scanner восстановлен; focused heavy test прошёл `1/1`.\n- Ещё отсутствует: явное owner acceptance и отдельный baseline commit без остальных изменений T-1137.\n- Принято аудитом: отсутствует; control r07 потребовал это исправление как `B1`/`B2`.\n\n2026-07-10T02:22:21+03:00 - Владелец явно разрешил отдельный промежуточный Conventional Commit без push. Разрешение снимает commit gate, но задача остаётся активной до фиксации commit hash и проверки его точного состава.\n\n2026-07-10T02:28:10+03:00 - Промежуточный Conventional Commit `fix(audit): establish a machine-independent baseline` создан без push. Его code/docs scope содержит ровно шесть baseline-файлов; focused heavy regression прошёл `1/1`, CLI build завершился без warnings/errors, license verifier проверил 664 C# files. Шестой doc-only hunk заменяет старый machine-local `projectRoot` example на `<project>` и не затрагивает T-1137 CLI compare contract. Task-ledger T-1139/T-1140 и их ROADMAP rows входят в тот же baseline через разрешённый amend; фактический hash доказывается metadata следующего audit package и дневником, а не самоссылкой внутри commit.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-09T22:46:49.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

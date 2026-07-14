@@ -1,0 +1,206 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-301bca841d474a29afb19909f8fdfefc",
+  "revision": 3,
+  "taskId": "T-1214",
+  "legacyAliases": [],
+  "title": "Усилить номера задач в хидере окна задачи",
+  "description": "Номер открытой задачи и номер связанной задачи сейчас имеют слишком низкий визуальный вес и теряются среди статуса, приоритета и цветных тегов. Номер открытой задачи должен получить контрастное нейтральное оформление, а связанная задача — заметное ссылочное оформление с различимыми hover и keyboard-focus состояниями. Порядок элементов, навигация и семантика остальных бейджей не меняются.",
+  "status": "Cancelled",
+  "acceptanceState": "Cancelled",
+  "priority": "P2",
+  "tagIds": [
+    "tag-0001",
+    "tag-0002",
+    "tag-0003",
+    "tag-0010",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "assignee": null,
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "current-task-identity",
+      "description": "Номер открытой задачи в хидере имеет отчётливый нейтральный контраст и визуально отделяется от обычных цветных тегов.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "related-task-identity",
+      "description": "Номер связанной задачи сохраняет семантику ссылки, но имеет заметные фон и границу в обычном состоянии, а также различимые состояния наведения и клавиатурного фокуса.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "verification",
+      "description": "Регрессионный тест проходит через RED и GREEN, полный unit-набор, typecheck, VSIX и реальная проверка установленного расширения подтверждают новую визуальную иерархию хидера.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-3eda8ca72e5646d4abf58c46aae1f273",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-13T10:42:49.0988163+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Ready",
+        "next": "InProgress",
+        "reason": "Пользователь подтвердил проблему визуальной иерархии хидера; задача структурирована и готова к TDD-реализации."
+      }
+    },
+    {
+      "activityEntryId": "activity-ac1b9280e25b4940b2134529f61cf357",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-13T10:44:54.6346028+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "InProgress",
+        "next": "Cancelled",
+        "reason": "Пользователь явно отменил задачу до завершения реализации."
+      }
+    }
+  ],
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "links": [
+    {
+      "linkId": "link-header-identifiers-domain",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-header-identifiers-css",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.css"
+    },
+    {
+      "linkId": "link-header-identifiers-test",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+    }
+  ],
+  "executionContract": {
+    "taskType": "небольшая корректировка визуальной иерархии окна задачи VS Code Task Board",
+    "readyToStart": [
+      "Пользователь показал, что номер открытой задачи и номер связанной задачи теряются среди остальных элементов хидера.",
+      "Корректировка изолирована от данных, навигации и lifecycle taskboard и выполняется как подзадача общего VS Code Task Board T-1147."
+    ],
+    "stopConditions": [
+      "Для повышения заметности требуется изменить порядок элементов, семантику навигации или цвета статусов и пользовательских тегов.",
+      "Обновлённый пакет невозможно проверить в реальном VS Code через обязательный FFmpeg-захват окна."
+    ],
+    "allowedChanges": [
+      "Доменный документ, CSS хидера окна задачи и целевой layout unit-тест.",
+      "Сгенерированный индекс документации, устанавливаемый VSIX, task activity и append-only дневник."
+    ],
+    "forbiddenChanges": [
+      "Изменение taskId, связей задач, навигационного поведения, taskboard lifecycle или canonical storage.",
+      "Ручное редактирование файлов .taskboard, несвязанный рефакторинг webview или изменение других UI-композиций."
+    ],
+    "requiredOutputs": [
+      "Контрастный нейтральный бейдж номера открытой задачи и акцентный ссылочный бейдж номера связанной задачи.",
+      "Регрессионный тест, синхронизированный доменный документ, собранный VSIX и реальный FFmpeg-снимок обновлённого хидера."
+    ],
+    "commands": [
+      {
+        "commandId": "cmd-header-identifiers-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "cmd-header-identifiers-typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "cmd-header-identifiers-package",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-13T10:42:35.7705421+00:00",
+  "updatedAt": "2026-07-13T10:44:54.6346028+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": "2026-07-13T10:44:54.6346028+00:00",
+  "cancellationReason": "Пользователь явно отменил задачу до завершения реализации.",
+  "archivedAt": null,
+  "archivedBy": null,
+  "auditRuns": []
+}

@@ -1,0 +1,275 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-a197e914202c56d1883b45b2011d1a63",
+  "revision": 2,
+  "taskId": "T-0234",
+  "legacyAliases": [],
+  "title": "Перенести Platformer-задачи в проектную доску задач",
+  "description": "## T-0234 [x] P0: Перенести Platformer-задачи в проектную доску задач\n\n- Создана: 2026-06-30T12:21:00+03:00\n- Завершена: 2026-06-30T13:58:00+03:00\n- Принята внешним аудитом: 2026-06-30T13:58:00+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний audit r04 принял перенос активных Platformer-задач из корневого `TASKS.md` в `ProjectTaskManager` проекта `examples/platformer`.\n- Приоритет: P0\n- Зависимости: нет\n- Ссылки:\n  - Доменный документ: `docs/examples/platformer.md`\n  - Доменный документ: `docs/project-system/project-task-manager.md`\n  - Проектная доска: `examples/platformer/.electron2d/tasks/board.e2tasks`\n  - Внешний аудит r03: `docs/verdicts/project-system/t-0234-audit-r03.md`\n  - Внешний аудит r04: `docs/verdicts/project-system/t-0234-audit-r04.md`\n  - Verifier: `tools/Verify-Platformer.ps1`\n  - Тесты: `tests/Electron2D.Tests.Integration/PlatformerProjectTests.cs`\n\n### Самодостаточное описание\n\nЗадача перенесла активные игровые задачи Platformer из корневого `TASKS.md` в проектное хранилище `examples/platformer/.electron2d/tasks/*.e2task`. Это закрепляет правило, что разработка Platformer ведётся внутри самого проекта Platformer через механизмы `Electron2D.Editor` и `ProjectTaskManager`, а корень репозитория хранит только задачи движка, редактора, релиза и внешние блокеры.\n\nВнутри `examples/platformer/` не создан `TASKS.md`; каноническая доска задач проекта находится в `.electron2d/tasks/`. Карточка `platformer-acceptance` не принята за пользователя: она остаётся заблокированной, зависит от `T-0166` и хранит `acceptanceState = ChangesRequested`.\n\n### Критерии и результат\n\n- [x] `T-0166`, `T-0221`, `T-0222`, `T-0223` и `T-0225` удалены из активных секций корневого `TASKS.md` и созданы как `.e2task` документы в `examples/platformer/.electron2d/tasks/`.\n- [x] Перенесённые `.e2task` документы сохраняют исходные идентификаторы, заголовки, приоритеты, описания, критерии, подзадачи, зависимости и исторические заметки.\n- [x] `board.e2tasks` показывает `T-0222` в `Ready`, а `T-0223`, `T-0225`, `T-0221`, `T-0166` и `platformer-acceptance` в `Blocked`.\n- [x] `T-0221.e2task` сохраняет внешнюю зависимость `T-0215` вместе с `T-0223` и `T-0225`.\n- [x] Корневые release-задачи больше не объявляют перенесённые Platformer ID как локальные зависимости и вместо этого ссылаются на внешний блокер проектной доски Platformer.\n- [x] `docs/examples/platformer.md`, `tools/Verify-Platformer.ps1` и `PlatformerProjectTests` синхронизированы с новой доской.\n- [x] Внешний аудит r04 вернул `VERDICT: ACCEPT`.\n\n### Проверки\n\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-Platformer.ps1` прошёл.\n- [x] `dotnet build tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj -v:minimal` прошёл без предупреждений и ошибок.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~PlatformerProjectTests\" --no-build --no-restore` прошёл: 8/8.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs --check` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify docs` прошёл.\n- [x] `git diff --check` прошёл.\n- [x] `audit package r04` и отдельный `audit package verify r04` прошли.\n- [x] Внешний аудит `docs/verdicts/project-system/t-0234-audit-r04.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-30T12:21:00+03:00 - Задача создана по прямому запросу пользователя: все Platformer-задачи должны жить в контуре самого проекта Platformer, без временного `examples/platformer/TASKS.md`.\n\n2026-06-30T13:25:00+03:00 - Внешний аудит r03 вернул `VERDICT: NEEDS_FIXES`: в diff случайно поменялось состояние `T-0105`, в `T-0221.e2task` потерялась зависимость `T-0215`, а проверки не доказывали точное сохранение metadata перенесённых задач.\n\n2026-06-30T13:58:00+03:00 - Внешний аудит r04 вернул `VERDICT: ACCEPT`; `T-0234` удалена из активного `TASKS.md` и перенесена в monthly archive.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`T-0166`, `T-0221`, `T-0222`, `T-0223` и `T-0225` удалены из активных секций корневого `TASKS.md` и созданы как `.e2task` документы в `examples/platformer/.electron2d/tasks/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a197e914202c56d1883b45b2011d1a63/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Перенесённые `.e2task` документы сохраняют исходные идентификаторы, заголовки, приоритеты, описания, критерии, подзадачи, зависимости и исторические заметки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a197e914202c56d1883b45b2011d1a63/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`board.e2tasks` показывает `T-0222` в `Ready`, а `T-0223`, `T-0225`, `T-0221`, `T-0166` и `platformer-acceptance` в `Blocked`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a197e914202c56d1883b45b2011d1a63/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`T-0221.e2task` сохраняет внешнюю зависимость `T-0215` вместе с `T-0223` и `T-0225`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a197e914202c56d1883b45b2011d1a63/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Корневые release-задачи больше не объявляют перенесённые Platformer ID как локальные зависимости и вместо этого ссылаются на внешний блокер проектной доски Platformer.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a197e914202c56d1883b45b2011d1a63/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "`docs/examples/platformer.md`, `tools/Verify-Platformer.ps1` и `PlatformerProjectTests` синхронизированы с новой доской.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a197e914202c56d1883b45b2011d1a63/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Внешний аудит r04 вернул `VERDICT: ACCEPT`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-a197e914202c56d1883b45b2011d1a63/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T09:21:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача создана по прямому запросу пользователя: все Platformer-задачи должны жить в контуре самого проекта Platformer, без временного `examples/platformer/TASKS.md`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T10:25:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r03 вернул `VERDICT: NEEDS_FIXES`: в diff случайно поменялось состояние `T-0105`, в `T-0221.e2task` потерялась зависимость `T-0215`, а проверки не доказывали точное сохранение metadata перенесённых задач."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T10:58:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r04 вернул `VERDICT: ACCEPT`; `T-0234` удалена из активного `TASKS.md` и перенесена в monthly archive."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-30T10:58:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": ".electron2d/tasks"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/examples/platformer.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/project-system/project-task-manager.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/verdicts/project-system/t-0234-audit-r03.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/verdicts/project-system/t-0234-audit-r04.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "examples/platformer"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "examples/platformer"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "examples/platformer/.electron2d/tasks"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "examples/platformer/.electron2d/tasks/*.e2task"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "examples/platformer/.electron2d/tasks/board.e2tasks"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "examples/platformer/TASKS.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/PlatformerProjectTests.cs"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "tools/Verify-Platformer.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 1045382,
+      "byteLength": 5431,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "c1349c05d67ffffe9bcaee97d62c34541d3a74bc41a55115da9f3e44453d4ee1",
+      "markdown": "## T-0234 [x] P0: Перенести Platformer-задачи в проектную доску задач\n\n- Создана: 2026-06-30T12:21:00+03:00\n- Завершена: 2026-06-30T13:58:00+03:00\n- Принята внешним аудитом: 2026-06-30T13:58:00+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний audit r04 принял перенос активных Platformer-задач из корневого `TASKS.md` в `ProjectTaskManager` проекта `examples/platformer`.\n- Приоритет: P0\n- Зависимости: нет\n- Ссылки:\n  - Доменный документ: `docs/examples/platformer.md`\n  - Доменный документ: `docs/project-system/project-task-manager.md`\n  - Проектная доска: `examples/platformer/.electron2d/tasks/board.e2tasks`\n  - Внешний аудит r03: `docs/verdicts/project-system/t-0234-audit-r03.md`\n  - Внешний аудит r04: `docs/verdicts/project-system/t-0234-audit-r04.md`\n  - Verifier: `tools/Verify-Platformer.ps1`\n  - Тесты: `tests/Electron2D.Tests.Integration/PlatformerProjectTests.cs`\n\n### Самодостаточное описание\n\nЗадача перенесла активные игровые задачи Platformer из корневого `TASKS.md` в проектное хранилище `examples/platformer/.electron2d/tasks/*.e2task`. Это закрепляет правило, что разработка Platformer ведётся внутри самого проекта Platformer через механизмы `Electron2D.Editor` и `ProjectTaskManager`, а корень репозитория хранит только задачи движка, редактора, релиза и внешние блокеры.\n\nВнутри `examples/platformer/` не создан `TASKS.md`; каноническая доска задач проекта находится в `.electron2d/tasks/`. Карточка `platformer-acceptance` не принята за пользователя: она остаётся заблокированной, зависит от `T-0166` и хранит `acceptanceState = ChangesRequested`.\n\n### Критерии и результат\n\n- [x] `T-0166`, `T-0221`, `T-0222`, `T-0223` и `T-0225` удалены из активных секций корневого `TASKS.md` и созданы как `.e2task` документы в `examples/platformer/.electron2d/tasks/`.\n- [x] Перенесённые `.e2task` документы сохраняют исходные идентификаторы, заголовки, приоритеты, описания, критерии, подзадачи, зависимости и исторические заметки.\n- [x] `board.e2tasks` показывает `T-0222` в `Ready`, а `T-0223`, `T-0225`, `T-0221`, `T-0166` и `platformer-acceptance` в `Blocked`.\n- [x] `T-0221.e2task` сохраняет внешнюю зависимость `T-0215` вместе с `T-0223` и `T-0225`.\n- [x] Корневые release-задачи больше не объявляют перенесённые Platformer ID как локальные зависимости и вместо этого ссылаются на внешний блокер проектной доски Platformer.\n- [x] `docs/examples/platformer.md`, `tools/Verify-Platformer.ps1` и `PlatformerProjectTests` синхронизированы с новой доской.\n- [x] Внешний аудит r04 вернул `VERDICT: ACCEPT`.\n\n### Проверки\n\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-Platformer.ps1` прошёл.\n- [x] `dotnet build tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj -v:minimal` прошёл без предупреждений и ошибок.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~PlatformerProjectTests\" --no-build --no-restore` прошёл: 8/8.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs --check` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify docs` прошёл.\n- [x] `git diff --check` прошёл.\n- [x] `audit package r04` и отдельный `audit package verify r04` прошли.\n- [x] Внешний аудит `docs/verdicts/project-system/t-0234-audit-r04.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-30T12:21:00+03:00 - Задача создана по прямому запросу пользователя: все Platformer-задачи должны жить в контуре самого проекта Platformer, без временного `examples/platformer/TASKS.md`.\n\n2026-06-30T13:25:00+03:00 - Внешний аудит r03 вернул `VERDICT: NEEDS_FIXES`: в diff случайно поменялось состояние `T-0105`, в `T-0221.e2task` потерялась зависимость `T-0215`, а проверки не доказывали точное сохранение metadata перенесённых задач.\n\n2026-06-30T13:58:00+03:00 - Внешний аудит r04 вернул `VERDICT: ACCEPT`; `T-0234` удалена из активного `TASKS.md` и перенесена в monthly archive.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-30T09:21:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-30T10:58:00.0000000+00:00",
+  "completedAt": "2026-06-30T10:58:00.0000000+00:00",
+  "acceptedAt": "2026-06-30T10:58:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-30T10:58:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

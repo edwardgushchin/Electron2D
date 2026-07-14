@@ -1,0 +1,367 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-151cd34d6b49681531bb1f9db9198973",
+  "revision": 2,
+  "taskId": "T-0189",
+  "legacyAliases": [],
+  "title": "Провести финальную приёмку зрелого Editor UI в реальном окне",
+  "description": "## T-0189 [ ] P0: Провести финальную приёмку зрелого Editor UI в реальном окне\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0183, T-0184, T-0185, T-0186, T-0187, T-0188, T-0190, T-0191, T-0192, T-0193\n- Ссылки:\n  - Доменный документ: `docs/editor/godot4-editor-reference.md`; `docs/editor/editor-shell-layout.md`; `docs/editor/editor-project-shell.md`\n  - Визуальный референс: `docs/editor/references/godot-4.7-2d-workspace.md`; PNG `docs/editor/references/godot-4.7-2d-workspace.png`, 1920 x 1032 px, SHA-256 `CE8C799A6AE23423957A904BCA1CD4D28922461DE235A9A5D398864BDE10A84F`.\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D/Graphics/UI/`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`; `tests/Electron2D.Tests.Integration/EditorShellLayoutTests.cs`; `tests/Electron2D.Tests.Integration/EditorSceneTreeDockTests.cs`; `tests/Electron2D.Tests.Integration/EditorFileSystemDockTests.cs`; `tests/Electron2D.Tests.Integration/EditorViewport2DTests.cs`; `tests/Electron2D.Tests.Integration/EditorInspectorTests.cs`; `tests/Electron2D.Tests.Integration/EditorProjectTasksBoardTests.cs`; `tests/Electron2D.Tests.Integration/EditorAgentWorkspacePanelTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0189.\n  - blocker artifact `data/quality/blockers/T-0189.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/editor/godot4-editor-reference.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0189.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0189.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЭта gate-задача фиксирует момент, когда Editor выходит из стадии каркаса раскладки. Acceptance должен проверять реальное окно, а не только snapshots или подготовительный harness. Референс - информационная архитектура и уровень зрелости Godot 4: menu/workspace/docks/viewport/bottom workflow, states, focus, keyboard navigation, context menus, drag-and-drop, DPI и cross-platform screenshots. Копировать `3D`, `AssetLib` или GDScript нельзя.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Ни один видимый widget не рисуется manual shell renderer; все видимые controls проходят через runtime `SceneTree`/`Control`.\n- [ ] Все применимые интерактивные controls имеют обязательные состояния согласно control manifest; для `Label`, separators и декоративных panels явно указано, какие состояния неприменимы.\n- [ ] Все docks изменяют размер и сохраняют layout.\n- [ ] Selection синхронизирована между Scene Tree, Viewport и Inspector.\n- [ ] Context menus, inline rename и drag-and-drop работают в реальном окне.\n- [ ] Keyboard-only workflow покрывает основные операции.\n- [ ] Русский и английский UI не имеют text overflow.\n- [ ] Проверены DPI 100%, 125%, 150% и 200%.\n- [ ] Проверены размеры минимум 1280x720 и 1920x1080.\n- [ ] Реальные window screenshots получены на Windows, Linux и macOS; если host недоступен, задача остаётся blocked с явной причиной.\n- [ ] Переключение workspaces не теряет selection, zoom, open documents и Agent state.\n- [ ] Bottom panel автоматически показывает значимую ошибку, но не занимает экран без причины.\n- [ ] Автоматическое раскрытие `Agent` не забирает keyboard focus.\n- [ ] Внутренняя `Diagnostics` в `Agent Workspace` и глобальная bottom `Diagnostics` имеют разные источники данных и не смешивают сообщения.\n- [ ] Bottom tabs при нехватке ширины уходят в overflow-menu.\n- [ ] `3D`, `AssetLib` и GDScript отсутствуют.\n- [ ] Acceptance выполняется по реальному окну; documented harness допускается только как подготовительная проверка layout/state и не заменяет screenshot окна.\n\n### Подзадачи\n\n- [ ] Специфицировать финальный acceptance matrix и artifact layout.\n- [ ] Зафиксировать manifest controls/states и числовые pass/fail thresholds для DPI, overflow и forbidden UI checks.\n- [ ] Добавить automated checks для DPI, sizes, states, overflow и forbidden UI.\n- [ ] Запустить real-window сценарии на Windows.\n- [ ] Зафиксировать Linux/macOS screenshots или blocker по окружению.\n- [ ] Обновить доменные документы итоговыми ссылками на подтверждения и ограничениями.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача оформляет Definition of Done из пользовательского диагноза как отдельный gate, чтобы после vertical slice и последующих workspace подключений оставалась проверяемая граница готовности видимого Editor UI.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-7f7b64a98f3293d7a7fe897551a30cfc"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-8f41d65484e3795850a39c152b6cc4ea"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-25a58de70ed9578bce89005b13d66f06"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a50a277456d7154c5e34ed5aa09f50ef"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a0edca4f5caaee9a37b8afcc788d2bbc"
+    },
+    {
+      "relationId": "relation-0006",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c454bcc0d3877fcad5864dbba106c590"
+    },
+    {
+      "relationId": "relation-0007",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-6ef50cb8a5290967fc11d1db2a5ecc43"
+    },
+    {
+      "relationId": "relation-0008",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-221255a5875beb24f2b471d78b5d932d"
+    },
+    {
+      "relationId": "relation-0009",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-4b0137493062681285ca29b6eec5d841"
+    },
+    {
+      "relationId": "relation-0010",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-64d78c440fac9e9ac2f63e1c90f7fb10"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Ни один видимый widget не рисуется manual shell renderer; все видимые controls проходят через runtime `SceneTree`/`Control`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Все применимые интерактивные controls имеют обязательные состояния согласно control manifest; для `Label`, separators и декоративных panels явно указано, какие состояния неприменимы.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Все docks изменяют размер и сохраняют layout.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Selection синхронизирована между Scene Tree, Viewport и Inspector.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Context menus, inline rename и drag-and-drop работают в реальном окне.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Keyboard-only workflow покрывает основные операции.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Русский и английский UI не имеют text overflow.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Проверены DPI 100%, 125%, 150% и 200%.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Проверены размеры минимум 1280x720 и 1920x1080.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Реальные window screenshots получены на Windows, Linux и macOS; если host недоступен, задача остаётся blocked с явной причиной.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Переключение workspaces не теряет selection, zoom, open documents и Agent state.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Bottom panel автоматически показывает значимую ошибку, но не занимает экран без причины.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-013",
+      "description": "Автоматическое раскрытие `Agent` не забирает keyboard focus.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-014",
+      "description": "Внутренняя `Diagnostics` в `Agent Workspace` и глобальная bottom `Diagnostics` имеют разные источники данных и не смешивают сообщения.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-015",
+      "description": "Bottom tabs при нехватке ширины уходят в overflow-menu.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-016",
+      "description": "`3D`, `AssetLib` и GDScript отсутствуют.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-017",
+      "description": "Acceptance выполняется по реальному окну; documented harness допускается только как подготовительная проверка layout/state и не заменяет screenshot окна.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача оформляет Definition of Done из пользовательского диагноза как отдельный gate, чтобы после vertical slice и последующих workspace подключений оставалась проверяемая граница готовности видимого Editor UI."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/dev-diary"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/quality/blockers/T-0189.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/editor/editor-project-shell.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/editor/editor-shell-layout.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/editor/godot4-editor-reference.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/editor/references/godot-4.7-2d-workspace.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/editor/references/godot-4.7-2d-workspace.png"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "src/Electron2D/Graphics/UI"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorAgentWorkspacePanelTests.cs"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorFileSystemDockTests.cs"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorInspectorTests.cs"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectTasksBoardTests.cs"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorSceneTreeDockTests.cs"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorShellLayoutTests.cs"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorViewport2DTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "blocked-environment",
+    "readyToStart": [
+      "только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.",
+      "перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate."
+    ],
+    "stopConditions": [
+      "dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.",
+      "требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.",
+      "задача просит audit package без отдельной blocker-report задачи."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` blocker/current evidence notes for T-0189.",
+      "blocker artifact `data/quality/blockers/T-0189.md`, если нужен отдельный отчёт.",
+      "дневник `data/dev-diary/` и связанный доменный документ docs/editor/godot4-editor-reference.md только для уточнения blocker-а."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.",
+      "unrelated task statuses, dependency graph or release scope."
+    ],
+    "requiredOutputs": [
+      "blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.",
+      "blocker artifact `data/quality/blockers/T-0189.md` when diagnostics need a durable file.",
+      "diary entry with exact commands or host checks that proved the block."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 216415,
+      "byteLength": 9843,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "b543f3333bff050ffce590e5b326d7cef03d4c1c9042942f9eb22529f37fff93",
+      "markdown": "## T-0189 [ ] P0: Провести финальную приёмку зрелого Editor UI в реальном окне\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0183, T-0184, T-0185, T-0186, T-0187, T-0188, T-0190, T-0191, T-0192, T-0193\n- Ссылки:\n  - Доменный документ: `docs/editor/godot4-editor-reference.md`; `docs/editor/editor-shell-layout.md`; `docs/editor/editor-project-shell.md`\n  - Визуальный референс: `docs/editor/references/godot-4.7-2d-workspace.md`; PNG `docs/editor/references/godot-4.7-2d-workspace.png`, 1920 x 1032 px, SHA-256 `CE8C799A6AE23423957A904BCA1CD4D28922461DE235A9A5D398864BDE10A84F`.\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D/Graphics/UI/`\n  - Тесты: `tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs`; `tests/Electron2D.Tests.Integration/EditorShellLayoutTests.cs`; `tests/Electron2D.Tests.Integration/EditorSceneTreeDockTests.cs`; `tests/Electron2D.Tests.Integration/EditorFileSystemDockTests.cs`; `tests/Electron2D.Tests.Integration/EditorViewport2DTests.cs`; `tests/Electron2D.Tests.Integration/EditorInspectorTests.cs`; `tests/Electron2D.Tests.Integration/EditorProjectTasksBoardTests.cs`; `tests/Electron2D.Tests.Integration/EditorAgentWorkspacePanelTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0189.\n  - blocker artifact `data/quality/blockers/T-0189.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/editor/godot4-editor-reference.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0189.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0189.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЭта gate-задача фиксирует момент, когда Editor выходит из стадии каркаса раскладки. Acceptance должен проверять реальное окно, а не только snapshots или подготовительный harness. Референс - информационная архитектура и уровень зрелости Godot 4: menu/workspace/docks/viewport/bottom workflow, states, focus, keyboard navigation, context menus, drag-and-drop, DPI и cross-platform screenshots. Копировать `3D`, `AssetLib` или GDScript нельзя.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Ни один видимый widget не рисуется manual shell renderer; все видимые controls проходят через runtime `SceneTree`/`Control`.\n- [ ] Все применимые интерактивные controls имеют обязательные состояния согласно control manifest; для `Label`, separators и декоративных panels явно указано, какие состояния неприменимы.\n- [ ] Все docks изменяют размер и сохраняют layout.\n- [ ] Selection синхронизирована между Scene Tree, Viewport и Inspector.\n- [ ] Context menus, inline rename и drag-and-drop работают в реальном окне.\n- [ ] Keyboard-only workflow покрывает основные операции.\n- [ ] Русский и английский UI не имеют text overflow.\n- [ ] Проверены DPI 100%, 125%, 150% и 200%.\n- [ ] Проверены размеры минимум 1280x720 и 1920x1080.\n- [ ] Реальные window screenshots получены на Windows, Linux и macOS; если host недоступен, задача остаётся blocked с явной причиной.\n- [ ] Переключение workspaces не теряет selection, zoom, open documents и Agent state.\n- [ ] Bottom panel автоматически показывает значимую ошибку, но не занимает экран без причины.\n- [ ] Автоматическое раскрытие `Agent` не забирает keyboard focus.\n- [ ] Внутренняя `Diagnostics` в `Agent Workspace` и глобальная bottom `Diagnostics` имеют разные источники данных и не смешивают сообщения.\n- [ ] Bottom tabs при нехватке ширины уходят в overflow-menu.\n- [ ] `3D`, `AssetLib` и GDScript отсутствуют.\n- [ ] Acceptance выполняется по реальному окну; documented harness допускается только как подготовительная проверка layout/state и не заменяет screenshot окна.\n\n### Подзадачи\n\n- [ ] Специфицировать финальный acceptance matrix и artifact layout.\n- [ ] Зафиксировать manifest controls/states и числовые pass/fail thresholds для DPI, overflow и forbidden UI checks.\n- [ ] Добавить automated checks для DPI, sizes, states, overflow и forbidden UI.\n- [ ] Запустить real-window сценарии на Windows.\n- [ ] Зафиксировать Linux/macOS screenshots или blocker по окружению.\n- [ ] Обновить доменные документы итоговыми ссылками на подтверждения и ограничениями.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача оформляет Definition of Done из пользовательского диагноза как отдельный gate, чтобы после vertical slice и последующих workspace подключений оставалась проверяемая граница готовности видимого Editor UI.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

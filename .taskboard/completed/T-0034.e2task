@@ -1,0 +1,115 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-e638ce08de8baf3418a1acc91b8f2e61",
+  "revision": 2,
+  "taskId": "T-0034",
+  "legacyAliases": [],
+  "title": "Реализовать Android mobile profile, GPU smoke test и automatic/fail fallback policy",
+  "description": "# T-0034 [x] P0: Реализовать Android mobile profile, GPU smoke test и automatic/fail fallback policy\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T06:13:00+03:00\n- Статус: завершена\n- Коммит: `T-0034: реализовать Android GPU fallback policy`\n\n## Итог\n\nРеализован internal Android mobile GPU startup baseline. Runtime теперь имеет `SdlGpuStartupPolicy`, Android-safe `SdlGpuDeviceCreateInfo`, mobile smoke test, `Automatic` fallback на `Compatibility` и `FailIfUnavailable` failure path со structured startup result.\n\nПубличный API не расширялся: mobile profile остаётся внутренней policy создания SDL_GPU device, а не новым public `RenderingProfile`.\n\n## Проверенное поведение\n\n- Android startup использует `SdlGpuDeviceCreateInfo.AndroidMobile(debugMode)`.\n- В Android mobile create profile отключены optional Vulkan features: `ClipDistance`, `DepthClamping`, `IndirectDrawFirstInstance`, `Anisotropy`.\n- Production `SdlGpuApi` создаёт device через `SDL_CreateGPUDeviceWithProperties`.\n- Smoke test выполняет шаги `Texture`, `Pipeline`, `CommandBuffer`, `FirstSubmit` в стабильном порядке.\n- `Automatic` policy при failure выбирает `CompatibilityRenderingBackend` и сохраняет root reason.\n- `FailIfUnavailable` policy при failure выбрасывает `SdlGpuStartupException` с `SdlGpuStartupResult`.\n- Startup result/log содержит backend, profile, fallback flag, GPU, driver, driver version и reasons.\n- Public API compatibility count остался `47`.\n\n## Документация\n\n- Добавлена спецификация `docs/rendering/android-mobile-gpu-fallback-policy.md`.\n- Добавлена справка `docs/rendering/android-mobile-gpu-fallback-policy.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены `docs/rendering/sdl-gpu-lifecycle.md` и `docs/rendering/rendering-server.md`.\n- Обновлены `README.md`, `CHANGELOG.md` и `RELEASE-NOTES.md`.\n\n## Проверки\n\n- RED: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore --filter FullyQualifiedName~SdlGpuStartupPolicyTests` упал на отсутствующих startup policy/create info/smoke result типах и старом `ISdlGpuApi.CreateDevice(bool, ...)`.\n- GREEN: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore --filter FullyQualifiedName~SdlGpuStartupPolicyTests` - прошло, 3 теста.\n- Regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore --filter FullyQualifiedName~SdlGpuLifecycleTests` - прошло, 6 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit 59, integration 90, runtime smoke 5, golden-data 6.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 47.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло, 178 tracked source files.\n- `git diff --check` - прошло; были только стандартные Windows предупреждения о будущей CRLF-нормализации.\n\n## Ограничения\n\n- Реальный Android export/package ещё не реализован.\n- Pipeline smoke в production adapter пока проверяет shader format availability, а не создаёт полноценный graphics pipeline с platform-specific compiled shader.\n- Реальный swapchain screenshot и Android device run остаются следующими задачами.\n- Project settings UI для `automatic`/`fail_if_unavailable` ещё не добавлен.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0013",
+    "tag-0034"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T03:13:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/rendering/android-mobile-gpu-fallback-policy.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/rendering/rendering-server.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/rendering/sdl-gpu-lifecycle.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 120056,
+      "byteLength": 3995,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "23107dbeb74b9f67833c7516eb01b96ece0c2ef1821d46f7569a1aed724fa7a0",
+      "markdown": "# T-0034 [x] P0: Реализовать Android mobile profile, GPU smoke test и automatic/fail fallback policy\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T06:13:00+03:00\n- Статус: завершена\n- Коммит: `T-0034: реализовать Android GPU fallback policy`\n\n## Итог\n\nРеализован internal Android mobile GPU startup baseline. Runtime теперь имеет `SdlGpuStartupPolicy`, Android-safe `SdlGpuDeviceCreateInfo`, mobile smoke test, `Automatic` fallback на `Compatibility` и `FailIfUnavailable` failure path со structured startup result.\n\nПубличный API не расширялся: mobile profile остаётся внутренней policy создания SDL_GPU device, а не новым public `RenderingProfile`.\n\n## Проверенное поведение\n\n- Android startup использует `SdlGpuDeviceCreateInfo.AndroidMobile(debugMode)`.\n- В Android mobile create profile отключены optional Vulkan features: `ClipDistance`, `DepthClamping`, `IndirectDrawFirstInstance`, `Anisotropy`.\n- Production `SdlGpuApi` создаёт device через `SDL_CreateGPUDeviceWithProperties`.\n- Smoke test выполняет шаги `Texture`, `Pipeline`, `CommandBuffer`, `FirstSubmit` в стабильном порядке.\n- `Automatic` policy при failure выбирает `CompatibilityRenderingBackend` и сохраняет root reason.\n- `FailIfUnavailable` policy при failure выбрасывает `SdlGpuStartupException` с `SdlGpuStartupResult`.\n- Startup result/log содержит backend, profile, fallback flag, GPU, driver, driver version и reasons.\n- Public API compatibility count остался `47`.\n\n## Документация\n\n- Добавлена спецификация `docs/rendering/android-mobile-gpu-fallback-policy.md`.\n- Добавлена справка `docs/rendering/android-mobile-gpu-fallback-policy.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены `docs/rendering/sdl-gpu-lifecycle.md` и `docs/rendering/rendering-server.md`.\n- Обновлены `README.md`, `CHANGELOG.md` и `RELEASE-NOTES.md`.\n\n## Проверки\n\n- RED: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore --filter FullyQualifiedName~SdlGpuStartupPolicyTests` упал на отсутствующих startup policy/create info/smoke result типах и старом `ISdlGpuApi.CreateDevice(bool, ...)`.\n- GREEN: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore --filter FullyQualifiedName~SdlGpuStartupPolicyTests` - прошло, 3 теста.\n- Regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore --filter FullyQualifiedName~SdlGpuLifecycleTests` - прошло, 6 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit 59, integration 90, runtime smoke 5, golden-data 6.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 47.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло, 178 tracked source files.\n- `git diff --check` - прошло; были только стандартные Windows предупреждения о будущей CRLF-нормализации.\n\n## Ограничения\n\n- Реальный Android export/package ещё не реализован.\n- Pipeline smoke в production adapter пока проверяет shader format availability, а не создаёт полноценный graphics pipeline с platform-specific compiled shader.\n- Реальный swapchain screenshot и Android device run остаются следующими задачами.\n- Project settings UI для `automatic`/`fail_if_unavailable` ещё не добавлен.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T03:13:00.0000000+00:00",
+  "completedAt": "2026-06-21T03:13:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T03:13:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T03:13:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

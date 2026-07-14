@@ -1,0 +1,312 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-1959002fea1eeebdb9f08c6ed22aca4a",
+  "revision": 2,
+  "taskId": "T-0121",
+  "legacyAliases": [],
+  "title": "Реализовать headless runtime automation для CI и автономных агентов",
+  "description": "# T-0121: Реализовать headless runtime automation для CI и автономных агентов\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:35:00+03:00\n- Приоритет: P0\n- Коммит: `dc0f9e2`\n\n## Ссылки\n\n- Спецификация: `docs/runtime/headless-runtime-automation.md`; `docs/architecture/ai-friendly-workflow.md`; `docs/cli/e2d-cli.md`\n- Документация: `docs/runtime/headless-runtime-automation.md`; `docs/cli/e2d-cli.md`\n- Исходный код: `src/Electron2D.Cli/CliGeneralCommands.cs`; `src/Electron2D.Cli/HeadlessRuntimeAutomation.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/Electron2DHeadlessRuntimeAutomationTests.cs`\n- Схемы: `schemas/runtime/*.schema.json`\n\n## Итог\n\n- `e2d run` получил headless runtime mode при runtime-флагах `--scene`, `--frames`, `--fixed-delta`, `--input`, `--capture-frame` и `--output`.\n- Generic `e2d run --format jsonl` без runtime-флагов сохранил existing job queued event contract.\n- Headless run создаёт stable artifacts: `result.json`, `diagnostics.json`, `runtime.log.jsonl`, `scene-tree-final.json`, `performance.json` и `frame-XXXX.png` при capture.\n- Input trace применяет `pressed`/`released` action events по кадрам и сохраняет итоговое action state.\n- Runtime artifacts содержат `WorkspaceSnapshot` identity: `inputSnapshotId`, workspace/content revisions, document revisions и build/run configuration hash.\n- Опубликованы JSON Schema Draft 2020-12 files для input trace и runtime artifacts.\n- Implementation documentation и local documentation index обновлены.\n- По запросу пользователя во время задачи дополнительно удалена active backlog задача `T-0108`; это отдельная local-only workflow правка и не входит в commit.\n\n## Критерии приёмки\n\n- [x] Реализованы `--frames`, `--fixed-delta`, `--input`, `--capture-frame`, `--output`.\n- [x] Input trace поддерживает pressed/released action events по кадрам.\n- [x] Output artifacts имеют стабильную структуру и JSON schema.\n- [x] Headless run не требует ручного взаимодействия с Editor.\n- [x] Headless artifacts совместимы с будущими Editor RuntimeController и Agent Workspace consumers через общий artifact contract и snapshot identity.\n- [x] Добавлены tests для deterministic same-platform run.\n- [x] Документация runtime automation обновлена.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests` упал ожидаемо: отсутствовали `result.json`/runtime artifacts и `schemas/runtime/*.schema.json`.\n- Green focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests` прошёл `7/7`.\n- Focused regression phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests|FullyQualifiedName~Electron2DCliWorkflowTests\"` прошёл `16/16`.\n- `git diff --check` прошёл без whitespace errors, только с предупреждениями о будущей нормализации LF/CRLF.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для `542` tracked source files до staging.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `345/345`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл.\n\n## Решения\n\n- Первая реализация deterministic и не запускает пользовательский C# runtime process, physics, rendering backend или audio; она фиксирует artifact contract и input/snapshot semantics для будущих настоящих runtime workers.\n- `run` branch включается только runtime-флагами, чтобы не ломать existing queued job JSONL mode.\n- Absolute `--output` поддержан как явно переданный пользователем путь; относительный `--output` обязан оставаться внутри project root.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0121 [ ] P0: Реализовать headless runtime automation для CI и автономных агентов\n\n- Создана: 2026-06-21T00:17:01+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0084, T-0116, T-0153\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/runtime/`\n  - Документация: `docs/runtime/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D.Cli/`; `tests/`\n\n### Самодостаточное описание\n\n`e2d run` должен уметь запускать сцену без GUI automation для CI, пакетных проверок и автономных агентов: фиксированное число кадров, fixed delta, input trace, screenshot/frame capture, output folder с `result.json`, `diagnostics.json`, `runtime.log.jsonl`, captured frame, final scene tree и performance metrics. Запуск работает с `WorkspaceSnapshot` из `T-0153`, чтобы dirty-изменения открытого workspace не терялись и artifacts можно было связать с входным состоянием.\n\nВидимый запуск из открытого Editor реализуется отдельной задачей `T-0144`; эта задача отвечает за headless-сценарий и общий формат артефактов, который может использовать Editor.\n\n### Критерии приёмки\n\n- [ ] Реализованы `--frames`, `--fixed-delta`, `--input`, `--capture-frame`, `--output`.\n- [ ] Input trace поддерживает pressed/released action events по кадрам.\n- [ ] Output artifacts имеют стабильную структуру и JSON schema.\n- [ ] Headless run не требует ручного взаимодействия с Editor.\n- [ ] Headless artifacts совместимы с Editor RuntimeController и могут отображаться в Agent Workspace panel.\n- [ ] Добавлены tests для deterministic same-platform run.\n- [ ] Документация runtime automation обновлена.\n\n### Заметки агента\n\nСоздано из AI-friendly архитектурного файла: агент должен видеть результат игры, а не только компиляцию.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:02:00+03:00 - Уточнение пользователя: headless runtime automation остаётся нужной для CI, но основной наблюдаемый UX переносится в видимый Editor-attached play session.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-804bc015aae532e2b2308c5d5995e21c"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-87432465f9ca500ace92dd670ec79481"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-8f9de83d456b281aabdaa6b0dbd08764"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Реализованы `--frames`, `--fixed-delta`, `--input`, `--capture-frame`, `--output`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1959002fea1eeebdb9f08c6ed22aca4a/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Input trace поддерживает pressed/released action events по кадрам.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1959002fea1eeebdb9f08c6ed22aca4a/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Output artifacts имеют стабильную структуру и JSON schema.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1959002fea1eeebdb9f08c6ed22aca4a/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Headless run не требует ручного взаимодействия с Editor.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1959002fea1eeebdb9f08c6ed22aca4a/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Headless artifacts совместимы с будущими Editor RuntimeController и Agent Workspace consumers через общий artifact contract и snapshot identity.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1959002fea1eeebdb9f08c6ed22aca4a/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Добавлены tests для deterministic same-platform run.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1959002fea1eeebdb9f08c6ed22aca4a/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Документация runtime automation обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-1959002fea1eeebdb9f08c6ed22aca4a/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T07:24:54.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:02:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: headless runtime automation остаётся нужной для CI, но основной наблюдаемый UX переносится в видимый Editor-attached play session."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:05:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T18:35:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "16/16"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "345/345"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "7/7"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/architecture/ai-friendly-workflow.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "docs/runtime"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/runtime/headless-runtime-automation.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "schemas/runtime/*.schema.json"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "Directory",
+      "value": "src/Electron2D.Cli"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/CliGeneralCommands.cs"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/HeadlessRuntimeAutomation.cs"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DHeadlessRuntimeAutomationTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 586324,
+      "byteLength": 8316,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "5e8e2261c41b91ce6f333af4df4eb94259d868e643139d3da5fc915f91f2048e",
+      "markdown": "# T-0121: Реализовать headless runtime automation для CI и автономных агентов\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:35:00+03:00\n- Приоритет: P0\n- Коммит: `dc0f9e2`\n\n## Ссылки\n\n- Спецификация: `docs/runtime/headless-runtime-automation.md`; `docs/architecture/ai-friendly-workflow.md`; `docs/cli/e2d-cli.md`\n- Документация: `docs/runtime/headless-runtime-automation.md`; `docs/cli/e2d-cli.md`\n- Исходный код: `src/Electron2D.Cli/CliGeneralCommands.cs`; `src/Electron2D.Cli/HeadlessRuntimeAutomation.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/Electron2DHeadlessRuntimeAutomationTests.cs`\n- Схемы: `schemas/runtime/*.schema.json`\n\n## Итог\n\n- `e2d run` получил headless runtime mode при runtime-флагах `--scene`, `--frames`, `--fixed-delta`, `--input`, `--capture-frame` и `--output`.\n- Generic `e2d run --format jsonl` без runtime-флагов сохранил existing job queued event contract.\n- Headless run создаёт stable artifacts: `result.json`, `diagnostics.json`, `runtime.log.jsonl`, `scene-tree-final.json`, `performance.json` и `frame-XXXX.png` при capture.\n- Input trace применяет `pressed`/`released` action events по кадрам и сохраняет итоговое action state.\n- Runtime artifacts содержат `WorkspaceSnapshot` identity: `inputSnapshotId`, workspace/content revisions, document revisions и build/run configuration hash.\n- Опубликованы JSON Schema Draft 2020-12 files для input trace и runtime artifacts.\n- Implementation documentation и local documentation index обновлены.\n- По запросу пользователя во время задачи дополнительно удалена active backlog задача `T-0108`; это отдельная local-only workflow правка и не входит в commit.\n\n## Критерии приёмки\n\n- [x] Реализованы `--frames`, `--fixed-delta`, `--input`, `--capture-frame`, `--output`.\n- [x] Input trace поддерживает pressed/released action events по кадрам.\n- [x] Output artifacts имеют стабильную структуру и JSON schema.\n- [x] Headless run не требует ручного взаимодействия с Editor.\n- [x] Headless artifacts совместимы с будущими Editor RuntimeController и Agent Workspace consumers через общий artifact contract и snapshot identity.\n- [x] Добавлены tests для deterministic same-platform run.\n- [x] Документация runtime automation обновлена.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests` упал ожидаемо: отсутствовали `result.json`/runtime artifacts и `schemas/runtime/*.schema.json`.\n- Green focused phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests` прошёл `7/7`.\n- Focused regression phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Electron2DHeadlessRuntimeAutomationTests|FullyQualifiedName~Electron2DCliWorkflowTests\"` прошёл `16/16`.\n- `git diff --check` прошёл без whitespace errors, только с предупреждениями о будущей нормализации LF/CRLF.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для `542` tracked source files до staging.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `345/345`, runtime smoke `5/5`, golden-data `12/12`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл.\n\n## Решения\n\n- Первая реализация deterministic и не запускает пользовательский C# runtime process, physics, rendering backend или audio; она фиксирует artifact contract и input/snapshot semantics для будущих настоящих runtime workers.\n- `run` branch включается только runtime-флагами, чтобы не ломать existing queued job JSONL mode.\n- Absolute `--output` поддержан как явно переданный пользователем путь; относительный `--output` обязан оставаться внутри project root.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0121 [ ] P0: Реализовать headless runtime automation для CI и автономных агентов\n\n- Создана: 2026-06-21T00:17:01+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0084, T-0116, T-0153\n- Ссылки:\n  - Спецификация: `docs/architecture/ai-friendly-workflow.md`; `docs/runtime/`\n  - Документация: `docs/runtime/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D.Cli/`; `tests/`\n\n### Самодостаточное описание\n\n`e2d run` должен уметь запускать сцену без GUI automation для CI, пакетных проверок и автономных агентов: фиксированное число кадров, fixed delta, input trace, screenshot/frame capture, output folder с `result.json`, `diagnostics.json`, `runtime.log.jsonl`, captured frame, final scene tree и performance metrics. Запуск работает с `WorkspaceSnapshot` из `T-0153`, чтобы dirty-изменения открытого workspace не терялись и artifacts можно было связать с входным состоянием.\n\nВидимый запуск из открытого Editor реализуется отдельной задачей `T-0144`; эта задача отвечает за headless-сценарий и общий формат артефактов, который может использовать Editor.\n\n### Критерии приёмки\n\n- [ ] Реализованы `--frames`, `--fixed-delta`, `--input`, `--capture-frame`, `--output`.\n- [ ] Input trace поддерживает pressed/released action events по кадрам.\n- [ ] Output artifacts имеют стабильную структуру и JSON schema.\n- [ ] Headless run не требует ручного взаимодействия с Editor.\n- [ ] Headless artifacts совместимы с Editor RuntimeController и могут отображаться в Agent Workspace panel.\n- [ ] Добавлены tests для deterministic same-platform run.\n- [ ] Документация runtime automation обновлена.\n\n### Заметки агента\n\nСоздано из AI-friendly архитектурного файла: агент должен видеть результат игры, а не только компиляцию.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:02:00+03:00 - Уточнение пользователя: headless runtime automation остаётся нужной для CI, но основной наблюдаемый UX переносится в видимый Editor-attached play session.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T21:17:01.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T18:35:00.0000000+00:00",
+  "completedAt": "2026-06-22T18:35:00.0000000+00:00",
+  "acceptedAt": "2026-06-22T18:35:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T18:35:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

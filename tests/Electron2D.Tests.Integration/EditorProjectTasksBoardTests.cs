@@ -71,7 +71,7 @@ public sealed class EditorProjectTasksBoardTests
             Assert.Contains("Electron2D.Editor project tasks board smoke passed", output);
             Assert.Equal("2D|Script|Game|Tasks", lines["WorkspaceSwitcher"]);
             Assert.Equal("Tasks", lines["SelectedWorkspace"]);
-            Assert.Equal("Backlog|Ready|In Progress|Blocked|Review|Awaiting Acceptance|Done|Cancelled", lines["Columns"]);
+            Assert.Equal("Ready|In Progress|Blocked|Review|Done|Cancelled", lines["Columns"]);
             Assert.Equal("T-0155|T-review|T-blocked|T-done|T-archived", lines["TaskIds"]);
             Assert.Equal("T-0155", lines["SelectedTaskId"]);
             Assert.Equal("Project Tasks board UI", lines["SelectedTaskTitle"]);
@@ -100,7 +100,7 @@ public sealed class EditorProjectTasksBoardTests
             Assert.Equal("True", lines["HardDeleteRequiresConfirmation"]);
             Assert.Equal("True", lines["HumanAcceptActionUsesTrustedContext"]);
             Assert.Equal("False", lines["AgentAcceptActionAvailable"]);
-            Assert.Equal("Review|Awaiting Acceptance", lines["ReviewStatesDiffer"]);
+            Assert.Equal("Review:Open|Review:Submitted", lines["ReviewStatesDiffer"]);
             Assert.Equal("Status|Priority|Labels|Assignee|Text|Linked Object", lines["Filters"]);
             Assert.Equal("43", lines["WorkspaceEventRevision"]);
             Assert.Equal("True", lines["WorksWithoutAi"]);
@@ -135,7 +135,7 @@ public sealed class EditorProjectTasksBoardTests
             Assert.False(data.GetProperty("acceptance").GetProperty("agentAcceptActionAvailable").GetBoolean());
             Assert.True(data.GetProperty("acceptance").GetProperty("humanAcceptActionUsesTrustedContext").GetBoolean());
             Assert.Equal(
-                new[] { "Backlog", "Ready", "In Progress", "Blocked", "Review", "Awaiting Acceptance", "Done", "Cancelled" },
+                new[] { "Ready", "In Progress", "Blocked", "Review", "Done", "Cancelled" },
                 data.GetProperty("columns").EnumerateArray().Select(item => item.GetProperty("label").GetString()).ToArray());
             Assert.Equal(
                 new[] { "Status", "Priority", "Labels", "Assignee", "Text", "Linked Object" },

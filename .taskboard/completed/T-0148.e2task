@@ -1,0 +1,459 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-abc4d706a6f3ddd3a78e36dcf1eee8f6",
+  "revision": 2,
+  "taskId": "T-0148",
+  "legacyAliases": [],
+  "title": "Реализовать AI-ready project template, `AGENTS.md`, skills и git init",
+  "description": "## T-0148 - Реализовать AI-ready project template, `AGENTS.md`, skills и git init\n\n- Закрыта: 2026-06-23T01:33:34+03:00\n- Итоговый статус: выполнено\n- Коммит: `f515d73 feat: add agent ready project template`\n\n## Ссылки\n\n- Спецификация: `docs/release-management/project-template.md`; `docs/architecture/agent-native-workflow.md`\n- Документация: `docs/release-management/project-template.md`; `docs/editor/project-manager.md`; `docs/cli/e2d-cli.md`; `docs/project-system/project-task-manager.md`\n- Тесты: `tests/Electron2D.Tests.Integration/EditorProjectManagerTests.cs`; `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`\n- Исходный код: `src/Electron2D.ProjectSystem/Templates/ProjectTemplateCreator.cs`; `src/Electron2D.Editor/ProjectManagement/EditorProjectManager.cs`; `src/Electron2D.Cli/CliGeneralCommands.cs`; `data/templates/electron2d-empty/`; `tools/Verify-ProjectTemplate.ps1`\n\n## Итог\n\n- Спецификация `project-template` расширена AI-ready contract: `AGENTS.md`, starter skills, `.gitignore`, `.electron2d/tasks/`, `git init` и CLI `project create`.\n- Добавлен общий `ProjectTemplateCreator` в `Electron2D.ProjectSystem`: он копирует template, переписывает project name/renderer profile, создаёт AI-ready файлы, стартовую task board и пытается выполнить `git init`.\n- Project Manager редактора использует общий creator, поэтому smoke-создание получает локальный Git repository, `AGENTS.md`, starter skills и начальную доску `ProjectTaskManager`.\n- CLI получил `e2d project create <name> --output <projects-root> --renderer-profile <profile> --format json` с stable JSON envelope.\n- В `data/templates/electron2d-empty/` добавлены поставляемые `AGENTS.md`, `.gitignore`, `.codex/skills/**/SKILL.md`, `.electron2d/tasks/board.e2tasks` и `.electron2d/tasks/welcome.e2task`.\n- Template verifier проверяет AI-ready files, отсутствие `TASKS.md`/`completed-tasks`/`dev-diary` и `.gitignore` policy для `.electron2d/tasks/`.\n- Документация и local documentation index синхронизированы с фактическим поведением.\n\n## Критерии приёмки\n\n- [x] Новый проект получает локальный git repository или понятную warning diagnostic, если `git` недоступен.\n- [x] Project-local `AGENTS.md` описывает Electron2D/.NET version, renderer profile, команды validate/build/test/run/export, структуру проекта, import cache запрет, stable UID, `e2d validate`, `e2d api compare-godot <type>`, active Editor session и правила работы с `ProjectTaskManager`.\n- [x] Шаблон пользовательского проекта не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/`.\n- [x] Шаблон создаёт начальную board/task storage `ProjectTaskManager` в `.electron2d/tasks/` как стабильные текстовые `EditorMetadata` documents.\n- [x] Template `.gitignore` не игнорирует `.electron2d/` целиком; ignored generated/local-only paths заданы явно, а `.electron2d/tasks/` остаётся отслеживаемой.\n- [x] Template `.gitignore` игнорирует `.electron2d/user/`, включая локальные пользовательские настройки Editor.\n- [x] `AGENTS.md` запрещает напрямую редактировать task storage files и требует `task_submit_for_acceptance` вместо самостоятельного закрытия задачи AI-агентом.\n- [x] Starter skills хранятся как project files и документированы.\n- [x] Template не содержит secrets, tokens или приватные абсолютные пути.\n- [x] Добавлены Project Manager/template/CLI tests.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n## Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectManagerTests|FullyQualifiedName~Electron2DCliWorkflowTests\"` упал ожидаемо на отсутствии `.git`, AI-ready files и `project create`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectManagerTests|FullyQualifiedName~Electron2DCliWorkflowTests\"` прошёл `11/11`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-LocalDocumentationIndex.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для `559` tracked source files.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- Focused regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectManagerTests|FullyQualifiedName~Electron2DCliWorkflowTests|FullyQualifiedName~ProjectTaskManagerTests|FullyQualifiedName~ReproducibilityLockDoctorTests|FullyQualifiedName~SolutionLayoutTests\"` прошёл `24/24`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CanonicalGoalAlignment.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `382/382`, runtime smoke `5/5`, golden-data `12/12`.\n\n## Решения\n\n- Общий create workflow размещён в `Electron2D.ProjectSystem`, чтобы Editor Project Manager и CLI не расходились по файлам шаблона.\n- `git init` является best-effort: отсутствие `git` не удаляет созданный проект, а возвращает warning diagnostic `E2D-PROJECT-0003`.\n- `.codex/skills/` внутри `data/templates/` будет staged явно, потому что root `.gitignore` скрывает рабочую `.codex/` директорию репозитория.\n- Пользовательские проекты не получают repository-local Markdown workflow; tasks storage создаётся только через `ProjectTaskManager` в `.electron2d/tasks/`.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0148 [ ] P0: Реализовать AI-ready project template, `AGENTS.md`, skills и git init\n\n- Создана: 2026-06-22T11:24:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0078, T-0079, T-0117, T-0126, T-0145, T-0154\n- Ссылки:\n  - Спецификация: `docs/architecture/agent-native-workflow.md`; `docs/release-management/project-template.md`\n  - Документация: `docs/project-system/`; `docs/editor/`\n  - Исходный код: `data/templates/`; `src/Electron2D.Editor/`; `tests/`\n\n### Самодостаточное описание\n\nНужно отделить от epic `T-0113` создание проекта: Project Manager создаёт локальный git repository, project-local `AGENTS.md`, начальную доску `ProjectTaskManager` и starter skills без секретов, Markdown-backlog файлов и скрытых глобальных зависимостей.\n\n### Критерии приёмки\n\n- [ ] Новый проект получает локальный git repository или понятную ошибку, если `git` недоступен.\n- [ ] Project-local `AGENTS.md` описывает Electron2D/.NET version, renderer profile, команды validate/build/test/run/export, структуру проекта, import cache запрет, stable UID, `e2d validate`, правило не использовать Godot API вне утверждённого Electron2D 2D-профиля, `e2d api compare-godot <type>` как strict verifier, подключение к активной Editor-сессии и правила работы с задачами через `ProjectTaskManager`.\n- [ ] Шаблон пользовательского проекта не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/`.\n- [ ] Шаблон создаёт начальную board/task storage `ProjectTaskManager` в `.electron2d/tasks/` как стабильные текстовые `EditorMetadata` documents.\n- [ ] Template `.gitignore` не игнорирует `.electron2d/` целиком; по умолчанию игнорируются `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/context/`, `.electron2d/session/`, `.electron2d/user/`, а политика для `.electron2d/tasks/` явно задана Project Manager.\n- [ ] Template `.gitignore` игнорирует `.electron2d/user/`, включая локальные breakpoints и другие пользовательские настройки Editor.\n- [ ] `AGENTS.md` запрещает напрямую редактировать task storage files и требует `task_submit_for_acceptance` вместо самостоятельного закрытия задачи AI-агентом.\n- [ ] Starter skills хранятся как project files и документированы.\n- [ ] Template не содержит secrets, tokens или приватные абсолютные пути.\n- [ ] Добавлены Project Manager/template tests.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: project template, `AGENTS.md`, skills и git init нужно выполнять отдельно от Agent Workspace UI.\n\n2026-06-22T12:25:00+03:00 - Уточнение пользователя: пользовательские проекты не получают `TASKS.md`, `completed-tasks/` и `dev-diary/`; task state создаётся через `ProjectTaskManager`, а текущий workflow репозитория Electron2D не мигрируется.\n```\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-cc9ad8b28e56d3f9ecd8e5efa6602736"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-045f5dd70915dce6ceead264e737f449"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-094d5d511494804413645297336db440"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-bafe0f9701ba8f6f41f278128c34f2cb"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5623ef1cecffc6cd840e9e0d4ddf29dc"
+    },
+    {
+      "relationId": "relation-0006",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-be9db2bbcef2fdd32e3978b12680dbc4"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Новый проект получает локальный git repository или понятную warning diagnostic, если `git` недоступен.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-abc4d706a6f3ddd3a78e36dcf1eee8f6/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Project-local `AGENTS.md` описывает Electron2D/.NET version, renderer profile, команды validate/build/test/run/export, структуру проекта, import cache запрет, stable UID, `e2d validate`, `e2d api compare-godot <type>`, active Editor session и правила работы с `ProjectTaskManager`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-abc4d706a6f3ddd3a78e36dcf1eee8f6/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Шаблон пользовательского проекта не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-abc4d706a6f3ddd3a78e36dcf1eee8f6/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Шаблон создаёт начальную board/task storage `ProjectTaskManager` в `.electron2d/tasks/` как стабильные текстовые `EditorMetadata` documents.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-abc4d706a6f3ddd3a78e36dcf1eee8f6/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Template `.gitignore` не игнорирует `.electron2d/` целиком; ignored generated/local-only paths заданы явно, а `.electron2d/tasks/` остаётся отслеживаемой.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-abc4d706a6f3ddd3a78e36dcf1eee8f6/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Template `.gitignore` игнорирует `.electron2d/user/`, включая локальные пользовательские настройки Editor.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-abc4d706a6f3ddd3a78e36dcf1eee8f6/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "`AGENTS.md` запрещает напрямую редактировать task storage files и требует `task_submit_for_acceptance` вместо самостоятельного закрытия задачи AI-агентом.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-abc4d706a6f3ddd3a78e36dcf1eee8f6/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Starter skills хранятся как project files и документированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-abc4d706a6f3ddd3a78e36dcf1eee8f6/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Template не содержит secrets, tokens или приватные абсолютные пути.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-abc4d706a6f3ddd3a78e36dcf1eee8f6/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Добавлены Project Manager/template/CLI tests.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-abc4d706a6f3ddd3a78e36dcf1eee8f6/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Документация фактического поведения обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-abc4d706a6f3ddd3a78e36dcf1eee8f6/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Команда проверки задокументирована.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-abc4d706a6f3ddd3a78e36dcf1eee8f6/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T09:25:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: пользовательские проекты не получают `TASKS.md`, `completed-tasks/` и `dev-diary/`; task state создаётся через `ProjectTaskManager`, а текущий workflow репозитория Electron2D не мигрируется."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T22:33:34.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": ".codex"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": ".codex/skills"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": ".codex/skills/**/SKILL.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": ".electron2d"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": ".electron2d/context"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": ".electron2d/import-cache"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": ".electron2d/session"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": ".electron2d/tasks"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": ".electron2d/tasks/board.e2tasks"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": ".electron2d/tasks/welcome.e2task"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": ".electron2d/user"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "Directory",
+      "value": ".electron2d/workspaces"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "11/11"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "24/24"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "382/382"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "Directory",
+      "value": "completed-tasks"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "Directory",
+      "value": "data/templates"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "Directory",
+      "value": "data/templates/electron2d-empty"
+    },
+    {
+      "linkId": "link-0022",
+      "kind": "Directory",
+      "value": "dev-diary"
+    },
+    {
+      "linkId": "link-0023",
+      "kind": "File",
+      "value": "docs/architecture/agent-native-workflow.md"
+    },
+    {
+      "linkId": "link-0024",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "link-0025",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0026",
+      "kind": "File",
+      "value": "docs/editor/project-manager.md"
+    },
+    {
+      "linkId": "link-0027",
+      "kind": "Directory",
+      "value": "docs/project-system"
+    },
+    {
+      "linkId": "link-0028",
+      "kind": "File",
+      "value": "docs/project-system/project-task-manager.md"
+    },
+    {
+      "linkId": "link-0029",
+      "kind": "File",
+      "value": "docs/release-management/project-template.md"
+    },
+    {
+      "linkId": "link-0030",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/CliGeneralCommands.cs"
+    },
+    {
+      "linkId": "link-0031",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0032",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/ProjectManagement/EditorProjectManager.cs"
+    },
+    {
+      "linkId": "link-0033",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Templates/ProjectTemplateCreator.cs"
+    },
+    {
+      "linkId": "link-0034",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0035",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectManagerTests.cs"
+    },
+    {
+      "linkId": "link-0036",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+    },
+    {
+      "linkId": "link-0037",
+      "kind": "File",
+      "value": "tools/Verify-ProjectTemplate.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 655427,
+      "byteLength": 10877,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "f5625eca339106c0e57de05bf142c64575c8d69a5d1c5fd4f8e51ba49b7ad9db",
+      "markdown": "## T-0148 - Реализовать AI-ready project template, `AGENTS.md`, skills и git init\n\n- Закрыта: 2026-06-23T01:33:34+03:00\n- Итоговый статус: выполнено\n- Коммит: `f515d73 feat: add agent ready project template`\n\n## Ссылки\n\n- Спецификация: `docs/release-management/project-template.md`; `docs/architecture/agent-native-workflow.md`\n- Документация: `docs/release-management/project-template.md`; `docs/editor/project-manager.md`; `docs/cli/e2d-cli.md`; `docs/project-system/project-task-manager.md`\n- Тесты: `tests/Electron2D.Tests.Integration/EditorProjectManagerTests.cs`; `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`\n- Исходный код: `src/Electron2D.ProjectSystem/Templates/ProjectTemplateCreator.cs`; `src/Electron2D.Editor/ProjectManagement/EditorProjectManager.cs`; `src/Electron2D.Cli/CliGeneralCommands.cs`; `data/templates/electron2d-empty/`; `tools/Verify-ProjectTemplate.ps1`\n\n## Итог\n\n- Спецификация `project-template` расширена AI-ready contract: `AGENTS.md`, starter skills, `.gitignore`, `.electron2d/tasks/`, `git init` и CLI `project create`.\n- Добавлен общий `ProjectTemplateCreator` в `Electron2D.ProjectSystem`: он копирует template, переписывает project name/renderer profile, создаёт AI-ready файлы, стартовую task board и пытается выполнить `git init`.\n- Project Manager редактора использует общий creator, поэтому smoke-создание получает локальный Git repository, `AGENTS.md`, starter skills и начальную доску `ProjectTaskManager`.\n- CLI получил `e2d project create <name> --output <projects-root> --renderer-profile <profile> --format json` с stable JSON envelope.\n- В `data/templates/electron2d-empty/` добавлены поставляемые `AGENTS.md`, `.gitignore`, `.codex/skills/**/SKILL.md`, `.electron2d/tasks/board.e2tasks` и `.electron2d/tasks/welcome.e2task`.\n- Template verifier проверяет AI-ready files, отсутствие `TASKS.md`/`completed-tasks`/`dev-diary` и `.gitignore` policy для `.electron2d/tasks/`.\n- Документация и local documentation index синхронизированы с фактическим поведением.\n\n## Критерии приёмки\n\n- [x] Новый проект получает локальный git repository или понятную warning diagnostic, если `git` недоступен.\n- [x] Project-local `AGENTS.md` описывает Electron2D/.NET version, renderer profile, команды validate/build/test/run/export, структуру проекта, import cache запрет, stable UID, `e2d validate`, `e2d api compare-godot <type>`, active Editor session и правила работы с `ProjectTaskManager`.\n- [x] Шаблон пользовательского проекта не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/`.\n- [x] Шаблон создаёт начальную board/task storage `ProjectTaskManager` в `.electron2d/tasks/` как стабильные текстовые `EditorMetadata` documents.\n- [x] Template `.gitignore` не игнорирует `.electron2d/` целиком; ignored generated/local-only paths заданы явно, а `.electron2d/tasks/` остаётся отслеживаемой.\n- [x] Template `.gitignore` игнорирует `.electron2d/user/`, включая локальные пользовательские настройки Editor.\n- [x] `AGENTS.md` запрещает напрямую редактировать task storage files и требует `task_submit_for_acceptance` вместо самостоятельного закрытия задачи AI-агентом.\n- [x] Starter skills хранятся как project files и документированы.\n- [x] Template не содержит secrets, tokens или приватные абсолютные пути.\n- [x] Добавлены Project Manager/template/CLI tests.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n## Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectManagerTests|FullyQualifiedName~Electron2DCliWorkflowTests\"` упал ожидаемо на отсутствии `.git`, AI-ready files и `project create`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectManagerTests|FullyQualifiedName~Electron2DCliWorkflowTests\"` прошёл `11/11`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-LocalDocumentationIndex.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для `559` tracked source files.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- Focused regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectManagerTests|FullyQualifiedName~Electron2DCliWorkflowTests|FullyQualifiedName~ProjectTaskManagerTests|FullyQualifiedName~ReproducibilityLockDoctorTests|FullyQualifiedName~SolutionLayoutTests\"` прошёл `24/24`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CanonicalGoalAlignment.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `382/382`, runtime smoke `5/5`, golden-data `12/12`.\n\n## Решения\n\n- Общий create workflow размещён в `Electron2D.ProjectSystem`, чтобы Editor Project Manager и CLI не расходились по файлам шаблона.\n- `git init` является best-effort: отсутствие `git` не удаляет созданный проект, а возвращает warning diagnostic `E2D-PROJECT-0003`.\n- `.codex/skills/` внутри `data/templates/` будет staged явно, потому что root `.gitignore` скрывает рабочую `.codex/` директорию репозитория.\n- Пользовательские проекты не получают repository-local Markdown workflow; tasks storage создаётся только через `ProjectTaskManager` в `.electron2d/tasks/`.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0148 [ ] P0: Реализовать AI-ready project template, `AGENTS.md`, skills и git init\n\n- Создана: 2026-06-22T11:24:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0078, T-0079, T-0117, T-0126, T-0145, T-0154\n- Ссылки:\n  - Спецификация: `docs/architecture/agent-native-workflow.md`; `docs/release-management/project-template.md`\n  - Документация: `docs/project-system/`; `docs/editor/`\n  - Исходный код: `data/templates/`; `src/Electron2D.Editor/`; `tests/`\n\n### Самодостаточное описание\n\nНужно отделить от epic `T-0113` создание проекта: Project Manager создаёт локальный git repository, project-local `AGENTS.md`, начальную доску `ProjectTaskManager` и starter skills без секретов, Markdown-backlog файлов и скрытых глобальных зависимостей.\n\n### Критерии приёмки\n\n- [ ] Новый проект получает локальный git repository или понятную ошибку, если `git` недоступен.\n- [ ] Project-local `AGENTS.md` описывает Electron2D/.NET version, renderer profile, команды validate/build/test/run/export, структуру проекта, import cache запрет, stable UID, `e2d validate`, правило не использовать Godot API вне утверждённого Electron2D 2D-профиля, `e2d api compare-godot <type>` как strict verifier, подключение к активной Editor-сессии и правила работы с задачами через `ProjectTaskManager`.\n- [ ] Шаблон пользовательского проекта не создаёт `TASKS.md`, `completed-tasks/` или `dev-diary/`.\n- [ ] Шаблон создаёт начальную board/task storage `ProjectTaskManager` в `.electron2d/tasks/` как стабильные текстовые `EditorMetadata` documents.\n- [ ] Template `.gitignore` не игнорирует `.electron2d/` целиком; по умолчанию игнорируются `.electron2d/import-cache/`, `.electron2d/workspaces/`, `.electron2d/context/`, `.electron2d/session/`, `.electron2d/user/`, а политика для `.electron2d/tasks/` явно задана Project Manager.\n- [ ] Template `.gitignore` игнорирует `.electron2d/user/`, включая локальные breakpoints и другие пользовательские настройки Editor.\n- [ ] `AGENTS.md` запрещает напрямую редактировать task storage files и требует `task_submit_for_acceptance` вместо самостоятельного закрытия задачи AI-агентом.\n- [ ] Starter skills хранятся как project files и документированы.\n- [ ] Template не содержит secrets, tokens или приватные абсолютные пути.\n- [ ] Добавлены Project Manager/template tests.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: project template, `AGENTS.md`, skills и git init нужно выполнять отдельно от Agent Workspace UI.\n\n2026-06-22T12:25:00+03:00 - Уточнение пользователя: пользовательские проекты не получают `TASKS.md`, `completed-tasks/` и `dev-diary/`; task state создаётся через `ProjectTaskManager`, а текущий workflow репозитория Electron2D не мигрируется.\n```\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T08:24:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T22:33:34.0000000+00:00",
+  "completedAt": "2026-06-22T22:33:34.0000000+00:00",
+  "acceptedAt": "2026-06-22T22:33:34.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T22:33:34.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

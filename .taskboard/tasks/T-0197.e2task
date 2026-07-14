@@ -1,0 +1,220 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-ba0204c7fafa44e262fb1d338cc42822",
+  "revision": 2,
+  "taskId": "T-0197",
+  "legacyAliases": [],
+  "title": "Реализовать TextEdit, CodeEdit и индикаторы",
+  "description": "## T-0197 [ ] P0: Реализовать TextEdit, CodeEdit и индикаторы\n\n- Создана: 2026-06-24T03:49:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0177, T-0178, T-0196\n- Ссылки:\n  - Доменный документ: `docs/ui/structured-controls.md`; `docs/editor/script-workspace.md`\n  - Исходный код: `src/Electron2D/Graphics/UI/`; `src/Electron2D.Editor/`\n  - Тесты: `tests/Electron2D.Tests.Integration/StructuredControlInteractionTests.cs`; `tests/Electron2D.Tests.Integration/EditorScriptWorkspaceTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0197.\n  - blocker artifact `data/quality/blockers/T-0197.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/ui/structured-controls.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0197.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0197.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nДочерняя задача `T-0179`: реализовать базовые text/code editing controls и вспомогательные UI elements: `TextEdit`, `CodeEdit`, separators и progress indicators. Полная интеграция Script workspace остаётся в `T-0198`-`T-0201`.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменные документы обновлены до кода и описывают text edit, code edit, caret, selection, scrolling, undo hooks, separators и progress indicators.\n- [ ] Добавлены сначала падающие tests для caret movement, selection, typing, scrolling, copy/paste-safe command hooks и progress state.\n- [ ] Production implementation выполнена в runtime text/code editing controls и не добавляет GDScript-specific UI.\n- [ ] После зелёных проверок те же доменные документы обновлены фактическим поведением, ограничениями, командой проверки `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~StructuredControlInteractionTests|FullyQualifiedName~EditorScriptWorkspaceTests\" -v q` и artifact path `.temp/ui-text-code-edit/`.\n- [ ] `CodeEdit` поддерживает базовую line gutter, monospace font и text clipping без GDScript-specific UI.\n- [ ] Public API documentation полная для новых public runtime элементов API.\n- [ ] Focused tests, проверка документации и проверка лицензий исходников проходят.\n\n### Подзадачи\n\n- [ ] Специфицировать text/code edit controls.\n- [ ] Добавить failing tests.\n- [ ] Реализовать controls и indicators.\n- [ ] Проверить Script workspace smoke prerequisites.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": "task-dd9a891241f73f86d9df6d40838951ba",
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-74bfcc810bb4ff8a8463ecc5f0ceee92"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-62dcdbbe53532a93688e38a62b8c719e"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-0b9d31344ef709340140447146f08aff"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменные документы обновлены до кода и описывают text edit, code edit, caret, selection, scrolling, undo hooks, separators и progress indicators.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Добавлены сначала падающие tests для caret movement, selection, typing, scrolling, copy/paste-safe command hooks и progress state.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Production implementation выполнена в runtime text/code editing controls и не добавляет GDScript-specific UI.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "После зелёных проверок те же доменные документы обновлены фактическим поведением, ограничениями, командой проверки `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~StructuredControlInteractionTests|FullyQualifiedName~EditorScriptWorkspaceTests\" -v q` и artifact path `.temp/ui-text-code-edit/`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`CodeEdit` поддерживает базовую line gutter, monospace font и text clipping без GDScript-specific UI.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Public API documentation полная для новых public runtime элементов API.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Focused tests, проверка документации и проверка лицензий исходников проходят.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": ".temp/ui-text-code-edit"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/dev-diary"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/quality/blockers/T-0197.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/editor/script-workspace.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/ui/structured-controls.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "src/Electron2D/Graphics/UI"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorScriptWorkspaceTests.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/StructuredControlInteractionTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "blocked-environment",
+    "readyToStart": [
+      "только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.",
+      "перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate."
+    ],
+    "stopConditions": [
+      "dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.",
+      "требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.",
+      "задача просит audit package без отдельной blocker-report задачи."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` blocker/current evidence notes for T-0197.",
+      "blocker artifact `data/quality/blockers/T-0197.md`, если нужен отдельный отчёт.",
+      "дневник `data/dev-diary/` и связанный доменный документ docs/ui/structured-controls.md только для уточнения blocker-а."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.",
+      "unrelated task statuses, dependency graph or release scope."
+    ],
+    "requiredOutputs": [
+      "blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.",
+      "blocker artifact `data/quality/blockers/T-0197.md` when diagnostics need a durable file.",
+      "diary entry with exact commands or host checks that proved the block."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 275847,
+      "byteLength": 7014,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "2c76911006c0e48b0b7a89dca01a55da6388d4ab1a60706ae3e48048a3f3db6c",
+      "markdown": "## T-0197 [ ] P0: Реализовать TextEdit, CodeEdit и индикаторы\n\n- Создана: 2026-06-24T03:49:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0177, T-0178, T-0196\n- Ссылки:\n  - Доменный документ: `docs/ui/structured-controls.md`; `docs/editor/script-workspace.md`\n  - Исходный код: `src/Electron2D/Graphics/UI/`; `src/Electron2D.Editor/`\n  - Тесты: `tests/Electron2D.Tests.Integration/StructuredControlInteractionTests.cs`; `tests/Electron2D.Tests.Integration/EditorScriptWorkspaceTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0197.\n  - blocker artifact `data/quality/blockers/T-0197.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/ui/structured-controls.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0197.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0197.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nДочерняя задача `T-0179`: реализовать базовые text/code editing controls и вспомогательные UI elements: `TextEdit`, `CodeEdit`, separators и progress indicators. Полная интеграция Script workspace остаётся в `T-0198`-`T-0201`.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменные документы обновлены до кода и описывают text edit, code edit, caret, selection, scrolling, undo hooks, separators и progress indicators.\n- [ ] Добавлены сначала падающие tests для caret movement, selection, typing, scrolling, copy/paste-safe command hooks и progress state.\n- [ ] Production implementation выполнена в runtime text/code editing controls и не добавляет GDScript-specific UI.\n- [ ] После зелёных проверок те же доменные документы обновлены фактическим поведением, ограничениями, командой проверки `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~StructuredControlInteractionTests|FullyQualifiedName~EditorScriptWorkspaceTests\" -v q` и artifact path `.temp/ui-text-code-edit/`.\n- [ ] `CodeEdit` поддерживает базовую line gutter, monospace font и text clipping без GDScript-specific UI.\n- [ ] Public API documentation полная для новых public runtime элементов API.\n- [ ] Focused tests, проверка документации и проверка лицензий исходников проходят.\n\n### Подзадачи\n\n- [ ] Специфицировать text/code edit controls.\n- [ ] Добавить failing tests.\n- [ ] Реализовать controls и indicators.\n- [ ] Проверить Script workspace smoke prerequisites.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-24T00:49:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

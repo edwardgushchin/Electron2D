@@ -23,8 +23,8 @@
 Каноническое хранилище остаётся прежним:
 
 ```text
-.electron2d/tasks/*.e2task
-.electron2d/tasks/board.e2tasks
+.taskboard/*.e2task
+.taskboard/board.e2tasks
 ```
 
 Команда не должна создавать или обновлять `TASKS.md`, `completed-tasks/` или `dev-diary/` в пользовательском проекте. Эти файлы относятся только к локальному workflow разработки самого Electron2D.
@@ -52,11 +52,11 @@ e2d tasks export --project <path> --format markdown
 
 ## Загрузка и безопасность
 
-Команда читает только `.electron2d/tasks/*.e2task` через существующий `ProjectTaskSerializer`. `board.e2tasks` может использоваться только для предсказуемого порядка, но не изменяется.
+Команда читает только `.taskboard/*.e2task` через существующий `ProjectTaskSerializer`. `board.e2tasks` может использоваться только для предсказуемого порядка, но не изменяется.
 
 При malformed task document команда должна завершиться fail-closed с `E2D-CLI-0002` и не писать partial report как успешный результат. Empty project без `.e2task` документов возвращает валидный Markdown с количеством задач `0`.
 
-Команда не открывает `ProjectWorkspace` на запись, не выбирает active Editor route, не вызывает `WorkspaceTransactionEngine`, не создаёт Undo group и не меняет `.electron2d/tasks/**`.
+Команда не открывает `ProjectWorkspace` на запись, не выбирает active Editor route, не вызывает `WorkspaceTransactionEngine`, не создаёт Undo group и не меняет `.taskboard/**`.
 
 ## Markdown output
 

@@ -1,0 +1,258 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-f008ae39f0056adb7cf750577ce3a7ac",
+  "revision": 2,
+  "taskId": "T-0095",
+  "legacyAliases": [],
+  "title": "Создать законченный UI-heavy puzzle или карточную игру",
+  "description": "## T-0095 [x] P0: Создать законченный UI-heavy puzzle или карточную игру\n\n- Завершена: 2026-06-23T15:42:00+03:00\n- Коммит: `55cf6cc feat: add ui-heavy reference project`\n- Спецификация: `docs/examples/ui-heavy-reference.md`; `docs/releases/0.1.0-preview.md`\n- Документация: `docs/examples/ui-heavy-reference.md`; `docs/examples/reference-game-assets.md`; `docs/README.md`\n- Исходный код, тесты и проект:\n  - `examples/ui-heavy-reference/`\n  - `tools/Verify-UiHeavyReference.ps1`\n  - `tests/Electron2D.Tests.Integration/UiHeavyReferenceProjectTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nСоздана законченная UI-heavy reference game как валидный проект `Electron2D.Editor`, а не standalone demo. Проект содержит `project.e2d.json`, `.csproj`, scene files `menu/game/result`, Input Map, export presets для Windows/Linux/macOS/Android/iOS/WebAssembly browser, импортированные project-local assets, C# gameplay script и `.electron2d/tasks/**` metadata с задачей `AwaitingAcceptance` для человеческой приёмки.\n\nGameplay verification строит карточную UI-гру через public Electron2D API и проверяет `Control`, containers, buttons, `TextureButton`, `CheckBox`, `Slider`, `ProgressBar`, `TextureRect`, `NinePatchRect`, `ItemList`, localization, разные layout checkpoints, touch input, текст, save progress, scene transitions и Android `Compatibility` renderer preset.\n\n### Критерии и результат\n\n- [x] UI-heavy reference game является валидным проектом `Electron2D.Editor` с project settings, scenes, resources, scripts, Input Map, export presets и ProjectTaskManager metadata.\n- [x] Проект использует реальные локальные ассеты из проверенного набора `data/assets/reference-games/`, скопированные в `examples/ui-heavy-reference/assets/`.\n- [x] Headless verification mode подтверждает UI/gameplay subsystem markers и пишет progress save artifact.\n- [x] Android export preset использует renderer profile `Compatibility`.\n- [x] `tools/Verify-UiHeavyReference.ps1` проверяет структуру, resources, localization, task metadata, build/run, `e2d validate` и WebAssembly package boundary без `.electron2d/tasks/**`.\n- [x] Red tests были добавлены до реализации и упали ожидаемо на отсутствующем проекте, script и verifier.\n- [x] Документация реализации обновлена.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~UiHeavyReferenceProjectTests\"` упал ожидаемо `3/3` на отсутствующих `Electron2D.UiHeavyReference.csproj`, `Scripts/CardPuzzleGame.cs` и `tools/Verify-UiHeavyReference.ps1`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~UiHeavyReferenceProjectTests\"` прошёл `3/3`.\n- Project verifier: `powershell -ExecutionPolicy Bypass -File tools\\Verify-UiHeavyReference.ps1` прошёл; build warnings `0`, errors `0`, assets `14`, export targets `6`.\n- Asset verifier: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReferenceGameAssets.ps1` прошёл.\n- Documentation: `Update-LocalDocumentationIndex.ps1` и `Verify-LocalDocumentation.ps1` прошли.\n- Source checks: `Verify-SourceLicenseHeaders.ps1` и `Verify-SourceDomainLayout.ps1` прошли.\n- Release build: `dotnet build src\\Electron2D.sln -c Release` прошёл с warnings `0`, errors `0`.\n\n### Решения\n\n- Пример не использует internal/test-only API: verification texture используется через пользовательский subclass `Texture2D`, audio работает через default public `AudioStreamPlayer` path, а scene transitions представлены обычными public UI state changes.\n- Android preset закреплён на `Compatibility`, потому что задача проверяет mobile fallback renderer path.\n- `.electron2d/tasks/**` остаётся source-controlled Editor metadata внутри проекта, но verifier проверяет, что WebAssembly runtime package не копирует task metadata.\n- `T-0093`, `T-0096`, `T-0102`, `T-0103` и `T-0104` остаются отдельными release gate задачами; `T-0095` не подменяет их smoke/soak/performance/leak checks.\n\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "UI-heavy reference game является валидным проектом `Electron2D.Editor` с project settings, scenes, resources, scripts, Input Map, export presets и ProjectTaskManager metadata.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-f008ae39f0056adb7cf750577ce3a7ac/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Проект использует реальные локальные ассеты из проверенного набора `data/assets/reference-games/`, скопированные в `examples/ui-heavy-reference/assets/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-f008ae39f0056adb7cf750577ce3a7ac/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Headless verification mode подтверждает UI/gameplay subsystem markers и пишет progress save artifact.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-f008ae39f0056adb7cf750577ce3a7ac/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Android export preset использует renderer profile `Compatibility`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-f008ae39f0056adb7cf750577ce3a7ac/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`tools/Verify-UiHeavyReference.ps1` проверяет структуру, resources, localization, task metadata, build/run, `e2d validate` и WebAssembly package boundary без `.electron2d/tasks/**`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-f008ae39f0056adb7cf750577ce3a7ac/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Red tests были добавлены до реализации и упали ожидаемо на отсутствующем проекте, script и verifier.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-f008ae39f0056adb7cf750577ce3a7ac/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Документация реализации обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-f008ae39f0056adb7cf750577ce3a7ac/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-f008ae39f0056adb7cf750577ce3a7ac/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-23T12:42:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".electron2d/tasks/**"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "3/3"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "Scripts/CardPuzzleGame.cs"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "data/assets/reference-games"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/README.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/examples/reference-game-assets.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/examples/ui-heavy-reference.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "examples/ui-heavy-reference"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "examples/ui-heavy-reference/assets"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "menu/game/result"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/UiHeavyReferenceProjectTests.cs"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "tools/Verify-UiHeavyReference.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 862119,
+      "byteLength": 4899,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "4ee0b027e9d564a49a70ba99c1abba7fb373166efdc9949dbcee69f01eea8a33",
+      "markdown": "## T-0095 [x] P0: Создать законченный UI-heavy puzzle или карточную игру\n\n- Завершена: 2026-06-23T15:42:00+03:00\n- Коммит: `55cf6cc feat: add ui-heavy reference project`\n- Спецификация: `docs/examples/ui-heavy-reference.md`; `docs/releases/0.1.0-preview.md`\n- Документация: `docs/examples/ui-heavy-reference.md`; `docs/examples/reference-game-assets.md`; `docs/README.md`\n- Исходный код, тесты и проект:\n  - `examples/ui-heavy-reference/`\n  - `tools/Verify-UiHeavyReference.ps1`\n  - `tests/Electron2D.Tests.Integration/UiHeavyReferenceProjectTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nСоздана законченная UI-heavy reference game как валидный проект `Electron2D.Editor`, а не standalone demo. Проект содержит `project.e2d.json`, `.csproj`, scene files `menu/game/result`, Input Map, export presets для Windows/Linux/macOS/Android/iOS/WebAssembly browser, импортированные project-local assets, C# gameplay script и `.electron2d/tasks/**` metadata с задачей `AwaitingAcceptance` для человеческой приёмки.\n\nGameplay verification строит карточную UI-гру через public Electron2D API и проверяет `Control`, containers, buttons, `TextureButton`, `CheckBox`, `Slider`, `ProgressBar`, `TextureRect`, `NinePatchRect`, `ItemList`, localization, разные layout checkpoints, touch input, текст, save progress, scene transitions и Android `Compatibility` renderer preset.\n\n### Критерии и результат\n\n- [x] UI-heavy reference game является валидным проектом `Electron2D.Editor` с project settings, scenes, resources, scripts, Input Map, export presets и ProjectTaskManager metadata.\n- [x] Проект использует реальные локальные ассеты из проверенного набора `data/assets/reference-games/`, скопированные в `examples/ui-heavy-reference/assets/`.\n- [x] Headless verification mode подтверждает UI/gameplay subsystem markers и пишет progress save artifact.\n- [x] Android export preset использует renderer profile `Compatibility`.\n- [x] `tools/Verify-UiHeavyReference.ps1` проверяет структуру, resources, localization, task metadata, build/run, `e2d validate` и WebAssembly package boundary без `.electron2d/tasks/**`.\n- [x] Red tests были добавлены до реализации и упали ожидаемо на отсутствующем проекте, script и verifier.\n- [x] Документация реализации обновлена.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~UiHeavyReferenceProjectTests\"` упал ожидаемо `3/3` на отсутствующих `Electron2D.UiHeavyReference.csproj`, `Scripts/CardPuzzleGame.cs` и `tools/Verify-UiHeavyReference.ps1`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~UiHeavyReferenceProjectTests\"` прошёл `3/3`.\n- Project verifier: `powershell -ExecutionPolicy Bypass -File tools\\Verify-UiHeavyReference.ps1` прошёл; build warnings `0`, errors `0`, assets `14`, export targets `6`.\n- Asset verifier: `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReferenceGameAssets.ps1` прошёл.\n- Documentation: `Update-LocalDocumentationIndex.ps1` и `Verify-LocalDocumentation.ps1` прошли.\n- Source checks: `Verify-SourceLicenseHeaders.ps1` и `Verify-SourceDomainLayout.ps1` прошли.\n- Release build: `dotnet build src\\Electron2D.sln -c Release` прошёл с warnings `0`, errors `0`.\n\n### Решения\n\n- Пример не использует internal/test-only API: verification texture используется через пользовательский subclass `Texture2D`, audio работает через default public `AudioStreamPlayer` path, а scene transitions представлены обычными public UI state changes.\n- Android preset закреплён на `Compatibility`, потому что задача проверяет mobile fallback renderer path.\n- `.electron2d/tasks/**` остаётся source-controlled Editor metadata внутри проекта, но verifier проверяет, что WebAssembly runtime package не копирует task metadata.\n- `T-0093`, `T-0096`, `T-0102`, `T-0103` и `T-0104` остаются отдельными release gate задачами; `T-0095` не подменяет их smoke/soak/performance/leak checks.\n\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T12:42:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-23T12:42:00.0000000+00:00",
+  "completedAt": "2026-06-23T12:42:00.0000000+00:00",
+  "acceptedAt": "2026-06-23T12:42:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-23T12:42:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

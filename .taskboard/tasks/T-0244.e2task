@@ -1,0 +1,274 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-fb8ef0d5a90d34ece52148458b4f5b8e",
+  "revision": 2,
+  "taskId": "T-0244",
+  "legacyAliases": [],
+  "title": "Подготовить эталонные проверки поведения для Godot-подобных объектов",
+  "description": "## T-0244 [ ] P0: Подготовить эталонные проверки поведения для Godot-подобных объектов\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0243\n- Ссылки:\n  - Доменный документ: `docs/testing/godot-47-public-api-behavioral-golden-harness.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/testing/godot-47-public-api-behavioral-golden-harness.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/testing/godot-47-public-api-behavioral-golden-harness.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. Нужен общий тестовый каркас для жизненного цикла, сериализации, сигналов, загрузки ресурсов, отрисовки, физики, ввода, аудио, раскладки UI и платформенной диагностики, чтобы каждая объектная задача имела воспроизводимый путь приёмки.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n`T-0244` не генерирует всю публичную поверхность API. Публичная поверхность принадлежит `T-0242`; `T-0244` владеет исполняемыми проверками поведения, эталонными результатами, уточняющими правилами для семейства классов и отчётами о расхождениях поведения.\n\n### Сгенерированные файлы, за которые отвечает T-0244\n\n- `data/api/godot-4.7/behavior/<ClassName>.behavior.json`\n- `data/api/godot-4.7/behavior/<ClassName>.behavior.md`\n- `data/api/godot-4.7/behavior-results/<ClassName>.godot.json`\n- `data/api/electron2d/behavior-results/<ClassName>.electron2d.json`\n- `data/api/electron2d/behavior-diff/<ClassName>.behavior.diff.md`\n\n`*.behavior.md` является сгенерированным читаемым представлением поверх проверок, эталонных результатов, уточняющих правил и явных строк `Deferred`/`Unsupported`. Это не ручная замена исполняемым подтверждениям.\n\n### Команды инструмента, за которые отвечает T-0244\n\n- `dotnet run --project eng/Electron2D.Build -- api behavior generate --class <ClassName>`\n- `dotnet run --project eng/Electron2D.Build -- api behavior run-godot --class <ClassName>`\n- `dotnet run --project eng/Electron2D.Build -- api behavior run-electron2d --class <ClassName>`\n- `dotnet run --project eng/Electron2D.Build -- api behavior compare --class <ClassName>`### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ описывает модель проверок поведения, хранение эталонных результатов, правила для семейств классов, требования к ручному уточнению спецификации и правила строк `Deferred`/`Unsupported`.\n- [ ] Каркас умеет запускать проверки на стороне Godot, где это доступно, и проверки на стороне Electron2D для того же контракта класса или семейства.\n- [ ] Каркас хранит результаты поведения отдельно от описаний API и никогда не считает заметки о поведении публичной поверхностью API.\n- [ ] Описания поведения различают сгенерированные результаты проверок, уточняющие правила для семейства классов, требования к ручному уточнению спецификации, строки, заблокированные платформой, и явные строки `Deferred`/`Unsupported`.\n- [ ] Отчёт о расхождениях поведения различает `Pass`, `Fail`, `Deferred`, `Unsupported`, `ManualSpecRequired` и `PlatformBlocked`.\n- [ ] Минимум проверки `Object`, `Resource`, `Node` и `Texture2D` доказывают сквозной путь от эталона до сравнения.\n- [ ] Сравнение поведения падает на наблюдаемых расхождениях жизненного цикла, сигналов, сериализации, загрузки ресурсов, отрисовки, физики, ввода, аудио, раскладки UI и платформенной диагностики там, где класс участвует в этих сценариях.\n- [ ] Harness возвращает устойчивые диагностические сообщения для отсутствующая среда запуска Godot, отсутствующая среда запуска Electron2D, устаревшие проверки поведения, неподдержанная платформа и непроверенные ручные строки.\n- [ ] Документация, манифест API и заметки задачи синхронизированы с фактическими behavior artifacts и commands.\n\n### Подзадачи\n\n- [ ] Зафиксировать probe/golden/overlay schema в доменном документе.\n- [ ] Добавить сначала падающие проверки на отсутствующие проверки поведения, устаревшие описания поведения и неутверждённые отчёты о расхождениях поведения.\n- [ ] Реализовать behavior generation, Godot runner, Electron2D runner и comparison commands.\n- [ ] Добавить reusable class-family overlays для Object/Resource/Node/Texture/UI/Physics/Audio families.\n- [ ] Обновить документацию, сгенерированные файлы и заметки задачи и запустить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0013",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ описывает модель проверок поведения, хранение эталонных результатов, правила для семейств классов, требования к ручному уточнению спецификации и правила строк `Deferred`/`Unsupported`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Каркас умеет запускать проверки на стороне Godot, где это доступно, и проверки на стороне Electron2D для того же контракта класса или семейства.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Каркас хранит результаты поведения отдельно от описаний API и никогда не считает заметки о поведении публичной поверхностью API.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Описания поведения различают сгенерированные результаты проверок, уточняющие правила для семейства классов, требования к ручному уточнению спецификации, строки, заблокированные платформой, и явные строки `Deferred`/`Unsupported`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Отчёт о расхождениях поведения различает `Pass`, `Fail`, `Deferred`, `Unsupported`, `ManualSpecRequired` и `PlatformBlocked`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Минимум проверки `Object`, `Resource`, `Node` и `Texture2D` доказывают сквозной путь от эталона до сравнения.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Сравнение поведения падает на наблюдаемых расхождениях жизненного цикла, сигналов, сериализации, загрузки ресурсов, отрисовки, физики, ввода, аудио, раскладки UI и платформенной диагностики там, где класс участвует в этих сценариях.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Harness возвращает устойчивые диагностические сообщения для отсутствующая среда запуска Godot, отсутствующая среда запуска Electron2D, устаревшие проверки поведения, неподдержанная платформа и непроверенные ручные строки.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Документация, манифест API и заметки задачи синхронизированы с фактическими behavior artifacts и commands.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate unless task criteria explicitly require primary/control audit"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/api/electron2d/behavior-diff/<ClassName>.behavior.diff.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/api/electron2d/behavior-results/<ClassName>.electron2d.json"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "data/api/godot-4.7/behavior-results/<ClassName>.godot.json"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "data/api/godot-4.7/behavior/<ClassName>.behavior.json"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "data/api/godot-4.7/behavior/<ClassName>.behavior.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/testing/godot-47-public-api-behavioral-golden-harness.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tooling",
+    "readyToStart": [
+      "task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/testing/godot-47-public-api-behavioral-golden-harness.md describes the tool or policy contract.",
+      "add RED verifier/test coverage before changing implementation when tooling behavior changes."
+    ],
+    "stopConditions": [
+      "the change would define public API surface manually or close behavior owned by a public class task.",
+      "missing dependency, platform prerequisite or generated input prevents deterministic verifier output."
+    ],
+    "allowedChanges": [
+      "tooling, verifier, generated-report plumbing and docs named by this task.",
+      "tests under `tests/` that prove the tooling contract.",
+      "`TASKS.md` notes and diary evidence."
+    ],
+    "forbiddenChanges": [
+      "production runtime behavior outside this tooling contract.",
+      "generated artifacts by hand when a generator/verifier owns them.",
+      "unrelated task statuses or release scope."
+    ],
+    "requiredOutputs": [
+      "docs/testing/godot-47-public-api-behavioral-golden-harness.md",
+      "focused verifier/test evidence named by the task.",
+      "synchronized generated docs/index artifacts when docs are changed."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- api behavior compare --class <ClassName>",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- api behavior generate --class <ClassName>",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- api behavior run-electron2d --class <ClassName>",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- api behavior run-godot --class <ClassName>",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 458444,
+      "byteLength": 10656,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "c90b90bea20399d70792382a1255ff5187bb285b05d99b0ecf6817ddcd9cfe22",
+      "markdown": "## T-0244 [ ] P0: Подготовить эталонные проверки поведения для Godot-подобных объектов\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0243\n- Ссылки:\n  - Доменный документ: `docs/testing/godot-47-public-api-behavioral-golden-harness.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/testing/godot-47-public-api-behavioral-golden-harness.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - docs/testing/godot-47-public-api-behavioral-golden-harness.md\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. Нужен общий тестовый каркас для жизненного цикла, сериализации, сигналов, загрузки ресурсов, отрисовки, физики, ввода, аудио, раскладки UI и платформенной диагностики, чтобы каждая объектная задача имела воспроизводимый путь приёмки.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n`T-0244` не генерирует всю публичную поверхность API. Публичная поверхность принадлежит `T-0242`; `T-0244` владеет исполняемыми проверками поведения, эталонными результатами, уточняющими правилами для семейства классов и отчётами о расхождениях поведения.\n\n### Сгенерированные файлы, за которые отвечает T-0244\n\n- `data/api/godot-4.7/behavior/<ClassName>.behavior.json`\n- `data/api/godot-4.7/behavior/<ClassName>.behavior.md`\n- `data/api/godot-4.7/behavior-results/<ClassName>.godot.json`\n- `data/api/electron2d/behavior-results/<ClassName>.electron2d.json`\n- `data/api/electron2d/behavior-diff/<ClassName>.behavior.diff.md`\n\n`*.behavior.md` является сгенерированным читаемым представлением поверх проверок, эталонных результатов, уточняющих правил и явных строк `Deferred`/`Unsupported`. Это не ручная замена исполняемым подтверждениям.\n\n### Команды инструмента, за которые отвечает T-0244\n\n- `dotnet run --project eng/Electron2D.Build -- api behavior generate --class <ClassName>`\n- `dotnet run --project eng/Electron2D.Build -- api behavior run-godot --class <ClassName>`\n- `dotnet run --project eng/Electron2D.Build -- api behavior run-electron2d --class <ClassName>`\n- `dotnet run --project eng/Electron2D.Build -- api behavior compare --class <ClassName>`### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменный документ описывает модель проверок поведения, хранение эталонных результатов, правила для семейств классов, требования к ручному уточнению спецификации и правила строк `Deferred`/`Unsupported`.\n- [ ] Каркас умеет запускать проверки на стороне Godot, где это доступно, и проверки на стороне Electron2D для того же контракта класса или семейства.\n- [ ] Каркас хранит результаты поведения отдельно от описаний API и никогда не считает заметки о поведении публичной поверхностью API.\n- [ ] Описания поведения различают сгенерированные результаты проверок, уточняющие правила для семейства классов, требования к ручному уточнению спецификации, строки, заблокированные платформой, и явные строки `Deferred`/`Unsupported`.\n- [ ] Отчёт о расхождениях поведения различает `Pass`, `Fail`, `Deferred`, `Unsupported`, `ManualSpecRequired` и `PlatformBlocked`.\n- [ ] Минимум проверки `Object`, `Resource`, `Node` и `Texture2D` доказывают сквозной путь от эталона до сравнения.\n- [ ] Сравнение поведения падает на наблюдаемых расхождениях жизненного цикла, сигналов, сериализации, загрузки ресурсов, отрисовки, физики, ввода, аудио, раскладки UI и платформенной диагностики там, где класс участвует в этих сценариях.\n- [ ] Harness возвращает устойчивые диагностические сообщения для отсутствующая среда запуска Godot, отсутствующая среда запуска Electron2D, устаревшие проверки поведения, неподдержанная платформа и непроверенные ручные строки.\n- [ ] Документация, манифест API и заметки задачи синхронизированы с фактическими behavior artifacts и commands.\n\n### Подзадачи\n\n- [ ] Зафиксировать probe/golden/overlay schema в доменном документе.\n- [ ] Добавить сначала падающие проверки на отсутствующие проверки поведения, устаревшие описания поведения и неутверждённые отчёты о расхождениях поведения.\n- [ ] Реализовать behavior generation, Godot runner, Electron2D runner и comparison commands.\n- [ ] Добавить reusable class-family overlays для Object/Resource/Node/Texture/UI/Physics/Audio families.\n- [ ] Обновить документацию, сгенерированные файлы и заметки задачи и запустить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

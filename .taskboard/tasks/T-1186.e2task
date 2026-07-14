@@ -1,0 +1,121 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-7c11469ca1744990a7758d80df8a3e1f",
+  "revision": 7,
+  "taskId": "T-1186",
+  "legacyAliases": [],
+  "title": "Сделать FFmpeg-утилиту единственным путём UI-захвата для агентов",
+  "description": "Изменить repository agent workflow: Windows-control и computer-use screenshot backend полностью запрещены для визуальной проверки UI Electron2D. Для каждой UI-задачи единственным разрешённым путём реального Windows capture является tracked python eng/tools/capture_window.py через ffmpeg gdigrab с сохранением PNG под .temp и обязательным визуальным просмотром. Unit/Extension Host остаются дополнительными проверками, headless/fixture не заменяют реальный capture. Связанные файлы: docs/repository/agent-workflow.md, eng/tools/capture_window.py, data/dev-diary/2026/07 Июль/12-07-2026.md. Проверки: docs update/check/verify, taskboard verify, git diff --check.",
+  "status": "Review",
+  "acceptanceState": "InternalReview",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "mandatory-ffmpeg-capture",
+      "description": "Agent workflow запрещает Windows-control/computer-use screenshots и требует eng/tools/capture_window.py для визуальной проверки каждой UI-задачи.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-a0bf8f9353094393ab90195c4868f91e",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-12T13:00:37.2174367+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to InProgress."
+      }
+    },
+    {
+      "activityEntryId": "activity-a9900fadd2eb459d890033f8ed5ac2d3",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-12T13:02:51.5367143+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Review."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-12T13:00:30.0561173+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "activity-26c636ff1b5a45f2a17dab1cfc009b52",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-12T13:02:50.2173398+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "docs/repository/agent-workflow.md теперь определяет eng/tools/capture_window.py как единственный разрешённый screenshot path для каждой UI-задачи и явно запрещает Windows-control/computer-use capture даже при доступном backend. Post-change PNG и его визуальный просмотр обязательны; unit/Extension Host/headless/fixture не заменяют capture. При отказе helper verification остаётся blocked. docs update/check/verify прошли."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

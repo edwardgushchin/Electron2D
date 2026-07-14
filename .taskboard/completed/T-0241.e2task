@@ -1,0 +1,637 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-b892bc8650e54fd05773e55874522370",
+  "revision": 2,
+  "taskId": "T-0241",
+  "legacyAliases": [],
+  "title": "Зафиксировать полный контракт совместимости Godot 4.7 для публичного API",
+  "description": "## T-0241 [x] P0: Зафиксировать полный контракт совместимости Godot 4.7 для публичного API\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Завершена: 2026-07-06T11:33:49+03:00\n- Принята внешним аудитом: 2026-07-06T02:43:00+03:00 primary r07 VERDICT: ACCEPT; 2026-07-06T03:26:00+03:00 control r07 VERDICT: ACCEPT.\n- Архивная причина: пользователь явно дал команду закрыть задачу и сделать commit после сохранённых primary/control ACCEPT, закрытых actionable follow-up notes и удаления временных audit-артефактов.\n- Коммит: chore: close T-0241 public API compatibility contract\n- Состояние: accepted/closed\n- Приоритет: P0\n- Execution class: `completed`\n- Scheduling tier: `accepted`\n- Зависимости: нет\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/release-management/api-compatibility.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/release-management/api-compatibility.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\nЗадача относится к подготовке полного публичного API Electron2D 0.1-preview, совместимого с Godot 4.7. Единый контракт фиксирует простое правило: каждая публичная сущность должна совпадать с Godot 4.7 не только по списку методов, свойств, сигналов, перечислений и констант, но и по наблюдаемому поведению, ошибкам, жизненному циклу и ожиданиям разработчика.\n\nОжидаемый результат: этот базовый срез становится рабочим контрактом для всех последующих задач. Он закрепляет источники данных Godot, владельцев сгенерированных описаний, правила проверки поведения, C# как единственный публичный путь для скриптов и HLSL как единственный публичный язык исходного кода шейдеров.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Корневой контракт совместимости\n- Входные данные Godot закреплены на `4.7-stable`. Официальная справка, XML-описания классов и экспорт API становятся источником истины только через сгенерированные файлы `T-0242`.\n- Публичный путь для скриптов — только C#. `GDScript`, совместимость с рантаймом скриптов Godot и прямое копирование привязок Godot C# не входят в задачу без отдельного будущего решения.\n- Публичный язык исходного кода шейдеров — только HLSL. Godot Shader Language, GLSL и MSL не являются публичными авторскими языками; платформенные результаты создаются внутренними задачами шейдеров и рендеринга.\n- `T-0242` отвечает за сгенерированные описания API и указатели; `T-0243` — за отчёты о расхождениях и правила падения проверок; `T-0244` — за проверки поведения и отчёты о расхождениях поведения; `T-0245` — за контроль готовности каждого класса.\n- `TASKS.md` и доменные документы не должны вручную переписывать списки публичных элементов API Godot. Они ссылаются на сгенерированные описания и описывают границы задачи, поведение, связь с внутренними слоями и подтверждения.\n- Строки `Deferred` и `Unsupported` требуют явного утверждения через `T-0963`, должны быть видны в отчётах API/поведения и проверяются финальным рубежом `T-0980`.\n- Обязательные платформенные проверки для `0.1-preview`: Windows, Linux, macOS, Android, iOS и WebAssembly browser. Windows/Linux/macOS требуют runtime+editor diagnostics; Android/iOS/WebAssembly browser требуют runtime/export diagnostics без editor surface.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [x] Доменный документ фиксирует источник истины, понятные границы, потребителей, внутренние возможности, платформенную матрицу, диагностику и путь подтверждения именно для этой задачи.\n- [x] Контракт совместимости называет `T-0242`, `T-0243`, `T-0244` и `T-0245` единственными владельцами сгенерированных описаний публичной поверхности, проверки совместимости, подтверждений поведения и контрольных проверок по классам.\n- [x] Контракт запрещает вручную переписывать списки публичных элементов API в `TASKS.md` и доменных документах; задачи публичных типов ссылаются на сгенерированные описания.\n- [x] Контракт фиксирует C# как единственный публичный путь для скриптов и HLSL как единственный публичный язык исходного кода шейдеров, с исключением GDScript, Godot Shader Language, GLSL и MSL из публичного авторского пути.\n- [x] Контракт определяет утверждение `Deferred`/`Unsupported` через `T-0963`, обязательные платформенные проверки 0.1-preview, desktop editor targets Windows/Linux/macOS и runtime-only targets Android/iOS/WebAssembly browser.\n- [x] `EditorOnly` public/API rows не считаются неподдержанными по умолчанию: они сохраняются как будущий editor-scope и получают runtime-only diagnostics только там, где редакторская поверхность неприменима.\n- [x] Добавлены сначала падающие, затем проходящие контрактные тесты или проверочный срез для названной возможности, включая диагностические сообщения об ошибках и запрет неподтверждённых добавлений публичного API.\n- [x] Реализация или инструмент работает в рабочем пути для названной возможности, использует утверждённые внутренние слои и возвращает устойчивые диагностические сообщения при неподдержанном окружении.\n- [x] Проверки включают негативные сценарии, различия платформ, первое подтверждение связи с потребителем и регрессии против фасадного поведения, заглушек и пустых веток.\n- [x] Документация, сгенерированные файлы/манифест API и заметки задачи синхронизированы с фактическим поведением и подтверждение командами.\n\n### Подзадачи\n\n- [x] Зафиксировать границы задачи без дополнительного контекста, источник истины, таблицу потребителей и явные нецели в доменном документе.\n- [x] Зафиксировать корневой контракт совместимости: закреплённый `4.7-stable`, владение сгенерированными файлами, скрипты на C#, исходный код шейдеров на HLSL, `Deferred`/`Unsupported` и политику целевых платформ.\n- [x] Добавить сначала падающие контрактные тесты и проверяющие команды для названной возможности, включая диагностические сообщения об ошибках.\n- [x] Реализовать рабочий путь для названной возможности без заглушек, временного или пустого поведения.\n- [x] Добавить первое подтверждение связи с потребителем и проверку производительности, если возможность влияет на критический путь выполнения.\n- [x] Обновить документацию, сгенерированные файлы и заметки задачи и запустить релевантные проверки.\n\n### Текущее evidence\n\n- 2026-07-05T19:56:00+03:00 - Ready-to-start gate пройден: задача `open`, зависимости отсутствуют, внешних blocker-ов без текущего user override не найдено; пользователь подтвердил, что `T-0241` обновляет существующий доменный документ `docs/release-management/api-compatibility.md`, не реализует публичные классы и даёт evidence по контракту.\n- 2026-07-05T20:01:00+03:00 - RED: после добавления root-contract verifier-а команда `dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki` упала с `E2D-BUILD-API-COMPATIBILITY-CONTRACT-FRAGMENT` и `E2D-BUILD-API-COMPATIBILITY-CONTRACT-OBSOLETE` на stale-ссылке на прежний `docs/runtime/...` документ, старом profile name и ручных `2D`-profile/subset формулировках.\n- 2026-07-05T20:05:00+03:00 - GREEN: после обновления root contract, tracked docs/templates, manifest profile metadata и generated `data/api/electron2d-api-manifest.json` команда `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify api-compatibility --wiki-path .github/wiki` прошла: `E2D-BUILD-API-MANIFEST-SHAPE-PASSED`, `E2D-BUILD-API-COMPATIBILITY-PASSED`, public types `175`.\n- 2026-07-05T20:08:00+03:00 - Focused tests: `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~VerifyApiCompatibility\" --no-restore -v:minimal` прошёл `5/5`; `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ApiManifestTests|FullyQualifiedName~ApiCompareGodot|FullyQualifiedName~ProjectTemplate\" --no-build --no-restore -v:minimal` прошёл `21/21`.\n- 2026-07-05T20:17:00+03:00 - Medium checks: `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal` passed, warnings `0`; `update api-manifest --wiki-path .github/wiki --check` passed; `update docs --check` passed; `verify api-compatibility --wiki-path .github/wiki` passed, public types `175`; `verify docs` passed; `verify audit-contracts` passed, `12/12`, `73ms`, Heavy not-run; `verify manifests` passed; `verify licenses` passed, `663` source files; `git diff --check` passed with only Git LF-normalization warning for `TASKS.md`.\n- 2026-07-05T20:35:00+03:00 - Audit package r01: portable preflight evidence rebuilt, `audit-medium` passed `10/10`, `audit-heavy` passed `14/14`, `git diff --check` passed; `audit package --task T-0241 --iteration r01 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.input.json --out .temp/audit/T-0241-r01` created and verified `.temp/audit/T-0241-r01/T-0241-audit-r01.zip` plus operator workflow sidecar. Repo-owned audit scope excludes full `TASKS.md`/diary and CLI files with baseline-local placeholders; package includes portable task/diary excerpts and the root-contract docs/generated/verifier/test slice.\n- 2026-07-05T21:13:00+03:00 - Primary r01 external audit saved `docs/verdicts/release-management/t-0241-audit-r01.md` with `VERDICT: NEEDS_FIXES`: B1 manual stale public type list in domain contract, B2 missing consumer/internal-capability/evidence map, B3 hidden generated docs index hash for `docs/cli/e2d-cli.md`.\n- 2026-07-05T21:20:00+03:00 - r01 blocker closure in progress: domain document removes the manual public type list and points to `data/api/electron2d-api-manifest.json`/Wiki/generated reports; adds `## Карта потребителей контракта`; verifier rejects manual `Electron2D.*` Markdown lists in `TASKS.md`/domain contract and requires the consumer map in `docs/release-management/api-compatibility.md`; focused `VerifyApiCompatibility` tests passed `7/7`. Out-of-scope CLI doc/source/test edits were removed and `update docs` regenerated local docs index, closing B3 without expanding `T-0241` into Android/toolchain cleanup.\n- 2026-07-05T21:59:00+03:00 - Primary r02 external audit saved `docs/verdicts/release-management/t-0241-audit-r02.md` with `VERDICT: NEEDS_FIXES`: B1 closure was too narrow because `docs/core-types/variant.md` still stated a four-type `Public API baseline` and manually listed exported runtime public types, while generated manifest evidence reports `175` public types.\n- 2026-07-05T22:02:00+03:00 - r02 B1 closure in progress: `docs/core-types/variant.md` no longer defines the exported runtime baseline and now points to generated API manifest/Wiki/`verify api-compatibility` as source of truth; verifier rejects manual public API lists in scoped domain documents, including punctuation after closing backtick; focused `VerifyApiCompatibility` tests passed `8/8`, `verify api-compatibility --wiki-path .github/wiki` passed with public types `175`, `update docs --check` and `verify docs` passed.\n- 2026-07-05T22:15:00+03:00 - Audit package r03: portable preflight evidence rebuilt and sanitized, including build, API compatibility, focused tests, docs, audit-contracts, manifests, licenses, audit-medium, audit-heavy and `git diff --check`; `audit package --task T-0241 --iteration r03 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r03.input.json --out .temp/audit/T-0241-r03` created and verified `.temp/audit/T-0241-r03/T-0241-audit-r03.zip` plus operator workflow sidecar with `previousVerdictChain` r01+r02 and closure for r02 B1.\n- 2026-07-05T22:25:00+03:00 - Primary r03 submit blocked by local browser automation: two `audit submit --reuse-conversation` attempts against `.temp/audit/T-0241-r03/T-0241-audit-r03.zip` hung without saving `docs/verdicts/release-management/t-0241-audit-r03.md`; `.temp/audit/T-0241/conversation-url-r03.txt` was written, but `audit submit --download-report-only --project-url <r03>` also hung and was stopped. No manual verdict reading/copying was performed.\n- 2026-07-05T22:28:00+03:00 - Continuation recovery attempt: repeated `audit submit --download-report-only --project-url <r03>` using `.temp/audit/T-0241/conversation-url-r03.txt`; command again hung without saving `docs/verdicts/release-management/t-0241-audit-r03.md` and was stopped. r03 package remains verified and ready, but saved primary r03 verdict is still missing.\n- 2026-07-05T22:31:00+03:00 - Timeout-bounded official recovery: `audit submit --download-report-only --project-url <r03> --timeout-minutes 1 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-TIMEOUT` (`External audit report was not ready within 1 minutes.`). `docs/verdicts/release-management/t-0241-audit-r03.md` remains missing.\n- 2026-07-05T22:34:00+03:00 - Third consecutive goal-turn recovery attempt: repeated timeout-bounded `audit submit --download-report-only --project-url <r03>` and received the same `E2D-BUILD-AUDIT-SUBMIT-TIMEOUT` diagnostic. r03 primary verdict is still missing, so control audit, task closure and commit remain blocked by external report readiness/browser automation state.\n- 2026-07-05T22:42:00+03:00 - Primary r03 external audit saved from user-provided official report text as `docs/verdicts/release-management/t-0241-audit-r03.md` with `VERDICT: NEEDS_FIXES`: B1 `docs/releases/0.1-preview.md` still exposed `Not planned` as a waiver-status outside `Deferred`/`Unsupported` through `T-0963`; follow-ups F1/F2 noted for enum `value__` filtering and broader manual-list verifier strategy. r03 B1 closure in progress: release status table removed `Not planned`, verifier rejects unapproved waiver status rows in root-contract docs, focused `VerifyApiCompatibility` tests passed `9/9`, `verify api-compatibility --wiki-path .github/wiki`, `update docs --check` and `verify docs` passed.\n- 2026-07-05T22:46:00+03:00 - r03 follow-up closure: F2 closed inside T-0241 by expanding manual public API list scanning to all root-contract docs and adding `VerifyApiCompatibilityRejectsManualPublicApiListInReleaseRootContractDocument`; focused `VerifyApiCompatibility` tests passed `10/10`. F1 is tracked-existing by `T-0242`, which owns generated API descriptions/API manifest cleanup.\n- 2026-07-05T22:47:00+03:00 - `verify audit-followups` passed after r03 F1/F2 closure notes: `E2D-BUILD-AUDIT-FOLLOWUPS-PASSED`, 22 actionable findings across 130 saved audit reports.\n- 2026-07-05T22:56:00+03:00 - r04 preflight evidence rebuilt and sanitized: build, `verify api-compatibility`, focused `VerifyApiCompatibility` tests `10/10`, API surface tests, `update api-manifest --check`, `update docs --check`, `verify docs`, `verify audit-contracts`, `verify audit-followups`, `verify manifests`, `verify licenses`, `audit-medium`, `audit-heavy` and `git diff --check` all passed.\n- 2026-07-05T22:59:00+03:00 - Audit loop stabilization check added for r04 after package guard `E2D-BUILD-AUDIT-CONFIG-INVALID`: named preflight `audit-loop-stabilization` reruns focused `VerifyApiCompatibility` coverage for r01-r03 root-contract failure classes and passed `10/10`; evidence sanitized and added to `.temp/audit/T-0241/audit-package.r04.input.json`.\n- 2026-07-05T23:01:00+03:00 - Audit package r04 created and verified: `audit package --task T-0241 --iteration r04 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r04.input.json --out .temp/audit/T-0241-r04` produced `.temp/audit/T-0241-r04/T-0241-audit-r04.zip` and operator workflow sidecar; package verify exitCode `0`.\n- 2026-07-05T23:07:00+03:00 - Primary r04 submit blocked by external report readiness/browser automation: `audit submit --reuse-conversation --zip .temp/audit/T-0241-r04/T-0241-audit-r04.zip --out docs/verdicts/release-management/t-0241-audit-r04.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-TIMEOUT` (`External audit report was not ready within 5 minutes.`). `docs/verdicts/release-management/t-0241-audit-r04.md` was not created.\n- 2026-07-05T23:45:00+03:00 - User-requested profile label cleanup: generated API manifest/profile display text now uses `Electron2D 0.1-preview` without the `Godot 4.7 public API` suffix, while `godotBaseline` remains `4.7-stable`; `update api-manifest --check`, focused `ApiManifestTests|ApiCompareGodot|ProjectTemplate|VerifyApiCompatibility` tests `31/31`, `update docs --check`, `verify docs`, `verify api-compatibility --wiki-path .github/wiki` and `git diff --check` passed. Existing r04 package predated this cleanup and was treated as stale.\n- 2026-07-05T23:54:00+03:00 - r04 preflight evidence rebuilt after profile label cleanup: build, `verify api-compatibility`, focused `VerifyApiCompatibility`, `audit-loop-stabilization`, API surface tests, `update api-manifest --check`, `update docs --check`, `verify docs`, `verify audit-contracts`, `verify audit-followups`, `verify manifests`, `verify licenses`, `audit-medium`, `audit-heavy` and `git diff --check` all passed; portable task/diary excerpts were refreshed and sanitized, and r04 package config scope summary now notes the simplified display label.\n- 2026-07-06T00:04:00+03:00 - Final r04 package after profile label cleanup was rebuilt and verified at `.temp/audit/T-0241-r04/T-0241-audit-r04.zip` with operator workflow sidecar; official `audit submit --reuse-conversation --zip .temp/audit/T-0241-r04/T-0241-audit-r04.zip --out docs/verdicts/release-management/t-0241-audit-r04.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-TIMEOUT` (`External audit report was not ready within 5 minutes.`). `docs/verdicts/release-management/t-0241-audit-r04.md` was not created; current goal remains blocked on external report readiness/browser automation.\n- 2026-07-06T00:12:00+03:00 - Primary r04 external audit saved from user-provided official report text as `docs/verdicts/release-management/t-0241-audit-r04.md` with `VERDICT: NEEDS_FIXES`: B1 found manual fenced/bare-name public API lists in `docs/releases/0.1-preview.md` and incomplete verifier coverage. RED reproduced by `VerifyApiCompatibilityRejectsFencedBarePublicApiListInReleaseRootContractDocument` failing with exitCode `0`; closure removes/rephrases release-note code fences into generated-artifact references, extends verifier to reject fenced bare API names in public API/baseline contexts, then focused test passed `1/1`, focused `VerifyApiCompatibility` passed `11/11`, `verify api-compatibility --wiki-path .github/wiki`, `update docs --check`, `verify docs`, `verify licenses` and `verify audit-followups` passed.\n- 2026-07-06T00:17:00+03:00 - r05 preflight evidence rebuilt after r04 B1 closure: build, `verify api-compatibility`, focused `VerifyApiCompatibility` tests, `audit-loop-stabilization`, API surface tests, `update api-manifest --check`, `update docs --check`, `verify docs`, `verify audit-contracts`, `verify audit-followups`, `verify manifests`, `verify licenses`, `audit-medium`, `audit-heavy` and `git diff --check` all passed. `git diff --check` reported only the known LF-normalization warning for `TASKS.md`.\n- 2026-07-06T00:24:00+03:00 - Audit package r05 created and verified: `audit package --task T-0241 --iteration r05 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r05.input.json --out .temp/audit/T-0241-r05` produced `.temp/audit/T-0241-r05/T-0241-audit-r05.zip` and operator workflow sidecar; package verify exitCode `0`. Official `audit submit --reuse-conversation --zip .temp/audit/T-0241-r05/T-0241-audit-r05.zip --out docs/verdicts/release-management/t-0241-audit-r05.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-TIMEOUT` (`External audit report was not ready within 5 minutes.`). `docs/verdicts/release-management/t-0241-audit-r05.md` was not created; goal remains blocked on external report readiness/browser automation.\n- 2026-07-06T00:30:00+03:00 - Official r05 recovery attempt using `.temp/audit/T-0241/conversation-url-r05.txt` failed before report download: `audit submit --download-report-only --project-url <r05> --out docs/verdicts/release-management/t-0241-audit-r05.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-PROTOCOL` because CDP reattach repeatedly timed out on `Page.enable`. `docs/verdicts/release-management/t-0241-audit-r05.md` remains absent; no active `audit submit` process remained after the command exited.\n- 2026-07-06T00:34:00+03:00 - Third consecutive resumed r05 report recovery turn: official `audit submit --download-report-only --project-url <r05> --out docs/verdicts/release-management/t-0241-audit-r05.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-REPORT-STILL-GENERATING` (`The report page is still generating; download-report-only does not reload or resubmit the page.`). `docs/verdicts/release-management/t-0241-audit-r05.md` is still absent; without saved primary r05 verdict, control audit, closure, cleanup and commit remain blocked on external report readiness/browser automation.\n- 2026-07-06T00:44:00+03:00 - Primary r05 external audit saved from user-provided official report text as `docs/verdicts/release-management/t-0241-audit-r05.md` with `VERDICT: NEEDS_FIXES`: B1 found residual manual public API fragments in `docs/releases/0.1-preview.md` (`RenderingServer.*`, `RenderingDeviceFeatures.*`, marker attributes and inline physics/animation/audio baseline lists); B2 found that `docs/documentation/github-wiki-api-reference.md` is verifier root-contract surface but was missing as a full audit package snapshot.\n- 2026-07-06T00:51:00+03:00 - r05 B1/B2 closure in progress: release note residual fragments were rewritten into behavior/source-of-truth prose; `RepositoryPolicyVerifiers` now builds manual public API names from the generated manifest and hardcoded marker/fence names, applies advanced fenced/inline detection only to root-contract docs, and keeps the broader bullet-list guard for scoped documents. Added RED/GREEN regressions for fenced `RenderingServer.*`, fenced `[Export]`/`[Signal]`/`[Tool]` and inline generated type lists; focused r05 regression tests passed `3/3`, focused `VerifyApiCompatibility` passed `14/14`, and `verify api-compatibility --wiki-path .github/wiki` passed with public types `175`. r06 package must include full `docs/documentation/github-wiki-api-reference.md` snapshot to close B2.\n- 2026-07-06T01:01:00+03:00 - r06 preflight evidence rebuilt: build-tool build, `verify api-compatibility`, focused `VerifyApiCompatibility` tests, `audit-loop-stabilization`, API surface tests, `update api-manifest --check`, `update docs --check`, `verify docs`, `verify audit-contracts`, `verify audit-followups`, `verify manifests`, `verify licenses`, `audit-medium`, `audit-heavy`, `git diff --check` and portable task/diary excerpts all passed. Evidence scan across `.temp/audit-evidence/preflight` found no local absolute Windows paths.\n- 2026-07-06T01:08:00+03:00 - r05 B2 closure refined: `docs/documentation/github-wiki-api-reference.md` now explicitly states that Wiki API reference is a generated source-of-truth consumer and not a manual public API list. This keeps the file in root-contract verifier paths, makes the full snapshot part of the r06 patch/restore set, and avoids relying on an unchanged allowlist-only snapshot that `audit package verify` cannot restore as a changed repo file.\n- 2026-07-06T01:16:00+03:00 - Audit package r06 created and verified: `audit package --task T-0241 --iteration r06 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r06.input.json --out .temp/audit/T-0241-r06 --force` produced `.temp/audit/T-0241-r06/T-0241-audit-r06.zip` and operator workflow sidecar; sidecar summary reported `audit-package-message exitCode=0` and `audit-package-verify exitCode=0`. Official `audit submit --reuse-conversation --zip .temp/audit/T-0241-r06/T-0241-audit-r06.zip --out docs/verdicts/release-management/t-0241-audit-r06.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-TIMEOUT` (`External audit report was not ready within 5 minutes.`). `docs/verdicts/release-management/t-0241-audit-r06.md` was not created; no manual Chrome reading/copying was performed.\n- 2026-07-06T01:40:00+03:00 - Primary r06 external audit recovered through official `audit submit --download-report-only --project-url <r06> --out docs/verdicts/release-management/t-0241-audit-r06.md --browser-backend codex-chrome`: first retry hit `E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-PROTOCOL`, second retry saved `docs/verdicts/release-management/t-0241-audit-r06.md` with `VERDICT: NEEDS_FIXES`. Recovery was implemented in the build tool as controlled ordinary assistant copy fallback for ready existing conversations before Deep Research export fallback; no arbitrary manual DOM verdict was saved.\n- 2026-07-06T01:58:00+03:00 - r06 B1 closure in progress: `docs/core-types/variant.md`, `docs/rendering/texture-resource-baseline.md` and `docs/scripting/editor-script-workflow.md` no longer use manual C# public API signatures, method/property lists or dense public UI prerequisite lists as source of truth; those sections now describe behavior/capability boundaries and point exact public surfaces to generated API artifacts and owner tasks. `RepositoryPolicyVerifiers` now includes these scoped docs in advanced manual-list scanning, detects C# public declaration fences, and covers the named UI/texture/variant formats from r06.\n- 2026-07-06T02:28:00+03:00 - r07 preflight evidence rebuilt after r06 B1 closure: build-tool build passed with warnings `0`; `verify api-compatibility --wiki-path .github/wiki` passed with public types `175`; focused `VerifyApiCompatibility` passed `17/17` for both `api-compatibility-tests` and `audit-loop-stabilization`; audit-submit recovery/documentation focused tests passed `2/2`; API surface slice passed `21/21`; `update api-manifest --check`, `update docs --check`, `verify docs`, `verify audit-contracts`, `verify audit-followups`, `verify manifests`, `verify licenses`, `audit-medium` (`10/10`), `audit-heavy` (`14/14`) and `git diff --check` passed. Evidence was sanitized to remove local absolute paths; `git diff --check` output contains only the known `TASKS.md` LF-normalization warning.\n- 2026-07-06T02:34:00+03:00 - Audit package r07 created and verified: `audit package --task T-0241 --iteration r07 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r07.input.json --out .temp/audit/T-0241-r07 --force` produced `.temp/audit/T-0241-r07/T-0241-audit-r07.zip`; operator workflow sidecar reported `audit-package-message exitCode=0` and `audit-package-verify exitCode=0`.\n- 2026-07-06T02:43:00+03:00 - Primary r07 external audit saved by official recovery after submit timeout and two `REPORT-STILL-GENERATING` waits: `docs/verdicts/release-management/t-0241-audit-r07.md` has `VERDICT: ACCEPT` and `BLOCKERS: No blockers found`. r07 accepts closure for r06 B1 and all prior blockers. Non-blocking `FOLLOW_UP_FINDING F1` about overly aggressive preflight evidence sanitizer is tracked as new `T-0982`.\n- 2026-07-06T02:47:00+03:00 - Post-accept follow-up checks passed: `verify audit-followups` passed for `23` actionable findings across `134` saved audit reports after linking r07 F1 to `T-0982`; `update docs --check` passed; `verify docs` passed; `git diff --check` exitCode `0` with only the known `TASKS.md` LF-normalization warning.\n- 2026-07-06T03:26:00+03:00 - Control audit package created and verified from clean-control config `.temp/audit/T-0241/audit-package.r07.control.input.json`: `metadata.previousVerdictChain` and `metadata.blockerClosureList` are empty, `task-ledger-excerpts` are excluded, and `.temp/audit/T-0241-r07-control/T-0241-audit-r07.zip` verified with operator workflow sidecar exitCode `0` for both package message and package verify.\n- 2026-07-06T03:26:00+03:00 - First official control submit timed out after `15` minutes; second official `audit submit --control-audit` against the same clean-control ZIP with `--timeout-minutes 30` saved `docs/verdicts/release-management/t-0241-audit-control-r07.md` with `VERDICT: ACCEPT` and `BLOCKERS: No blockers found`. The control report adds non-blocking `FOLLOW_UP_FINDING F1` for duplicated generated method signatures; it is tracked as new `T-0983`.\n- 2026-07-06T03:27:00+03:00 - Post-control checks passed: `verify audit-followups` passed for `24` actionable findings across `135` saved audit reports after linking control r07 F1 to `T-0983`; `update docs --check` passed; `verify docs` passed; `git diff --check` exitCode `0` with only the known `TASKS.md` LF-normalization warning.\n- 2026-07-06T03:31:00+03:00 - Temporary audit artifacts for `T-0241` were removed after primary and control `VERDICT: ACCEPT`: `.temp/audit/T-0241*`, `.temp/audit-clean/T-0241*` and `.temp/audit-evidence/preflight` were resolved and validated under workspace `.temp` before recursive deletion. Durable reports remain in `docs/verdicts/release-management/`.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-r03.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-0242\n  - rationale: r03 F1 concerns generated API manifest descriptions leaking CLR enum backing field `value__`; `T-0242` owns generated API descriptions and API manifest source-of-truth work, so the cleanup belongs there without expanding the root-contract closure slice.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-r03.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0241\n  - rationale: r03 F2 suggested broadening manual public API list guard coverage; current T-0241 iteration closes it by scanning all root-contract docs and proving a manual `Electron2D.*` list in `docs/releases/0.1-preview.md` fails with `E2D-BUILD-API-COMPATIBILITY-CONTRACT-MANUAL-LIST`.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-r05.md\n  - id: BLOCKER B1\n  - state: closed\n  - target: T-0241\n  - rationale: r06 primary audit confirmed the concrete release-note fragments from r05 are removed: `docs/releases/0.1-preview.md` no longer contains the residual `RenderingServer.*`, `RenderingDeviceFeatures.*`, marker attribute or inline physics/animation/audio manual API lists, and verifier/tests cover those root-contract formats.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-r05.md\n  - id: BLOCKER B2\n  - state: closed\n  - target: T-0241\n  - rationale: r06 primary audit confirmed `docs/documentation/github-wiki-api-reference.md` is included as a full package snapshot and documented as a generated source-of-truth consumer rather than a manual public API list.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-r06.md\n  - id: BLOCKER B1\n  - state: closed\n  - target: T-0241\n  - rationale: r07 primary audit accepted the closure: the scoped-domain documents no longer define manual public API source-of-truth lists, and `RepositoryPolicyVerifiers` plus focused `VerifyApiCompatibility` tests reject the real r06 C# declaration fence, texture declaration fence and dense UI prerequisite formats.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-r07.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0982\n  - rationale: r07 accepted T-0241 and classified the evidence sanitizer placeholder-per-character issue as a separate non-blocking P2 follow-up. `T-0982` tracks the sanitizer/readability fix without expanding the accepted T-0241 scope or rewriting saved audit packages.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-control-r07.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0983\n  - rationale: control r07 accepted T-0241 and classified duplicate generated method signatures as a separate P1 API manifest/tooling follow-up. `T-0983` tracks the generator/manifest formatting fix without expanding the accepted T-0241 scope.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n2026-07-05T19:56:00+03:00 - Взято в работу после ready-to-start gate; stale-ссылка на несуществующий `docs/runtime/...` заменена существующим доменным документом `docs/release-management/api-compatibility.md` по текущему решению пользователя.\n\n\n### Архивное закрытие\n\n- 2026-07-06T11:33:49+03:00 - Пользователь явно подтвердил закрытие T-0241 и commit. Задача удалена из активного TASKS.md; follow-up T-0982 и T-0983 остаются активными отдельными задачами.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0015",
+    "tag-0016",
+    "tag-0021"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ фиксирует источник истины, понятные границы, потребителей, внутренние возможности, платформенную матрицу, диагностику и путь подтверждения именно для этой задачи.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b892bc8650e54fd05773e55874522370/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Контракт совместимости называет `T-0242`, `T-0243`, `T-0244` и `T-0245` единственными владельцами сгенерированных описаний публичной поверхности, проверки совместимости, подтверждений поведения и контрольных проверок по классам.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b892bc8650e54fd05773e55874522370/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Контракт запрещает вручную переписывать списки публичных элементов API в `TASKS.md` и доменных документах; задачи публичных типов ссылаются на сгенерированные описания.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b892bc8650e54fd05773e55874522370/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Контракт фиксирует C# как единственный публичный путь для скриптов и HLSL как единственный публичный язык исходного кода шейдеров, с исключением GDScript, Godot Shader Language, GLSL и MSL из публичного авторского пути.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b892bc8650e54fd05773e55874522370/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Контракт определяет утверждение `Deferred`/`Unsupported` через `T-0963`, обязательные платформенные проверки 0.1-preview, desktop editor targets Windows/Linux/macOS и runtime-only targets Android/iOS/WebAssembly browser.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b892bc8650e54fd05773e55874522370/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "`EditorOnly` public/API rows не считаются неподдержанными по умолчанию: они сохраняются как будущий editor-scope и получают runtime-only diagnostics только там, где редакторская поверхность неприменима.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b892bc8650e54fd05773e55874522370/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Добавлены сначала падающие, затем проходящие контрактные тесты или проверочный срез для названной возможности, включая диагностические сообщения об ошибках и запрет неподтверждённых добавлений публичного API.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b892bc8650e54fd05773e55874522370/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Реализация или инструмент работает в рабочем пути для названной возможности, использует утверждённые внутренние слои и возвращает устойчивые диагностические сообщения при неподдержанном окружении.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b892bc8650e54fd05773e55874522370/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Проверки включают негативные сценарии, различия платформ, первое подтверждение связи с потребителем и регрессии против фасадного поведения, заглушек и пустых веток.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b892bc8650e54fd05773e55874522370/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Документация, сгенерированные файлы/манифест API и заметки задачи синхронизированы с фактическим поведением и подтверждение командами.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b892bc8650e54fd05773e55874522370/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T16:56:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Взято в работу после ready-to-start gate; stale-ссылка на несуществующий `docs/runtime/...` заменена существующим доменным документом `docs/release-management/api-compatibility.md` по текущему решению пользователя."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-07-06T08:33:49.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required for final acceptance unless a parent gate explicitly owns audit evidence"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".temp/audit-clean/T-0241*"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": ".temp/audit-evidence/preflight"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": ".temp/audit/T-0241*"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": ".temp/audit/T-0241-r01/T-0241-audit-r01.zip"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": ".temp/audit/T-0241-r03/T-0241-audit-r03.zip"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": ".temp/audit/T-0241-r04/T-0241-audit-r04.zip"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": ".temp/audit/T-0241-r05/T-0241-audit-r05.zip"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": ".temp/audit/T-0241-r06/T-0241-audit-r06.zip"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": ".temp/audit/T-0241-r07-control/T-0241-audit-r07.zip"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": ".temp/audit/T-0241-r07/T-0241-audit-r07.zip"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": ".temp/audit/T-0241/audit-package.r04.input.json"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": ".temp/audit/T-0241/audit-package.r07.control.input.json"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": ".temp/audit/T-0241/conversation-url-r03.txt"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": ".temp/audit/T-0241/conversation-url-r05.txt"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "10/10"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "11/11"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "File",
+      "value": "14/14"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": "17/17"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": "2/2"
+    },
+    {
+      "linkId": "link-0022",
+      "kind": "File",
+      "value": "21/21"
+    },
+    {
+      "linkId": "link-0023",
+      "kind": "File",
+      "value": "3/3"
+    },
+    {
+      "linkId": "link-0024",
+      "kind": "File",
+      "value": "31/31"
+    },
+    {
+      "linkId": "link-0025",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0026",
+      "kind": "File",
+      "value": "7/7"
+    },
+    {
+      "linkId": "link-0027",
+      "kind": "File",
+      "value": "8/8"
+    },
+    {
+      "linkId": "link-0028",
+      "kind": "File",
+      "value": "9/9"
+    },
+    {
+      "linkId": "link-0029",
+      "kind": "File",
+      "value": "audit package --task T-0241 --iteration r01 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.input.json --out .temp/audit/T-0241-r01"
+    },
+    {
+      "linkId": "link-0030",
+      "kind": "File",
+      "value": "audit package --task T-0241 --iteration r03 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r03.input.json --out .temp/audit/T-0241-r03"
+    },
+    {
+      "linkId": "link-0031",
+      "kind": "File",
+      "value": "audit package --task T-0241 --iteration r04 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r04.input.json --out .temp/audit/T-0241-r04"
+    },
+    {
+      "linkId": "link-0032",
+      "kind": "File",
+      "value": "audit package --task T-0241 --iteration r05 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r05.input.json --out .temp/audit/T-0241-r05"
+    },
+    {
+      "linkId": "link-0033",
+      "kind": "File",
+      "value": "audit package --task T-0241 --iteration r06 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r06.input.json --out .temp/audit/T-0241-r06 --force"
+    },
+    {
+      "linkId": "link-0034",
+      "kind": "File",
+      "value": "audit package --task T-0241 --iteration r07 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r07.input.json --out .temp/audit/T-0241-r07 --force"
+    },
+    {
+      "linkId": "link-0035",
+      "kind": "File",
+      "value": "audit submit --download-report-only --project-url <r05> --out docs/verdicts/release-management/t-0241-audit-r05.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1"
+    },
+    {
+      "linkId": "link-0036",
+      "kind": "File",
+      "value": "audit submit --download-report-only --project-url <r06> --out docs/verdicts/release-management/t-0241-audit-r06.md --browser-backend codex-chrome"
+    },
+    {
+      "linkId": "link-0037",
+      "kind": "File",
+      "value": "audit submit --reuse-conversation --zip .temp/audit/T-0241-r04/T-0241-audit-r04.zip --out docs/verdicts/release-management/t-0241-audit-r04.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1"
+    },
+    {
+      "linkId": "link-0038",
+      "kind": "File",
+      "value": "audit submit --reuse-conversation --zip .temp/audit/T-0241-r05/T-0241-audit-r05.zip --out docs/verdicts/release-management/t-0241-audit-r05.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1"
+    },
+    {
+      "linkId": "link-0039",
+      "kind": "File",
+      "value": "audit submit --reuse-conversation --zip .temp/audit/T-0241-r06/T-0241-audit-r06.zip --out docs/verdicts/release-management/t-0241-audit-r06.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1"
+    },
+    {
+      "linkId": "link-0040",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0041",
+      "kind": "File",
+      "value": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "linkId": "link-0042",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0043",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "link-0044",
+      "kind": "File",
+      "value": "docs/core-types/variant.md"
+    },
+    {
+      "linkId": "link-0045",
+      "kind": "File",
+      "value": "docs/documentation/github-wiki-api-reference.md"
+    },
+    {
+      "linkId": "link-0046",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0047",
+      "kind": "File",
+      "value": "docs/releases/0.1-preview.md"
+    },
+    {
+      "linkId": "link-0048",
+      "kind": "File",
+      "value": "docs/rendering/texture-resource-baseline.md"
+    },
+    {
+      "linkId": "link-0049",
+      "kind": "File",
+      "value": "docs/runtime/..."
+    },
+    {
+      "linkId": "link-0050",
+      "kind": "File",
+      "value": "docs/scripting/editor-script-workflow.md"
+    },
+    {
+      "linkId": "link-0051",
+      "kind": "Directory",
+      "value": "docs/verdicts/release-management"
+    },
+    {
+      "linkId": "link-0052",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0241-audit-control-r07.md"
+    },
+    {
+      "linkId": "link-0053",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0241-audit-r01.md"
+    },
+    {
+      "linkId": "link-0054",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0241-audit-r02.md"
+    },
+    {
+      "linkId": "link-0055",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0241-audit-r03.md"
+    },
+    {
+      "linkId": "link-0056",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0241-audit-r04.md"
+    },
+    {
+      "linkId": "link-0057",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0241-audit-r05.md"
+    },
+    {
+      "linkId": "link-0058",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0241-audit-r06.md"
+    },
+    {
+      "linkId": "link-0059",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0241-audit-r07.md"
+    },
+    {
+      "linkId": "link-0060",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0061",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0062",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0063",
+      "kind": "File",
+      "value": "update api-manifest --wiki-path .github/wiki --check"
+    },
+    {
+      "linkId": "link-0064",
+      "kind": "File",
+      "value": "verify api-compatibility --wiki-path .github/wiki"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.",
+      "docs/release-management/api-compatibility.md is current and RED tests/verifiers can be added before production changes."
+    ],
+    "stopConditions": [
+      "implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.",
+      "tests, domain document or generated source-of-truth artifacts are missing or stale.",
+      "a shortcut would introduce facade, stub, hidden fallback or undocumented behavior."
+    ],
+    "allowedChanges": [
+      "files named in this task's `Ссылки` block and their owning tests/docs.",
+      "generated artifacts only through their owning generator/verifier.",
+      "`TASKS.md` notes/current evidence and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.",
+      "public API surface not present in generated Godot 4.7 packets.",
+      "unrelated formatting, dependency graph or metadata churn."
+    ],
+    "requiredOutputs": [
+      "docs/release-management/api-compatibility.md",
+      "RED/GREEN test or verifier evidence for the selected slice.",
+      "synchronized XML/docs/API/generated documentation evidence when public surface or docs change.",
+      "task notes/current evidence and diary entry with exact command results."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0008",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify api-compatibility --wiki-path .github/wiki",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0009",
+        "kind": "LegacyShell",
+        "text": "dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ApiManifestTests|FullyQualifiedName~ApiCompareGodot|FullyQualifiedName~ProjectTemplate\" --no-build --no-restore -v:minimal",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0010",
+        "kind": "LegacyShell",
+        "text": "dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~VerifyApiCompatibility\" --no-restore -v:minimal",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/07 Июль.md",
+      "byteOffset": 377387,
+      "byteLength": 42727,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "3d0d36a13f7b5aa6a384538e8a7ed5225ed1ea8ff2d6c785a791bf707a93a82b",
+      "markdown": "## T-0241 [x] P0: Зафиксировать полный контракт совместимости Godot 4.7 для публичного API\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Завершена: 2026-07-06T11:33:49+03:00\n- Принята внешним аудитом: 2026-07-06T02:43:00+03:00 primary r07 VERDICT: ACCEPT; 2026-07-06T03:26:00+03:00 control r07 VERDICT: ACCEPT.\n- Архивная причина: пользователь явно дал команду закрыть задачу и сделать commit после сохранённых primary/control ACCEPT, закрытых actionable follow-up notes и удаления временных audit-артефактов.\n- Коммит: chore: close T-0241 public API compatibility contract\n- Состояние: accepted/closed\n- Приоритет: P0\n- Execution class: `completed`\n- Scheduling tier: `accepted`\n- Зависимости: нет\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/release-management/api-compatibility.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/release-management/api-compatibility.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\nЗадача относится к подготовке полного публичного API Electron2D 0.1-preview, совместимого с Godot 4.7. Единый контракт фиксирует простое правило: каждая публичная сущность должна совпадать с Godot 4.7 не только по списку методов, свойств, сигналов, перечислений и констант, но и по наблюдаемому поведению, ошибкам, жизненному циклу и ожиданиям разработчика.\n\nОжидаемый результат: этот базовый срез становится рабочим контрактом для всех последующих задач. Он закрепляет источники данных Godot, владельцев сгенерированных описаний, правила проверки поведения, C# как единственный публичный путь для скриптов и HLSL как единственный публичный язык исходного кода шейдеров.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Корневой контракт совместимости\n- Входные данные Godot закреплены на `4.7-stable`. Официальная справка, XML-описания классов и экспорт API становятся источником истины только через сгенерированные файлы `T-0242`.\n- Публичный путь для скриптов — только C#. `GDScript`, совместимость с рантаймом скриптов Godot и прямое копирование привязок Godot C# не входят в задачу без отдельного будущего решения.\n- Публичный язык исходного кода шейдеров — только HLSL. Godot Shader Language, GLSL и MSL не являются публичными авторскими языками; платформенные результаты создаются внутренними задачами шейдеров и рендеринга.\n- `T-0242` отвечает за сгенерированные описания API и указатели; `T-0243` — за отчёты о расхождениях и правила падения проверок; `T-0244` — за проверки поведения и отчёты о расхождениях поведения; `T-0245` — за контроль готовности каждого класса.\n- `TASKS.md` и доменные документы не должны вручную переписывать списки публичных элементов API Godot. Они ссылаются на сгенерированные описания и описывают границы задачи, поведение, связь с внутренними слоями и подтверждения.\n- Строки `Deferred` и `Unsupported` требуют явного утверждения через `T-0963`, должны быть видны в отчётах API/поведения и проверяются финальным рубежом `T-0980`.\n- Обязательные платформенные проверки для `0.1-preview`: Windows, Linux, macOS, Android, iOS и WebAssembly browser. Windows/Linux/macOS требуют runtime+editor diagnostics; Android/iOS/WebAssembly browser требуют runtime/export diagnostics без editor surface.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [x] Доменный документ фиксирует источник истины, понятные границы, потребителей, внутренние возможности, платформенную матрицу, диагностику и путь подтверждения именно для этой задачи.\n- [x] Контракт совместимости называет `T-0242`, `T-0243`, `T-0244` и `T-0245` единственными владельцами сгенерированных описаний публичной поверхности, проверки совместимости, подтверждений поведения и контрольных проверок по классам.\n- [x] Контракт запрещает вручную переписывать списки публичных элементов API в `TASKS.md` и доменных документах; задачи публичных типов ссылаются на сгенерированные описания.\n- [x] Контракт фиксирует C# как единственный публичный путь для скриптов и HLSL как единственный публичный язык исходного кода шейдеров, с исключением GDScript, Godot Shader Language, GLSL и MSL из публичного авторского пути.\n- [x] Контракт определяет утверждение `Deferred`/`Unsupported` через `T-0963`, обязательные платформенные проверки 0.1-preview, desktop editor targets Windows/Linux/macOS и runtime-only targets Android/iOS/WebAssembly browser.\n- [x] `EditorOnly` public/API rows не считаются неподдержанными по умолчанию: они сохраняются как будущий editor-scope и получают runtime-only diagnostics только там, где редакторская поверхность неприменима.\n- [x] Добавлены сначала падающие, затем проходящие контрактные тесты или проверочный срез для названной возможности, включая диагностические сообщения об ошибках и запрет неподтверждённых добавлений публичного API.\n- [x] Реализация или инструмент работает в рабочем пути для названной возможности, использует утверждённые внутренние слои и возвращает устойчивые диагностические сообщения при неподдержанном окружении.\n- [x] Проверки включают негативные сценарии, различия платформ, первое подтверждение связи с потребителем и регрессии против фасадного поведения, заглушек и пустых веток.\n- [x] Документация, сгенерированные файлы/манифест API и заметки задачи синхронизированы с фактическим поведением и подтверждение командами.\n\n### Подзадачи\n\n- [x] Зафиксировать границы задачи без дополнительного контекста, источник истины, таблицу потребителей и явные нецели в доменном документе.\n- [x] Зафиксировать корневой контракт совместимости: закреплённый `4.7-stable`, владение сгенерированными файлами, скрипты на C#, исходный код шейдеров на HLSL, `Deferred`/`Unsupported` и политику целевых платформ.\n- [x] Добавить сначала падающие контрактные тесты и проверяющие команды для названной возможности, включая диагностические сообщения об ошибках.\n- [x] Реализовать рабочий путь для названной возможности без заглушек, временного или пустого поведения.\n- [x] Добавить первое подтверждение связи с потребителем и проверку производительности, если возможность влияет на критический путь выполнения.\n- [x] Обновить документацию, сгенерированные файлы и заметки задачи и запустить релевантные проверки.\n\n### Текущее evidence\n\n- 2026-07-05T19:56:00+03:00 - Ready-to-start gate пройден: задача `open`, зависимости отсутствуют, внешних blocker-ов без текущего user override не найдено; пользователь подтвердил, что `T-0241` обновляет существующий доменный документ `docs/release-management/api-compatibility.md`, не реализует публичные классы и даёт evidence по контракту.\n- 2026-07-05T20:01:00+03:00 - RED: после добавления root-contract verifier-а команда `dotnet run --project eng/Electron2D.Build -- verify api-compatibility --wiki-path .github/wiki` упала с `E2D-BUILD-API-COMPATIBILITY-CONTRACT-FRAGMENT` и `E2D-BUILD-API-COMPATIBILITY-CONTRACT-OBSOLETE` на stale-ссылке на прежний `docs/runtime/...` документ, старом profile name и ручных `2D`-profile/subset формулировках.\n- 2026-07-05T20:05:00+03:00 - GREEN: после обновления root contract, tracked docs/templates, manifest profile metadata и generated `data/api/electron2d-api-manifest.json` команда `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify api-compatibility --wiki-path .github/wiki` прошла: `E2D-BUILD-API-MANIFEST-SHAPE-PASSED`, `E2D-BUILD-API-COMPATIBILITY-PASSED`, public types `175`.\n- 2026-07-05T20:08:00+03:00 - Focused tests: `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~VerifyApiCompatibility\" --no-restore -v:minimal` прошёл `5/5`; `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ApiManifestTests|FullyQualifiedName~ApiCompareGodot|FullyQualifiedName~ProjectTemplate\" --no-build --no-restore -v:minimal` прошёл `21/21`.\n- 2026-07-05T20:17:00+03:00 - Medium checks: `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal` passed, warnings `0`; `update api-manifest --wiki-path .github/wiki --check` passed; `update docs --check` passed; `verify api-compatibility --wiki-path .github/wiki` passed, public types `175`; `verify docs` passed; `verify audit-contracts` passed, `12/12`, `73ms`, Heavy not-run; `verify manifests` passed; `verify licenses` passed, `663` source files; `git diff --check` passed with only Git LF-normalization warning for `TASKS.md`.\n- 2026-07-05T20:35:00+03:00 - Audit package r01: portable preflight evidence rebuilt, `audit-medium` passed `10/10`, `audit-heavy` passed `14/14`, `git diff --check` passed; `audit package --task T-0241 --iteration r01 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.input.json --out .temp/audit/T-0241-r01` created and verified `.temp/audit/T-0241-r01/T-0241-audit-r01.zip` plus operator workflow sidecar. Repo-owned audit scope excludes full `TASKS.md`/diary and CLI files with baseline-local placeholders; package includes portable task/diary excerpts and the root-contract docs/generated/verifier/test slice.\n- 2026-07-05T21:13:00+03:00 - Primary r01 external audit saved `docs/verdicts/release-management/t-0241-audit-r01.md` with `VERDICT: NEEDS_FIXES`: B1 manual stale public type list in domain contract, B2 missing consumer/internal-capability/evidence map, B3 hidden generated docs index hash for `docs/cli/e2d-cli.md`.\n- 2026-07-05T21:20:00+03:00 - r01 blocker closure in progress: domain document removes the manual public type list and points to `data/api/electron2d-api-manifest.json`/Wiki/generated reports; adds `## Карта потребителей контракта`; verifier rejects manual `Electron2D.*` Markdown lists in `TASKS.md`/domain contract and requires the consumer map in `docs/release-management/api-compatibility.md`; focused `VerifyApiCompatibility` tests passed `7/7`. Out-of-scope CLI doc/source/test edits were removed and `update docs` regenerated local docs index, closing B3 without expanding `T-0241` into Android/toolchain cleanup.\n- 2026-07-05T21:59:00+03:00 - Primary r02 external audit saved `docs/verdicts/release-management/t-0241-audit-r02.md` with `VERDICT: NEEDS_FIXES`: B1 closure was too narrow because `docs/core-types/variant.md` still stated a four-type `Public API baseline` and manually listed exported runtime public types, while generated manifest evidence reports `175` public types.\n- 2026-07-05T22:02:00+03:00 - r02 B1 closure in progress: `docs/core-types/variant.md` no longer defines the exported runtime baseline and now points to generated API manifest/Wiki/`verify api-compatibility` as source of truth; verifier rejects manual public API lists in scoped domain documents, including punctuation after closing backtick; focused `VerifyApiCompatibility` tests passed `8/8`, `verify api-compatibility --wiki-path .github/wiki` passed with public types `175`, `update docs --check` and `verify docs` passed.\n- 2026-07-05T22:15:00+03:00 - Audit package r03: portable preflight evidence rebuilt and sanitized, including build, API compatibility, focused tests, docs, audit-contracts, manifests, licenses, audit-medium, audit-heavy and `git diff --check`; `audit package --task T-0241 --iteration r03 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r03.input.json --out .temp/audit/T-0241-r03` created and verified `.temp/audit/T-0241-r03/T-0241-audit-r03.zip` plus operator workflow sidecar with `previousVerdictChain` r01+r02 and closure for r02 B1.\n- 2026-07-05T22:25:00+03:00 - Primary r03 submit blocked by local browser automation: two `audit submit --reuse-conversation` attempts against `.temp/audit/T-0241-r03/T-0241-audit-r03.zip` hung without saving `docs/verdicts/release-management/t-0241-audit-r03.md`; `.temp/audit/T-0241/conversation-url-r03.txt` was written, but `audit submit --download-report-only --project-url <r03>` also hung and was stopped. No manual verdict reading/copying was performed.\n- 2026-07-05T22:28:00+03:00 - Continuation recovery attempt: repeated `audit submit --download-report-only --project-url <r03>` using `.temp/audit/T-0241/conversation-url-r03.txt`; command again hung without saving `docs/verdicts/release-management/t-0241-audit-r03.md` and was stopped. r03 package remains verified and ready, but saved primary r03 verdict is still missing.\n- 2026-07-05T22:31:00+03:00 - Timeout-bounded official recovery: `audit submit --download-report-only --project-url <r03> --timeout-minutes 1 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-TIMEOUT` (`External audit report was not ready within 1 minutes.`). `docs/verdicts/release-management/t-0241-audit-r03.md` remains missing.\n- 2026-07-05T22:34:00+03:00 - Third consecutive goal-turn recovery attempt: repeated timeout-bounded `audit submit --download-report-only --project-url <r03>` and received the same `E2D-BUILD-AUDIT-SUBMIT-TIMEOUT` diagnostic. r03 primary verdict is still missing, so control audit, task closure and commit remain blocked by external report readiness/browser automation state.\n- 2026-07-05T22:42:00+03:00 - Primary r03 external audit saved from user-provided official report text as `docs/verdicts/release-management/t-0241-audit-r03.md` with `VERDICT: NEEDS_FIXES`: B1 `docs/releases/0.1-preview.md` still exposed `Not planned` as a waiver-status outside `Deferred`/`Unsupported` through `T-0963`; follow-ups F1/F2 noted for enum `value__` filtering and broader manual-list verifier strategy. r03 B1 closure in progress: release status table removed `Not planned`, verifier rejects unapproved waiver status rows in root-contract docs, focused `VerifyApiCompatibility` tests passed `9/9`, `verify api-compatibility --wiki-path .github/wiki`, `update docs --check` and `verify docs` passed.\n- 2026-07-05T22:46:00+03:00 - r03 follow-up closure: F2 closed inside T-0241 by expanding manual public API list scanning to all root-contract docs and adding `VerifyApiCompatibilityRejectsManualPublicApiListInReleaseRootContractDocument`; focused `VerifyApiCompatibility` tests passed `10/10`. F1 is tracked-existing by `T-0242`, which owns generated API descriptions/API manifest cleanup.\n- 2026-07-05T22:47:00+03:00 - `verify audit-followups` passed after r03 F1/F2 closure notes: `E2D-BUILD-AUDIT-FOLLOWUPS-PASSED`, 22 actionable findings across 130 saved audit reports.\n- 2026-07-05T22:56:00+03:00 - r04 preflight evidence rebuilt and sanitized: build, `verify api-compatibility`, focused `VerifyApiCompatibility` tests `10/10`, API surface tests, `update api-manifest --check`, `update docs --check`, `verify docs`, `verify audit-contracts`, `verify audit-followups`, `verify manifests`, `verify licenses`, `audit-medium`, `audit-heavy` and `git diff --check` all passed.\n- 2026-07-05T22:59:00+03:00 - Audit loop stabilization check added for r04 after package guard `E2D-BUILD-AUDIT-CONFIG-INVALID`: named preflight `audit-loop-stabilization` reruns focused `VerifyApiCompatibility` coverage for r01-r03 root-contract failure classes and passed `10/10`; evidence sanitized and added to `.temp/audit/T-0241/audit-package.r04.input.json`.\n- 2026-07-05T23:01:00+03:00 - Audit package r04 created and verified: `audit package --task T-0241 --iteration r04 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r04.input.json --out .temp/audit/T-0241-r04` produced `.temp/audit/T-0241-r04/T-0241-audit-r04.zip` and operator workflow sidecar; package verify exitCode `0`.\n- 2026-07-05T23:07:00+03:00 - Primary r04 submit blocked by external report readiness/browser automation: `audit submit --reuse-conversation --zip .temp/audit/T-0241-r04/T-0241-audit-r04.zip --out docs/verdicts/release-management/t-0241-audit-r04.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-TIMEOUT` (`External audit report was not ready within 5 minutes.`). `docs/verdicts/release-management/t-0241-audit-r04.md` was not created.\n- 2026-07-05T23:45:00+03:00 - User-requested profile label cleanup: generated API manifest/profile display text now uses `Electron2D 0.1-preview` without the `Godot 4.7 public API` suffix, while `godotBaseline` remains `4.7-stable`; `update api-manifest --check`, focused `ApiManifestTests|ApiCompareGodot|ProjectTemplate|VerifyApiCompatibility` tests `31/31`, `update docs --check`, `verify docs`, `verify api-compatibility --wiki-path .github/wiki` and `git diff --check` passed. Existing r04 package predated this cleanup and was treated as stale.\n- 2026-07-05T23:54:00+03:00 - r04 preflight evidence rebuilt after profile label cleanup: build, `verify api-compatibility`, focused `VerifyApiCompatibility`, `audit-loop-stabilization`, API surface tests, `update api-manifest --check`, `update docs --check`, `verify docs`, `verify audit-contracts`, `verify audit-followups`, `verify manifests`, `verify licenses`, `audit-medium`, `audit-heavy` and `git diff --check` all passed; portable task/diary excerpts were refreshed and sanitized, and r04 package config scope summary now notes the simplified display label.\n- 2026-07-06T00:04:00+03:00 - Final r04 package after profile label cleanup was rebuilt and verified at `.temp/audit/T-0241-r04/T-0241-audit-r04.zip` with operator workflow sidecar; official `audit submit --reuse-conversation --zip .temp/audit/T-0241-r04/T-0241-audit-r04.zip --out docs/verdicts/release-management/t-0241-audit-r04.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-TIMEOUT` (`External audit report was not ready within 5 minutes.`). `docs/verdicts/release-management/t-0241-audit-r04.md` was not created; current goal remains blocked on external report readiness/browser automation.\n- 2026-07-06T00:12:00+03:00 - Primary r04 external audit saved from user-provided official report text as `docs/verdicts/release-management/t-0241-audit-r04.md` with `VERDICT: NEEDS_FIXES`: B1 found manual fenced/bare-name public API lists in `docs/releases/0.1-preview.md` and incomplete verifier coverage. RED reproduced by `VerifyApiCompatibilityRejectsFencedBarePublicApiListInReleaseRootContractDocument` failing with exitCode `0`; closure removes/rephrases release-note code fences into generated-artifact references, extends verifier to reject fenced bare API names in public API/baseline contexts, then focused test passed `1/1`, focused `VerifyApiCompatibility` passed `11/11`, `verify api-compatibility --wiki-path .github/wiki`, `update docs --check`, `verify docs`, `verify licenses` and `verify audit-followups` passed.\n- 2026-07-06T00:17:00+03:00 - r05 preflight evidence rebuilt after r04 B1 closure: build, `verify api-compatibility`, focused `VerifyApiCompatibility` tests, `audit-loop-stabilization`, API surface tests, `update api-manifest --check`, `update docs --check`, `verify docs`, `verify audit-contracts`, `verify audit-followups`, `verify manifests`, `verify licenses`, `audit-medium`, `audit-heavy` and `git diff --check` all passed. `git diff --check` reported only the known LF-normalization warning for `TASKS.md`.\n- 2026-07-06T00:24:00+03:00 - Audit package r05 created and verified: `audit package --task T-0241 --iteration r05 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r05.input.json --out .temp/audit/T-0241-r05` produced `.temp/audit/T-0241-r05/T-0241-audit-r05.zip` and operator workflow sidecar; package verify exitCode `0`. Official `audit submit --reuse-conversation --zip .temp/audit/T-0241-r05/T-0241-audit-r05.zip --out docs/verdicts/release-management/t-0241-audit-r05.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-TIMEOUT` (`External audit report was not ready within 5 minutes.`). `docs/verdicts/release-management/t-0241-audit-r05.md` was not created; goal remains blocked on external report readiness/browser automation.\n- 2026-07-06T00:30:00+03:00 - Official r05 recovery attempt using `.temp/audit/T-0241/conversation-url-r05.txt` failed before report download: `audit submit --download-report-only --project-url <r05> --out docs/verdicts/release-management/t-0241-audit-r05.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-PROTOCOL` because CDP reattach repeatedly timed out on `Page.enable`. `docs/verdicts/release-management/t-0241-audit-r05.md` remains absent; no active `audit submit` process remained after the command exited.\n- 2026-07-06T00:34:00+03:00 - Third consecutive resumed r05 report recovery turn: official `audit submit --download-report-only --project-url <r05> --out docs/verdicts/release-management/t-0241-audit-r05.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-REPORT-STILL-GENERATING` (`The report page is still generating; download-report-only does not reload or resubmit the page.`). `docs/verdicts/release-management/t-0241-audit-r05.md` is still absent; without saved primary r05 verdict, control audit, closure, cleanup and commit remain blocked on external report readiness/browser automation.\n- 2026-07-06T00:44:00+03:00 - Primary r05 external audit saved from user-provided official report text as `docs/verdicts/release-management/t-0241-audit-r05.md` with `VERDICT: NEEDS_FIXES`: B1 found residual manual public API fragments in `docs/releases/0.1-preview.md` (`RenderingServer.*`, `RenderingDeviceFeatures.*`, marker attributes and inline physics/animation/audio baseline lists); B2 found that `docs/documentation/github-wiki-api-reference.md` is verifier root-contract surface but was missing as a full audit package snapshot.\n- 2026-07-06T00:51:00+03:00 - r05 B1/B2 closure in progress: release note residual fragments were rewritten into behavior/source-of-truth prose; `RepositoryPolicyVerifiers` now builds manual public API names from the generated manifest and hardcoded marker/fence names, applies advanced fenced/inline detection only to root-contract docs, and keeps the broader bullet-list guard for scoped documents. Added RED/GREEN regressions for fenced `RenderingServer.*`, fenced `[Export]`/`[Signal]`/`[Tool]` and inline generated type lists; focused r05 regression tests passed `3/3`, focused `VerifyApiCompatibility` passed `14/14`, and `verify api-compatibility --wiki-path .github/wiki` passed with public types `175`. r06 package must include full `docs/documentation/github-wiki-api-reference.md` snapshot to close B2.\n- 2026-07-06T01:01:00+03:00 - r06 preflight evidence rebuilt: build-tool build, `verify api-compatibility`, focused `VerifyApiCompatibility` tests, `audit-loop-stabilization`, API surface tests, `update api-manifest --check`, `update docs --check`, `verify docs`, `verify audit-contracts`, `verify audit-followups`, `verify manifests`, `verify licenses`, `audit-medium`, `audit-heavy`, `git diff --check` and portable task/diary excerpts all passed. Evidence scan across `.temp/audit-evidence/preflight` found no local absolute Windows paths.\n- 2026-07-06T01:08:00+03:00 - r05 B2 closure refined: `docs/documentation/github-wiki-api-reference.md` now explicitly states that Wiki API reference is a generated source-of-truth consumer and not a manual public API list. This keeps the file in root-contract verifier paths, makes the full snapshot part of the r06 patch/restore set, and avoids relying on an unchanged allowlist-only snapshot that `audit package verify` cannot restore as a changed repo file.\n- 2026-07-06T01:16:00+03:00 - Audit package r06 created and verified: `audit package --task T-0241 --iteration r06 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r06.input.json --out .temp/audit/T-0241-r06 --force` produced `.temp/audit/T-0241-r06/T-0241-audit-r06.zip` and operator workflow sidecar; sidecar summary reported `audit-package-message exitCode=0` and `audit-package-verify exitCode=0`. Official `audit submit --reuse-conversation --zip .temp/audit/T-0241-r06/T-0241-audit-r06.zip --out docs/verdicts/release-management/t-0241-audit-r06.md --browser-backend codex-chrome --timeout-minutes 5 --login-timeout-minutes 1` exited with `E2D-BUILD-AUDIT-SUBMIT-TIMEOUT` (`External audit report was not ready within 5 minutes.`). `docs/verdicts/release-management/t-0241-audit-r06.md` was not created; no manual Chrome reading/copying was performed.\n- 2026-07-06T01:40:00+03:00 - Primary r06 external audit recovered through official `audit submit --download-report-only --project-url <r06> --out docs/verdicts/release-management/t-0241-audit-r06.md --browser-backend codex-chrome`: first retry hit `E2D-BUILD-AUDIT-SUBMIT-CODEX-CHROME-PROTOCOL`, second retry saved `docs/verdicts/release-management/t-0241-audit-r06.md` with `VERDICT: NEEDS_FIXES`. Recovery was implemented in the build tool as controlled ordinary assistant copy fallback for ready existing conversations before Deep Research export fallback; no arbitrary manual DOM verdict was saved.\n- 2026-07-06T01:58:00+03:00 - r06 B1 closure in progress: `docs/core-types/variant.md`, `docs/rendering/texture-resource-baseline.md` and `docs/scripting/editor-script-workflow.md` no longer use manual C# public API signatures, method/property lists or dense public UI prerequisite lists as source of truth; those sections now describe behavior/capability boundaries and point exact public surfaces to generated API artifacts and owner tasks. `RepositoryPolicyVerifiers` now includes these scoped docs in advanced manual-list scanning, detects C# public declaration fences, and covers the named UI/texture/variant formats from r06.\n- 2026-07-06T02:28:00+03:00 - r07 preflight evidence rebuilt after r06 B1 closure: build-tool build passed with warnings `0`; `verify api-compatibility --wiki-path .github/wiki` passed with public types `175`; focused `VerifyApiCompatibility` passed `17/17` for both `api-compatibility-tests` and `audit-loop-stabilization`; audit-submit recovery/documentation focused tests passed `2/2`; API surface slice passed `21/21`; `update api-manifest --check`, `update docs --check`, `verify docs`, `verify audit-contracts`, `verify audit-followups`, `verify manifests`, `verify licenses`, `audit-medium` (`10/10`), `audit-heavy` (`14/14`) and `git diff --check` passed. Evidence was sanitized to remove local absolute paths; `git diff --check` output contains only the known `TASKS.md` LF-normalization warning.\n- 2026-07-06T02:34:00+03:00 - Audit package r07 created and verified: `audit package --task T-0241 --iteration r07 --baseline 5250674565d5a2c06663029ae0bc44c2fd8a6727 --config .temp/audit/T-0241/audit-package.r07.input.json --out .temp/audit/T-0241-r07 --force` produced `.temp/audit/T-0241-r07/T-0241-audit-r07.zip`; operator workflow sidecar reported `audit-package-message exitCode=0` and `audit-package-verify exitCode=0`.\n- 2026-07-06T02:43:00+03:00 - Primary r07 external audit saved by official recovery after submit timeout and two `REPORT-STILL-GENERATING` waits: `docs/verdicts/release-management/t-0241-audit-r07.md` has `VERDICT: ACCEPT` and `BLOCKERS: No blockers found`. r07 accepts closure for r06 B1 and all prior blockers. Non-blocking `FOLLOW_UP_FINDING F1` about overly aggressive preflight evidence sanitizer is tracked as new `T-0982`.\n- 2026-07-06T02:47:00+03:00 - Post-accept follow-up checks passed: `verify audit-followups` passed for `23` actionable findings across `134` saved audit reports after linking r07 F1 to `T-0982`; `update docs --check` passed; `verify docs` passed; `git diff --check` exitCode `0` with only the known `TASKS.md` LF-normalization warning.\n- 2026-07-06T03:26:00+03:00 - Control audit package created and verified from clean-control config `.temp/audit/T-0241/audit-package.r07.control.input.json`: `metadata.previousVerdictChain` and `metadata.blockerClosureList` are empty, `task-ledger-excerpts` are excluded, and `.temp/audit/T-0241-r07-control/T-0241-audit-r07.zip` verified with operator workflow sidecar exitCode `0` for both package message and package verify.\n- 2026-07-06T03:26:00+03:00 - First official control submit timed out after `15` minutes; second official `audit submit --control-audit` against the same clean-control ZIP with `--timeout-minutes 30` saved `docs/verdicts/release-management/t-0241-audit-control-r07.md` with `VERDICT: ACCEPT` and `BLOCKERS: No blockers found`. The control report adds non-blocking `FOLLOW_UP_FINDING F1` for duplicated generated method signatures; it is tracked as new `T-0983`.\n- 2026-07-06T03:27:00+03:00 - Post-control checks passed: `verify audit-followups` passed for `24` actionable findings across `135` saved audit reports after linking control r07 F1 to `T-0983`; `update docs --check` passed; `verify docs` passed; `git diff --check` exitCode `0` with only the known `TASKS.md` LF-normalization warning.\n- 2026-07-06T03:31:00+03:00 - Temporary audit artifacts for `T-0241` were removed after primary and control `VERDICT: ACCEPT`: `.temp/audit/T-0241*`, `.temp/audit-clean/T-0241*` and `.temp/audit-evidence/preflight` were resolved and validated under workspace `.temp` before recursive deletion. Durable reports remain in `docs/verdicts/release-management/`.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-r03.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-0242\n  - rationale: r03 F1 concerns generated API manifest descriptions leaking CLR enum backing field `value__`; `T-0242` owns generated API descriptions and API manifest source-of-truth work, so the cleanup belongs there without expanding the root-contract closure slice.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-r03.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0241\n  - rationale: r03 F2 suggested broadening manual public API list guard coverage; current T-0241 iteration closes it by scanning all root-contract docs and proving a manual `Electron2D.*` list in `docs/releases/0.1-preview.md` fails with `E2D-BUILD-API-COMPATIBILITY-CONTRACT-MANUAL-LIST`.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-r05.md\n  - id: BLOCKER B1\n  - state: closed\n  - target: T-0241\n  - rationale: r06 primary audit confirmed the concrete release-note fragments from r05 are removed: `docs/releases/0.1-preview.md` no longer contains the residual `RenderingServer.*`, `RenderingDeviceFeatures.*`, marker attribute or inline physics/animation/audio manual API lists, and verifier/tests cover those root-contract formats.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-r05.md\n  - id: BLOCKER B2\n  - state: closed\n  - target: T-0241\n  - rationale: r06 primary audit confirmed `docs/documentation/github-wiki-api-reference.md` is included as a full package snapshot and documented as a generated source-of-truth consumer rather than a manual public API list.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-r06.md\n  - id: BLOCKER B1\n  - state: closed\n  - target: T-0241\n  - rationale: r07 primary audit accepted the closure: the scoped-domain documents no longer define manual public API source-of-truth lists, and `RepositoryPolicyVerifiers` plus focused `VerifyApiCompatibility` tests reject the real r06 C# declaration fence, texture declaration fence and dense UI prerequisite formats.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-r07.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0982\n  - rationale: r07 accepted T-0241 and classified the evidence sanitizer placeholder-per-character issue as a separate non-blocking P2 follow-up. `T-0982` tracks the sanitizer/readability fix without expanding the accepted T-0241 scope or rewriting saved audit packages.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0241-audit-control-r07.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0983\n  - rationale: control r07 accepted T-0241 and classified duplicate generated method signatures as a separate P1 API manifest/tooling follow-up. `T-0983` tracks the generator/manifest formatting fix without expanding the accepted T-0241 scope.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n2026-07-05T19:56:00+03:00 - Взято в работу после ready-to-start gate; stale-ссылка на несуществующий `docs/runtime/...` заменена существующим доменным документом `docs/release-management/api-compatibility.md` по текущему решению пользователя.\n\n\n### Архивное закрытие\n\n- 2026-07-06T11:33:49+03:00 - Пользователь явно подтвердил закрытие T-0241 и commit. Задача удалена из активного TASKS.md; follow-up T-0982 и T-0983 остаются активными отдельными задачами.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-07-06T08:33:49.0000000+00:00",
+  "completedAt": "2026-07-06T08:33:49.0000000+00:00",
+  "acceptedAt": "2026-07-06T08:33:49.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-07-06T08:33:49.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

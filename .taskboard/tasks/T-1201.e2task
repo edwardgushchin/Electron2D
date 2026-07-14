@@ -1,0 +1,352 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-dd6affc155b541f7baaf43c210a39745",
+  "revision": 5,
+  "taskId": "T-1201",
+  "legacyAliases": [],
+  "title": "Ограничить время process-based Editor-тестов и гарантированно завершать дочерние процессы",
+  "description": "Полный integration suite не должен ждать Editor smoke десятки минут. Изолированные bootstrap и window smoke проходят за секунды, но большинство Editor-тестов запускает дочерний `dotnet run` и ожидает `WaitForExitAsync()` без timeout. Нужно ввести один общий test-infrastructure runner для всех process-based Editor checks. Runner одновременно читает stdout и stderr, применяет явный ограниченный timeout и cancellation, а при превышении времени гарантированно завершает всё дерево процессов, дожидается его остановки в пределах второго короткого лимита и не оставляет orphan `dotnet`, MSBuild, editor или game processes. Timeout-ошибка должна содержать команду, PID, elapsed time, последние stdout/stderr и известные artifact paths.\n\nПосле общей сборки тесты должны запускать готовый Editor apphost/assembly либо использовать `--no-build --no-restore`, чтобы каждый тест не начинал вложенную компиляцию. Все существующие Editor integration tests, которые запускают процессы, переводятся на общий runner; прямые неограниченные `WaitForExit`, `WaitForExitAsync` и ручные несовместимые timeout-циклы запрещаются статической регрессией. Отдельный тест запускает намеренно зависающий дочерний процесс с потомком, подтверждает срабатывание watchdog, диагностический результат и отсутствие живого process tree. Поведение production Editor, runtime rendering/input и смысл smoke-проверок не меняются.",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0008",
+    "tag-0013",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": "task-4874695e7c98a3a55d21221977beac8d",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "domain-contract",
+      "description": "`docs/editor/editor-project-shell.md` описывает общий process-test runner, значения timeout, двухфазное завершение дерева, диагностику и запрет неограниченного ожидания.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "shared-runner",
+      "description": "Все process-based Editor integration tests используют один helper, который одновременно считывает stdout/stderr, принимает timeout и cancellation и возвращает единый результат запуска.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "bounded-tree-termination",
+      "description": "При timeout или отмене helper вызывает завершение всего process tree, ограниченно ждёт его остановки и подтверждает отсутствие живых дочерних `dotnet`, MSBuild, Editor и game processes.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "timeout-diagnostics",
+      "description": "Timeout failure содержит executable и arguments, PID, elapsed time, timeout, exit reason, последние stdout/stderr и доступные пути к screenshot, analysis, dump или другому diagnostic artifact.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "no-nested-build",
+      "description": "Editor smoke tests используют заранее собранный apphost/assembly либо `--no-build --no-restore`; full suite не выполняет отдельную вложенную сборку Editor для каждого теста.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "regression-watchdog",
+      "description": "Автоматический regression test запускает контролируемо зависающий процесс с дочерним процессом, завершается существенно раньше минутного лимита, сохраняет stdout/stderr и доказывает отсутствие orphan process tree.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "static-guard",
+      "description": "Статическая проверка охватывает все process-based Editor tests и отклоняет прямые `WaitForExit`, `WaitForExitAsync` либо собственные timeout-петли вне общего helper.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "verification",
+      "description": "Focused helper regressions, все Editor process tests и полный integration suite с `--blame-hang-timeout` завершаются в заданных пределах; повторные smoke-запуски не оставляют процессов, документация, licenses и `git diff --check` проходят.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T08:55:37.2177399+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-domain",
+      "kind": "File",
+      "value": "docs/editor/editor-project-shell.md"
+    },
+    {
+      "linkId": "link-workflow",
+      "kind": "File",
+      "value": "docs/repository/agent-workflow.md"
+    },
+    {
+      "linkId": "link-shell-tests",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectShellTests.cs"
+    },
+    {
+      "linkId": "link-manager-tests",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectManagerTests.cs"
+    },
+    {
+      "linkId": "link-test-area",
+      "kind": "Directory",
+      "value": "tests/Electron2D.Tests.Integration"
+    },
+    {
+      "linkId": "link-editor-entry",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Program.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "test-infrastructure",
+    "readyToStart": [
+      "Поведение текущих Editor smoke и список process-based integration tests зафиксированы до изменения helper.",
+      "Доменный документ обновлён до production/test-infrastructure кода, а regression watchdog сначала подтверждён красным тестом."
+    ],
+    "stopConditions": [
+      "Для завершения дерева процессов требуется изменение production Editor или runtime поведения вместо test infrastructure.",
+      "Выбранный способ скрывает зависание увеличением общего timeout либо ослабляет существующие smoke assertions.",
+      "Невозможно надёжно отличить дочерние процессы теста от посторонних пользовательских процессов."
+    ],
+    "allowedChanges": [
+      "Общий process runner и его тестовые helpers в `tests/Electron2D.Tests.Integration`.",
+      "Process-based Editor integration tests и их bounded launch contract.",
+      "`docs/editor/editor-project-shell.md` и связанная проверка repository workflow.",
+      "Минимальная build-test plumbing, необходимая для запуска заранее собранного Editor без вложенной сборки."
+    ],
+    "forbiddenChanges": [
+      "Production Editor startup, runtime rendering/input, taskboard schema и пользовательское поведение smoke-команд.",
+      "Увеличение timeout до десятков минут, удаление smoke assertions или исключение тестов из полного suite.",
+      "Завершение процессов по имени без доказанной принадлежности дереву конкретного test launch.",
+      "Исправление несвязанных текущих падений integration suite внутри этой задачи."
+    ],
+    "requiredOutputs": [
+      "Переиспользуемый bounded process runner с документированными значениями timeout и kill grace period.",
+      "Regression evidence для зависшего родителя и потомка без orphan processes.",
+      "Инвентаризация всех мигрированных Editor process tests и статическая защита от возврата неограниченного ожидания.",
+      "Логи focused и full integration запусков с hang watchdog и итоговым временем."
+    ],
+    "commands": [
+      {
+        "commandId": "command-build-tests",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "build",
+          "Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+          "--no-restore",
+          "-v:minimal"
+        ],
+        "workingDirectory": "tests",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "command-focused-runner",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "test",
+          "Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+          "--filter",
+          "FullyQualifiedName~EditorProcess",
+          "--no-build",
+          "--no-restore",
+          "-v:minimal"
+        ],
+        "workingDirectory": "tests",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 180,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "command-editor-tests",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "test",
+          "Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+          "--filter",
+          "FullyQualifiedName~Editor",
+          "--no-build",
+          "--no-restore",
+          "--blame-hang",
+          "--blame-hang-timeout",
+          "90s",
+          "-v:minimal"
+        ],
+        "workingDirectory": "tests",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 900,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "command-full-integration",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "test",
+          "Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj",
+          "--no-build",
+          "--no-restore",
+          "--blame-hang",
+          "--blame-hang-timeout",
+          "90s",
+          "-v:minimal"
+        ],
+        "workingDirectory": "tests",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 3600,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "command-licenses",
+        "kind": "Process",
+        "executable": "dotnet",
+        "arguments": [
+          "run",
+          "--project",
+          "Electron2D.Build",
+          "--",
+          "verify",
+          "licenses"
+        ],
+        "workingDirectory": "eng",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "command-diff",
+        "kind": "Process",
+        "executable": "git",
+        "arguments": [
+          "diff",
+          "--check"
+        ],
+        "workingDirectory": "src",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 120,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-13T00:16:04.8111338+00:00",
+  "updatedAt": "2026-07-13T08:55:37.2177399+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "activity-43716c727a344aa0ac29e304b6ebccfa",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-13T00:16:54.8555594+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Диагностика перед созданием задачи: `EditorProjectShellTests.EditorProjectSmokeRunStartsOnElectron2D` прошёл отдельно за 8 секунд; `EditorWindowSmokeRunCreatesRealWindowAndWritesVisualArtifacts` прошёл за 4 секунды; весь `EditorProjectShellTests` прошёл 6/6 за 14,6 секунды. Постоянная поломка smoke не подтверждена. Подтверждён инфраструктурный дефект: bootstrap test и многие соседние Editor tests вызывают `WaitForExitAsync()` без timeout/cancellation, поэтому зависший дочерний `dotnet run` способен удерживать полный suite неограниченно. Отдельный `EditorProjectManagerTests` завершился за 15,5 секунды с двумя детерминированными несвязанными падениями: устаревшее ожидание placement-поля и отсутствующий `task_submit_for_acceptance` в шаблоне. Эти падения не входят в scope `T-1201` и не должны маскироваться увеличением timeout."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

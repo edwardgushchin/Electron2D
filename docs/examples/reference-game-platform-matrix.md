@@ -31,7 +31,7 @@
 - имеет набор `runtimeTargets`: `WindowsX64`, `LinuxX64`, `MacOSArm64`, `AndroidArm64`, `IosArm64`, `WebAssemblyBrowser`;
 - имеет набор `editorTargets`: `Windows`, `Linux`, `macOS`;
 - имеет отдельный `releaseVerificationTargets` с правилами smoke/soak, blocked-environment artifact и release blocker для каждой платформы;
-- использует named `.e2d` project file, `.csproj`, main scene, embedded export presets, локальные resources, C# scripts и `.electron2d/tasks/**` как обычный формат проекта;
+- использует named `.e2d` project file, `.csproj`, main scene, embedded export presets, локальные resources, C# scripts и `.taskboard/**` как обычный формат проекта;
 - проходит проектную проверку `dotnet run --project eng/Electron2D.Build -- verify platformer`;
 - не содержит platform-specific игровой fork в `scripts/`, `scenes/`, `resources/` или `assets/`;
 - не зависит от локальных repository workflow-файлов `TASKS.md`, `data/dev-diary/` или `data/completed-tasks/`.
@@ -79,7 +79,7 @@ Gameplay code, scenes, resources, imported asset manifests, task metadata и pro
 - проверять, что каждый preset не содержит секреты signing values, а `credentialReference` указывает только на безопасную ссылку, например `env:...`;
 - проверять, что `.csproj` не содержит conditional compile или platform-specific source includes для gameplay code;
 - проверять отсутствие platform-specific directories и files в `Scripts/`, `scenes/`, `resources/` и `assets/`;
-- проверять, что `.electron2d/tasks/**` существует как Editor metadata, но не используется как runtime resource path;
+- проверять, что `.taskboard/**` существует как Editor metadata, но не используется как runtime resource path;
 - сохранять machine-readable summary в `.temp/reference-game-platform-matrix/summary.json`;
 - завершаться ненулевым кодом при любом нарушении.
 
@@ -121,7 +121,7 @@ Gate не выполняет реальную проверку на устрой
 - `releaseVerificationDecision`;
 - разрешённые platform-specific отличия;
 - текущую активную запись проекта: `platformer`; будущие reference games добавляются отдельными записями, а не platform-specific fork-ами этого проекта;
-- пути к named `.e2d` project file, `.csproj`, main scene, script/scene/resource roots, `.electron2d/tasks/**` metadata и project verifier-у.
+- пути к named `.e2d` project file, `.csproj`, main scene, script/scene/resource roots, `.taskboard/**` metadata и project verifier-у.
 
 Разрешённые отличия ограничены export/package metadata: target/configuration/runtime identifier/output directory, renderer profile, иконки/branding, signing references без секретов, storefront metadata и browser hosting metadata.
 
@@ -143,7 +143,7 @@ Verifier выполняет:
 - проверку safe signing references: обязательный signing должен ссылаться на `env:...`, а не хранить секрет в preset;
 - проверку `.csproj` на отсутствие conditional compile для platform-specific gameplay code;
 - проверку отсутствия platform-specific folders/files в `Scripts/`, `scenes/`, `resources/` и `assets/`;
-- проверку, что `.electron2d/tasks/**` существует как Editor metadata, но не попадает в runtime resource roots;
+- проверку, что `.taskboard/**` существует как Editor metadata, но не попадает в runtime resource roots;
 - запись summary artifact в `.temp/reference-game-platform-matrix/summary.json` с теми же `runtimeTargets`, `editorTargets`, `releaseVerificationTargets` и `releaseVerificationDecision`.
 
 Focused automated test:

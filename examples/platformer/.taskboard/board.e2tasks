@@ -1,0 +1,106 @@
+{
+  "format": "Electron2D.TaskBoard",
+  "version": 3,
+  "boardId": "platformer-board",
+  "revision": 2,
+  "idPolicy": {
+    "prefix": "T-",
+    "padding": 4,
+    "nextNumber": 226
+  },
+  "attachmentPolicy": {
+    "perFileByteLimit": 26214400,
+    "boardByteLimit": 262144000
+  },
+  "migration": {
+    "sourceVersion": 2,
+    "reportSha256": "bb211501b5647c022915d2aae5b7b49d500b0f5c62a42b3147fba7971c90b9a3",
+    "sourceBoardRevision": 1,
+    "sourceDigests": {
+      ".taskboard/board.e2tasks": "9d6327556a08f2e959756857a905cca48e87d32b7f0b717d2ff329dc86e9b918",
+      ".taskboard/tasks/T-0166.e2task": "b37c760ba08687d8305a6248a92da0b1edb77a9f56ec760d6b2d1cce5a5cb75c",
+      ".taskboard/tasks/T-0221.e2task": "74cb28c16bd2748d0943c7d362e3a0bafe3d92d70ca14bfb023a6bdc99bb4f24",
+      ".taskboard/tasks/T-0222.e2task": "1d6307f2fa16962e1ddd5e7fc35b8c50b646c58e10777dbddf0436a90068cadf",
+      ".taskboard/tasks/T-0223.e2task": "f6d124dbd68ab8fccd231a20dce230e36701d009b4621229f93619c4a2de3db6",
+      ".taskboard/tasks/T-0225.e2task": "729d88155bf2f975bf8d2934a4fd9d4789f149a50de3da866ce05551d0b347b2",
+      ".taskboard/tasks/platformer-acceptance.e2task": "476ca7ac4ac2a79da4fd0d9713a9d194414d9661b3240dfd6e548c8446aa2b51"
+    },
+    "migratedAt": "2026-07-12T23:00:03.7979796+00:00",
+    "finalized": true
+  },
+  "tags": [
+    {
+      "tagId": "acceptance",
+      "name": "acceptance",
+      "color": "Gray"
+    },
+    {
+      "tagId": "gameplay",
+      "name": "gameplay",
+      "color": "Gray"
+    },
+    {
+      "tagId": "performance",
+      "name": "performance",
+      "color": "Gray"
+    },
+    {
+      "tagId": "platformer",
+      "name": "platformer",
+      "color": "Gray"
+    },
+    {
+      "tagId": "reference-game",
+      "name": "reference-game",
+      "color": "Gray"
+    },
+    {
+      "tagId": "tracking",
+      "name": "tracking",
+      "color": "Gray"
+    },
+    {
+      "tagId": "version:0.1.0-preview",
+      "name": "version:0.1.0-preview",
+      "color": "Gray"
+    },
+    {
+      "tagId": "visual-gate",
+      "name": "visual-gate",
+      "color": "Gray"
+    }
+  ],
+  "groups": [],
+  "placements": [
+    {
+      "taskUid": "task-T-0222",
+      "groupId": null,
+      "rank": "000000001000"
+    },
+    {
+      "taskUid": "task-T-0223",
+      "groupId": null,
+      "rank": "000000002000"
+    },
+    {
+      "taskUid": "task-T-0225",
+      "groupId": null,
+      "rank": "000000003000"
+    },
+    {
+      "taskUid": "task-T-0221",
+      "groupId": null,
+      "rank": "000000004000"
+    },
+    {
+      "taskUid": "task-T-0166",
+      "groupId": null,
+      "rank": "000000005000"
+    },
+    {
+      "taskUid": "task-platformer-acceptance",
+      "groupId": null,
+      "rank": "000000006000"
+    }
+  ]
+}

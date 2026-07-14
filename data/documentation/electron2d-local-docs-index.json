@@ -29,11 +29,11 @@
       },
       {
         "path": "docs/architecture/agent-native-workflow.md",
-        "sha256": "b5a45dc070077b09efaea5a27051da01acc975e93a410698aee5b6adf10efa3e"
+        "sha256": "a2191b065cca338abfd2994be074b7b7bd679645aa3bbe4bd0109497bb60f589"
       },
       {
         "path": "docs/architecture/engine-platform-stack.md",
-        "sha256": "422f936f04df5478417038d1fe9f57ad2135f55d234564ceea651da85edd962d"
+        "sha256": "8bdc0df27ed212e03b055d882699d9dd5d05bcd59ffa81ec6d88062c02b68d1d"
       },
       {
         "path": "docs/architecture/source-domain-layout.md",
@@ -53,7 +53,7 @@
       },
       {
         "path": "docs/cli/e2d-cli.md",
-        "sha256": "6a6fa38111868f7440e9f9b97eb2ec959921d96dfe50faa0c0745a1ae3721437"
+        "sha256": "be2fdf938deb503b8f4e85530f0586d73b5aa04c7aad5d3944edac976d46c499"
       },
       {
         "path": "docs/core-types/2d-math-baseline.md",
@@ -81,7 +81,7 @@
       },
       {
         "path": "docs/diagnostics/diagnostics-core.md",
-        "sha256": "071d9d0cd736b5ad0f796e702b03b380d83531c93978d4b8affbe78002a342a8"
+        "sha256": "293de0d39572b6cae9b9bcc595a7e0c9809d8105b73c26c718a01358425ce08b"
       },
       {
         "path": "docs/documentation/api-manifest.md",
@@ -145,7 +145,7 @@
       },
       {
         "path": "docs/editor/godot4-editor-reference.md",
-        "sha256": "4cecef91ea37b48e047282ccf40798e730cfb57a953d4fef711111abdc44f788"
+        "sha256": "eb9406f0ed153bb4bc9a289727249ccd112be01b6055cf37e0357d87689de6da"
       },
       {
         "path": "docs/editor/inspector.md",
@@ -153,7 +153,7 @@
       },
       {
         "path": "docs/editor/project-manager.md",
-        "sha256": "6d29ca8f20a72accf6b707624aefc0b5eaa3194401dd4a7fa32564ff69a6a1fb"
+        "sha256": "62c79a84374ba20c6a13a336fc42f893f0890b5f326e34d0723eae581d7cc213"
       },
       {
         "path": "docs/editor/project-settings-ui.md",
@@ -161,7 +161,7 @@
       },
       {
         "path": "docs/editor/project-tasks-board.md",
-        "sha256": "fc6fffc1d312432d7b46a9efe1fd04216759ae7ba4e8cb34102642fef9936c41"
+        "sha256": "66e1e99c07cb0da14936cf5edb6fbfda5b8a77b29f51cc7f311f67275b0094be"
       },
       {
         "path": "docs/editor/references/godot-4.7-2d-workspace.md",
@@ -189,19 +189,19 @@
       },
       {
         "path": "docs/examples/platformer.md",
-        "sha256": "9c877459871508a8ba79b727a9b595227d97e4e015b5cc92414b7dfddba269c9"
+        "sha256": "c244039c2ac25a32ae6527618f49d6ddeb6e4842cd43298b7abe069d4ac8d52c"
       },
       {
         "path": "docs/examples/reference-game-assets.md",
-        "sha256": "fa20300a62ee6edf5bee881d7c0c04a650e3fc39a4167a1706d68bcf6dba7d7e"
+        "sha256": "0269796f06cc430576b038510134db188c4dddf691ad4e21d0da885bb1a2348b"
       },
       {
         "path": "docs/examples/reference-game-platform-matrix.md",
-        "sha256": "e4d0901de39fca45fda7e0a58e95747f0ee593651f5c0338207a29ade150e4f5"
+        "sha256": "bab09ca06b962b013ef9db071cc6da3c68c38fce8c30f76670728a763c4d7e78"
       },
       {
         "path": "docs/export/android-arm64-export.md",
-        "sha256": "957749f6334a02678f8a26613d65b255efe1f42c8651130a6e2501e6cc404cb8"
+        "sha256": "abec5bc7cfb985a7b5d59aca9b59970a6099f16f9fef0b99ac7932cb289b6736"
       },
       {
         "path": "docs/export/export-guide.md",
@@ -213,7 +213,7 @@
       },
       {
         "path": "docs/export/ios-arm64-export.md",
-        "sha256": "5e453c6191e8e6f261989f6ff7da551073dc1593db423b3d25b3d12520024b31"
+        "sha256": "396ebea25c68b51f7ddda09c059f039c6e7ed10f8aa089b88a5f56f215501f02"
       },
       {
         "path": "docs/export/linux-x64-export.md",
@@ -225,11 +225,11 @@
       },
       {
         "path": "docs/export/webassembly-browser-export.md",
-        "sha256": "41a5f9cd7c8c8d9a56ef0a67e5b19c3cfd804e6b533f8fb08193a5f2847b75c9"
+        "sha256": "8fb3a2dd7de6c8aa5755daad369e704d02920dde5f898fdd7cf33c44099cb8f8"
       },
       {
         "path": "docs/export/windows-x64-export.md",
-        "sha256": "35475fb8f3610228c01e42d7667d4da178ccb8dec6b0ba47568ee3bc09256bdd"
+        "sha256": "3ddb0281e749f4961159a9cea40b80de81609ce68fb387150741b37350268601"
       },
       {
         "path": "docs/input/gamepad-input.md",
@@ -253,7 +253,7 @@
       },
       {
         "path": "docs/mcp/mcp-server.md",
-        "sha256": "d15c341068480e7b63b736ace0b7d1b225cb7f171d0be5d51f9500b7a38c9c7c"
+        "sha256": "3c5d115906b0985ce11ea73b18e0878d498a3cd952332bfcc854e59c37efc4bb"
       },
       {
         "path": "docs/object-model/base-object-lifetime.md",
@@ -333,7 +333,7 @@
       },
       {
         "path": "docs/project-system/canonical-document-model.md",
-        "sha256": "a41fe2c1728900e987b668e435ae12e172e475b93f582be2cd20321151d94cd9"
+        "sha256": "34d2d5a9ccd9dd599c4e23f5c917079971c2180e74686f8b130037fd2e5caef6"
       },
       {
         "path": "docs/project-system/concurrent-editing-and-undo.md",
@@ -341,7 +341,7 @@
       },
       {
         "path": "docs/project-system/external-change-synchronizer.md",
-        "sha256": "d688cfaf505b878e5becf6c15b495ef462d21c1c06fde7f50b1c391a88c5a992"
+        "sha256": "346cd09d106bbd23f77ddaf5ea9441e3b1fd711947dff82b310b916e9b89856c"
       },
       {
         "path": "docs/project-system/live-project-workspace.md",
@@ -349,11 +349,11 @@
       },
       {
         "path": "docs/project-system/project-task-manager.md",
-        "sha256": "850a96f335bba3ce0a4c7af6b9471593ea4d5d15d2eb92e023f8ed9a0ec7bd49"
+        "sha256": "324f0d290e7b4cf67c9c910daf449a43bdeac64ee8086f5b19db7f2e9911a95a"
       },
       {
         "path": "docs/project-system/project-tasks-markdown-report-export.md",
-        "sha256": "57254499c83681aef144fbcaf99b8133e717989e3f85b00240694ce3010b0316"
+        "sha256": "359718a3b7ea66bf927e46e4369f0430adc0175a026069b03f956c2f9538a668"
       },
       {
         "path": "docs/project-system/project-text-formats.md",
@@ -365,7 +365,7 @@
       },
       {
         "path": "docs/project-system/static-context-pack.md",
-        "sha256": "02ed3b094452a0bde8f394a3ecfc6d4ac13a89a1cae08d10688cf957d65dca78"
+        "sha256": "1b73921772da68cdf1079d9d23122dbbea851f8bb07e519cbd12d8ae9cceeb77"
       },
       {
         "path": "docs/project-system/workspace-jobs.md",
@@ -393,15 +393,15 @@
       },
       {
         "path": "docs/release-management/api-compatibility.md",
-        "sha256": "23b6451e528b157502b8fa8425365cdfa64667ded33035881a3421809caf2d6e"
+        "sha256": "c0777619841ce92fae823439b4c7dfe42c5bf8435e68f0d869c1cb9134de4ef7"
       },
       {
         "path": "docs/release-management/audit-package.md",
-        "sha256": "88dcf15f5ba4064164615552c111ea420a674b3c934c52c89863d9b74823bc92"
+        "sha256": "f7fa3ce0e02ce751896dacc2fdc03b89e1e9d864a54730bcca2fcb71f9ff6f26"
       },
       {
         "path": "docs/release-management/ci-matrix.md",
-        "sha256": "cec7702f7fbfb62267ee9392f29b98ae7542803866f19c0de9f04386843d7172"
+        "sha256": "dc1e015983290b13a297d529564f925f4690c12055e880d24536f5581aede5d2"
       },
       {
         "path": "docs/release-management/performance-budgets.md",
@@ -409,15 +409,15 @@
       },
       {
         "path": "docs/release-management/project-template.md",
-        "sha256": "18d3d0cf14545e169810be04ac9c68576ff5c9812868907d5298d818ec55072d"
+        "sha256": "d950968f9a0812cc4a5c6cd9c8e342ab707a7af1e7791c56e9eeb09e76c71e42"
       },
       {
         "path": "docs/release-management/release-metadata.md",
-        "sha256": "2a4e5267468d45125ea00b352bdd3c938b28d5b5971bf8db7fee1b38bca63ebb"
+        "sha256": "644f5a6769c2f645d2bd29a3750480dd5a3dbf8d2c854714f8ea0f7ac67f5044"
       },
       {
         "path": "docs/release-management/release-packaging.md",
-        "sha256": "239f11f6da2ea63d63feea90fc8c2511f586951f8f070bb6c905693491361848"
+        "sha256": "16d7b541a10d3879852f3efe46ecdc7149449d418ef79aeac7d6b7259010b186"
       },
       {
         "path": "docs/release-management/test-infrastructure.md",
@@ -425,7 +425,7 @@
       },
       {
         "path": "docs/releases/0.1-preview.md",
-        "sha256": "e9f14555e3ad24d16d80114a955ac6552512b8b7138fb25a7632ae4a807f0a8f"
+        "sha256": "7a9f14fd6c3c8f286070f80759bac6609d65cfa9b414e5ef2314db6e0e148303"
       },
       {
         "path": "docs/rendering/android-mobile-gpu-fallback-policy.md",
@@ -489,7 +489,7 @@
       },
       {
         "path": "docs/repository/agent-workflow.md",
-        "sha256": "e424dd9205c1e5354f86158b4fce0ba4805c3d736d44eb2d256e2454113d705b"
+        "sha256": "f46a510d1a30d4643c33cdf6b479de880d20ef5056c4cc267a498ed2db84f24d"
       },
       {
         "path": "docs/repository/license-policy.md",
@@ -497,7 +497,7 @@
       },
       {
         "path": "docs/repository/repository-layout.md",
-        "sha256": "23f844d6813e05ea3f40d6bb80be7c193375d8f140c5275fd939011b48d78ea3"
+        "sha256": "4f677fa5ba561544037044babcc3d61fd3e8517a34c8c6a9a95bd0ddc7bcbc6a"
       },
       {
         "path": "docs/resources/aot-safe-metadata.md",
@@ -617,7 +617,7 @@
       },
       {
         "path": "docs/tooling/tooling-service-boundary.md",
-        "sha256": "3bd362d3e24f880cea18e36701b697a76d1bbaaaebaf173676321819251acf74"
+        "sha256": "000a6b3da4747f6fcf3a9c04615cedc801f9b28748ad773194a5bb4437484552"
       },
       {
         "path": "docs/tooling/vscode-example-launch.md",
@@ -895,7 +895,7 @@
       "path": "data/documentation/local-docs-index/documentation.ndjson",
       "kind": "documentation",
       "count": 159,
-      "sha256": "03e3aaaed01eb024387226d4aae73eccd24f0d9468d8bda6898dcaafe9344f25"
+      "sha256": "f7dbc4b6a40dc96a102d82db316f15c2e137a8681ef83d6a4d3d4dcbb10c56b2"
     },
     {
       "path": "data/documentation/local-docs-index/examples.ndjson",
@@ -907,7 +907,7 @@
   "sqliteCache": {
     "path": "data/documentation/electron2d-local-docs-search.sqlite",
     "schemaVersion": 1,
-    "sourceDigest": "912ad80dc4dd980c301c946e8b04df2dc9f001746cb7f594da5d059314189fd7",
+    "sourceDigest": "483b8b1173c9845ed3af8247e650d10cc06566dd8e5aac099e8076be4f7cc258",
     "entriesTable": "entries",
     "ftsTable": "entries_fts",
     "contract": "Generated local SQLite search cache; manifest and NDJSON shards remain canonical."

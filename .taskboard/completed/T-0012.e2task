@@ -1,0 +1,104 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-c755f2ff7b6a44bc0906713b2eced33c",
+  "revision": 2,
+  "taskId": "T-0012",
+  "legacyAliases": [],
+  "title": "Довести группы, persistent group metadata и group calls до release-качества",
+  "description": "# T-0012 [x] P1: Довести группы, persistent group metadata и group calls до release-качества\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-20T22:55:00+03:00\n- Статус: завершена\n- Коммит: `T-0012: реализовать группы и CallGroup`\n\n## Итог\n\nРеализован baseline групп целевого API:\n\n- `Node.AddToGroup(string group, bool persistent = false)`;\n- `Node.RemoveFromGroup(string group)`;\n- `Node.IsInGroup(string group)`;\n- `Node.GetGroups()`;\n- `SceneTree.GetFirstNodeInGroup(string group)`;\n- `SceneTree.GetNodeCountInGroup(string group)`;\n- `SceneTree.GetNodesInGroup(string group)`;\n- `SceneTree.HasGroup(string name)`;\n- `SceneTree.CallGroup(string group, string method, params object?[] args)`.\n\nPersistent metadata хранится internal и проверяется integration-тестами через friend assembly.\n\n## Проверенное поведение\n\n- Добавление/удаление groups работает без дубликатов.\n- Persistent flag не сбрасывается повторным non-persistent add.\n- `SceneTree` group queries возвращают только nodes inside tree.\n- `GetNodesInGroup()` возвращает nodes в hierarchy order.\n- `RemoveChild()` исключает subtree из group queries, но сохраняет локальное membership.\n- `CallGroup()` вызывает public matching method в hierarchy order и игнорирует nodes без метода.\n\n## Документация\n\n- Спецификация: `docs/object-model/node-groups.md`.\n- Справка: `docs/object-model/node-groups.md`.\n- Обновлены docs index, GitHub Wiki compatibility table, README, changelog и release notes.\n\n## Отличия и будущие задачи\n\n- До `StringName` group/method names представлены `string`.\n- До `Variant` `CallGroup()` использует `params object?[]`.\n- `CallGroupFlags`, deferred/reverse group calls, `NotifyGroup()` и `SetGroup()` остаются будущими задачами.\n- Persistence пока не сериализуется в scene files до появления `PackedScene`.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` упал на отсутствующем group API.\n- Green narrow: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 20 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 28 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 7.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n\n## Заметки агента\n\nЗадача выполнена через spec -> red tests -> минимальную runtime-реализацию -> документацию фактического поведения.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-20T19:55:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/object-model/node-groups.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 26611,
+      "byteLength": 3394,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "599529ee5b93a54e6922e0914bfacbc9aad08d0bb7fc2e6704736fef72ff47d5",
+      "markdown": "# T-0012 [x] P1: Довести группы, persistent group metadata и group calls до release-качества\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-20T22:55:00+03:00\n- Статус: завершена\n- Коммит: `T-0012: реализовать группы и CallGroup`\n\n## Итог\n\nРеализован baseline групп целевого API:\n\n- `Node.AddToGroup(string group, bool persistent = false)`;\n- `Node.RemoveFromGroup(string group)`;\n- `Node.IsInGroup(string group)`;\n- `Node.GetGroups()`;\n- `SceneTree.GetFirstNodeInGroup(string group)`;\n- `SceneTree.GetNodeCountInGroup(string group)`;\n- `SceneTree.GetNodesInGroup(string group)`;\n- `SceneTree.HasGroup(string name)`;\n- `SceneTree.CallGroup(string group, string method, params object?[] args)`.\n\nPersistent metadata хранится internal и проверяется integration-тестами через friend assembly.\n\n## Проверенное поведение\n\n- Добавление/удаление groups работает без дубликатов.\n- Persistent flag не сбрасывается повторным non-persistent add.\n- `SceneTree` group queries возвращают только nodes inside tree.\n- `GetNodesInGroup()` возвращает nodes в hierarchy order.\n- `RemoveChild()` исключает subtree из group queries, но сохраняет локальное membership.\n- `CallGroup()` вызывает public matching method в hierarchy order и игнорирует nodes без метода.\n\n## Документация\n\n- Спецификация: `docs/object-model/node-groups.md`.\n- Справка: `docs/object-model/node-groups.md`.\n- Обновлены docs index, GitHub Wiki compatibility table, README, changelog и release notes.\n\n## Отличия и будущие задачи\n\n- До `StringName` group/method names представлены `string`.\n- До `Variant` `CallGroup()` использует `params object?[]`.\n- `CallGroupFlags`, deferred/reverse group calls, `NotifyGroup()` и `SetGroup()` остаются будущими задачами.\n- Persistence пока не сериализуется в scene files до появления `PackedScene`.\n\n## Проверки\n\n- Red-state: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` упал на отсутствующем group API.\n- Green narrow: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 20 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло, 28 тестов.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 7.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n\n## Заметки агента\n\nЗадача выполнена через spec -> red tests -> минимальную runtime-реализацию -> документацию фактического поведения.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-20T19:55:00.0000000+00:00",
+  "completedAt": "2026-06-20T19:55:00.0000000+00:00",
+  "acceptedAt": "2026-06-20T19:55:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-20T19:55:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

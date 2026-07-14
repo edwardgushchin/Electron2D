@@ -175,7 +175,8 @@ internal static class ProjectDocumentClassifier
 
     private static bool IsEditorMetadataPath(string normalizedPath)
     {
-        return normalizedPath.StartsWith(".electron2d/tasks/", StringComparison.Ordinal) ||
+        return normalizedPath.StartsWith(".taskboard/", StringComparison.Ordinal) ||
+            normalizedPath.StartsWith(".electron2d/tasks/", StringComparison.Ordinal) ||
             normalizedPath.StartsWith(".electron2d/user/", StringComparison.Ordinal);
     }
 

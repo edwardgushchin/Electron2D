@@ -1,0 +1,216 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-5e5c641c9ff366c582aa2b1ceed59fdf",
+  "revision": 2,
+  "taskId": "T-0081",
+  "legacyAliases": [],
+  "title": "Реализовать 2D Viewport: pan, zoom, select, move, rotate, scale, snapping, pivot, bounds, collision shapes, camera preview, multi-select",
+  "description": "# T-0081 [x] P0: Реализовать 2D Viewport: pan, zoom, select, move, rotate, scale, snapping, pivot, bounds, collision shapes, camera preview, multi-select\n\n- Статус: завершена\n- Завершена: 2026-06-22T07:00:37+03:00\n- Коммит: `T-0081: add editor 2D viewport model`\n\n## Ссылки\n\n- Спецификация: `docs/editor/viewport-2d.md`\n- Документация: `docs/editor/viewport-2d.md`\n- Исходный код: `src/Electron2D.Editor/Viewport2D/`; `src/Electron2D.Editor/Program.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/EditorViewport2DTests.cs`\n- Runtime-опоры: `Viewport`, `Camera2D`, `Node2D`, debug collision-shape snapshot\n\n## Самодостаточное описание\n\nЗадача относилась к домену «Electron2D.Editor». Цель - реализовать проверяемую модель 2D Viewport для навигации по сцене, выбора объектов и базовых transform-инструментов: pan, zoom, select, move, rotate, scale, snapping, pivot, bounds, collision shapes, camera preview и multi-select.\n\nПолноценный визуальный layout постоянного окна редактора не входил в эту задачу. Реализована внутренняя модель поведения и smoke-команда editor executable, чтобы следующие editor-задачи могли встроить viewport в shell.\n\n## Что сделано\n\n- Добавлена спецификация `docs/editor/viewport-2d.md`.\n- Добавлена документация реализации `docs/editor/viewport-2d.md` и обновлены индексы документации.\n- Добавлена команда редактора:\n\n```powershell\ndotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --viewport-2d-smoke <work-root>\n```\n\n- Реализована внутренняя модель `EditorViewport2D` с pan/zoom, screen-to-world и world-to-screen преобразованиями.\n- Добавлены selectable bounds для `Node2D`, single select, additive select и selection by rectangle.\n- Реализованы move, rotate и scale выбранных узлов с snapping.\n- Реализован pivot по selection bounds или явному world point.\n- Реализован расчёт selection bounds после transform-операций.\n- Реализован сбор collision-shape overlays через текущий debug collision-shape snapshot.\n- Реализован camera preview rectangle для `Camera2D`.\n- Smoke-run создаёт runtime scene, выполняет все ключевые операции и выводит machine-readable значения.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: 2D Viewport поддерживает pan, zoom, select, move, rotate, scale, snapping, pivot, bounds, collision shapes, camera preview и multi-select.\n- [x] Core interactions have automated or scripted visual checks.\n- [x] Готова спецификация в `docs/editor/`.\n- [x] Добавлены automated tests, покрывающие новое поведение.\n- [x] Готова документация реализации в `docs/editor/`.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorViewport2DTests\" --no-restore -m:1` упал с exit code `2`, потому что editor executable ещё не поддерживал `--viewport-2d-smoke`.\n- Green phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorViewport2DTests\" --no-restore -m:1` прошёл: `1/1`.\n- Прямой smoke-run `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --viewport-2d-smoke ...` прошёл и вывел `Selected=Player|Enemy`, `SelectionBounds=140,-20,40,240`, `CollisionOverlays=1`, `CameraPreview=0,0,400,300`, `WorldUnderCursorStable=True`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki` прошёл: UI/Text public types `48`, все строки имеют статус `Supported`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: tracked source files `458`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: source files scanned `305`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `266/266`, runtime smoke `5/5`, golden-data `12/12`.\n- `dotnet build src\\Electron2D.sln -c Release` прошёл: warnings `0`, errors `0`.\n\n## Решения\n\n- Публичный runtime API не расширялся: viewport editor logic остаётся внутренним слоем `Electron2D.Editor`.\n- `Pan` в smoke output показывает итоговый view offset после `ZoomAt()`, потому что сохранение world point под курсором меняет offset.\n- Transform-изменения пока применяются к runtime `Node2D` в модели редактора, но не сохраняются в scene file. Сохранение связывается с Inspector и scene persistence следующими задачами.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Реализована цель задачи: 2D Viewport поддерживает pan, zoom, select, move, rotate, scale, snapping, pivot, bounds, collision shapes, camera preview и multi-select.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-5e5c641c9ff366c582aa2b1ceed59fdf/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Core interactions have automated or scripted visual checks.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-5e5c641c9ff366c582aa2b1ceed59fdf/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Готова спецификация в `docs/editor/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-5e5c641c9ff366c582aa2b1ceed59fdf/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Добавлены automated tests, покрывающие новое поведение.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-5e5c641c9ff366c582aa2b1ceed59fdf/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Готова документация реализации в `docs/editor/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-5e5c641c9ff366c582aa2b1ceed59fdf/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-5e5c641c9ff366c582aa2b1ceed59fdf/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T04:00:37.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "266/266"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/editor/viewport-2d.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Program.cs"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor/Viewport2D"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorViewport2DTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 428341,
+      "byteLength": 5609,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "e43ac67a667605cfa01a50c0891d0b03877e8b5f049568d4eebe8b42da25e0ae",
+      "markdown": "# T-0081 [x] P0: Реализовать 2D Viewport: pan, zoom, select, move, rotate, scale, snapping, pivot, bounds, collision shapes, camera preview, multi-select\n\n- Статус: завершена\n- Завершена: 2026-06-22T07:00:37+03:00\n- Коммит: `T-0081: add editor 2D viewport model`\n\n## Ссылки\n\n- Спецификация: `docs/editor/viewport-2d.md`\n- Документация: `docs/editor/viewport-2d.md`\n- Исходный код: `src/Electron2D.Editor/Viewport2D/`; `src/Electron2D.Editor/Program.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/EditorViewport2DTests.cs`\n- Runtime-опоры: `Viewport`, `Camera2D`, `Node2D`, debug collision-shape snapshot\n\n## Самодостаточное описание\n\nЗадача относилась к домену «Electron2D.Editor». Цель - реализовать проверяемую модель 2D Viewport для навигации по сцене, выбора объектов и базовых transform-инструментов: pan, zoom, select, move, rotate, scale, snapping, pivot, bounds, collision shapes, camera preview и multi-select.\n\nПолноценный визуальный layout постоянного окна редактора не входил в эту задачу. Реализована внутренняя модель поведения и smoke-команда editor executable, чтобы следующие editor-задачи могли встроить viewport в shell.\n\n## Что сделано\n\n- Добавлена спецификация `docs/editor/viewport-2d.md`.\n- Добавлена документация реализации `docs/editor/viewport-2d.md` и обновлены индексы документации.\n- Добавлена команда редактора:\n\n```powershell\ndotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --viewport-2d-smoke <work-root>\n```\n\n- Реализована внутренняя модель `EditorViewport2D` с pan/zoom, screen-to-world и world-to-screen преобразованиями.\n- Добавлены selectable bounds для `Node2D`, single select, additive select и selection by rectangle.\n- Реализованы move, rotate и scale выбранных узлов с snapping.\n- Реализован pivot по selection bounds или явному world point.\n- Реализован расчёт selection bounds после transform-операций.\n- Реализован сбор collision-shape overlays через текущий debug collision-shape snapshot.\n- Реализован camera preview rectangle для `Camera2D`.\n- Smoke-run создаёт runtime scene, выполняет все ключевые операции и выводит machine-readable значения.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: 2D Viewport поддерживает pan, zoom, select, move, rotate, scale, snapping, pivot, bounds, collision shapes, camera preview и multi-select.\n- [x] Core interactions have automated or scripted visual checks.\n- [x] Готова спецификация в `docs/editor/`.\n- [x] Добавлены automated tests, покрывающие новое поведение.\n- [x] Готова документация реализации в `docs/editor/`.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorViewport2DTests\" --no-restore -m:1` упал с exit code `2`, потому что editor executable ещё не поддерживал `--viewport-2d-smoke`.\n- Green phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorViewport2DTests\" --no-restore -m:1` прошёл: `1/1`.\n- Прямой smoke-run `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --viewport-2d-smoke ...` прошёл и вывел `Selected=Player|Enemy`, `SelectionBounds=140,-20,40,240`, `CollisionOverlays=1`, `CameraPreview=0,0,400,300`, `WorldUnderCursorStable=True`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki` прошёл: UI/Text public types `48`, все строки имеют статус `Supported`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: tracked source files `458`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: source files scanned `305`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `266/266`, runtime smoke `5/5`, golden-data `12/12`.\n- `dotnet build src\\Electron2D.sln -c Release` прошёл: warnings `0`, errors `0`.\n\n## Решения\n\n- Публичный runtime API не расширялся: viewport editor logic остаётся внутренним слоем `Electron2D.Editor`.\n- `Pan` в smoke output показывает итоговый view offset после `ZoomAt()`, потому что сохранение world point под курсором меняет offset.\n- Transform-изменения пока применяются к runtime `Node2D` в модели редактора, но не сохраняются в scene file. Сохранение связывается с Inspector и scene persistence следующими задачами.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T04:00:37.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T04:00:37.0000000+00:00",
+  "completedAt": "2026-06-22T04:00:37.0000000+00:00",
+  "acceptedAt": "2026-06-22T04:00:37.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T04:00:37.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

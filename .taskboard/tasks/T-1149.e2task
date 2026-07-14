@@ -1,0 +1,388 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-3c36a434e93b46838a00c18fe4da20ac",
+  "revision": 11,
+  "taskId": "T-1149",
+  "legacyAliases": [],
+  "title": "Открывать сведения о задаче в центрированном модальном окне VS Code",
+  "description": "При выборе карточки VS Code Task Board должен показывать сведения о задаче в центрированном модальном окне поверх доски, а не в отдельной боковой полосе, уменьшающей ширину колонок. Окно ограничено доступным viewport: заголовок и нижняя панель остаются на месте, содержимое прокручивается независимо. Доступная кнопка закрытия, Escape и щелчок по фону закрывают окно и возвращают фокус на исходную карточку, когда это возможно. Существующие действия редактирования, работы с вложениями, смены статуса и добавления комментариев сохраняют прежнюю семантику и revision-aware границу TaskBoard CLI.",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "centered-modal-overlay",
+      "description": "Сведения о выбранной задаче открываются в центрированном модальном окне поверх доски; окно не занимает отдельную колонку и не изменяет ширину статусных колонок.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webview.css"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "bounded-independent-scroll",
+      "description": "Высота модального окна ограничена доступным viewport, заголовок и нижняя панель остаются на месте, а содержимое прокручивается независимо внутри окна.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webview.css"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "accessible-close-and-focus",
+      "description": "Доступная кнопка закрытия находится в правом верхнем углу; кнопка, Escape и щелчок по фону закрывают окно, после чего фокус возвращается на исходную карточку, когда это возможно.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webview.ts"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "preserve-task-actions",
+      "description": "Переход к модальному представлению сохраняет существующие действия редактирования, работы с вложениями, смены статуса и добавления комментариев без изменения семантики TaskBoard CLI.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webview.ts"
+        },
+        {
+          "kind": "File",
+          "path": "docs/editor/project-tasks-board.md"
+        }
+      ]
+    },
+    {
+      "criterionId": "verification-and-packaging",
+      "description": "Регрессионные тесты, проверка типов, Extension Host и сборка VSIX подтверждают модальное представление; результат и остаточный риск визуальной проверки явно сохранены в activity задачи и доменном документе.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+        },
+        {
+          "kind": "File",
+          "path": "docs/editor/project-tasks-board.md"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-8debaf6e3a6f448c8b825118e8014a62",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T08:50:40.4945616+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Ready."
+      }
+    },
+    {
+      "activityEntryId": "activity-08229bf32e7b4c21bdc76380f27e9428",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T08:50:41.1186692+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to InProgress."
+      }
+    },
+    {
+      "activityEntryId": "activity-eb0ed5db5e2f442681b9b88a4de2a860",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T08:55:13.8398947+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Review."
+      }
+    },
+    {
+      "activityEntryId": "activity-5df7b53467c64368a630ed00fb8f74fe",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-13T21:40:15.3961186+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Задача принята пользователем в VS Code Task Board."
+      }
+    },
+    {
+      "activityEntryId": "activity-41a5845be2fb4a4490b0568259c88054",
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-13T21:40:16.8666480+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "╨Ч╨░╨┤╨░╤З╨░ ╨┐╤А╨╕╨╜╤П╤В╨░ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╨╡╨╝ ╨▓ VS Code Task Board.",
+        "authorityActorId": "vscode:eduar",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-modal-domain",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-modal-renderer",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "link-modal-styles",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.css"
+    },
+    {
+      "linkId": "link-modal-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+    }
+  ],
+  "executionContract": {
+    "taskType": "модальное представление сведений о задаче в VS Code Task Board",
+    "readyToStart": [
+      "Боковая панель сведений занимает отдельную полосу и уменьшает доступную ширину доски; целевое поведение — центрированное модальное окно поверх доски.",
+      "Действия задачи и revision-aware граница записи через TaskBoard CLI уже существуют и должны быть сохранены."
+    ],
+    "stopConditions": [
+      "Для модального представления требуется изменить lifecycle задач, формат TaskBoard, команды CLI или доверенную границу Extension Host.",
+      "Нельзя сохранить доступное закрытие, возврат фокуса или существующие действия задачи без расширения согласованного объёма."
+    ],
+    "allowedChanges": [
+      "Доменный документ VS Code Task Board, разметка и стили окна сведений, связанные unit/layout и Extension Host tests.",
+      "Сборка и установка VSIX, визуальная проверка реального окна VS Code, activity задачи и append-only дневник."
+    ],
+    "forbiddenChanges": [
+      "Изменение lifecycle, статусов, revision-aware мутаций, формата TaskBoard или команд `e2d tasks`.",
+      "Ручное редактирование `.taskboard`, несвязанный рефакторинг карточек или колонок и отключение доступности модального окна."
+    ],
+    "requiredOutputs": [
+      "Центрированное модальное окно с backdrop, ограниченной геометрией и независимой прокруткой содержимого без изменения ширины доски.",
+      "Доступное закрытие кнопкой, Escape и щелчком по фону с возвратом фокуса на исходную карточку.",
+      "Сохранённые действия задачи, регрессионные проверки, собранный VSIX и визуальное доказательство из реального VS Code либо явно зафиксированный остаточный риск."
+    ],
+    "commands": [
+      {
+        "commandId": "cmd-modal-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-modal-typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-modal-extension-host",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:extension"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Windows"
+        ],
+        "timeoutSeconds": 900,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "Network",
+          "ExternalEffect"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-modal-package",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "cmd-modal-real-window-capture",
+        "kind": "Process",
+        "executable": "python",
+        "arguments": [
+          "eng/tools/capture_window.py",
+          "--title",
+          "Visual Studio Code",
+          "--output",
+          ".temp/taskboard-t1149-modal-real.png"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Windows"
+        ],
+        "timeoutSeconds": 120,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "ExternalEffect"
+        ],
+        "confirmation": "PolicyDecides"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-11T08:50:39.8632681+00:00",
+  "updatedAt": "2026-07-13T21:40:16.8666480+00:00",
+  "submittedAt": "2026-07-13T21:40:15.3961186+00:00",
+  "completedAt": "2026-07-13T21:40:16.8666480+00:00",
+  "acceptedAt": "2026-07-13T21:40:16.8666480+00:00",
+  "acceptedBy": "vscode:eduar",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 2,
+    "messages": [
+      {
+        "messageId": "activity-46c3b155f825490e857274012fdb4cf8",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T08:55:13.1939874+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Task details presentation заменён бокового track на centered modal window: fixed backdrop, bounded `.details-window`, fixed title bar, independent `.details-content` scroll, Windows-like red-hover `×`, accessible dialog attributes, Escape/backdrop close и focus restore на исходную card. Regression suite прошёл RED 18/20 → GREEN 20/20; typecheck, Insiders Extension Host exit 0, VSIX 8 files/15.31 KB, установка в stable VS Code, docs и licenses GREEN. Pixel-level automation заблокирована отсутствующими Windows control kernel assets; требуется пользовательское визуальное подтверждение."
+          }
+        ]
+      },
+      {
+        "messageId": "message-25a264b79e7d4c149fdf6525e32037ba",
+        "sequence": 2,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-13T16:00:00.8124257+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Задача нормализована по схеме TaskBoard v3. Критерии приёмки перенесены из Markdown-описания в структурированный acceptanceCriteria с типизированными File-evidence; добавлены typed links, содержательный executionContract, пять исполняемых команд, явные границы изменений и требуемые результаты. Сохранены P1, теги Функциональность/Редактор, родитель T-1147, placement, Review/InternalReview и историческая activity. Production-код и прежние результаты проверок не изменялись и в этой сессии повторно не запускались."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

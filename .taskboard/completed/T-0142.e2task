@@ -1,0 +1,409 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-4afe524e3b7cf00d205b740a383a321e",
+  "revision": 2,
+  "taskId": "T-0142",
+  "legacyAliases": [],
+  "title": "Ввести Editor Capability Manifest и parity verifier для AI-паритета",
+  "description": "## T-0142 - Ввести Editor Capability Manifest и parity verifier для AI-паритета\n\n- Завершено: 2026-06-23T00:29:00+03:00\n- Commit: `50d1602 feat: add editor capability manifest`\n- Статус: выполнено по pipeline; пользовательская приёмка отдельно не заявлялась.\n- Спецификация: `docs/tooling/editor-capability-manifest.md`\n- Документация: `docs/tooling/editor-capability-manifest.md`; `docs/mcp/mcp-server.md`; `docs/tooling/tooling-service-boundary.md`; диагностические таблицы.\n- Код и данные: `src/Electron2D.Tooling/EditorCapabilityManifest.cs`; `src/Electron2D.Mcp/McpServerSession.cs`; `data/editor/electron2d-editor-capabilities.json`; `data/documentation/electron2d-local-docs-index.json`.\n- Тесты: `tests/Electron2D.Tests.Integration/EditorCapabilityManifestTests.cs`; обновлён `tests/Electron2D.Tests.Integration/Electron2DMcpServerTests.cs`.\n\n## Итог\n\n- Создан canonical `Editor Capability Manifest` для `0.1.0-preview`, который связывает Editor capability, Tooling command, MCP tool/resource, CLI binding policy и статус поддержки.\n- Добавлен verifier, который возвращает structured diagnostics при нарушении parity, CLI policy, формы manifest или ссылок на отсутствующие Tooling/MCP команды.\n- MCP resource `electron2d://editor/capabilities` теперь возвращает canonical manifest, а `e2d mcp serve --format json` включает summary `data.editorCapabilityManifest`.\n- В diagnostic registry добавлены `E2D-CAPABILITY-0001`...`E2D-CAPABILITY-0004`.\n- Локальный индекс документации пересобран и вошёл в commit.\n\n## Критерии\n\n- [x] Создана спецификация `Editor Capability Manifest`.\n- [x] Manifest покрывает scene, node, Inspector properties, resources, signals, groups, Input Map, Project Settings, SpriteFrames, AnimationPlayer, TileMap, UI themes, import settings, main scene, export presets, tests, diagnostics и runtime control.\n- [x] Каждая capability классифицирована как `projectMutation`, `editorSessionAction`, `runtimeAction`, `backgroundJob` или `readOnlyQuery`.\n- [x] CLI binding поддерживает `dedicatedCommand`, `genericTransaction` и `notApplicable`; отдельная CLI-команда не требуется для каждого Editor-действия.\n- [x] Каждая capability имеет `supported`, `partial`, `experimental` или `not_applicable` с объяснением.\n- [x] Verifier падает, если Editor capability имеет статус `Supported`, а Tooling binding или MCP binding имеют статус ниже `Supported`.\n- [x] `partial` для Tooling/MCP допустим только тогда, когда сама Editor capability `partial` и не входит в release-required semantic operations.\n- [x] Verifier падает, если Editor получил новую проектную операцию без полного Tooling/MCP представления и корректной CLI binding policy.\n- [x] Manifest ссылается на JSON API manifest для runtime types, properties и signals.\n- [x] Добавлены tests на manifest generation и verifier failures.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n## Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~EditorCapabilityManifestTests` сначала упал ожидаемо из-за отсутствующих типов `EditorCapabilityManifestFactory`, serializer/verifier и опубликованных списков Tooling/MCP команд.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~EditorCapabilityManifestTests` прошёл `4/4`.\n- Focused regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorCapabilityManifestTests|FullyQualifiedName~Electron2DMcpServerTests|FullyQualifiedName~ToolingServiceBoundaryTests|FullyQualifiedName~DiagnosticsCoreTests|FullyQualifiedName~Electron2DCliWorkflowTests\"` прошёл `27/27`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-LocalDocumentationIndex.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для `558` tracked source files.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CanonicalGoalAlignment.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `375/375`, runtime smoke `5/5`, golden-data `12/12`.\n- `git diff --cached --check` прошёл без whitespace errors.\n\n## Решения\n\n- Manifest реализован в `Electron2D.Tooling` как внутренний contract и canonical tracked JSON, чтобы future Editor UI не мог заявить поддержку без Tooling/MCP parity.\n- Release-required operations обязаны иметь supported Tooling/MCP bindings и явную CLI policy; специализированные будущие workflows остаются `partial` без объявления готовности.\n- MCP summary содержит краткую fail-closed проверку, а полный список capabilities отдаётся отдельным resource.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0142 [ ] P0: Ввести Editor Capability Manifest и parity verifier для AI-паритета\n\n- Создана: 2026-06-22T11:03:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0115, T-0118, T-0139\n- Ссылки:\n  - Спецификация: `docs/architecture/agent-native-workflow.md`; `docs/editor/`; `docs/documentation/`\n  - Документация: `docs/editor/`; `docs/documentation/`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.Tooling/`; `src/Electron2D.Mcp/`; `src/Electron2D.Cli/`; `tools/`; `tests/`\n\n### Самодостаточное описание\n\nНужно сделать проверяемым контракт «AI может выполнить каждую семантически значимую операцию Editor». Для этого нужен `Editor Capability Manifest`, который связывает editor command, Tooling command, MCP tool/resource, CLI command и статус поддержки.\n\n### Критерии приёмки\n\n- [ ] Создана спецификация `Editor Capability Manifest`.\n- [ ] Manifest покрывает scene, node, Inspector properties, resources, signals, groups, Input Map, Project Settings, SpriteFrames, AnimationPlayer, TileMap, UI themes, import settings, main scene, export presets, tests, diagnostics и runtime control.\n- [ ] Каждая capability классифицирована как `projectMutation`, `editorSessionAction`, `runtimeAction`, `backgroundJob` или `readOnlyQuery`.\n- [ ] CLI binding поддерживает `dedicatedCommand`, `genericTransaction` и `notApplicable`; отдельная CLI-команда не требуется для каждого Editor-действия.\n- [ ] Каждая capability имеет `supported`, `partial`, `experimental` или `not_applicable` с объяснением.\n- [ ] Verifier падает, если Editor capability имеет статус `Supported`, а Tooling binding или MCP binding имеют статус ниже `Supported`.\n- [ ] `partial` для Tooling/MCP допустим только тогда, когда сама Editor capability `partial` и не входит в release-required semantic operations.\n- [ ] Verifier падает, если Editor получил новую проектную операцию без полного Tooling/MCP представления и корректной CLI binding policy.\n- [ ] Manifest ссылается на JSON API manifest для runtime types, properties и signals.\n- [ ] Добавлены tests на manifest generation и verifier failures.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: AI-паритет должен быть проверяемым, а не обещанием в README.\n\n2026-06-22T11:03:00+03:00 - Блокер пользователя: Agent-native cross-platform 2D game engine задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:24:00+03:00 - Уточнение пользователя: Capability Manifest должен различать project mutations, editor-session actions, runtime actions, background jobs и read-only queries; CLI может использовать generic transaction вместо отдельной команды.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017",
+    "tag-0018",
+    "tag-0021"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-dc068f5afb24a6ac7b7b897592fc6418"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-33c33447a62b875d2e8f84f934416e2d"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ae16b90af93a4555a0963cb5434eefe5"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создана спецификация `Editor Capability Manifest`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4afe524e3b7cf00d205b740a383a321e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Manifest покрывает scene, node, Inspector properties, resources, signals, groups, Input Map, Project Settings, SpriteFrames, AnimationPlayer, TileMap, UI themes, import settings, main scene, export presets, tests, diagnostics и runtime control.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4afe524e3b7cf00d205b740a383a321e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Каждая capability классифицирована как `projectMutation`, `editorSessionAction`, `runtimeAction`, `backgroundJob` или `readOnlyQuery`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4afe524e3b7cf00d205b740a383a321e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "CLI binding поддерживает `dedicatedCommand`, `genericTransaction` и `notApplicable`; отдельная CLI-команда не требуется для каждого Editor-действия.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4afe524e3b7cf00d205b740a383a321e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Каждая capability имеет `supported`, `partial`, `experimental` или `not_applicable` с объяснением.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4afe524e3b7cf00d205b740a383a321e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Verifier падает, если Editor capability имеет статус `Supported`, а Tooling binding или MCP binding имеют статус ниже `Supported`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4afe524e3b7cf00d205b740a383a321e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "`partial` для Tooling/MCP допустим только тогда, когда сама Editor capability `partial` и не входит в release-required semantic operations.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4afe524e3b7cf00d205b740a383a321e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Verifier падает, если Editor получил новую проектную операцию без полного Tooling/MCP представления и корректной CLI binding policy.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4afe524e3b7cf00d205b740a383a321e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Manifest ссылается на JSON API manifest для runtime types, properties и signals.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4afe524e3b7cf00d205b740a383a321e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Добавлены tests на manifest generation и verifier failures.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4afe524e3b7cf00d205b740a383a321e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Документация фактического поведения обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4afe524e3b7cf00d205b740a383a321e/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Команда проверки задокументирована.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4afe524e3b7cf00d205b740a383a321e/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:03:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Блокер пользователя: Agent-native cross-platform 2D game engine задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:05:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:24:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: Capability Manifest должен различать project mutations, editor-session actions, runtime actions, background jobs и read-only queries; CLI может использовать generic transaction вместо отдельной команды."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T21:29:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "27/27"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "375/375"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "4/4"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "data/editor/electron2d-editor-capabilities.json"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/architecture/agent-native-workflow.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "docs/documentation"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/mcp/mcp-server.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/tooling/editor-capability-manifest.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "docs/tooling/tooling-service-boundary.md"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "Uri",
+      "value": "electron2d://editor/capabilities"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "src/Electron2D.Cli"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "Directory",
+      "value": "src/Electron2D.Mcp"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "File",
+      "value": "src/Electron2D.Mcp/McpServerSession.cs"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "Directory",
+      "value": "src/Electron2D.Tooling"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": "src/Electron2D.Tooling/EditorCapabilityManifest.cs"
+    },
+    {
+      "linkId": "link-0022",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0023",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorCapabilityManifestTests.cs"
+    },
+    {
+      "linkId": "link-0024",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DMcpServerTests.cs"
+    },
+    {
+      "linkId": "link-0025",
+      "kind": "Directory",
+      "value": "tools"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 676425,
+      "byteLength": 10240,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "d01f48054ecac81cc267a5e745a3829dd5e7cab94869efa7e1a26e6ba9e63171",
+      "markdown": "## T-0142 - Ввести Editor Capability Manifest и parity verifier для AI-паритета\n\n- Завершено: 2026-06-23T00:29:00+03:00\n- Commit: `50d1602 feat: add editor capability manifest`\n- Статус: выполнено по pipeline; пользовательская приёмка отдельно не заявлялась.\n- Спецификация: `docs/tooling/editor-capability-manifest.md`\n- Документация: `docs/tooling/editor-capability-manifest.md`; `docs/mcp/mcp-server.md`; `docs/tooling/tooling-service-boundary.md`; диагностические таблицы.\n- Код и данные: `src/Electron2D.Tooling/EditorCapabilityManifest.cs`; `src/Electron2D.Mcp/McpServerSession.cs`; `data/editor/electron2d-editor-capabilities.json`; `data/documentation/electron2d-local-docs-index.json`.\n- Тесты: `tests/Electron2D.Tests.Integration/EditorCapabilityManifestTests.cs`; обновлён `tests/Electron2D.Tests.Integration/Electron2DMcpServerTests.cs`.\n\n## Итог\n\n- Создан canonical `Editor Capability Manifest` для `0.1.0-preview`, который связывает Editor capability, Tooling command, MCP tool/resource, CLI binding policy и статус поддержки.\n- Добавлен verifier, который возвращает structured diagnostics при нарушении parity, CLI policy, формы manifest или ссылок на отсутствующие Tooling/MCP команды.\n- MCP resource `electron2d://editor/capabilities` теперь возвращает canonical manifest, а `e2d mcp serve --format json` включает summary `data.editorCapabilityManifest`.\n- В diagnostic registry добавлены `E2D-CAPABILITY-0001`...`E2D-CAPABILITY-0004`.\n- Локальный индекс документации пересобран и вошёл в commit.\n\n## Критерии\n\n- [x] Создана спецификация `Editor Capability Manifest`.\n- [x] Manifest покрывает scene, node, Inspector properties, resources, signals, groups, Input Map, Project Settings, SpriteFrames, AnimationPlayer, TileMap, UI themes, import settings, main scene, export presets, tests, diagnostics и runtime control.\n- [x] Каждая capability классифицирована как `projectMutation`, `editorSessionAction`, `runtimeAction`, `backgroundJob` или `readOnlyQuery`.\n- [x] CLI binding поддерживает `dedicatedCommand`, `genericTransaction` и `notApplicable`; отдельная CLI-команда не требуется для каждого Editor-действия.\n- [x] Каждая capability имеет `supported`, `partial`, `experimental` или `not_applicable` с объяснением.\n- [x] Verifier падает, если Editor capability имеет статус `Supported`, а Tooling binding или MCP binding имеют статус ниже `Supported`.\n- [x] `partial` для Tooling/MCP допустим только тогда, когда сама Editor capability `partial` и не входит в release-required semantic operations.\n- [x] Verifier падает, если Editor получил новую проектную операцию без полного Tooling/MCP представления и корректной CLI binding policy.\n- [x] Manifest ссылается на JSON API manifest для runtime types, properties и signals.\n- [x] Добавлены tests на manifest generation и verifier failures.\n- [x] Документация фактического поведения обновлена.\n- [x] Команда проверки задокументирована.\n\n## Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~EditorCapabilityManifestTests` сначала упал ожидаемо из-за отсутствующих типов `EditorCapabilityManifestFactory`, serializer/verifier и опубликованных списков Tooling/MCP команд.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~EditorCapabilityManifestTests` прошёл `4/4`.\n- Focused regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorCapabilityManifestTests|FullyQualifiedName~Electron2DMcpServerTests|FullyQualifiedName~ToolingServiceBoundaryTests|FullyQualifiedName~DiagnosticsCoreTests|FullyQualifiedName~Electron2DCliWorkflowTests\"` прошёл `27/27`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-LocalDocumentationIndex.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл для `558` tracked source files.\n- `dotnet build src\\Electron2D.sln` прошёл: warnings `0`, errors `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CanonicalGoalAlignment.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `375/375`, runtime smoke `5/5`, golden-data `12/12`.\n- `git diff --cached --check` прошёл без whitespace errors.\n\n## Решения\n\n- Manifest реализован в `Electron2D.Tooling` как внутренний contract и canonical tracked JSON, чтобы future Editor UI не мог заявить поддержку без Tooling/MCP parity.\n- Release-required operations обязаны иметь supported Tooling/MCP bindings и явную CLI policy; специализированные будущие workflows остаются `partial` без объявления готовности.\n- MCP summary содержит краткую fail-closed проверку, а полный список capabilities отдаётся отдельным resource.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0142 [ ] P0: Ввести Editor Capability Manifest и parity verifier для AI-паритета\n\n- Создана: 2026-06-22T11:03:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0115, T-0118, T-0139\n- Ссылки:\n  - Спецификация: `docs/architecture/agent-native-workflow.md`; `docs/editor/`; `docs/documentation/`\n  - Документация: `docs/editor/`; `docs/documentation/`\n  - Исходный код: `src/Electron2D.Editor/`; `src/Electron2D.Tooling/`; `src/Electron2D.Mcp/`; `src/Electron2D.Cli/`; `tools/`; `tests/`\n\n### Самодостаточное описание\n\nНужно сделать проверяемым контракт «AI может выполнить каждую семантически значимую операцию Editor». Для этого нужен `Editor Capability Manifest`, который связывает editor command, Tooling command, MCP tool/resource, CLI command и статус поддержки.\n\n### Критерии приёмки\n\n- [ ] Создана спецификация `Editor Capability Manifest`.\n- [ ] Manifest покрывает scene, node, Inspector properties, resources, signals, groups, Input Map, Project Settings, SpriteFrames, AnimationPlayer, TileMap, UI themes, import settings, main scene, export presets, tests, diagnostics и runtime control.\n- [ ] Каждая capability классифицирована как `projectMutation`, `editorSessionAction`, `runtimeAction`, `backgroundJob` или `readOnlyQuery`.\n- [ ] CLI binding поддерживает `dedicatedCommand`, `genericTransaction` и `notApplicable`; отдельная CLI-команда не требуется для каждого Editor-действия.\n- [ ] Каждая capability имеет `supported`, `partial`, `experimental` или `not_applicable` с объяснением.\n- [ ] Verifier падает, если Editor capability имеет статус `Supported`, а Tooling binding или MCP binding имеют статус ниже `Supported`.\n- [ ] `partial` для Tooling/MCP допустим только тогда, когда сама Editor capability `partial` и не входит в release-required semantic operations.\n- [ ] Verifier падает, если Editor получил новую проектную операцию без полного Tooling/MCP представления и корректной CLI binding policy.\n- [ ] Manifest ссылается на JSON API manifest для runtime types, properties и signals.\n- [ ] Добавлены tests на manifest generation и verifier failures.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: AI-паритет должен быть проверяемым, а не обещанием в README.\n\n2026-06-22T11:03:00+03:00 - Блокер пользователя: Agent-native cross-platform 2D game engine задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:24:00+03:00 - Уточнение пользователя: Capability Manifest должен различать project mutations, editor-session actions, runtime actions, background jobs и read-only queries; CLI может использовать generic transaction вместо отдельной команды.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T08:03:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T21:29:00.0000000+00:00",
+  "completedAt": "2026-06-22T21:29:00.0000000+00:00",
+  "acceptedAt": "2026-06-22T21:29:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T21:29:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

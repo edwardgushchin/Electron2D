@@ -1,0 +1,215 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-d6fec9e7ac056283e91eedf5cbd6bad3",
+  "revision": 2,
+  "taskId": "T-1143",
+  "legacyAliases": [],
+  "title": "Исправить XML threadsafety-контракт RenderingServer",
+  "description": "## T-1143 [ ] P3: Исправить XML threadsafety-контракт RenderingServer\n\n- Создана: 2026-07-10T20:25:03+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-1137\n- Ссылки:\n  - Доменный документ: `docs/rendering/rendering-server.md`\n  - Исходник: `src/Electron2D/Graphics/Rendering/RenderingServer.cs`\n  - Сгенерированные потребители: `data/api/electron2d-api-manifest.json`; `.github/wiki/RenderingServer.md`\n  - Проверки: `tests/Electron2D.Tests.Unit/RenderingServerPublicApiTests.cs`; `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`\n  - Источник finding-а: `docs/verdicts/release-management/t-1137-audit-control-r35.md`, `FOLLOW_UP_FINDING F3`\n\n### Execution contract\n\n- Task type: XML-documentation synchronization without runtime behavior or public signature changes.\n- Ready-to-start:\n  - task state is `open`;\n  - `T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;\n  - no other task is `in progress`.\n- Stop conditions:\n  - cleanup would remove the existing backend lock or change threading behavior;\n  - work requires a public signature/profile decision;\n  - generated documentation cannot be synchronized by existing generators.\n- May change:\n  - `<threadsafety>` text on `RenderingServer.CurrentProfile` and `RenderingServer.HasFeature`;\n  - the rendering domain document and existing public-documentation assertions;\n  - generated manifest/Wiki/local documentation produced from the corrected XML.\n- Must not change:\n  - `BackendLock`, backend replacement semantics or public signatures;\n  - manual API profile decisions;\n  - unrelated object-owning-thread documentation.\n- Required outputs:\n  - type/member XML consistently states that profile/feature reads are synchronized and safe from any thread;\n  - generated API documentation carries the same contract;\n  - no runtime or API manifest identity changes.\n- Required commands:\n  - `dotnet build src/Electron2D/Electron2D.csproj --no-restore -v:minimal`\n  - existing focused `RenderingServerPublicApiTests`\n  - `dotnet run --project eng/Electron2D.Build -- update api-manifest --check`\n  - `dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- verify public-api-documentation`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: not required by default; require it only if runtime threading behavior or public signatures change.\n\n### Internal substrate acceptance contract\n\n- Input boundary: current type-level and member-level `<threadsafety>` documentation for `RenderingServer`.\n- Synchronization invariant: `CurrentProfile` and `HasFeature` remain guarded by `BackendLock`; documentation describes that observed behavior exactly.\n- Failure policy: contradictory generated XML/Wiki documentation fails existing public documentation checks.\n- Consumer boundary: source XML, rendering domain document, manifest and Wiki agree on the same thread-safety statement.\n- Regression boundary: no renderer selection, feature set, backend lifetime or API profile change.\n\n### Самодостаточное описание\n\n`RenderingServer` на уровне типа документирует безопасное чтение профиля и feature flags с любого потока, а реализация обоих members использует `BackendLock`. Их member-level XML сейчас утверждает обратное: вызов якобы не синхронизирован и требует owning thread. Задача исправляет только этот документальный конфликт после принятия T-1137.\n\n### Критерии приёмки\n\n- [ ] XML `CurrentProfile` и `HasFeature` одинаково описывает фактическую синхронизацию через backend lock.\n- [ ] Runtime behavior, public signatures и manual API profile не изменены.\n- [ ] Generated manifest/Wiki/local documentation синхронизированы.\n- [ ] Existing focused public API/documentation checks проходят.\n\n### Подзадачи\n\n- [ ] Уточнить все противоречивые member-level threadsafety fragments.\n- [ ] Исправить только XML/domain wording.\n- [ ] Перегенерировать consumers и выполнить обязательные проверки.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: r35 локализовал противоречие в XML `CurrentProfile` и `HasFeature` и подтвердил фактический lock в реализации.\n- Ещё отсутствует: отдельный узкий documentation cleanup после принятия `T-1137`.\n- Принято аудитом: отсутствует; r35 классифицировал finding как неблокирующий follow-up.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r35.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-new\n  - target: T-1143\n  - rationale: Противоречие ограничено XML/generated documentation и не меняет production synchronization или публичный профиль T-1137.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r36.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-1143\n  - rationale: r36 повторяет тот же member-level XML threadsafety conflict и прямо указывает существующую T-1143 как владельца documentation cleanup.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r37.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-1143\n  - rationale: r37 повторяет тот же member-level XML threadsafety conflict; T-1143 уже владеет узкой синхронизацией XML/generated documentation.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r38.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-1143\n  - rationale: r38 повторяет тот же XML threadsafety conflict; T-1143 остаётся владельцем документационной синхронизации.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P3",
+  "tagIds": [
+    "tag-0012",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-94ca0395565920c2776d3693d2df82fe"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "XML `CurrentProfile` и `HasFeature` одинаково описывает фактическую синхронизацию через backend lock.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Runtime behavior, public signatures и manual API profile не изменены.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Generated manifest/Wiki/local documentation синхронизированы.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Existing focused public API/documentation checks проходят.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required by default; require it only if runtime threading behavior or public signatures change."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/wiki/RenderingServer.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/api/electron2d-api-manifest.json"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/rendering/rendering-server.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-1137-audit-control-r35.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/RepositoryPolicyVerifiers.cs"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "src/Electron2D/Graphics/Rendering/RenderingServer.cs"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Unit/RenderingServerPublicApiTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "XML-documentation synchronization without runtime behavior or public signature changes.",
+    "readyToStart": [
+      "task state is `open`;",
+      "`T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;",
+      "no other task is `in progress`."
+    ],
+    "stopConditions": [
+      "cleanup would remove the existing backend lock or change threading behavior;",
+      "work requires a public signature/profile decision;",
+      "generated documentation cannot be synchronized by existing generators."
+    ],
+    "allowedChanges": [
+      "`<threadsafety>` text on `RenderingServer.CurrentProfile` and `RenderingServer.HasFeature`;",
+      "the rendering domain document and existing public-documentation assertions;",
+      "generated manifest/Wiki/local documentation produced from the corrected XML."
+    ],
+    "forbiddenChanges": [
+      "`BackendLock`, backend replacement semantics or public signatures;",
+      "manual API profile decisions;",
+      "unrelated object-owning-thread documentation."
+    ],
+    "requiredOutputs": [
+      "type/member XML consistently states that profile/feature reads are synchronized and safe from any thread;",
+      "generated API documentation carries the same contract;",
+      "no runtime or API manifest identity changes."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet build src/Electron2D/Electron2D.csproj --no-restore -v:minimal`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "existing focused `RenderingServerPublicApiTests`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update api-manifest --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify public-api-documentation`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 15478023,
+      "byteLength": 6652,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "8122e78f5a0f4e58cb05b4e256189f453416847495bfdf0ef197ca69f2c94355",
+      "markdown": "## T-1143 [ ] P3: Исправить XML threadsafety-контракт RenderingServer\n\n- Создана: 2026-07-10T20:25:03+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-1137\n- Ссылки:\n  - Доменный документ: `docs/rendering/rendering-server.md`\n  - Исходник: `src/Electron2D/Graphics/Rendering/RenderingServer.cs`\n  - Сгенерированные потребители: `data/api/electron2d-api-manifest.json`; `.github/wiki/RenderingServer.md`\n  - Проверки: `tests/Electron2D.Tests.Unit/RenderingServerPublicApiTests.cs`; `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`\n  - Источник finding-а: `docs/verdicts/release-management/t-1137-audit-control-r35.md`, `FOLLOW_UP_FINDING F3`\n\n### Execution contract\n\n- Task type: XML-documentation synchronization without runtime behavior or public signature changes.\n- Ready-to-start:\n  - task state is `open`;\n  - `T-1137` accepted/closed or has the final saved control `ACCEPT` required by its audit workflow;\n  - no other task is `in progress`.\n- Stop conditions:\n  - cleanup would remove the existing backend lock or change threading behavior;\n  - work requires a public signature/profile decision;\n  - generated documentation cannot be synchronized by existing generators.\n- May change:\n  - `<threadsafety>` text on `RenderingServer.CurrentProfile` and `RenderingServer.HasFeature`;\n  - the rendering domain document and existing public-documentation assertions;\n  - generated manifest/Wiki/local documentation produced from the corrected XML.\n- Must not change:\n  - `BackendLock`, backend replacement semantics or public signatures;\n  - manual API profile decisions;\n  - unrelated object-owning-thread documentation.\n- Required outputs:\n  - type/member XML consistently states that profile/feature reads are synchronized and safe from any thread;\n  - generated API documentation carries the same contract;\n  - no runtime or API manifest identity changes.\n- Required commands:\n  - `dotnet build src/Electron2D/Electron2D.csproj --no-restore -v:minimal`\n  - existing focused `RenderingServerPublicApiTests`\n  - `dotnet run --project eng/Electron2D.Build -- update api-manifest --check`\n  - `dotnet run --project eng/Electron2D.Build -- update wiki --check --output .github/wiki`\n  - `dotnet run --project eng/Electron2D.Build -- verify public-api-documentation`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses`\n  - `git diff --check`\n- External audit: not required by default; require it only if runtime threading behavior or public signatures change.\n\n### Internal substrate acceptance contract\n\n- Input boundary: current type-level and member-level `<threadsafety>` documentation for `RenderingServer`.\n- Synchronization invariant: `CurrentProfile` and `HasFeature` remain guarded by `BackendLock`; documentation describes that observed behavior exactly.\n- Failure policy: contradictory generated XML/Wiki documentation fails existing public documentation checks.\n- Consumer boundary: source XML, rendering domain document, manifest and Wiki agree on the same thread-safety statement.\n- Regression boundary: no renderer selection, feature set, backend lifetime or API profile change.\n\n### Самодостаточное описание\n\n`RenderingServer` на уровне типа документирует безопасное чтение профиля и feature flags с любого потока, а реализация обоих members использует `BackendLock`. Их member-level XML сейчас утверждает обратное: вызов якобы не синхронизирован и требует owning thread. Задача исправляет только этот документальный конфликт после принятия T-1137.\n\n### Критерии приёмки\n\n- [ ] XML `CurrentProfile` и `HasFeature` одинаково описывает фактическую синхронизацию через backend lock.\n- [ ] Runtime behavior, public signatures и manual API profile не изменены.\n- [ ] Generated manifest/Wiki/local documentation синхронизированы.\n- [ ] Existing focused public API/documentation checks проходят.\n\n### Подзадачи\n\n- [ ] Уточнить все противоречивые member-level threadsafety fragments.\n- [ ] Исправить только XML/domain wording.\n- [ ] Перегенерировать consumers и выполнить обязательные проверки.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: r35 локализовал противоречие в XML `CurrentProfile` и `HasFeature` и подтвердил фактический lock в реализации.\n- Ещё отсутствует: отдельный узкий documentation cleanup после принятия `T-1137`.\n- Принято аудитом: отсутствует; r35 классифицировал finding как неблокирующий follow-up.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r35.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-new\n  - target: T-1143\n  - rationale: Противоречие ограничено XML/generated documentation и не меняет production synchronization или публичный профиль T-1137.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r36.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-1143\n  - rationale: r36 повторяет тот же member-level XML threadsafety conflict и прямо указывает существующую T-1143 как владельца documentation cleanup.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r37.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-1143\n  - rationale: r37 повторяет тот же member-level XML threadsafety conflict; T-1143 уже владеет узкой синхронизацией XML/generated documentation.\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-1137-audit-control-r38.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-1143\n  - rationale: r38 повторяет тот же XML threadsafety conflict; T-1143 остаётся владельцем документационной синхронизации.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-10T17:25:03.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

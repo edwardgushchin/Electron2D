@@ -1,0 +1,245 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-4f2623e91556270e845d083123ca613f",
+  "revision": 2,
+  "taskId": "T-0248",
+  "legacyAliases": [],
+  "title": "Подключить SDL addons для image, TTF, mixer и shadercross",
+  "description": "## T-0248 [ ] P0: Подключить SDL addons для image, TTF, mixer и shadercross\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0246\n- Ссылки:\n  - Доменный документ: `docs/runtime/godot-47-public-api-sdl-addons-runtime-backend.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/runtime/godot-47-public-api-sdl-addons-runtime-backend.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/runtime/godot-47-public-api-sdl-addons-runtime-backend.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. `SDL_image`, `SDL_ttf`, `SDL_mixer` и `SDL_shadercross` должны стать внутренними слоями для `Image`/`Texture`, `Font`/`TextServer`, `AudioServer`/streams/effects и HLSL shader pipeline.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Первичные потребители результата\n\n- Задачам `Image` и текстур нужны возможности decode/encode через SDL_image и устойчивая диагностика unsupported-format.\n- `Font`, `TextServer`, `TextLine` и текстовым UI controls нужны возможности SDL_ttf и загрузки font face.\n- Задачам `AudioServer`, `AudioStream*` и `AudioEffect*` нужны возможности SDL_mixer, декодирования аудио и внутреннего слоя микширования.\n- Задачам shader pipeline нужна интеграция SDL_shadercross для генерации HLSL package и диагностики platform target.\n\nДоменный документ должен развернуть этот список в таблицу: публичная задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Исполняемый контракт\n\n- Должны появиться или обновиться: `docs/runtime/godot-47-public-api-sdl-addons-runtime-backend.md`, `data/runtime/sdl-addons-contract.json`, `tests/Electron2D.Tests.Integration/SdlAddonsRuntimeBackendTests.cs` и manifest/checker code в `eng/`.\n- Обязательная команда: `dotnet run --project eng/Electron2D.Build -- verify sdl-addons`; focused proof: `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SdlAddonsRuntimeBackend\" --no-restore -v:minimal`.\n- RED-before-GREEN: тест сначала падает на отсутствующем manifest для `SDL_image`, `SDL_ttf`, `SDL_mixer`, `SDL_shadercross`, на unsupported image/font/audio/shadercross fixture и на отсутствие consumer mapping.\n- Diagnostic codes: `E2D-SDLADDON-0001` addon/native dependency missing, `E2D-SDLADDON-0002` image decode/encode unsupported, `E2D-SDLADDON-0003` font face load failed, `E2D-SDLADDON-0004` audio decode/mixer path failed, `E2D-SDLADDON-0005` shadercross target generation failed.\n- Consumer proof: fixtures должны пройти через будущие consumer routes `Image`/`ImageTexture`, `Font`/`TextServer`, `AudioServer`/`AudioStream*`, `Shader`/`ShaderMaterial` или documented adapter hooks, а не через ad-hoc direct library smoke.\n- Запрещено: реализовывать public API `Image`, `Font`, `AudioStream*`, `Shader` или `ShaderMaterial`; добавлять native binaries в `src/`; менять public shader language policy; требовать live platform SDK или network download во время tests.\n\n### Internal substrate acceptance contract\n\n- `T-0248` has deterministic init/success and fail-closed diagnostics in the domain document, including a stable `E2D-*` code family when runtime failure is possible.\n- First consumer proof names the public task, required internal capability and first test/report that proves the consumer uses this substrate instead of a fallback.\n- Resource lifetime, cache, handle or subscription counters return to baseline after the smallest create/use/dispose scenario applicable to this substrate.\n- Unsupported platform/backend paths return documented diagnostics and do not silently degrade into stubs or no-op behavior.\n- This task does not define public methods/properties/signals/enums; public behavior remains owned by the concrete public API tasks.\n### Критерии приёмки\n\n- [ ] `data/runtime/sdl-addons-contract.json` содержит exact addon name/version/source, target platforms, load policy, required capabilities, fixture IDs, consumer task IDs and diagnostics.\n- [ ] `SdlAddonsRuntimeBackendTests` проверяет at least one deterministic fixture для image, font, audio and shadercross; unsupported fixtures возвращают `E2D-SDLADDON-0002`-`0005`, а missing dependency - `E2D-SDLADDON-0001`.\n- [ ] `verify sdl-addons` валидирует manifest, не скачивает зависимости из сети, не требует credentials и пишет platform diagnostics без путей к секретам.\n- [ ] Первое подтверждение использования связано с consumer adapters: image fixture готов для `Image`, font fixture для `TextServer`, audio fixture для `AudioServer`, shadercross fixture для `T-0249`/`T-0759`.\n- [ ] В diff нет реализации публичных классов image/font/audio/shader и нет native binary blobs вне утверждённого dependency packaging path.\n\n### Подзадачи\n\n- [ ] Создать/обновить addon contract JSON and domain consumer table.\n- [ ] Добавить deterministic fixtures and RED tests для image/font/audio/shadercross.\n- [ ] Реализовать verifier `verify sdl-addons` and diagnostic codes `E2D-SDLADDON-0001`-`0005`.\n- [ ] Привязать fixtures к consumer adapters без закрытия public API classes.\n- [ ] Запустить `verify sdl-addons`, focused integration tests, docs checks and `git diff --check`.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a9dc106b3357162a2b473b8e01e91ad3"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`data/runtime/sdl-addons-contract.json` содержит exact addon name/version/source, target platforms, load policy, required capabilities, fixture IDs, consumer task IDs and diagnostics.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`SdlAddonsRuntimeBackendTests` проверяет at least one deterministic fixture для image, font, audio and shadercross; unsupported fixtures возвращают `E2D-SDLADDON-0002`-`0005`, а missing dependency - `E2D-SDLADDON-0001`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`verify sdl-addons` валидирует manifest, не скачивает зависимости из сети, не требует credentials и пишет platform diagnostics без путей к секретам.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Первое подтверждение использования связано с consumer adapters: image fixture готов для `Image`, font fixture для `TextServer`, audio fixture для `AudioServer`, shadercross fixture для `T-0249`/`T-0759`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "В diff нет реализации публичных классов image/font/audio/shader и нет native binary blobs вне утверждённого dependency packaging path.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required for final acceptance unless a parent gate explicitly owns audit evidence"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/runtime/sdl-addons-contract.json"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/runtime/godot-47-public-api-sdl-addons-runtime-backend.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "src"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/SdlAddonsRuntimeBackendTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.",
+      "docs/runtime/godot-47-public-api-sdl-addons-runtime-backend.md is current and RED tests/verifiers can be added before production changes."
+    ],
+    "stopConditions": [
+      "implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.",
+      "tests, domain document or generated source-of-truth artifacts are missing or stale.",
+      "a shortcut would introduce facade, stub, hidden fallback or undocumented behavior."
+    ],
+    "allowedChanges": [
+      "files named in this task's `Ссылки` block and their owning tests/docs.",
+      "generated artifacts only through their owning generator/verifier.",
+      "`TASKS.md` notes/current evidence and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.",
+      "public API surface not present in generated Godot 4.7 packets.",
+      "unrelated formatting, dependency graph or metadata churn."
+    ],
+    "requiredOutputs": [
+      "docs/runtime/godot-47-public-api-sdl-addons-runtime-backend.md",
+      "RED/GREEN test or verifier evidence for the selected slice.",
+      "synchronized XML/docs/API/generated documentation evidence when public surface or docs change.",
+      "task notes/current evidence and diary entry with exact command results."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify sdl-addons",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SdlAddonsRuntimeBackend\" --no-restore -v:minimal",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required for final acceptance unless a parent gate explicitly owns audit evidence",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 507038,
+      "byteLength": 12497,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "7747142e712a22389161ea1cd8092f3cc922ebbf9438621b2b610241b9126279",
+      "markdown": "## T-0248 [ ] P0: Подключить SDL addons для image, TTF, mixer и shadercross\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `internal-substrate`\n- Scheduling tier: `next`\n- Зависимости: T-0246\n- Ссылки:\n  - Доменный документ: `docs/runtime/godot-47-public-api-sdl-addons-runtime-backend.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - docs/runtime/godot-47-public-api-sdl-addons-runtime-backend.md is current and RED tests/verifiers can be added before production changes.\n- Stop conditions:\n  - implementation requires a sibling task, unrelated subsystem, blocked platform prerequisite or public API surface outside generated packets.\n  - tests, domain document or generated source-of-truth artifacts are missing or stale.\n  - a shortcut would introduce facade, stub, hidden fallback or undocumented behavior.\n- May change:\n  - files named in this task's `Ссылки` block and their owning tests/docs.\n  - generated artifacts only through their owning generator/verifier.\n  - `TASKS.md` notes/current evidence and diary entries for this task.\n- Must not change:\n  - neighboring public classes, unrelated internal substrates, release gates or tracking parent scope.\n  - public API surface not present in generated Godot 4.7 packets.\n  - unrelated formatting, dependency graph or metadata churn.\n- Required outputs:\n  - docs/runtime/godot-47-public-api-sdl-addons-runtime-backend.md\n  - RED/GREEN test or verifier evidence for the selected slice.\n  - synchronized XML/docs/API/generated documentation evidence when public surface or docs change.\n  - task notes/current evidence and diary entry with exact command results.\n- Required commands:\n  - `git diff --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build -- verify licenses` when C# source changes.\n- External audit:\n  - required for final acceptance unless a parent gate explicitly owns audit evidence\n\n### Самодостаточное описание\n\nЗадача относится к подготовке полного публичного API, совместимого с Godot 4.7 Electron2D 0.1-preview. `SDL_image`, `SDL_ttf`, `SDL_mixer` и `SDL_shadercross` должны стать внутренними слоями для `Image`/`Texture`, `Font`/`TextServer`, `AudioServer`/streams/effects и HLSL shader pipeline.\n\nОжидаемый результат: этот базовый срез должен быть рабочим инструментом или контрактом внутреннего слоя, а не заметкой. Он должен поддерживать дальнейшие объектные задачи, фиксировать проверяемые критерии, не вводить GDScript или Godot Shader Language и оставлять публичные скрипты на C#, а публичные исходные тексты шейдеров на HLSL.\n\n### Как выполнять задачу без дополнительного контекста\n\n- Источник истины: доменный документ из блока `Ссылки`, раздел ROADMAP, явные зависимости и сгенерированные файлы из `T-0242`/`T-0243`/`T-0244`, если задача связана с публичным API.\n- Граница публичного API: задача не придумывает новые публичные методы, свойства, сигналы или перечисления. Публичная поверхность берётся из сгенерированных описаний API и задач конкретных классов.\n- Ответственность задачи: задача отвечает только за возможность, названную в заголовке. Границы, платформенные проверки, требования к производительности и первое подтверждение использования фиксируются в доменном документе.\n- Подтверждение для потребителей: если результат используется публичными классами, доменный документ содержит таблицу потребителей: задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Первичные потребители результата\n\n- Задачам `Image` и текстур нужны возможности decode/encode через SDL_image и устойчивая диагностика unsupported-format.\n- `Font`, `TextServer`, `TextLine` и текстовым UI controls нужны возможности SDL_ttf и загрузки font face.\n- Задачам `AudioServer`, `AudioStream*` и `AudioEffect*` нужны возможности SDL_mixer, декодирования аудио и внутреннего слоя микширования.\n- Задачам shader pipeline нужна интеграция SDL_shadercross для генерации HLSL package и диагностики platform target.\n\nДоменный документ должен развернуть этот список в таблицу: публичная задача, нужная внутренняя возможность и первый тест или файл, который доказывает связь.\n\n### Исполняемый контракт\n\n- Должны появиться или обновиться: `docs/runtime/godot-47-public-api-sdl-addons-runtime-backend.md`, `data/runtime/sdl-addons-contract.json`, `tests/Electron2D.Tests.Integration/SdlAddonsRuntimeBackendTests.cs` и manifest/checker code в `eng/`.\n- Обязательная команда: `dotnet run --project eng/Electron2D.Build -- verify sdl-addons`; focused proof: `dotnet test tests/Electron2D.Tests.Integration/Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SdlAddonsRuntimeBackend\" --no-restore -v:minimal`.\n- RED-before-GREEN: тест сначала падает на отсутствующем manifest для `SDL_image`, `SDL_ttf`, `SDL_mixer`, `SDL_shadercross`, на unsupported image/font/audio/shadercross fixture и на отсутствие consumer mapping.\n- Diagnostic codes: `E2D-SDLADDON-0001` addon/native dependency missing, `E2D-SDLADDON-0002` image decode/encode unsupported, `E2D-SDLADDON-0003` font face load failed, `E2D-SDLADDON-0004` audio decode/mixer path failed, `E2D-SDLADDON-0005` shadercross target generation failed.\n- Consumer proof: fixtures должны пройти через будущие consumer routes `Image`/`ImageTexture`, `Font`/`TextServer`, `AudioServer`/`AudioStream*`, `Shader`/`ShaderMaterial` или documented adapter hooks, а не через ad-hoc direct library smoke.\n- Запрещено: реализовывать public API `Image`, `Font`, `AudioStream*`, `Shader` или `ShaderMaterial`; добавлять native binaries в `src/`; менять public shader language policy; требовать live platform SDK или network download во время tests.\n\n### Internal substrate acceptance contract\n\n- `T-0248` has deterministic init/success and fail-closed diagnostics in the domain document, including a stable `E2D-*` code family when runtime failure is possible.\n- First consumer proof names the public task, required internal capability and first test/report that proves the consumer uses this substrate instead of a fallback.\n- Resource lifetime, cache, handle or subscription counters return to baseline after the smallest create/use/dispose scenario applicable to this substrate.\n- Unsupported platform/backend paths return documented diagnostics and do not silently degrade into stubs or no-op behavior.\n- This task does not define public methods/properties/signals/enums; public behavior remains owned by the concrete public API tasks.\n### Критерии приёмки\n\n- [ ] `data/runtime/sdl-addons-contract.json` содержит exact addon name/version/source, target platforms, load policy, required capabilities, fixture IDs, consumer task IDs and diagnostics.\n- [ ] `SdlAddonsRuntimeBackendTests` проверяет at least one deterministic fixture для image, font, audio and shadercross; unsupported fixtures возвращают `E2D-SDLADDON-0002`-`0005`, а missing dependency - `E2D-SDLADDON-0001`.\n- [ ] `verify sdl-addons` валидирует manifest, не скачивает зависимости из сети, не требует credentials и пишет platform diagnostics без путей к секретам.\n- [ ] Первое подтверждение использования связано с consumer adapters: image fixture готов для `Image`, font fixture для `TextServer`, audio fixture для `AudioServer`, shadercross fixture для `T-0249`/`T-0759`.\n- [ ] В diff нет реализации публичных классов image/font/audio/shader и нет native binary blobs вне утверждённого dependency packaging path.\n\n### Подзадачи\n\n- [ ] Создать/обновить addon contract JSON and domain consumer table.\n- [ ] Добавить deterministic fixtures and RED tests для image/font/audio/shadercross.\n- [ ] Реализовать verifier `verify sdl-addons` and diagnostic codes `E2D-SDLADDON-0001`-`0005`.\n- [ ] Привязать fixtures к consumer adapters без закрытия public API classes.\n- [ ] Запустить `verify sdl-addons`, focused integration tests, docs checks and `git diff --check`.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

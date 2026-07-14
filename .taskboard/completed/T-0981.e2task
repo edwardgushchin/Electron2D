@@ -1,0 +1,321 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-9a846c6f208d093f02b06f538035d055",
+  "revision": 2,
+  "taskId": "T-0981",
+  "legacyAliases": [],
+  "title": "Нормализовать сериализацию `evidence metadata command`",
+  "description": "## T-0981 [x] P3: Нормализовать сериализацию `evidence metadata command`\n\n- Создана: 2026-07-05T19:31:45+03:00\n- Состояние: accepted/closed\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-0239\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходный код: `eng/Electron2D.Build/AuditPackageCommand.cs`\n  - Исходный код: `eng/Electron2D.Build/AuditSubmitCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Verdict: `docs/verdicts/release-management/t-0981-audit-r01.md`\n  - Источник: `RISKS_AND_NOTES` из `docs/verdicts/release-management/t-0239-audit-r02.md`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - `docs/release-management/audit-package.md` is current and a focused RED test or verifier can be added before production changes.\n- Stop conditions:\n  - fixing the issue would require changing the accepted `T-0239` scope instead of the evidence metadata serialization path.\n  - generated evidence format is intentionally changed without updating the domain document and tests.\n  - the change would hide the command instead of making `metadata.json.command` consistent with `command.txt`.\n- May change:\n  - the audit-package evidence metadata writer and its owning tests/docs.\n  - generated documentation index through `update docs` only if the domain document changes.\n  - `TASKS.md` notes and diary entries for this task.\n- Must not change:\n  - external audit verdict reports, past evidence files or saved audit archives.\n  - unrelated `audit submit` browser automation behavior.\n  - public API surface, release gates or task graph outside this follow-up.\n- Required outputs:\n  - updated domain contract for evidence metadata command serialization.\n  - RED/GREEN focused test or verifier proving `metadata.json.command` agrees with `command.txt`.\n  - task notes and diary entries with exact command results.\n- Required commands:\n  - `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`\n  - focused integration test or verifier for generated preflight evidence metadata.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify licenses` when C# source changes.\n  - `git diff --check`\n- External audit:\n  - primary external audit required for final acceptance; first-try primary `ACCEPT` is treated as control-equivalent by explicit operator decision on 2026-07-07.\n\n### Самодостаточное описание\n\nPrimary audit `T-0239` r02 принял удаление screenshot recorder, но нашёл follow-up в служебном evidence metadata: поле `evidence/**/metadata.json.command` записывало команду с потерей пробела между executable и первым аргументом, например `dotnetrun`, `dotnetbuild`, `dotnettest`, `gitdiff`. Соседние `command.txt`, `metadata/audit-package.input.json`, stdout/stderr и exit code оставались достаточными для проверки пакета, поэтому это не было blocker `T-0239`, но формат metadata нужно было нормализовать отдельной задачей.\n\nИтоговый результат: новые audit packages переписывают root preflight `metadata.json.command` в staging-копии evidence так, чтобы он совпадал с configured command и `command.txt`. Исторические ZIP и сохранённые evidence-файлы не переписываются; совместимость старых пакетов остаётся на verifier-уровне.\n\n### Internal substrate acceptance contract\n\n- Evidence metadata has deterministic serialization and fail-closed tests for command fields.\n- `command.txt` remains the canonical human-readable command evidence, while `metadata.json.command` stays consistent with it instead of becoming a lossy duplicate.\n- Existing audit package verification remains compatible with old saved packages; the new rule applies to newly generated evidence.\n- This task does not change audit verdict parsing, browser submission or public runtime behavior.\n\n### Критерии приёмки\n\n- [x] `docs/release-management/audit-package.md` documents the expected relationship between `command.txt` and `metadata.json.command`.\n- [x] Focused tests or verifier generate representative preflight evidence and prove `metadata.json.command` does not lose spaces or quoting relative to `command.txt`.\n- [x] The fix covers commands beginning with `dotnet run`, `dotnet build`, `dotnet test` and `git diff`.\n- [x] Existing audit package verification remains compatible with saved packages and current package evidence.\n- [x] `verify audit-followups` passes with the closure note from `T-0239` r02.\n\n### Подзадачи\n\n- [x] Add a RED regression around generated evidence metadata command serialization.\n- [x] Update the evidence metadata writer with the smallest compatible representation.\n- [x] Update the domain document and generated documentation index when the contract changes.\n- [x] Run focused tests, docs checks, license verifier when needed, `verify audit-followups` and `git diff --check`.\n\n### Current evidence\n\n- Ready-to-start gate:\n  - `T-0981` started from `open` state.\n  - dependency `T-0239` was accepted/closed in this archive with saved `VERDICT: ACCEPT` reports `t-0239-audit-r02.md` and `t-0239-audit-control-r02.md`.\n  - no external blocker without user override was present.\n- RED/GREEN:\n  - `AuditPackageNormalizesPreflightMetadataCommandToConfiguredCommand` first failed 4/4 on lossy `dotnetrun`, `dotnetbuild`, `dotnettest` and `gitdiff`.\n  - after the fix, the focused test passed 4/4 and the no-build rerun passed 4/4.\n- Local checks before audit:\n  - `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal` passed, warnings `0`.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-contracts` passed, Fast `12/12`.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check` passed.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify docs` passed.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups` passed for `31` actionable findings across `152` saved reports.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify licenses` passed for `664` source files.\n  - `git diff --check` passed.\n- External audit:\n  - primary package `.temp/audit/T-0981-audit-r01.zip` was created by `audit package` and verified by operator workflow.\n  - primary report `docs/verdicts/release-management/t-0981-audit-r01.md` was saved by `audit submit` with `VERDICT: ACCEPT`.\n  - `RISKS_AND_NOTES` in the saved report are `None`.\n  - clean-control package was created and operator-verified, but no control submit was run after the user's explicit 2026-07-07 decision that first-try primary `ACCEPT` is control-equivalent for this task.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0239-audit-r02.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-existing\n- target: T-0981\n- rationale: Primary `T-0239` r02 accepted the current task and classified the metadata command serialization issue as a separate P3 release-management follow-up. `T-0981` closed the issue by aligning new generated preflight `metadata.json.command` with `command.txt`, covering `dotnet run`, `dotnet build`, `dotnet test` and `git diff` through RED/GREEN package output tests and saved primary audit `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-07-05T19:31:45+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0239-audit-r02.md`; control audit r02 для `T-0239` содержит только non-actionable `INFO_NOTE I1`.\n\n2026-07-07T13:05:00+03:00 - Ready-to-start gate пройден: `T-0981` была в `open`, зависимость `T-0239` принята и закрыта saved primary/control `ACCEPT`, внешний blocker отсутствовал.\n\n2026-07-07T13:12:00+03:00 - RED/GREEN завершён: `AuditPackageCommand` нормализует root preflight `metadata.json.command` в staging-копии, focused test покрывает `dotnet run`, `dotnet build`, `dotnet test` и `git diff`, доменный документ и generated docs index синхронизированы.\n\n### Архивное закрытие\n\n- 2026-07-07T13:40:00+03:00 - Primary r01 сохранён как `VERDICT: ACCEPT`, `RISKS_AND_NOTES` пусты; по явному решению пользователя first-try primary `ACCEPT` считается control-equivalent, поэтому отдельный control submit не выполнялся. Задача удалена из активного `TASKS.md` и перенесена в июльский архив.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P3",
+  "tagIds": [
+    "tag-0011",
+    "tag-0016",
+    "tag-0020"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-cc269545c42b38e41f28c1431ca742be"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`docs/release-management/audit-package.md` documents the expected relationship between `command.txt` and `metadata.json.command`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9a846c6f208d093f02b06f538035d055/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Focused tests or verifier generate representative preflight evidence and prove `metadata.json.command` does not lose spaces or quoting relative to `command.txt`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9a846c6f208d093f02b06f538035d055/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "The fix covers commands beginning with `dotnet run`, `dotnet build`, `dotnet test` and `git diff`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9a846c6f208d093f02b06f538035d055/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Existing audit package verification remains compatible with saved packages and current package evidence.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9a846c6f208d093f02b06f538035d055/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`verify audit-followups` passes with the closure note from `T-0239` r02.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-9a846c6f208d093f02b06f538035d055/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T16:31:45.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0239-audit-r02.md`; control audit r02 для `T-0239` содержит только non-actionable `INFO_NOTE I1`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-07T10:05:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Ready-to-start gate пройден: `T-0981` была в `open`, зависимость `T-0239` принята и закрыта saved primary/control `ACCEPT`, внешний blocker отсутствовал."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-07T10:12:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "RED/GREEN завершён: `AuditPackageCommand` нормализует root preflight `metadata.json.command` в staging-копии, focused test покрывает `dotnet run`, `dotnet build`, `dotnet test` и `git diff`, доменный документ и generated docs index синхронизированы."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-07-07T10:40:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "primary external audit required for final acceptance; first-try primary `ACCEPT` is treated as control-equivalent by explicit operator decision on 2026-07-07."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".temp/audit/T-0981-audit-r01.zip"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0239-audit-r02.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0981-audit-r01.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/AuditPackageCommand.cs"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/AuditSubmitCommand.cs"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "evidence/**/metadata.json.command"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "metadata/audit-package.input.json"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "production",
+    "readyToStart": [
+      "task state is `open` or an explicitly defined ready state.",
+      "dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.",
+      "`docs/release-management/audit-package.md` is current and a focused RED test or verifier can be added before production changes."
+    ],
+    "stopConditions": [
+      "fixing the issue would require changing the accepted `T-0239` scope instead of the evidence metadata serialization path.",
+      "generated evidence format is intentionally changed without updating the domain document and tests.",
+      "the change would hide the command instead of making `metadata.json.command` consistent with `command.txt`."
+    ],
+    "allowedChanges": [
+      "the audit-package evidence metadata writer and its owning tests/docs.",
+      "generated documentation index through `update docs` only if the domain document changes.",
+      "`TASKS.md` notes and diary entries for this task."
+    ],
+    "forbiddenChanges": [
+      "external audit verdict reports, past evidence files or saved audit archives.",
+      "unrelated `audit submit` browser automation behavior.",
+      "public API surface, release gates or task graph outside this follow-up."
+    ],
+    "requiredOutputs": [
+      "updated domain contract for evidence metadata command serialization.",
+      "RED/GREEN focused test or verifier proving `metadata.json.command` agrees with `command.txt`.",
+      "task notes and diary entries with exact command results."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "focused integration test or verifier for generated preflight evidence metadata.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify licenses` when C# source changes.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0008",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-contracts",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0009",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/07 Июль.md",
+      "byteOffset": 459875,
+      "byteLength": 9616,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "a334a9a34e2a5606e71fcfebe909bebef84977c1d0df3f3386204f8f6db7f8f8",
+      "markdown": "## T-0981 [x] P3: Нормализовать сериализацию `evidence metadata command`\n\n- Создана: 2026-07-05T19:31:45+03:00\n- Состояние: accepted/closed\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-0239\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходный код: `eng/Electron2D.Build/AuditPackageCommand.cs`\n  - Исходный код: `eng/Electron2D.Build/AuditSubmitCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Verdict: `docs/verdicts/release-management/t-0981-audit-r01.md`\n  - Источник: `RISKS_AND_NOTES` из `docs/verdicts/release-management/t-0239-audit-r02.md`\n\n### Execution contract\n\n- Task type: production\n- Ready-to-start:\n  - task state is `open` or an explicitly defined ready state.\n  - dependencies are accepted/closed or have explicit `Deferred`/`Unsupported` contract.\n  - `docs/release-management/audit-package.md` is current and a focused RED test or verifier can be added before production changes.\n- Stop conditions:\n  - fixing the issue would require changing the accepted `T-0239` scope instead of the evidence metadata serialization path.\n  - generated evidence format is intentionally changed without updating the domain document and tests.\n  - the change would hide the command instead of making `metadata.json.command` consistent with `command.txt`.\n- May change:\n  - the audit-package evidence metadata writer and its owning tests/docs.\n  - generated documentation index through `update docs` only if the domain document changes.\n  - `TASKS.md` notes and diary entries for this task.\n- Must not change:\n  - external audit verdict reports, past evidence files or saved audit archives.\n  - unrelated `audit submit` browser automation behavior.\n  - public API surface, release gates or task graph outside this follow-up.\n- Required outputs:\n  - updated domain contract for evidence metadata command serialization.\n  - RED/GREEN focused test or verifier proving `metadata.json.command` agrees with `command.txt`.\n  - task notes and diary entries with exact command results.\n- Required commands:\n  - `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`\n  - focused integration test or verifier for generated preflight evidence metadata.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check`\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify licenses` when C# source changes.\n  - `git diff --check`\n- External audit:\n  - primary external audit required for final acceptance; first-try primary `ACCEPT` is treated as control-equivalent by explicit operator decision on 2026-07-07.\n\n### Самодостаточное описание\n\nPrimary audit `T-0239` r02 принял удаление screenshot recorder, но нашёл follow-up в служебном evidence metadata: поле `evidence/**/metadata.json.command` записывало команду с потерей пробела между executable и первым аргументом, например `dotnetrun`, `dotnetbuild`, `dotnettest`, `gitdiff`. Соседние `command.txt`, `metadata/audit-package.input.json`, stdout/stderr и exit code оставались достаточными для проверки пакета, поэтому это не было blocker `T-0239`, но формат metadata нужно было нормализовать отдельной задачей.\n\nИтоговый результат: новые audit packages переписывают root preflight `metadata.json.command` в staging-копии evidence так, чтобы он совпадал с configured command и `command.txt`. Исторические ZIP и сохранённые evidence-файлы не переписываются; совместимость старых пакетов остаётся на verifier-уровне.\n\n### Internal substrate acceptance contract\n\n- Evidence metadata has deterministic serialization and fail-closed tests for command fields.\n- `command.txt` remains the canonical human-readable command evidence, while `metadata.json.command` stays consistent with it instead of becoming a lossy duplicate.\n- Existing audit package verification remains compatible with old saved packages; the new rule applies to newly generated evidence.\n- This task does not change audit verdict parsing, browser submission or public runtime behavior.\n\n### Критерии приёмки\n\n- [x] `docs/release-management/audit-package.md` documents the expected relationship between `command.txt` and `metadata.json.command`.\n- [x] Focused tests or verifier generate representative preflight evidence and prove `metadata.json.command` does not lose spaces or quoting relative to `command.txt`.\n- [x] The fix covers commands beginning with `dotnet run`, `dotnet build`, `dotnet test` and `git diff`.\n- [x] Existing audit package verification remains compatible with saved packages and current package evidence.\n- [x] `verify audit-followups` passes with the closure note from `T-0239` r02.\n\n### Подзадачи\n\n- [x] Add a RED regression around generated evidence metadata command serialization.\n- [x] Update the evidence metadata writer with the smallest compatible representation.\n- [x] Update the domain document and generated documentation index when the contract changes.\n- [x] Run focused tests, docs checks, license verifier when needed, `verify audit-followups` and `git diff --check`.\n\n### Current evidence\n\n- Ready-to-start gate:\n  - `T-0981` started from `open` state.\n  - dependency `T-0239` was accepted/closed in this archive with saved `VERDICT: ACCEPT` reports `t-0239-audit-r02.md` and `t-0239-audit-control-r02.md`.\n  - no external blocker without user override was present.\n- RED/GREEN:\n  - `AuditPackageNormalizesPreflightMetadataCommandToConfiguredCommand` first failed 4/4 on lossy `dotnetrun`, `dotnetbuild`, `dotnettest` and `gitdiff`.\n  - after the fix, the focused test passed 4/4 and the no-build rerun passed 4/4.\n- Local checks before audit:\n  - `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal` passed, warnings `0`.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-contracts` passed, Fast `12/12`.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- update docs --check` passed.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify docs` passed.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups` passed for `31` actionable findings across `152` saved reports.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify licenses` passed for `664` source files.\n  - `git diff --check` passed.\n- External audit:\n  - primary package `.temp/audit/T-0981-audit-r01.zip` was created by `audit package` and verified by operator workflow.\n  - primary report `docs/verdicts/release-management/t-0981-audit-r01.md` was saved by `audit submit` with `VERDICT: ACCEPT`.\n  - `RISKS_AND_NOTES` in the saved report are `None`.\n  - clean-control package was created and operator-verified, but no control submit was run after the user's explicit 2026-07-07 decision that first-try primary `ACCEPT` is control-equivalent for this task.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0239-audit-r02.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-existing\n- target: T-0981\n- rationale: Primary `T-0239` r02 accepted the current task and classified the metadata command serialization issue as a separate P3 release-management follow-up. `T-0981` closed the issue by aligning new generated preflight `metadata.json.command` with `command.txt`, covering `dotnet run`, `dotnet build`, `dotnet test` and `git diff` through RED/GREEN package output tests and saved primary audit `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-07-05T19:31:45+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0239-audit-r02.md`; control audit r02 для `T-0239` содержит только non-actionable `INFO_NOTE I1`.\n\n2026-07-07T13:05:00+03:00 - Ready-to-start gate пройден: `T-0981` была в `open`, зависимость `T-0239` принята и закрыта saved primary/control `ACCEPT`, внешний blocker отсутствовал.\n\n2026-07-07T13:12:00+03:00 - RED/GREEN завершён: `AuditPackageCommand` нормализует root preflight `metadata.json.command` в staging-копии, focused test покрывает `dotnet run`, `dotnet build`, `dotnet test` и `git diff`, доменный документ и generated docs index синхронизированы.\n\n### Архивное закрытие\n\n- 2026-07-07T13:40:00+03:00 - Primary r01 сохранён как `VERDICT: ACCEPT`, `RISKS_AND_NOTES` пусты; по явному решению пользователя first-try primary `ACCEPT` считается control-equivalent, поэтому отдельный control submit не выполнялся. Задача удалена из активного `TASKS.md` и перенесена в июльский архив.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T16:31:45.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-07-07T10:40:00.0000000+00:00",
+  "completedAt": "2026-07-07T10:40:00.0000000+00:00",
+  "acceptedAt": "2026-07-07T10:40:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-07-07T10:40:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

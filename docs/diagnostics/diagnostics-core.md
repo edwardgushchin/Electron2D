@@ -67,6 +67,10 @@ Registry должен быть immutable во время работы проце
 | `E2D-RUNTIME-0001` | `Error` | `Runtime` | runtime debug bridge отклонил unsafe, production-mode или invalid runtime inspection request |
 | `E2D-TASK-0002` | `Error` | `Project` | task operation rejected из-за acceptance guard, privileged field guard или недопустимого перехода |
 | `E2D-TASK-0003` | `Warning` | `Project` | dependency graph требует внимания: cycle, unfinished dependency или cancelled dependency |
+| `E2D-TASK-0004` | `Error` | `Project` | writer lock не получен до deadline; операция может быть повторена |
+| `E2D-TASK-0005` | `Error` | `Project` | ограниченное ожидание writer lock отменено; операция может быть повторена |
+| `E2D-TASK-0006` | `Error` | `Project` | optimistic task/board revision не совпала; mutation не записана и не повторяется автоматически |
+| `E2D-TASK-0007` | `Error` | `Project` | operation ID уже связан с другим fingerprint или повреждённым receipt |
 | `E2D-TEST-0001` | `Error` | `Tooling` | scene test assertion не нашёл ожидаемый node, type или property value |
 | `E2D-TEST-0002` | `Error` | `Tooling` | scene visual comparison не нашёл reference image или превысил tolerance |
 | `E2D-TOOLING-0001` | `Info` | `Tooling` | job cancellation state changed или cancel request был отклонён без изменения job state |
@@ -158,6 +162,10 @@ Serialization не обязана быть финальным CLI schema. CLI JS
 | `E2D-RUNTIME-0001` | `Error` | `Runtime` | runtime debug bridge отклонил unsafe, production-mode или invalid runtime inspection request |
 | `E2D-TASK-0002` | `Error` | `Project` | task operation rejected из-за acceptance guard, privileged field guard или недопустимого перехода |
 | `E2D-TASK-0003` | `Warning` | `Project` | dependency graph требует внимания: cycle, unfinished dependency или cancelled dependency |
+| `E2D-TASK-0004` | `Error` | `Project` | writer lock не получен до deadline; операция может быть повторена |
+| `E2D-TASK-0005` | `Error` | `Project` | ограниченное ожидание writer lock отменено; операция может быть повторена |
+| `E2D-TASK-0006` | `Error` | `Project` | optimistic task/board revision не совпала; mutation не записана и не повторяется автоматически |
+| `E2D-TASK-0007` | `Error` | `Project` | operation ID уже связан с другим fingerprint или повреждённым receipt |
 | `E2D-TEST-0001` | `Error` | `Tooling` | scene test assertion не нашёл ожидаемый node, type или property value |
 | `E2D-TEST-0002` | `Error` | `Tooling` | scene visual comparison не нашёл reference image или превысил tolerance |
 | `E2D-TOOLING-0001` | `Info` | `Tooling` | job cancellation state changed или cancel request был отклонён без изменения job state |

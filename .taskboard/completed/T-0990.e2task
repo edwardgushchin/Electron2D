@@ -1,0 +1,392 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-90476c714273240a7f2ca627a532aab3",
+  "revision": 2,
+  "taskId": "T-0990",
+  "legacyAliases": [],
+  "title": "Ввести ручной source-of-truth профиль публичного Electron2D API",
+  "description": "## T-0990 [x] P0: Ввести ручной source-of-truth профиль публичного Electron2D API\n\n- Создана: 2026-07-08T12:35:00+03:00\n- Завершена: 2026-07-09T00:13:24+03:00\n- Принята пользователем: 2026-07-09T00:13:24+03:00\n- Принята внешним аудитом: 2026-07-08T22:16:00+03:00, primary/control `VERDICT: ACCEPT`\n- Архивная причина: primary r10 и clean-control r10 приняли ручной пустой public API profile как единственный source-of-truth для публичного Electron2D API, fail-closed API gates, generated manifest/Wiki/docs projection, forbidden legacy diagnostic priority и audit tooling hardening без blocker-ов.\n- Приоритет: P0\n- Зависимости: T-0241, T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Документация/API index: `docs/documentation/api-manifest.md`; `data/api/`\n  - Исходный код: `eng/Electron2D.ApiManifestGenerator/`; `eng/Electron2D.Build/`; `src/Electron2D.Cli/`\n  - Тесты: `tests/Electron2D.Tests.Integration/ApiManifestTests.cs`; `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`; `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Финальный primary audit: `docs/verdicts/release-management/t-0990-audit-r10.md`\n  - Финальный clean-control audit: `docs/verdicts/release-management/t-0990-audit-control-r10.md`\n\n### Самодостаточное описание\n\n`T-0990` перевела ownership публичной API-поверхности Electron2D `0.1-preview` с производного manifest/Wiki состояния на ручной JSON-профиль `data/api/electron2d-public-api-profile.json`, который утверждает project owner. Начальный профиль намеренно пустой: ни один Godot `4.7-stable` тип не считается включённым в публичный Electron2D API до явного решения владельца.\n\nИтоговая модель: `approved` означает включение типа только после полного Godot `4.7-stable` public C# parity; `deferred` и `unsupported` являются явными исключающими решениями; отсутствующая строка означает отсутствие решения. Generated manifest, Wiki `API-Compatibility.md`, local docs index, CLI compare и build-tool gates являются производными проверками ручного профиля. Exported runtime public type без `approved` ломает `update api-manifest --check` и `verify api-compatibility --wiki-path .github/wiki` с fail-fast diagnostic `E2D-BUILD-API-PROFILE-UNAPPROVED-EXPORT`.\n\n### Критерии и результат\n\n- [x] Создан пустой hand-authored `data/api/electron2d-public-api-profile.json` со схемой `schemaVersion`, `release`, `godotBaseline`, `approvalAuthority` и `types: []`.\n- [x] API manifest generator/build-tool/CLI/local-docs/Wiki generation читают manual profile как source-of-truth и больше не используют `.github/wiki/API-Compatibility.md` как input для compatibility status.\n- [x] Empty-profile gates намеренно падают для текущих exported runtime public types без owner approval.\n- [x] Manual profile validation покрывает `decision`, `rationale`, `godotReference` для `approved`, `deferred`, `unsupported`, duplicate `fullName` и неверные значения.\n- [x] `API-Compatibility.md` генерируется из profile-backed manifest и содержит generated marker, status legend и таблицу `Type | Status | Decision | Rationale`.\n- [x] Forbidden legacy/component public exports диагностируются до раннего manual-profile gate, чтобы `E2D-BUILD-API-COMPATIBILITY-FORBIDDEN-TYPE` не маскировался отсутствием `approved`.\n- [x] CDP recovery и strict previous-verdict placeholder scanner hardening закрыты как часть audit-loop stabilization.\n- [x] Actionable follow-ups перенесены в `T-0991`-`T-0995` и проверены `verify audit-followups`.\n- [x] Primary r10 и clean-control r10 сохранены как `VERDICT: ACCEPT`.\n\n### Follow-up ownership\n\n- `T-0991` - expected exit codes в `AUDIT-MANIFEST.md` для expected-failure evidence.\n- `T-0992` - diagnostic ordering manual API profile в `update api-manifest`.\n- `T-0993` - explicit duplicate `fullName` regression.\n- `T-0994` - удалить или явно задокументировать устаревший `--wiki-path` у `update api-manifest`.\n- `T-0995` - валидировать top-level metadata manual public API profile.\n\n### Проверки\n\n- [x] Focused implementation GREEN прошёл `19/19` после RED `0/8`.\n- [x] r10 `control-b1-forbidden-profile-gates` прошёл `7/7`.\n- [x] r10 `focused-profile-tests` прошёл `34/34`.\n- [x] r10 `audit-loop-stabilization` прошёл `17/17`.\n- [x] r10 `audit-submit-reattach-stabilization` прошёл `7/7`.\n- [x] `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal` passed, warnings `0`.\n- [x] `dotnet run --project eng/Electron2D.Build -- update docs --check` passed.\n- [x] `dotnet run --project eng/Electron2D.Build -- verify docs` passed.\n- [x] `dotnet run --project eng/Electron2D.Build -- verify ci-matrix` passed.\n- [x] `dotnet run --project eng/Electron2D.Build -- verify licenses` passed.\n- [x] `dotnet run --project eng/Electron2D.Build -- verify audit-contracts` passed.\n- [x] `dotnet run --project eng/Electron2D.Build -- verify audit-followups` passed for `70` actionable findings across `189` saved reports after final control acceptance.\n- [x] `git diff --check` passed.\n- [x] Intentional empty-profile gates `update-api-manifest-empty-profile-fail` and `verify-api-compatibility-empty-profile-fail` passed as expected failures with expected/actual exit code `1`.\n- [x] Primary `audit package` r10 created `.temp/audit/T-0990-audit-r10.zip`; operator workflow sidecar passed `audit-package-message` and `audit-package-verify`.\n- [x] Clean-control `audit package` r10 created `.temp/audit/control/T-0990-audit-r10.zip`; operator workflow sidecar passed `audit-package-message` and `audit-package-verify`.\n- [x] `audit submit --reuse-conversation` saved primary `docs/verdicts/release-management/t-0990-audit-r10.md` with `VERDICT: ACCEPT`.\n- [x] `audit submit --control-audit` saved clean-control `docs/verdicts/release-management/t-0990-audit-control-r10.md` with `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-07-08T12:41:00+03:00 - Ready-to-start gate пройден: `T-0990` была в допустимом состоянии, зависимости `T-0241` и `T-0242` приняты/закрыты saved `ACCEPT`, пользователь явно выбрал пустой strict fail-fast manual profile.\n\n2026-07-08T22:16:00+03:00 - Primary r10 and clean-control r10 сохранены как `VERDICT: ACCEPT`; control `RISKS_AND_NOTES` перенесены в `T-0991` и `T-0994`.\n\n2026-07-09T00:13:24+03:00 - Пользователь явно принял `T-0990` и разрешил closing commit.\n\n### Архивное закрытие\n\n- 2026-07-09T00:13:24+03:00 - T-0990 удалена из активного `TASKS.md`, перенесена в июльский архив, release notes обновляются acceptance note; временные audit artifacts `T-0990` подлежат удалению перед финальными проверками и commit.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0015"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создан пустой hand-authored `data/api/electron2d-public-api-profile.json` со схемой `schemaVersion`, `release`, `godotBaseline`, `approvalAuthority` и `types: []`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-90476c714273240a7f2ca627a532aab3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "API manifest generator/build-tool/CLI/local-docs/Wiki generation читают manual profile как source-of-truth и больше не используют `.github/wiki/API-Compatibility.md` как input для compatibility status.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-90476c714273240a7f2ca627a532aab3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Empty-profile gates намеренно падают для текущих exported runtime public types без owner approval.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-90476c714273240a7f2ca627a532aab3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Manual profile validation покрывает `decision`, `rationale`, `godotReference` для `approved`, `deferred`, `unsupported`, duplicate `fullName` и неверные значения.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-90476c714273240a7f2ca627a532aab3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "`API-Compatibility.md` генерируется из profile-backed manifest и содержит generated marker, status legend и таблицу `Type | Status | Decision | Rationale`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-90476c714273240a7f2ca627a532aab3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Forbidden legacy/component public exports диагностируются до раннего manual-profile gate, чтобы `E2D-BUILD-API-COMPATIBILITY-FORBIDDEN-TYPE` не маскировался отсутствием `approved`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-90476c714273240a7f2ca627a532aab3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "CDP recovery и strict previous-verdict placeholder scanner hardening закрыты как часть audit-loop stabilization.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-90476c714273240a7f2ca627a532aab3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Actionable follow-ups перенесены в `T-0991`-`T-0995` и проверены `verify audit-followups`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-90476c714273240a7f2ca627a532aab3/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Primary r10 и clean-control r10 сохранены как `VERDICT: ACCEPT`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-90476c714273240a7f2ca627a532aab3/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-08T09:41:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Ready-to-start gate пройден: `T-0990` была в допустимом состоянии, зависимости `T-0241` и `T-0242` приняты/закрыты saved `ACCEPT`, пользователь явно выбрал пустой strict fail-fast manual profile."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-08T19:16:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r10 and clean-control r10 сохранены как `VERDICT: ACCEPT`; control `RISKS_AND_NOTES` перенесены в `T-0991` и `T-0994`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-08T21:13:24.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Пользователь явно принял `T-0990` и разрешил closing commit."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-07-08T21:13:24.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/wiki/API-Compatibility.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": ".temp/audit/T-0990-audit-r10.zip"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": ".temp/audit/control/T-0990-audit-r10.zip"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "0/8"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "17/17"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "19/19"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "34/34"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "7/7"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "data/api/electron2d-public-api-profile.json"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/documentation/api-manifest.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0990-audit-control-r10.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0990-audit-r10.md"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "Directory",
+      "value": "eng/Electron2D.ApiManifestGenerator"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "eng/Electron2D.Build"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "Directory",
+      "value": "src/Electron2D.Cli"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ApiManifestTests.cs"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": "verify api-compatibility --wiki-path .github/wiki"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- update docs --check",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify audit-contracts",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify audit-followups",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify ci-matrix",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify docs",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- verify licenses",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/07 Июль.md",
+      "byteOffset": 477077,
+      "byteLength": 7847,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "3f44fdbbd6ff0ac3fe6336b3e40b615aa3febb005e050152e48f9675682ef0c0",
+      "markdown": "## T-0990 [x] P0: Ввести ручной source-of-truth профиль публичного Electron2D API\n\n- Создана: 2026-07-08T12:35:00+03:00\n- Завершена: 2026-07-09T00:13:24+03:00\n- Принята пользователем: 2026-07-09T00:13:24+03:00\n- Принята внешним аудитом: 2026-07-08T22:16:00+03:00, primary/control `VERDICT: ACCEPT`\n- Архивная причина: primary r10 и clean-control r10 приняли ручной пустой public API profile как единственный source-of-truth для публичного Electron2D API, fail-closed API gates, generated manifest/Wiki/docs projection, forbidden legacy diagnostic priority и audit tooling hardening без blocker-ов.\n- Приоритет: P0\n- Зависимости: T-0241, T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Документация/API index: `docs/documentation/api-manifest.md`; `data/api/`\n  - Исходный код: `eng/Electron2D.ApiManifestGenerator/`; `eng/Electron2D.Build/`; `src/Electron2D.Cli/`\n  - Тесты: `tests/Electron2D.Tests.Integration/ApiManifestTests.cs`; `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`; `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Финальный primary audit: `docs/verdicts/release-management/t-0990-audit-r10.md`\n  - Финальный clean-control audit: `docs/verdicts/release-management/t-0990-audit-control-r10.md`\n\n### Самодостаточное описание\n\n`T-0990` перевела ownership публичной API-поверхности Electron2D `0.1-preview` с производного manifest/Wiki состояния на ручной JSON-профиль `data/api/electron2d-public-api-profile.json`, который утверждает project owner. Начальный профиль намеренно пустой: ни один Godot `4.7-stable` тип не считается включённым в публичный Electron2D API до явного решения владельца.\n\nИтоговая модель: `approved` означает включение типа только после полного Godot `4.7-stable` public C# parity; `deferred` и `unsupported` являются явными исключающими решениями; отсутствующая строка означает отсутствие решения. Generated manifest, Wiki `API-Compatibility.md`, local docs index, CLI compare и build-tool gates являются производными проверками ручного профиля. Exported runtime public type без `approved` ломает `update api-manifest --check` и `verify api-compatibility --wiki-path .github/wiki` с fail-fast diagnostic `E2D-BUILD-API-PROFILE-UNAPPROVED-EXPORT`.\n\n### Критерии и результат\n\n- [x] Создан пустой hand-authored `data/api/electron2d-public-api-profile.json` со схемой `schemaVersion`, `release`, `godotBaseline`, `approvalAuthority` и `types: []`.\n- [x] API manifest generator/build-tool/CLI/local-docs/Wiki generation читают manual profile как source-of-truth и больше не используют `.github/wiki/API-Compatibility.md` как input для compatibility status.\n- [x] Empty-profile gates намеренно падают для текущих exported runtime public types без owner approval.\n- [x] Manual profile validation покрывает `decision`, `rationale`, `godotReference` для `approved`, `deferred`, `unsupported`, duplicate `fullName` и неверные значения.\n- [x] `API-Compatibility.md` генерируется из profile-backed manifest и содержит generated marker, status legend и таблицу `Type | Status | Decision | Rationale`.\n- [x] Forbidden legacy/component public exports диагностируются до раннего manual-profile gate, чтобы `E2D-BUILD-API-COMPATIBILITY-FORBIDDEN-TYPE` не маскировался отсутствием `approved`.\n- [x] CDP recovery и strict previous-verdict placeholder scanner hardening закрыты как часть audit-loop stabilization.\n- [x] Actionable follow-ups перенесены в `T-0991`-`T-0995` и проверены `verify audit-followups`.\n- [x] Primary r10 и clean-control r10 сохранены как `VERDICT: ACCEPT`.\n\n### Follow-up ownership\n\n- `T-0991` - expected exit codes в `AUDIT-MANIFEST.md` для expected-failure evidence.\n- `T-0992` - diagnostic ordering manual API profile в `update api-manifest`.\n- `T-0993` - explicit duplicate `fullName` regression.\n- `T-0994` - удалить или явно задокументировать устаревший `--wiki-path` у `update api-manifest`.\n- `T-0995` - валидировать top-level metadata manual public API profile.\n\n### Проверки\n\n- [x] Focused implementation GREEN прошёл `19/19` после RED `0/8`.\n- [x] r10 `control-b1-forbidden-profile-gates` прошёл `7/7`.\n- [x] r10 `focused-profile-tests` прошёл `34/34`.\n- [x] r10 `audit-loop-stabilization` прошёл `17/17`.\n- [x] r10 `audit-submit-reattach-stabilization` прошёл `7/7`.\n- [x] `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal` passed, warnings `0`.\n- [x] `dotnet run --project eng/Electron2D.Build -- update docs --check` passed.\n- [x] `dotnet run --project eng/Electron2D.Build -- verify docs` passed.\n- [x] `dotnet run --project eng/Electron2D.Build -- verify ci-matrix` passed.\n- [x] `dotnet run --project eng/Electron2D.Build -- verify licenses` passed.\n- [x] `dotnet run --project eng/Electron2D.Build -- verify audit-contracts` passed.\n- [x] `dotnet run --project eng/Electron2D.Build -- verify audit-followups` passed for `70` actionable findings across `189` saved reports after final control acceptance.\n- [x] `git diff --check` passed.\n- [x] Intentional empty-profile gates `update-api-manifest-empty-profile-fail` and `verify-api-compatibility-empty-profile-fail` passed as expected failures with expected/actual exit code `1`.\n- [x] Primary `audit package` r10 created `.temp/audit/T-0990-audit-r10.zip`; operator workflow sidecar passed `audit-package-message` and `audit-package-verify`.\n- [x] Clean-control `audit package` r10 created `.temp/audit/control/T-0990-audit-r10.zip`; operator workflow sidecar passed `audit-package-message` and `audit-package-verify`.\n- [x] `audit submit --reuse-conversation` saved primary `docs/verdicts/release-management/t-0990-audit-r10.md` with `VERDICT: ACCEPT`.\n- [x] `audit submit --control-audit` saved clean-control `docs/verdicts/release-management/t-0990-audit-control-r10.md` with `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-07-08T12:41:00+03:00 - Ready-to-start gate пройден: `T-0990` была в допустимом состоянии, зависимости `T-0241` и `T-0242` приняты/закрыты saved `ACCEPT`, пользователь явно выбрал пустой strict fail-fast manual profile.\n\n2026-07-08T22:16:00+03:00 - Primary r10 and clean-control r10 сохранены как `VERDICT: ACCEPT`; control `RISKS_AND_NOTES` перенесены в `T-0991` и `T-0994`.\n\n2026-07-09T00:13:24+03:00 - Пользователь явно принял `T-0990` и разрешил closing commit.\n\n### Архивное закрытие\n\n- 2026-07-09T00:13:24+03:00 - T-0990 удалена из активного `TASKS.md`, перенесена в июльский архив, release notes обновляются acceptance note; временные audit artifacts `T-0990` подлежат удалению перед финальными проверками и commit.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-08T09:35:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-07-08T21:13:24.0000000+00:00",
+  "completedAt": "2026-07-08T21:13:24.0000000+00:00",
+  "acceptedAt": "2026-07-08T21:13:24.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-07-08T21:13:24.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

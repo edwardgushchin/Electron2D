@@ -1,0 +1,446 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-589771244653947a36b8d49064cd93a2",
+  "revision": 2,
+  "taskId": "T-0210",
+  "legacyAliases": [],
+  "title": "Переключить CI, AGENTS и документацию на C# tool и удалить PowerShell",
+  "description": "## T-0210 [x] P0: Переключить CI, AGENTS и документацию на C# tool и удалить PowerShell\n\n- Создана: 2026-06-24T14:32:00+03:00\n- Завершена: 2026-07-01T08:21:55+03:00\n- Принята внешним аудитом: 2026-07-01T08:21:55+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний audit r20 принял перенос active CI, `AGENTS.md`, активных доменных документов, рабочих задач, generated documentation data и оставшейся автоматизации репозитория на `eng/Electron2D.Build` без tracked PowerShell scripts как активного пути.\n- Приоритет: P0\n- Зависимости: T-0208, T-0209\n- Ссылки:\n  - Доменный документ: `docs/release-management/ci-matrix.md`; `docs/repository/repository-layout.md`; `docs/release-management/audit-package.md`\n  - Исходный код: `.github/workflows/ci.yml`; `AGENTS.md`; `eng/Electron2D.Build/`; `eng/Electron2D.ApiManifestGenerator/`; `src/Electron2D.Cli/Program.cs`; `src/Electron2D.ProjectSystem/Documents/ProjectTextFormats.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`; `tests/Electron2D.Tests.Integration/SolutionLayoutTests.cs`; `tests/Electron2D.Tests.Integration/LeakVerificationTests.cs`; `tests/Electron2D.Tests.Integration/ReferenceGamePlatformMatrixTests.cs`\n  - Внешние аудиты с исправлениями: `docs/verdicts/release-management/t-0210-audit-r02.md`; `docs/verdicts/release-management/t-0210-audit-r03.md`; `docs/verdicts/release-management/t-0210-audit-r04.md`; `docs/verdicts/release-management/t-0210-audit-r16.md`\n  - Финальный внешний аудит: `docs/verdicts/release-management/t-0210-audit-r20.md`\n\n### Самодостаточное описание\n\nЗадача закрыла оставшийся переход репозиторной автоматизации на внутренний C#-инструмент `eng/Electron2D.Build`. CI, `AGENTS.md`, активные документы, рабочие задачи и generated documentation data больше не используют tracked PowerShell scripts как целевой путь проверки или сборки. Корневой каталог `tools/` удалён; оставшийся C# API manifest generator перенесён в `eng/Electron2D.ApiManifestGenerator/`. Рабочие журналы, архивы завершённых задач и JSON Schema размещены под `data/dev-diary/`, `data/completed-tasks/` и `data/schemas/`.\n\nAudit tooling дополнительно разрешает archive-only evidence из `.temp/audit-evidence/...` для `archiveOnlyEvidenceGlobs` и `checks[].trxGlobs`, не создавая evidence-каталоги в корне репозитория. Корневые `audit-evidence`, `.audit-evidence`, `tools`, `artifacts`, `TestResults`, `dev-diary`, `completed-tasks` и `schemas` отсутствуют.\n\n### Критерии и результат\n\n- [x] `.github/workflows/*.yml` больше не содержит `pwsh`, `.ps1` или PowerShell-команды как активный маршрут.\n- [x] `AGENTS.md` и локальные правила указывают C# verifier-ы и layout под `data/`.\n- [x] Активные доменные документы и задачи используют переносимый путь `eng/Electron2D.Build`.\n- [x] Tracked `tools/*.ps1` удалены; C# generator перенесён в `eng/Electron2D.ApiManifestGenerator/`.\n- [x] Корневой каталог `tools/` отсутствует.\n- [x] C# verifier `verify no-powershell-workflows` проверяет tracked production paths и игнорирует untracked drafts.\n- [x] `verify ci-matrix` заменяет удалённый `tools/Verify-CiMatrix.ps1`.\n- [x] `verify licenses` проверяет `eng/**/*.cs` вместе с `src/`, `tests/` и `data/templates/`.\n- [x] Внешний аудит r20 вернул `VERDICT: ACCEPT`.\n\n### Проверки\n\n- [x] `dotnet build tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj -v:minimal` прошёл.\n- [x] `dotnet build src\\Electron2D.Cli\\Electron2D.Cli.csproj -v:minimal` прошёл после последовательного повторного запуска.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~LeakVerificationTests\" --no-build --no-restore -v:minimal` прошёл: 5/5.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ReferenceGamePlatformMatrixTests\" --no-build --no-restore -v:minimal` прошёл: 6/6.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify licenses` прошёл для 659 source-файлов.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs --check` прошёл.\n- [x] `git diff --check` прошёл с предупреждениями Git о будущей LF-нормализации двух файлов, без whitespace errors.\n- [x] `audit package r20` прошёл и создал `.temp/audit/T-0210-audit-r20.zip` с operator workflow sidecar.\n- [x] `audit package verify r20` прошёл на отдельной clean repo `.temp/audit-clean/T-0210-r20`.\n- [x] `audit submit r20` после повторной штатной попытки сохранил `docs/verdicts/release-management/t-0210-audit-r20.md` с первой непустой строкой `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-30T20:45:55+03:00 - Начата работа: исходный `HEAD` и audit baseline зафиксированы как `24838853ac510be270ada6a348482303143e7aee`; домен задачи - `release-management`.\n\n2026-06-30T23:29:00+03:00 - Внешний аудит r02 вернул `NEEDS_FIXES`; исправления закрыли содержательность C# runner-ов для agent acceptance benchmarks, platformer, reference game matrix/assets, UI API gate и ARM64 autodetect для Box2D RID.\n\n2026-07-01T00:14:00+03:00 - Внешний аудит r03 вернул `NEEDS_FIXES`; исправления ограничены scope `T-0210` и tracked-only контрактом `verify no-powershell-workflows`.\n\n2026-07-01T01:10:00+03:00 - Внешний аудит r04 вернул `NEEDS_FIXES`; исправления добавили `verify ci-matrix`, расширили `verify licenses` на `eng/**/*.cs`, перенесли рабочие каталоги под `data/` и разрешили `.temp/audit-evidence/...` для audit evidence.\n\n2026-07-01T07:12:00+03:00 - Внешний аудит r16 вернул `NEEDS_FIXES`; исправления синхронизировали `AGENTS.md`, активные документы и generated local docs с переносимым `eng/Electron2D.Build`.\n\n2026-07-01T08:21:55+03:00 - Внешний аудит r20 вернул `VERDICT: ACCEPT`; `T-0210` удалена из активного `TASKS.md`, `T-0206` отмечает её закрытой, а архивная запись сохранена в `data/completed-tasks/2026/07 Июль.md`.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0012"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b71407dc1aa85c13f0d8de0ac31595cc"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-65e36e22a9b501e75db661fbaea6b616"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`.github/workflows/*.yml` больше не содержит `pwsh`, `.ps1` или PowerShell-команды как активный маршрут.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-589771244653947a36b8d49064cd93a2/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`AGENTS.md` и локальные правила указывают C# verifier-ы и layout под `data/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-589771244653947a36b8d49064cd93a2/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Активные доменные документы и задачи используют переносимый путь `eng/Electron2D.Build`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-589771244653947a36b8d49064cd93a2/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Tracked `tools/*.ps1` удалены; C# generator перенесён в `eng/Electron2D.ApiManifestGenerator/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-589771244653947a36b8d49064cd93a2/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Корневой каталог `tools/` отсутствует.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-589771244653947a36b8d49064cd93a2/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "C# verifier `verify no-powershell-workflows` проверяет tracked production paths и игнорирует untracked drafts.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-589771244653947a36b8d49064cd93a2/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "`verify ci-matrix` заменяет удалённый `tools/Verify-CiMatrix.ps1`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-589771244653947a36b8d49064cd93a2/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "`verify licenses` проверяет `eng/**/*.cs` вместе с `src/`, `tests/` и `data/templates/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-589771244653947a36b8d49064cd93a2/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Внешний аудит r20 вернул `VERDICT: ACCEPT`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-589771244653947a36b8d49064cd93a2/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T17:45:55.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Начата работа: исходный `HEAD` и audit baseline зафиксированы как `24838853ac510be270ada6a348482303143e7aee`; домен задачи - `release-management`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T20:29:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r02 вернул `NEEDS_FIXES`; исправления закрыли содержательность C# runner-ов для agent acceptance benchmarks, platformer, reference game matrix/assets, UI API gate и ARM64 autodetect для Box2D RID."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T21:14:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r03 вернул `NEEDS_FIXES`; исправления ограничены scope `T-0210` и tracked-only контрактом `verify no-powershell-workflows`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T22:10:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r04 вернул `NEEDS_FIXES`; исправления добавили `verify ci-matrix`, расширили `verify licenses` на `eng/**/*.cs`, перенесли рабочие каталоги под `data/` и разрешили `.temp/audit-evidence/...` для audit evidence."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-01T04:12:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r16 вернул `NEEDS_FIXES`; исправления синхронизировали `AGENTS.md`, активные документы и generated local docs с переносимым `eng/Electron2D.Build`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0006",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-01T05:21:55.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r20 вернул `VERDICT: ACCEPT`; `T-0210` удалена из активного `TASKS.md`, `T-0206` отмечает её закрытой, а архивная запись сохранена в `data/completed-tasks/2026/07 Июль.md`."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-07-01T05:21:55.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/workflows/*.yml"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": ".github/workflows/ci.yml"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": ".temp/audit-clean/T-0210-r20"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": ".temp/audit-evidence/..."
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": ".temp/audit/T-0210-audit-r20.zip"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "data"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "data/completed-tasks"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "data/completed-tasks/2026/07 Июль.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "data/dev-diary"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "data/schemas"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "Directory",
+      "value": "data/templates"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/release-management/ci-matrix.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "docs/repository/repository-layout.md"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0210-audit-r02.md"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0210-audit-r03.md"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0210-audit-r04.md"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0210-audit-r16.md"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0210-audit-r20.md"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": "eng/**/*.cs"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "Directory",
+      "value": "eng/Electron2D.ApiManifestGenerator"
+    },
+    {
+      "linkId": "link-0022",
+      "kind": "File",
+      "value": "eng/Electron2D.Build"
+    },
+    {
+      "linkId": "link-0023",
+      "kind": "Directory",
+      "value": "eng/Electron2D.Build"
+    },
+    {
+      "linkId": "link-0024",
+      "kind": "Directory",
+      "value": "src"
+    },
+    {
+      "linkId": "link-0025",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/Program.cs"
+    },
+    {
+      "linkId": "link-0026",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Documents/ProjectTextFormats.cs"
+    },
+    {
+      "linkId": "link-0027",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0028",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/LeakVerificationTests.cs"
+    },
+    {
+      "linkId": "link-0029",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ReferenceGamePlatformMatrixTests.cs"
+    },
+    {
+      "linkId": "link-0030",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    },
+    {
+      "linkId": "link-0031",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/SolutionLayoutTests.cs"
+    },
+    {
+      "linkId": "link-0032",
+      "kind": "Directory",
+      "value": "tools"
+    },
+    {
+      "linkId": "link-0033",
+      "kind": "File",
+      "value": "tools/*.ps1"
+    },
+    {
+      "linkId": "link-0034",
+      "kind": "File",
+      "value": "tools/Verify-CiMatrix.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/07 Июль.md",
+      "byteOffset": 54,
+      "byteLength": 7420,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "32a663f77e90d4f2157e971910bca50e00b7c0d2f110e534009f0e541fb954b4",
+      "markdown": "## T-0210 [x] P0: Переключить CI, AGENTS и документацию на C# tool и удалить PowerShell\n\n- Создана: 2026-06-24T14:32:00+03:00\n- Завершена: 2026-07-01T08:21:55+03:00\n- Принята внешним аудитом: 2026-07-01T08:21:55+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний audit r20 принял перенос active CI, `AGENTS.md`, активных доменных документов, рабочих задач, generated documentation data и оставшейся автоматизации репозитория на `eng/Electron2D.Build` без tracked PowerShell scripts как активного пути.\n- Приоритет: P0\n- Зависимости: T-0208, T-0209\n- Ссылки:\n  - Доменный документ: `docs/release-management/ci-matrix.md`; `docs/repository/repository-layout.md`; `docs/release-management/audit-package.md`\n  - Исходный код: `.github/workflows/ci.yml`; `AGENTS.md`; `eng/Electron2D.Build/`; `eng/Electron2D.ApiManifestGenerator/`; `src/Electron2D.Cli/Program.cs`; `src/Electron2D.ProjectSystem/Documents/ProjectTextFormats.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`; `tests/Electron2D.Tests.Integration/SolutionLayoutTests.cs`; `tests/Electron2D.Tests.Integration/LeakVerificationTests.cs`; `tests/Electron2D.Tests.Integration/ReferenceGamePlatformMatrixTests.cs`\n  - Внешние аудиты с исправлениями: `docs/verdicts/release-management/t-0210-audit-r02.md`; `docs/verdicts/release-management/t-0210-audit-r03.md`; `docs/verdicts/release-management/t-0210-audit-r04.md`; `docs/verdicts/release-management/t-0210-audit-r16.md`\n  - Финальный внешний аудит: `docs/verdicts/release-management/t-0210-audit-r20.md`\n\n### Самодостаточное описание\n\nЗадача закрыла оставшийся переход репозиторной автоматизации на внутренний C#-инструмент `eng/Electron2D.Build`. CI, `AGENTS.md`, активные документы, рабочие задачи и generated documentation data больше не используют tracked PowerShell scripts как целевой путь проверки или сборки. Корневой каталог `tools/` удалён; оставшийся C# API manifest generator перенесён в `eng/Electron2D.ApiManifestGenerator/`. Рабочие журналы, архивы завершённых задач и JSON Schema размещены под `data/dev-diary/`, `data/completed-tasks/` и `data/schemas/`.\n\nAudit tooling дополнительно разрешает archive-only evidence из `.temp/audit-evidence/...` для `archiveOnlyEvidenceGlobs` и `checks[].trxGlobs`, не создавая evidence-каталоги в корне репозитория. Корневые `audit-evidence`, `.audit-evidence`, `tools`, `artifacts`, `TestResults`, `dev-diary`, `completed-tasks` и `schemas` отсутствуют.\n\n### Критерии и результат\n\n- [x] `.github/workflows/*.yml` больше не содержит `pwsh`, `.ps1` или PowerShell-команды как активный маршрут.\n- [x] `AGENTS.md` и локальные правила указывают C# verifier-ы и layout под `data/`.\n- [x] Активные доменные документы и задачи используют переносимый путь `eng/Electron2D.Build`.\n- [x] Tracked `tools/*.ps1` удалены; C# generator перенесён в `eng/Electron2D.ApiManifestGenerator/`.\n- [x] Корневой каталог `tools/` отсутствует.\n- [x] C# verifier `verify no-powershell-workflows` проверяет tracked production paths и игнорирует untracked drafts.\n- [x] `verify ci-matrix` заменяет удалённый `tools/Verify-CiMatrix.ps1`.\n- [x] `verify licenses` проверяет `eng/**/*.cs` вместе с `src/`, `tests/` и `data/templates/`.\n- [x] Внешний аудит r20 вернул `VERDICT: ACCEPT`.\n\n### Проверки\n\n- [x] `dotnet build tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj -v:minimal` прошёл.\n- [x] `dotnet build src\\Electron2D.Cli\\Electron2D.Cli.csproj -v:minimal` прошёл после последовательного повторного запуска.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~LeakVerificationTests\" --no-build --no-restore -v:minimal` прошёл: 5/5.\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ReferenceGamePlatformMatrixTests\" --no-build --no-restore -v:minimal` прошёл: 6/6.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify licenses` прошёл для 659 source-файлов.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs --check` прошёл.\n- [x] `git diff --check` прошёл с предупреждениями Git о будущей LF-нормализации двух файлов, без whitespace errors.\n- [x] `audit package r20` прошёл и создал `.temp/audit/T-0210-audit-r20.zip` с operator workflow sidecar.\n- [x] `audit package verify r20` прошёл на отдельной clean repo `.temp/audit-clean/T-0210-r20`.\n- [x] `audit submit r20` после повторной штатной попытки сохранил `docs/verdicts/release-management/t-0210-audit-r20.md` с первой непустой строкой `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-30T20:45:55+03:00 - Начата работа: исходный `HEAD` и audit baseline зафиксированы как `24838853ac510be270ada6a348482303143e7aee`; домен задачи - `release-management`.\n\n2026-06-30T23:29:00+03:00 - Внешний аудит r02 вернул `NEEDS_FIXES`; исправления закрыли содержательность C# runner-ов для agent acceptance benchmarks, platformer, reference game matrix/assets, UI API gate и ARM64 autodetect для Box2D RID.\n\n2026-07-01T00:14:00+03:00 - Внешний аудит r03 вернул `NEEDS_FIXES`; исправления ограничены scope `T-0210` и tracked-only контрактом `verify no-powershell-workflows`.\n\n2026-07-01T01:10:00+03:00 - Внешний аудит r04 вернул `NEEDS_FIXES`; исправления добавили `verify ci-matrix`, расширили `verify licenses` на `eng/**/*.cs`, перенесли рабочие каталоги под `data/` и разрешили `.temp/audit-evidence/...` для audit evidence.\n\n2026-07-01T07:12:00+03:00 - Внешний аудит r16 вернул `NEEDS_FIXES`; исправления синхронизировали `AGENTS.md`, активные документы и generated local docs с переносимым `eng/Electron2D.Build`.\n\n2026-07-01T08:21:55+03:00 - Внешний аудит r20 вернул `VERDICT: ACCEPT`; `T-0210` удалена из активного `TASKS.md`, `T-0206` отмечает её закрытой, а архивная запись сохранена в `data/completed-tasks/2026/07 Июль.md`.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-24T11:32:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-07-01T05:21:55.0000000+00:00",
+  "completedAt": "2026-07-01T05:21:55.0000000+00:00",
+  "acceptedAt": "2026-07-01T05:21:55.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-07-01T05:21:55.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

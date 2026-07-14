@@ -173,8 +173,9 @@ public sealed class ToolingServiceBoundaryTests
 
         Assert.True(submitted.Succeeded);
         Assert.Equal("task-alpha", submitted.TaskId);
-        Assert.Equal(ProjectTaskStatus.AwaitingAcceptance, workspace.Tasks.GetTask("task-alpha").Status);
-        Assert.Equal([".electron2d/tasks/task-alpha.e2task"], submitted.DirtyDocuments);
+        Assert.Equal(ProjectTaskStatus.Review, workspace.Tasks.GetTask("task-alpha").Status);
+        Assert.Equal(ProjectTaskAcceptanceState.Submitted, workspace.Tasks.GetTask("task-alpha").AcceptanceState);
+        Assert.Equal([".taskboard/tasks/task-alpha.e2task"], submitted.DirtyDocuments);
 
         var agentAccept = host.Tasks.Accept(new ToolingTaskStatusRequest(
             "task-alpha",
@@ -185,7 +186,7 @@ public sealed class ToolingServiceBoundaryTests
 
         Assert.False(agentAccept.Succeeded);
         Assert.Contains(agentAccept.Diagnostics, diagnostic => diagnostic.Code == "E2D-TASK-0002");
-        Assert.Equal(ProjectTaskStatus.AwaitingAcceptance, workspace.Tasks.GetTask("task-alpha").Status);
+        Assert.Equal(ProjectTaskStatus.Review, workspace.Tasks.GetTask("task-alpha").Status);
 
         var humanAccept = host.Tasks.Accept(new ToolingTaskStatusRequest(
             "task-alpha",
@@ -346,7 +347,7 @@ public sealed class ToolingServiceBoundaryTests
             1,
             ProjectWorkspaceOperationContext.ForTest($"open-scene-{name}"));
         workspace.CommandBus.OpenTextDocument(
-            ".electron2d/tasks/task-alpha.e2task",
+            ".taskboard/tasks/task-alpha.e2task",
             taskText,
             1,
             ProjectWorkspaceOperationContext.ForTest($"open-task-{name}"));

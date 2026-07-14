@@ -1,0 +1,265 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-62dcdbbe53532a93688e38a62b8c719e",
+  "revision": 2,
+  "taskId": "T-0178",
+  "legacyAliases": [],
+  "title": "Основа UI C - состояния interaction, focus и pointer lifecycle",
+  "description": "## T-0178 [ ] P0: Основа UI C - состояния interaction, focus и pointer lifecycle\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0177\n- Ссылки:\n  - Доменный документ: `docs/input/input-dispatch-ui-focus.md`; `docs/ui/basic-controls.md`; `docs/ui/structured-controls.md`; `docs/editor/editor-project-shell.md`\n  - Исходный код: `src/Electron2D/Input/`; `src/Electron2D/Graphics/UI/`; `src/Electron2D.Editor/`\n  - Тесты: `tests/Electron2D.Tests.Integration/BasicControlInteractionTests.cs`; `tests/Electron2D.Tests.Integration/InputDispatchControlTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0178.\n  - blocker artifact `data/quality/blockers/T-0178.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/input/input-dispatch-ui-focus.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0178.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0178.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЦель - закрыть общий lifecycle взаимодействия controls: hover, press, focus, disabled, selected state, pointer capture, keyboard traversal, popup/modal ownership, tooltip delay, drag-and-drop и shortcuts. Без этого editor docks вынуждены снова изобретать ручной hit-test и состояния поверх shell.\n\nОжидаемый результат: мышь, touch, клавиатура и shortcuts проходят через общий GUI routing runtime. Активный workspace влияет на shortcut dispatch, но не ломает focus ownership. Popup/modal ownership забирает и возвращает focus предсказуемо. Drag-and-drop имеет единый generic lifecycle: drag source, payload, target enter/leave, preview, drop, cancel и cleanup. Конкретные controls `Tree`, `ItemList`, `TabContainer`, `PopupMenu`, `LineEdit`, `ScrollContainer` и editor-операции Scene Tree, FileSystem, Tasks board и viewport проверяются в `T-0194`-`T-0197` и editor-задачах.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменные документы описывают mouse enter/leave, pointer capture, double click, wheel, cursor shapes, focus traversal, keyboard activation, popup/modal focus ownership, tooltip delay и drag-and-drop lifecycle.\n- [ ] Добавлены сначала падающие tests на hover redraw, pressed/captured pointer, disabled base controls, selected state, Tab/Shift+Tab traversal, popup/modal focus ownership, generic drag lifecycle и workspace-aware shortcuts.\n- [ ] Foundation tests используют базовые test controls и минимальные popup/drag fixtures; готовность `Tree`, `ItemList`, `TabContainer`, `PopupMenu`, `LineEdit` и `ScrollContainer` к общему state/focus path подтверждается в `T-0194`-`T-0197`.\n- [ ] Focus ring и selected state видны через theme resources и не меняют layout размеров.\n- [ ] Generic focus traversal, keyboard activation и shortcut routing проверены на базовых controls и не зависят от конкретного editor dock или будущих desktop controls.\n- [ ] Generic drag-and-drop lifecycle поддерживает source, payload, target enter/leave, preview, drop, cancel и cleanup без editor-only input path.\n- [ ] Focused input/UI tests, real-window interaction smoke и проверка лицензий исходников проходят.\n\n### Подзадачи\n\n- [ ] Специфицировать state machine для pointer/focus/keyboard.\n- [ ] Добавить tests для hover/press/focus/disabled/selected transitions.\n- [ ] Реализовать popup/modal focus ownership и tooltip delay.\n- [ ] Подключить shortcut dispatch с учётом active workspace.\n- [ ] Добавить общий drag-and-drop lifecycle.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача отделяет поведение controls от визуальной переработки shell: новые editor panels не должны реализовывать собственный focus или pointer routing.\n\n2026-06-24T03:20:00+03:00 - При реализации foundation-часть нужно проверять на generic controls. Editor-specific keyboard workflows для Scene Tree, FileSystem и Inspector должны закрываться в `T-0183`/`T-0185`, чтобы эта задача не разрослась до полноценного shell workflow.\n\n2026-06-24T03:49:00+03:00 - Критерии приведены к этой границе: `T-0178` больше не требует reparent/reorder, resource-to-scene placement или movement task cards. Она даёт только общий drag/focus/shortcut lifecycle.\n\n2026-06-24T13:36:00+03:00 - Убрана инверсия зависимости с `T-0194`-`T-0197`: foundation проверяет механизмы на базовых test controls, а конкретные desktop controls доказывают использование общего state/focus path в своих дочерних задачах.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": "task-6e1088ab0e5bff54d81278aab3c7ac54",
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-74bfcc810bb4ff8a8463ecc5f0ceee92"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменные документы описывают mouse enter/leave, pointer capture, double click, wheel, cursor shapes, focus traversal, keyboard activation, popup/modal focus ownership, tooltip delay и drag-and-drop lifecycle.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Добавлены сначала падающие tests на hover redraw, pressed/captured pointer, disabled base controls, selected state, Tab/Shift+Tab traversal, popup/modal focus ownership, generic drag lifecycle и workspace-aware shortcuts.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Foundation tests используют базовые test controls и минимальные popup/drag fixtures; готовность `Tree`, `ItemList`, `TabContainer`, `PopupMenu`, `LineEdit` и `ScrollContainer` к общему state/focus path подтверждается в `T-0194`-`T-0197`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Focus ring и selected state видны через theme resources и не меняют layout размеров.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Generic focus traversal, keyboard activation и shortcut routing проверены на базовых controls и не зависят от конкретного editor dock или будущих desktop controls.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Generic drag-and-drop lifecycle поддерживает source, payload, target enter/leave, preview, drop, cancel и cleanup без editor-only input path.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Focused input/UI tests, real-window interaction smoke и проверка лицензий исходников проходят.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача отделяет поведение controls от визуальной переработки shell: новые editor panels не должны реализовывать собственный focus или pointer routing."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T00:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "При реализации foundation-часть нужно проверять на generic controls. Editor-specific keyboard workflows для Scene Tree, FileSystem и Inspector должны закрываться в `T-0183`/`T-0185`, чтобы эта задача не разрослась до полноценного shell workflow."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T00:49:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Критерии приведены к этой границе: `T-0178` больше не требует reparent/reorder, resource-to-scene placement или movement task cards. Она даёт только общий drag/focus/shortcut lifecycle."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T10:36:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Убрана инверсия зависимости с `T-0194`-`T-0197`: foundation проверяет механизмы на базовых test controls, а конкретные desktop controls доказывают использование общего state/focus path в своих дочерних задачах."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/dev-diary"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/quality/blockers/T-0178.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/editor/editor-project-shell.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/input/input-dispatch-ui-focus.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/ui/basic-controls.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/ui/structured-controls.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "src/Electron2D/Graphics/UI"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "src/Electron2D/Input"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/BasicControlInteractionTests.cs"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/InputDispatchControlTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "blocked-environment",
+    "readyToStart": [
+      "только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.",
+      "перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate."
+    ],
+    "stopConditions": [
+      "dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.",
+      "требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.",
+      "задача просит audit package без отдельной blocker-report задачи."
+    ],
+    "allowedChanges": [
+      "`TASKS.md` blocker/current evidence notes for T-0178.",
+      "blocker artifact `data/quality/blockers/T-0178.md`, если нужен отдельный отчёт.",
+      "дневник `data/dev-diary/` и связанный доменный документ docs/input/input-dispatch-ui-focus.md только для уточнения blocker-а."
+    ],
+    "forbiddenChanges": [
+      "production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.",
+      "unrelated task statuses, dependency graph or release scope."
+    ],
+    "requiredOutputs": [
+      "blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.",
+      "blocker artifact `data/quality/blockers/T-0178.md` when diagnostics need a durable file.",
+      "diary entry with exact commands or host checks that proved the block."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 123305,
+      "byteLength": 9506,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "975e656cb747610db72cb064ab202f3379346d0173e95c41f569e905c66b09be",
+      "markdown": "## T-0178 [ ] P0: Основа UI C - состояния interaction, focus и pointer lifecycle\n\n- Создана: 2026-06-24T02:20:00+03:00\n- Состояние: blocked\n- Приоритет: P0\n- Execution class: `blocked`\n- Scheduling tier: `later`\n- Зависимости: T-0177\n- Ссылки:\n  - Доменный документ: `docs/input/input-dispatch-ui-focus.md`; `docs/ui/basic-controls.md`; `docs/ui/structured-controls.md`; `docs/editor/editor-project-shell.md`\n  - Исходный код: `src/Electron2D/Input/`; `src/Electron2D/Graphics/UI/`; `src/Electron2D.Editor/`\n  - Тесты: `tests/Electron2D.Tests.Integration/BasicControlInteractionTests.cs`; `tests/Electron2D.Tests.Integration/InputDispatchControlTests.cs`\n\n### Execution contract\n\n- Task type: blocked-environment\n- Ready-to-start:\n  - только после закрытия зависимостей, появления host/platform prerequisites или явного текущего user override в заметках задачи и дневнике.\n  - перед любыми изменениями подтвердить, что состояние всё ещё `blocked` и блокер не снят архивной задачей или parent gate.\n- Stop conditions:\n  - dependency, SDK, device, simulator, credential, platform service или host prerequisite отсутствует.\n  - требуется workaround, surrogate implementation или подмена platform smoke вместо настоящего evidence.\n  - задача просит audit package без отдельной blocker-report задачи.\n- May change:\n  - `TASKS.md` blocker/current evidence notes for T-0178.\n  - blocker artifact `data/quality/blockers/T-0178.md`, если нужен отдельный отчёт.\n  - дневник `data/dev-diary/` и связанный доменный документ docs/input/input-dispatch-ui-focus.md только для уточнения blocker-а.\n- Must not change:\n  - production source, tests, generated artifacts, export/runtime implementation or public API behavior while the blocker is active.\n  - unrelated task statuses, dependency graph or release scope.\n- Required outputs:\n  - blocker note in `TASKS.md` with missing prerequisite, owner, next action and date.\n  - blocker artifact `data/quality/blockers/T-0178.md` when diagnostics need a durable file.\n  - diary entry with exact commands or host checks that proved the block.\n- Required commands:\n  - `git diff --check`\n  - any host/prerequisite probe named by the domain document or task criteria; do not invent substitute smoke commands.\n- External audit:\n  - not required until parent gate; no audit package while blocked unless a blocker-report task explicitly asks for it\n\n### Blocked protocol\n\nIf dependencies or host prerequisites are missing:\n\n- do not implement a workaround, surrogate path or partial production behavior;\n- create or update blocker evidence in TASKS.md, data/quality/blockers/T-0178.md when a durable artifact is needed, and the current diary;\n- leave the task state as blocked until the dependency/prerequisite is genuinely available or the user changes the dependency graph;\n- do not create an audit package unless a separate blocker-report task explicitly asks for it;\n- record the exact missing prerequisite, attempted command, diagnostic output and next owner/action.\n### Самодостаточное описание\n\nЦель - закрыть общий lifecycle взаимодействия controls: hover, press, focus, disabled, selected state, pointer capture, keyboard traversal, popup/modal ownership, tooltip delay, drag-and-drop и shortcuts. Без этого editor docks вынуждены снова изобретать ручной hit-test и состояния поверх shell.\n\nОжидаемый результат: мышь, touch, клавиатура и shortcuts проходят через общий GUI routing runtime. Активный workspace влияет на shortcut dispatch, но не ломает focus ownership. Popup/modal ownership забирает и возвращает focus предсказуемо. Drag-and-drop имеет единый generic lifecycle: drag source, payload, target enter/leave, preview, drop, cancel и cleanup. Конкретные controls `Tree`, `ItemList`, `TabContainer`, `PopupMenu`, `LineEdit`, `ScrollContainer` и editor-операции Scene Tree, FileSystem, Tasks board и viewport проверяются в `T-0194`-`T-0197` и editor-задачах.\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [ ] Доменные документы описывают mouse enter/leave, pointer capture, double click, wheel, cursor shapes, focus traversal, keyboard activation, popup/modal focus ownership, tooltip delay и drag-and-drop lifecycle.\n- [ ] Добавлены сначала падающие tests на hover redraw, pressed/captured pointer, disabled base controls, selected state, Tab/Shift+Tab traversal, popup/modal focus ownership, generic drag lifecycle и workspace-aware shortcuts.\n- [ ] Foundation tests используют базовые test controls и минимальные popup/drag fixtures; готовность `Tree`, `ItemList`, `TabContainer`, `PopupMenu`, `LineEdit` и `ScrollContainer` к общему state/focus path подтверждается в `T-0194`-`T-0197`.\n- [ ] Focus ring и selected state видны через theme resources и не меняют layout размеров.\n- [ ] Generic focus traversal, keyboard activation и shortcut routing проверены на базовых controls и не зависят от конкретного editor dock или будущих desktop controls.\n- [ ] Generic drag-and-drop lifecycle поддерживает source, payload, target enter/leave, preview, drop, cancel и cleanup без editor-only input path.\n- [ ] Focused input/UI tests, real-window interaction smoke и проверка лицензий исходников проходят.\n\n### Подзадачи\n\n- [ ] Специфицировать state machine для pointer/focus/keyboard.\n- [ ] Добавить tests для hover/press/focus/disabled/selected transitions.\n- [ ] Реализовать popup/modal focus ownership и tooltip delay.\n- [ ] Подключить shortcut dispatch с учётом active workspace.\n- [ ] Добавить общий drag-and-drop lifecycle.\n\n### Заметки агента\n\n2026-06-24T02:20:00+03:00 - Задача отделяет поведение controls от визуальной переработки shell: новые editor panels не должны реализовывать собственный focus или pointer routing.\n\n2026-06-24T03:20:00+03:00 - При реализации foundation-часть нужно проверять на generic controls. Editor-specific keyboard workflows для Scene Tree, FileSystem и Inspector должны закрываться в `T-0183`/`T-0185`, чтобы эта задача не разрослась до полноценного shell workflow.\n\n2026-06-24T03:49:00+03:00 - Критерии приведены к этой границе: `T-0178` больше не требует reparent/reorder, resource-to-scene placement или movement task cards. Она даёт только общий drag/focus/shortcut lifecycle.\n\n2026-06-24T13:36:00+03:00 - Убрана инверсия зависимости с `T-0194`-`T-0197`: foundation проверяет механизмы на базовых test controls, а конкретные desktop controls доказывают использование общего state/focus path в своих дочерних задачах.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-23T23:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

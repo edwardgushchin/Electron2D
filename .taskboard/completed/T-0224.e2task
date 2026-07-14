@@ -1,0 +1,354 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-ad05c3cc286456fa74fa8fbefaa72327",
+  "revision": 2,
+  "taskId": "T-0224",
+  "legacyAliases": [],
+  "title": "Развести runtime targets, editor targets и release verification tier",
+  "description": "## T-0224 [x] P0: Развести runtime targets, editor targets и release verification tier\n\n- Завершена: 2026-06-24T23:10:00+03:00\n- Принята пользователем: 2026-06-24T23:10:00+03:00\n- Архивная причина: пользователь принял задачу после повторной статической проверки результата; блокирующих замечаний не осталось.\n\n- Ссылки:\n  - Доменный документ: `docs/examples/reference-game-platform-matrix.md`\n  - Доменный документ: `docs/releases/0.1.0-preview.md`\n  - Доменный документ: `docs/export/export-guide.md`\n  - Доменный документ: `docs/export/ios-arm64-export.md`\n  - Доменный документ: `docs/export/webassembly-browser-export.md`\n  - Доменный документ: `docs/documentation/repository-readme.md`\n  - Артефакт: `data/quality/reference-game-platform-matrix.json`\n  - Тесты: `tests/Electron2D.Tests.Integration/ReferenceGamePlatformMatrixTests.cs`\n  - Verifier: `tools/Verify-ReferenceGamePlatformMatrix.ps1`\n\n### Самодостаточное описание\n\nПользователь уточнил, что iOS и WebAssembly являются полноценными платформами запуска и экспорта Electron2D: экспортированные игры должны на них работать, и их нельзя удалять из общей матрицы запуска. Одновременно нужно отдельно определить релизный набор проверки `0.1.0 Preview`: какие платформы обязаны иметь реальную быструю и длительную проверку, какие отчёты о заблокированном окружении допустимы как диагностика и что блокирует релизную проверку.\n\nИтоговое поведение: документы, JSON-артефакт и verifier различают `runtimeTargets`, `editorTargets` и `releaseVerificationTargets`. `runtimeTargets` включают Windows, Linux, macOS, Android, iOS и WebAssembly. `editorTargets` включают Windows, Linux и macOS. `releaseVerificationTargets` для `0.1.0 Preview` включают все шесть платформ, а отчёт о заблокированном окружении не засчитывает финальную релизную проверку.\n\n### Критерии и результат\n\n- [x] `docs/examples/reference-game-platform-matrix.md` явно различает `runtimeTargets`, `editorTargets` и `releaseVerificationTargets`.\n- [x] Матрица запуска и экспорта сохраняет Windows, Linux, macOS, Android, iOS и WebAssembly как реальные платформы игр.\n- [x] Матрица редактора ограничена Windows, Linux и macOS.\n- [x] Релизный набор проверки `0.1.0 Preview` зафиксирован отдельно: для каждой платформы указано, обязательна ли реальная быстрая и длительная проверка, допускается ли отчёт о заблокированном окружении и что блокирует релиз.\n- [x] Окончательный состав `releaseVerificationTargets` основан на явном продуктовом решении из `docs/releases/0.1.0-preview.md`.\n- [x] Export presets для iOS/WebAssembly остаются частью runtime/export target set и не удаляются ради упрощения проверок.\n- [x] `T-0092` получила приоритет `P0` и вернулась в зависимости `T-0093`; iOS-проверка находится в критическом пути до `T-0093`.\n- [x] README соответствует контракту `T-0110`: таблица `Platform / Editor / Runtime`, iOS/Web как запланированные платформы запуска, без столбца релизной проверки.\n- [x] Platformer в README и release/matrix-документах описан как пример и кандидат на приёмочный проект, а не как уже завершённая приёмочная игра.\n- [x] Focused tests проверяют разделение `runtimeTargets`, `editorTargets`, `releaseVerificationTargets`, JSON version 2, README-контракт и доменный документ README.\n- [x] После зелёных проверок связанные доменные документы, generated local documentation index и локальный `TASKS.md` синхронизированы.\n\n### Подзадачи\n\n- [x] Обновить platform matrix domain document.\n- [x] Добавить tests/verifier checks для `runtimeTargets`, `editorTargets` и `releaseVerificationTargets`.\n- [x] Синхронизировать `T-0092`, `T-0093`, release docs, export docs, README и README-доменный контракт.\n- [x] Запустить focused platform matrix checks и записать результат в дневник.\n\n### Проверки\n\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ReferenceGamePlatformMatrixTests\"` прошёл 6/6.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReferenceGamePlatformMatrix.ps1` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-ExportDocumentation.ps1` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл после обновления `data/documentation/electron2d-local-docs-index.json`.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-Tasks.ps1` прошёл.\n- [x] `git diff --check` не нашёл whitespace-ошибок и вывел только предупреждения о будущей замене LF на CRLF.\n\n### Заметки агента\n\n2026-06-24T19:45:00+03:00 - Создано по уточнению пользователя. Не выносить iOS/WebAssembly из runtime/export matrix; спорный вопрос должен быть только в release verification tier конкретного preview-релиза.\n\n2026-06-24T20:59:00+03:00 - `data/quality/reference-game-platform-matrix.json` обновлён до version 2 с отдельными `runtimeTargets`, `editorTargets`, `releaseVerificationTargets` и `releaseVerificationDecision`. Verifier и focused tests падают на старом общем `targetSet`/`expectedTargets`.\n\n2026-06-24T22:20:00+03:00 - После пользовательского отказа README возвращён к контракту `T-0110`, `T-0092` повышена до `P0` и возвращена в зависимости `T-0093`, ROADMAP поставил iOS в критический путь до `T-0093`, а `Platformer` описан как активный проект матрицы и кандидат на приёмочный проект до принятия `T-0222`, `T-0223` и `T-0225`.\n\n2026-06-24T22:36:00+03:00 - README и доменный документ README заменили завышенное описание Platformer на `A 2D platformer example built with Electron2D.`; focused test запрещает старую формулировку.\n\n2026-06-24T22:49:00+03:00 - В `docs/documentation/repository-readme.md` убрана коллизия, будто iOS/Web не входят в обязательную релизную проверку `0.1.0 Preview`. README показывает публичный статус, а состав `releaseVerificationTargets` задаётся release-документом.\n\n2026-06-24T23:03:00+03:00 - README синхронизирован с точной строкой `Cross-platform runtime` из доменного контракта, focused test читает `repository-readme.md`, проверяет фразу про `releaseVerificationTargets` и больше не запрещает нужную строку `iOS and Web are planned as future runtime targets`.\n\n2026-06-24T23:10:00+03:00 - Пользователь принял `T-0224`; задача удалена из активного `TASKS.md` и перенесена в этот архив.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0011",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`docs/examples/reference-game-platform-matrix.md` явно различает `runtimeTargets`, `editorTargets` и `releaseVerificationTargets`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ad05c3cc286456fa74fa8fbefaa72327/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Матрица запуска и экспорта сохраняет Windows, Linux, macOS, Android, iOS и WebAssembly как реальные платформы игр.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ad05c3cc286456fa74fa8fbefaa72327/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Матрица редактора ограничена Windows, Linux и macOS.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ad05c3cc286456fa74fa8fbefaa72327/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Релизный набор проверки `0.1.0 Preview` зафиксирован отдельно: для каждой платформы указано, обязательна ли реальная быстрая и длительная проверка, допускается ли отчёт о заблокированном окружении и что блокирует релиз.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ad05c3cc286456fa74fa8fbefaa72327/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Окончательный состав `releaseVerificationTargets` основан на явном продуктовом решении из `docs/releases/0.1.0-preview.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ad05c3cc286456fa74fa8fbefaa72327/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Export presets для iOS/WebAssembly остаются частью runtime/export target set и не удаляются ради упрощения проверок.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ad05c3cc286456fa74fa8fbefaa72327/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "`T-0092` получила приоритет `P0` и вернулась в зависимости `T-0093`; iOS-проверка находится в критическом пути до `T-0093`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ad05c3cc286456fa74fa8fbefaa72327/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "README соответствует контракту `T-0110`: таблица `Platform / Editor / Runtime`, iOS/Web как запланированные платформы запуска, без столбца релизной проверки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ad05c3cc286456fa74fa8fbefaa72327/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Platformer в README и release/matrix-документах описан как пример и кандидат на приёмочный проект, а не как уже завершённая приёмочная игра.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ad05c3cc286456fa74fa8fbefaa72327/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Focused tests проверяют разделение `runtimeTargets`, `editorTargets`, `releaseVerificationTargets`, JSON version 2, README-контракт и доменный документ README.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ad05c3cc286456fa74fa8fbefaa72327/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "После зелёных проверок связанные доменные документы, generated local documentation index и локальный `TASKS.md` синхронизированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-ad05c3cc286456fa74fa8fbefaa72327/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T16:45:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по уточнению пользователя. Не выносить iOS/WebAssembly из runtime/export matrix; спорный вопрос должен быть только в release verification tier конкретного preview-релиза."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T17:59:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "`data/quality/reference-game-platform-matrix.json` обновлён до version 2 с отдельными `runtimeTargets`, `editorTargets`, `releaseVerificationTargets` и `releaseVerificationDecision`. Verifier и focused tests падают на старом общем `targetSet`/`expectedTargets`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T19:20:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "После пользовательского отказа README возвращён к контракту `T-0110`, `T-0092` повышена до `P0` и возвращена в зависимости `T-0093`, ROADMAP поставил iOS в критический путь до `T-0093`, а `Platformer` описан как активный проект матрицы и кандидат на приёмочный проект до принятия `T-0222`, `T-0223` и `T-0225`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T19:36:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "README и доменный документ README заменили завышенное описание Platformer на `A 2D platformer example built with Electron2D.`; focused test запрещает старую формулировку."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T19:49:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "В `docs/documentation/repository-readme.md` убрана коллизия, будто iOS/Web не входят в обязательную релизную проверку `0.1.0 Preview`. README показывает публичный статус, а состав `releaseVerificationTargets` задаётся release-документом."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0006",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T20:03:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "README синхронизирован с точной строкой `Cross-platform runtime` из доменного контракта, focused test читает `repository-readme.md`, проверяет фразу про `releaseVerificationTargets` и больше не запрещает нужную строку `iOS and Web are planned as future runtime targets`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0007",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-24T20:10:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Пользователь принял `T-0224`; задача удалена из активного `TASKS.md` и перенесена в этот архив."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-24T20:10:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "Platform / Editor / Runtime"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "data/quality/reference-game-platform-matrix.json"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/documentation/repository-readme.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/examples/reference-game-platform-matrix.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/export/export-guide.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/export/ios-arm64-export.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/export/webassembly-browser-export.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ReferenceGamePlatformMatrixTests.cs"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "tools/Verify-ReferenceGamePlatformMatrix.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 930398,
+      "byteLength": 8732,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "3dc39fde06b20b18c7e957e27286183848663ddd7a24e0074dd7fb689d4d3159",
+      "markdown": "## T-0224 [x] P0: Развести runtime targets, editor targets и release verification tier\n\n- Завершена: 2026-06-24T23:10:00+03:00\n- Принята пользователем: 2026-06-24T23:10:00+03:00\n- Архивная причина: пользователь принял задачу после повторной статической проверки результата; блокирующих замечаний не осталось.\n\n- Ссылки:\n  - Доменный документ: `docs/examples/reference-game-platform-matrix.md`\n  - Доменный документ: `docs/releases/0.1.0-preview.md`\n  - Доменный документ: `docs/export/export-guide.md`\n  - Доменный документ: `docs/export/ios-arm64-export.md`\n  - Доменный документ: `docs/export/webassembly-browser-export.md`\n  - Доменный документ: `docs/documentation/repository-readme.md`\n  - Артефакт: `data/quality/reference-game-platform-matrix.json`\n  - Тесты: `tests/Electron2D.Tests.Integration/ReferenceGamePlatformMatrixTests.cs`\n  - Verifier: `tools/Verify-ReferenceGamePlatformMatrix.ps1`\n\n### Самодостаточное описание\n\nПользователь уточнил, что iOS и WebAssembly являются полноценными платформами запуска и экспорта Electron2D: экспортированные игры должны на них работать, и их нельзя удалять из общей матрицы запуска. Одновременно нужно отдельно определить релизный набор проверки `0.1.0 Preview`: какие платформы обязаны иметь реальную быструю и длительную проверку, какие отчёты о заблокированном окружении допустимы как диагностика и что блокирует релизную проверку.\n\nИтоговое поведение: документы, JSON-артефакт и verifier различают `runtimeTargets`, `editorTargets` и `releaseVerificationTargets`. `runtimeTargets` включают Windows, Linux, macOS, Android, iOS и WebAssembly. `editorTargets` включают Windows, Linux и macOS. `releaseVerificationTargets` для `0.1.0 Preview` включают все шесть платформ, а отчёт о заблокированном окружении не засчитывает финальную релизную проверку.\n\n### Критерии и результат\n\n- [x] `docs/examples/reference-game-platform-matrix.md` явно различает `runtimeTargets`, `editorTargets` и `releaseVerificationTargets`.\n- [x] Матрица запуска и экспорта сохраняет Windows, Linux, macOS, Android, iOS и WebAssembly как реальные платформы игр.\n- [x] Матрица редактора ограничена Windows, Linux и macOS.\n- [x] Релизный набор проверки `0.1.0 Preview` зафиксирован отдельно: для каждой платформы указано, обязательна ли реальная быстрая и длительная проверка, допускается ли отчёт о заблокированном окружении и что блокирует релиз.\n- [x] Окончательный состав `releaseVerificationTargets` основан на явном продуктовом решении из `docs/releases/0.1.0-preview.md`.\n- [x] Export presets для iOS/WebAssembly остаются частью runtime/export target set и не удаляются ради упрощения проверок.\n- [x] `T-0092` получила приоритет `P0` и вернулась в зависимости `T-0093`; iOS-проверка находится в критическом пути до `T-0093`.\n- [x] README соответствует контракту `T-0110`: таблица `Platform / Editor / Runtime`, iOS/Web как запланированные платформы запуска, без столбца релизной проверки.\n- [x] Platformer в README и release/matrix-документах описан как пример и кандидат на приёмочный проект, а не как уже завершённая приёмочная игра.\n- [x] Focused tests проверяют разделение `runtimeTargets`, `editorTargets`, `releaseVerificationTargets`, JSON version 2, README-контракт и доменный документ README.\n- [x] После зелёных проверок связанные доменные документы, generated local documentation index и локальный `TASKS.md` синхронизированы.\n\n### Подзадачи\n\n- [x] Обновить platform matrix domain document.\n- [x] Добавить tests/verifier checks для `runtimeTargets`, `editorTargets` и `releaseVerificationTargets`.\n- [x] Синхронизировать `T-0092`, `T-0093`, release docs, export docs, README и README-доменный контракт.\n- [x] Запустить focused platform matrix checks и записать результат в дневник.\n\n### Проверки\n\n- [x] `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ReferenceGamePlatformMatrixTests\"` прошёл 6/6.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReferenceGamePlatformMatrix.ps1` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-ExportDocumentation.ps1` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1` прошёл после обновления `data/documentation/electron2d-local-docs-index.json`.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-Tasks.ps1` прошёл.\n- [x] `git diff --check` не нашёл whitespace-ошибок и вывел только предупреждения о будущей замене LF на CRLF.\n\n### Заметки агента\n\n2026-06-24T19:45:00+03:00 - Создано по уточнению пользователя. Не выносить iOS/WebAssembly из runtime/export matrix; спорный вопрос должен быть только в release verification tier конкретного preview-релиза.\n\n2026-06-24T20:59:00+03:00 - `data/quality/reference-game-platform-matrix.json` обновлён до version 2 с отдельными `runtimeTargets`, `editorTargets`, `releaseVerificationTargets` и `releaseVerificationDecision`. Verifier и focused tests падают на старом общем `targetSet`/`expectedTargets`.\n\n2026-06-24T22:20:00+03:00 - После пользовательского отказа README возвращён к контракту `T-0110`, `T-0092` повышена до `P0` и возвращена в зависимости `T-0093`, ROADMAP поставил iOS в критический путь до `T-0093`, а `Platformer` описан как активный проект матрицы и кандидат на приёмочный проект до принятия `T-0222`, `T-0223` и `T-0225`.\n\n2026-06-24T22:36:00+03:00 - README и доменный документ README заменили завышенное описание Platformer на `A 2D platformer example built with Electron2D.`; focused test запрещает старую формулировку.\n\n2026-06-24T22:49:00+03:00 - В `docs/documentation/repository-readme.md` убрана коллизия, будто iOS/Web не входят в обязательную релизную проверку `0.1.0 Preview`. README показывает публичный статус, а состав `releaseVerificationTargets` задаётся release-документом.\n\n2026-06-24T23:03:00+03:00 - README синхронизирован с точной строкой `Cross-platform runtime` из доменного контракта, focused test читает `repository-readme.md`, проверяет фразу про `releaseVerificationTargets` и больше не запрещает нужную строку `iOS and Web are planned as future runtime targets`.\n\n2026-06-24T23:10:00+03:00 - Пользователь принял `T-0224`; задача удалена из активного `TASKS.md` и перенесена в этот архив.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-24T16:45:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-24T20:10:00.0000000+00:00",
+  "completedAt": "2026-06-24T20:10:00.0000000+00:00",
+  "acceptedAt": "2026-06-24T20:10:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-24T20:10:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

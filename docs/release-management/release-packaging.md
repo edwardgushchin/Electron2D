@@ -134,7 +134,7 @@ dotnet run --project eng/Electron2D.Build -- release verify
 
 - сверить имена артефактов, поля манифеста `version`, `runtimeIdentifier`, `configuration` и контрольную сумму;
 - скачать архив из файлов рабочего процесса и проверить наличие `README.md`, `LICENSE`, `library`, `editor`, `tools/e2d` и `release-manifest.json`;
-- убедиться, что `.electron2d/tasks/**`, `TASKS.md`, старые корневые `dev-diary/` и `completed-tasks/`, текущие `data/dev-diary/` и `data/completed-tasks/`, `CHANGELOG.md` и `RELEASE-NOTES.md` не попали в релизный архив;
+- убедиться, что `.taskboard/**`, `TASKS.md`, старые корневые `dev-diary/` и `completed-tasks/`, текущие `data/dev-diary/` и `data/completed-tasks/`, `CHANGELOG.md` и `RELEASE-NOTES.md` не попали в релизный архив;
 - приложить результаты к `T-0104`, если это не запуск релиз-кандидата в режиме `dry_run`.
 
 ## Проверка

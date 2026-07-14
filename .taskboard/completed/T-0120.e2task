@@ -1,0 +1,274 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-246cbc975354fd7e83c931d0d5a7ab56",
+  "revision": 2,
+  "taskId": "T-0120",
+  "legacyAliases": [],
+  "title": "Реализовать `e2d context build` для компактного статического AI context pack",
+  "description": "## T-0120 [x] P2: Реализовать `e2d context build` для компактного статического AI context pack\n\n- Завершена: 2026-06-23T14:40:00+03:00\n- Коммит: `8f977fc feat: add static context pack build`\n- Спецификация: `docs/project-system/static-context-pack.md`; `docs/architecture/agent-native-workflow.md`; `docs/cli/e2d-cli.md`\n- Документация: `docs/project-system/static-context-pack.md`; `docs/cli/e2d-cli.md`\n- Исходный код и тесты:\n  - `src/Electron2D.Cli/ContextPackCli.cs`\n  - `src/Electron2D.Cli/CliGeneralCommands.cs`\n  - `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nРеализована read-only CLI-команда `e2d context build`, которая пересоздаёт `.electron2d/context/` и пишет компактный snapshot проекта для автономного агента или CI. Команда возвращает stable JSON envelope с `command = \"context build\"`, `route = \"none\"`, `data.mode = \"context.build\"`, списком generated files и суммарным размером.\n\nContext pack содержит `context-manifest.json`, `project-summary.json`, `api-surface.json`, `godot-differences.json`, `scene-index.json`, `resource-graph.json`, `diagnostics.json` и `conventions.md`. Snapshot включает engine/.NET version, renderer profile, main scene, Input Map, custom C# classes без source text, scene/resource index, diagnostics categories и recommended check commands.\n\n### Критерии и результат\n\n- [x] Context pack содержит версию движка/.NET, renderer profile, main scene, scene/resource index, Input Map, custom classes, diagnostics и команды проверки.\n- [x] Документация ясно говорит, что context pack является snapshot и может устареть относительно активной Editor-сессии.\n- [x] Context pack не содержит `.git`, секреты, импортированные бинарные данные, huge logs, local workflow Markdown и полный исходный код движка.\n- [x] Добавлены automated tests на состав, размер и отсутствие secret values.\n- [x] Документация команды обновлена.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~ContextBuildCreatesCompactSnapshotWithoutSecretsOrBinaryPayloads` упал ожидаемо: `context build` вернул exit code `1`, потому что команда ещё не была реализована.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~ContextBuildCreatesCompactSnapshotWithoutSecretsOrBinaryPayloads` прошёл `1/1`.\n- CLI workflow slice: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DCliWorkflowTests` прошёл `22/22`.\n- Documentation: `Update-LocalDocumentationIndex.ps1` и `Verify-LocalDocumentation.ps1` прошли.\n- Source gates: `Verify-SourceLicenseHeaders.ps1` прошёл для `632` tracked source files; `Verify-SourceDomainLayout.ps1` прошёл для `320` source files.\n- Release build: `dotnet build src\\Electron2D.sln -c Release` прошёл с warnings `0`, errors `0`.\n- Git checks: `git diff --check` прошёл.\n\n### Решения\n\n- `context build` использует `route = none`, потому что это static snapshot без подключения к active Editor и без headless `ProjectWorkspace` ownership.\n- Source text scripts не копируются: сохраняются только `type`, `baseType` и project-relative path custom classes.\n- Для excluded data context pack хранит только категории и счётчики, чтобы не раскрывать secret values, `.git`, local workflow paths, import cache references, huge log names или binary asset names.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0120 [ ] P2: Реализовать `e2d context build` для компактного статического AI context pack\n\n- Создана: 2026-06-21T00:17:01+03:00\n- Приоритет: P2\n- Состояние: in progress\n- Зависимости: T-0116, T-0118\n- Ссылки:\n  - Спецификация: `docs/architecture/agent-native-workflow.md`\n  - Документация: `docs/cli/`; `docs/project-system/`\n  - Исходный код: `src/Electron2D.Cli/`; `src/Electron2D.Tooling/`; `tests/`\n\n### Самодостаточное описание\n\n`e2d context build` должен создавать `.electron2d/context/` с project-summary, api-surface, godot-differences, scene-index, resource-graph, diagnostics и conventions. Пакет даёт AI-агенту компактный статический снимок без чтения всего репозитория.\n\nContext pack не заменяет живые MCP resources открытого Editor. Он нужен для CI, автономного анализа и клиентов без постоянного соединения с Editor.\n\n### Критерии приёмки\n\n- [ ] Context pack содержит версию движка/.NET, renderer profile, main scene, scene/resource index, Input Map, custom classes, diagnostics и команды проверки.\n- [ ] Документация ясно говорит, что context pack является снимком и может устареть относительно активной Editor-сессии.\n- [ ] Context pack не содержит `.git`, секреты, импортированные бинарные данные, огромные логи и полный исходный код движка.\n- [ ] Добавлены tests на состав, размер и отсутствие секретов.\n- [ ] Документация команды обновлена.\n\n### Заметки агента\n\nСоздано из Agent-native cross-platform 2D game engine архитектурного файла: агенту нужен ограниченный и проверяемый контекст.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все Agent-native cross-platform 2D game engine задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:01:00+03:00 - Уточнение пользователя: context pack полезен, но вторичен относительно живых MCP resources и не должен определять основной Editor workflow.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P2",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-87432465f9ca500ace92dd670ec79481"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-33c33447a62b875d2e8f84f934416e2d"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Context pack содержит версию движка/.NET, renderer profile, main scene, scene/resource index, Input Map, custom classes, diagnostics и команды проверки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-246cbc975354fd7e83c931d0d5a7ab56/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Документация ясно говорит, что context pack является snapshot и может устареть относительно активной Editor-сессии.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-246cbc975354fd7e83c931d0d5a7ab56/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Context pack не содержит `.git`, секреты, импортированные бинарные данные, huge logs, local workflow Markdown и полный исходный код движка.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-246cbc975354fd7e83c931d0d5a7ab56/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Добавлены automated tests на состав, размер и отсутствие secret values.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-246cbc975354fd7e83c931d0d5a7ab56/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Документация команды обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-246cbc975354fd7e83c931d0d5a7ab56/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T07:24:54.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Блокер пользователя: все Agent-native cross-platform 2D game engine задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:01:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: context pack полезен, но вторичен относительно живых MCP resources и не должен определять основной Editor workflow."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:05:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-23T11:40:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": ".electron2d/context"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "22/22"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/architecture/agent-native-workflow.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "docs/cli"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/cli/e2d-cli.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "docs/project-system"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/project-system/static-context-pack.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "src/Electron2D.Cli"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/CliGeneralCommands.cs"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "src/Electron2D.Cli/ContextPackCli.cs"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "Directory",
+      "value": "src/Electron2D.Tooling"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 844876,
+      "byteLength": 7385,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "ca065bf54dc058b27a238e618075fa452404f4eebfcead05c8a23178b84a090d",
+      "markdown": "## T-0120 [x] P2: Реализовать `e2d context build` для компактного статического AI context pack\n\n- Завершена: 2026-06-23T14:40:00+03:00\n- Коммит: `8f977fc feat: add static context pack build`\n- Спецификация: `docs/project-system/static-context-pack.md`; `docs/architecture/agent-native-workflow.md`; `docs/cli/e2d-cli.md`\n- Документация: `docs/project-system/static-context-pack.md`; `docs/cli/e2d-cli.md`\n- Исходный код и тесты:\n  - `src/Electron2D.Cli/ContextPackCli.cs`\n  - `src/Electron2D.Cli/CliGeneralCommands.cs`\n  - `tests/Electron2D.Tests.Integration/Electron2DCliWorkflowTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nРеализована read-only CLI-команда `e2d context build`, которая пересоздаёт `.electron2d/context/` и пишет компактный snapshot проекта для автономного агента или CI. Команда возвращает stable JSON envelope с `command = \"context build\"`, `route = \"none\"`, `data.mode = \"context.build\"`, списком generated files и суммарным размером.\n\nContext pack содержит `context-manifest.json`, `project-summary.json`, `api-surface.json`, `godot-differences.json`, `scene-index.json`, `resource-graph.json`, `diagnostics.json` и `conventions.md`. Snapshot включает engine/.NET version, renderer profile, main scene, Input Map, custom C# classes без source text, scene/resource index, diagnostics categories и recommended check commands.\n\n### Критерии и результат\n\n- [x] Context pack содержит версию движка/.NET, renderer profile, main scene, scene/resource index, Input Map, custom classes, diagnostics и команды проверки.\n- [x] Документация ясно говорит, что context pack является snapshot и может устареть относительно активной Editor-сессии.\n- [x] Context pack не содержит `.git`, секреты, импортированные бинарные данные, huge logs, local workflow Markdown и полный исходный код движка.\n- [x] Добавлены automated tests на состав, размер и отсутствие secret values.\n- [x] Документация команды обновлена.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~ContextBuildCreatesCompactSnapshotWithoutSecretsOrBinaryPayloads` упал ожидаемо: `context build` вернул exit code `1`, потому что команда ещё не была реализована.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~ContextBuildCreatesCompactSnapshotWithoutSecretsOrBinaryPayloads` прошёл `1/1`.\n- CLI workflow slice: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~Electron2DCliWorkflowTests` прошёл `22/22`.\n- Documentation: `Update-LocalDocumentationIndex.ps1` и `Verify-LocalDocumentation.ps1` прошли.\n- Source gates: `Verify-SourceLicenseHeaders.ps1` прошёл для `632` tracked source files; `Verify-SourceDomainLayout.ps1` прошёл для `320` source files.\n- Release build: `dotnet build src\\Electron2D.sln -c Release` прошёл с warnings `0`, errors `0`.\n- Git checks: `git diff --check` прошёл.\n\n### Решения\n\n- `context build` использует `route = none`, потому что это static snapshot без подключения к active Editor и без headless `ProjectWorkspace` ownership.\n- Source text scripts не копируются: сохраняются только `type`, `baseType` и project-relative path custom classes.\n- Для excluded data context pack хранит только категории и счётчики, чтобы не раскрывать secret values, `.git`, local workflow paths, import cache references, huge log names или binary asset names.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0120 [ ] P2: Реализовать `e2d context build` для компактного статического AI context pack\n\n- Создана: 2026-06-21T00:17:01+03:00\n- Приоритет: P2\n- Состояние: in progress\n- Зависимости: T-0116, T-0118\n- Ссылки:\n  - Спецификация: `docs/architecture/agent-native-workflow.md`\n  - Документация: `docs/cli/`; `docs/project-system/`\n  - Исходный код: `src/Electron2D.Cli/`; `src/Electron2D.Tooling/`; `tests/`\n\n### Самодостаточное описание\n\n`e2d context build` должен создавать `.electron2d/context/` с project-summary, api-surface, godot-differences, scene-index, resource-graph, diagnostics и conventions. Пакет даёт AI-агенту компактный статический снимок без чтения всего репозитория.\n\nContext pack не заменяет живые MCP resources открытого Editor. Он нужен для CI, автономного анализа и клиентов без постоянного соединения с Editor.\n\n### Критерии приёмки\n\n- [ ] Context pack содержит версию движка/.NET, renderer profile, main scene, scene/resource index, Input Map, custom classes, diagnostics и команды проверки.\n- [ ] Документация ясно говорит, что context pack является снимком и может устареть относительно активной Editor-сессии.\n- [ ] Context pack не содержит `.git`, секреты, импортированные бинарные данные, огромные логи и полный исходный код движка.\n- [ ] Добавлены tests на состав, размер и отсутствие секретов.\n- [ ] Документация команды обновлена.\n\n### Заметки агента\n\nСоздано из Agent-native cross-platform 2D game engine архитектурного файла: агенту нужен ограниченный и проверяемый контекст.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все Agent-native cross-platform 2D game engine задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:01:00+03:00 - Уточнение пользователя: context pack полезен, но вторичен относительно живых MCP resources и не должен определять основной Editor workflow.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T21:17:01.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-23T11:40:00.0000000+00:00",
+  "completedAt": "2026-06-23T11:40:00.0000000+00:00",
+  "acceptedAt": "2026-06-23T11:40:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-23T11:40:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

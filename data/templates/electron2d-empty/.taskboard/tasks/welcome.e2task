@@ -1,0 +1,67 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "board-main",
+  "taskUid": "task-welcome",
+  "revision": 1,
+  "taskId": "welcome",
+  "legacyAliases": [],
+  "title": "Open the project and run the first scene",
+  "description": "Verify that the newly created Electron2D project opens, validates, builds and runs before adding gameplay.",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "starter"
+  ],
+  "deadline": null,
+  "createdBy": "project-template",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "validate-build-run",
+      "description": "Run e2d validate, dotnet build and e2d run or the Editor Game workspace without errors.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-template-created",
+      "actorId": "project-template",
+      "actorKind": "System",
+      "createdAt": "2026-06-23T00:00:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "Decision",
+        "text": "Initial starter task created by the Electron2D project template."
+      }
+    }
+  ],
+  "links": [],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": "not-required"
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-06-23T00:00:00.0000000+00:00",
+  "updatedAt": "2026-06-23T00:00:00.0000000+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null
+}

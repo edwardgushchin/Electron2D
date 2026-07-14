@@ -1,0 +1,335 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-fb5d983425d8d96458f2757be835cb68",
+  "revision": 2,
+  "taskId": "T-0085",
+  "legacyAliases": [],
+  "title": "Реализовать Project Settings, Input Map, main scene, display settings, renderer profile, physics tick rate и export presets UI",
+  "description": "## T-0085 [x] P1: Реализовать Project Settings, Input Map, main scene, display settings, renderer profile, physics tick rate и export presets UI\n\n- Завершена: 2026-06-23T11:20:00+03:00\n- Коммит: `152652b feat: add editor project settings ui smoke`\n- Спецификация: `docs/editor/project-settings-ui.md`; `docs/editor/godot4-editor-reference.md`; `docs/releases/0.1.0-preview.md`\n- Документация: `docs/editor/project-settings-ui.md`; `docs/editor/editor-project-shell.md`\n- Исходный код и тесты:\n  - `src/Electron2D.Editor/ProjectSettings/EditorProjectSettingsSmoke.cs`\n  - `src/Electron2D.Editor/ProjectSettings/EditorProjectSettingsSmokeResult.cs`\n  - `src/Electron2D.Editor/ProjectSettings/EditorProjectSettingsVisualHarness.cs`\n  - `src/Electron2D.Editor/Program.cs`\n  - `src/Electron2D.Editor/Shell/EditorWindowSmoke.cs`\n  - `tests/Electron2D.Tests.Integration/EditorProjectSettingsUiTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nДобавлен проверяемый Project Settings UI smoke для `Electron2D.Editor`. Команда `--project-settings-smoke <work-root>` создаёт валидный Editor-проект из canonical template, открывает его через Project Manager, сохраняет `project.e2d.json` и `export_presets.e2export.json`, заново загружает оба файла и показывает Project Settings frame в настоящем окне редактора.\n\nЭкран фиксирует main scene, display settings, renderer profile, physics tick rate, Input Map и export presets для Windows, Linux, macOS, Android, iOS и WebAssembly browser. Signing fields хранят только non-secret references. Real-window screenshot `.temp/debug-project-settings-2/visual/project-settings-ui.png` вручную просмотрен: секции находятся в центральной области, `Save Apply` и `Revert` видны, текст читаем и не выходит за контейнеры, запрещённые `3D`, `AssetLib` и GDScript элементы отсутствуют.\n\n### Критерии и результат\n\n- [x] Реализована цель задачи: Project Settings, Input Map, main scene, display settings, renderer profile, physics tick rate и export presets UI.\n- [x] Settings write through project format: `project.e2d.json` и `export_presets.e2export.json` сохраняются через существующие store-слои и проходят reload/round-trip.\n- [x] Спецификация добавлена: `docs/editor/project-settings-ui.md`; reference spec обновлена.\n- [x] Red test добавлен и до implementation упал ожидаемо на отсутствующем `--project-settings-smoke` с exit code `2`.\n- [x] Green test `EditorProjectSettingsUiTests` подтверждает CLI smoke, JSON write-through, export presets, PNG и JSON visual analysis.\n- [x] Документация реализации добавлена: `docs/editor/project-settings-ui.md`; общий Editor shell doc обновлён.\n- [x] Создан и просмотрен real-window screenshot окна `Electron2D.Editor`; `TextOverflowCount=0`, `ForbiddenUiMatches=0`, pointer/keyboard interaction подтверждены.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectSettingsUiTests\" --no-restore -m:1` упал ожидаемо: Editor CLI вернул usage и exit code `2`, потому что `--project-settings-smoke` ещё не существовал.\n- Direct visual smoke: `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --project-settings-smoke .temp\\debug-project-settings-2` прошёл; output содержит `ProjectSettingsWritten=True`, `InputMapRoundTrip=True`, `ExportPresetsRoundTrip=True`, `WindowCreated=True`, `WindowShown=True`, `FramePresented=True`, `PointerInteractionObserved=True`, `KeyboardInteractionObserved=True`, `TextOverflowCount=0`, `ForbiddenUiMatches=0`, `ScreenshotReviewed=True`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectSettingsUiTests\" --no-restore -m:1` прошёл `1/1`.\n- Focused regression slice: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectSettingsUiTests|FullyQualifiedName~SettingsPersistenceTests|FullyQualifiedName~ExportPresetTests|FullyQualifiedName~EditorProjectManagerTests|FullyQualifiedName~EditorProjectShellTests\" --no-restore -m:1` прошёл `14/14`.\n- Verifiers: `Verify-SourceLicenseHeaders.ps1`, `Verify-SourceDomainLayout.ps1`, `Update-LocalDocumentationIndex.ps1`, `Verify-LocalDocumentation.ps1`, `Verify-ReleaseMetadata.ps1`, `Verify-CanonicalGoalAlignment.ps1` прошли.\n- Full tests: `tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `415/415`, runtime smoke `5/5`, golden-data `12/12`.\n- Release build: `dotnet build src\\Electron2D.sln -c Release` прошёл с warnings `0`, errors `0`.\n\n### Решения\n\n- Project Settings UI реализован как internal Editor smoke и visual model без расширения public runtime API.\n- Real-window presentation переиспользует общий `EditorWindowSmoke.PresentCanvasForSmoke`, чтобы следующие visible UI-задачи не возвращались к model-only acceptance.\n- Export presets UI сохраняет все шесть целевых платформ `0.1.0 Preview`, включая WebAssembly browser, но не запускает build/signing/deploy.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0085 [ ] P1: Реализовать Project Settings, Input Map, main scene, display settings, renderer profile, physics tick rate и export presets UI\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Приоритет: P1\n- Состояние: in progress\n- Зависимости: T-0078, T-0076, T-0129, T-0157, T-0165\n- Ссылки:\n  - Upstream commit: нет\n  - Спецификация: `docs/releases/0.1.0-preview.md`; `docs/editor/`\n  - Документация: `docs/editor/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`\n\n### Самодостаточное описание\n\nЗадача относится к домену «Electron2D.Editor». Цель - Реализовать Project Settings, Input Map, main scene, display settings, renderer profile, physics tick rate и export presets UI. Нужное поведение: результат должен закрыть релизный контракт `0.1.0 Preview`, быть проверяемым автоматическими тестами или документированной проверкой и соответствовать критериям: settings write through project format and are covered by save/load tests.\n\n### Критерии приёмки\n\n- [ ] Реализована или подготовлена цель задачи: Реализовать Project Settings, Input Map, main scene, display settings, renderer profile, physics tick rate и export presets UI.\n- [ ] settings write through project format and are covered by save/load tests.\n- [ ] Если задача меняет код, готова или обновлена спецификация в `docs/specifications/<domain>/`, соответствующая фактическому изменению.\n- [ ] Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.\n- [ ] Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, готова или обновлена справка в `docs/documentation/<domain>/` по фактическому результату изменения кода.\n- [ ] Для видимого UI создан и сохранён screenshot окна `Electron2D.Editor`; проведён анализ размещения, взаимодействия, переполнения текста и соответствия `docs/editor/godot4-editor-reference.md`.\n- [ ] Команда тестирования или проверки задокументирована.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a242ee77ff7971a574520d3cd12a7364"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-cc9ad8b28e56d3f9ecd8e5efa6602736"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-045f38cf3a9a10f510ad88b37dbd4213"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-64e2349d092d26dab374236689d2dfd4"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-98db476c492e3eda0f80405f6a464de3"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Реализована цель задачи: Project Settings, Input Map, main scene, display settings, renderer profile, physics tick rate и export presets UI.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-fb5d983425d8d96458f2757be835cb68/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Settings write through project format: `project.e2d.json` и `export_presets.e2export.json` сохраняются через существующие store-слои и проходят reload/round-trip.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-fb5d983425d8d96458f2757be835cb68/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Спецификация добавлена: `docs/editor/project-settings-ui.md`; reference spec обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-fb5d983425d8d96458f2757be835cb68/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Red test добавлен и до implementation упал ожидаемо на отсутствующем `--project-settings-smoke` с exit code `2`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-fb5d983425d8d96458f2757be835cb68/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Green test `EditorProjectSettingsUiTests` подтверждает CLI smoke, JSON write-through, export presets, PNG и JSON visual analysis.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-fb5d983425d8d96458f2757be835cb68/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Документация реализации добавлена: `docs/editor/project-settings-ui.md`; общий Editor shell doc обновлён.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-fb5d983425d8d96458f2757be835cb68/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Создан и просмотрен real-window screenshot окна `Electron2D.Editor`; `TextOverflowCount=0`, `ForbiddenUiMatches=0`, pointer/keyboard interaction подтверждены.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-fb5d983425d8d96458f2757be835cb68/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-fb5d983425d8d96458f2757be835cb68/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-23T08:20:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".temp/debug-project-settings-2/visual/project-settings-ui.png"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "14/14"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "415/415"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "docs/documentation/<domain>"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/editor/editor-project-shell.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/editor/godot4-editor-reference.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/editor/project-settings-ui.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "Directory",
+      "value": "docs/specifications/<domain>"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "examples"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Program.cs"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/ProjectSettings/EditorProjectSettingsSmoke.cs"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/ProjectSettings/EditorProjectSettingsSmokeResult.cs"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/ProjectSettings/EditorProjectSettingsVisualHarness.cs"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Shell/EditorWindowSmoke.cs"
+    },
+    {
+      "linkId": "link-0022",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0023",
+      "kind": "Directory",
+      "value": "src/Electron2D/Runtime"
+    },
+    {
+      "linkId": "link-0024",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorProjectSettingsUiTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 823659,
+      "byteLength": 8762,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "d44a0b37f90f719ad3327c734d35d7e71ccbca8d124f0be2cebfa5a5eb7f32bf",
+      "markdown": "## T-0085 [x] P1: Реализовать Project Settings, Input Map, main scene, display settings, renderer profile, physics tick rate и export presets UI\n\n- Завершена: 2026-06-23T11:20:00+03:00\n- Коммит: `152652b feat: add editor project settings ui smoke`\n- Спецификация: `docs/editor/project-settings-ui.md`; `docs/editor/godot4-editor-reference.md`; `docs/releases/0.1.0-preview.md`\n- Документация: `docs/editor/project-settings-ui.md`; `docs/editor/editor-project-shell.md`\n- Исходный код и тесты:\n  - `src/Electron2D.Editor/ProjectSettings/EditorProjectSettingsSmoke.cs`\n  - `src/Electron2D.Editor/ProjectSettings/EditorProjectSettingsSmokeResult.cs`\n  - `src/Electron2D.Editor/ProjectSettings/EditorProjectSettingsVisualHarness.cs`\n  - `src/Electron2D.Editor/Program.cs`\n  - `src/Electron2D.Editor/Shell/EditorWindowSmoke.cs`\n  - `tests/Electron2D.Tests.Integration/EditorProjectSettingsUiTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nДобавлен проверяемый Project Settings UI smoke для `Electron2D.Editor`. Команда `--project-settings-smoke <work-root>` создаёт валидный Editor-проект из canonical template, открывает его через Project Manager, сохраняет `project.e2d.json` и `export_presets.e2export.json`, заново загружает оба файла и показывает Project Settings frame в настоящем окне редактора.\n\nЭкран фиксирует main scene, display settings, renderer profile, physics tick rate, Input Map и export presets для Windows, Linux, macOS, Android, iOS и WebAssembly browser. Signing fields хранят только non-secret references. Real-window screenshot `.temp/debug-project-settings-2/visual/project-settings-ui.png` вручную просмотрен: секции находятся в центральной области, `Save Apply` и `Revert` видны, текст читаем и не выходит за контейнеры, запрещённые `3D`, `AssetLib` и GDScript элементы отсутствуют.\n\n### Критерии и результат\n\n- [x] Реализована цель задачи: Project Settings, Input Map, main scene, display settings, renderer profile, physics tick rate и export presets UI.\n- [x] Settings write through project format: `project.e2d.json` и `export_presets.e2export.json` сохраняются через существующие store-слои и проходят reload/round-trip.\n- [x] Спецификация добавлена: `docs/editor/project-settings-ui.md`; reference spec обновлена.\n- [x] Red test добавлен и до implementation упал ожидаемо на отсутствующем `--project-settings-smoke` с exit code `2`.\n- [x] Green test `EditorProjectSettingsUiTests` подтверждает CLI smoke, JSON write-through, export presets, PNG и JSON visual analysis.\n- [x] Документация реализации добавлена: `docs/editor/project-settings-ui.md`; общий Editor shell doc обновлён.\n- [x] Создан и просмотрен real-window screenshot окна `Electron2D.Editor`; `TextOverflowCount=0`, `ForbiddenUiMatches=0`, pointer/keyboard interaction подтверждены.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectSettingsUiTests\" --no-restore -m:1` упал ожидаемо: Editor CLI вернул usage и exit code `2`, потому что `--project-settings-smoke` ещё не существовал.\n- Direct visual smoke: `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --project-settings-smoke .temp\\debug-project-settings-2` прошёл; output содержит `ProjectSettingsWritten=True`, `InputMapRoundTrip=True`, `ExportPresetsRoundTrip=True`, `WindowCreated=True`, `WindowShown=True`, `FramePresented=True`, `PointerInteractionObserved=True`, `KeyboardInteractionObserved=True`, `TextOverflowCount=0`, `ForbiddenUiMatches=0`, `ScreenshotReviewed=True`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectSettingsUiTests\" --no-restore -m:1` прошёл `1/1`.\n- Focused regression slice: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorProjectSettingsUiTests|FullyQualifiedName~SettingsPersistenceTests|FullyQualifiedName~ExportPresetTests|FullyQualifiedName~EditorProjectManagerTests|FullyQualifiedName~EditorProjectShellTests\" --no-restore -m:1` прошёл `14/14`.\n- Verifiers: `Verify-SourceLicenseHeaders.ps1`, `Verify-SourceDomainLayout.ps1`, `Update-LocalDocumentationIndex.ps1`, `Verify-LocalDocumentation.ps1`, `Verify-ReleaseMetadata.ps1`, `Verify-CanonicalGoalAlignment.ps1` прошли.\n- Full tests: `tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `415/415`, runtime smoke `5/5`, golden-data `12/12`.\n- Release build: `dotnet build src\\Electron2D.sln -c Release` прошёл с warnings `0`, errors `0`.\n\n### Решения\n\n- Project Settings UI реализован как internal Editor smoke и visual model без расширения public runtime API.\n- Real-window presentation переиспользует общий `EditorWindowSmoke.PresentCanvasForSmoke`, чтобы следующие visible UI-задачи не возвращались к model-only acceptance.\n- Export presets UI сохраняет все шесть целевых платформ `0.1.0 Preview`, включая WebAssembly browser, но не запускает build/signing/deploy.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0085 [ ] P1: Реализовать Project Settings, Input Map, main scene, display settings, renderer profile, physics tick rate и export presets UI\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Приоритет: P1\n- Состояние: in progress\n- Зависимости: T-0078, T-0076, T-0129, T-0157, T-0165\n- Ссылки:\n  - Upstream commit: нет\n  - Спецификация: `docs/releases/0.1.0-preview.md`; `docs/editor/`\n  - Документация: `docs/editor/`\n  - Исходный код: `src/Electron2D/`; `src/Electron2D/Runtime/`; `examples/`\n\n### Самодостаточное описание\n\nЗадача относится к домену «Electron2D.Editor». Цель - Реализовать Project Settings, Input Map, main scene, display settings, renderer profile, physics tick rate и export presets UI. Нужное поведение: результат должен закрыть релизный контракт `0.1.0 Preview`, быть проверяемым автоматическими тестами или документированной проверкой и соответствовать критериям: settings write through project format and are covered by save/load tests.\n\n### Критерии приёмки\n\n- [ ] Реализована или подготовлена цель задачи: Реализовать Project Settings, Input Map, main scene, display settings, renderer profile, physics tick rate и export presets UI.\n- [ ] settings write through project format and are covered by save/load tests.\n- [ ] Если задача меняет код, готова или обновлена спецификация в `docs/specifications/<domain>/`, соответствующая фактическому изменению.\n- [ ] Если задача меняет код, добавлены или обновлены тесты, покрывающие новое поведение.\n- [ ] Если задача меняет исполняемый код, API, доменную модель, конфигурацию или пользовательское поведение, готова или обновлена справка в `docs/documentation/<domain>/` по фактическому результату изменения кода.\n- [ ] Для видимого UI создан и сохранён screenshot окна `Electron2D.Editor`; проведён анализ размещения, взаимодействия, переполнения текста и соответствия `docs/editor/godot4-editor-reference.md`.\n- [ ] Команда тестирования или проверки задокументирована.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-23T08:20:00.0000000+00:00",
+  "completedAt": "2026-06-23T08:20:00.0000000+00:00",
+  "acceptedAt": "2026-06-23T08:20:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-23T08:20:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

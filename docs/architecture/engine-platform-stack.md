@@ -97,7 +97,7 @@ Project source files должны оставаться deterministic и diff-fri
 - сцены, resources и settings имеют stable text formats;
 - resource references используют stable UID;
 - generated/import cache files отделены от source documents;
-- `.electron2d/tasks/**` является EditorMetadata и не попадает в game runtime asset packs или production packages;
+- `.taskboard/**` является EditorMetadata и не попадает в game runtime asset packs или production packages;
 - agent workflow files репозитория, такие как `TASKS.md`, `data/dev-diary/`, `data/completed-tasks/`, `CHANGELOG*` и `RELEASE-NOTES*`, не являются canonical project storage пользовательского проекта.
 
 ## Mobile и export status

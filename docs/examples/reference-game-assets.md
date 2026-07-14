@@ -14,7 +14,7 @@
 
 `T-0136` закрывает блокер по отсутствующим реальным ассетам для приёмочного Platformer-проекта `0.1-preview`.
 
-Эта спецификация не закрывает сам reference game. `T-0094` должен создать полноценный валидный проект `Electron2D.Editor`: с `.e2d`, `.csproj`, main scene, project settings, Input Map, export presets, импортируемыми resources, scripts и `.electron2d/tasks/**` metadata. Успешная проверка ассетов означает только готовность исходных файлов ресурсов; она не заменяет Editor project validation, открытие проекта в Editor, save/reopen cycle, run/debug/export workflow и platform packaging checks.
+Эта спецификация не закрывает сам reference game. `T-0094` должен создать полноценный валидный проект `Electron2D.Editor`: с `.e2d`, `.csproj`, main scene, project settings, Input Map, export presets, импортируемыми resources, scripts и `.taskboard/**` metadata. Успешная проверка ассетов означает только готовность исходных файлов ресурсов; она не заменяет Editor project validation, открытие проекта в Editor, save/reopen cycle, run/debug/export workflow и platform packaging checks.
 
 ## Цель
 

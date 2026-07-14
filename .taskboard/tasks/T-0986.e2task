@@ -1,0 +1,214 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-95a7f3345c54e0793143e4344627c559",
+  "revision": 2,
+  "taskId": "T-0986",
+  "legacyAliases": [],
+  "title": "Сопоставить Godot enum groups с Electron2D enum-type packets",
+  "description": "## T-0986 [ ] P1: Сопоставить Godot enum groups с Electron2D enum-type packets\n\n- Создана: 2026-07-06T20:29:00+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `tooling`\n- Scheduling tier: `next`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Источник follow-up: `docs/verdicts/release-management/t-0242-audit-r06.md`\n  - Generated packets: `data/api/godot-4.7/classes/*.api.json`; `data/api/electron2d/classes/*.api.json`\n  - Будущий потребитель: `T-0243`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - `T-0242` generated packets accepted and available as source input.\n  - API diff/matrix domain document names the enum group/type mapping contract.\n- Stop conditions:\n  - the change would mutate generated packet shape without a domain-document update and RED tests.\n  - the change would manually list enum values in `TASKS.md` instead of deriving them from generated packets.\n- May change:\n  - API diff/matrix tooling and tests that compare Godot enum groups with Electron2D enum-type packets.\n  - domain documentation for enum group/type mapping.\n  - generated matrix reports owned by the API diff task.\n- Must not change:\n  - public runtime enum declarations merely to satisfy diff shape.\n  - accepted `T-0242` generated packet snapshots unless the generator contract changes in a separate accepted scope.\n- Required outputs:\n  - documented mapping rule from Godot class-local enum groups to canonical Electron2D enum-type packets without duplicating values in parent packets.\n  - focused tests for at least `TextureRect.StretchMode`, `TextureRect.ExpandMode` and one non-TextureRect enum family.\n  - synchronized matrix/check output used by `T-0243`.\n- Required commands:\n  - focused enum mapping tests.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`\n  - relevant API matrix/docs checks for the owning implementation.\n  - `git diff --check`\n- External audit:\n  - required only when included in a later audit-managed API diff/package scope.\n\n### Самодостаточное описание\n\nr06 primary audit for `T-0242` accepted the current enum packet surface as non-blocking for class packet generation, and the user confirmed the canonical representation: Electron2D enum values live only in separate enum-type packets with `class.kind = \"enum\"` and typed `constants` / `EnumValue` entries with numeric `value`. Parent class packets must not duplicate those values in `enums`, because that would create two competing sources of truth. Strict API diff tooling must explicitly map Godot class-local enum groups to Electron2D enum-type packets through `class.godotReference` or another documented mapping field, approved C# projection rules, numeric value equality and missing/extra value reporting.\n\n### Критерии приёмки\n\n- [ ] Domain documentation explains how Godot enum groups map to Electron2D enum-type packets and confirms that Electron2D parent class packets do not duplicate enum values.\n- [ ] Focused tests cover representative enum families and prove names/numeric values compare deterministically.\n- [ ] API diff/matrix tooling reports missing, renamed or value-changed enum entries across the two shapes.\n- [ ] `verify audit-followups` passes with the closure note from `T-0242` r06.\n\n### Подзадачи\n\n- [ ] Add RED tests around Godot enum group to Electron2D enum-type packet mapping.\n- [ ] Implement the smallest mapping layer in the API diff/matrix tooling.\n- [ ] Update domain documentation and generated matrix outputs.\n- [ ] Run focused enum mapping tests and required docs/audit checks.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0242-audit-r06.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0986\n  - rationale: Primary `T-0242` r06 classifies enum group/type packet mapping as a future `T-0243`-adjacent API diff policy issue, not a blocker for generated packet creation. The user confirmed that Electron2D enum-type packets are canonical and parent class packets must not duplicate enum values; `T-0986` tracks the explicit cross-shape mapping rule and focused tests for comparing Godot class-local enum groups with Electron2D enum-type packets.\n\n### Заметки агента\n\n2026-07-06T20:29:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0242-audit-r06.md`; r06 не блокирует T-0242 по enum packets, но требует отдельный future mapping contract before strict API diff.\n\n2026-07-06T20:47:00+03:00 - По решению пользователя canonical Electron2D enum representation остаётся отдельным enum-type packet-ом с numeric `constants`; parent class `enums: []` допустим и не должен дублировать values. `T-0986` владеет только future cross-shape mapping policy для `T-0243`.\n\n2026-07-06T23:16:00+03:00 - В текущем `T-0242` enum-type packets сделаны явно typed: `TextureRect.StretchMode.api.json` и аналогичные packets имеют `class.kind = \"enum\"`, `members.kind = \"EnumValue\"` и `constants.kind = \"EnumValue\"` с numeric `value`. Это не меняет будущую ответственность `T-0986`: сопоставление Godot class-local enum groups с отдельными Electron2D enum-type packets остаётся задачей diff/matrix policy.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0014",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3cc45b57159de74d7d17b92f2d25a107"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Domain documentation explains how Godot enum groups map to Electron2D enum-type packets and confirms that Electron2D parent class packets do not duplicate enum values.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Focused tests cover representative enum families and prove names/numeric values compare deterministically.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "API diff/matrix tooling reports missing, renamed or value-changed enum entries across the two shapes.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`verify audit-followups` passes with the closure note from `T-0242` r06.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T17:29:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0242-audit-r06.md`; r06 не блокирует T-0242 по enum packets, но требует отдельный future mapping contract before strict API diff."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T17:47:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "По решению пользователя canonical Electron2D enum representation остаётся отдельным enum-type packet-ом с numeric `constants`; parent class `enums: []` допустим и не должен дублировать values. `T-0986` владеет только future cross-shape mapping policy для `T-0243`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T20:16:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "В текущем `T-0242` enum-type packets сделаны явно typed: `TextureRect.StretchMode.api.json` и аналогичные packets имеют `class.kind = \"enum\"`, `members.kind = \"EnumValue\"` и `constants.kind = \"EnumValue\"` с numeric `value`. Это не меняет будущую ответственность `T-0986`: сопоставление Godot class-local enum groups с отдельными Electron2D enum-type packets остаётся задачей diff/matrix policy."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required only when included in a later audit-managed API diff/package scope."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "data/api/electron2d/classes/*.api.json"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/api/godot-4.7/classes/*.api.json"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0242-audit-r06.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tooling",
+    "readyToStart": [
+      "`T-0242` generated packets accepted and available as source input.",
+      "API diff/matrix domain document names the enum group/type mapping contract."
+    ],
+    "stopConditions": [
+      "the change would mutate generated packet shape without a domain-document update and RED tests.",
+      "the change would manually list enum values in `TASKS.md` instead of deriving them from generated packets."
+    ],
+    "allowedChanges": [
+      "API diff/matrix tooling and tests that compare Godot enum groups with Electron2D enum-type packets.",
+      "domain documentation for enum group/type mapping.",
+      "generated matrix reports owned by the API diff task."
+    ],
+    "forbiddenChanges": [
+      "public runtime enum declarations merely to satisfy diff shape.",
+      "accepted `T-0242` generated packet snapshots unless the generator contract changes in a separate accepted scope."
+    ],
+    "requiredOutputs": [
+      "documented mapping rule from Godot class-local enum groups to canonical Electron2D enum-type packets without duplicating values in parent packets.",
+      "focused tests for at least `TextureRect.StretchMode`, `TextureRect.ExpandMode` and one non-TextureRect enum family.",
+      "synchronized matrix/check output used by `T-0243`."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "focused enum mapping tests.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "relevant API matrix/docs checks for the owning implementation.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required only when included in a later audit-managed API diff/package scope.",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 397265,
+      "byteLength": 5665,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "6bec702aae1e73622e2fe324afa67dd748dac0fa6206a516797c93990ac29dab",
+      "markdown": "## T-0986 [ ] P1: Сопоставить Godot enum groups с Electron2D enum-type packets\n\n- Создана: 2026-07-06T20:29:00+03:00\n- Состояние: open\n- Приоритет: P1\n- Execution class: `tooling`\n- Scheduling tier: `next`\n- Зависимости: T-0242\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Источник follow-up: `docs/verdicts/release-management/t-0242-audit-r06.md`\n  - Generated packets: `data/api/godot-4.7/classes/*.api.json`; `data/api/electron2d/classes/*.api.json`\n  - Будущий потребитель: `T-0243`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - `T-0242` generated packets accepted and available as source input.\n  - API diff/matrix domain document names the enum group/type mapping contract.\n- Stop conditions:\n  - the change would mutate generated packet shape without a domain-document update and RED tests.\n  - the change would manually list enum values in `TASKS.md` instead of deriving them from generated packets.\n- May change:\n  - API diff/matrix tooling and tests that compare Godot enum groups with Electron2D enum-type packets.\n  - domain documentation for enum group/type mapping.\n  - generated matrix reports owned by the API diff task.\n- Must not change:\n  - public runtime enum declarations merely to satisfy diff shape.\n  - accepted `T-0242` generated packet snapshots unless the generator contract changes in a separate accepted scope.\n- Required outputs:\n  - documented mapping rule from Godot class-local enum groups to canonical Electron2D enum-type packets without duplicating values in parent packets.\n  - focused tests for at least `TextureRect.StretchMode`, `TextureRect.ExpandMode` and one non-TextureRect enum family.\n  - synchronized matrix/check output used by `T-0243`.\n- Required commands:\n  - focused enum mapping tests.\n  - `dotnet run --project eng/Electron2D.Build --no-build --no-restore -- verify audit-followups`\n  - relevant API matrix/docs checks for the owning implementation.\n  - `git diff --check`\n- External audit:\n  - required only when included in a later audit-managed API diff/package scope.\n\n### Самодостаточное описание\n\nr06 primary audit for `T-0242` accepted the current enum packet surface as non-blocking for class packet generation, and the user confirmed the canonical representation: Electron2D enum values live only in separate enum-type packets with `class.kind = \"enum\"` and typed `constants` / `EnumValue` entries with numeric `value`. Parent class packets must not duplicate those values in `enums`, because that would create two competing sources of truth. Strict API diff tooling must explicitly map Godot class-local enum groups to Electron2D enum-type packets through `class.godotReference` or another documented mapping field, approved C# projection rules, numeric value equality and missing/extra value reporting.\n\n### Критерии приёмки\n\n- [ ] Domain documentation explains how Godot enum groups map to Electron2D enum-type packets and confirms that Electron2D parent class packets do not duplicate enum values.\n- [ ] Focused tests cover representative enum families and prove names/numeric values compare deterministically.\n- [ ] API diff/matrix tooling reports missing, renamed or value-changed enum entries across the two shapes.\n- [ ] `verify audit-followups` passes with the closure note from `T-0242` r06.\n\n### Подзадачи\n\n- [ ] Add RED tests around Godot enum group to Electron2D enum-type packet mapping.\n- [ ] Implement the smallest mapping layer in the API diff/matrix tooling.\n- [ ] Update domain documentation and generated matrix outputs.\n- [ ] Run focused enum mapping tests and required docs/audit checks.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0242-audit-r06.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0986\n  - rationale: Primary `T-0242` r06 classifies enum group/type packet mapping as a future `T-0243`-adjacent API diff policy issue, not a blocker for generated packet creation. The user confirmed that Electron2D enum-type packets are canonical and parent class packets must not duplicate enum values; `T-0986` tracks the explicit cross-shape mapping rule and focused tests for comparing Godot class-local enum groups with Electron2D enum-type packets.\n\n### Заметки агента\n\n2026-07-06T20:29:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0242-audit-r06.md`; r06 не блокирует T-0242 по enum packets, но требует отдельный future mapping contract before strict API diff.\n\n2026-07-06T20:47:00+03:00 - По решению пользователя canonical Electron2D enum representation остаётся отдельным enum-type packet-ом с numeric `constants`; parent class `enums: []` допустим и не должен дублировать values. `T-0986` владеет только future cross-shape mapping policy для `T-0243`.\n\n2026-07-06T23:16:00+03:00 - В текущем `T-0242` enum-type packets сделаны явно typed: `TextureRect.StretchMode.api.json` и аналогичные packets имеют `class.kind = \"enum\"`, `members.kind = \"EnumValue\"` и `constants.kind = \"EnumValue\"` с numeric `value`. Это не меняет будущую ответственность `T-0986`: сопоставление Godot class-local enum groups с отдельными Electron2D enum-type packets остаётся задачей diff/matrix policy.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-06T17:29:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -1,0 +1,2442 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-89407b4e4bc1488b91b85d36eaf5c607",
+  "revision": 25,
+  "taskId": "T-1226",
+  "legacyAliases": [],
+  "title": "Выровнять число задач по центру счётчика колонки",
+  "description": "Число внутри круглого badge рядом с названием статусной колонки визуально смещено относительно центра: текущий `.column-count` задаёт только горизонтальный `text-align`, а вертикальное положение зависит от метрик шрифта, `line-height: 1.2` и padding. Нужно сделать сам badge двухмерным alignment-контейнером и центрировать значение независимо от baseline. Исправление должно одинаково работать для `0`, однозначных, двухзначных и трёхзначных счётчиков во всех шести колонках, при разных темах и масштабе VS Code. Минимальная ширина, горизонтальный padding, pill-форма и динамическое расширение под число сохраняются; цифры не обрезаются, а высота и расположение заголовка колонки, status accent и соседние controls не меняются. Семантика count остаётся прежней: отображается фактическое число задач после действующих фильтров.",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P2",
+  "tagIds": [
+    "tag-0001",
+    "tag-0002",
+    "tag-0003",
+    "tag-0010",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "assignee": null,
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-column-count-center",
+      "description": "`.column-count` использует явное двухмерное центрирование, поэтому видимая цифра находится по центру pill-контейнера по горизонтали и вертикали и не зависит от baseline или default line box текущего шрифта.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webview.css"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-column-count-values",
+      "description": "Значения `0`, `4`, `29` и `913` не обрезаются и остаются центрированными; badge сохраняет минимальную ширину, pill-форму и симметричный горизонтальный запас, расширяясь только по содержимому.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": ".temp/taskboard-column-count-centered-real.png"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-column-count-layout",
+      "description": "Высота `.column-header`, положение title/status accent, интервал между title и badge, а также соседние filter/overflow и collapse controls не сдвигаются. Исправление работает во всех шести колонках, в светлой и тёмной теме и при увеличенном масштабе текста.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": ".temp/taskboard-column-count-centered-real.png"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-column-count-semantics",
+      "description": "Renderer по-прежнему показывает `tasks.length` итогового видимого набора; фильтры, collapse, preview `+ N ещё`, status/rank и canonical task data не меняются. Специальных поправок для конкретной цифры или шрифта нет.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webview.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-column-count-verification",
+      "description": "Доменный документ обновлён до production-кода; focused layout test сначала фиксирует RED на отсутствии двухмерного центрирования и затем GREEN. Полный unit-набор, typecheck, VSIX и FFmpeg-снимок установленного расширения подтверждают центрирование реального однозначного и многозначного count без изменения header geometry.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-264698cfa0874f1a911e9b7a7e868c4c",
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T02:45:21.1472066+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Ready",
+        "next": "InProgress",
+        "reason": "Статус изменён через CLI."
+      },
+      "sequence": 1
+    },
+    {
+      "activityEntryId": "activity-9c1065bfe828426b9ca792d967002790",
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T02:52:25.9404796+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "InProgress",
+        "next": "Review",
+        "reason": "Статус изменён через CLI."
+      },
+      "sequence": 2
+    },
+    {
+      "activityEntryId": "activity-b7ea049d0b77427ca3c56ac5d7263e7a",
+      "actorId": "Codex",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T02:52:27.9814665+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Передано на приёмку."
+      },
+      "sequence": 3
+    },
+    {
+      "activityEntryId": "activity-eae998b6aa2d4323b01aa87ecfebee97",
+      "sequence": 4,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T13:50:23.4072166+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 17,
+        "toRevision": 18,
+        "activitySequence": 4,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник."
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "babcd9a24217c679811a78dfaa8fcd51ea4800151d1d99e64e0ea5d99ea88626",
+        "afterTaskCoreDigest": "bbf061abecba47e07b3ebedf3644decec436c04bebe549f74efbd7b6963f962c"
+      }
+    },
+    {
+      "activityEntryId": "activity-bbdc0dc897d148ba8caeacc9846cb2c5",
+      "sequence": 5,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:13:50.7316376+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 18,
+        "toRevision": 19,
+        "activitySequence": 5,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+                "path:data/dev-diary/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "bbf061abecba47e07b3ebedf3644decec436c04bebe549f74efbd7b6963f962c",
+        "afterTaskCoreDigest": "bc231e29459ad35c3ffc9a2e55d0bad22b267b8721fd6f4baa458870495917cf"
+      }
+    },
+    {
+      "activityEntryId": "activity-8d9d021d66a44ed6ab88978ff1043875",
+      "sequence": 6,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:41:46.4757096+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 19,
+        "toRevision": 20,
+        "activitySequence": 6,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+                "path:data/dev-diary/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "bc231e29459ad35c3ffc9a2e55d0bad22b267b8721fd6f4baa458870495917cf",
+        "afterTaskCoreDigest": "a58d30d08e3de10a455f294dd2d28b6447023ce3c457daa42bec8528658c94e5"
+      }
+    },
+    {
+      "activityEntryId": "activity-b94a9344f14e417a9ac05f945fa19589",
+      "sequence": 7,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T14:52:06.4477506+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 20,
+        "toRevision": 21,
+        "activitySequence": 7,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "a58d30d08e3de10a455f294dd2d28b6447023ce3c457daa42bec8528658c94e5",
+        "afterTaskCoreDigest": "59f4381411b7e5d5a1a21fd9648cc43dadf031cd4155f497a55070159941c7de"
+      }
+    },
+    {
+      "activityEntryId": "activity-4ca05356afd64d6c8bc652cbe7980f21",
+      "sequence": 8,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T15:00:33.5562405+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 21,
+        "toRevision": 22,
+        "activitySequence": 8,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**",
+                "path:src/Electron2D.VsCode/src/cli.ts",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/test/unit/cli.test.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts"
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "59f4381411b7e5d5a1a21fd9648cc43dadf031cd4155f497a55070159941c7de",
+        "afterTaskCoreDigest": "dd83691807c5f3e1f0e70e772ac481f2c9d68ac42f725daee0babaa61277089e"
+      }
+    },
+    {
+      "activityEntryId": "activity-79bfb45dacc443f1825a47840951bfe8",
+      "sequence": 9,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T15:14:40.3423026+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 22,
+        "toRevision": 23,
+        "activitySequence": 9,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**",
+                "path:src/Electron2D.VsCode/src/cli.ts",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/test/unit/cli.test.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts"
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**",
+                "path:src/Electron2D.VsCode/src/cli.ts",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/test/unit/cli.test.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/artifacts/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "dd83691807c5f3e1f0e70e772ac481f2c9d68ac42f725daee0babaa61277089e",
+        "afterTaskCoreDigest": "50bf4698f425f16eb851d3b598067d0bbbb5cdab94141d4509a2e6100dfa80d9"
+      }
+    },
+    {
+      "activityEntryId": "activity-ec4a693964ba4a778c91f67a6788aa43",
+      "sequence": 10,
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-14T15:26:09.5918539+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "fromRevision": 23,
+        "toRevision": 24,
+        "activitySequence": 10,
+        "hashProfile": "sha256-jcs-rfc8785-v1",
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "oldValue": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**",
+                "path:src/Electron2D.VsCode/src/cli.ts",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/test/unit/cli.test.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/artifacts/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            },
+            "value": {
+              "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+              "readyToStart": [
+                "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+                "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+                "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+              ],
+              "stopConditions": [
+                "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+                "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+                "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+              ],
+              "allowedChanges": [
+                "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+                "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+                "path:docs/editor/project-tasks-board.md",
+                "path:src/Electron2D.VsCode/src/webview.css",
+                "path:src/Electron2D.VsCode/src/webview.ts",
+                "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+                "path:data/dev-diary/**",
+                "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+                "path:src/Electron2D.VsCode/dist/**",
+                "path:src/Electron2D.VsCode/src/cli.ts",
+                "path:src/Electron2D.VsCode/src/extension.ts",
+                "path:src/Electron2D.VsCode/src/localization.ts",
+                "path:src/Electron2D.VsCode/test/unit/cli.test.ts",
+                "path:src/Electron2D.VsCode/test/suite/index.ts",
+                "path:src/Electron2D.VsCode/artifacts/**",
+                "path:data/documentation/**"
+              ],
+              "forbiddenChanges": [
+                "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+                "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+                "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+              ],
+              "requiredOutputs": [
+                "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+                "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+                "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+              ],
+              "commands": [
+                {
+                  "commandId": "cmd-column-count-unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-package",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ]
+                },
+                {
+                  "commandId": "cmd-column-count-real-window-capture",
+                  "kind": "Process",
+                  "executable": "python",
+                  "arguments": [
+                    "eng/tools/capture_window.py",
+                    "--title",
+                    "Visual Studio Code",
+                    "--output",
+                    ".temp/taskboard-column-count-centered-real.png"
+                  ],
+                  "workingDirectory": ".",
+                  "platforms": [
+                    "Windows"
+                  ],
+                  "timeoutSeconds": 120,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "confirmation": "PolicyDecides",
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite",
+                    "ExternalEffect"
+                  ]
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "50bf4698f425f16eb851d3b598067d0bbbb5cdab94141d4509a2e6100dfa80d9",
+        "afterTaskCoreDigest": "1d17b4c49dae2c115188f11ba4db63783250055aba1b11cf646144e56bbd5537"
+      }
+    },
+    {
+      "activityEntryId": "activity-3d3668c8e9b04f4fbdecd4cab4d2fad3",
+      "sequence": 11,
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-14T17:30:26.4536260+00:00",
+      "kind": "WorkspaceChangesUpdated",
+      "payload": {
+        "beforeDigest": "427a8f787e9f733dbe19ea48c3d9e18ced3c91c897998a03e7ac361049a6261e",
+        "afterDigest": "b6d55daf30faf2e8f7696de70446b7c773ae54c183e1dcca2944b380bac859a2",
+        "workspaceChanges": {
+          "baseRevision": "workspace:9d91b046806bccd28efd345021311ab7046f609d60dee37cb1ffcee08c962896",
+          "currentRevision": "workspace:9d91b046806bccd28efd345021311ab7046f609d60dee37cb1ffcee08c962896",
+          "files": []
+        }
+      }
+    },
+    {
+      "activityEntryId": "activity-ffcd235196094c99bf306d140373bb99",
+      "sequence": 12,
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-14T17:30:26.4536260+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Задача принята пользователем в VS Code Task Board.",
+        "authorityActorId": "vscode:eduar",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    }
+  ],
+  "auditRuns": [],
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "message-84870f8e530f47768dc0cf453479c25f",
+        "sequence": 1,
+        "author": {
+          "actorId": "Codex",
+          "actorKind": "Agent",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-14T02:52:24.2225016+00:00",
+        "replyToMessageId": null,
+        "agentRunId": "run-d3f0846bea2443daa7d631c08b66b76a",
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "T-1226 выполнена узким CSS-исправлением: `.column-count` использует `inline-grid`, `place-items: center` и `line-height: 1`; прежние min-width/padding/pill-метрики и renderer `String(tasks.length)` сохранены, glyph-specific offsets отсутствуют.\n\nПроверки текущей сессии: focused RED `0/1` → GREEN `1/1`; unit `142/142`; `npm run typecheck`; VSIX `11` файлов / `129,92 KB`; built/installed CSS SHA-256 `94FE62AE3841234F0549D960B33CD2C59F4CE21BCA6AC01FFDCDF293705CDE7F`; docs update/check/verify; `e2d tasks verify` valid v3; `git diff --check`. FFmpeg evidence `.temp/taskboard-column-count-centered-real.png` показывает реальные counts `31`, `2`, `914` без сдвига header geometry."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "links": [
+    {
+      "linkId": "link-column-count-domain",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "link-column-count-webview",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "link-column-count-styles",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.css"
+    },
+    {
+      "linkId": "link-column-count-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+    }
+  ],
+  "executionContract": {
+    "taskType": "визуальное исправление count badge в заголовке колонок VS Code Task Board",
+    "readyToStart": [
+      "Пользовательский снимок сохранён как исходное доказательство смещения цифры внутри `.column-count`.",
+      "`docs/editor/project-tasks-board.md` до production-кода определяет двухмерное центрирование, поддерживаемые длины значения и неизменную геометрию header.",
+      "До CSS-исправления добавлен падающий focused layout test, который требует собственного alignment context и единичного line-height."
+    ],
+    "stopConditions": [
+      "Исправление требует менять вычисление count, фильтрацию, DOM-порядок заголовка, высоту колонок или TaskBoard data.",
+      "Решение использует индивидуальный offset для цифры `4`, конкретного шрифта, темы или масштаба вместо устойчивого layout-контракта.",
+      "Нельзя сохранить pill geometry и проверить установленный VSIX реальным FFmpeg-захватом."
+    ],
+    "allowedChanges": [
+      "Доменный документ, `.column-count` и минимально связанные CSS-правила, focused VS Code layout tests.",
+      "Generated docs index, устанавливаемый VSIX, task activity, локальные FFmpeg-артефакты и append-only дневник.",
+      "path:docs/editor/project-tasks-board.md",
+      "path:src/Electron2D.VsCode/src/webview.css",
+      "path:src/Electron2D.VsCode/src/webview.ts",
+      "path:src/Electron2D.VsCode/test/unit/webview-layout.test.ts",
+      "path:data/dev-diary/**",
+      "path:src/Electron2D.VsCode/.vscode-test/user-data/**",
+      "path:src/Electron2D.VsCode/dist/**",
+      "path:src/Electron2D.VsCode/src/cli.ts",
+      "path:src/Electron2D.VsCode/src/extension.ts",
+      "path:src/Electron2D.VsCode/src/localization.ts",
+      "path:src/Electron2D.VsCode/test/unit/cli.test.ts",
+      "path:src/Electron2D.VsCode/test/suite/index.ts",
+      "path:src/Electron2D.VsCode/artifacts/**",
+      "path:data/documentation/**"
+    ],
+    "forbiddenChanges": [
+      "Изменение task count semantics, фильтров, lifecycle, rank/placement, schema или CLI writer boundary.",
+      "Несвязанный рефакторинг column header, status accent, controls, карточек, toolbar или Task Details.",
+      "Ручное редактирование `.taskboard`, glyph-specific transform/margin и literal theme palette."
+    ],
+    "requiredOutputs": [
+      "Стабильно центрированный по двум осям `.column-count` для одно-, двух- и трёхзначных значений без изменения header geometry.",
+      "Синхронизированный доменный документ и RED/GREEN regression test на устойчивый CSS layout contract.",
+      "Собранный VSIX и FFmpeg-доказательство из реального окна VS Code с проверенными count badges."
+    ],
+    "commands": [
+      {
+        "commandId": "cmd-column-count-unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "cmd-column-count-typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ]
+      },
+      {
+        "commandId": "cmd-column-count-package",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ]
+      },
+      {
+        "commandId": "cmd-column-count-real-window-capture",
+        "kind": "Process",
+        "executable": "python",
+        "arguments": [
+          "eng/tools/capture_window.py",
+          "--title",
+          "Visual Studio Code",
+          "--output",
+          ".temp/taskboard-column-count-centered-real.png"
+        ],
+        "workingDirectory": ".",
+        "platforms": [
+          "Windows"
+        ],
+        "timeoutSeconds": 120,
+        "expectedExitCodes": [
+          0
+        ],
+        "confirmation": "PolicyDecides",
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite",
+          "ExternalEffect"
+        ]
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [
+    {
+      "attachmentId": "A-0001",
+      "displayName": "codex-clipboard-9ccb2a6d-4f12-4748-bfa2-1bef5b969724.png",
+      "relativePath": ".taskboard/attachments/task-89407b4e4bc1488b91b85d36eaf5c607/A-0001/9ac4c153aceb622a25175a1dcd0afbd9cee5c66a08aecd0505b150fe9b5520d5.png",
+      "mediaType": "image/png",
+      "byteLength": 2751,
+      "sha256": "9ac4c153aceb622a25175a1dcd0afbd9cee5c66a08aecd0505b150fe9b5520d5",
+      "addedAt": "2026-07-13T18:32:04.1084241+00:00",
+      "addedBy": "cli",
+      "derivatives": [
+        {
+          "derivativeId": "derivative-extractedtext",
+          "kind": "ExtractedText",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "9ac4c153aceb622a25175a1dcd0afbd9cee5c66a08aecd0505b150fe9b5520d5",
+          "extractor": null,
+          "createdAt": "2026-07-13T18:32:04.1084241+00:00"
+        },
+        {
+          "derivativeId": "derivative-ocr",
+          "kind": "Ocr",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "9ac4c153aceb622a25175a1dcd0afbd9cee5c66a08aecd0505b150fe9b5520d5",
+          "extractor": null,
+          "createdAt": "2026-07-13T18:32:04.1084241+00:00"
+        },
+        {
+          "derivativeId": "derivative-preview",
+          "kind": "Preview",
+          "status": "Pending",
+          "failureReason": null,
+          "relativePath": null,
+          "mediaType": null,
+          "byteLength": null,
+          "sha256": null,
+          "sourceSha256": "9ac4c153aceb622a25175a1dcd0afbd9cee5c66a08aecd0505b150fe9b5520d5",
+          "extractor": null,
+          "createdAt": "2026-07-13T18:32:04.1084241+00:00"
+        }
+      ]
+    }
+  ],
+  "previewAttachmentId": "A-0001",
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-13T18:31:51.8028535+00:00",
+  "updatedAt": "2026-07-14T17:30:26.4536260+00:00",
+  "submittedAt": "2026-07-14T02:52:27.9814665+00:00",
+  "completedAt": "2026-07-14T17:30:26.4536260+00:00",
+  "acceptedAt": "2026-07-14T17:30:26.4536260+00:00",
+  "acceptedBy": "vscode:eduar",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "workspaceChanges": {
+    "baseRevision": "workspace:9d91b046806bccd28efd345021311ab7046f609d60dee37cb1ffcee08c962896",
+    "currentRevision": "workspace:9d91b046806bccd28efd345021311ab7046f609d60dee37cb1ffcee08c962896",
+    "files": []
+  },
+  "lastActivitySequence": 12
+}

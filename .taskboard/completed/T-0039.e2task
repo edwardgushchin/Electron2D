@@ -1,0 +1,308 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-588a3e7459cddadcb8de7b06cb18de07",
+  "revision": 2,
+  "taskId": "T-0039",
+  "legacyAliases": [],
+  "title": "Реализовать импорт WAV/OGG в `AudioStream`",
+  "description": "# T-0039 [x] P1: Реализовать импорт WAV/OGG в `AudioStream`\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T20:35:00+03:00\n- Приоритет: P1\n- Зависимости: T-0036, T-0071\n\n## Ссылки\n\n- Спецификация: `docs/resources/audio-stream-import.md`\n- Релизная спецификация: `docs/releases/0.1.0-preview.md`\n- Документация: `docs/resources/audio-stream-import.md`\n- Public API: `src/Electron2D/Audio/AudioStream.cs`\n- Importer: `src/Electron2D/Assets/Resources/Importing/AudioStreamImporter.cs`\n- Metadata: `src/Electron2D/Assets/Resources/Importing/AudioImportMetadata.cs`\n- Integration tests: `tests/Electron2D.Tests.Integration/AudioStreamImportTests.cs`\n- Golden-data test: `tests/Electron2D.Tests.GoldenData/AudioImportMetadataGoldenTests.cs`\n- Public API tests: `tests/Electron2D.Tests.Unit/AudioStreamPublicApiTests.cs`\n\n## Самодостаточное описание\n\nНужно было реализовать import baseline для WAV/OGG source assets в `AudioStream`: исходные файлы остаются source data проекта, generated metadata попадает в import cache, UID остаётся стабильным, а static/streaming mode, loop metadata и platform packaging metadata проверяются автоматическими тестами.\n\nЗадача была взята по явной команде пользователя после блокировки `T-0091`. Зависимость `T-0071` относится к editor controls; runtime importer, cache metadata и `AudioStream` resource реализованы без ожидания editor UI.\n\n## Что сделано\n\n- Добавлен public `AudioStream` resource с metadata queries:\n  - `GetLength()`;\n  - `IsMonophonic()`;\n  - `IsMetaStream()`;\n  - `CanBeSampled()`.\n- Добавлен internal `ImportedAudioStream`, создаваемый из import metadata.\n- Добавлен `AudioStreamImporter` для `.wav` и `.ogg`.\n- Добавлен `AudioMetadataReader`:\n  - WAV: читает RIFF/WAVE `fmt ` и `data` chunks;\n  - OGG: читает Vorbis identification packet и final granule position.\n- Добавлен stable metadata format `audio.e2audio.json`.\n- Добавлен serializer `AudioImportMetadataTextSerializer` и factory `AudioImportResourceFactory`.\n- `ResourceImportOptions.CreateDefault()` теперь регистрирует audio importer.\n- GitHub Wiki API reference обновлена локально в `.github/wiki`: добавлены `API-Audio.md`, `AudioStream.md` и строка `AudioStream` в `API-Compatibility.md`.\n- `tools/Update-ApiWiki.ps1` получил категорию `Audio`.\n- `tools/Verify-SourceDomainLayout.ps1` теперь считает `src/Electron2D/Audio` официальным крупным корневым доменом.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: WAV/OGG импортируются в `AudioStream` metadata cache.\n- [x] `Static` и `Streaming` import modes проверены integration tests.\n- [x] Loop metadata из sidecar проверена integration tests.\n- [x] Platform packaging metadata проверена integration tests и golden-data output.\n- [x] Спецификация обновлена в `docs/resources/audio-stream-import.md`.\n- [x] Документация обновлена в `docs/resources/audio-stream-import.md`.\n- [x] Добавлены integration, golden-data и public API tests.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~AudioStreamImportTests\" --no-restore -m:1` - пройдено, `3/3`.\n- `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --filter \"FullyQualifiedName~AudioImportMetadataGoldenTests\" --no-restore -m:1` - пройдено, `1/1`.\n- `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~AudioStreamPublicApiTests|FullyQualifiedName~CleanRuntimeBaselineTests\" --no-restore -m:1` - пройдено, `3/3`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiXmlDocs.ps1 -FailOnIssues` - пройдено, checked symbols `1264`, issues `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1 -WikiPath .github/wiki/API-Compatibility.md` - пройдено, public types `121`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check` - пройдено, generated pages `138`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki` - пройдено, scanned Markdown files `145`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - пройдено после staging, tracked source files `370`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` - пройдено, scanned source files `254`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` - пройдено.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - пройдено.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - пройдено: unit `65/65`, integration `210/210`, runtime smoke `5/5`, golden-data `12/12`.\n\n## Решения\n\n- Source-embedded loop tags не читаются в этой задаче; loop metadata задаётся sidecar-файлом и может быть расширена отдельной задачей.\n- Platform packaging metadata сохраняется как import decision, но ещё не создаёт platform-specific packaged files.\n- Playback, buses, voices, attenuation и device lifecycle оставлены следующим задачам audio runtime.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c62692174caaa4ba9611624106942d8b"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-21e066d2323b760272d18ee813e8437f"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Реализована цель задачи: WAV/OGG импортируются в `AudioStream` metadata cache.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-588a3e7459cddadcb8de7b06cb18de07/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`Static` и `Streaming` import modes проверены integration tests.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-588a3e7459cddadcb8de7b06cb18de07/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Loop metadata из sidecar проверена integration tests.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-588a3e7459cddadcb8de7b06cb18de07/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Platform packaging metadata проверена integration tests и golden-data output.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-588a3e7459cddadcb8de7b06cb18de07/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Спецификация обновлена в `docs/resources/audio-stream-import.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-588a3e7459cddadcb8de7b06cb18de07/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Документация обновлена в `docs/resources/audio-stream-import.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-588a3e7459cddadcb8de7b06cb18de07/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Добавлены integration, golden-data и public API tests.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-588a3e7459cddadcb8de7b06cb18de07/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-588a3e7459cddadcb8de7b06cb18de07/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T17:35:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/wiki"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "210/210"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "3/3"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "65/65"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/resources/audio-stream-import.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "src/Electron2D/Assets/Resources/Importing/AudioImportMetadata.cs"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "src/Electron2D/Assets/Resources/Importing/AudioStreamImporter.cs"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "src/Electron2D/Audio"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "src/Electron2D/Audio/AudioStream.cs"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.GoldenData/AudioImportMetadataGoldenTests.cs"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/AudioStreamImportTests.cs"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Unit/AudioStreamPublicApiTests.cs"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "tools/Update-ApiWiki.ps1"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "tools/Verify-SourceDomainLayout.ps1"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "powershell -ExecutionPolicy Bypass -File tools\\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1 -WikiPath .github/wiki/API-Compatibility.md",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 319686,
+      "byteLength": 6038,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "15436ccb9b62f462cf7e01fb7e4380627505815ef8c8b3508ea19e6fdfaee32e",
+      "markdown": "# T-0039 [x] P1: Реализовать импорт WAV/OGG в `AudioStream`\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T20:35:00+03:00\n- Приоритет: P1\n- Зависимости: T-0036, T-0071\n\n## Ссылки\n\n- Спецификация: `docs/resources/audio-stream-import.md`\n- Релизная спецификация: `docs/releases/0.1.0-preview.md`\n- Документация: `docs/resources/audio-stream-import.md`\n- Public API: `src/Electron2D/Audio/AudioStream.cs`\n- Importer: `src/Electron2D/Assets/Resources/Importing/AudioStreamImporter.cs`\n- Metadata: `src/Electron2D/Assets/Resources/Importing/AudioImportMetadata.cs`\n- Integration tests: `tests/Electron2D.Tests.Integration/AudioStreamImportTests.cs`\n- Golden-data test: `tests/Electron2D.Tests.GoldenData/AudioImportMetadataGoldenTests.cs`\n- Public API tests: `tests/Electron2D.Tests.Unit/AudioStreamPublicApiTests.cs`\n\n## Самодостаточное описание\n\nНужно было реализовать import baseline для WAV/OGG source assets в `AudioStream`: исходные файлы остаются source data проекта, generated metadata попадает в import cache, UID остаётся стабильным, а static/streaming mode, loop metadata и platform packaging metadata проверяются автоматическими тестами.\n\nЗадача была взята по явной команде пользователя после блокировки `T-0091`. Зависимость `T-0071` относится к editor controls; runtime importer, cache metadata и `AudioStream` resource реализованы без ожидания editor UI.\n\n## Что сделано\n\n- Добавлен public `AudioStream` resource с metadata queries:\n  - `GetLength()`;\n  - `IsMonophonic()`;\n  - `IsMetaStream()`;\n  - `CanBeSampled()`.\n- Добавлен internal `ImportedAudioStream`, создаваемый из import metadata.\n- Добавлен `AudioStreamImporter` для `.wav` и `.ogg`.\n- Добавлен `AudioMetadataReader`:\n  - WAV: читает RIFF/WAVE `fmt ` и `data` chunks;\n  - OGG: читает Vorbis identification packet и final granule position.\n- Добавлен stable metadata format `audio.e2audio.json`.\n- Добавлен serializer `AudioImportMetadataTextSerializer` и factory `AudioImportResourceFactory`.\n- `ResourceImportOptions.CreateDefault()` теперь регистрирует audio importer.\n- GitHub Wiki API reference обновлена локально в `.github/wiki`: добавлены `API-Audio.md`, `AudioStream.md` и строка `AudioStream` в `API-Compatibility.md`.\n- `tools/Update-ApiWiki.ps1` получил категорию `Audio`.\n- `tools/Verify-SourceDomainLayout.ps1` теперь считает `src/Electron2D/Audio` официальным крупным корневым доменом.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: WAV/OGG импортируются в `AudioStream` metadata cache.\n- [x] `Static` и `Streaming` import modes проверены integration tests.\n- [x] Loop metadata из sidecar проверена integration tests.\n- [x] Platform packaging metadata проверена integration tests и golden-data output.\n- [x] Спецификация обновлена в `docs/resources/audio-stream-import.md`.\n- [x] Документация обновлена в `docs/resources/audio-stream-import.md`.\n- [x] Добавлены integration, golden-data и public API tests.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~AudioStreamImportTests\" --no-restore -m:1` - пройдено, `3/3`.\n- `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --filter \"FullyQualifiedName~AudioImportMetadataGoldenTests\" --no-restore -m:1` - пройдено, `1/1`.\n- `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --filter \"FullyQualifiedName~AudioStreamPublicApiTests|FullyQualifiedName~CleanRuntimeBaselineTests\" --no-restore -m:1` - пройдено, `3/3`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiXmlDocs.ps1 -FailOnIssues` - пройдено, checked symbols `1264`, issues `0`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1 -WikiPath .github/wiki/API-Compatibility.md` - пройдено, public types `121`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Update-ApiWiki.ps1 -OutputPath .github/wiki -Check` - пройдено, generated pages `138`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PublicApiDocumentationAudit.ps1 -WikiPath .github/wiki` - пройдено, scanned Markdown files `145`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - пройдено после staging, tracked source files `370`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` - пройдено, scanned source files `254`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` - пройдено.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - пройдено.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - пройдено: unit `65/65`, integration `210/210`, runtime smoke `5/5`, golden-data `12/12`.\n\n## Решения\n\n- Source-embedded loop tags не читаются в этой задаче; loop metadata задаётся sidecar-файлом и может быть расширена отдельной задачей.\n- Platform packaging metadata сохраняется как import decision, но ещё не создаёт platform-specific packaged files.\n- Playback, buses, voices, attenuation и device lifecycle оставлены следующим задачам audio runtime.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T17:35:00.0000000+00:00",
+  "completedAt": "2026-06-21T17:35:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T17:35:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T17:35:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

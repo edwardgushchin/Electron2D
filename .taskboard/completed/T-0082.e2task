@@ -1,0 +1,238 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-4f0dad627be4cd3182605ab07f56d482",
+  "revision": 2,
+  "taskId": "T-0082",
+  "legacyAliases": [],
+  "title": "Реализовать Inspector: primitives, enum/flags, arrays, resources, NodePath, export attributes, reset default, nested resources",
+  "description": "# T-0082 [x] P0: Реализовать Inspector: primitives, enum/flags, arrays, resources, NodePath, export attributes, reset default, nested resources\n\n- Статус: завершена\n- Завершена: 2026-06-22T07:23:13+03:00\n- Коммит: `T-0082: add editor inspector model`\n\n## Ссылки\n\n- Спецификация: `docs/editor/inspector.md`\n- Документация: `docs/editor/inspector.md`\n- Исходный код: `src/Electron2D.Editor/Inspector/`; `src/Electron2D.Editor/Program.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/EditorInspectorTests.cs`\n- Формат сцены: `src/Electron2D/Assets/Resources/Serialization/SceneFileDocument.cs`; `src/Electron2D/Assets/Resources/Serialization/SerializedPropertyValue.cs`\n\n## Самодостаточное описание\n\nЗадача относилась к домену «Electron2D.Editor». Цель - реализовать проверяемую модель Inspector для редактирования сохранённых properties выбранного узла или внутреннего ресурса сцены: primitive values, enum, flags enum, arrays, resource references, `NodePath`, exported properties, reset default, nested resources, serialization и undo/redo.\n\nПолноценная визуальная панель Inspector в постоянном окне редактора не входила в эту задачу. Реализована внутренняя модель поведения и smoke-команда editor executable, чтобы следующие editor-задачи могли встроить Inspector в shell.\n\n## Что сделано\n\n- Добавлена спецификация `docs/editor/inspector.md`.\n- Добавлена документация реализации `docs/editor/inspector.md` и обновлены индексы документации.\n- Добавлена команда редактора:\n\n```powershell\ndotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --inspector-smoke <work-root>\n```\n\n- Реализована внутренняя модель `EditorInspector`, которая редактирует `SceneFileDocument` и не создаёт второй формат данных.\n- Добавлены descriptors для properties из registered metadata; smoke-проверка подтверждает, что Inspector видит только exported properties.\n- Поддержаны edits для `bool`, integer, `string`, enum, flags enum, array, internal resource reference и `NodePath`.\n- Поддержано редактирование nested property у internal resource через registered resource metadata.\n- Поддержан reset property to default.\n- Добавлен undo/redo слой со снимками `SceneFileDocument` до и после операции.\n- Smoke-run создаёт временную сцену, меняет properties, проверяет reset/undo/redo, сохраняет scene JSON и перечитывает его.\n- Предыдущее уточнение пользователя о том, что editor-задачи нельзя начинать без `T-0129`, закреплено в активном `TASKS.md` для следующих editor-задач.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: Inspector поддерживает primitives, enum/flags, arrays, resources, `NodePath`, exported properties, reset default и nested resources.\n- [x] Inspector edits serialize.\n- [x] Undo/redo works for main property operations.\n- [x] Готова спецификация в `docs/editor/`.\n- [x] Добавлены automated tests, покрывающие новое поведение.\n- [x] Готова документация реализации в `docs/editor/`.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorInspectorTests\" --no-restore -m:1` упал с exit code `2`, потому что editor executable ещё не поддерживал `--inspector-smoke`.\n- Green phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorInspectorTests\" --no-restore -m:1` прошёл: `1/1`.\n- Прямой smoke-run `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --inspector-smoke .temp\\editor-inspector` прошёл и вывел `PropertyCount=8`, `ExportedProperties=8`, `SerializedHealth=42`, `UndoName=Captain`, `RedoName=Player`, `SerializedFlags=Air|Ground`, `NestedMaxHealth=250`, `RoundTripStable=True`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki` прошёл: UI/Text public types `48`, все строки имеют статус `Supported`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: tracked source files `465`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: source files scanned `305`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `267/267`, runtime smoke `5/5`, golden-data `12/12`.\n- `dotnet build src\\Electron2D.sln -c Release` прошёл: warnings `0`, errors `0`.\n\n## Решения\n\n- Публичный runtime API не расширялся: Inspector остаётся внутренним слоем `Electron2D.Editor`.\n- Inspector редактирует уже существующие `SceneFileDocument` и `SerializedPropertyValue`, чтобы Scene Tree dock, resource serialization и будущие tooling операции работали с одним форматом сцены.\n- Inspector не выполняет runtime reflection discovery. Editable properties приходят из explicit metadata descriptors; если metadata отсутствует, property не становится редактируемым автоматически.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Реализована цель задачи: Inspector поддерживает primitives, enum/flags, arrays, resources, `NodePath`, exported properties, reset default и nested resources.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4f0dad627be4cd3182605ab07f56d482/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Inspector edits serialize.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4f0dad627be4cd3182605ab07f56d482/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Undo/redo works for main property operations.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4f0dad627be4cd3182605ab07f56d482/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Готова спецификация в `docs/editor/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4f0dad627be4cd3182605ab07f56d482/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Добавлены automated tests, покрывающие новое поведение.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4f0dad627be4cd3182605ab07f56d482/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Готова документация реализации в `docs/editor/`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4f0dad627be4cd3182605ab07f56d482/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-4f0dad627be4cd3182605ab07f56d482/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T04:23:13.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "267/267"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/editor/inspector.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor/Inspector"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Program.cs"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "src/Electron2D/Assets/Resources/Serialization/SceneFileDocument.cs"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "src/Electron2D/Assets/Resources/Serialization/SerializedPropertyValue.cs"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorInspectorTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 433950,
+      "byteLength": 6249,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "71984062732bbd2f39467f2082ee91bed53dee9db6a21907e211484a32f00861",
+      "markdown": "# T-0082 [x] P0: Реализовать Inspector: primitives, enum/flags, arrays, resources, NodePath, export attributes, reset default, nested resources\n\n- Статус: завершена\n- Завершена: 2026-06-22T07:23:13+03:00\n- Коммит: `T-0082: add editor inspector model`\n\n## Ссылки\n\n- Спецификация: `docs/editor/inspector.md`\n- Документация: `docs/editor/inspector.md`\n- Исходный код: `src/Electron2D.Editor/Inspector/`; `src/Electron2D.Editor/Program.cs`\n- Тесты: `tests/Electron2D.Tests.Integration/EditorInspectorTests.cs`\n- Формат сцены: `src/Electron2D/Assets/Resources/Serialization/SceneFileDocument.cs`; `src/Electron2D/Assets/Resources/Serialization/SerializedPropertyValue.cs`\n\n## Самодостаточное описание\n\nЗадача относилась к домену «Electron2D.Editor». Цель - реализовать проверяемую модель Inspector для редактирования сохранённых properties выбранного узла или внутреннего ресурса сцены: primitive values, enum, flags enum, arrays, resource references, `NodePath`, exported properties, reset default, nested resources, serialization и undo/redo.\n\nПолноценная визуальная панель Inspector в постоянном окне редактора не входила в эту задачу. Реализована внутренняя модель поведения и smoke-команда editor executable, чтобы следующие editor-задачи могли встроить Inspector в shell.\n\n## Что сделано\n\n- Добавлена спецификация `docs/editor/inspector.md`.\n- Добавлена документация реализации `docs/editor/inspector.md` и обновлены индексы документации.\n- Добавлена команда редактора:\n\n```powershell\ndotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --inspector-smoke <work-root>\n```\n\n- Реализована внутренняя модель `EditorInspector`, которая редактирует `SceneFileDocument` и не создаёт второй формат данных.\n- Добавлены descriptors для properties из registered metadata; smoke-проверка подтверждает, что Inspector видит только exported properties.\n- Поддержаны edits для `bool`, integer, `string`, enum, flags enum, array, internal resource reference и `NodePath`.\n- Поддержано редактирование nested property у internal resource через registered resource metadata.\n- Поддержан reset property to default.\n- Добавлен undo/redo слой со снимками `SceneFileDocument` до и после операции.\n- Smoke-run создаёт временную сцену, меняет properties, проверяет reset/undo/redo, сохраняет scene JSON и перечитывает его.\n- Предыдущее уточнение пользователя о том, что editor-задачи нельзя начинать без `T-0129`, закреплено в активном `TASKS.md` для следующих editor-задач.\n\n## Критерии приёмки\n\n- [x] Реализована цель задачи: Inspector поддерживает primitives, enum/flags, arrays, resources, `NodePath`, exported properties, reset default и nested resources.\n- [x] Inspector edits serialize.\n- [x] Undo/redo works for main property operations.\n- [x] Готова спецификация в `docs/editor/`.\n- [x] Добавлены automated tests, покрывающие новое поведение.\n- [x] Готова документация реализации в `docs/editor/`.\n- [x] Команды проверки задокументированы.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorInspectorTests\" --no-restore -m:1` упал с exit code `2`, потому что editor executable ещё не поддерживал `--inspector-smoke`.\n- Green phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorInspectorTests\" --no-restore -m:1` прошёл: `1/1`.\n- Прямой smoke-run `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --inspector-smoke .temp\\editor-inspector` прошёл и вывел `PropertyCount=8`, `ExportedProperties=8`, `SerializedHealth=42`, `UndoName=Captain`, `RedoName=Player`, `SerializedFlags=Air|Ground`, `NestedMaxHealth=250`, `RoundTripStable=True`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki` прошёл: UI/Text public types `48`, все строки имеют статус `Supported`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: tracked source files `465`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: source files scanned `305`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `267/267`, runtime smoke `5/5`, golden-data `12/12`.\n- `dotnet build src\\Electron2D.sln -c Release` прошёл: warnings `0`, errors `0`.\n\n## Решения\n\n- Публичный runtime API не расширялся: Inspector остаётся внутренним слоем `Electron2D.Editor`.\n- Inspector редактирует уже существующие `SceneFileDocument` и `SerializedPropertyValue`, чтобы Scene Tree dock, resource serialization и будущие tooling операции работали с одним форматом сцены.\n- Inspector не выполняет runtime reflection discovery. Editable properties приходят из explicit metadata descriptors; если metadata отсутствует, property не становится редактируемым автоматически.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T04:23:13.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T04:23:13.0000000+00:00",
+  "completedAt": "2026-06-22T04:23:13.0000000+00:00",
+  "acceptedAt": "2026-06-22T04:23:13.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T04:23:13.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

@@ -1,0 +1,189 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-38a413aa273428fc384e91ac57063a20",
+  "revision": 2,
+  "taskId": "T-0991",
+  "legacyAliases": [],
+  "title": "Синхронизировать expected exit codes в audit manifest с evidence summaries",
+  "description": "## T-0991 [ ] P3: Синхронизировать expected exit codes в audit manifest с evidence summaries\n\n- Создана: 2026-07-08T18:11:00+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-0990\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходный код: `eng/Electron2D.Build/AuditPackageCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник follow-up: `docs/verdicts/release-management/t-0990-audit-r05.md`\n\n### Execution contract\n\n- Task type: audit-tooling-hardening\n- Ready-to-start:\n  - task state is `open`.\n  - `docs/release-management/audit-package.md` describes the current audit manifest/evidence contract.\n  - a focused RED test can generate a package with one expected-success and one expected-failure preflight check.\n- Stop conditions:\n  - the change would alter saved external verdicts, manual ZIP assembly, browser submit behavior or current `T-0990` scope.\n  - expected-failure evidence would be hidden instead of represented consistently in `AUDIT-MANIFEST.md`.\n- May change:\n  - audit package manifest rendering and direct tests/docs.\n  - generated local documentation index after docs updates.\n  - task notes and diary for this task.\n- Must not change:\n  - public runtime API, API profile decisions or generated API class packets.\n  - saved audit reports.\n- Required outputs:\n  - `AUDIT-MANIFEST.md` preflight rows show the same expected exit code as corresponding `evidence/**/result.txt`.\n  - regression proving expected-failure checks are rendered consistently.\n- Required commands:\n  - focused audit package builder regression.\n  - `dotnet run --project eng/Electron2D.Build -- verify audit-contracts`\n  - `dotnet run --project eng/Electron2D.Build -- verify audit-followups`\n  - `git diff --check`\n- External audit:\n  - not required unless bundled with a parent audit-tooling package.\n\n### Самодостаточное описание\n\nr05 primary audit for `T-0990` found that `AUDIT-MANIFEST.md` listed expected exit code `0` for intentional failure checks, while each raw `result.txt` correctly recorded `expectedExitCode=1`, `actualExitCode=1`, `status=PASS`. The raw evidence was sufficient for `T-0990`, but the manifest should not contradict the evidence summaries.\n\n### Internal substrate acceptance contract\n\n- Audit manifest preflight rows must mirror expected exit codes from structured evidence summaries.\n- Expected-failure checks remain explicit and reviewable.\n- The fix is limited to audit package metadata/rendering and does not change task behavior or external verdict handling.\n\n### Критерии приёмки\n\n- [ ] Focused regression fails on mismatched manifest/evidence expected exit codes.\n- [ ] Audit package manifest renders expected-failure checks with the expected non-zero code.\n- [ ] Audit contract verifier and audit follow-up verifier pass.\n\n### Подзадачи\n\n- [ ] Add RED test for expected-failure manifest rendering.\n- [ ] Fix audit package manifest rendering.\n- [ ] Update `docs/release-management/audit-package.md` if the documented manifest contract changes.\n- [ ] Run focused checks, `verify audit-contracts`, `verify audit-followups` and `git diff --check`.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r01.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0991\n  - rationale: Primary audit r01 classified audit manifest expected exit code drift as P3 audit packaging hardening. Raw evidence for `T-0990` was correct, so this task tracks the manifest quality fix without expanding current `T-0990` scope.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r02.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0991\n  - rationale: Primary audit r02 repeated the same manifest/evidence expected exit code finding. `T-0991` owns the package manifest consistency fix across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r03.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0991\n  - rationale: Primary audit r03 repeated the same manifest/evidence expected exit code finding. `T-0991` owns the package manifest consistency fix across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r04.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0991\n  - rationale: Primary audit r04 repeated the same manifest/evidence expected exit code finding. `T-0991` owns the package manifest consistency fix across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r05.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0991\n  - rationale: Primary audit r05 classified manifest/evidence expected exit code drift as P3 audit packaging hardening. Raw evidence for `T-0990` was correct, so this task tracks the manifest quality fix without expanding current `T-0990` scope.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r06.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-0991\n  - rationale: Primary audit r06 repeated the same manifest/evidence expected exit code finding and explicitly pointed to existing `T-0991`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r07.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-0991\n  - rationale: Accepted primary audit r07 repeated the same manifest/evidence expected exit code finding and explicitly pointed to existing `T-0991`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r08.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-0991\n  - rationale: Primary audit r08 repeated the same manifest/evidence expected exit code finding and explicitly pointed to existing `T-0991`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r09.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-0991\n  - rationale: Accepted primary audit r09 repeated the same manifest/evidence expected exit code finding and explicitly pointed to existing `T-0991`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r10.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-0991\n  - rationale: Accepted primary audit r10 repeated the same manifest/evidence expected exit code finding and explicitly pointed to existing `T-0991`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-control-r10.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0991\n  - rationale: Accepted control audit r10 repeated the expected-failure manifest summary finding and explicitly pointed to the same audit package hardening owned by `T-0991`; no new task is needed.\n\n### Заметки агента\n\n2026-07-08T18:11:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0990-audit-r05.md`; finding перенесён в P3 audit package manifest hardening.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P3",
+  "tagIds": [
+    "tag-0011",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-90476c714273240a7f2ca627a532aab3"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Focused regression fails on mismatched manifest/evidence expected exit codes.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Audit package manifest renders expected-failure checks with the expected non-zero code.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Audit contract verifier and audit follow-up verifier pass.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-08T15:11:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0990-audit-r05.md`; finding перенесён в P3 audit package manifest hardening."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required unless bundled with a parent audit-tooling package."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/release-management/audit-package.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0990-audit-r05.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/AuditPackageCommand.cs"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "evidence/**/result.txt"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "audit-tooling-hardening",
+    "readyToStart": [
+      "task state is `open`.",
+      "`docs/release-management/audit-package.md` describes the current audit manifest/evidence contract.",
+      "a focused RED test can generate a package with one expected-success and one expected-failure preflight check."
+    ],
+    "stopConditions": [
+      "the change would alter saved external verdicts, manual ZIP assembly, browser submit behavior or current `T-0990` scope.",
+      "expected-failure evidence would be hidden instead of represented consistently in `AUDIT-MANIFEST.md`."
+    ],
+    "allowedChanges": [
+      "audit package manifest rendering and direct tests/docs.",
+      "generated local documentation index after docs updates.",
+      "task notes and diary for this task."
+    ],
+    "forbiddenChanges": [
+      "public runtime API, API profile decisions or generated API class packets.",
+      "saved audit reports."
+    ],
+    "requiredOutputs": [
+      "`AUDIT-MANIFEST.md` preflight rows show the same expected exit code as corresponding `evidence/**/result.txt`.",
+      "regression proving expected-failure checks are rendered consistently."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "focused audit package builder regression.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify audit-contracts`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify audit-followups`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 416927,
+      "byteLength": 7560,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "53a5dc679228bbf3a53ebfa27bb47e106c0aaf544a46fc08253ceca69a1df3a1",
+      "markdown": "## T-0991 [ ] P3: Синхронизировать expected exit codes в audit manifest с evidence summaries\n\n- Создана: 2026-07-08T18:11:00+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-0990\n- Ссылки:\n  - Доменный документ: `docs/release-management/audit-package.md`\n  - Исходный код: `eng/Electron2D.Build/AuditPackageCommand.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник follow-up: `docs/verdicts/release-management/t-0990-audit-r05.md`\n\n### Execution contract\n\n- Task type: audit-tooling-hardening\n- Ready-to-start:\n  - task state is `open`.\n  - `docs/release-management/audit-package.md` describes the current audit manifest/evidence contract.\n  - a focused RED test can generate a package with one expected-success and one expected-failure preflight check.\n- Stop conditions:\n  - the change would alter saved external verdicts, manual ZIP assembly, browser submit behavior or current `T-0990` scope.\n  - expected-failure evidence would be hidden instead of represented consistently in `AUDIT-MANIFEST.md`.\n- May change:\n  - audit package manifest rendering and direct tests/docs.\n  - generated local documentation index after docs updates.\n  - task notes and diary for this task.\n- Must not change:\n  - public runtime API, API profile decisions or generated API class packets.\n  - saved audit reports.\n- Required outputs:\n  - `AUDIT-MANIFEST.md` preflight rows show the same expected exit code as corresponding `evidence/**/result.txt`.\n  - regression proving expected-failure checks are rendered consistently.\n- Required commands:\n  - focused audit package builder regression.\n  - `dotnet run --project eng/Electron2D.Build -- verify audit-contracts`\n  - `dotnet run --project eng/Electron2D.Build -- verify audit-followups`\n  - `git diff --check`\n- External audit:\n  - not required unless bundled with a parent audit-tooling package.\n\n### Самодостаточное описание\n\nr05 primary audit for `T-0990` found that `AUDIT-MANIFEST.md` listed expected exit code `0` for intentional failure checks, while each raw `result.txt` correctly recorded `expectedExitCode=1`, `actualExitCode=1`, `status=PASS`. The raw evidence was sufficient for `T-0990`, but the manifest should not contradict the evidence summaries.\n\n### Internal substrate acceptance contract\n\n- Audit manifest preflight rows must mirror expected exit codes from structured evidence summaries.\n- Expected-failure checks remain explicit and reviewable.\n- The fix is limited to audit package metadata/rendering and does not change task behavior or external verdict handling.\n\n### Критерии приёмки\n\n- [ ] Focused regression fails on mismatched manifest/evidence expected exit codes.\n- [ ] Audit package manifest renders expected-failure checks with the expected non-zero code.\n- [ ] Audit contract verifier and audit follow-up verifier pass.\n\n### Подзадачи\n\n- [ ] Add RED test for expected-failure manifest rendering.\n- [ ] Fix audit package manifest rendering.\n- [ ] Update `docs/release-management/audit-package.md` if the documented manifest contract changes.\n- [ ] Run focused checks, `verify audit-contracts`, `verify audit-followups` and `git diff --check`.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r01.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0991\n  - rationale: Primary audit r01 classified audit manifest expected exit code drift as P3 audit packaging hardening. Raw evidence for `T-0990` was correct, so this task tracks the manifest quality fix without expanding current `T-0990` scope.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r02.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0991\n  - rationale: Primary audit r02 repeated the same manifest/evidence expected exit code finding. `T-0991` owns the package manifest consistency fix across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r03.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0991\n  - rationale: Primary audit r03 repeated the same manifest/evidence expected exit code finding. `T-0991` owns the package manifest consistency fix across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r04.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0991\n  - rationale: Primary audit r04 repeated the same manifest/evidence expected exit code finding. `T-0991` owns the package manifest consistency fix across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r05.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-new\n  - target: T-0991\n  - rationale: Primary audit r05 classified manifest/evidence expected exit code drift as P3 audit packaging hardening. Raw evidence for `T-0990` was correct, so this task tracks the manifest quality fix without expanding current `T-0990` scope.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r06.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-0991\n  - rationale: Primary audit r06 repeated the same manifest/evidence expected exit code finding and explicitly pointed to existing `T-0991`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r07.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-0991\n  - rationale: Accepted primary audit r07 repeated the same manifest/evidence expected exit code finding and explicitly pointed to existing `T-0991`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r08.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-0991\n  - rationale: Primary audit r08 repeated the same manifest/evidence expected exit code finding and explicitly pointed to existing `T-0991`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r09.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-0991\n  - rationale: Accepted primary audit r09 repeated the same manifest/evidence expected exit code finding and explicitly pointed to existing `T-0991`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r10.md\n  - id: FOLLOW_UP_FINDING F1\n  - state: tracked-existing\n  - target: T-0991\n  - rationale: Accepted primary audit r10 repeated the same manifest/evidence expected exit code finding and explicitly pointed to existing `T-0991`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-control-r10.md\n  - id: FOLLOW_UP_FINDING F2\n  - state: tracked-existing\n  - target: T-0991\n  - rationale: Accepted control audit r10 repeated the expected-failure manifest summary finding and explicitly pointed to the same audit package hardening owned by `T-0991`; no new task is needed.\n\n### Заметки агента\n\n2026-07-08T18:11:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F1` из `docs/verdicts/release-management/t-0990-audit-r05.md`; finding перенесён в P3 audit package manifest hardening.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-08T15:11:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

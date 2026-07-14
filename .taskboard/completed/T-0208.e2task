@@ -1,0 +1,295 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-b71407dc1aa85c13f0d8de0ac31595cc",
+  "revision": 2,
+  "taskId": "T-0208",
+  "legacyAliases": [],
+  "title": "Перенести тестовые, документационные и API verifiers на C#",
+  "description": "## T-0208 [x] P0: Перенести тестовые, документационные и API verifiers на C#\n\n- Создана: 2026-06-24T14:32:00+03:00\n- Завершена: 2026-06-30T12:11:05+03:00\n- Принята внешним аудитом: 2026-06-30T12:11:05+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний audit r03 принял tracking-закрытие переноса тестовых, документационных и API-проверок на C# без blocker-ов.\n- Приоритет: P0\n- Зависимости: T-0207\n- Ссылки:\n  - Доменные документы: `docs/documentation/repository-readme.md`; `docs/documentation/local-documentation-pipeline.md`; `docs/release-management/api-compatibility.md`; `docs/release-management/release-metadata.md`; `docs/release-management/ci-matrix.md`\n  - Внешний аудит: `docs/verdicts/release-management/t-0208-audit-r03.md`\n  - Дочерние accepted audits: `docs/verdicts/documentation/t-0213-audit-r05.md`; `docs/verdicts/release-management/t-0214-audit-r05.md`; `docs/verdicts/release-management/t-0215-audit-r07.md`\n  - Исходный код: `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`\n  - Generated documentation index: `data/documentation/electron2d-local-docs-index.json`; `data/documentation/local-docs-index/documentation.ndjson`\n\n### Самодостаточное описание\n\nTracking-задача закрыла перенос тестовых, документационных и API-related verifier-ов на C#-команды внутреннего инструмента `eng\\Electron2D.Build`. Собственный production scope был разбит на дочерние задачи: `T-0213` закрыла README/docs verifier-ы, `T-0214` закрыла API/Wiki/license/manifest verifier-ы, а `T-0215` закрыла test runner и performance checks.\n\nВ ходе финального закрытия найдено и исправлено узкое несоответствие в release metadata verifier-е: `TASKS.md` ошибочно считался локальным релизным черновиком. По правилам репозитория `TASKS.md` является tracked рабочим журналом активных задач, поэтому `verify release-metadata` теперь запрещает только tracked `CHANGELOG*` и `RELEASE-NOTES*`, а исключение task files из пользовательских шаблонов, экспортов и релизных архивов остаётся ответственностью project-template, export и package проверок.\n\n### Критерии и результат\n\n- [x] Создана и закрыта `T-0213`.\n- [x] Создана и закрыта `T-0214`.\n- [x] Создана и закрыта `T-0215`.\n- [x] Доменные документы и active tasks больше не требуют PowerShell-команды как целевой verifier для README, docs, API, Wiki, license, manifests, tests и performance checks.\n- [x] После закрытия дочерних задач общий C# verification entrypoint и отдельные C# verifier routes проходят в focused checks.\n- [x] `verify manifests` снова проходит в текущей рабочей копии с tracked `TASKS.md`.\n- [x] Внешний аудит r03 вернул `VERDICT: ACCEPT`.\n\n### Проверки\n\n- [x] Red-check: focused-набор C# verifier tests сначала упал 44/45 на `VerifyManifestsRunsReleaseMetadataAndProjectTemplateShapeChecks`, а прямой `verify manifests` вернул `E2D-BUILD-RELEASE-METADATA-LOCAL-DRAFT-TRACKED` для `TASKS.md`.\n- [x] `dotnet build tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj -v:minimal` прошёл без предупреждений и ошибок.\n- [x] После исправления точечный `VerifyManifestsRunsReleaseMetadataAndProjectTemplateShapeChecks` прошёл 1/1.\n- [x] Focused T-0208 verifier tests прошли: 45/45.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs --check` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify docs` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify readme` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify manifests` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify licenses` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update wiki --check` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update api-manifest --wiki-path .github/wiki --check` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify api-compatibility --wiki-path .github/wiki` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify performance-budgets` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify performance --out audit-evidence/T-0208/reference-performance/verification-plan.json` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: 692 tracked source files.\n- [x] `git diff --check` прошёл с кодом 0; Git вывел только предупреждение о будущей LF-нормализации `TASKS.md`.\n- [x] `audit package r01` не отправлялся: внутренняя restore-проверка упала из-за неверного использования accepted child verdict files как `previousVerdictChain`.\n- [x] `audit package r02` не отправлялся: archive-only raw TRX содержал машинные абсолютные пути; в r03 TRX был передан через штатный `trxGlobs` с нормализацией.\n- [x] `audit package r03` и отдельный `audit package verify r03` прошли.\n- [x] Внешний аудит `docs/verdicts/release-management/t-0208-audit-r03.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-30T11:28:24+03:00 - `T-0215` принята внешним аудитом r07 и перенесена в архив; `T-0208` переведена в `ready for acceptance`.\n\n2026-06-30T11:38:00+03:00 - Red-check выявил, что `verify manifests` не проходит в текущей рабочей копии из-за tracked `TASKS.md`. Исправление ограничено `RepositoryPolicyVerifiers.cs` и release-management документами: релизными черновиками считаются `CHANGELOG*` и `RELEASE-NOTES*`, но не `TASKS.md`.\n\n2026-06-30T12:11:05+03:00 - Внешний аудит r03 вернул `VERDICT: ACCEPT`; T-0208 удалена из активного `TASKS.md`, критерий `T-0206` по `T-0208` отмечен выполненным, а задача перенесена в monthly archive.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0012"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c7ddf12eae78cbfd5bc1f098cd3317f1"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Создана и закрыта `T-0213`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b71407dc1aa85c13f0d8de0ac31595cc/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Создана и закрыта `T-0214`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b71407dc1aa85c13f0d8de0ac31595cc/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Создана и закрыта `T-0215`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b71407dc1aa85c13f0d8de0ac31595cc/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Доменные документы и active tasks больше не требуют PowerShell-команды как целевой verifier для README, docs, API, Wiki, license, manifests, tests и performance checks.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b71407dc1aa85c13f0d8de0ac31595cc/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "После закрытия дочерних задач общий C# verification entrypoint и отдельные C# verifier routes проходят в focused checks.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b71407dc1aa85c13f0d8de0ac31595cc/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "`verify manifests` снова проходит в текущей рабочей копии с tracked `TASKS.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b71407dc1aa85c13f0d8de0ac31595cc/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Внешний аудит r03 вернул `VERDICT: ACCEPT`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b71407dc1aa85c13f0d8de0ac31595cc/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T08:28:24.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "`T-0215` принята внешним аудитом r07 и перенесена в архив; `T-0208` переведена в `ready for acceptance`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T08:38:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Red-check выявил, что `verify manifests` не проходит в текущей рабочей копии из-за tracked `TASKS.md`. Исправление ограничено `RepositoryPolicyVerifiers.cs` и release-management документами: релизными черновиками считаются `CHANGELOG*` и `RELEASE-NOTES*`, но не `TASKS.md`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-30T09:11:05.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Внешний аудит r03 вернул `VERDICT: ACCEPT`; T-0208 удалена из активного `TASKS.md`, критерий `T-0206` по `T-0208` отмечен выполненным, а задача перенесена в monthly archive."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-30T09:11:05.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "data/documentation/local-docs-index/documentation.ndjson"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/documentation/local-documentation-pipeline.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "docs/documentation/repository-readme.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "docs/release-management/ci-matrix.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "docs/release-management/release-metadata.md"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "docs/verdicts/documentation/t-0213-audit-r05.md"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0208-audit-r03.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0214-audit-r05.md"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0215-audit-r07.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/RepositoryPolicyVerifiers.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng\\Electron2D.Build --no-build -- update api-manifest --wiki-path .github/wiki --check",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng\\Electron2D.Build --no-build -- verify api-compatibility --wiki-path .github/wiki",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng\\Electron2D.Build --no-build -- verify performance --out audit-evidence/T-0208/reference-performance/verification-plan.json",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 1038228,
+      "byteLength": 7154,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "160d12e094cd604fc0ee0e1aafed85e1f3fd5757ec6c5c933e9b9c60d68a6a3a",
+      "markdown": "## T-0208 [x] P0: Перенести тестовые, документационные и API verifiers на C#\n\n- Создана: 2026-06-24T14:32:00+03:00\n- Завершена: 2026-06-30T12:11:05+03:00\n- Принята внешним аудитом: 2026-06-30T12:11:05+03:00, `VERDICT: ACCEPT`\n- Архивная причина: внешний audit r03 принял tracking-закрытие переноса тестовых, документационных и API-проверок на C# без blocker-ов.\n- Приоритет: P0\n- Зависимости: T-0207\n- Ссылки:\n  - Доменные документы: `docs/documentation/repository-readme.md`; `docs/documentation/local-documentation-pipeline.md`; `docs/release-management/api-compatibility.md`; `docs/release-management/release-metadata.md`; `docs/release-management/ci-matrix.md`\n  - Внешний аудит: `docs/verdicts/release-management/t-0208-audit-r03.md`\n  - Дочерние accepted audits: `docs/verdicts/documentation/t-0213-audit-r05.md`; `docs/verdicts/release-management/t-0214-audit-r05.md`; `docs/verdicts/release-management/t-0215-audit-r07.md`\n  - Исходный код: `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`\n  - Generated documentation index: `data/documentation/electron2d-local-docs-index.json`; `data/documentation/local-docs-index/documentation.ndjson`\n\n### Самодостаточное описание\n\nTracking-задача закрыла перенос тестовых, документационных и API-related verifier-ов на C#-команды внутреннего инструмента `eng\\Electron2D.Build`. Собственный production scope был разбит на дочерние задачи: `T-0213` закрыла README/docs verifier-ы, `T-0214` закрыла API/Wiki/license/manifest verifier-ы, а `T-0215` закрыла test runner и performance checks.\n\nВ ходе финального закрытия найдено и исправлено узкое несоответствие в release metadata verifier-е: `TASKS.md` ошибочно считался локальным релизным черновиком. По правилам репозитория `TASKS.md` является tracked рабочим журналом активных задач, поэтому `verify release-metadata` теперь запрещает только tracked `CHANGELOG*` и `RELEASE-NOTES*`, а исключение task files из пользовательских шаблонов, экспортов и релизных архивов остаётся ответственностью project-template, export и package проверок.\n\n### Критерии и результат\n\n- [x] Создана и закрыта `T-0213`.\n- [x] Создана и закрыта `T-0214`.\n- [x] Создана и закрыта `T-0215`.\n- [x] Доменные документы и active tasks больше не требуют PowerShell-команды как целевой verifier для README, docs, API, Wiki, license, manifests, tests и performance checks.\n- [x] После закрытия дочерних задач общий C# verification entrypoint и отдельные C# verifier routes проходят в focused checks.\n- [x] `verify manifests` снова проходит в текущей рабочей копии с tracked `TASKS.md`.\n- [x] Внешний аудит r03 вернул `VERDICT: ACCEPT`.\n\n### Проверки\n\n- [x] Red-check: focused-набор C# verifier tests сначала упал 44/45 на `VerifyManifestsRunsReleaseMetadataAndProjectTemplateShapeChecks`, а прямой `verify manifests` вернул `E2D-BUILD-RELEASE-METADATA-LOCAL-DRAFT-TRACKED` для `TASKS.md`.\n- [x] `dotnet build tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj -v:minimal` прошёл без предупреждений и ошибок.\n- [x] После исправления точечный `VerifyManifestsRunsReleaseMetadataAndProjectTemplateShapeChecks` прошёл 1/1.\n- [x] Focused T-0208 verifier tests прошли: 45/45.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update docs --check` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify docs` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify readme` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify manifests` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify licenses` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update wiki --check` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- update api-manifest --wiki-path .github/wiki --check` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify api-compatibility --wiki-path .github/wiki` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify performance-budgets` прошёл.\n- [x] `dotnet run --project eng\\Electron2D.Build --no-build -- verify performance --out audit-evidence/T-0208/reference-performance/verification-plan.json` прошёл.\n- [x] `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: 692 tracked source files.\n- [x] `git diff --check` прошёл с кодом 0; Git вывел только предупреждение о будущей LF-нормализации `TASKS.md`.\n- [x] `audit package r01` не отправлялся: внутренняя restore-проверка упала из-за неверного использования accepted child verdict files как `previousVerdictChain`.\n- [x] `audit package r02` не отправлялся: archive-only raw TRX содержал машинные абсолютные пути; в r03 TRX был передан через штатный `trxGlobs` с нормализацией.\n- [x] `audit package r03` и отдельный `audit package verify r03` прошли.\n- [x] Внешний аудит `docs/verdicts/release-management/t-0208-audit-r03.md` вернул `VERDICT: ACCEPT`.\n\n### Заметки агента\n\n2026-06-30T11:28:24+03:00 - `T-0215` принята внешним аудитом r07 и перенесена в архив; `T-0208` переведена в `ready for acceptance`.\n\n2026-06-30T11:38:00+03:00 - Red-check выявил, что `verify manifests` не проходит в текущей рабочей копии из-за tracked `TASKS.md`. Исправление ограничено `RepositoryPolicyVerifiers.cs` и release-management документами: релизными черновиками считаются `CHANGELOG*` и `RELEASE-NOTES*`, но не `TASKS.md`.\n\n2026-06-30T12:11:05+03:00 - Внешний аудит r03 вернул `VERDICT: ACCEPT`; T-0208 удалена из активного `TASKS.md`, критерий `T-0206` по `T-0208` отмечен выполненным, а задача перенесена в monthly archive.\n\n"
+    }
+  ],
+  "createdAt": "2026-06-24T11:32:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-30T09:11:05.0000000+00:00",
+  "completedAt": "2026-06-30T09:11:05.0000000+00:00",
+  "acceptedAt": "2026-06-30T09:11:05.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-30T09:11:05.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

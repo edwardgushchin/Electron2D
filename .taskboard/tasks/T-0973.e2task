@@ -1,0 +1,286 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-13f9549833b4a39f30dd2ffde969aa79",
+  "revision": 2,
+  "taskId": "T-0973",
+  "legacyAliases": [],
+  "title": "Провести контроль готовности платформ, ввода и окон для публичного API 0.1-preview",
+  "description": "## T-0973 [ ] P0: Провести контроль готовности платформ, ввода и окон для публичного API 0.1-preview\n\n- Создана: 2026-07-05T12:09:05+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `gate`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0241, T-0243, T-0245, T-0246, T-0253, T-0972, T-0885, T-0886, T-0887, T-0888, T-0889, T-0890, T-0891, T-0892, T-0893, T-0894, T-0895, T-0896, T-0897\n- Ссылки:\n  - Доменный документ: `docs/runtime/godot-47-platform-input-and-window-ready-gate-public-api-010.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0.3 Совокупные рубежи готовности и релизный рубеж`\n\n### Execution contract\n\n- Task type: gate\n- Ready-to-start:\n  - dependencies and child evidence are closed, accepted or explicitly represented as blockers.\n  - gate commands and domain document for T-0973 are known before running checks.\n- Stop conditions:\n  - missing evidence belongs to a child/leaf task rather than the gate tooling.\n  - fixing the issue would change production behavior outside this gate's verifier/report ownership.\n- May change:\n  - gate report/check artifacts named by task criteria.\n  - verifier/report tooling owned by this gate.\n  - `TASKS.md` notes and diary evidence for T-0973.\n- Must not change:\n  - leaf implementation, subsystem backend, platform runtime behavior or sibling task acceptance state.\n- Required outputs:\n  - gate report or current evidence section naming pass/fail/blockers.\n  - links to commands, logs and owning tasks for blockers.\n- Required commands:\n  - exact gate commands named in this task or docs/runtime/godot-47-platform-input-and-window-ready-gate-public-api-010.md.\n  - `git diff --check`\n- External audit:\n  - required when this gate is the acceptance boundary; otherwise inherited from parent gate\n\n### Самодостаточное описание\nЭтот контрольный рубеж проверяет, что для области платформенных служб, ввода и окон: Window, DisplayServer, OS, Input, события ввода, курсор, DPI, режимы окна и задержка ввода готовы необходимые внутренние слои, инструменты и диагностические проверки. Он не заменяет задачи конкретных публичных классов и не принимает их поведение вместо них.\n\nОжидаемый результат: любой публичный Godot API-класс может зависеть от этого рубежа без скрытых дыр в базовой реализации. Если часть области ещё не готова, она должна иметь явный контракт Deferred или Unsupported с понятной диагностикой.\n\n### Контракт контрольного рубежа\n\n- Рубеж готовности проверяет только общие предпосылки: внутренние слои, инструменты, проверки и отчёты.\n- Его зависимости должны быть internal/subsystem/tooling tasks; задачи конкретных публичных классов должны проверяться через `T-0980`, а не закрываться этим рубежом.\n- Он не должен зависеть от публичных классов, которые сами зависят от этого рубежа.\n- Поведение публичных классов принимается в их собственных задачах и дополнительно проверяется финальным рубежом `T-0980`.\n- Подтверждение берётся из команд репозитория, тестов и сгенерированных отчётов, а не из устного утверждения.\n- Граф зависимостей должен оставаться без циклов, повторных зависимостей и устаревших ссылок ROADMAP.\n\n### Критерии приёмки\n\n- [ ] Все зависимости рубежа закрыты либо имеют утверждённый контракт `Deferred` или `Unsupported` через manual public API profile.\n- [ ] Доменный документ описывает, какие внутренние возможности проверяются, какие публичные задачи будут потребителями и какой первый тест или отчёт доказывает связь.\n- [ ] Публичные Godot API-классы не закрываются этим рубежом напрямую; их совпадение с Godot по API и поведению остаётся в задачах классов и в `T-0980`.\n- [ ] Проверки дают воспроизводимые отчёты, понятные ошибки и не скрывают неподдержанные платформы или временные заглушки.\n- [ ] В дневнике зафиксированы команды проверки, результат, найденные ограничения и отсутствие циклов в зависимостях.\n\n### Подзадачи\n\n- [ ] Сверить зависимости рубежа и убедиться, что они не создают циклов.\n- [ ] Обновить доменный документ: область, потребители, нецели, проверки и диагностические сообщения.\n- [ ] Добавить или обновить проверяющую команду, тест или отчёт, который доказывает готовность области.\n- [ ] Запустить целевые проверки и записать результат в заметки задачи и дневник.\n\n### Заметки агента\n\n2026-07-05T12:09:05+03:00 - Создано по результатам проверки плана: полный объём публичного API должен блокировать `0.1-preview`, а задачи объектов должны зависеть от совокупных рубежей готовности, чтобы ROADMAP не оставался только рекомендательным порядком.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0013",
+    "tag-0015",
+    "tag-0028",
+    "tag-0030"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-5d5cdc37ce746e40f1ee1a25337f85da"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-fab4705fe4a1db467903c0bc500995a7"
+    },
+    {
+      "relationId": "relation-0004",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a9dc106b3357162a2b473b8e01e91ad3"
+    },
+    {
+      "relationId": "relation-0005",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-1e12be331f0d804a0785e6a872bfd6ec"
+    },
+    {
+      "relationId": "relation-0006",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a0a0d88f928e44f7127b482f782c3bd6"
+    },
+    {
+      "relationId": "relation-0007",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-422aa1e6a5a317f476c2ecdb3fd7ca98"
+    },
+    {
+      "relationId": "relation-0008",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-7b58ecf0e2f3911189a3417fe35f08dc"
+    },
+    {
+      "relationId": "relation-0009",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-8d00b24da41f9d997ac8278d6672fd17"
+    },
+    {
+      "relationId": "relation-0010",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-2338ab13fb3ae70d94df0f272b844df5"
+    },
+    {
+      "relationId": "relation-0011",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-16fcf7b69c01c4de91b494b848de8f55"
+    },
+    {
+      "relationId": "relation-0012",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-9182addbe1a244bab59635aeead899aa"
+    },
+    {
+      "relationId": "relation-0013",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-93c6f21ab976754aada524e52c588385"
+    },
+    {
+      "relationId": "relation-0014",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-c0411932d43764f34351dbd6c30b5c46"
+    },
+    {
+      "relationId": "relation-0015",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-74be361278053c377fb476adac9267ed"
+    },
+    {
+      "relationId": "relation-0016",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-3edf261cca4cc7d8065dce6d2760243a"
+    },
+    {
+      "relationId": "relation-0017",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-6b83686fb2fb32abeaff45bf8316dbf5"
+    },
+    {
+      "relationId": "relation-0018",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-f400cf6e852d1ca0a375d6cd70c97d2a"
+    },
+    {
+      "relationId": "relation-0019",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b0af681628d7b897f3b4ae252e265f2c"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Все зависимости рубежа закрыты либо имеют утверждённый контракт `Deferred` или `Unsupported` через manual public API profile.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Доменный документ описывает, какие внутренние возможности проверяются, какие публичные задачи будут потребителями и какой первый тест или отчёт доказывает связь.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Публичные Godot API-классы не закрываются этим рубежом напрямую; их совпадение с Godot по API и поведению остаётся в задачах классов и в `T-0980`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Проверки дают воспроизводимые отчёты, понятные ошибки и не скрывают неподдержанные платформы или временные заглушки.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "В дневнике зафиксированы команды проверки, результат, найденные ограничения и отсутствие циклов в зависимостях.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T09:09:05.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по результатам проверки плана: полный объём публичного API должен блокировать `0.1-preview`, а задачи объектов должны зависеть от совокупных рубежей готовности, чтобы ROADMAP не оставался только рекомендательным порядком."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "required when this gate is the acceptance boundary; otherwise inherited from parent gate"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "docs/runtime/godot-47-platform-input-and-window-ready-gate-public-api-010.md"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "Directory",
+      "value": "tests"
+    }
+  ],
+  "executionContract": {
+    "taskType": "gate",
+    "readyToStart": [
+      "dependencies and child evidence are closed, accepted or explicitly represented as blockers.",
+      "gate commands and domain document for T-0973 are known before running checks."
+    ],
+    "stopConditions": [
+      "missing evidence belongs to a child/leaf task rather than the gate tooling.",
+      "fixing the issue would change production behavior outside this gate's verifier/report ownership."
+    ],
+    "allowedChanges": [
+      "gate report/check artifacts named by task criteria.",
+      "verifier/report tooling owned by this gate.",
+      "`TASKS.md` notes and diary evidence for T-0973."
+    ],
+    "forbiddenChanges": [
+      "leaf implementation, subsystem backend, platform runtime behavior or sibling task acceptance state."
+    ],
+    "requiredOutputs": [
+      "gate report or current evidence section naming pass/fail/blockers.",
+      "links to commands, logs and owning tasks for blockers."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "exact gate commands named in this task or docs/runtime/godot-47-platform-input-and-window-ready-gate-public-api-010.md.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "Single",
+      "independence": "DifferentActor",
+      "instructions": "required when this gate is the acceptance boundary; otherwise inherited from parent gate",
+      "requiredVerdicts": [
+        "Primary"
+      ]
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 13558717,
+      "byteLength": 6848,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "e874c61d7588369ed6fe9ece0841db3ec10c99cb813b95dd43d3007e1c6ac08e",
+      "markdown": "## T-0973 [ ] P0: Провести контроль готовности платформ, ввода и окон для публичного API 0.1-preview\n\n- Создана: 2026-07-05T12:09:05+03:00\n- Состояние: open\n- Приоритет: P0\n- Execution class: `gate`\n- Scheduling tier: `final-gate`\n- Зависимости: T-0241, T-0243, T-0245, T-0246, T-0253, T-0972, T-0885, T-0886, T-0887, T-0888, T-0889, T-0890, T-0891, T-0892, T-0893, T-0894, T-0895, T-0896, T-0897\n- Ссылки:\n  - Доменный документ: `docs/runtime/godot-47-platform-input-and-window-ready-gate-public-api-010.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0.3 Совокупные рубежи готовности и релизный рубеж`\n\n### Execution contract\n\n- Task type: gate\n- Ready-to-start:\n  - dependencies and child evidence are closed, accepted or explicitly represented as blockers.\n  - gate commands and domain document for T-0973 are known before running checks.\n- Stop conditions:\n  - missing evidence belongs to a child/leaf task rather than the gate tooling.\n  - fixing the issue would change production behavior outside this gate's verifier/report ownership.\n- May change:\n  - gate report/check artifacts named by task criteria.\n  - verifier/report tooling owned by this gate.\n  - `TASKS.md` notes and diary evidence for T-0973.\n- Must not change:\n  - leaf implementation, subsystem backend, platform runtime behavior or sibling task acceptance state.\n- Required outputs:\n  - gate report or current evidence section naming pass/fail/blockers.\n  - links to commands, logs and owning tasks for blockers.\n- Required commands:\n  - exact gate commands named in this task or docs/runtime/godot-47-platform-input-and-window-ready-gate-public-api-010.md.\n  - `git diff --check`\n- External audit:\n  - required when this gate is the acceptance boundary; otherwise inherited from parent gate\n\n### Самодостаточное описание\nЭтот контрольный рубеж проверяет, что для области платформенных служб, ввода и окон: Window, DisplayServer, OS, Input, события ввода, курсор, DPI, режимы окна и задержка ввода готовы необходимые внутренние слои, инструменты и диагностические проверки. Он не заменяет задачи конкретных публичных классов и не принимает их поведение вместо них.\n\nОжидаемый результат: любой публичный Godot API-класс может зависеть от этого рубежа без скрытых дыр в базовой реализации. Если часть области ещё не готова, она должна иметь явный контракт Deferred или Unsupported с понятной диагностикой.\n\n### Контракт контрольного рубежа\n\n- Рубеж готовности проверяет только общие предпосылки: внутренние слои, инструменты, проверки и отчёты.\n- Его зависимости должны быть internal/subsystem/tooling tasks; задачи конкретных публичных классов должны проверяться через `T-0980`, а не закрываться этим рубежом.\n- Он не должен зависеть от публичных классов, которые сами зависят от этого рубежа.\n- Поведение публичных классов принимается в их собственных задачах и дополнительно проверяется финальным рубежом `T-0980`.\n- Подтверждение берётся из команд репозитория, тестов и сгенерированных отчётов, а не из устного утверждения.\n- Граф зависимостей должен оставаться без циклов, повторных зависимостей и устаревших ссылок ROADMAP.\n\n### Критерии приёмки\n\n- [ ] Все зависимости рубежа закрыты либо имеют утверждённый контракт `Deferred` или `Unsupported` через manual public API profile.\n- [ ] Доменный документ описывает, какие внутренние возможности проверяются, какие публичные задачи будут потребителями и какой первый тест или отчёт доказывает связь.\n- [ ] Публичные Godot API-классы не закрываются этим рубежом напрямую; их совпадение с Godot по API и поведению остаётся в задачах классов и в `T-0980`.\n- [ ] Проверки дают воспроизводимые отчёты, понятные ошибки и не скрывают неподдержанные платформы или временные заглушки.\n- [ ] В дневнике зафиксированы команды проверки, результат, найденные ограничения и отсутствие циклов в зависимостях.\n\n### Подзадачи\n\n- [ ] Сверить зависимости рубежа и убедиться, что они не создают циклов.\n- [ ] Обновить доменный документ: область, потребители, нецели, проверки и диагностические сообщения.\n- [ ] Добавить или обновить проверяющую команду, тест или отчёт, который доказывает готовность области.\n- [ ] Запустить целевые проверки и записать результат в заметки задачи и дневник.\n\n### Заметки агента\n\n2026-07-05T12:09:05+03:00 - Создано по результатам проверки плана: полный объём публичного API должен блокировать `0.1-preview`, а задачи объектов должны зависеть от совокупных рубежей готовности, чтобы ROADMAP не оставался только рекомендательным порядком.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T09:09:05.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

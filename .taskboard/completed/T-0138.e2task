@@ -1,0 +1,294 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-661bf8a6633416b1a785cae7fccd07db",
+  "revision": 2,
+  "taskId": "T-0138",
+  "legacyAliases": [],
+  "title": "Сделать рабочие журналы local-only и перенести поставляемые данные в `data`",
+  "description": "# T-0138 [x] P0: Сделать рабочие журналы local-only и перенести поставляемые данные в `data`\n\n- Статус: завершена\n- Завершена: 2026-06-22T10:55:55+03:00\n- Коммит: `T-0138: localize work logs and move data assets`\n\n## Ссылки\n\n- Спецификация: `docs/repository/repository-layout.md`\n- Документация: `docs/repository/repository-layout.md`\n- Исходный код: `.gitignore`; `.gitattributes`; `data/`; `tools/`; `src/Electron2D.Editor/`; `tests/Electron2D.Tests.Integration/SolutionLayoutTests.cs`\n\n## Самодостаточное описание\n\nРабочие материалы агента и maintainer-а переведены в local-only режим: `TASKS.md`, `completed-tasks/`, `dev-diary/`, `CHANGELOG*` и `RELEASE-NOTES*` остаются на машине, но больше не отслеживаются удалённым Git-репозиторием. Поставляемые шаблоны и ассеты перенесены под `data/`.\n\n## Что сделано\n\n- `.gitignore` получил правила для local-only рабочих файлов.\n- `TASKS.md`, `completed-tasks/`, `dev-diary/`, `CHANGELOG.md` и `RELEASE-NOTES.md` удалены из Git index, но сохранены локально.\n- `templates/electron2d-empty` перенесён в `data/templates/electron2d-empty`.\n- `assets/reference-games` перенесён в `data/assets/reference-games`.\n- `.gitattributes` обновлён на `data/assets/reference-games/** binary`, чтобы Windows checkout не менял байты ассетов.\n- Обновлены verifiers, editor smoke root detection, документация и спецификация раскладки репозитория.\n- `T-0110` и `T-0111` локально переведены в блокер до самого конца `0.1.0 Preview`.\n- Все AI-friendly задачи `T-0113`, `T-0115`-`T-0128` локально переведены в блокер до отдельной команды пользователя.\n\n## Критерии приёмки\n\n- [x] `.gitignore` содержит local-only правила для `TASKS.md`, `completed-tasks/`, `dev-diary/`, `CHANGELOG*` и `RELEASE-NOTES*`.\n- [x] `git ls-files` не содержит local-only рабочие материалы.\n- [x] `templates/electron2d-empty` перенесён в `data/templates/electron2d-empty`.\n- [x] `assets/reference-games` перенесён в `data/assets/reference-games`.\n- [x] Все verifier scripts и документация используют новые пути.\n- [x] Добавлена спецификация раскладки репозитория.\n- [x] Добавлена документация фактической раскладки.\n- [x] Добавлена автоматическая проверка раскладки.\n- [x] Выполнены focused и release-gate проверки.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SolutionLayoutTests\" --no-restore -m:1` падал на старой раскладке.\n- Green phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SolutionLayoutTests\" --no-restore -m:1` прошёл `2/2`.\n- После Windows CI failure добавлена красная проверка `.gitattributes`, затем green phase снова прошёл `2/2`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReferenceGameAssets.ps1` прошёл: `25` files, `4` sources.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: `504` tracked source files.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: `305` source files.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- Focused editor smoke tests прошли `3/3`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `271/271`, runtime smoke `5/5`, golden-data `12/12`.\n- `dotnet build src\\Electron2D.sln -c Release` прошёл: warnings `0`, errors `0`.\n- `git diff --check` прошёл с предупреждениями только о будущей нормализации LF/CRLF.\n- GitHub Actions CI run `27937800280` прошёл на Windows, Ubuntu и macOS.\n\n## Решения\n\n- `CHANGELOG*` и `RELEASE-NOTES*` остаются локальными release draft файлами до явной команды на публикацию GitHub Release.\n- Reference asset payload считается бинарным для Git, даже если расширение текстовое, потому что manifest проверяет byte length и SHA-256.\n- `.github/wiki/` остаётся локальным clone GitHub Wiki и не отслеживается основным репозиторием.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`.gitignore` содержит local-only правила для `TASKS.md`, `completed-tasks/`, `dev-diary/`, `CHANGELOG*` и `RELEASE-NOTES*`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-661bf8a6633416b1a785cae7fccd07db/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`git ls-files` не содержит local-only рабочие материалы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-661bf8a6633416b1a785cae7fccd07db/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`templates/electron2d-empty` перенесён в `data/templates/electron2d-empty`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-661bf8a6633416b1a785cae7fccd07db/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "`assets/reference-games` перенесён в `data/assets/reference-games`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-661bf8a6633416b1a785cae7fccd07db/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Все verifier scripts и документация используют новые пути.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-661bf8a6633416b1a785cae7fccd07db/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Добавлена спецификация раскладки репозитория.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-661bf8a6633416b1a785cae7fccd07db/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Добавлена документация фактической раскладки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-661bf8a6633416b1a785cae7fccd07db/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Добавлена автоматическая проверка раскладки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-661bf8a6633416b1a785cae7fccd07db/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Выполнены focused и release-gate проверки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-661bf8a6633416b1a785cae7fccd07db/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T07:55:55.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": ".github/wiki"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "2/2"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "271/271"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "3/3"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "assets/reference-games"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "Directory",
+      "value": "completed-tasks"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "data"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "data/assets/reference-games"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "data/assets/reference-games/** binary"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "data/templates/electron2d-empty"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "Directory",
+      "value": "dev-diary"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "docs/repository/repository-layout.md"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "templates/electron2d-empty"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/SolutionLayoutTests.cs"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "Directory",
+      "value": "tools"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 459473,
+      "byteLength": 5334,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "49992b7268e96cf78385a5fb864efbf472792072787af48480bf142e8bd0c3ae",
+      "markdown": "# T-0138 [x] P0: Сделать рабочие журналы local-only и перенести поставляемые данные в `data`\n\n- Статус: завершена\n- Завершена: 2026-06-22T10:55:55+03:00\n- Коммит: `T-0138: localize work logs and move data assets`\n\n## Ссылки\n\n- Спецификация: `docs/repository/repository-layout.md`\n- Документация: `docs/repository/repository-layout.md`\n- Исходный код: `.gitignore`; `.gitattributes`; `data/`; `tools/`; `src/Electron2D.Editor/`; `tests/Electron2D.Tests.Integration/SolutionLayoutTests.cs`\n\n## Самодостаточное описание\n\nРабочие материалы агента и maintainer-а переведены в local-only режим: `TASKS.md`, `completed-tasks/`, `dev-diary/`, `CHANGELOG*` и `RELEASE-NOTES*` остаются на машине, но больше не отслеживаются удалённым Git-репозиторием. Поставляемые шаблоны и ассеты перенесены под `data/`.\n\n## Что сделано\n\n- `.gitignore` получил правила для local-only рабочих файлов.\n- `TASKS.md`, `completed-tasks/`, `dev-diary/`, `CHANGELOG.md` и `RELEASE-NOTES.md` удалены из Git index, но сохранены локально.\n- `templates/electron2d-empty` перенесён в `data/templates/electron2d-empty`.\n- `assets/reference-games` перенесён в `data/assets/reference-games`.\n- `.gitattributes` обновлён на `data/assets/reference-games/** binary`, чтобы Windows checkout не менял байты ассетов.\n- Обновлены verifiers, editor smoke root detection, документация и спецификация раскладки репозитория.\n- `T-0110` и `T-0111` локально переведены в блокер до самого конца `0.1.0 Preview`.\n- Все AI-friendly задачи `T-0113`, `T-0115`-`T-0128` локально переведены в блокер до отдельной команды пользователя.\n\n## Критерии приёмки\n\n- [x] `.gitignore` содержит local-only правила для `TASKS.md`, `completed-tasks/`, `dev-diary/`, `CHANGELOG*` и `RELEASE-NOTES*`.\n- [x] `git ls-files` не содержит local-only рабочие материалы.\n- [x] `templates/electron2d-empty` перенесён в `data/templates/electron2d-empty`.\n- [x] `assets/reference-games` перенесён в `data/assets/reference-games`.\n- [x] Все verifier scripts и документация используют новые пути.\n- [x] Добавлена спецификация раскладки репозитория.\n- [x] Добавлена документация фактической раскладки.\n- [x] Добавлена автоматическая проверка раскладки.\n- [x] Выполнены focused и release-gate проверки.\n\n## Проверки\n\n- Красная фаза: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SolutionLayoutTests\" --no-restore -m:1` падал на старой раскладке.\n- Green phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~SolutionLayoutTests\" --no-restore -m:1` прошёл `2/2`.\n- После Windows CI failure добавлена красная проверка `.gitattributes`, затем green phase снова прошёл `2/2`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReferenceGameAssets.ps1` прошёл: `25` files, `4` sources.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` прошёл.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` прошёл: `504` tracked source files.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1` прошёл: `305` source files.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` прошёл.\n- Focused editor smoke tests прошли `3/3`.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` прошёл: unit `92/92`, integration `271/271`, runtime smoke `5/5`, golden-data `12/12`.\n- `dotnet build src\\Electron2D.sln -c Release` прошёл: warnings `0`, errors `0`.\n- `git diff --check` прошёл с предупреждениями только о будущей нормализации LF/CRLF.\n- GitHub Actions CI run `27937800280` прошёл на Windows, Ubuntu и macOS.\n\n## Решения\n\n- `CHANGELOG*` и `RELEASE-NOTES*` остаются локальными release draft файлами до явной команды на публикацию GitHub Release.\n- Reference asset payload считается бинарным для Git, даже если расширение текстовое, потому что manifest проверяет byte length и SHA-256.\n- `.github/wiki/` остаётся локальным clone GitHub Wiki и не отслеживается основным репозиторием.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T07:55:55.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T07:55:55.0000000+00:00",
+  "completedAt": "2026-06-22T07:55:55.0000000+00:00",
+  "acceptedAt": "2026-06-22T07:55:55.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T07:55:55.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

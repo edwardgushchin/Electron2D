@@ -1,0 +1,133 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-393bd08e24fe42299a7a16186412cfae",
+  "revision": 11,
+  "taskId": "T-1183",
+  "legacyAliases": [],
+  "title": "Добавить репозиторную FFmpeg-утилиту захвата окон для агентов",
+  "description": "Добавить репозиторную Python-утилиту для захвата активного окна, окна по заголовку или HWND и рабочего стола через установленный FFmpeg gdigrab. Утилита должна жить в eng/tools, не требовать сторонних Python-пакетов, создавать PNG, выводить итоговый абсолютный путь, иметь --list/--title/--hwnd/--desktop/--output/--delay/--cursor, возвращать ненулевой exit code с понятной диагностикой при отсутствии ffmpeg или окна. docs/repository/agent-workflow.md должен предписывать использовать эту утилиту для визуальной проверки Windows UI, когда computer-use/Windows-control capture недоступен, и честно различать desktop capture от headless render. Связанные файлы: eng/tools/capture-window.py, tests или self-test для утилиты, docs/repository/agent-workflow.md, data/dev-diary/2026/07 Июль/12-07-2026.md. Проверки: Python compile/help/list, реальный FFmpeg PNG capture, docs update/check/verify, taskboard verify, git diff --check.",
+  "status": "Review",
+  "acceptanceState": "InternalReview",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "repo-tool",
+      "description": "eng/tools/capture-window.py работает на Windows без сторонних Python-пакетов, поддерживает active/title/HWND/desktop/list и выдаёт понятные exit codes.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "verified-capture",
+      "description": "Automated tests, Python compile/help/list и реальный PNG-захват через FFmpeg проходят; docs/taskboard/diff checks зелёные.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "workflow-contract",
+      "description": "docs/repository/agent-workflow.md описывает обязательный fallback через FFmpeg, точную команду и ограничения доказательности снимка.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-d75e341cdffc45699066f218acdd2c21",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-12T12:35:34.1038618+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to InProgress."
+      }
+    },
+    {
+      "activityEntryId": "activity-c9f88a0c8c064fd6a6004feb593f182d",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-12T12:55:20.3780304+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Review."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-12T12:35:16.3559825+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "activity-0c66dc5ce27049d8aa0de8218c6ad61f",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-12T12:55:18.4356408+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Добавлена tracked eng/tools/capture_window.py и unittest suite eng/tools/tests/test_capture_window.py. RED: 3/3 отсутствующий helper; дополнительные regressions покрыли cp1251 Unicode, GPU black HWND frame, desktop-first strategy, foreground verification и обратимый TOPMOST/NOTOPMOST. GREEN: unittest 9/9, py_compile, --help, --list. Реальный ffmpeg gdigrab artifact .temp/taskboard-window-ffmpeg-final.png (336990 bytes) визуально проверен: содержит Tasks - Electron2D - Visual Studio Code с Task Details. docs/repository/agent-workflow.md описывает обязательный fallback, команды и границы evidence. docs update/check/verify, licenses verify прошли."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

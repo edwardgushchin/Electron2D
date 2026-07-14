@@ -1,0 +1,735 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-defbb46b778d4310aa0d252079989fd7",
+  "revision": 12,
+  "taskId": "T-1155",
+  "legacyAliases": [],
+  "title": "Убрать невидимый блокирующий backdrop Task Board",
+  "description": "В editor-area webview Task Board полноэкранный слой Task Details не должен оставаться невидимым backdrop поверх доски после закрытия. Закрытое состояние обязано одновременно использовать HTML hidden, DOM inert, aria-hidden=true и author CSS, который принудительно исключает .details[hidden] из layout и hit-testing. Открытие и все способы закрытия проходят через единый setDetailsVisibility, чтобы визуальное состояние, фокус и доступность не расходились. Повторное открытие уже существующей панели из Activity Bar раскрывает её в активной колонке с preserveFocus: false. Исправление не меняет каноническую TaskBoard v3, данные задачи или lifecycle и ограничено webview, orchestration фокуса, проверками, упаковкой и доменным документом.",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0001",
+    "tag-0002",
+    "tag-0003",
+    "tag-0009",
+    "tag-0010",
+    "tag-0017",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "cli",
+  "parentTaskUid": "task-b59811a17c316e5dc21abf6970f1f24c",
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "hidden-css",
+      "description": "Закрытый fullscreen details layer принудительно исключён из layout и hit-testing правилом .details[hidden] с display: none !important и pointer-events: none !important.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webview.css"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "semantic-hidden-state",
+      "description": "Исходный details DOM имеет hidden, inert и aria-hidden=true; при открытии эти ограничения снимаются, а при закрытии восстанавливаются.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webviewHtml.ts"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/extension-core.test.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "single-visibility-contract",
+      "description": "Открытие, кнопка закрытия, Escape, клик по backdrop и программное закрытие используют единый setDetailsVisibility и не оставляют рассинхронизированного невидимого слоя.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webview.ts"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "focused-reveal",
+      "description": "Повторное открытие существующего Task Board раскрывает панель в активной колонке с preserveFocus: false, возвращая ввод в доску.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/extension.ts"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/extension-core.test.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "unblocked-board-input",
+      "description": "Когда подробности закрыты, backdrop не затемняет доску, не перехватывает мышь или клавиатуру и отсутствует в accessibility interaction surface.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webview.css"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webview.ts"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/src/webviewHtml.ts"
+        }
+      ]
+    },
+    {
+      "criterionId": "verification",
+      "description": "Unit layout regression, typecheck, Extension Host и VSIX packaging проверяют hidden/inert/aria contract, фокус повторно раскрытой панели и включение исправления в устанавливаемый пакет; доменный документ описывает фактическое поведение.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/test/suite/index.ts"
+        },
+        {
+          "kind": "File",
+          "path": "docs/editor/project-tasks-board.md"
+        },
+        {
+          "kind": "File",
+          "path": "src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "activity-6a180d90c1b443f98e93470d353a8e8a",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T10:44:57.1203389+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Ready."
+      }
+    },
+    {
+      "activityEntryId": "activity-73eaf1adf21a4506a61671a4ad3b8691",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T10:44:58.1183061+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to InProgress."
+      }
+    },
+    {
+      "activityEntryId": "activity-42bd75cca8524244879b90a61cd2df28",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-11T10:49:06.4730899+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "StatusChange",
+        "text": "Status changed to Review."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    },
+    {
+      "activityEntryId": "activity-f627e79bf8ed430087a780380f33637b",
+      "actorId": "cli",
+      "actorKind": "Agent",
+      "createdAt": "2026-07-13T21:08:39.6784197+00:00",
+      "kind": "TaskPatched",
+      "payload": {
+        "patch": [
+          {
+            "op": "replace",
+            "path": "/description",
+            "value": "В editor-area webview Task Board полноэкранный слой Task Details не должен оставаться невидимым backdrop поверх доски после закрытия. Закрытое состояние обязано одновременно использовать HTML hidden, DOM inert, aria-hidden=true и author CSS, который принудительно исключает .details[hidden] из layout и hit-testing. Открытие и все способы закрытия проходят через единый setDetailsVisibility, чтобы визуальное состояние, фокус и доступность не расходились. Повторное открытие уже существующей панели из Activity Bar раскрывает её в активной колонке с preserveFocus: false. Исправление не меняет каноническую TaskBoard v3, данные задачи или lifecycle и ограничено webview, orchestration фокуса, проверками, упаковкой и доменным документом."
+          },
+          {
+            "op": "replace",
+            "path": "/tagIds",
+            "value": [
+              "tag-0001",
+              "tag-0002",
+              "tag-0003",
+              "tag-0009",
+              "tag-0010",
+              "tag-0017",
+              "tag-0018"
+            ]
+          },
+          {
+            "op": "replace",
+            "path": "/acceptanceCriteria",
+            "value": [
+              {
+                "criterionId": "hidden-css",
+                "description": "Закрытый fullscreen details layer принудительно исключён из layout и hit-testing правилом .details[hidden] с display: none !important и pointer-events: none !important.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/src/webview.css"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+                  }
+                ]
+              },
+              {
+                "criterionId": "semantic-hidden-state",
+                "description": "Исходный details DOM имеет hidden, inert и aria-hidden=true; при открытии эти ограничения снимаются, а при закрытии восстанавливаются.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/src/webviewHtml.ts"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/test/unit/extension-core.test.ts"
+                  }
+                ]
+              },
+              {
+                "criterionId": "single-visibility-contract",
+                "description": "Открытие, кнопка закрытия, Escape, клик по backdrop и программное закрытие используют единый setDetailsVisibility и не оставляют рассинхронизированного невидимого слоя.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/src/webview.ts"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+                  }
+                ]
+              },
+              {
+                "criterionId": "focused-reveal",
+                "description": "Повторное открытие существующего Task Board раскрывает панель в активной колонке с preserveFocus: false, возвращая ввод в доску.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/src/extension.ts"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/test/unit/extension-core.test.ts"
+                  }
+                ]
+              },
+              {
+                "criterionId": "unblocked-board-input",
+                "description": "Когда подробности закрыты, backdrop не затемняет доску, не перехватывает мышь или клавиатуру и отсутствует в accessibility interaction surface.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/src/webview.css"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/src/webview.ts"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/src/webviewHtml.ts"
+                  }
+                ]
+              },
+              {
+                "criterionId": "verification",
+                "description": "Unit layout regression, typecheck, Extension Host и VSIX packaging проверяют hidden/inert/aria contract, фокус повторно раскрытой панели и включение исправления в устанавливаемый пакет; доменный документ описывает фактическое поведение.",
+                "state": "Passed",
+                "evidence": [
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/test/suite/index.ts"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "docs/editor/project-tasks-board.md"
+                  },
+                  {
+                    "kind": "File",
+                    "path": "src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "replace",
+            "path": "/links",
+            "value": [
+              {
+                "linkId": "webview-styles",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/src/webview.css"
+              },
+              {
+                "linkId": "webview-runtime",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/src/webview.ts"
+              },
+              {
+                "linkId": "webview-html",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/src/webviewHtml.ts"
+              },
+              {
+                "linkId": "extension-host",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/src/extension.ts"
+              },
+              {
+                "linkId": "layout-tests",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+              },
+              {
+                "linkId": "core-tests",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/test/unit/extension-core.test.ts"
+              },
+              {
+                "linkId": "extension-tests",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/test/suite/index.ts"
+              },
+              {
+                "linkId": "editor-contract",
+                "kind": "File",
+                "value": "docs/editor/project-tasks-board.md"
+              },
+              {
+                "linkId": "packaged-vsix",
+                "kind": "File",
+                "value": "src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix"
+              }
+            ]
+          },
+          {
+            "op": "replace",
+            "path": "/executionContract",
+            "value": {
+              "taskType": "Исправление модального слоя VS Code Task Board",
+              "readyToStart": [
+                "Проблема воспроизводится в editor-area webview после открытия Task Board через Activity Bar.",
+                "Task Details использует один fullscreen aside#details поверх основной доски.",
+                "Изменение начинается с regression test, который фиксирует hidden, inert, aria-hidden и focus contract."
+              ],
+              "stopConditions": [
+                "Исправление требует ослабить Content Security Policy или trusted workspace boundary.",
+                "Закрытие modal удаляет данные задачи или меняет canonical TaskBoard v3 state.",
+                "Появляется второй visibility state вне setDetailsVisibility.",
+                "Focus fix закрывает или заменяет пользовательские editor tabs."
+              ],
+              "allowedChanges": [
+                "HTML, CSS и TypeScript webview слоя Task Details.",
+                "Extension Host reveal существующей editor-area панели.",
+                "Unit/Extension Host tests, VSIX package и доменный документ VS Code Task Board."
+              ],
+              "forbiddenChanges": [
+                "Изменение TaskBoard v3 schema, lifecycle или canonical storage.",
+                "Прямое редактирование .taskboard из webview или Extension Host.",
+                "Несвязанный редизайн доски, карточек или Task Details.",
+                "Изменение системного поведения Activity Bar вне раскрытия существующей панели."
+              ],
+              "requiredOutputs": [
+                "Author-level hidden CSS, исключающий backdrop из layout и hit-testing.",
+                "Согласованный hidden/inert/aria-hidden contract через единый visibility helper.",
+                "Явное получение editor focus при раскрытии существующей панели.",
+                "Автоматические проверки, устанавливаемый VSIX и синхронизированный доменный документ."
+              ],
+              "commands": [
+                {
+                  "commandId": "unit",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:unit"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ],
+                  "confirmation": "PolicyDecides"
+                },
+                {
+                  "commandId": "typecheck",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "typecheck"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 300,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "requestedCapabilities": [
+                    "WorkspaceRead"
+                  ],
+                  "confirmation": "PolicyDecides"
+                },
+                {
+                  "commandId": "extension-host",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "test:extension"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 900,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ],
+                  "confirmation": "PolicyDecides"
+                },
+                {
+                  "commandId": "package-vsix",
+                  "kind": "Process",
+                  "executable": "npm",
+                  "arguments": [
+                    "run",
+                    "package:vsix"
+                  ],
+                  "workingDirectory": "src/Electron2D.VsCode",
+                  "platforms": [
+                    "Any"
+                  ],
+                  "timeoutSeconds": 600,
+                  "expectedExitCodes": [
+                    0
+                  ],
+                  "requestedCapabilities": [
+                    "WorkspaceRead",
+                    "WorkspaceWrite"
+                  ],
+                  "confirmation": "PolicyDecides"
+                }
+              ],
+              "externalAudit": {
+                "mode": "None",
+                "independence": "NotRequired",
+                "instructions": null,
+                "requiredVerdicts": []
+              }
+            }
+          }
+        ],
+        "beforeTaskCoreDigest": "50a123fc12f56be8d2d2fc668e5147fd86f7940aa55ad276474da922e356c817",
+        "afterTaskCoreDigest": "6b7aca495d7eeb8469f1cf1ade07c796c34ee44953818dab2002b60619f5d981"
+      }
+    },
+    {
+      "activityEntryId": "activity-57073b8d1175481a9476aefdf89246f1",
+      "actorId": "cli",
+      "actorKind": "Cli",
+      "createdAt": "2026-07-13T21:13:12.9235578+00:00",
+      "kind": "StatusChange",
+      "payload": {
+        "previous": "Review",
+        "next": "Review",
+        "reason": "Задача принята пользователем в VS Code Task Board."
+      }
+    },
+    {
+      "activityEntryId": "activity-53db145682394f91b836a1403325734b",
+      "actorId": "vscode:eduar",
+      "actorKind": "Human",
+      "createdAt": "2026-07-13T21:13:14.1661586+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "╨Ч╨░╨┤╨░╤З╨░ ╨┐╤А╨╕╨╜╤П╤В╨░ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╨╡╨╝ ╨▓ VS Code Task Board.",
+        "authorityActorId": "vscode:eduar",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "webview-styles",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.css"
+    },
+    {
+      "linkId": "webview-runtime",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webview.ts"
+    },
+    {
+      "linkId": "webview-html",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/webviewHtml.ts"
+    },
+    {
+      "linkId": "extension-host",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/src/extension.ts"
+    },
+    {
+      "linkId": "layout-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/webview-layout.test.ts"
+    },
+    {
+      "linkId": "core-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/unit/extension-core.test.ts"
+    },
+    {
+      "linkId": "extension-tests",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/test/suite/index.ts"
+    },
+    {
+      "linkId": "editor-contract",
+      "kind": "File",
+      "value": "docs/editor/project-tasks-board.md"
+    },
+    {
+      "linkId": "packaged-vsix",
+      "kind": "File",
+      "value": "src/Electron2D.VsCode/artifacts/electron2d-taskboard.vsix"
+    }
+  ],
+  "executionContract": {
+    "taskType": "Исправление модального слоя VS Code Task Board",
+    "readyToStart": [
+      "Проблема воспроизводится в editor-area webview после открытия Task Board через Activity Bar.",
+      "Task Details использует один fullscreen aside#details поверх основной доски.",
+      "Изменение начинается с regression test, который фиксирует hidden, inert, aria-hidden и focus contract."
+    ],
+    "stopConditions": [
+      "Исправление требует ослабить Content Security Policy или trusted workspace boundary.",
+      "Закрытие modal удаляет данные задачи или меняет canonical TaskBoard v3 state.",
+      "Появляется второй visibility state вне setDetailsVisibility.",
+      "Focus fix закрывает или заменяет пользовательские editor tabs."
+    ],
+    "allowedChanges": [
+      "HTML, CSS и TypeScript webview слоя Task Details.",
+      "Extension Host reveal существующей editor-area панели.",
+      "Unit/Extension Host tests, VSIX package и доменный документ VS Code Task Board."
+    ],
+    "forbiddenChanges": [
+      "Изменение TaskBoard v3 schema, lifecycle или canonical storage.",
+      "Прямое редактирование .taskboard из webview или Extension Host.",
+      "Несвязанный редизайн доски, карточек или Task Details.",
+      "Изменение системного поведения Activity Bar вне раскрытия существующей панели."
+    ],
+    "requiredOutputs": [
+      "Author-level hidden CSS, исключающий backdrop из layout и hit-testing.",
+      "Согласованный hidden/inert/aria-hidden contract через единый visibility helper.",
+      "Явное получение editor focus при раскрытии существующей панели.",
+      "Автоматические проверки, устанавливаемый VSIX и синхронизированный доменный документ."
+    ],
+    "commands": [
+      {
+        "commandId": "unit",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:unit"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "typecheck",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "typecheck"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 300,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "extension-host",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "test:extension"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 900,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      },
+      {
+        "commandId": "package-vsix",
+        "kind": "Process",
+        "executable": "npm",
+        "arguments": [
+          "run",
+          "package:vsix"
+        ],
+        "workingDirectory": "src/Electron2D.VsCode",
+        "platforms": [
+          "Any"
+        ],
+        "timeoutSeconds": 600,
+        "expectedExitCodes": [
+          0
+        ],
+        "requestedCapabilities": [
+          "WorkspaceRead",
+          "WorkspaceWrite"
+        ],
+        "confirmation": "PolicyDecides"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [],
+  "createdAt": "2026-07-11T10:44:44.9520648+00:00",
+  "updatedAt": "2026-07-13T21:13:14.1661586+00:00",
+  "submittedAt": "2026-07-13T21:13:12.9235578+00:00",
+  "completedAt": "2026-07-13T21:13:14.1661586+00:00",
+  "acceptedAt": "2026-07-13T21:13:14.1661586+00:00",
+  "acceptedBy": "vscode:eduar",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 1,
+    "messages": [
+      {
+        "messageId": "activity-cca868517c6041e28dee214bfffee638",
+        "sequence": 1,
+        "author": {
+          "actorId": "cli",
+          "actorKind": "Cli",
+          "role": "Worker"
+        },
+        "createdAt": "2026-07-11T10:49:05.5671621+00:00",
+        "replyToMessageId": null,
+        "agentRunId": null,
+        "content": [
+          {
+            "kind": "Markdown",
+            "markdown": "Причина: fullscreen .details имел display:grid без author-level hidden override и мог оставаться hit-test backdrop без окна. Добавлены .details[hidden] display:none!important + pointer-events:none!important, initial inert/aria-hidden, единый setDetailsVisibility и explicit reveal(ViewColumn.Active,false). RED 22/25 → GREEN 25/25; typecheck GREEN; Extension Host exit 0. VSIX 9 files/17.54 KB установлен в stable VS Code 0.1.0. Docs update/check/verify и licenses GREEN. Visual control недоступен: Windows kernel assets os error 3."
+          }
+        ]
+      }
+    ],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

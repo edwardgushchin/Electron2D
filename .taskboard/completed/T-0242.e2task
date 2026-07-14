@@ -1,0 +1,1029 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-3cc45b57159de74d7d17b92f2d25a107",
+  "revision": 2,
+  "taskId": "T-0242",
+  "legacyAliases": [],
+  "title": "Подготовить матрицу API и генератор документации публичного API",
+  "description": "## T-0242 [x] P0: Подготовить матрицу API и генератор документации публичного API\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: accepted/closed\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0241\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/release-management/api-compatibility.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - `docs/release-management/api-compatibility.md`\n  - `data/api/godot-4.7/classes/*.api.json` and `data/api/electron2d/classes/*.api.json`\n  - `data/api/godot-4.7/index/classes.json` and `data/api/electron2d/index/classes.json`\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\nЗадача относится к подготовке полного публичного API Electron2D 0.1-preview, совместимого с Godot 4.7. Матрица API должна хранить машиночитаемое описание публичной поверхности Godot 4.7 и Electron2D: классы, элементы API, перегрузки, ссылки документации, наследование, сигналы, перечисления и константы.\n\nОжидаемый результат: генератор создаёт воспроизводимые описания API из закреплённых источников, чтобы задачи по классам не сравнивали справку Godot вручную и не переписывали списки методов в `TASKS.md`.\n\n### Сгенерированные файлы, за которые отвечает T-0242\n`T-0242` отвечает за генерацию статических описаний публичной поверхности API. Эти файлы создаются инструментами репозитория и не редактируются вручную:\n\n- `data/api/godot-4.7/classes/<ClassName>.api.json`\n- `data/api/electron2d/classes/<ClassName>.api.json`\n- `data/api/godot-4.7/index/classes.json`\n- `data/api/electron2d/index/classes.json`\n\nИсточник истины для описаний Godot закреплён на `4.7-stable` и включает `doc/classes/*.xml`, `extension_api.json`, если он используется, и сгенерированный снимок C# API, если он доступен или строится инструментом.\n\nГенератор не создаёт per-class Markdown рядом с JSON. Любые stale `*.api.md` в `data/api/godot-4.7/classes/` или `data/api/electron2d/classes/` считаются лишним generated artifact и должны приводить `api generate-class-packets --check` к отказу.\n\nElectron2D-side projection использует нормальные публичные C#-имена: callback methods отображаются без ведущего Godot `_` (`Draw`, `Process`, `PhysicsProcess` и т.п.), а enum-типы отображаются без технического суффикса `Enum` (`TextureRect.StretchMode`, а не `TextureRect.StretchModeEnum`). Raw `xmlDocId` сохраняет исходное имя для связи с кодом и XML documentation.\n\n### Команды инструмента, за которые отвечает T-0242\n\n- `dotnet run --project eng/Electron2D.Build -- api fetch-godot --version 4.7-stable`\n- `dotnet run --project eng/Electron2D.Build -- api generate-matrix`\n- `dotnet run --project eng/Electron2D.Build -- api generate-class-packets`\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [x] Доменный документ описывает закреплённые входные данные Godot `4.7-stable`, модель публичного API Electron2D, схему сгенерированного описания, контракт воспроизводимой генерации и запрет ручного редактирования.\n- [x] `api generate-class-packets` детерминированно пересоздаёт описания по каждому классу из закреплённых входных данных Godot 4.7 и модель публичного API Electron2D.\n- [x] Генератор читает официальные XML-описания классов Godot или утверждённый экспорт API, а не вручную скопированные страницы справки.\n- [x] Генератор извлекает имя класса, наследование, конструкторы, свойства, методы, сигналы, перечисления, констант, операторы, виртуальные точки расширения, ссылки документации и правила имён и перегрузок C# в машиночитаемые описания.\n- [x] Генератор извлекает публичный API Electron2D из исходного кода или сборки, а не из текста задач.\n- [x] Сгенерированные описания содержат всю публичную поверхность, но `TASKS.md` и доменные документы не дублируют вручную списки элементов API.\n- [x] Проверка матрицы API падает, если сгенерированные описания устарели.\n- [x] Инструмент возвращает устойчивые диагностические сообщения для недоступных входных данных Godot, повреждённых XML/JSON, несовместимых снимков C# API и устаревших сгенерированных файлов.\n- [x] Документация, манифест API и заметки задачи синхронизированы с фактическими сгенерированными файлами и командами генерации.\n\n### Подзадачи\n\n- [x] Зафиксировать схему сгенерированных описаний API и правило закрепления входных данных в доменном документе.\n- [x] Добавить сначала падающие проверки на отсутствие генерации описаний, устаревших сгенерированных файлов и ручные правки.\n- [x] Реализовать команды генератора в `eng/Electron2D.Build`.\n- [x] Добавить проверки воспроизводимости результата и тестовые наборы устойчивых диагностических сообщений.\n- [x] Обновить документацию, сгенерированные файлы и заметки задачи и запустить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n2026-07-06T15:40:00+03:00 - Primary r02 package создан штатной командой `audit package` и clean-verified с operator workflow timeout `600` секунд; `api generate-class-packets --check` внутри пакета подтверждает JSON-only output и отсутствие stale `*.api.md`. Повторная отправка через `--reuse-conversation` невозможна, потому `.temp/audit/T-0242/conversation-url.txt` отсутствует после восстановления `.temp`; r02 будет отправлен штатным аварийным режимом `--new-conversation`, а r01 verdict и blocker closure остаются включены в ZIP через `previousVerdictChain` и `blockerClosureList`.\n\n2026-07-06T16:25:00+03:00 - Primary r02 вернул `VERDICT: NEEDS_FIXES` с blocker-ами `B1`-`B3`. Исправления подготовлены для r03: Electron2D class packets теперь заполняют `virtualMethods` из raw underscored runtime hook `xmlDocId`, `api fetch-godot` сохраняет и валидирует входной `csharp_api.json` и синтезирует fallback только при его отсутствии, случайные изменения статусов `T-0104`/`T-0174` убраны, а timeout operator workflow оформлен отдельной явной задачей `T-0984` для combined scope. Локально прошли focused API tests `6/6`, focused sidecar timeout test `1/1`, `api generate-class-packets --check`, `api generate-matrix --check`, docs/API/public docs/license/audit-followups verifiers и `git diff --check`.\n\n2026-07-06T16:45:00+03:00 - Первая r03 package attempt остановилась до создания ZIP на `E2D-BUILD-AUDIT-SECRET-DETECTED` из-за reviewer placeholder `pass` внутри Markdown code span с поясняющим suffix в сохранённом r02 verdict. Добавлена отдельная явная scope-задача `T-0985`: previous verdict reports из `previousVerdictChain` сохраняются дословно, focused tests подтверждают, что такой placeholder разрешён только в previous verdict context, а task-owned файл с тем же значением остаётся отказом.\n\n2026-07-06T17:45:00+03:00 - Primary r03 вернул `VERDICT: NEEDS_FIXES` с одним blocker `B1`: Electron2D class packets не заполняли типизированные секции `operators` и `constants` для public C# operators и public `const` fields. Исправление подготовлено для r04: manifest generator теперь классифицирует `op_*` как `Operator`, public `const` fields как `Constant`, class packet generator нормализует legacy manifest entries `Method op_*`/`Field public const`, а focused API tests проверяют Electron2D `Vector2.operators`, `Mathf.constants` и `ResourceUid.constants`. Локально прошли focused API tests `6/6`, `api generate-class-packets --check`, `api generate-matrix --check`, `update api-manifest --check --wiki-path .github/wiki`, `update docs --check` и `update wiki --check --output .github/wiki`; r04 package должен включить `audit-loop-stabilization`, потому `previousVerdictChain` будет содержать r01-r03.\n\n2026-07-06T17:53:00+03:00 - Первая r04 package attempt остановилась до создания ZIP на `E2D-BUILD-AUDIT-SECRET-DETECTED` из-за той же исторической `password/pass` code span цитаты в saved r03 verdict с новым reviewer suffix. `T-0985` уточнён: previous verdict matcher теперь разрешает `pass` с reviewer prose suffix после закрывающей обратной кавычки только для `previousVerdictChain`; focused previous verdict/task-owned tests прошли `2/2`.\n\n2026-07-06T18:32:00+03:00 - Primary r04 создан штатной командой и отправлен через `audit submit --reuse-conversation`, но вернул `VERDICT: NEEDS_FIXES`. Новые blocker-и: `B1` по слишком широкому previous-verdict Markdown code span matcher для `T-0985` и `B2` по отсутствующим `value` у Electron2D `constants`/`enum values` в class packets. r05 scope должен исправить только эти два пункта, добавить RED/GREEN tests, обновить generated artifacts и снова включить `audit-loop-stabilization`.\n\n2026-07-06T18:47:00+03:00 - r05 local fixes готовы для обоих blocker-ов: `ApiManifestGenerator` извлекает `value` public `const` fields и enum values через reflection/invariant culture, `ApiMatrixCommand` переносит это значение в typed `constants`, а `AuditPackageCommand` больше не разрешает произвольный suffix после `pass` code span в previous verdict. Focused RED/GREEN tests прошли: API/scanner set `4/4`, scanner positive/negative set `3/3`; `api generate-class-packets --check`, `api generate-matrix --check`, `update api-manifest --check --wiki-path .github/wiki`, `update docs --check` и `update wiki --check --output .github/wiki` прошли.\n\n2026-07-06T18:56:00+03:00 - По решению пользователя r04 `FOLLOW_UP_FINDING F1` закрывается в текущем `T-0242`: public static readonly/static get-only predefined value singletons (`Vector2.Zero`, `Vector2.One`, `Color.White` и похожие значения) сохраняют .NET-style ABI `Field`/`Property` в manifest `members`, но generated compatibility packets дополнительно помещают их в typed `constants` со стабильным строковым `value`. Focused API tests подтвердили `Vector2.Zero`, `Vector2.One` и `Color.White`; пользователь также подтвердил закрывающий критерий r01 `F1` по Godot docs links, и `rg 'en/stable|/stable/' data/api/godot-4.7/classes` не нашёл mutable links.\n\n2026-07-06T18:59:00+03:00 - После r05 fixes прошли локальные проверки перед packaging: build tool build, focused API tests `3/3`, focused scanner tests `3/3`, `api generate-class-packets --check`, `api generate-matrix --check`, `update api-manifest --check --wiki-path .github/wiki`, `update docs --check`, `verify docs`, `update wiki --check --output .github/wiki`, `verify api-compatibility --wiki-path .github/wiki`, `verify ui-public-api-gate --wiki-path .github/wiki`, `verify public-api-documentation --wiki-path .github/wiki`, `verify licenses`, `verify audit-contracts`, `verify audit-followups` и `git diff --check`.\n\n2026-07-06T19:04:00+03:00 - r05 preflight evidence обновлён: focused API generator tests, previous-verdict placeholder tests с новым unsafe suffix regression, timeout sidecar test и audit-loop-stabilization завершились exitCode `0`; evidence scan не нашёл локальные Windows paths. Создан r05 config с `previousVerdictChain` r01-r04, closure entries для r04 `B1`/`B2`, checks `godot-docs-no-stable-links` и `electron2d-packets-no-documentation-url`.\n\n2026-07-06T19:06:00+03:00 - Первый r05 package attempt остановился до создания ZIP на `E2D-BUILD-AUDIT-SECRET-DETECTED` в рабочем дневнике из-за дословного служебного описания reviewer placeholder. Это process-history artifact, не реализация и не доказательство поведения, поэтому r05 config сужен: `data/dev-diary/**` исключён из `repoFileGlobs`, а `TASKS.md` остаётся в payload как task ledger.\n\n2026-07-06T19:17:00+03:00 - Второй r05 package attempt остановился до создания ZIP на saved r03 verdict из `previousVerdictChain`. `T-0985` сужен без общего suffix matcher: добавлены только точные нормализованные historical reviewer placeholder values, focused scanner suite прошёл `3/3`, `audit-loop-stabilization` evidence обновлён, `git diff --check` чистый.\n\n2026-07-06T19:47:00+03:00 - Primary r05 создан и отправлен штатным `audit submit --reuse-conversation`; verdict сохранён как `NEEDS_FIXES` с одним blocker `B1`: existing `csharp_api.json` оставался permissive для duplicate class names, conflicting member binding projections и loose parameter-insensitive member resolution.\n\n2026-07-06T19:55:00+03:00 - r05 `B1` исправлен через RED/GREEN: доменный документ требует fail-closed C# snapshot semantics; добавлены negative tests для duplicate classes, conflicting `kind + godotName + parameter types` member bindings и parameter-mismatch loose match; `ApiMatrixCommand` теперь отвергает такие snapshots кодом `E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID` и при наличии snapshot не подставляет synthetic member fallback. Прошли focused API tests `7/7`, `api fetch-godot --version 4.7-stable`, `api generate-class-packets --check`, `api generate-matrix --check` и `update docs --check`.\n\n2026-07-06T20:05:00+03:00 - r06 preflight и verification corridor готовы: `rg 'en/stable|/stable/' data/api/godot-4.7/classes` и `rg '\"documentationUrl\"' data/api/electron2d/classes` вернули no matches; прошли `api generate-class-packets --check`, `api generate-matrix --check`, `update api-manifest --check --wiki-path .github/wiki`, `update docs --check`, `verify docs`, `update wiki --check --output .github/wiki`, `verify api-compatibility --wiki-path .github/wiki`, `verify ui-public-api-gate --wiki-path .github/wiki`, `verify public-api-documentation --wiki-path .github/wiki`, `verify licenses`, `verify audit-contracts`, `verify audit-followups` и `git diff --check`. Все четыре preflight evidence runs завершились exitCode `0`; stdout/stderr санитизированы от локального workspace path; `.temp/audit/T-0242/audit-package.r06.input.json` включает previous chain r01-r05 и closure для r05 `B1`.\n\n2026-07-06T20:29:00+03:00 - Primary r06 создан и отправлен штатным `audit submit --reuse-conversation`; verdict сохранён как `NEEDS_FIXES` с blocker-ами `B1`/`B2`. Исправления для r07: `csharp_api.json` должен fail-closed отклонять duplicate/empty `csharpName` и duplicate C# member projection identities; `Required outputs` в этой карточке синхронизированы с фактическим доменным документом и generated API artifacts. r06 `FOLLOW_UP_FINDING F1` по будущему сопоставлению Godot enum groups с Electron2D enum-type packets вынесен в `T-0986`.\n\n2026-07-06T20:38:00+03:00 - r06 `B1`/`B2` исправлены через RED/GREEN: добавлены negative tests для duplicate `csharpName`, blank `csharpName`, duplicate output class identity и duplicate C# member projection identity; `ApiMatrixCommand` теперь отклоняет эти cases кодом `E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID`. `Required outputs` у `T-0242` заменены на фактический `docs/release-management/api-compatibility.md` и generated API artifacts. Прошли focused API tests `11/11`, build tool build, `api fetch-godot`, `api generate-class-packets --check`, `api generate-matrix --check`, `update docs --check`, `verify docs`, `verify audit-followups`, `verify audit-contracts`, `verify licenses` и `git diff --check`.\n\n2026-07-06T20:44:00+03:00 - r07 preflight evidence обновлён после r06 fixes: focused API generator tests, timeout sidecar test, previous-verdict placeholder tests и audit-loop-stabilization завершились exitCode `0`; stdout/stderr санитизированы от локального workspace path. Создан `.temp/audit/T-0242/audit-package.r07.input.json` с previous verdict chain r01-r06, 12 blocker closure entries и task-only scope `T-0986` для tracked r06 `FOLLOW_UP_FINDING F1`; `git diff --check` чистый.\n\n2026-07-06T20:47:00+03:00 - Первая r07 package attempt остановилась до ZIP на secret scan saved r06 verdict из-за новой historical reviewer placeholder phrase. `T-0985` остаётся previous-verdict-only: allowlist расширяется только точным нормализованным значением из saved verdict, task-owned и arbitrary suffix regressions сохраняются. По решению пользователя r06 `FOLLOW_UP_FINDING F1` уточнён: Electron2D enum-type packet является canonical representation, parent class `enums: []` допустим, а cross-shape enum comparison принадлежит `T-0243`/`T-0986`.\n\n2026-07-06T21:38:00+03:00 - Primary r07 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: generated output path строился из непроверенного `csharpName`/class projection identity. Исправление подготовлено для r08 через RED/GREEN: добавлены negative tests для `../Escaped`, `../../../../Escaped`, `A/B`, `A\\B`, leading/trailing whitespace, `A..B`, unsafe fallback XML class name и generation traversal; `ApiMatrixCommand` теперь валидирует safe class identity, отвергает unsafe `csharp_api.json` кодом `E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID`, unsafe XML source кодом `E2D-BUILD-API-GODOT-SOURCE-INVALID` и canonicalizes каждый generated output path внутри разрешённых `data/api/**/classes|index` директорий. Прошли new unsafe tests `10/10`, focused API tests `21/21`, build tool build, `api fetch-godot`, `api generate-class-packets --check`, `api generate-matrix --check`, docs/wiki/API/public docs/audit/license verifiers и `git diff --check`.\n\n2026-07-06T22:24:00+03:00 - Primary r08 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: synthetic Godot C# snapshot записывал raw XML/inspector properties вроде `voice/1/cutoff_hz`, `stream_{index}/stream`, `point_{index}/in` и settings paths как невозможные C# member names/signatures. Исправление подготовлено для r09 через RED/GREEN: synthetic snapshot теперь пропускает unmappable raw XML properties, class packets сохраняют их в отдельной `rawMembers` секции, existing `csharp_api.json` с unsafe `member.name`/`signature` отклоняется `E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID`, а generated Godot packets больше не содержат `Voice/1/cutoffHz`, `Stream{index}/stream`, `Point{index}/in` или `Debug/gdscript/warnings/unsafeCallArgument` в C# `members`. Прошли focused raw-member tests `3/3`, focused API tests `24/24`, build tool build, `api fetch-godot`, `api generate-class-packets`, `api generate-matrix`, оба `--check`, docs/wiki/API/public docs/audit/license verifiers, smoke `rg` checks и `git diff --check`.\n\n2026-07-06T23:16:00+03:00 - Primary r09 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: generated Godot/Electron2D signatures содержали unescaped C# keyword parameter names (`base`, `class`, `enum`, `default`, `in`, `out`, `checked`, `object`). Исправление подготовлено для r10: `ApiMatrixCommand` экранирует keyword parameters в Godot synthetic snapshot и отклоняет existing `csharp_api.json` с unescaped keyword parameter projection, `ApiManifestGenerator` экранирует Electron2D reflection parameter names, generated packets пересобраны, а canonical manifest снова использует стабильный `.github/wiki/API-Compatibility.md` вместо временного `.temp/api-wiki/check-wiki`. По решению пользователя по r06 enum values в Electron2D enum-type packets дополнительно получили typed `constants.kind = \"EnumValue\"` при numeric `value`; parent class `enums: []` остаётся допустимым и не дублирует values. Прошли focused API tests `29/29`, build tool build, `update api-manifest --wiki-path .github/wiki --check`, `api generate-class-packets --check`, `api generate-matrix --check`, `update docs --check`, `verify docs`, `update wiki --check`, `verify api-compatibility --wiki-path .github/wiki`, `verify ui-public-api-gate --wiki-path .github/wiki`, `verify public-api-documentation --wiki-path .github/wiki`, `verify audit-followups`, `verify audit-contracts`, `verify licenses`, targeted smoke checks по `.api.md`/`_Draw`/`*Enum`/`/stable/`/keyword params/docs URL и `git diff --check`.\n\n2026-07-06T23:29:00+03:00 - r10 preflight evidence обновлён и r10 package создан штатной командой `audit package` без `--force`. Config `.temp/audit/T-0242/audit-package.r10.input.json` включает previous verdict chain r01-r09, closure для r09 `B1` и check `api-signatures-no-unescaped-keyword-parameters`; preflight evidence прошёл focused API `29/29`, timeout sidecar `1/1`, previous-verdict placeholder `3/3`, audit-loop stabilization `33/33`, path scan no matches. `audit package` прогнал 19 configured checks, создал `.temp/audit/T-0242-audit-r10.zip` и `.temp/audit/T-0242-audit-r10.operator-workflow.zip`; operator workflow summary: `audit-package-verify` exitCode `0`, duration ~136.6s, timeout `600`.\n\n2026-07-06T23:59:00+03:00 - Primary r10 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: reflection-based GitHub Wiki/public API renderer в `ApiWikiCommand` всё ещё строил signatures напрямую из `ParameterInfo.Name`, поэтому `.github/wiki/PopupMenu.md` и `.github/wiki/Tween.md` могли содержать `System.Boolean checked` и `Electron2D.Object object`, хотя `data/api` и manifest уже были исправлены. Исправление подготовлено для r11: добавлен RED/GREEN test `WikiReflectionRendererEscapesCSharpKeywordParameterNames` через reflection на private `ApiWikiCommand.MethodSignature`, `RepositoryPolicyVerifiers.cs` экранирует C# keyword parameter names в wiki renderer, `.github/wiki` пересобран, extended scan по `data/api/**` и `.github/wiki` больше не находит unescaped keyword signatures, а `update wiki --check --output .github/wiki`, `verify public-api-documentation`, manifest/class-packets/matrix/docs/API/audit/license/whitespace checks прошли.\n\n2026-07-07T00:15:00+03:00 - r11 preflight evidence и package готовы: preflight прошёл focused API `29/29`, wiki renderer regression `1/1`, timeout sidecar `1/1`, previous-verdict placeholder `3/3`, audit-loop stabilization `34/34`, path scan no matches. Config `.temp/audit/T-0242/audit-package.r11.input.json` включает previous verdict chain r01-r10, closure для r10 `B1`, preflight `wiki-reflection-renderer-test` и check `public-api-signatures-no-unescaped-keyword-parameters` по `data/api/**` + `.github/wiki`. `audit package` прогнал 20 configured checks, создал `.temp/audit/T-0242-audit-r11.zip` и `.temp/audit/T-0242-audit-r11.operator-workflow.zip`; operator workflow summary: `audit-package-verify` exitCode `0`, duration ~122.5s, timeout `600`.\n\n2026-07-07T00:38:00+03:00 - Primary r11 вернул `VERDICT: ACCEPT`, после чего собран clean-control ZIP `.temp/audit-control/T-0242-audit-r11.zip` с пустыми `previousVerdictChain`/`blockerClosureList`, без `TASKS.md`, `data/dev-diary/**` и `docs/verdicts/**` в repo model. Control package прошёл 19 configured checks и operator workflow sidecar: `audit-package-message` exitCode `0`, `audit-package-verify` exitCode `0`, duration ~146.0s, timeout `600`.\n\n2026-07-07T01:14:03+03:00 - Control r11 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: `WindowsAbsolutePathPattern` слишком широко маскировал документационные фрагменты `n: int`, `var x: int`, `X:Y` как `<windows-absolute-path>`. Исправление подготовлено для r12 через RED/GREEN: `ApiGenerateClassPacketsMasksWindowsPathsWithoutCorruptingDocumentationPunctuation` сначала падал на `range(<windows-absolute-path> int)`, затем прошёл после сужения regex до real drive-root path вида drive letter + slash/backslash; Godot class packets регенерированы и больше сохраняют ложные markers в `@GDScript`, `ProjectSettings`, `Projection`. Primary r11 `FOLLOW_UP_FINDING F1` по `op_*` operator representation перенесён в `T-0987` по решению пользователя; control r11 `FOLLOW_UP_FINDING F1` по zip extraction hardening перенесён в `T-0988`.\n\n2026-07-07T10:22:21+03:00 - Primary r12 сохранён как `VERDICT: NEEDS_FIXES` с blocker `B1`: path masking больше не портит `range(n: int)`, `var x: int = 1`, `X:Y` и JSON-escaped `D:\"`, но ещё ломал Godot BBCode для drive-root examples и частично маскировал Windows paths с пробелами, оставляя хвосты `Files\\...`. Исправление подготовлено для r13: `NormalizeDocumentation` заменён на tokenizer Windows path tokens, focused generator test расширен на `[code]<windows-absolute-path>[/code]`, path segments `Program Files`/`Program Files (x86)`, punctuation `D:\"` и проверку отсутствия broken `<windows-absolute-path> Files`; Godot class packets регенерированы, artifact scan больше не находит broken placeholder forms. По уточнению пользователя r13 submit должен использовать explicit control conversation URL из `.temp/audit/T-0242/control-conversation-url.txt`, а не stable primary `.temp/audit/T-0242/conversation-url.txt`.\n\n2026-07-07T10:46:00+03:00 - Primary r13 отправлен в explicit control conversation URL и вернул `VERDICT: ACCEPT`. Следующий обязательный шаг по регламенту - clean-control audit r13 с пустыми `previousVerdictChain`/`blockerClosureList`, без `TASKS.md`, `data/dev-diary/**` и `docs/verdicts/**` в repo model. r13 `FOLLOW_UP_FINDING F1` повторно указывает на zip extraction containment hardening и закрывается как `tracked-existing` через `T-0988`.\n\n2026-07-07T11:25:50+03:00 - Clean-control r13 вернул `VERDICT: NEEDS_FIXES` с blocker-ами `B1`/`B2`. Исправления подготовлены для r14: для `B1` audit package scanner больше не разрешает standalone secret-like value `pass` в previous verdict context, а focused tests разделяют допустимые полные historical reviewer phrases и запрещённую bare строку с password-like ключом и значением `pass`; для `B2` reflection-based Wiki/public API renderer добавляет `public static` к static properties, а regression проверяет `RenderingServer.CurrentProfile`. Прошли targeted tests `6/6`, `update wiki --check`, `verify public-api-documentation`, `update docs --check` и `verify docs`.\n\n2026-07-07T11:44:00+03:00 - r14 config `.temp/audit/T-0242/audit-package.r14.input.json` подготовлен для отправки в explicit control conversation: previous verdict chain включает r01-r13 + control r11/control r13, `blockerClosureList` закрывает control r13 `B1` exact full-line previous-verdict reviewer matching и `B2` static property signature rendering. Preflight evidence обновлён после `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`; `verify audit-contracts`, `update docs --check`, `verify docs` и `git diff --check` прошли.\n\n2026-07-07T12:13:00+03:00 - Primary r14 отправлен в explicit control conversation URL и вернул `VERDICT: ACCEPT`. Архив `.temp/audit/T-0242-audit-r14.zip` прошёл 21 configured check и operator workflow sidecar; auditor подтвердил closure для control r13 `B1`/`B2`.\n\n2026-07-07T12:47:00+03:00 - Clean-control r14 `.temp/audit-control/T-0242-audit-r14.zip` с пустыми `previousVerdictChain`/`blockerClosureList` вернул `VERDICT: ACCEPT`. Единственный `FOLLOW_UP_FINDING F1` по terminal Windows path masking со spaced segments перенесён в `T-0989` как P3 hardening debt и не блокирует закрытие текущего T-0242 package.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0242-audit-r01.md\n- id: F1\n- state: tracked-existing\n- target: T-0242\n- rationale: finding закрыт в текущей реализации T-0242: generated Godot `documentationUrl` использует версионированный `/en/4.7/`, summaries нормализуют Godot docs links с `/en/stable/` на `/en/4.7/`, focused tests проверяют URL, а `rg 'en/stable|/stable/' data/api/godot-4.7/classes` не находит mutable docs links в generated packets.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0242-audit-r04.md\n- id: F1\n- state: tracked-existing\n- target: T-0242\n- rationale: finding закрыт в текущей реализации T-0242: public static readonly/static get-only value singletons остаются .NET-style `Field`/`Property` в ABI manifest, но `api generate-class-packets` классифицирует self-typed static value entries с `value` как semantic compatibility `constants`; focused tests проверяют `Vector2.Zero`, `Vector2.One` и `Color.White`, а generated packets содержат эти элементы в typed `constants`.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0242-audit-r11.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-new\n- target: T-0987\n- rationale: primary r11 finding не меняет canonical Electron2D packets: по решению пользователя Electron2D-side API packets сохраняют reflection/ABI operator names `op_Addition`, `op_Division`, `op_Equality` и похожие entries, а `T-0987` отслеживает future `T-0243` semantic normalization layer для сопоставления с Godot source-style `operator +`, `operator /`, `operator ==`.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0242-audit-control-r11.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-new\n- target: T-0988\n- rationale: control r11 finding является hardening-долгом build tooling, а не blocker текущих generated packets; `T-0988` отслеживает canonical containment validation для zip entries в `api fetch-godot` перед строгим доведением этого пути.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0242-audit-r13.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-existing\n- target: T-0988\n- rationale: primary r13 finding повторяет уже заведённый build-tool hardening debt: `T-0988` покрывает canonical containment validation для zip entries в `api fetch-godot`; r13 auditor явно подтвердил, что это не blocker текущих generated API packets и остаётся отдельной P2-задачей.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0242-audit-control-r14.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-new\n- target: T-0989\n- rationale: clean-control r14 finding является P3 hardening-долгом Windows path masking для terminal spaced segments, а не blocker текущих generated Godot 4.7 packets; `T-0989` отслеживает отдельный focused regression и tightening без расширения принятого T-0242 scope.\n\n### Архивное закрытие\n\n- 2026-07-07T12:55:00+03:00 - Primary r14 и clean-control r14 сохранены как `VERDICT: ACCEPT`; actionable `RISKS_AND_NOTES` закрыты через `T-0989`; задача удалена из активного `TASKS.md` и перенесена в июльский архив по goal contract.\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P0",
+  "tagIds": [
+    "tag-0012",
+    "tag-0015",
+    "tag-0018"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-b892bc8650e54fd05773e55874522370"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Доменный документ описывает закреплённые входные данные Godot `4.7-stable`, модель публичного API Electron2D, схему сгенерированного описания, контракт воспроизводимой генерации и запрет ручного редактирования.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-3cc45b57159de74d7d17b92f2d25a107/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "`api generate-class-packets` детерминированно пересоздаёт описания по каждому классу из закреплённых входных данных Godot 4.7 и модель публичного API Electron2D.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-3cc45b57159de74d7d17b92f2d25a107/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Генератор читает официальные XML-описания классов Godot или утверждённый экспорт API, а не вручную скопированные страницы справки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-3cc45b57159de74d7d17b92f2d25a107/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Генератор извлекает имя класса, наследование, конструкторы, свойства, методы, сигналы, перечисления, констант, операторы, виртуальные точки расширения, ссылки документации и правила имён и перегрузок C# в машиночитаемые описания.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-3cc45b57159de74d7d17b92f2d25a107/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Генератор извлекает публичный API Electron2D из исходного кода или сборки, а не из текста задач.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-3cc45b57159de74d7d17b92f2d25a107/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Сгенерированные описания содержат всю публичную поверхность, но `TASKS.md` и доменные документы не дублируют вручную списки элементов API.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-3cc45b57159de74d7d17b92f2d25a107/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Проверка матрицы API падает, если сгенерированные описания устарели.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-3cc45b57159de74d7d17b92f2d25a107/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Инструмент возвращает устойчивые диагностические сообщения для недоступных входных данных Godot, повреждённых XML/JSON, несовместимых снимков C# API и устаревших сгенерированных файлов.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-3cc45b57159de74d7d17b92f2d25a107/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Документация, манифест API и заметки задачи синхронизированы с фактическими сгенерированными файлами и командами генерации.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-3cc45b57159de74d7d17b92f2d25a107/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T12:40:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r02 package создан штатной командой `audit package` и clean-verified с operator workflow timeout `600` секунд; `api generate-class-packets --check` внутри пакета подтверждает JSON-only output и отсутствие stale `*.api.md`. Повторная отправка через `--reuse-conversation` невозможна, потому `.temp/audit/T-0242/conversation-url.txt` отсутствует после восстановления `.temp`; r02 будет отправлен штатным аварийным режимом `--new-conversation`, а r01 verdict и blocker closure остаются включены в ZIP через `previousVerdictChain` и `blockerClosureList`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T13:25:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r02 вернул `VERDICT: NEEDS_FIXES` с blocker-ами `B1`-`B3`. Исправления подготовлены для r03: Electron2D class packets теперь заполняют `virtualMethods` из raw underscored runtime hook `xmlDocId`, `api fetch-godot` сохраняет и валидирует входной `csharp_api.json` и синтезирует fallback только при его отсутствии, случайные изменения статусов `T-0104`/`T-0174` убраны, а timeout operator workflow оформлен отдельной явной задачей `T-0984` для combined scope. Локально прошли focused API tests `6/6`, focused sidecar timeout test `1/1`, `api generate-class-packets --check`, `api generate-matrix --check`, docs/API/public docs/license/audit-followups verifiers и `git diff --check`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T13:45:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Первая r03 package attempt остановилась до создания ZIP на `E2D-BUILD-AUDIT-SECRET-DETECTED` из-за reviewer placeholder `pass` внутри Markdown code span с поясняющим suffix в сохранённом r02 verdict. Добавлена отдельная явная scope-задача `T-0985`: previous verdict reports из `previousVerdictChain` сохраняются дословно, focused tests подтверждают, что такой placeholder разрешён только в previous verdict context, а task-owned файл с тем же значением остаётся отказом."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T14:45:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r03 вернул `VERDICT: NEEDS_FIXES` с одним blocker `B1`: Electron2D class packets не заполняли типизированные секции `operators` и `constants` для public C# operators и public `const` fields. Исправление подготовлено для r04: manifest generator теперь классифицирует `op_*` как `Operator`, public `const` fields как `Constant`, class packet generator нормализует legacy manifest entries `Method op_*`/`Field public const`, а focused API tests проверяют Electron2D `Vector2.operators`, `Mathf.constants` и `ResourceUid.constants`. Локально прошли focused API tests `6/6`, `api generate-class-packets --check`, `api generate-matrix --check`, `update api-manifest --check --wiki-path .github/wiki`, `update docs --check` и `update wiki --check --output .github/wiki`; r04 package должен включить `audit-loop-stabilization`, потому `previousVerdictChain` будет содержать r01-r03."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0006",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T14:53:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Первая r04 package attempt остановилась до создания ZIP на `E2D-BUILD-AUDIT-SECRET-DETECTED` из-за той же исторической `password/pass` code span цитаты в saved r03 verdict с новым reviewer suffix. `T-0985` уточнён: previous verdict matcher теперь разрешает `pass` с reviewer prose suffix после закрывающей обратной кавычки только для `previousVerdictChain`; focused previous verdict/task-owned tests прошли `2/2`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0007",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T15:32:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r04 создан штатной командой и отправлен через `audit submit --reuse-conversation`, но вернул `VERDICT: NEEDS_FIXES`. Новые blocker-и: `B1` по слишком широкому previous-verdict Markdown code span matcher для `T-0985` и `B2` по отсутствующим `value` у Electron2D `constants`/`enum values` в class packets. r05 scope должен исправить только эти два пункта, добавить RED/GREEN tests, обновить generated artifacts и снова включить `audit-loop-stabilization`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0008",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T15:47:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "r05 local fixes готовы для обоих blocker-ов: `ApiManifestGenerator` извлекает `value` public `const` fields и enum values через reflection/invariant culture, `ApiMatrixCommand` переносит это значение в typed `constants`, а `AuditPackageCommand` больше не разрешает произвольный suffix после `pass` code span в previous verdict. Focused RED/GREEN tests прошли: API/scanner set `4/4`, scanner positive/negative set `3/3`; `api generate-class-packets --check`, `api generate-matrix --check`, `update api-manifest --check --wiki-path .github/wiki`, `update docs --check` и `update wiki --check --output .github/wiki` прошли."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0009",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T15:56:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "По решению пользователя r04 `FOLLOW_UP_FINDING F1` закрывается в текущем `T-0242`: public static readonly/static get-only predefined value singletons (`Vector2.Zero`, `Vector2.One`, `Color.White` и похожие значения) сохраняют .NET-style ABI `Field`/`Property` в manifest `members`, но generated compatibility packets дополнительно помещают их в typed `constants` со стабильным строковым `value`. Focused API tests подтвердили `Vector2.Zero`, `Vector2.One` и `Color.White`; пользователь также подтвердил закрывающий критерий r01 `F1` по Godot docs links, и `rg 'en/stable|/stable/' data/api/godot-4.7/classes` не нашёл mutable links."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0010",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T15:59:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "После r05 fixes прошли локальные проверки перед packaging: build tool build, focused API tests `3/3`, focused scanner tests `3/3`, `api generate-class-packets --check`, `api generate-matrix --check`, `update api-manifest --check --wiki-path .github/wiki`, `update docs --check`, `verify docs`, `update wiki --check --output .github/wiki`, `verify api-compatibility --wiki-path .github/wiki`, `verify ui-public-api-gate --wiki-path .github/wiki`, `verify public-api-documentation --wiki-path .github/wiki`, `verify licenses`, `verify audit-contracts`, `verify audit-followups` и `git diff --check`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0011",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T16:04:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "r05 preflight evidence обновлён: focused API generator tests, previous-verdict placeholder tests с новым unsafe suffix regression, timeout sidecar test и audit-loop-stabilization завершились exitCode `0`; evidence scan не нашёл локальные Windows paths. Создан r05 config с `previousVerdictChain` r01-r04, closure entries для r04 `B1`/`B2`, checks `godot-docs-no-stable-links` и `electron2d-packets-no-documentation-url`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0012",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T16:06:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Первый r05 package attempt остановился до создания ZIP на `E2D-BUILD-AUDIT-SECRET-DETECTED` в рабочем дневнике из-за дословного служебного описания reviewer placeholder. Это process-history artifact, не реализация и не доказательство поведения, поэтому r05 config сужен: `data/dev-diary/**` исключён из `repoFileGlobs`, а `TASKS.md` остаётся в payload как task ledger."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0013",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T16:17:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Второй r05 package attempt остановился до создания ZIP на saved r03 verdict из `previousVerdictChain`. `T-0985` сужен без общего suffix matcher: добавлены только точные нормализованные historical reviewer placeholder values, focused scanner suite прошёл `3/3`, `audit-loop-stabilization` evidence обновлён, `git diff --check` чистый."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0014",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T16:47:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r05 создан и отправлен штатным `audit submit --reuse-conversation`; verdict сохранён как `NEEDS_FIXES` с одним blocker `B1`: existing `csharp_api.json` оставался permissive для duplicate class names, conflicting member binding projections и loose parameter-insensitive member resolution."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0015",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T16:55:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "r05 `B1` исправлен через RED/GREEN: доменный документ требует fail-closed C# snapshot semantics; добавлены negative tests для duplicate classes, conflicting `kind + godotName + parameter types` member bindings и parameter-mismatch loose match; `ApiMatrixCommand` теперь отвергает такие snapshots кодом `E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID` и при наличии snapshot не подставляет synthetic member fallback. Прошли focused API tests `7/7`, `api fetch-godot --version 4.7-stable`, `api generate-class-packets --check`, `api generate-matrix --check` и `update docs --check`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0016",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T17:05:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "r06 preflight и verification corridor готовы: `rg 'en/stable|/stable/' data/api/godot-4.7/classes` и `rg '\"documentationUrl\"' data/api/electron2d/classes` вернули no matches; прошли `api generate-class-packets --check`, `api generate-matrix --check`, `update api-manifest --check --wiki-path .github/wiki`, `update docs --check`, `verify docs`, `update wiki --check --output .github/wiki`, `verify api-compatibility --wiki-path .github/wiki`, `verify ui-public-api-gate --wiki-path .github/wiki`, `verify public-api-documentation --wiki-path .github/wiki`, `verify licenses`, `verify audit-contracts`, `verify audit-followups` и `git diff --check`. Все четыре preflight evidence runs завершились exitCode `0`; stdout/stderr санитизированы от локального workspace path; `.temp/audit/T-0242/audit-package.r06.input.json` включает previous chain r01-r05 и closure для r05 `B1`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0017",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T17:29:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r06 создан и отправлен штатным `audit submit --reuse-conversation`; verdict сохранён как `NEEDS_FIXES` с blocker-ами `B1`/`B2`. Исправления для r07: `csharp_api.json` должен fail-closed отклонять duplicate/empty `csharpName` и duplicate C# member projection identities; `Required outputs` в этой карточке синхронизированы с фактическим доменным документом и generated API artifacts. r06 `FOLLOW_UP_FINDING F1` по будущему сопоставлению Godot enum groups с Electron2D enum-type packets вынесен в `T-0986`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0018",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T17:38:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "r06 `B1`/`B2` исправлены через RED/GREEN: добавлены negative tests для duplicate `csharpName`, blank `csharpName`, duplicate output class identity и duplicate C# member projection identity; `ApiMatrixCommand` теперь отклоняет эти cases кодом `E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID`. `Required outputs` у `T-0242` заменены на фактический `docs/release-management/api-compatibility.md` и generated API artifacts. Прошли focused API tests `11/11`, build tool build, `api fetch-godot`, `api generate-class-packets --check`, `api generate-matrix --check`, `update docs --check`, `verify docs`, `verify audit-followups`, `verify audit-contracts`, `verify licenses` и `git diff --check`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0019",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T17:44:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "r07 preflight evidence обновлён после r06 fixes: focused API generator tests, timeout sidecar test, previous-verdict placeholder tests и audit-loop-stabilization завершились exitCode `0`; stdout/stderr санитизированы от локального workspace path. Создан `.temp/audit/T-0242/audit-package.r07.input.json` с previous verdict chain r01-r06, 12 blocker closure entries и task-only scope `T-0986` для tracked r06 `FOLLOW_UP_FINDING F1`; `git diff --check` чистый."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0020",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T17:47:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Первая r07 package attempt остановилась до ZIP на secret scan saved r06 verdict из-за новой historical reviewer placeholder phrase. `T-0985` остаётся previous-verdict-only: allowlist расширяется только точным нормализованным значением из saved verdict, task-owned и arbitrary suffix regressions сохраняются. По решению пользователя r06 `FOLLOW_UP_FINDING F1` уточнён: Electron2D enum-type packet является canonical representation, parent class `enums: []` допустим, а cross-shape enum comparison принадлежит `T-0243`/`T-0986`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0021",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T18:38:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r07 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: generated output path строился из непроверенного `csharpName`/class projection identity. Исправление подготовлено для r08 через RED/GREEN: добавлены negative tests для `../Escaped`, `../../../../Escaped`, `A/B`, `A\\B`, leading/trailing whitespace, `A..B`, unsafe fallback XML class name и generation traversal; `ApiMatrixCommand` теперь валидирует safe class identity, отвергает unsafe `csharp_api.json` кодом `E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID`, unsafe XML source кодом `E2D-BUILD-API-GODOT-SOURCE-INVALID` и canonicalizes каждый generated output path внутри разрешённых `data/api/**/classes|index` директорий. Прошли new unsafe tests `10/10`, focused API tests `21/21`, build tool build, `api fetch-godot`, `api generate-class-packets --check`, `api generate-matrix --check`, docs/wiki/API/public docs/audit/license verifiers и `git diff --check`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0022",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T19:24:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r08 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: synthetic Godot C# snapshot записывал raw XML/inspector properties вроде `voice/1/cutoff_hz`, `stream_{index}/stream`, `point_{index}/in` и settings paths как невозможные C# member names/signatures. Исправление подготовлено для r09 через RED/GREEN: synthetic snapshot теперь пропускает unmappable raw XML properties, class packets сохраняют их в отдельной `rawMembers` секции, existing `csharp_api.json` с unsafe `member.name`/`signature` отклоняется `E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID`, а generated Godot packets больше не содержат `Voice/1/cutoffHz`, `Stream{index}/stream`, `Point{index}/in` или `Debug/gdscript/warnings/unsafeCallArgument` в C# `members`. Прошли focused raw-member tests `3/3`, focused API tests `24/24`, build tool build, `api fetch-godot`, `api generate-class-packets`, `api generate-matrix`, оба `--check`, docs/wiki/API/public docs/audit/license verifiers, smoke `rg` checks и `git diff --check`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0023",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T20:16:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r09 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: generated Godot/Electron2D signatures содержали unescaped C# keyword parameter names (`base`, `class`, `enum`, `default`, `in`, `out`, `checked`, `object`). Исправление подготовлено для r10: `ApiMatrixCommand` экранирует keyword parameters в Godot synthetic snapshot и отклоняет existing `csharp_api.json` с unescaped keyword parameter projection, `ApiManifestGenerator` экранирует Electron2D reflection parameter names, generated packets пересобраны, а canonical manifest снова использует стабильный `.github/wiki/API-Compatibility.md` вместо временного `.temp/api-wiki/check-wiki`. По решению пользователя по r06 enum values в Electron2D enum-type packets дополнительно получили typed `constants.kind = \"EnumValue\"` при numeric `value`; parent class `enums: []` остаётся допустимым и не дублирует values. Прошли focused API tests `29/29`, build tool build, `update api-manifest --wiki-path .github/wiki --check`, `api generate-class-packets --check`, `api generate-matrix --check`, `update docs --check`, `verify docs`, `update wiki --check`, `verify api-compatibility --wiki-path .github/wiki`, `verify ui-public-api-gate --wiki-path .github/wiki`, `verify public-api-documentation --wiki-path .github/wiki`, `verify audit-followups`, `verify audit-contracts`, `verify licenses`, targeted smoke checks по `.api.md`/`_Draw`/`*Enum`/`/stable/`/keyword params/docs URL и `git diff --check`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0024",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T20:29:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "r10 preflight evidence обновлён и r10 package создан штатной командой `audit package` без `--force`. Config `.temp/audit/T-0242/audit-package.r10.input.json` включает previous verdict chain r01-r09, closure для r09 `B1` и check `api-signatures-no-unescaped-keyword-parameters`; preflight evidence прошёл focused API `29/29`, timeout sidecar `1/1`, previous-verdict placeholder `3/3`, audit-loop stabilization `33/33`, path scan no matches. `audit package` прогнал 19 configured checks, создал `.temp/audit/T-0242-audit-r10.zip` и `.temp/audit/T-0242-audit-r10.operator-workflow.zip`; operator workflow summary: `audit-package-verify` exitCode `0`, duration ~136.6s, timeout `600`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0025",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T20:59:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r10 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: reflection-based GitHub Wiki/public API renderer в `ApiWikiCommand` всё ещё строил signatures напрямую из `ParameterInfo.Name`, поэтому `.github/wiki/PopupMenu.md` и `.github/wiki/Tween.md` могли содержать `System.Boolean checked` и `Electron2D.Object object`, хотя `data/api` и manifest уже были исправлены. Исправление подготовлено для r11: добавлен RED/GREEN test `WikiReflectionRendererEscapesCSharpKeywordParameterNames` через reflection на private `ApiWikiCommand.MethodSignature`, `RepositoryPolicyVerifiers.cs` экранирует C# keyword parameter names в wiki renderer, `.github/wiki` пересобран, extended scan по `data/api/**` и `.github/wiki` больше не находит unescaped keyword signatures, а `update wiki --check --output .github/wiki`, `verify public-api-documentation`, manifest/class-packets/matrix/docs/API/audit/license/whitespace checks прошли."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0026",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T21:15:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "r11 preflight evidence и package готовы: preflight прошёл focused API `29/29`, wiki renderer regression `1/1`, timeout sidecar `1/1`, previous-verdict placeholder `3/3`, audit-loop stabilization `34/34`, path scan no matches. Config `.temp/audit/T-0242/audit-package.r11.input.json` включает previous verdict chain r01-r10, closure для r10 `B1`, preflight `wiki-reflection-renderer-test` и check `public-api-signatures-no-unescaped-keyword-parameters` по `data/api/**` + `.github/wiki`. `audit package` прогнал 20 configured checks, создал `.temp/audit/T-0242-audit-r11.zip` и `.temp/audit/T-0242-audit-r11.operator-workflow.zip`; operator workflow summary: `audit-package-verify` exitCode `0`, duration ~122.5s, timeout `600`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0027",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T21:38:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r11 вернул `VERDICT: ACCEPT`, после чего собран clean-control ZIP `.temp/audit-control/T-0242-audit-r11.zip` с пустыми `previousVerdictChain`/`blockerClosureList`, без `TASKS.md`, `data/dev-diary/**` и `docs/verdicts/**` в repo model. Control package прошёл 19 configured checks и operator workflow sidecar: `audit-package-message` exitCode `0`, `audit-package-verify` exitCode `0`, duration ~146.0s, timeout `600`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0028",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-06T22:14:03.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Control r11 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: `WindowsAbsolutePathPattern` слишком широко маскировал документационные фрагменты `n: int`, `var x: int`, `X:Y` как `<windows-absolute-path>`. Исправление подготовлено для r12 через RED/GREEN: `ApiGenerateClassPacketsMasksWindowsPathsWithoutCorruptingDocumentationPunctuation` сначала падал на `range(<windows-absolute-path> int)`, затем прошёл после сужения regex до real drive-root path вида drive letter + slash/backslash; Godot class packets регенерированы и больше сохраняют ложные markers в `@GDScript`, `ProjectSettings`, `Projection`. Primary r11 `FOLLOW_UP_FINDING F1` по `op_*` operator representation перенесён в `T-0987` по решению пользователя; control r11 `FOLLOW_UP_FINDING F1` по zip extraction hardening перенесён в `T-0988`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0029",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-07T07:22:21.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r12 сохранён как `VERDICT: NEEDS_FIXES` с blocker `B1`: path masking больше не портит `range(n: int)`, `var x: int = 1`, `X:Y` и JSON-escaped `D:\"`, но ещё ломал Godot BBCode для drive-root examples и частично маскировал Windows paths с пробелами, оставляя хвосты `Files\\...`. Исправление подготовлено для r13: `NormalizeDocumentation` заменён на tokenizer Windows path tokens, focused generator test расширен на `[code]<windows-absolute-path>[/code]`, path segments `Program Files`/`Program Files (x86)`, punctuation `D:\"` и проверку отсутствия broken `<windows-absolute-path> Files`; Godot class packets регенерированы, artifact scan больше не находит broken placeholder forms. По уточнению пользователя r13 submit должен использовать explicit control conversation URL из `.temp/audit/T-0242/control-conversation-url.txt`, а не stable primary `.temp/audit/T-0242/conversation-url.txt`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0030",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-07T07:46:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r13 отправлен в explicit control conversation URL и вернул `VERDICT: ACCEPT`. Следующий обязательный шаг по регламенту - clean-control audit r13 с пустыми `previousVerdictChain`/`blockerClosureList`, без `TASKS.md`, `data/dev-diary/**` и `docs/verdicts/**` в repo model. r13 `FOLLOW_UP_FINDING F1` повторно указывает на zip extraction containment hardening и закрывается как `tracked-existing` через `T-0988`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0031",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-07T08:25:50.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Clean-control r13 вернул `VERDICT: NEEDS_FIXES` с blocker-ами `B1`/`B2`. Исправления подготовлены для r14: для `B1` audit package scanner больше не разрешает standalone secret-like value `pass` в previous verdict context, а focused tests разделяют допустимые полные historical reviewer phrases и запрещённую bare строку с password-like ключом и значением `pass`; для `B2` reflection-based Wiki/public API renderer добавляет `public static` к static properties, а regression проверяет `RenderingServer.CurrentProfile`. Прошли targeted tests `6/6`, `update wiki --check`, `verify public-api-documentation`, `update docs --check` и `verify docs`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0032",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-07T08:44:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "r14 config `.temp/audit/T-0242/audit-package.r14.input.json` подготовлен для отправки в explicit control conversation: previous verdict chain включает r01-r13 + control r11/control r13, `blockerClosureList` закрывает control r13 `B1` exact full-line previous-verdict reviewer matching и `B2` static property signature rendering. Preflight evidence обновлён после `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`; `verify audit-contracts`, `update docs --check`, `verify docs` и `git diff --check` прошли."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0033",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-07T09:13:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Primary r14 отправлен в explicit control conversation URL и вернул `VERDICT: ACCEPT`. Архив `.temp/audit/T-0242-audit-r14.zip` прошёл 21 configured check и operator workflow sidecar; auditor подтвердил closure для control r13 `B1`/`B2`."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0034",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-07T09:47:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Clean-control r14 `.temp/audit-control/T-0242-audit-r14.zip` с пустыми `previousVerdictChain`/`blockerClosureList` вернул `VERDICT: ACCEPT`. Единственный `FOLLOW_UP_FINDING F1` по terminal Windows path masking со spaced segments перенесён в `T-0989` как P3 hardening debt и не блокирует закрытие текущего T-0242 package."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-07-07T09:55:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required until parent gate unless task criteria explicitly require primary/control audit"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Resource",
+      "value": "../../../../Escaped"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "Resource",
+      "value": "../Escaped"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": ".github/wiki"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": ".github/wiki/API-Compatibility.md"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": ".github/wiki/PopupMenu.md"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": ".github/wiki/Tween.md"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": ".temp/api-wiki/check-wiki"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": ".temp/audit-control/T-0242-audit-r11.zip"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": ".temp/audit-control/T-0242-audit-r14.zip"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": ".temp/audit/T-0242-audit-r10.operator-workflow.zip"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": ".temp/audit/T-0242-audit-r10.zip"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": ".temp/audit/T-0242-audit-r11.operator-workflow.zip"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": ".temp/audit/T-0242-audit-r11.zip"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": ".temp/audit/T-0242-audit-r14.zip"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": ".temp/audit/T-0242/audit-package.r06.input.json"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": ".temp/audit/T-0242/audit-package.r07.input.json"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": ".temp/audit/T-0242/audit-package.r10.input.json"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "File",
+      "value": ".temp/audit/T-0242/audit-package.r11.input.json"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "File",
+      "value": ".temp/audit/T-0242/audit-package.r14.input.json"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": ".temp/audit/T-0242/control-conversation-url.txt"
+    },
+    {
+      "linkId": "link-0021",
+      "kind": "File",
+      "value": ".temp/audit/T-0242/conversation-url.txt"
+    },
+    {
+      "linkId": "link-0022",
+      "kind": "Resource",
+      "value": "/en/4.7"
+    },
+    {
+      "linkId": "link-0023",
+      "kind": "Resource",
+      "value": "/en/stable"
+    },
+    {
+      "linkId": "link-0024",
+      "kind": "Resource",
+      "value": "/stable"
+    },
+    {
+      "linkId": "link-0025",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0026",
+      "kind": "File",
+      "value": "10/10"
+    },
+    {
+      "linkId": "link-0027",
+      "kind": "File",
+      "value": "11/11"
+    },
+    {
+      "linkId": "link-0028",
+      "kind": "File",
+      "value": "2/2"
+    },
+    {
+      "linkId": "link-0029",
+      "kind": "File",
+      "value": "21/21"
+    },
+    {
+      "linkId": "link-0030",
+      "kind": "File",
+      "value": "24/24"
+    },
+    {
+      "linkId": "link-0031",
+      "kind": "File",
+      "value": "29/29"
+    },
+    {
+      "linkId": "link-0032",
+      "kind": "File",
+      "value": "3/3"
+    },
+    {
+      "linkId": "link-0033",
+      "kind": "File",
+      "value": "33/33"
+    },
+    {
+      "linkId": "link-0034",
+      "kind": "File",
+      "value": "34/34"
+    },
+    {
+      "linkId": "link-0035",
+      "kind": "File",
+      "value": "4/4"
+    },
+    {
+      "linkId": "link-0036",
+      "kind": "File",
+      "value": "6/6"
+    },
+    {
+      "linkId": "link-0037",
+      "kind": "File",
+      "value": "7/7"
+    },
+    {
+      "linkId": "link-0038",
+      "kind": "File",
+      "value": "A/B"
+    },
+    {
+      "linkId": "link-0039",
+      "kind": "File",
+      "value": "Debug/gdscript/warnings/unsafeCallArgument"
+    },
+    {
+      "linkId": "link-0040",
+      "kind": "File",
+      "value": "Point{index}/in"
+    },
+    {
+      "linkId": "link-0041",
+      "kind": "File",
+      "value": "Stream{index}/stream"
+    },
+    {
+      "linkId": "link-0042",
+      "kind": "File",
+      "value": "Voice/1/cutoffHz"
+    },
+    {
+      "linkId": "link-0043",
+      "kind": "File",
+      "value": "[code]<windows-absolute-path>[/code]"
+    },
+    {
+      "linkId": "link-0044",
+      "kind": "File",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0045",
+      "kind": "Directory",
+      "value": "data/api"
+    },
+    {
+      "linkId": "link-0046",
+      "kind": "File",
+      "value": "data/api/**"
+    },
+    {
+      "linkId": "link-0047",
+      "kind": "File",
+      "value": "data/api/**/classes|index"
+    },
+    {
+      "linkId": "link-0048",
+      "kind": "Directory",
+      "value": "data/api/electron2d/classes"
+    },
+    {
+      "linkId": "link-0049",
+      "kind": "File",
+      "value": "data/api/electron2d/classes/*.api.json"
+    },
+    {
+      "linkId": "link-0050",
+      "kind": "File",
+      "value": "data/api/electron2d/classes/<ClassName>.api.json"
+    },
+    {
+      "linkId": "link-0051",
+      "kind": "File",
+      "value": "data/api/electron2d/index/classes.json"
+    },
+    {
+      "linkId": "link-0052",
+      "kind": "Directory",
+      "value": "data/api/godot-4.7/classes"
+    },
+    {
+      "linkId": "link-0053",
+      "kind": "File",
+      "value": "data/api/godot-4.7/classes/*.api.json"
+    },
+    {
+      "linkId": "link-0054",
+      "kind": "File",
+      "value": "data/api/godot-4.7/classes/<ClassName>.api.json"
+    },
+    {
+      "linkId": "link-0055",
+      "kind": "File",
+      "value": "data/api/godot-4.7/index/classes.json"
+    },
+    {
+      "linkId": "link-0056",
+      "kind": "File",
+      "value": "data/dev-diary/**"
+    },
+    {
+      "linkId": "link-0057",
+      "kind": "Directory",
+      "value": "data/documentation"
+    },
+    {
+      "linkId": "link-0058",
+      "kind": "File",
+      "value": "doc/classes/*.xml"
+    },
+    {
+      "linkId": "link-0059",
+      "kind": "File",
+      "value": "docs/release-management/api-compatibility.md"
+    },
+    {
+      "linkId": "link-0060",
+      "kind": "File",
+      "value": "docs/verdicts/**"
+    },
+    {
+      "linkId": "link-0061",
+      "kind": "Directory",
+      "value": "eng"
+    },
+    {
+      "linkId": "link-0062",
+      "kind": "File",
+      "value": "eng/Electron2D.Build"
+    },
+    {
+      "linkId": "link-0063",
+      "kind": "Directory",
+      "value": "operator "
+    },
+    {
+      "linkId": "link-0064",
+      "kind": "File",
+      "value": "password/pass"
+    },
+    {
+      "linkId": "link-0065",
+      "kind": "File",
+      "value": "point_{index}/in"
+    },
+    {
+      "linkId": "link-0066",
+      "kind": "File",
+      "value": "rg '\"documentationUrl\"' data/api/electron2d/classes"
+    },
+    {
+      "linkId": "link-0067",
+      "kind": "File",
+      "value": "rg 'en/stable|/stable/' data/api/godot-4.7/classes"
+    },
+    {
+      "linkId": "link-0068",
+      "kind": "Directory",
+      "value": "src/Electron2D"
+    },
+    {
+      "linkId": "link-0069",
+      "kind": "File",
+      "value": "stream_{index}/stream"
+    },
+    {
+      "linkId": "link-0070",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0071",
+      "kind": "File",
+      "value": "update api-manifest --check --wiki-path .github/wiki"
+    },
+    {
+      "linkId": "link-0072",
+      "kind": "File",
+      "value": "update api-manifest --wiki-path .github/wiki --check"
+    },
+    {
+      "linkId": "link-0073",
+      "kind": "File",
+      "value": "update wiki --check --output .github/wiki"
+    },
+    {
+      "linkId": "link-0074",
+      "kind": "File",
+      "value": "verify api-compatibility --wiki-path .github/wiki"
+    },
+    {
+      "linkId": "link-0075",
+      "kind": "File",
+      "value": "verify public-api-documentation --wiki-path .github/wiki"
+    },
+    {
+      "linkId": "link-0076",
+      "kind": "File",
+      "value": "verify ui-public-api-gate --wiki-path .github/wiki"
+    },
+    {
+      "linkId": "link-0077",
+      "kind": "File",
+      "value": "voice/1/cutoff_hz"
+    }
+  ],
+  "executionContract": {
+    "taskType": "tooling",
+    "readyToStart": [
+      "task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/release-management/api-compatibility.md describes the tool or policy contract.",
+      "add RED verifier/test coverage before changing implementation when tooling behavior changes."
+    ],
+    "stopConditions": [
+      "the change would define public API surface manually or close behavior owned by a public class task.",
+      "missing dependency, platform prerequisite or generated input prevents deterministic verifier output."
+    ],
+    "allowedChanges": [
+      "tooling, verifier, generated-report plumbing and docs named by this task.",
+      "tests under `tests/` that prove the tooling contract.",
+      "`TASKS.md` notes and diary evidence."
+    ],
+    "forbiddenChanges": [
+      "production runtime behavior outside this tooling contract.",
+      "generated artifacts by hand when a generator/verifier owns them.",
+      "unrelated task statuses or release scope."
+    ],
+    "requiredOutputs": [
+      "`docs/release-management/api-compatibility.md`",
+      "`data/api/godot-4.7/classes/*.api.json` and `data/api/electron2d/classes/*.api.json`",
+      "`data/api/godot-4.7/index/classes.json` and `data/api/electron2d/index/classes.json`",
+      "focused verifier/test evidence named by the task.",
+      "synchronized generated docs/index artifacts when docs are changed."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify docs`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- update docs --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0004",
+        "kind": "LegacyShell",
+        "text": "dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0005",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- api fetch-godot --version 4.7-stable",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0006",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- api generate-class-packets",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0007",
+        "kind": "LegacyShell",
+        "text": "dotnet run --project eng/Electron2D.Build -- api generate-matrix",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/07 Июль.md",
+      "byteOffset": 420114,
+      "byteLength": 39761,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "9b7bdbea8727578283a784c832a2b7cde450ad2cd0eb705aaad2316e61e061a2",
+      "markdown": "## T-0242 [x] P0: Подготовить матрицу API и генератор документации публичного API\n\n- Создана: 2026-07-05T03:23:59+03:00\n- Состояние: accepted/closed\n- Приоритет: P0\n- Execution class: `foundation`\n- Scheduling tier: `next`\n- Зависимости: T-0241\n- Ссылки:\n  - Доменный документ: `docs/release-management/api-compatibility.md`\n  - Документация/API index: `data/documentation/`; `data/api/`\n  - Исходный код: `src/Electron2D/`; `eng/`\n  - Тесты и проверки производительности: `tests/`\n  - ROADMAP: раздел `2. Публичный API` / `2.0 Основа публичного API и внутренние слои`\n\n### Execution contract\n\n- Task type: tooling\n- Ready-to-start:\n  - task state is `open`, dependencies are accepted/closed or explicitly deferred, and docs/release-management/api-compatibility.md describes the tool or policy contract.\n  - add RED verifier/test coverage before changing implementation when tooling behavior changes.\n- Stop conditions:\n  - the change would define public API surface manually or close behavior owned by a public class task.\n  - missing dependency, platform prerequisite or generated input prevents deterministic verifier output.\n- May change:\n  - tooling, verifier, generated-report plumbing and docs named by this task.\n  - tests under `tests/` that prove the tooling contract.\n  - `TASKS.md` notes and diary evidence.\n- Must not change:\n  - production runtime behavior outside this tooling contract.\n  - generated artifacts by hand when a generator/verifier owns them.\n  - unrelated task statuses or release scope.\n- Required outputs:\n  - `docs/release-management/api-compatibility.md`\n  - `data/api/godot-4.7/classes/*.api.json` and `data/api/electron2d/classes/*.api.json`\n  - `data/api/godot-4.7/index/classes.json` and `data/api/electron2d/index/classes.json`\n  - focused verifier/test evidence named by the task.\n  - synchronized generated docs/index artifacts when docs are changed.\n- Required commands:\n  - `dotnet run --project eng/Electron2D.Build -- verify docs`\n  - `dotnet run --project eng/Electron2D.Build -- update docs --check`\n  - `git diff --check`\n- External audit:\n  - not required until parent gate unless task criteria explicitly require primary/control audit\n\n### Самодостаточное описание\nЗадача относится к подготовке полного публичного API Electron2D 0.1-preview, совместимого с Godot 4.7. Матрица API должна хранить машиночитаемое описание публичной поверхности Godot 4.7 и Electron2D: классы, элементы API, перегрузки, ссылки документации, наследование, сигналы, перечисления и константы.\n\nОжидаемый результат: генератор создаёт воспроизводимые описания API из закреплённых источников, чтобы задачи по классам не сравнивали справку Godot вручную и не переписывали списки методов в `TASKS.md`.\n\n### Сгенерированные файлы, за которые отвечает T-0242\n`T-0242` отвечает за генерацию статических описаний публичной поверхности API. Эти файлы создаются инструментами репозитория и не редактируются вручную:\n\n- `data/api/godot-4.7/classes/<ClassName>.api.json`\n- `data/api/electron2d/classes/<ClassName>.api.json`\n- `data/api/godot-4.7/index/classes.json`\n- `data/api/electron2d/index/classes.json`\n\nИсточник истины для описаний Godot закреплён на `4.7-stable` и включает `doc/classes/*.xml`, `extension_api.json`, если он используется, и сгенерированный снимок C# API, если он доступен или строится инструментом.\n\nГенератор не создаёт per-class Markdown рядом с JSON. Любые stale `*.api.md` в `data/api/godot-4.7/classes/` или `data/api/electron2d/classes/` считаются лишним generated artifact и должны приводить `api generate-class-packets --check` к отказу.\n\nElectron2D-side projection использует нормальные публичные C#-имена: callback methods отображаются без ведущего Godot `_` (`Draw`, `Process`, `PhysicsProcess` и т.п.), а enum-типы отображаются без технического суффикса `Enum` (`TextureRect.StretchMode`, а не `TextureRect.StretchModeEnum`). Raw `xmlDocId` сохраняет исходное имя для связи с кодом и XML documentation.\n\n### Команды инструмента, за которые отвечает T-0242\n\n- `dotnet run --project eng/Electron2D.Build -- api fetch-godot --version 4.7-stable`\n- `dotnet run --project eng/Electron2D.Build -- api generate-matrix`\n- `dotnet run --project eng/Electron2D.Build -- api generate-class-packets`\n\n### Границы задачи\n\n- Цель: выполнить только возможность, названную в заголовке и связанном доменном документе; не расширять задачу на соседние классы, платформы или внутренние слои.\n- Источник истины: связанный доменный документ, раздел ROADMAP, явные зависимости и сгенерированные файлы или проверяющие команды, если задача связана с публичным API.\n- Входит: конкретный контракт, сначала падающие проверки, рабочая реализация или инструмент, устойчивые диагностические сообщения, первое подтверждение использования и синхронизированные документы.\n- Не входит: ручное определение публичной поверхности Godot API, закрытие поведения публичного класса вместо его собственной задачи, посторонние платформенные работы, широкие рефакторинги и скрытые заглушки.\n- Подтверждение приёмки: доменный документ с понятными границами, вывод целевых команд, нужные сгенерированные отчёты, доказательство связи с потребителем и запись в дневнике с точными проверками.\n\n### Критерии приёмки\n\n- [x] Доменный документ описывает закреплённые входные данные Godot `4.7-stable`, модель публичного API Electron2D, схему сгенерированного описания, контракт воспроизводимой генерации и запрет ручного редактирования.\n- [x] `api generate-class-packets` детерминированно пересоздаёт описания по каждому классу из закреплённых входных данных Godot 4.7 и модель публичного API Electron2D.\n- [x] Генератор читает официальные XML-описания классов Godot или утверждённый экспорт API, а не вручную скопированные страницы справки.\n- [x] Генератор извлекает имя класса, наследование, конструкторы, свойства, методы, сигналы, перечисления, констант, операторы, виртуальные точки расширения, ссылки документации и правила имён и перегрузок C# в машиночитаемые описания.\n- [x] Генератор извлекает публичный API Electron2D из исходного кода или сборки, а не из текста задач.\n- [x] Сгенерированные описания содержат всю публичную поверхность, но `TASKS.md` и доменные документы не дублируют вручную списки элементов API.\n- [x] Проверка матрицы API падает, если сгенерированные описания устарели.\n- [x] Инструмент возвращает устойчивые диагностические сообщения для недоступных входных данных Godot, повреждённых XML/JSON, несовместимых снимков C# API и устаревших сгенерированных файлов.\n- [x] Документация, манифест API и заметки задачи синхронизированы с фактическими сгенерированными файлами и командами генерации.\n\n### Подзадачи\n\n- [x] Зафиксировать схему сгенерированных описаний API и правило закрепления входных данных в доменном документе.\n- [x] Добавить сначала падающие проверки на отсутствие генерации описаний, устаревших сгенерированных файлов и ручные правки.\n- [x] Реализовать команды генератора в `eng/Electron2D.Build`.\n- [x] Добавить проверки воспроизводимости результата и тестовые наборы устойчивых диагностических сообщений.\n- [x] Обновить документацию, сгенерированные файлы и заметки задачи и запустить релевантные проверки.\n\n### Заметки агента\n\n2026-07-05T03:23:59+03:00 - Создано по запросу пользователя как foundation-задача для полного совместимого с Godot 4.7 публичного API Electron2D 0.1-preview.\n\n2026-07-06T15:40:00+03:00 - Primary r02 package создан штатной командой `audit package` и clean-verified с operator workflow timeout `600` секунд; `api generate-class-packets --check` внутри пакета подтверждает JSON-only output и отсутствие stale `*.api.md`. Повторная отправка через `--reuse-conversation` невозможна, потому `.temp/audit/T-0242/conversation-url.txt` отсутствует после восстановления `.temp`; r02 будет отправлен штатным аварийным режимом `--new-conversation`, а r01 verdict и blocker closure остаются включены в ZIP через `previousVerdictChain` и `blockerClosureList`.\n\n2026-07-06T16:25:00+03:00 - Primary r02 вернул `VERDICT: NEEDS_FIXES` с blocker-ами `B1`-`B3`. Исправления подготовлены для r03: Electron2D class packets теперь заполняют `virtualMethods` из raw underscored runtime hook `xmlDocId`, `api fetch-godot` сохраняет и валидирует входной `csharp_api.json` и синтезирует fallback только при его отсутствии, случайные изменения статусов `T-0104`/`T-0174` убраны, а timeout operator workflow оформлен отдельной явной задачей `T-0984` для combined scope. Локально прошли focused API tests `6/6`, focused sidecar timeout test `1/1`, `api generate-class-packets --check`, `api generate-matrix --check`, docs/API/public docs/license/audit-followups verifiers и `git diff --check`.\n\n2026-07-06T16:45:00+03:00 - Первая r03 package attempt остановилась до создания ZIP на `E2D-BUILD-AUDIT-SECRET-DETECTED` из-за reviewer placeholder `pass` внутри Markdown code span с поясняющим suffix в сохранённом r02 verdict. Добавлена отдельная явная scope-задача `T-0985`: previous verdict reports из `previousVerdictChain` сохраняются дословно, focused tests подтверждают, что такой placeholder разрешён только в previous verdict context, а task-owned файл с тем же значением остаётся отказом.\n\n2026-07-06T17:45:00+03:00 - Primary r03 вернул `VERDICT: NEEDS_FIXES` с одним blocker `B1`: Electron2D class packets не заполняли типизированные секции `operators` и `constants` для public C# operators и public `const` fields. Исправление подготовлено для r04: manifest generator теперь классифицирует `op_*` как `Operator`, public `const` fields как `Constant`, class packet generator нормализует legacy manifest entries `Method op_*`/`Field public const`, а focused API tests проверяют Electron2D `Vector2.operators`, `Mathf.constants` и `ResourceUid.constants`. Локально прошли focused API tests `6/6`, `api generate-class-packets --check`, `api generate-matrix --check`, `update api-manifest --check --wiki-path .github/wiki`, `update docs --check` и `update wiki --check --output .github/wiki`; r04 package должен включить `audit-loop-stabilization`, потому `previousVerdictChain` будет содержать r01-r03.\n\n2026-07-06T17:53:00+03:00 - Первая r04 package attempt остановилась до создания ZIP на `E2D-BUILD-AUDIT-SECRET-DETECTED` из-за той же исторической `password/pass` code span цитаты в saved r03 verdict с новым reviewer suffix. `T-0985` уточнён: previous verdict matcher теперь разрешает `pass` с reviewer prose suffix после закрывающей обратной кавычки только для `previousVerdictChain`; focused previous verdict/task-owned tests прошли `2/2`.\n\n2026-07-06T18:32:00+03:00 - Primary r04 создан штатной командой и отправлен через `audit submit --reuse-conversation`, но вернул `VERDICT: NEEDS_FIXES`. Новые blocker-и: `B1` по слишком широкому previous-verdict Markdown code span matcher для `T-0985` и `B2` по отсутствующим `value` у Electron2D `constants`/`enum values` в class packets. r05 scope должен исправить только эти два пункта, добавить RED/GREEN tests, обновить generated artifacts и снова включить `audit-loop-stabilization`.\n\n2026-07-06T18:47:00+03:00 - r05 local fixes готовы для обоих blocker-ов: `ApiManifestGenerator` извлекает `value` public `const` fields и enum values через reflection/invariant culture, `ApiMatrixCommand` переносит это значение в typed `constants`, а `AuditPackageCommand` больше не разрешает произвольный suffix после `pass` code span в previous verdict. Focused RED/GREEN tests прошли: API/scanner set `4/4`, scanner positive/negative set `3/3`; `api generate-class-packets --check`, `api generate-matrix --check`, `update api-manifest --check --wiki-path .github/wiki`, `update docs --check` и `update wiki --check --output .github/wiki` прошли.\n\n2026-07-06T18:56:00+03:00 - По решению пользователя r04 `FOLLOW_UP_FINDING F1` закрывается в текущем `T-0242`: public static readonly/static get-only predefined value singletons (`Vector2.Zero`, `Vector2.One`, `Color.White` и похожие значения) сохраняют .NET-style ABI `Field`/`Property` в manifest `members`, но generated compatibility packets дополнительно помещают их в typed `constants` со стабильным строковым `value`. Focused API tests подтвердили `Vector2.Zero`, `Vector2.One` и `Color.White`; пользователь также подтвердил закрывающий критерий r01 `F1` по Godot docs links, и `rg 'en/stable|/stable/' data/api/godot-4.7/classes` не нашёл mutable links.\n\n2026-07-06T18:59:00+03:00 - После r05 fixes прошли локальные проверки перед packaging: build tool build, focused API tests `3/3`, focused scanner tests `3/3`, `api generate-class-packets --check`, `api generate-matrix --check`, `update api-manifest --check --wiki-path .github/wiki`, `update docs --check`, `verify docs`, `update wiki --check --output .github/wiki`, `verify api-compatibility --wiki-path .github/wiki`, `verify ui-public-api-gate --wiki-path .github/wiki`, `verify public-api-documentation --wiki-path .github/wiki`, `verify licenses`, `verify audit-contracts`, `verify audit-followups` и `git diff --check`.\n\n2026-07-06T19:04:00+03:00 - r05 preflight evidence обновлён: focused API generator tests, previous-verdict placeholder tests с новым unsafe suffix regression, timeout sidecar test и audit-loop-stabilization завершились exitCode `0`; evidence scan не нашёл локальные Windows paths. Создан r05 config с `previousVerdictChain` r01-r04, closure entries для r04 `B1`/`B2`, checks `godot-docs-no-stable-links` и `electron2d-packets-no-documentation-url`.\n\n2026-07-06T19:06:00+03:00 - Первый r05 package attempt остановился до создания ZIP на `E2D-BUILD-AUDIT-SECRET-DETECTED` в рабочем дневнике из-за дословного служебного описания reviewer placeholder. Это process-history artifact, не реализация и не доказательство поведения, поэтому r05 config сужен: `data/dev-diary/**` исключён из `repoFileGlobs`, а `TASKS.md` остаётся в payload как task ledger.\n\n2026-07-06T19:17:00+03:00 - Второй r05 package attempt остановился до создания ZIP на saved r03 verdict из `previousVerdictChain`. `T-0985` сужен без общего suffix matcher: добавлены только точные нормализованные historical reviewer placeholder values, focused scanner suite прошёл `3/3`, `audit-loop-stabilization` evidence обновлён, `git diff --check` чистый.\n\n2026-07-06T19:47:00+03:00 - Primary r05 создан и отправлен штатным `audit submit --reuse-conversation`; verdict сохранён как `NEEDS_FIXES` с одним blocker `B1`: existing `csharp_api.json` оставался permissive для duplicate class names, conflicting member binding projections и loose parameter-insensitive member resolution.\n\n2026-07-06T19:55:00+03:00 - r05 `B1` исправлен через RED/GREEN: доменный документ требует fail-closed C# snapshot semantics; добавлены negative tests для duplicate classes, conflicting `kind + godotName + parameter types` member bindings и parameter-mismatch loose match; `ApiMatrixCommand` теперь отвергает такие snapshots кодом `E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID` и при наличии snapshot не подставляет synthetic member fallback. Прошли focused API tests `7/7`, `api fetch-godot --version 4.7-stable`, `api generate-class-packets --check`, `api generate-matrix --check` и `update docs --check`.\n\n2026-07-06T20:05:00+03:00 - r06 preflight и verification corridor готовы: `rg 'en/stable|/stable/' data/api/godot-4.7/classes` и `rg '\"documentationUrl\"' data/api/electron2d/classes` вернули no matches; прошли `api generate-class-packets --check`, `api generate-matrix --check`, `update api-manifest --check --wiki-path .github/wiki`, `update docs --check`, `verify docs`, `update wiki --check --output .github/wiki`, `verify api-compatibility --wiki-path .github/wiki`, `verify ui-public-api-gate --wiki-path .github/wiki`, `verify public-api-documentation --wiki-path .github/wiki`, `verify licenses`, `verify audit-contracts`, `verify audit-followups` и `git diff --check`. Все четыре preflight evidence runs завершились exitCode `0`; stdout/stderr санитизированы от локального workspace path; `.temp/audit/T-0242/audit-package.r06.input.json` включает previous chain r01-r05 и closure для r05 `B1`.\n\n2026-07-06T20:29:00+03:00 - Primary r06 создан и отправлен штатным `audit submit --reuse-conversation`; verdict сохранён как `NEEDS_FIXES` с blocker-ами `B1`/`B2`. Исправления для r07: `csharp_api.json` должен fail-closed отклонять duplicate/empty `csharpName` и duplicate C# member projection identities; `Required outputs` в этой карточке синхронизированы с фактическим доменным документом и generated API artifacts. r06 `FOLLOW_UP_FINDING F1` по будущему сопоставлению Godot enum groups с Electron2D enum-type packets вынесен в `T-0986`.\n\n2026-07-06T20:38:00+03:00 - r06 `B1`/`B2` исправлены через RED/GREEN: добавлены negative tests для duplicate `csharpName`, blank `csharpName`, duplicate output class identity и duplicate C# member projection identity; `ApiMatrixCommand` теперь отклоняет эти cases кодом `E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID`. `Required outputs` у `T-0242` заменены на фактический `docs/release-management/api-compatibility.md` и generated API artifacts. Прошли focused API tests `11/11`, build tool build, `api fetch-godot`, `api generate-class-packets --check`, `api generate-matrix --check`, `update docs --check`, `verify docs`, `verify audit-followups`, `verify audit-contracts`, `verify licenses` и `git diff --check`.\n\n2026-07-06T20:44:00+03:00 - r07 preflight evidence обновлён после r06 fixes: focused API generator tests, timeout sidecar test, previous-verdict placeholder tests и audit-loop-stabilization завершились exitCode `0`; stdout/stderr санитизированы от локального workspace path. Создан `.temp/audit/T-0242/audit-package.r07.input.json` с previous verdict chain r01-r06, 12 blocker closure entries и task-only scope `T-0986` для tracked r06 `FOLLOW_UP_FINDING F1`; `git diff --check` чистый.\n\n2026-07-06T20:47:00+03:00 - Первая r07 package attempt остановилась до ZIP на secret scan saved r06 verdict из-за новой historical reviewer placeholder phrase. `T-0985` остаётся previous-verdict-only: allowlist расширяется только точным нормализованным значением из saved verdict, task-owned и arbitrary suffix regressions сохраняются. По решению пользователя r06 `FOLLOW_UP_FINDING F1` уточнён: Electron2D enum-type packet является canonical representation, parent class `enums: []` допустим, а cross-shape enum comparison принадлежит `T-0243`/`T-0986`.\n\n2026-07-06T21:38:00+03:00 - Primary r07 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: generated output path строился из непроверенного `csharpName`/class projection identity. Исправление подготовлено для r08 через RED/GREEN: добавлены negative tests для `../Escaped`, `../../../../Escaped`, `A/B`, `A\\B`, leading/trailing whitespace, `A..B`, unsafe fallback XML class name и generation traversal; `ApiMatrixCommand` теперь валидирует safe class identity, отвергает unsafe `csharp_api.json` кодом `E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID`, unsafe XML source кодом `E2D-BUILD-API-GODOT-SOURCE-INVALID` и canonicalizes каждый generated output path внутри разрешённых `data/api/**/classes|index` директорий. Прошли new unsafe tests `10/10`, focused API tests `21/21`, build tool build, `api fetch-godot`, `api generate-class-packets --check`, `api generate-matrix --check`, docs/wiki/API/public docs/audit/license verifiers и `git diff --check`.\n\n2026-07-06T22:24:00+03:00 - Primary r08 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: synthetic Godot C# snapshot записывал raw XML/inspector properties вроде `voice/1/cutoff_hz`, `stream_{index}/stream`, `point_{index}/in` и settings paths как невозможные C# member names/signatures. Исправление подготовлено для r09 через RED/GREEN: synthetic snapshot теперь пропускает unmappable raw XML properties, class packets сохраняют их в отдельной `rawMembers` секции, existing `csharp_api.json` с unsafe `member.name`/`signature` отклоняется `E2D-BUILD-API-CSHARP-SNAPSHOT-INVALID`, а generated Godot packets больше не содержат `Voice/1/cutoffHz`, `Stream{index}/stream`, `Point{index}/in` или `Debug/gdscript/warnings/unsafeCallArgument` в C# `members`. Прошли focused raw-member tests `3/3`, focused API tests `24/24`, build tool build, `api fetch-godot`, `api generate-class-packets`, `api generate-matrix`, оба `--check`, docs/wiki/API/public docs/audit/license verifiers, smoke `rg` checks и `git diff --check`.\n\n2026-07-06T23:16:00+03:00 - Primary r09 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: generated Godot/Electron2D signatures содержали unescaped C# keyword parameter names (`base`, `class`, `enum`, `default`, `in`, `out`, `checked`, `object`). Исправление подготовлено для r10: `ApiMatrixCommand` экранирует keyword parameters в Godot synthetic snapshot и отклоняет existing `csharp_api.json` с unescaped keyword parameter projection, `ApiManifestGenerator` экранирует Electron2D reflection parameter names, generated packets пересобраны, а canonical manifest снова использует стабильный `.github/wiki/API-Compatibility.md` вместо временного `.temp/api-wiki/check-wiki`. По решению пользователя по r06 enum values в Electron2D enum-type packets дополнительно получили typed `constants.kind = \"EnumValue\"` при numeric `value`; parent class `enums: []` остаётся допустимым и не дублирует values. Прошли focused API tests `29/29`, build tool build, `update api-manifest --wiki-path .github/wiki --check`, `api generate-class-packets --check`, `api generate-matrix --check`, `update docs --check`, `verify docs`, `update wiki --check`, `verify api-compatibility --wiki-path .github/wiki`, `verify ui-public-api-gate --wiki-path .github/wiki`, `verify public-api-documentation --wiki-path .github/wiki`, `verify audit-followups`, `verify audit-contracts`, `verify licenses`, targeted smoke checks по `.api.md`/`_Draw`/`*Enum`/`/stable/`/keyword params/docs URL и `git diff --check`.\n\n2026-07-06T23:29:00+03:00 - r10 preflight evidence обновлён и r10 package создан штатной командой `audit package` без `--force`. Config `.temp/audit/T-0242/audit-package.r10.input.json` включает previous verdict chain r01-r09, closure для r09 `B1` и check `api-signatures-no-unescaped-keyword-parameters`; preflight evidence прошёл focused API `29/29`, timeout sidecar `1/1`, previous-verdict placeholder `3/3`, audit-loop stabilization `33/33`, path scan no matches. `audit package` прогнал 19 configured checks, создал `.temp/audit/T-0242-audit-r10.zip` и `.temp/audit/T-0242-audit-r10.operator-workflow.zip`; operator workflow summary: `audit-package-verify` exitCode `0`, duration ~136.6s, timeout `600`.\n\n2026-07-06T23:59:00+03:00 - Primary r10 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: reflection-based GitHub Wiki/public API renderer в `ApiWikiCommand` всё ещё строил signatures напрямую из `ParameterInfo.Name`, поэтому `.github/wiki/PopupMenu.md` и `.github/wiki/Tween.md` могли содержать `System.Boolean checked` и `Electron2D.Object object`, хотя `data/api` и manifest уже были исправлены. Исправление подготовлено для r11: добавлен RED/GREEN test `WikiReflectionRendererEscapesCSharpKeywordParameterNames` через reflection на private `ApiWikiCommand.MethodSignature`, `RepositoryPolicyVerifiers.cs` экранирует C# keyword parameter names в wiki renderer, `.github/wiki` пересобран, extended scan по `data/api/**` и `.github/wiki` больше не находит unescaped keyword signatures, а `update wiki --check --output .github/wiki`, `verify public-api-documentation`, manifest/class-packets/matrix/docs/API/audit/license/whitespace checks прошли.\n\n2026-07-07T00:15:00+03:00 - r11 preflight evidence и package готовы: preflight прошёл focused API `29/29`, wiki renderer regression `1/1`, timeout sidecar `1/1`, previous-verdict placeholder `3/3`, audit-loop stabilization `34/34`, path scan no matches. Config `.temp/audit/T-0242/audit-package.r11.input.json` включает previous verdict chain r01-r10, closure для r10 `B1`, preflight `wiki-reflection-renderer-test` и check `public-api-signatures-no-unescaped-keyword-parameters` по `data/api/**` + `.github/wiki`. `audit package` прогнал 20 configured checks, создал `.temp/audit/T-0242-audit-r11.zip` и `.temp/audit/T-0242-audit-r11.operator-workflow.zip`; operator workflow summary: `audit-package-verify` exitCode `0`, duration ~122.5s, timeout `600`.\n\n2026-07-07T00:38:00+03:00 - Primary r11 вернул `VERDICT: ACCEPT`, после чего собран clean-control ZIP `.temp/audit-control/T-0242-audit-r11.zip` с пустыми `previousVerdictChain`/`blockerClosureList`, без `TASKS.md`, `data/dev-diary/**` и `docs/verdicts/**` в repo model. Control package прошёл 19 configured checks и operator workflow sidecar: `audit-package-message` exitCode `0`, `audit-package-verify` exitCode `0`, duration ~146.0s, timeout `600`.\n\n2026-07-07T01:14:03+03:00 - Control r11 вернул `VERDICT: NEEDS_FIXES` с blocker `B1`: `WindowsAbsolutePathPattern` слишком широко маскировал документационные фрагменты `n: int`, `var x: int`, `X:Y` как `<windows-absolute-path>`. Исправление подготовлено для r12 через RED/GREEN: `ApiGenerateClassPacketsMasksWindowsPathsWithoutCorruptingDocumentationPunctuation` сначала падал на `range(<windows-absolute-path> int)`, затем прошёл после сужения regex до real drive-root path вида drive letter + slash/backslash; Godot class packets регенерированы и больше сохраняют ложные markers в `@GDScript`, `ProjectSettings`, `Projection`. Primary r11 `FOLLOW_UP_FINDING F1` по `op_*` operator representation перенесён в `T-0987` по решению пользователя; control r11 `FOLLOW_UP_FINDING F1` по zip extraction hardening перенесён в `T-0988`.\n\n2026-07-07T10:22:21+03:00 - Primary r12 сохранён как `VERDICT: NEEDS_FIXES` с blocker `B1`: path masking больше не портит `range(n: int)`, `var x: int = 1`, `X:Y` и JSON-escaped `D:\"`, но ещё ломал Godot BBCode для drive-root examples и частично маскировал Windows paths с пробелами, оставляя хвосты `Files\\...`. Исправление подготовлено для r13: `NormalizeDocumentation` заменён на tokenizer Windows path tokens, focused generator test расширен на `[code]<windows-absolute-path>[/code]`, path segments `Program Files`/`Program Files (x86)`, punctuation `D:\"` и проверку отсутствия broken `<windows-absolute-path> Files`; Godot class packets регенерированы, artifact scan больше не находит broken placeholder forms. По уточнению пользователя r13 submit должен использовать explicit control conversation URL из `.temp/audit/T-0242/control-conversation-url.txt`, а не stable primary `.temp/audit/T-0242/conversation-url.txt`.\n\n2026-07-07T10:46:00+03:00 - Primary r13 отправлен в explicit control conversation URL и вернул `VERDICT: ACCEPT`. Следующий обязательный шаг по регламенту - clean-control audit r13 с пустыми `previousVerdictChain`/`blockerClosureList`, без `TASKS.md`, `data/dev-diary/**` и `docs/verdicts/**` в repo model. r13 `FOLLOW_UP_FINDING F1` повторно указывает на zip extraction containment hardening и закрывается как `tracked-existing` через `T-0988`.\n\n2026-07-07T11:25:50+03:00 - Clean-control r13 вернул `VERDICT: NEEDS_FIXES` с blocker-ами `B1`/`B2`. Исправления подготовлены для r14: для `B1` audit package scanner больше не разрешает standalone secret-like value `pass` в previous verdict context, а focused tests разделяют допустимые полные historical reviewer phrases и запрещённую bare строку с password-like ключом и значением `pass`; для `B2` reflection-based Wiki/public API renderer добавляет `public static` к static properties, а regression проверяет `RenderingServer.CurrentProfile`. Прошли targeted tests `6/6`, `update wiki --check`, `verify public-api-documentation`, `update docs --check` и `verify docs`.\n\n2026-07-07T11:44:00+03:00 - r14 config `.temp/audit/T-0242/audit-package.r14.input.json` подготовлен для отправки в explicit control conversation: previous verdict chain включает r01-r13 + control r11/control r13, `blockerClosureList` закрывает control r13 `B1` exact full-line previous-verdict reviewer matching и `B2` static property signature rendering. Preflight evidence обновлён после `dotnet build eng/Electron2D.Build/Electron2D.Build.csproj --no-restore -v:minimal`; `verify audit-contracts`, `update docs --check`, `verify docs` и `git diff --check` прошли.\n\n2026-07-07T12:13:00+03:00 - Primary r14 отправлен в explicit control conversation URL и вернул `VERDICT: ACCEPT`. Архив `.temp/audit/T-0242-audit-r14.zip` прошёл 21 configured check и operator workflow sidecar; auditor подтвердил closure для control r13 `B1`/`B2`.\n\n2026-07-07T12:47:00+03:00 - Clean-control r14 `.temp/audit-control/T-0242-audit-r14.zip` с пустыми `previousVerdictChain`/`blockerClosureList` вернул `VERDICT: ACCEPT`. Единственный `FOLLOW_UP_FINDING F1` по terminal Windows path masking со spaced segments перенесён в `T-0989` как P3 hardening debt и не блокирует закрытие текущего T-0242 package.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0242-audit-r01.md\n- id: F1\n- state: tracked-existing\n- target: T-0242\n- rationale: finding закрыт в текущей реализации T-0242: generated Godot `documentationUrl` использует версионированный `/en/4.7/`, summaries нормализуют Godot docs links с `/en/stable/` на `/en/4.7/`, focused tests проверяют URL, а `rg 'en/stable|/stable/' data/api/godot-4.7/classes` не находит mutable docs links в generated packets.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0242-audit-r04.md\n- id: F1\n- state: tracked-existing\n- target: T-0242\n- rationale: finding закрыт в текущей реализации T-0242: public static readonly/static get-only value singletons остаются .NET-style `Field`/`Property` в ABI manifest, но `api generate-class-packets` классифицирует self-typed static value entries с `value` как semantic compatibility `constants`; focused tests проверяют `Vector2.Zero`, `Vector2.One` и `Color.White`, а generated packets содержат эти элементы в typed `constants`.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0242-audit-r11.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-new\n- target: T-0987\n- rationale: primary r11 finding не меняет canonical Electron2D packets: по решению пользователя Electron2D-side API packets сохраняют reflection/ABI operator names `op_Addition`, `op_Division`, `op_Equality` и похожие entries, а `T-0987` отслеживает future `T-0243` semantic normalization layer для сопоставления с Godot source-style `operator +`, `operator /`, `operator ==`.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0242-audit-control-r11.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-new\n- target: T-0988\n- rationale: control r11 finding является hardening-долгом build tooling, а не blocker текущих generated packets; `T-0988` отслеживает canonical containment validation для zip entries в `api fetch-godot` перед строгим доведением этого пути.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0242-audit-r13.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-existing\n- target: T-0988\n- rationale: primary r13 finding повторяет уже заведённый build-tool hardening debt: `T-0988` покрывает canonical containment validation для zip entries в `api fetch-godot`; r13 auditor явно подтвердил, что это не blocker текущих generated API packets и остаётся отдельной P2-задачей.\n\naudit-followup-closure:\n- source: docs/verdicts/release-management/t-0242-audit-control-r14.md\n- id: FOLLOW_UP_FINDING F1\n- state: tracked-new\n- target: T-0989\n- rationale: clean-control r14 finding является P3 hardening-долгом Windows path masking для terminal spaced segments, а не blocker текущих generated Godot 4.7 packets; `T-0989` отслеживает отдельный focused regression и tightening без расширения принятого T-0242 scope.\n\n### Архивное закрытие\n\n- 2026-07-07T12:55:00+03:00 - Primary r14 и clean-control r14 сохранены как `VERDICT: ACCEPT`; actionable `RISKS_AND_NOTES` закрыты через `T-0989`; задача удалена из активного `TASKS.md` и перенесена в июльский архив по goal contract.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-05T00:23:59.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-07-07T09:55:00.0000000+00:00",
+  "completedAt": "2026-07-07T09:55:00.0000000+00:00",
+  "acceptedAt": "2026-07-07T09:55:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-07-07T09:55:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

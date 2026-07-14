@@ -1,0 +1,324 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-b5e1ea9744649d7252b1f4a088fec1cb",
+  "revision": 2,
+  "taskId": "T-0125",
+  "legacyAliases": [],
+  "title": "Сделать проектные операции транзакционными, ревизионными и безопасными для AI",
+  "description": "# T-0125: Сделать проектные операции транзакционными, ревизионными и безопасными для AI\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: `094267e`\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0125 [ ] P0: Сделать проектные операции транзакционными, ревизионными и безопасными для AI\n\n- Создана: 2026-06-21T00:17:01+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0117, T-0139, T-0147\n- Ссылки:\n  - Спецификация: `docs/project-system/workspace-transactions.md`; `docs/architecture/ai-friendly-workflow.md`\n  - Документация: `docs/project-system/workspace-transactions.md`\n  - Исходный код: `src/Electron2D.ProjectSystem/Workspace/WorkspaceTransactions.cs`; `tests/Electron2D.Tests.Integration/WorkspaceTransactionTests.cs`\n\n### Самодостаточное описание\n\nНужно реализовать `WorkspaceTransactionEngine` поверх `ProjectWorkspace`: изменяющие операции разделяют режимы `WorkspaceOnly`, `SaveAffectedDocuments`, `HeadlessCommit` и `ExternalImport`. Editor-команды меняют живую модель, создают Undo-запись и помечают документы dirty без автоматической записи на диск. Сохранение dirty-документов и headless commit выполняются отдельными путями через временные файлы и атомарную замену. External import сравнивает файл с `persistedRevision` и объединяет изменение с текущим dirty-состоянием.\n\nНужны dry-run, backups для миграций, защита project root, запрет редактирования import cache через scene API, audit log MCP operations, `expectedRevision`, `documentRevisions`, `persistedRevision`, `dirtyDocuments`, `persistenceState`, grouped undo и operation provenance.\n\n### Критерии приёмки\n\n- [x] Transaction engine поддерживает dry-run и возвращает changedFiles для save/headless paths.\n- [x] Transaction engine принимает `expectedRevision` для открытых документов и возвращает новую revision.\n- [x] Реализованы и протестированы режимы `WorkspaceOnly`, `SaveAffectedDocuments`, `HeadlessCommit` и `ExternalImport`.\n- [x] Результаты операций возвращают `documentRevisions`, `persistedRevision`, `dirtyDocuments` и `persistenceState`.\n- [x] Непересекающиеся изменения человека и AI структурно объединяются.\n- [x] Конфликтующие изменения одного свойства или удаление изменённого объекта попадают в conflict panel.\n- [x] Каждая AI-операция имеет operation provenance и может попасть в grouped Undo/Redo.\n- [x] Запись выполняется через temporary files и atomic replace.\n- [x] Нет записи за пределами project root.\n- [x] Unknown properties не удаляются молча.\n- [x] Import cache защищён от scene/resource API.\n- [x] Добавлены tests для rollback/backup/error cases.\n\n### Заметки агента\n\nСоздано из AI-friendly архитектурного файла: AI-операции должны быть проверяемыми и безопасными.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:03:00+03:00 - Уточнение пользователя: atomic write недостаточен; нужны revision checks, structural merge, conflict handling, provenance и интеграция в обычный Undo/Redo Editor.\n\n2026-06-22T19:16:00+03:00 - Взято в работу после `T-0147`: зависимости `T-0117`, `T-0139` и `T-0147` готовы к приёмке. Перед production-кодом нужно выделить проверяемую спецификацию transaction engine, добавить красные focused tests для режимов `WorkspaceOnly`, `SaveAffectedDocuments`, `HeadlessCommit` и `ExternalImport`, затем реализовать минимальный internal core.\n\n2026-06-22T19:28:00+03:00 - Реализация готова к приёмке: добавлены спецификация `docs/project-system/workspace-transactions.md`, implementation documentation `docs/project-system/workspace-transactions.md`, focused tests `WorkspaceTransactionTests`, internal transaction model `src/Electron2D.ProjectSystem/Workspace/WorkspaceTransactions.cs`, `ProjectWorkspace.Transactions`, persisted text baseline для open documents и diagnostic code `E2D-TOOLING-0002`. Задача не закрыта за пользователя.\n\nПроверки: красный focused test сначала упал на отсутствующем transaction API; затем прошли `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~WorkspaceTransactionTests`, `git diff --check` с предупреждениями только о будущей LF/CRLF-нормализации Git, `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1`, `dotnet build src\\Electron2D.sln`, `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1`, `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1`, `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` и `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1`.\n```\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009",
+    "tag-0023"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-094d5d511494804413645297336db440"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-ae16b90af93a4555a0963cb5434eefe5"
+    },
+    {
+      "relationId": "relation-0003",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-a129b3843ed32ad18bc5c86dd3b48ede"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Transaction engine поддерживает dry-run и возвращает changedFiles для save/headless paths.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b5e1ea9744649d7252b1f4a088fec1cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Transaction engine принимает `expectedRevision` для открытых документов и возвращает новую revision.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b5e1ea9744649d7252b1f4a088fec1cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Реализованы и протестированы режимы `WorkspaceOnly`, `SaveAffectedDocuments`, `HeadlessCommit` и `ExternalImport`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b5e1ea9744649d7252b1f4a088fec1cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Результаты операций возвращают `documentRevisions`, `persistedRevision`, `dirtyDocuments` и `persistenceState`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b5e1ea9744649d7252b1f4a088fec1cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Непересекающиеся изменения человека и AI структурно объединяются.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b5e1ea9744649d7252b1f4a088fec1cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Конфликтующие изменения одного свойства или удаление изменённого объекта попадают в conflict panel.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b5e1ea9744649d7252b1f4a088fec1cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Каждая AI-операция имеет operation provenance и может попасть в grouped Undo/Redo.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b5e1ea9744649d7252b1f4a088fec1cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Запись выполняется через temporary files и atomic replace.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b5e1ea9744649d7252b1f4a088fec1cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Нет записи за пределами project root.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b5e1ea9744649d7252b1f4a088fec1cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Unknown properties не удаляются молча.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b5e1ea9744649d7252b1f4a088fec1cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Import cache защищён от scene/resource API.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b5e1ea9744649d7252b1f4a088fec1cb/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Добавлены tests для rollback/backup/error cases.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-b5e1ea9744649d7252b1f4a088fec1cb/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T07:24:54.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0003",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:03:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Уточнение пользователя: atomic write недостаточен; нужны revision checks, structural merge, conflict handling, provenance и интеграция в обычный Undo/Redo Editor."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T08:05:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0004",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T16:16:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Взято в работу после `T-0147`: зависимости `T-0117`, `T-0139` и `T-0147` готовы к приёмке. Перед production-кодом нужно выделить проверяемую спецификацию transaction engine, добавить красные focused tests для режимов `WorkspaceOnly`, `SaveAffectedDocuments`, `HeadlessCommit` и `ExternalImport`, затем реализовать минимальный internal core."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0005",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-22T16:28:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Реализация готова к приёмке: добавлены спецификация `docs/project-system/workspace-transactions.md`, implementation documentation `docs/project-system/workspace-transactions.md`, focused tests `WorkspaceTransactionTests`, internal transaction model `src/Electron2D.ProjectSystem/Workspace/WorkspaceTransactions.cs`, `ProjectWorkspace.Transactions`, persisted text baseline для open documents и diagnostic code `E2D-TOOLING-0002`. Задача не закрыта за пользователя."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-22T18:14:16.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/architecture/ai-friendly-workflow.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/project-system/workspace-transactions.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "src/Electron2D.ProjectSystem/Workspace/WorkspaceTransactions.cs"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/WorkspaceTransactionTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 522460,
+      "byteLength": 7105,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "800e143e1d288a48f3d479d9d490cacaefd9f50d934a2c4358ca1934b88ecf2e",
+      "markdown": "# T-0125: Сделать проектные операции транзакционными, ревизионными и безопасными для AI\n\n- Статус: завершена\n- Завершена: 2026-06-22T21:14:16+03:00\n- Приоритет: P0\n- Основание: пользователь явно попросил закрыть все задачи со статусом `ready for acceptance`.\n- Коммит: `094267e`\n\n## Итог\n\n- Задача перенесена из активного `TASKS.md` в архив завершённых задач после пользовательской приёмки.\n- Исходная запись задачи сохранена ниже без изменения исторических заметок, критериев и ссылок.\n\n## Исходная запись из `TASKS.md`\n\n```markdown\n## T-0125 [ ] P0: Сделать проектные операции транзакционными, ревизионными и безопасными для AI\n\n- Создана: 2026-06-21T00:17:01+03:00\n- Приоритет: P0\n- Состояние: ready for acceptance\n- Зависимости: T-0117, T-0139, T-0147\n- Ссылки:\n  - Спецификация: `docs/project-system/workspace-transactions.md`; `docs/architecture/ai-friendly-workflow.md`\n  - Документация: `docs/project-system/workspace-transactions.md`\n  - Исходный код: `src/Electron2D.ProjectSystem/Workspace/WorkspaceTransactions.cs`; `tests/Electron2D.Tests.Integration/WorkspaceTransactionTests.cs`\n\n### Самодостаточное описание\n\nНужно реализовать `WorkspaceTransactionEngine` поверх `ProjectWorkspace`: изменяющие операции разделяют режимы `WorkspaceOnly`, `SaveAffectedDocuments`, `HeadlessCommit` и `ExternalImport`. Editor-команды меняют живую модель, создают Undo-запись и помечают документы dirty без автоматической записи на диск. Сохранение dirty-документов и headless commit выполняются отдельными путями через временные файлы и атомарную замену. External import сравнивает файл с `persistedRevision` и объединяет изменение с текущим dirty-состоянием.\n\nНужны dry-run, backups для миграций, защита project root, запрет редактирования import cache через scene API, audit log MCP operations, `expectedRevision`, `documentRevisions`, `persistedRevision`, `dirtyDocuments`, `persistenceState`, grouped undo и operation provenance.\n\n### Критерии приёмки\n\n- [x] Transaction engine поддерживает dry-run и возвращает changedFiles для save/headless paths.\n- [x] Transaction engine принимает `expectedRevision` для открытых документов и возвращает новую revision.\n- [x] Реализованы и протестированы режимы `WorkspaceOnly`, `SaveAffectedDocuments`, `HeadlessCommit` и `ExternalImport`.\n- [x] Результаты операций возвращают `documentRevisions`, `persistedRevision`, `dirtyDocuments` и `persistenceState`.\n- [x] Непересекающиеся изменения человека и AI структурно объединяются.\n- [x] Конфликтующие изменения одного свойства или удаление изменённого объекта попадают в conflict panel.\n- [x] Каждая AI-операция имеет operation provenance и может попасть в grouped Undo/Redo.\n- [x] Запись выполняется через temporary files и atomic replace.\n- [x] Нет записи за пределами project root.\n- [x] Unknown properties не удаляются молча.\n- [x] Import cache защищён от scene/resource API.\n- [x] Добавлены tests для rollback/backup/error cases.\n\n### Заметки агента\n\nСоздано из AI-friendly архитектурного файла: AI-операции должны быть проверяемыми и безопасными.\n\n2026-06-22T10:24:54+03:00 - Блокер пользователя: все AI-friendly задачи временно заблокированы. Не начинать реализацию до отдельной команды пользователя на разблокировку.\n\n2026-06-22T11:05:00+03:00 — АКТУАЛЬНЫЙ СТАТУС: предыдущий blocker снят. Задача доступна после закрытия её зависимостей. Предыдущая blocker-запись сохранена только как историческая.\n\n2026-06-22T11:03:00+03:00 - Уточнение пользователя: atomic write недостаточен; нужны revision checks, structural merge, conflict handling, provenance и интеграция в обычный Undo/Redo Editor.\n\n2026-06-22T19:16:00+03:00 - Взято в работу после `T-0147`: зависимости `T-0117`, `T-0139` и `T-0147` готовы к приёмке. Перед production-кодом нужно выделить проверяемую спецификацию transaction engine, добавить красные focused tests для режимов `WorkspaceOnly`, `SaveAffectedDocuments`, `HeadlessCommit` и `ExternalImport`, затем реализовать минимальный internal core.\n\n2026-06-22T19:28:00+03:00 - Реализация готова к приёмке: добавлены спецификация `docs/project-system/workspace-transactions.md`, implementation documentation `docs/project-system/workspace-transactions.md`, focused tests `WorkspaceTransactionTests`, internal transaction model `src/Electron2D.ProjectSystem/Workspace/WorkspaceTransactions.cs`, `ProjectWorkspace.Transactions`, persisted text baseline для open documents и diagnostic code `E2D-TOOLING-0002`. Задача не закрыта за пользователя.\n\nПроверки: красный focused test сначала упал на отсутствующем transaction API; затем прошли `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter FullyQualifiedName~WorkspaceTransactionTests`, `git diff --check` с предупреждениями только о будущей LF/CRLF-нормализации Git, `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1`, `dotnet build src\\Electron2D.sln`, `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1`, `powershell -ExecutionPolicy Bypass -File tools\\Verify-LocalDocumentation.ps1`, `powershell -ExecutionPolicy Bypass -File tools\\Verify-UserDocumentation.ps1` и `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceDomainLayout.ps1`.\n```\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T21:17:01.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "completedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-22T18:14:16.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

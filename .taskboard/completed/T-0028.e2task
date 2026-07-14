@@ -1,0 +1,109 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-c3a60d27726a1bfbcb4342e685054f5d",
+  "revision": 2,
+  "taskId": "T-0028",
+  "legacyAliases": [],
+  "title": "Реализовать immediate drawing API `DrawLine`, `DrawRect`, `DrawCircle`, `DrawPolygon`, `DrawTexture`, `DrawString`, `QueueRedraw`",
+  "description": "# T-0028 [x] P1: Реализовать immediate drawing API `DrawLine`, `DrawRect`, `DrawCircle`, `DrawPolygon`, `DrawTexture`, `DrawString`, `QueueRedraw`\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T04:01:00+03:00\n- Статус: завершена\n- Коммит: `T-0028: реализовать immediate drawing baseline`\n\n## Итог\n\nРеализован baseline immediate drawing для целевого API для `CanvasItem`: `_Draw()`, `QueueRedraw()`, `DrawLine()`, `DrawRect()`, `DrawCircle()`, `DrawPolygon()`, `DrawTexture()`, `DrawString()`, минимальные public `Font`/`HorizontalAlignment` и internal cached draw command submission.\n\n## Проверенное поведение\n\n- `QueueRedraw()` coalesces redraw: несколько вызовов до frame дают один `_Draw()` callback.\n- Cached draw commands переиспользуются, пока item не queued for redraw.\n- `Draw*` methods разрешены только во время `_Draw()` и бросают `InvalidOperationException` вне draw callback.\n- Ошибки в `_Draw()` сохраняются как internal diagnostics и не ломают traversal.\n- `CanvasSubmissionContext` отправляет line, rect, circle, polygon, texture и string commands в `CanvasItemRenderPlan`.\n- `DrawTexture()` использует source rect по размеру `Texture2D`.\n- `DrawString()` сохраняет `Font`, text, baseline position, `HorizontalAlignment`, width и font size, но не выполняет glyph layout.\n- Golden-data тест фиксирует stable primitive command stream для line/rect/circle.\n\n## Документация\n\n- Добавлена спецификация `docs/rendering/immediate-drawing-baseline.md`.\n- Добавлена справка `docs/rendering/immediate-drawing-baseline.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены `.github/wiki/API-Compatibility.md`, `README.md`, `CHANGELOG.md` и `RELEASE-NOTES.md`.\n- Обновлены canvas/texture docs и release-management API compatibility docs.\n\n## Проверки\n\n- Red-state unit: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --no-restore` упал на отсутствующем `_Draw()`.\n- Red-state integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` упал на отсутствующих `Font` и `_Draw()`.\n- Red-state golden-data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --no-restore` упал на отсутствующем `_Draw()`.\n- Focused green unit: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --no-restore` - прошло, 47 тестов.\n- Focused green integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 72 теста.\n- Focused green golden-data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --no-restore` - прошло, 2 теста.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 38.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit 47, integration 72, runtime smoke 3, golden data 2.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n- `git diff --check` - прошло; предупреждения были только о будущей нормализации переносов строк Git под Windows.\n- Pre-stage `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло, 113 tracked source files.\n- Staged `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло, 120 tracked source files.\n- `git diff --cached --check` - прошло.\n\n## Заметки агента\n\nРеальный primitive GPU renderer, texture rect/region drawing, polyline/multiline APIs и glyph layout не входят в T-0028. `DrawString()` сохраняет команду для будущего text backend `T-0029`.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-21T01:01:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".github/wiki/API-Compatibility.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/rendering/immediate-drawing-baseline.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 88568,
+      "byteLength": 4555,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "7f87e0fe67577b0b9709eeb6e1a24fcfc6850261c9e87594be5cc983a30e4f7d",
+      "markdown": "# T-0028 [x] P1: Реализовать immediate drawing API `DrawLine`, `DrawRect`, `DrawCircle`, `DrawPolygon`, `DrawTexture`, `DrawString`, `QueueRedraw`\n\n- Создана: 2026-06-20T16:16:20+03:00\n- Завершена: 2026-06-21T04:01:00+03:00\n- Статус: завершена\n- Коммит: `T-0028: реализовать immediate drawing baseline`\n\n## Итог\n\nРеализован baseline immediate drawing для целевого API для `CanvasItem`: `_Draw()`, `QueueRedraw()`, `DrawLine()`, `DrawRect()`, `DrawCircle()`, `DrawPolygon()`, `DrawTexture()`, `DrawString()`, минимальные public `Font`/`HorizontalAlignment` и internal cached draw command submission.\n\n## Проверенное поведение\n\n- `QueueRedraw()` coalesces redraw: несколько вызовов до frame дают один `_Draw()` callback.\n- Cached draw commands переиспользуются, пока item не queued for redraw.\n- `Draw*` methods разрешены только во время `_Draw()` и бросают `InvalidOperationException` вне draw callback.\n- Ошибки в `_Draw()` сохраняются как internal diagnostics и не ломают traversal.\n- `CanvasSubmissionContext` отправляет line, rect, circle, polygon, texture и string commands в `CanvasItemRenderPlan`.\n- `DrawTexture()` использует source rect по размеру `Texture2D`.\n- `DrawString()` сохраняет `Font`, text, baseline position, `HorizontalAlignment`, width и font size, но не выполняет glyph layout.\n- Golden-data тест фиксирует stable primitive command stream для line/rect/circle.\n\n## Документация\n\n- Добавлена спецификация `docs/rendering/immediate-drawing-baseline.md`.\n- Добавлена справка `docs/rendering/immediate-drawing-baseline.md`.\n- Обновлены индексы спецификаций и документации.\n- Обновлены `.github/wiki/API-Compatibility.md`, `README.md`, `CHANGELOG.md` и `RELEASE-NOTES.md`.\n- Обновлены canvas/texture docs и release-management API compatibility docs.\n\n## Проверки\n\n- Red-state unit: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --no-restore` упал на отсутствующем `_Draw()`.\n- Red-state integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` упал на отсутствующих `Font` и `_Draw()`.\n- Red-state golden-data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --no-restore` упал на отсутствующем `_Draw()`.\n- Focused green unit: `dotnet test tests\\Electron2D.Tests.Unit\\Electron2D.Tests.Unit.csproj --no-restore` - прошло, 47 тестов.\n- Focused green integration: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --no-restore` - прошло, 72 теста.\n- Focused green golden-data: `dotnet test tests\\Electron2D.Tests.GoldenData\\Electron2D.Tests.GoldenData.csproj --no-restore` - прошло, 2 теста.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ApiCompatibility.ps1` - прошло, public types: 38.\n- `powershell -ExecutionPolicy Bypass -File tools\\Run-Tests.ps1` - прошло: unit 47, integration 72, runtime smoke 3, golden data 2.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ReleaseMetadata.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-ProjectTemplate.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-CiMatrix.ps1` - прошло.\n- `powershell -ExecutionPolicy Bypass -File tools\\Verify-PerformanceBudgets.ps1` - прошло.\n- `git diff --check` - прошло; предупреждения были только о будущей нормализации переносов строк Git под Windows.\n- Pre-stage `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло, 113 tracked source files.\n- Staged `powershell -ExecutionPolicy Bypass -File tools\\Verify-SourceLicenseHeaders.ps1` - прошло, 120 tracked source files.\n- `git diff --cached --check` - прошло.\n\n## Заметки агента\n\nРеальный primitive GPU renderer, texture rect/region drawing, polyline/multiline APIs и glyph layout не входят в T-0028. `DrawString()` сохраняет команду для будущего text backend `T-0029`.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T13:16:20.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-21T01:01:00.0000000+00:00",
+  "completedAt": "2026-06-21T01:01:00.0000000+00:00",
+  "acceptedAt": "2026-06-21T01:01:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-21T01:01:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

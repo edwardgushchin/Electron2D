@@ -1,0 +1,328 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-99f26df853a57e1d0fcd1dd59b62ec60",
+  "revision": 2,
+  "taskId": "T-0163",
+  "legacyAliases": [],
+  "title": "Выбрать и валидировать распространяемый .NET debug adapter",
+  "description": "## T-0163 - Выбрать и валидировать распространяемый .NET debug adapter\n\n- Закрыта: 2026-06-23T07:19:00+03:00\n- Коммит: `f9d7f30 docs: select managed debug adapter`\n- Спецификация:\n  - `docs/scripting/editor-script-workflow.md`\n- Документация:\n  - `docs/scripting/managed-debug-adapter-selection.md`\n  - `docs/README.md`\n- Исходный код, данные и тесты:\n  - `data/debugging/dotnet-debug-adapter-selection.json`\n  - `tests/Electron2D.Tests.Integration/ManagedDebugAdapterSelectionTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nВыбран adapter `netcoredbg` release `3.1.3-1062` под MIT License. Результат зафиксирован в tracked manifest `data/debugging/dotnet-debug-adapter-selection.json`, чтобы `T-0160` использовала готовый выбор без повторного сравнения adapter-ов.\n\nWindows x64 проверен фактическим DAP smoke: download/extract `netcoredbg-win64.zip`, `--version`, Debug sample app с Portable PDB, DAP `initialize`, `launch`, `setBreakpoints`, `configurationDone`, остановка `stopped:breakpoint`, `threads`, `stackTrace`, `scopes`, `variables`, `evaluate`, `next`, `continue`, `disconnect`. Отдельно проверен DAP `attach` к уже запущенному .NET process: `attach`, `configurationDone`, `threads`, `pause`, managed stack frame, `continue`, `disconnect`.\n\nLinux x64 зафиксирован как upstream binary asset с SHA256. macOS arm64 зафиксирован как Electron2D source-build target, потому что upstream release публикует `osx-amd64`, но не `osx-arm64`; перед поставкой macOS package нужно собрать artifact из pinned MIT source tag и выполнить тот же DAP smoke на macOS arm64 host.\n\n### Критерии и результат\n\n- [x] Проверены Windows x64, Linux x64 и macOS arm64 как release packaging targets: Windows выполнен локально, Linux asset найден и захеширован, macOS arm64 требует source-build gate из pinned source tag.\n- [x] Проверена работа с Portable PDB на Windows Debug sample.\n- [x] Проверены launch и attach capability выбранного adapter. Attach к конкретному `EditorRunSession`/RuntimeController process ID остаётся integration шагом `T-0160`, потому что текущий RuntimeController не публикует PID в managed debugger boundary.\n- [x] Проверены breakpoints, stepping, locals, watches/evaluate и exceptions capability matrix.\n- [x] Restart определён как Editor-managed `disconnect + launch`, потому что `netcoredbg` не объявляет native DAP restart request.\n- [x] Составлена DAP capability matrix выбранного adapter.\n- [x] Подходящий DAP adapter найден, отдельное архитектурное решение для обхода DAP не требуется.\n- [x] Проверена MIT License и право распространения adapter binaries/source-build artifacts вместе с Electron2D при поставке license notice.\n- [x] Определён способ обновления adapter binaries через повтор T-0163 checklist.\n- [x] Результат spike оформлен в документации с выбранным adapter, ограничениями и командами проверки.\n- [x] `T-0160` может использовать результат без повторного выбора adapter.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ManagedDebugAdapterSelectionTests\"` упал ожидаемо на отсутствующем `data/debugging/dotnet-debug-adapter-selection.json`.\n- Windows DAP launch smoke: одноразовый Node.js harness прошёл `initialize`, `launch`, `setBreakpoints`, `configurationDone`, `stopped:breakpoint`, `threads`, `stackTrace`, `scopes`, `variables`, `next`, `continue`, `disconnect`; evidence сохранён локально в `.temp/debug-adapter/dap-smoke/windows-dap-smoke.json`.\n- Windows DAP attach smoke: одноразовый Node.js harness прошёл `attach`, `configurationDone`, `threads`, `pause`, managed stack frame, `continue`, `disconnect`; evidence сохранён локально в `.temp/debug-adapter/dap-smoke/windows-dap-attach-smoke.json`.\n- Evaluate smoke: DAP `evaluate` для expression `value` в stopped frame вернул `41` типа `int`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ManagedDebugAdapterSelectionTests\"` прошёл `1/1`.\n- Build: `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`.\n- Verifiers: `Verify-SourceLicenseHeaders.ps1`, `Verify-LocalDocumentation.ps1`, `Verify-SourceDomainLayout.ps1`, `Verify-CanonicalGoalAlignment.ps1` прошли.\n- Full tests: `tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `401/401`, runtime smoke `5/5`, golden-data `12/12`.\n\n### Решения\n\n- `netcoredbg` выбран как наиболее зрелый MIT-compatible adapter; `SharpDbg` отложен из-за отсутствия release/package assets на момент проверки, Microsoft debugger adapters отклонены по причине несовместимой distribution model для Electron2D.\n- macOS arm64 не берётся из upstream binary release: Electron2D должен build/sign/package свой artifact из pinned source tag и запускать platform smoke в release pipeline.\n- Native DAP restart не требуется от adapter. `T-0160` должен реализовать restart как остановку текущей debug session и новый `launch` на свежем `WorkspaceSnapshot`.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0163 [ ] P0: Выбрать и валидировать распространяемый .NET debug adapter\n\n- Создана: 2026-06-22T16:04:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0144, T-0153\n- Ссылки:\n  - Спецификация: `docs/scripting/editor-script-workflow.md`\n  - Документация: `docs/scripting/`; `docs/editor/`\n  - Исходный код: `.temp/` для spike artifacts; будущий `src/Electron2D.ManagedDebugging/`\n\n### Самодостаточное описание\n\nНужно выбрать packaged .NET debug adapter, который можно распространять вместе с Electron2D, и проверить его до реализации полноценного managed debugger. Это отдельный technical spike: он закрывает риск лицензии, платформенной поддержки и DAP capabilities до `T-0160`.\n\n### Критерии приёмки\n\n- [ ] Проверены Windows x64, Linux x64 и macOS arm64.\n- [ ] Проверена работа с Portable PDB.\n- [ ] Проверены launch и attach к game process, запущенному Editor RuntimeController.\n- [ ] Проверены breakpoints, stepping, locals, watches и exceptions.\n- [ ] Проверен restart debug session.\n- [ ] Составлена DAP capability matrix выбранного adapter.\n- [ ] Если подходящий DAP adapter не найден, оформлено отдельное архитектурное решение; без него `T-0160` не имеет права заменить DAP другим protocol boundary.\n- [ ] Проверена лицензия и право распространения adapter binaries вместе с Electron2D.\n- [ ] Определён способ обновления adapter binaries.\n- [ ] Результат spike оформлен в документации с выбранным adapter, ограничениями и командами проверки.\n- [ ] `T-0160` может использовать результат без повторного выбора adapter.\n\n### Заметки агента\n\nСоздано по замечанию пользователя: выбор debugger adapter должен быть отдельным P0-spike перед реализацией managed C# debugger. В локальном tracker `T-0162` уже занята бренд-паком, поэтому spike получил следующий свободный ID `T-0163`.\n\n2026-06-23T06:54:00+03:00 - Задача взята в работу после закрытия `T-0159`; `T-0160` остаётся заблокированной до результата этого spike. Перед выбором adapter нужно уточнить проверяемый acceptance в `docs/scripting/editor-script-workflow.md`, добавить red tests/harness для выбранного adapter и оформить implementation documentation с матрицей capability/license/platform validation.\n```\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-e587728f5886c91618d4e563dc396222"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-8f9de83d456b281aabdaa6b0dbd08764"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Проверены Windows x64, Linux x64 и macOS arm64 как release packaging targets: Windows выполнен локально, Linux asset найден и захеширован, macOS arm64 требует source-build gate из pinned source tag.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-99f26df853a57e1d0fcd1dd59b62ec60/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Проверена работа с Portable PDB на Windows Debug sample.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-99f26df853a57e1d0fcd1dd59b62ec60/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Проверены launch и attach capability выбранного adapter. Attach к конкретному `EditorRunSession`/RuntimeController process ID остаётся integration шагом `T-0160`, потому что текущий RuntimeController не публикует PID в managed debugger boundary.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-99f26df853a57e1d0fcd1dd59b62ec60/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Проверены breakpoints, stepping, locals, watches/evaluate и exceptions capability matrix.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-99f26df853a57e1d0fcd1dd59b62ec60/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Restart определён как Editor-managed `disconnect + launch`, потому что `netcoredbg` не объявляет native DAP restart request.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-99f26df853a57e1d0fcd1dd59b62ec60/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Составлена DAP capability matrix выбранного adapter.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-99f26df853a57e1d0fcd1dd59b62ec60/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Подходящий DAP adapter найден, отдельное архитектурное решение для обхода DAP не требуется.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-99f26df853a57e1d0fcd1dd59b62ec60/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Проверена MIT License и право распространения adapter binaries/source-build artifacts вместе с Electron2D при поставке license notice.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-99f26df853a57e1d0fcd1dd59b62ec60/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Определён способ обновления adapter binaries через повтор T-0163 checklist.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-99f26df853a57e1d0fcd1dd59b62ec60/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Результат spike оформлен в документации с выбранным adapter, ограничениями и командами проверки.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-99f26df853a57e1d0fcd1dd59b62ec60/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "`T-0160` может использовать результат без повторного выбора adapter.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-99f26df853a57e1d0fcd1dd59b62ec60/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T03:54:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача взята в работу после закрытия `T-0159`; `T-0160` остаётся заблокированной до результата этого spike. Перед выбором adapter нужно уточнить проверяемый acceptance в `docs/scripting/editor-script-workflow.md`, добавить red tests/harness для выбранного adapter и оформить implementation documentation с матрицей capability/license/platform validation."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-23T04:19:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": ".temp"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": ".temp/debug-adapter/dap-smoke/windows-dap-attach-smoke.json"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": ".temp/debug-adapter/dap-smoke/windows-dap-smoke.json"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "401/401"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "data/debugging/dotnet-debug-adapter-selection.json"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/README.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "Directory",
+      "value": "docs/scripting"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "docs/scripting/editor-script-workflow.md"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "File",
+      "value": "docs/scripting/managed-debug-adapter-selection.md"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "Directory",
+      "value": "src/Electron2D.ManagedDebugging"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/ManagedDebugAdapterSelectionTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 786697,
+      "byteLength": 9385,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "dfc145842b3c549fbc4df5fadee1a67d0a737a8d826642a43c0cde93ca54628b",
+      "markdown": "## T-0163 - Выбрать и валидировать распространяемый .NET debug adapter\n\n- Закрыта: 2026-06-23T07:19:00+03:00\n- Коммит: `f9d7f30 docs: select managed debug adapter`\n- Спецификация:\n  - `docs/scripting/editor-script-workflow.md`\n- Документация:\n  - `docs/scripting/managed-debug-adapter-selection.md`\n  - `docs/README.md`\n- Исходный код, данные и тесты:\n  - `data/debugging/dotnet-debug-adapter-selection.json`\n  - `tests/Electron2D.Tests.Integration/ManagedDebugAdapterSelectionTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nВыбран adapter `netcoredbg` release `3.1.3-1062` под MIT License. Результат зафиксирован в tracked manifest `data/debugging/dotnet-debug-adapter-selection.json`, чтобы `T-0160` использовала готовый выбор без повторного сравнения adapter-ов.\n\nWindows x64 проверен фактическим DAP smoke: download/extract `netcoredbg-win64.zip`, `--version`, Debug sample app с Portable PDB, DAP `initialize`, `launch`, `setBreakpoints`, `configurationDone`, остановка `stopped:breakpoint`, `threads`, `stackTrace`, `scopes`, `variables`, `evaluate`, `next`, `continue`, `disconnect`. Отдельно проверен DAP `attach` к уже запущенному .NET process: `attach`, `configurationDone`, `threads`, `pause`, managed stack frame, `continue`, `disconnect`.\n\nLinux x64 зафиксирован как upstream binary asset с SHA256. macOS arm64 зафиксирован как Electron2D source-build target, потому что upstream release публикует `osx-amd64`, но не `osx-arm64`; перед поставкой macOS package нужно собрать artifact из pinned MIT source tag и выполнить тот же DAP smoke на macOS arm64 host.\n\n### Критерии и результат\n\n- [x] Проверены Windows x64, Linux x64 и macOS arm64 как release packaging targets: Windows выполнен локально, Linux asset найден и захеширован, macOS arm64 требует source-build gate из pinned source tag.\n- [x] Проверена работа с Portable PDB на Windows Debug sample.\n- [x] Проверены launch и attach capability выбранного adapter. Attach к конкретному `EditorRunSession`/RuntimeController process ID остаётся integration шагом `T-0160`, потому что текущий RuntimeController не публикует PID в managed debugger boundary.\n- [x] Проверены breakpoints, stepping, locals, watches/evaluate и exceptions capability matrix.\n- [x] Restart определён как Editor-managed `disconnect + launch`, потому что `netcoredbg` не объявляет native DAP restart request.\n- [x] Составлена DAP capability matrix выбранного adapter.\n- [x] Подходящий DAP adapter найден, отдельное архитектурное решение для обхода DAP не требуется.\n- [x] Проверена MIT License и право распространения adapter binaries/source-build artifacts вместе с Electron2D при поставке license notice.\n- [x] Определён способ обновления adapter binaries через повтор T-0163 checklist.\n- [x] Результат spike оформлен в документации с выбранным adapter, ограничениями и командами проверки.\n- [x] `T-0160` может использовать результат без повторного выбора adapter.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ManagedDebugAdapterSelectionTests\"` упал ожидаемо на отсутствующем `data/debugging/dotnet-debug-adapter-selection.json`.\n- Windows DAP launch smoke: одноразовый Node.js harness прошёл `initialize`, `launch`, `setBreakpoints`, `configurationDone`, `stopped:breakpoint`, `threads`, `stackTrace`, `scopes`, `variables`, `next`, `continue`, `disconnect`; evidence сохранён локально в `.temp/debug-adapter/dap-smoke/windows-dap-smoke.json`.\n- Windows DAP attach smoke: одноразовый Node.js harness прошёл `attach`, `configurationDone`, `threads`, `pause`, managed stack frame, `continue`, `disconnect`; evidence сохранён локально в `.temp/debug-adapter/dap-smoke/windows-dap-attach-smoke.json`.\n- Evaluate smoke: DAP `evaluate` для expression `value` в stopped frame вернул `41` типа `int`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~ManagedDebugAdapterSelectionTests\"` прошёл `1/1`.\n- Build: `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`.\n- Verifiers: `Verify-SourceLicenseHeaders.ps1`, `Verify-LocalDocumentation.ps1`, `Verify-SourceDomainLayout.ps1`, `Verify-CanonicalGoalAlignment.ps1` прошли.\n- Full tests: `tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `401/401`, runtime smoke `5/5`, golden-data `12/12`.\n\n### Решения\n\n- `netcoredbg` выбран как наиболее зрелый MIT-compatible adapter; `SharpDbg` отложен из-за отсутствия release/package assets на момент проверки, Microsoft debugger adapters отклонены по причине несовместимой distribution model для Electron2D.\n- macOS arm64 не берётся из upstream binary release: Electron2D должен build/sign/package свой artifact из pinned source tag и запускать platform smoke в release pipeline.\n- Native DAP restart не требуется от adapter. `T-0160` должен реализовать restart как остановку текущей debug session и новый `launch` на свежем `WorkspaceSnapshot`.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0163 [ ] P0: Выбрать и валидировать распространяемый .NET debug adapter\n\n- Создана: 2026-06-22T16:04:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0144, T-0153\n- Ссылки:\n  - Спецификация: `docs/scripting/editor-script-workflow.md`\n  - Документация: `docs/scripting/`; `docs/editor/`\n  - Исходный код: `.temp/` для spike artifacts; будущий `src/Electron2D.ManagedDebugging/`\n\n### Самодостаточное описание\n\nНужно выбрать packaged .NET debug adapter, который можно распространять вместе с Electron2D, и проверить его до реализации полноценного managed debugger. Это отдельный technical spike: он закрывает риск лицензии, платформенной поддержки и DAP capabilities до `T-0160`.\n\n### Критерии приёмки\n\n- [ ] Проверены Windows x64, Linux x64 и macOS arm64.\n- [ ] Проверена работа с Portable PDB.\n- [ ] Проверены launch и attach к game process, запущенному Editor RuntimeController.\n- [ ] Проверены breakpoints, stepping, locals, watches и exceptions.\n- [ ] Проверен restart debug session.\n- [ ] Составлена DAP capability matrix выбранного adapter.\n- [ ] Если подходящий DAP adapter не найден, оформлено отдельное архитектурное решение; без него `T-0160` не имеет права заменить DAP другим protocol boundary.\n- [ ] Проверена лицензия и право распространения adapter binaries вместе с Electron2D.\n- [ ] Определён способ обновления adapter binaries.\n- [ ] Результат spike оформлен в документации с выбранным adapter, ограничениями и командами проверки.\n- [ ] `T-0160` может использовать результат без повторного выбора adapter.\n\n### Заметки агента\n\nСоздано по замечанию пользователя: выбор debugger adapter должен быть отдельным P0-spike перед реализацией managed C# debugger. В локальном tracker `T-0162` уже занята бренд-паком, поэтому spike получил следующий свободный ID `T-0163`.\n\n2026-06-23T06:54:00+03:00 - Задача взята в работу после закрытия `T-0159`; `T-0160` остаётся заблокированной до результата этого spike. Перед выбором adapter нужно уточнить проверяемый acceptance в `docs/scripting/editor-script-workflow.md`, добавить red tests/harness для выбранного adapter и оформить implementation documentation с матрицей capability/license/platform validation.\n```\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T13:04:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-23T04:19:00.0000000+00:00",
+  "completedAt": "2026-06-23T04:19:00.0000000+00:00",
+  "acceptedAt": "2026-06-23T04:19:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-23T04:19:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

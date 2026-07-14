@@ -106,6 +106,7 @@ internal static class WindowsExportPlanner
                 "assets/",
                 "resources/",
                 "scenes/",
+                ".taskboard/",
                 ".electron2d/tasks/"
             ],
             IncludeDebugSymbols = preset.IncludeDebugSymbols

@@ -1,0 +1,366 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-64e2349d092d26dab374236689d2dfd4",
+  "revision": 2,
+  "taskId": "T-0157",
+  "legacyAliases": [],
+  "title": "Реализовать Editor shell по UX-референсу Godot 4 и центральные workspaces",
+  "description": "## T-0157 - Реализовать Editor shell по UX-референсу Godot 4 и центральные workspaces\n\n- Закрыта: 2026-06-23T04:25:00+03:00\n- Коммит: `b2b2e9b feat: add editor shell layout harness`\n- Спецификация:\n  - `docs/editor/godot4-editor-reference.md`\n  - `docs/releases/0.1.0-preview.md`\n- Документация:\n  - `docs/editor/editor-shell-layout.md`\n  - `docs/editor/editor-project-shell.md`\n  - `docs/README.md`\n- Исходный код и тесты:\n  - `src/Electron2D.Editor/Shell/`\n  - `src/Electron2D.Editor/EditorApplication.cs`\n  - `src/Electron2D.Editor/Program.cs`\n  - `tests/Electron2D.Tests.Integration/EditorShellLayoutTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nРеализован model-first shell layout для `Electron2D.Editor`: top menu, workspace switcher `2D`/`Script`/`Game`/`Tasks`, document tabs, `Scene`/`FileSystem` слева, `Inspector`/`Node`/`Agent Workspace` справа и сворачиваемая bottom panel. Layout сохраняет selected workspace, dock sizes, document tabs и per-workspace state: selection, scroll, zoom и open documents. Добавлены machine-readable shortcut map, forbidden UI checks и documented automated visual harness, который сохраняет PNG screenshot и JSON-анализ.\n\n### Критерии и результат\n\n- [x] Реализован default layout по `docs/editor/godot4-editor-reference.md`.\n- [x] Workspace switcher содержит только `2D`, `Script`, `Game`, `Tasks`.\n- [x] Workspace `3D`, `AssetLib`, GDScript UI и disabled 3D controls отсутствуют во всём UI.\n- [x] Слева расположены `Scene` и `FileSystem` docks.\n- [x] Справа расположены `Inspector`/`Node` docks и зарезервированная dock area для `Agent Workspace`.\n- [x] Bottom panel сворачивается и разворачивается.\n- [x] Layout docks, размеры, открытые tabs и выбранный workspace сохраняются между запусками.\n- [x] Workspace switching сохраняет selection, scroll, zoom и открытые документы там, где это применимо.\n- [x] Keyboard shortcut map не содержит 3D/GDScript shortcuts.\n- [x] Screenshot/golden acceptance реализован через documented automated harness до полной desktop automation.\n- [x] Создан screenshot `.temp/editor-shell-visual/visual/editor-shell-default.png`; проведён ручной visual review размещения, переполнения текста, кликабельных controls и соответствия спецификации.\n- [x] Документация фактического поведения обновлена.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorShellLayoutTests\"` упал ожидаемо на отсутствующей `--shell-layout-smoke`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorShellLayoutTests\"` прошёл `1/1`.\n- Visual smoke: `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --shell-layout-smoke .temp\\editor-shell-visual` прошёл и создал PNG/JSON artifacts.\n- Visual review: screenshot открыт агентом; подтверждены workspace switcher, dock placement, bottom panel, отсутствие text overflow и отсутствие `3D`, `AssetLib`, GDScript UI.\n- Focused regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Editor\" -m:1` прошёл `32/32`.\n- Build: `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`.\n- Verifiers: `Verify-SourceLicenseHeaders.ps1`, `Verify-LocalDocumentation.ps1`, `Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki`, `Verify-SourceDomainLayout.ps1` прошли.\n- Full tests: повторный `tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `396/396`, runtime smoke `5/5`, golden-data `12/12`. Первый полный запуск упал на flaky local documentation JSON parse; отдельная CLI-команда и focused test прошли, повторный полный запуск прошёл.\n\n### Решения\n\n- До появления постоянного desktop event loop shell закрывается через documented automated harness, который строит тот же `EditorShellLayout`, что и стартовый `EditorApplication`.\n- `ScreenshotReviewed=True` в smoke output означает успешный automated analysis; ручной просмотр PNG отдельно зафиксирован в дневнике и этой архивной записи.\n- Содержательная реализация `Script`, `Game`, `Tasks`, `Agent Workspace` и debugger остаётся в следующих задачах, а T-0157 закрывает общий layout, persistence и визуальный acceptance baseline.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0157 [ ] P0: Реализовать Editor shell по UX-референсу Godot 4 и центральные workspaces\n\n- Создана: 2026-06-22T15:20:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0078, T-0129\n- Ссылки:\n  - Спецификация: `docs/editor/godot4-editor-reference.md`; `docs/releases/0.1.0-preview.md`\n  - Документация: `docs/editor/`\n  - Исходный код: `src/Electron2D.Editor/`; `tests/`\n\n### Самодостаточное описание\n\nНужно реализовать базовый shell `Electron2D.Editor`, где Godot 4 является каноническим UX- и layout-референсом: верхнее меню, workspace switcher, scene/document tabs, центральная область, `Scene`/`FileSystem` docks слева, `Inspector`/`Node` справа и bottom panel снизу. Electron2D при этом остаётся строго 2D: workspace `3D`, 3D controls, 3D settings, GDScript UI и `AssetLib` отсутствуют полностью.\n\nЦентральные workspaces `0.1.0`: `2D`, `Script`, `Game`, `Tasks`. Эта задача создаёт общий shell, layout persistence и переключение workspaces; содержательная реализация Agent Workspace, Task Board, Script IDE и debugger закрывается отдельными задачами.\n\n### Критерии приёмки\n\n- [ ] Реализован default layout по `docs/editor/godot4-editor-reference.md`.\n- [ ] Workspace switcher содержит только `2D`, `Script`, `Game`, `Tasks`.\n- [ ] Workspace `3D`, `AssetLib`, GDScript UI и disabled 3D controls отсутствуют во всём UI.\n- [ ] Слева расположены `Scene` и `FileSystem` docks.\n- [ ] Справа расположены `Inspector`/`Node` docks и зарезервированная dock area для `Agent Workspace`.\n- [ ] Bottom panel сворачивается и разворачивается.\n- [ ] Layout docks, размеры, открытые tabs и выбранный workspace сохраняются между запусками.\n- [ ] Workspace switching сохраняет selection, scroll, zoom и открытые документы там, где это применимо.\n- [ ] Keyboard shortcut map не содержит 3D/GDScript shortcuts.\n- [ ] Screenshot/golden tests подтверждают default layout на Windows, Linux и macOS либо имеют documented platform harness до полной автоматизации.\n- [ ] Создан и сохранён screenshot окна `Electron2D.Editor`; проведён анализ workspace switcher, dock placement, bottom panel, отсутствия переполнения текста, кликабельности основных controls и соответствия `docs/editor/godot4-editor-reference.md`.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: `Electron2D.Editor` должен использовать Godot 4 как канонический UX/layout reference, но без 3D, GDScript и AssetLib; `Tasks` является центральным workspace.\n\n2026-06-23T03:57:00+03:00 - Задача взята в работу после подтверждения `tools\\Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki`: UI public API gate проходит. До production-кода нужно уточнить проверяемый shell layout contract, добавить red tests и сохранить screenshot artifact с анализом видимого UI.\n```\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "Unspecified",
+  "tagIds": [
+    "tag-0009",
+    "tag-0017"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-cc9ad8b28e56d3f9ecd8e5efa6602736"
+    },
+    {
+      "relationId": "relation-0002",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-045f38cf3a9a10f510ad88b37dbd4213"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Реализован default layout по `docs/editor/godot4-editor-reference.md`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-64e2349d092d26dab374236689d2dfd4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Workspace switcher содержит только `2D`, `Script`, `Game`, `Tasks`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-64e2349d092d26dab374236689d2dfd4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Workspace `3D`, `AssetLib`, GDScript UI и disabled 3D controls отсутствуют во всём UI.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-64e2349d092d26dab374236689d2dfd4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Слева расположены `Scene` и `FileSystem` docks.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-64e2349d092d26dab374236689d2dfd4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-005",
+      "description": "Справа расположены `Inspector`/`Node` docks и зарезервированная dock area для `Agent Workspace`.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-64e2349d092d26dab374236689d2dfd4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-006",
+      "description": "Bottom panel сворачивается и разворачивается.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-64e2349d092d26dab374236689d2dfd4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-007",
+      "description": "Layout docks, размеры, открытые tabs и выбранный workspace сохраняются между запусками.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-64e2349d092d26dab374236689d2dfd4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-008",
+      "description": "Workspace switching сохраняет selection, scroll, zoom и открытые документы там, где это применимо.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-64e2349d092d26dab374236689d2dfd4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-009",
+      "description": "Keyboard shortcut map не содержит 3D/GDScript shortcuts.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-64e2349d092d26dab374236689d2dfd4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-010",
+      "description": "Screenshot/golden acceptance реализован через documented automated harness до полной desktop automation.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-64e2349d092d26dab374236689d2dfd4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-011",
+      "description": "Создан screenshot `.temp/editor-shell-visual/visual/editor-shell-default.png`; проведён ручной visual review размещения, переполнения текста, кликабельных controls и соответствия спецификации.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-64e2349d092d26dab374236689d2dfd4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-012",
+      "description": "Документация фактического поведения обновлена.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-64e2349d092d26dab374236689d2dfd4/activity/migration-acceptance"
+        }
+      ]
+    },
+    {
+      "criterionId": "criterion-013",
+      "description": "Команды проверки задокументированы.",
+      "state": "Passed",
+      "evidence": [
+        {
+          "kind": "Uri",
+          "uri": "e2d-task://task-64e2349d092d26dab374236689d2dfd4/activity/migration-acceptance"
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-06-23T00:57:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Задача взята в работу после подтверждения `tools\\Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki`: UI public API gate проходит. До production-кода нужно уточнить проверяемый shell layout contract, добавить red tests и сохранить screenshot artifact с анализом видимого UI."
+      }
+    },
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-23T01:25:00.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": ".temp/editor-shell-visual/visual/editor-shell-default.png"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "1/1"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "12/12"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "32/32"
+    },
+    {
+      "linkId": "link-0005",
+      "kind": "File",
+      "value": "396/396"
+    },
+    {
+      "linkId": "link-0006",
+      "kind": "File",
+      "value": "5/5"
+    },
+    {
+      "linkId": "link-0007",
+      "kind": "File",
+      "value": "92/92"
+    },
+    {
+      "linkId": "link-0008",
+      "kind": "File",
+      "value": "data/documentation/electron2d-local-docs-index.json"
+    },
+    {
+      "linkId": "link-0009",
+      "kind": "File",
+      "value": "docs/README.md"
+    },
+    {
+      "linkId": "link-0010",
+      "kind": "Directory",
+      "value": "docs/editor"
+    },
+    {
+      "linkId": "link-0011",
+      "kind": "File",
+      "value": "docs/editor/editor-project-shell.md"
+    },
+    {
+      "linkId": "link-0012",
+      "kind": "File",
+      "value": "docs/editor/editor-shell-layout.md"
+    },
+    {
+      "linkId": "link-0013",
+      "kind": "File",
+      "value": "docs/editor/godot4-editor-reference.md"
+    },
+    {
+      "linkId": "link-0014",
+      "kind": "File",
+      "value": "docs/releases/0.1.0-preview.md"
+    },
+    {
+      "linkId": "link-0015",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor"
+    },
+    {
+      "linkId": "link-0016",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/EditorApplication.cs"
+    },
+    {
+      "linkId": "link-0017",
+      "kind": "File",
+      "value": "src/Electron2D.Editor/Program.cs"
+    },
+    {
+      "linkId": "link-0018",
+      "kind": "Directory",
+      "value": "src/Electron2D.Editor/Shell"
+    },
+    {
+      "linkId": "link-0019",
+      "kind": "Directory",
+      "value": "tests"
+    },
+    {
+      "linkId": "link-0020",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/EditorShellLayoutTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 755525,
+      "byteLength": 9311,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "96a3ef54d41d641c7e292cea197b3603198b43a06beeda73466ec2d9acce8dd4",
+      "markdown": "## T-0157 - Реализовать Editor shell по UX-референсу Godot 4 и центральные workspaces\n\n- Закрыта: 2026-06-23T04:25:00+03:00\n- Коммит: `b2b2e9b feat: add editor shell layout harness`\n- Спецификация:\n  - `docs/editor/godot4-editor-reference.md`\n  - `docs/releases/0.1.0-preview.md`\n- Документация:\n  - `docs/editor/editor-shell-layout.md`\n  - `docs/editor/editor-project-shell.md`\n  - `docs/README.md`\n- Исходный код и тесты:\n  - `src/Electron2D.Editor/Shell/`\n  - `src/Electron2D.Editor/EditorApplication.cs`\n  - `src/Electron2D.Editor/Program.cs`\n  - `tests/Electron2D.Tests.Integration/EditorShellLayoutTests.cs`\n  - `data/documentation/electron2d-local-docs-index.json`\n\n### Сводка\n\nРеализован model-first shell layout для `Electron2D.Editor`: top menu, workspace switcher `2D`/`Script`/`Game`/`Tasks`, document tabs, `Scene`/`FileSystem` слева, `Inspector`/`Node`/`Agent Workspace` справа и сворачиваемая bottom panel. Layout сохраняет selected workspace, dock sizes, document tabs и per-workspace state: selection, scroll, zoom и open documents. Добавлены machine-readable shortcut map, forbidden UI checks и documented automated visual harness, который сохраняет PNG screenshot и JSON-анализ.\n\n### Критерии и результат\n\n- [x] Реализован default layout по `docs/editor/godot4-editor-reference.md`.\n- [x] Workspace switcher содержит только `2D`, `Script`, `Game`, `Tasks`.\n- [x] Workspace `3D`, `AssetLib`, GDScript UI и disabled 3D controls отсутствуют во всём UI.\n- [x] Слева расположены `Scene` и `FileSystem` docks.\n- [x] Справа расположены `Inspector`/`Node` docks и зарезервированная dock area для `Agent Workspace`.\n- [x] Bottom panel сворачивается и разворачивается.\n- [x] Layout docks, размеры, открытые tabs и выбранный workspace сохраняются между запусками.\n- [x] Workspace switching сохраняет selection, scroll, zoom и открытые документы там, где это применимо.\n- [x] Keyboard shortcut map не содержит 3D/GDScript shortcuts.\n- [x] Screenshot/golden acceptance реализован через documented automated harness до полной desktop automation.\n- [x] Создан screenshot `.temp/editor-shell-visual/visual/editor-shell-default.png`; проведён ручной visual review размещения, переполнения текста, кликабельных controls и соответствия спецификации.\n- [x] Документация фактического поведения обновлена.\n- [x] Команды проверки задокументированы.\n\n### Проверки\n\n- Red phase: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorShellLayoutTests\"` упал ожидаемо на отсутствующей `--shell-layout-smoke`.\n- Focused green: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~EditorShellLayoutTests\"` прошёл `1/1`.\n- Visual smoke: `dotnet run --project src\\Electron2D.Editor\\Electron2D.Editor.csproj -- --shell-layout-smoke .temp\\editor-shell-visual` прошёл и создал PNG/JSON artifacts.\n- Visual review: screenshot открыт агентом; подтверждены workspace switcher, dock placement, bottom panel, отсутствие text overflow и отсутствие `3D`, `AssetLib`, GDScript UI.\n- Focused regression: `dotnet test tests\\Electron2D.Tests.Integration\\Electron2D.Tests.Integration.csproj --filter \"FullyQualifiedName~Editor\" -m:1` прошёл `32/32`.\n- Build: `dotnet build src\\Electron2D.sln` прошёл с warnings `0`, errors `0`.\n- Verifiers: `Verify-SourceLicenseHeaders.ps1`, `Verify-LocalDocumentation.ps1`, `Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki`, `Verify-SourceDomainLayout.ps1` прошли.\n- Full tests: повторный `tools\\Run-Tests.ps1` прошёл unit `92/92`, integration `396/396`, runtime smoke `5/5`, golden-data `12/12`. Первый полный запуск упал на flaky local documentation JSON parse; отдельная CLI-команда и focused test прошли, повторный полный запуск прошёл.\n\n### Решения\n\n- До появления постоянного desktop event loop shell закрывается через documented automated harness, который строит тот же `EditorShellLayout`, что и стартовый `EditorApplication`.\n- `ScreenshotReviewed=True` в smoke output означает успешный automated analysis; ручной просмотр PNG отдельно зафиксирован в дневнике и этой архивной записи.\n- Содержательная реализация `Script`, `Game`, `Tasks`, `Agent Workspace` и debugger остаётся в следующих задачах, а T-0157 закрывает общий layout, persistence и визуальный acceptance baseline.\n\n### Исходная запись из `TASKS.md`\n\n```markdown\n## T-0157 [ ] P0: Реализовать Editor shell по UX-референсу Godot 4 и центральные workspaces\n\n- Создана: 2026-06-22T15:20:00+03:00\n- Приоритет: P0\n- Состояние: in progress\n- Зависимости: T-0078, T-0129\n- Ссылки:\n  - Спецификация: `docs/editor/godot4-editor-reference.md`; `docs/releases/0.1.0-preview.md`\n  - Документация: `docs/editor/`\n  - Исходный код: `src/Electron2D.Editor/`; `tests/`\n\n### Самодостаточное описание\n\nНужно реализовать базовый shell `Electron2D.Editor`, где Godot 4 является каноническим UX- и layout-референсом: верхнее меню, workspace switcher, scene/document tabs, центральная область, `Scene`/`FileSystem` docks слева, `Inspector`/`Node` справа и bottom panel снизу. Electron2D при этом остаётся строго 2D: workspace `3D`, 3D controls, 3D settings, GDScript UI и `AssetLib` отсутствуют полностью.\n\nЦентральные workspaces `0.1.0`: `2D`, `Script`, `Game`, `Tasks`. Эта задача создаёт общий shell, layout persistence и переключение workspaces; содержательная реализация Agent Workspace, Task Board, Script IDE и debugger закрывается отдельными задачами.\n\n### Критерии приёмки\n\n- [ ] Реализован default layout по `docs/editor/godot4-editor-reference.md`.\n- [ ] Workspace switcher содержит только `2D`, `Script`, `Game`, `Tasks`.\n- [ ] Workspace `3D`, `AssetLib`, GDScript UI и disabled 3D controls отсутствуют во всём UI.\n- [ ] Слева расположены `Scene` и `FileSystem` docks.\n- [ ] Справа расположены `Inspector`/`Node` docks и зарезервированная dock area для `Agent Workspace`.\n- [ ] Bottom panel сворачивается и разворачивается.\n- [ ] Layout docks, размеры, открытые tabs и выбранный workspace сохраняются между запусками.\n- [ ] Workspace switching сохраняет selection, scroll, zoom и открытые документы там, где это применимо.\n- [ ] Keyboard shortcut map не содержит 3D/GDScript shortcuts.\n- [ ] Screenshot/golden tests подтверждают default layout на Windows, Linux и macOS либо имеют documented platform harness до полной автоматизации.\n- [ ] Создан и сохранён screenshot окна `Electron2D.Editor`; проведён анализ workspace switcher, dock placement, bottom panel, отсутствия переполнения текста, кликабельности основных controls и соответствия `docs/editor/godot4-editor-reference.md`.\n- [ ] Документация фактического поведения обновлена.\n- [ ] Команда проверки задокументирована.\n\n### Заметки агента\n\nСоздано по уточнению пользователя: `Electron2D.Editor` должен использовать Godot 4 как канонический UX/layout reference, но без 3D, GDScript и AssetLib; `Tasks` является центральным workspace.\n\n2026-06-23T03:57:00+03:00 - Задача взята в работу после подтверждения `tools\\Verify-UiPublicApiGate.ps1 -WikiPath .github\\wiki`: UI public API gate проходит. До production-кода нужно уточнить проверяемый shell layout contract, добавить red tests и сохранить screenshot artifact с анализом видимого UI.\n```\n\n"
+    }
+  ],
+  "createdAt": "2026-06-22T12:20:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-23T01:25:00.0000000+00:00",
+  "completedAt": "2026-06-23T01:25:00.0000000+00:00",
+  "acceptedAt": "2026-06-23T01:25:00.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-23T01:25:00.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

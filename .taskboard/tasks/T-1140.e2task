@@ -1,0 +1,143 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-6eef42e9ee8d2cfb28650167cb9f9f24",
+  "revision": 2,
+  "taskId": "T-1140",
+  "legacyAliases": [],
+  "title": "Зафиксировать lifecycle-value gate для новых automated tests",
+  "description": "## T-1140 [ ] P2: Зафиксировать lifecycle-value gate для новых automated tests\n\n- Создана: 2026-07-10T01:46:49+03:00\n- Состояние: open\n- Приоритет: P2\n- Execution class: `repository-process`\n- Scheduling tier: `current`\n- Зависимости: нет\n- Ссылки:\n  - Workflow: `docs/repository/agent-workflow.md`\n  - Источник решения: прямой запрос владельца не создавать тесты на каждый малый change\n  - Источник scope замечания: `docs/verdicts/release-management/t-1137-audit-control-r07.md`, `B2`\n\n### Самодостаточное описание\n\nRepository workflow должен требовать от агента перед добавлением нового automated test оценить его устойчивую ценность на всём жизненном цикле проекта. Одноразовые assertions для механической правки не создаются; существующий тест расширяется, когда он уже владеет тем же долговечным контрактом. Новые тесты остаются обязательными для рисковых runtime, security, serialization, compatibility и process boundaries.\n\n### Критерии приёмки\n\n- [ ] `docs/repository/agent-workflow.md` содержит lifecycle-value decision gate и критерии, когда новый test оправдан.\n- [ ] Правило не отменяет feature gate и обязательные проверки поведения.\n- [ ] Docs/audit-contract/whitespace checks проходят.\n- [ ] Владелец явно принимает отдельный process change.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: workflow rule добавлен; текущие r05-r08 изменения расширяют существующие test methods там, где это возможно.\n- Ещё отсутствует: явное owner acceptance и отделение изменения от diff T-1137 через baseline commit.\n- Принято аудитом: отсутствует; control r07 потребовал самостоятельную scope ownership.\n\n2026-07-10T02:22:21+03:00 - Владелец явно разрешил включить process change в отдельный промежуточный Conventional Commit без push. Задача остаётся активной до фиксации commit hash и проверки staged scope.\n\n2026-07-10T02:28:10+03:00 - Workflow rule вошёл в отдельный Conventional Commit `fix(audit): establish a machine-independent baseline`; push не выполнялся. Точный staged scope проверен перед commit, `git diff --cached --check` прошёл. Task-ledger T-1139/T-1140 и их ROADMAP rows добавляются в тот же baseline разрешённым amend без включения T-1137 API/audit изменений.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P2",
+  "tagIds": [
+    "tag-0009",
+    "tag-0016"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "`docs/repository/agent-workflow.md` содержит lifecycle-value decision gate и критерии, когда новый test оправдан.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Правило не отменяет feature gate и обязательные проверки поведения.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "Docs/audit-contract/whitespace checks проходят.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-004",
+      "description": "Владелец явно принимает отдельный process change.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-09T23:22:21.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Владелец явно разрешил включить process change в отдельный промежуточный Conventional Commit без push. Задача остаётся активной до фиксации commit hash и проверки staged scope."
+      }
+    },
+    {
+      "activityEntryId": "legacy-activity-0002",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-09T23:28:10.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Workflow rule вошёл в отдельный Conventional Commit `fix(audit): establish a machine-independent baseline`; push не выполнялся. Точный staged scope проверен перед commit, `git diff --cached --check` прошёл. Task-ledger T-1139/T-1140 и их ROADMAP rows добавляются в тот же baseline разрешённым amend без включения T-1137 API/audit изменений."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/repository/agent-workflow.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-1137-audit-control-r07.md"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 15461378,
+      "byteLength": 3160,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "34ca61e72b7fdec9e6d08ace890eb5c3816f4110a7c36d29dd669cf5743722d1",
+      "markdown": "## T-1140 [ ] P2: Зафиксировать lifecycle-value gate для новых automated tests\n\n- Создана: 2026-07-10T01:46:49+03:00\n- Состояние: open\n- Приоритет: P2\n- Execution class: `repository-process`\n- Scheduling tier: `current`\n- Зависимости: нет\n- Ссылки:\n  - Workflow: `docs/repository/agent-workflow.md`\n  - Источник решения: прямой запрос владельца не создавать тесты на каждый малый change\n  - Источник scope замечания: `docs/verdicts/release-management/t-1137-audit-control-r07.md`, `B2`\n\n### Самодостаточное описание\n\nRepository workflow должен требовать от агента перед добавлением нового automated test оценить его устойчивую ценность на всём жизненном цикле проекта. Одноразовые assertions для механической правки не создаются; существующий тест расширяется, когда он уже владеет тем же долговечным контрактом. Новые тесты остаются обязательными для рисковых runtime, security, serialization, compatibility и process boundaries.\n\n### Критерии приёмки\n\n- [ ] `docs/repository/agent-workflow.md` содержит lifecycle-value decision gate и критерии, когда новый test оправдан.\n- [ ] Правило не отменяет feature gate и обязательные проверки поведения.\n- [ ] Docs/audit-contract/whitespace checks проходят.\n- [ ] Владелец явно принимает отдельный process change.\n\n### Текущее подтверждение (`Current evidence`)\n\n- Выполнено локально: workflow rule добавлен; текущие r05-r08 изменения расширяют существующие test methods там, где это возможно.\n- Ещё отсутствует: явное owner acceptance и отделение изменения от diff T-1137 через baseline commit.\n- Принято аудитом: отсутствует; control r07 потребовал самостоятельную scope ownership.\n\n2026-07-10T02:22:21+03:00 - Владелец явно разрешил включить process change в отдельный промежуточный Conventional Commit без push. Задача остаётся активной до фиксации commit hash и проверки staged scope.\n\n2026-07-10T02:28:10+03:00 - Workflow rule вошёл в отдельный Conventional Commit `fix(audit): establish a machine-independent baseline`; push не выполнялся. Точный staged scope проверен перед commit, `git diff --cached --check` прошёл. Task-ledger T-1139/T-1140 и их ROADMAP rows добавляются в тот же baseline разрешённым amend без включения T-1137 API/audit изменений.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-09T22:46:49.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

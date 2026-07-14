@@ -54,7 +54,7 @@
 | `T-0245` per-class ready gate | Готовность каждого public class task к acceptance | Generated API descriptions, behavior evidence, documentation evidence | Class-ready verifier/focused tests конкретной задачи | Public class не принимается без полного evidence или утверждённого исключения. |
 | Manual profile exceptions | Утверждение `Deferred`/`Unsupported` строк | `data/api/electron2d-public-api-profile.json` | `verify api-compatibility --wiki-path .github/wiki` | Исключение должно быть явно видно в API/behavior reports и generated Wiki. |
 | `T-0980` final gate | Финальная проверка root contract перед release | Manual API profile, manifest, generated Wiki, exception reports, behavior reports | Release gate verifier | `EditorOnly` rows сохраняются как future editor-scope, mobile/web остаются runtime-only. |
-| Build tool `verify api-compatibility` | Локальная fail-closed проверка root contract | Tracked docs, `TASKS.md`, manual API profile, API manifest, generated Wiki clone | `RepositoryBuildToolTests.VerifyApiCompatibility*` | Запрещает unapproved exported types, stale generated Wiki, stale docs and legacy/component API. |
+| Build tool `verify api-compatibility` | Локальная fail-closed проверка root contract | Tracked docs, manual API profile, API manifest, generated Wiki clone | `RepositoryBuildToolTests.VerifyApiCompatibility*` | Запрещает unapproved exported types, stale generated Wiki, stale docs and legacy/component API. |
 | Templates/context packs | Агентские guardrails и project context | `data/templates/electron2d-empty/AGENTS.md`, `src/Electron2D.Cli/ContextPackCli.cs` | Focused API/template tests | Текст ссылается на root contract и generated artifacts, не на ручной список типов. |
 
 ## Ручной профиль публичного API

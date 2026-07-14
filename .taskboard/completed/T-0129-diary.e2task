@@ -1,0 +1,116 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-ac2a10736c82e9b5e8111b62e562a6c6",
+  "revision": 2,
+  "taskId": "T-0129-diary",
+  "legacyAliases": [
+    "T-0129"
+  ],
+  "title": "Привести формат dev-diary к примеру portfolio-bot",
+  "description": "# T-0129 [x] P1: Привести формат dev-diary к примеру portfolio-bot\n\n- Создана: 2026-06-21T00:45:47+03:00\n- Завершена: 2026-06-21T00:45:47+03:00\n- Статус: завершена\n- Коммит: `T-0129: обновить формат дневника агента`\n\n## Итог\n\nПо прямому запросу пользователя правила агентской работы обновлены: новые дневниковые записи должны использовать компактный формат из `G:\\Projects\\2026\\portfolio-bot\\dev-diary\\2026`.\n\n## Проверенное поведение\n\n- Новый дневной файл начинается с `# Дневник разработки: DD-MM-YYYY`.\n- Каждая новая запись оформляется как `## HH:MM +03:00 - Agent: Codex`.\n- Внутри записи обязательны поля `Задача`, `Контекст`, `Действия`, `Изменения`, `Решения`, `Проверки`, `Далее`.\n- Поле `Действия` ведётся как хронологический журнал с вложенными пунктами `HH:MM - ...`.\n- Старые дневниковые записи не переписываются ради миграции: новые записи добавляются только в хвост файла.\n\n## Документация\n\n- Обновлён `AGENTS.md`.\n- Обновлена локальная инструкция `.codex/skills/obsidian-markdown/SKILL.md`, чтобы она не противоречила `AGENTS.md`.\n- Текущая запись в дневнике добавлена уже в новом компактном стиле.\n\n## Проверки\n\n- Сравнен пример формата из `G:\\Projects\\2026\\portfolio-bot\\dev-diary\\2026`.\n- `git diff --check` - прошло; предупреждения были только о будущей нормализации переносов строк Git под Windows.\n- Хвост дневника проверен: новая запись находится последней.\n- Runtime-тесты не запускались: production-код и runtime-поведение не менялись.\n\n## Заметки агента\n\nЗадача закрыта сразу по прямому запросу пользователя как изменение правил работы агента. `TASKS.md` не оставляет отдельную активную задачу, потому что работа завершена в том же инкременте и перенесена в `completed-tasks/`. Локальная инструкция `.codex/skills/obsidian-markdown/SKILL.md` также обновлена на диске, но каталог `.codex/` исключён из Git и не входит в commit.\n\n---\n\n",
+  "status": "Done",
+  "acceptanceState": "Accepted",
+  "priority": "P1",
+  "tagIds": [
+    "tag-0009"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [],
+  "acceptanceCriteria": [],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "migration-acceptance",
+      "actorId": "legacy-human",
+      "actorKind": "Human",
+      "createdAt": "2026-06-20T21:45:47.0000000+00:00",
+      "kind": "AcceptanceResult",
+      "payload": {
+        "decision": "Accepted",
+        "reason": "Человеческая приёмка перенесена из terminal state v2.",
+        "authorityActorId": "legacy-human",
+        "authorityRole": "Owner",
+        "auditRunId": null
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not-required"
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "Directory",
+      "value": ".codex"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": ".codex/skills/obsidian-markdown/SKILL.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "Directory",
+      "value": "completed-tasks"
+    }
+  ],
+  "executionContract": {
+    "taskType": "general",
+    "readyToStart": [],
+    "stopConditions": [],
+    "allowedChanges": [],
+    "forbiddenChanges": [],
+    "requiredOutputs": [],
+    "commands": [],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "data/completed-tasks/2026/06 Июнь.md",
+      "byteOffset": 290304,
+      "byteLength": 2950,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "fdbdc539e8840102f49ad87b8107a6e0d572dd91a385a318c0f35d263efee137",
+      "markdown": "# T-0129 [x] P1: Привести формат dev-diary к примеру portfolio-bot\n\n- Создана: 2026-06-21T00:45:47+03:00\n- Завершена: 2026-06-21T00:45:47+03:00\n- Статус: завершена\n- Коммит: `T-0129: обновить формат дневника агента`\n\n## Итог\n\nПо прямому запросу пользователя правила агентской работы обновлены: новые дневниковые записи должны использовать компактный формат из `G:\\Projects\\2026\\portfolio-bot\\dev-diary\\2026`.\n\n## Проверенное поведение\n\n- Новый дневной файл начинается с `# Дневник разработки: DD-MM-YYYY`.\n- Каждая новая запись оформляется как `## HH:MM +03:00 - Agent: Codex`.\n- Внутри записи обязательны поля `Задача`, `Контекст`, `Действия`, `Изменения`, `Решения`, `Проверки`, `Далее`.\n- Поле `Действия` ведётся как хронологический журнал с вложенными пунктами `HH:MM - ...`.\n- Старые дневниковые записи не переписываются ради миграции: новые записи добавляются только в хвост файла.\n\n## Документация\n\n- Обновлён `AGENTS.md`.\n- Обновлена локальная инструкция `.codex/skills/obsidian-markdown/SKILL.md`, чтобы она не противоречила `AGENTS.md`.\n- Текущая запись в дневнике добавлена уже в новом компактном стиле.\n\n## Проверки\n\n- Сравнен пример формата из `G:\\Projects\\2026\\portfolio-bot\\dev-diary\\2026`.\n- `git diff --check` - прошло; предупреждения были только о будущей нормализации переносов строк Git под Windows.\n- Хвост дневника проверен: новая запись находится последней.\n- Runtime-тесты не запускались: production-код и runtime-поведение не менялись.\n\n## Заметки агента\n\nЗадача закрыта сразу по прямому запросу пользователя как изменение правил работы агента. `TASKS.md` не оставляет отдельную активную задачу, потому что работа завершена в том же инкременте и перенесена в `completed-tasks/`. Локальная инструкция `.codex/skills/obsidian-markdown/SKILL.md` также обновлена на диске, но каталог `.codex/` исключён из Git и не входит в commit.\n\n---\n\n"
+    }
+  ],
+  "createdAt": "2026-06-20T21:45:47.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": "2026-06-20T21:45:47.0000000+00:00",
+  "completedAt": "2026-06-20T21:45:47.0000000+00:00",
+  "acceptedAt": "2026-06-20T21:45:47.0000000+00:00",
+  "acceptedBy": "legacy-human",
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": "2026-06-20T21:45:47.0000000+00:00",
+  "archivedBy": "legacy-migration",
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}

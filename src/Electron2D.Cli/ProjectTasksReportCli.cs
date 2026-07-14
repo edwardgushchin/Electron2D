@@ -30,8 +30,290 @@ using Electron2D.ProjectSystem;
 
 internal static partial class Electron2DCommandLine
 {
-    private static int RunTasks(CliOptions options, TextWriter output, TextWriter error)
+    private static int RunTasks(CliOptions options, TextWriter output, TextWriter error, CliExecutionContext context)
     {
+        if (options.Values.Count == 0)
+        {
+            return WriteResult(
+                CliResult.Blocked(
+                    BuildCommandName("tasks", options),
+                    options,
+                    "Unknown tasks command.",
+                    CreateCliDiagnostic("E2D-CLI-0001", "Use a documented `e2d tasks` command.")),
+                output,
+                error);
+        }
+
+        var commandRoot = options.Values[0].ToLowerInvariant();
+        var projectRoot = NormalizeProjectRoot(options.ProjectRoot);
+        var boardPath = Path.Combine(projectRoot, ProjectTaskStorage.BoardDocumentPath.Replace('/', Path.DirectorySeparatorChar));
+        if (File.Exists(boardPath) && !TaskBoardV3DiskStore.IsV3(projectRoot) &&
+            commandRoot is not ("board" or "list" or "get" or "verify" or "migrate" or "export"))
+        {
+            return WriteTaskFailure(
+                BuildCommandName("tasks", options),
+                "tasks.v2-read-only",
+                options,
+                projectRoot,
+                new InvalidOperationException("TaskBoard v2 is read-only. Run `e2d tasks migrate --to-version 3 --dry-run` and apply the reviewed migration before mutating tasks."),
+                output,
+                error);
+        }
+
+        if (options.Values.Count == 1 && string.Equals(options.Values[0], "init", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksInit(options, output, error);
+        }
+
+        if (options.Values.Count == 1 && string.Equals(options.Values[0], "create", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksCreate(options, output, error, context);
+        }
+
+        if (options.Values.Count == 1 && string.Equals(options.Values[0], "list", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksList(options, output, error);
+        }
+
+        if (options.Values.Count == 1 && string.Equals(options.Values[0], "board", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksBoard(options, output, error);
+        }
+
+        if (options.Values.Count == 2 && string.Equals(options.Values[0], "move", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksMove(options, output, error);
+        }
+
+        if (options.Values.Count == 2 &&
+            string.Equals(options.Values[0], "group", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "add", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksGroupAdd(options, output, error);
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "group", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "update", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksGroupUpdate(options, output, error);
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "group", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "remove", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksGroupRemove(options, output, error);
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "parent", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "set", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksParentSet(options, output, error, context);
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "parent", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "clear", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksParentClear(options, output, error, context);
+        }
+
+        if (options.Values.Count == 2 && string.Equals(options.Values[0], "get", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksGet(options, output, error);
+        }
+
+        if (options.Values.Count == 2 && string.Equals(options.Values[0], "update", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksUpdate(options, output, error, context);
+        }
+
+        if (options.Values.Count == 2 && string.Equals(options.Values[0], "set-status", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksSetStatus(options, output, error, context);
+        }
+
+        if (options.Values.Count == 2 && string.Equals(options.Values[0], "submit", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksSubmit(options, output, error, context);
+        }
+
+        if (options.Values.Count == 2 &&
+            (string.Equals(options.Values[0], "accept", StringComparison.OrdinalIgnoreCase) ||
+             string.Equals(options.Values[0], "request-changes", StringComparison.OrdinalIgnoreCase)))
+        {
+            return RunTasksHumanDecisionUnavailable(options, output, error);
+        }
+
+        if (options.Values.Count == 2 && string.Equals(options.Values[0], "__human-decision", StringComparison.Ordinal))
+        {
+            return RunTasksHumanDecision(options, output, error, context);
+        }
+
+        if (options.Values.Count == 2 && string.Equals(options.Values[0], "__human-message", StringComparison.Ordinal))
+        {
+            return RunTasksHumanMessage(options, output, error, context);
+        }
+
+        if (options.Values.Count == 2 && string.Equals(options.Values[0], "cancel", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksCancel(options, output, error, context);
+        }
+
+        if (options.Values.Count == 2 && string.Equals(options.Values[0], "archive", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksArchive(options, output, error, context);
+        }
+
+        if (options.Values.Count == 2 && string.Equals(options.Values[0], "unarchive", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksUnarchive(options, output, error, context);
+        }
+
+        if (options.Values.Count == 2 && string.Equals(options.Values[0], "reopen", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksReopen(options, output, error, context);
+        }
+
+        if (options.Values.Count == 2 && string.Equals(options.Values[0], "delete", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksDelete(options, output, error);
+        }
+
+        if (options.Values.Count == 1 && string.Equals(options.Values[0], "verify", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksVerify(options, output, error);
+        }
+
+        if (options.Values.Count == 1 && string.Equals(options.Values[0], "normalize", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksNormalize(options, output, error);
+        }
+
+        if (options.Values.Count == 1 && string.Equals(options.Values[0], "migrate", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksMigrate(options, output, error, context);
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "dependency", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "add", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksDependencyAdd(options, output, error, context);
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "dependency", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "remove", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksDependencyRemove(options, output, error, context);
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "comment", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "add", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksCommentAdd(options, output, error, context);
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "context", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "checkpoint", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksContextCheckpoint(options, output, error, context);
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "criterion", StringComparison.OrdinalIgnoreCase))
+        {
+            return options.Values[1].ToLowerInvariant() switch
+            {
+                "add" => RunTasksCriterionAdd(options, output, error, context),
+                "update" => RunTasksCriterionUpdate(options, output, error, context),
+                "add-evidence" => RunTasksCriterionAddEvidence(options, output, error, context),
+                "set-state" => RunTasksCriterionSetState(options, output, error, context),
+                "remove" => RunTasksCriterionRemove(options, output, error, context),
+                _ => WriteResult(
+                    CliResult.Blocked(
+                        BuildCommandName("tasks", options),
+                        options,
+                        "Unknown tasks criterion command.",
+                        CreateCliDiagnostic("E2D-CLI-0001", $"Criterion command '{options.Values[1]}' is not implemented.")),
+                    output,
+                    error)
+            };
+        }
+
+        if (options.Values.Count == 2 &&
+            string.Equals(options.Values[0], "tag", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "create", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksTagCreate(options, output, error, context);
+        }
+
+        if (options.Values.Count == 2 &&
+            string.Equals(options.Values[0], "tag", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "apply", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksTagApply(options, output, error, context);
+        }
+
+        if (options.Values.Count == 3 && string.Equals(options.Values[0], "tag", StringComparison.OrdinalIgnoreCase))
+        {
+            return options.Values[1].ToLowerInvariant() switch
+            {
+                "update" => RunTasksTagUpdate(options, output, error),
+                "delete" => RunTasksTagDelete(options, output, error),
+                "assign" => RunTasksTagAssign(options, output, error, context, assign: true),
+                "unassign" => RunTasksTagAssign(options, output, error, context, assign: false),
+                _ => WriteResult(
+                    CliResult.Blocked(
+                        BuildCommandName("tasks", options),
+                        options,
+                        "Unknown tasks tag command.",
+                        CreateCliDiagnostic("E2D-CLI-0001", $"Tag command '{options.Values[1]}' is not implemented.")),
+                    output,
+                    error)
+            };
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "attachment", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "add", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksAttachmentAdd(options, output, error, context);
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "attachment", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "read", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksAttachmentRead(options, output, error);
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "attachment", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "remove", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksAttachmentRemove(options, output, error, context);
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "attachment", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "set-preview", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksAttachmentSetPreview(options, output, error, context, clear: false);
+        }
+
+        if (options.Values.Count == 3 &&
+            string.Equals(options.Values[0], "attachment", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(options.Values[1], "clear-preview", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunTasksAttachmentSetPreview(options, output, error, context, clear: true);
+        }
+
         if (options.Values.Count != 1 || !string.Equals(options.Values[0], "export", StringComparison.OrdinalIgnoreCase))
         {
             return WriteResult(
@@ -39,12 +321,12 @@ internal static partial class Electron2DCommandLine
                     BuildCommandName("tasks", options),
                     options,
                     "Unknown tasks command.",
-                    CreateCliDiagnostic("E2D-CLI-0001", "`e2d tasks export --format markdown` is the implemented Project Tasks report command.")),
+                    CreateCliDiagnostic("E2D-CLI-0001", $"Tasks command '{options.Values[0]}' is not implemented.")),
                 output,
                 error);
         }
 
-        var projectRoot = NormalizeProjectRoot(options.ProjectRoot);
+        projectRoot = NormalizeProjectRoot(options.ProjectRoot);
         if (options.Format is not (CliOutputFormat.Text or CliOutputFormat.Markdown))
         {
             return WriteResult(
@@ -96,12 +378,10 @@ internal static class ProjectTasksMarkdownReport
 {
     private static readonly ProjectTaskStatus[] StatusOrder =
     [
-        ProjectTaskStatus.Backlog,
         ProjectTaskStatus.Ready,
         ProjectTaskStatus.InProgress,
         ProjectTaskStatus.Blocked,
         ProjectTaskStatus.Review,
-        ProjectTaskStatus.AwaitingAcceptance,
         ProjectTaskStatus.Done,
         ProjectTaskStatus.Cancelled
     ];
@@ -120,7 +400,14 @@ internal static class ProjectTasksMarkdownReport
 
     private static IReadOnlyList<ProjectTask> LoadTasks(string projectRoot)
     {
-        var tasksRoot = Path.Combine(projectRoot, ".electron2d", "tasks");
+        if (TaskBoardV3DiskStore.IsV3(projectRoot))
+        {
+            var snapshot = new TaskBoardV3DiskStore(projectRoot).Verify();
+            var all = snapshot.ActiveTasks.Concat(snapshot.CompletedTasks).ToArray();
+            return snapshot.ActiveTasks.Select(task => TaskBoardV3DiskStore.CreateCompatibilityTask(task, all)).ToArray();
+        }
+
+        var tasksRoot = Path.Combine(projectRoot, ProjectTaskStorage.ActiveTasksDirectory.Replace('/', Path.DirectorySeparatorChar));
         if (!Directory.Exists(tasksRoot))
         {
             return [];
@@ -138,6 +425,16 @@ internal static class ProjectTasksMarkdownReport
 
     private static IReadOnlyDictionary<string, int> LoadBoardOrder(string projectRoot)
     {
+        if (TaskBoardV3DiskStore.IsV3(projectRoot))
+        {
+            var snapshot = new TaskBoardV3DiskStore(projectRoot).Verify();
+            var projection = TaskBoardV3DiskStore.CreateBoardProjection(snapshot);
+            return projection["placements"]!.AsArray().Select(node => node!.AsObject())
+                .OrderBy(placement => placement["rank"]!.GetValue<string>(), StringComparer.Ordinal)
+                .Select((placement, index) => (TaskId: placement["taskId"]!.GetValue<string>(), Index: index))
+                .ToDictionary(item => item.TaskId, item => item.Index, StringComparer.Ordinal);
+        }
+
         var boardPath = Path.Combine(projectRoot, ProjectTaskStorage.BoardDocumentPath.Replace('/', Path.DirectorySeparatorChar));
         if (!File.Exists(boardPath))
         {
@@ -147,7 +444,10 @@ internal static class ProjectTasksMarkdownReport
         var board = ProjectTaskSerializer.DeserializeBoard(ProjectTaskStorage.BoardDocumentPath, File.ReadAllText(boardPath));
         var order = new Dictionary<string, int>(StringComparer.Ordinal);
         var index = 0;
-        foreach (var taskId in board.Columns.SelectMany(column => column.TaskIds))
+        foreach (var taskId in board.Placements
+            .OrderBy(placement => placement.Rank, StringComparer.Ordinal)
+            .ThenBy(placement => placement.TaskId, StringComparer.Ordinal)
+            .Select(placement => placement.TaskId))
         {
             if (!order.ContainsKey(taskId))
             {
@@ -158,6 +458,75 @@ internal static class ProjectTasksMarkdownReport
         return order;
     }
 
+    private static ProjectTask ToReportTask(JsonObject task)
+    {
+        var acceptanceState = task["acceptanceState"]!.GetValue<string>() switch
+        {
+            "Submitted" => ProjectTaskAcceptanceState.Submitted,
+            "Accepted" => ProjectTaskAcceptanceState.Accepted,
+            "ChangesRequested" => ProjectTaskAcceptanceState.ChangesRequested,
+            "Cancelled" => ProjectTaskAcceptanceState.Cancelled,
+            _ => ProjectTaskAcceptanceState.Open
+        };
+        var result = new ProjectTask
+        {
+            TaskUid = task["taskUid"]!.GetValue<string>(),
+            Revision = task["revision"]!.GetValue<long>(),
+            TaskId = task["taskId"]!.GetValue<string>(),
+            Title = task["title"]!.GetValue<string>(),
+            Description = task["description"]!.GetValue<string>(),
+            Status = Enum.Parse<ProjectTaskStatus>(task["status"]!.GetValue<string>(), ignoreCase: false),
+            Priority = task["priority"]!.GetValue<string>(),
+            CreatedBy = task["createdBy"]!.GetValue<string>(),
+            CreatedAt = task["createdAt"]!.GetValue<DateTimeOffset>(),
+            UpdatedAt = task["updatedAt"]!.GetValue<DateTimeOffset>(),
+            SubmittedAt = ReadOptionalTimestamp(task, "submittedAt"),
+            CompletedAt = ReadOptionalTimestamp(task, "completedAt"),
+            AcceptedAt = ReadOptionalTimestamp(task, "acceptedAt"),
+            AcceptedBy = task["acceptedBy"]?.GetValue<string>(),
+            AcceptanceState = acceptanceState,
+            ArchivedAt = ReadOptionalTimestamp(task, "archivedAt"),
+            ArchivedBy = task["archivedBy"]?.GetValue<string>(),
+            CancellationReason = task["cancellationReason"]?.GetValue<string>(),
+            ParentTaskId = task["parentTaskId"]?.GetValue<string>(),
+            Deadline = task["deadline"] is null
+                ? null
+                : DateOnly.ParseExact(task["deadline"]!.GetValue<string>(), "yyyy-MM-dd", CultureInfo.InvariantCulture)
+        };
+        result.Labels.AddRange(task["labels"]!.AsArray().Select(node => node!.GetValue<string>()));
+        result.Dependencies.AddRange(task["dependencies"]!.AsArray().Select(node => node!.GetValue<string>()));
+        result.Subtasks.AddRange(task["subtasks"]!.AsArray().Select(node => node!.GetValue<string>()));
+        foreach (var criterionNode in task["acceptanceCriteria"]!.AsArray())
+        {
+            var criterion = criterionNode!.AsObject();
+            result.AcceptanceCriteria.Add(new AcceptanceCriterion(
+                criterion["criterionId"]!.GetValue<string>(),
+                criterion["description"]!.GetValue<string>(),
+                Enum.Parse<AcceptanceCriterionState>(criterion["state"]!.GetValue<string>(), ignoreCase: false),
+                criterion["evidenceLinks"]!.AsArray().Select(node => node!.GetValue<string>()).ToArray()));
+        }
+
+        foreach (var activityNode in task["activity"]!.AsArray())
+        {
+            var activity = activityNode!.AsObject();
+            var kindText = activity["kind"]!.GetValue<string>();
+            result.Activity.Add(new TaskActivityEntry(
+                activity["activityEntryId"]!.GetValue<string>(),
+                activity["actorId"]!.GetValue<string>(),
+                Enum.Parse<PrincipalKind>(activity["actorKind"]!.GetValue<string>(), ignoreCase: false),
+                activity["createdAt"]!.GetValue<DateTimeOffset>(),
+                Enum.TryParse<TaskActivityKind>(kindText, ignoreCase: false, out var kind) ? kind : TaskActivityKind.Decision,
+                activity["payload"]!.GetValue<string>()));
+        }
+
+        return result;
+    }
+
+    private static DateTimeOffset? ReadOptionalTimestamp(JsonObject value, string propertyName)
+    {
+        return value[propertyName] is null ? null : value[propertyName]!.GetValue<DateTimeOffset>();
+    }
+
     private static string WriteMarkdown(
         IReadOnlyList<ProjectTask> tasks,
         IReadOnlyDictionary<string, int> boardOrder,
@@ -166,9 +535,9 @@ internal static class ProjectTasksMarkdownReport
         var builder = new StringBuilder();
         builder.AppendLine("# Project Tasks Report");
         builder.AppendLine();
-        builder.AppendLine("> Markdown report only. Canonical task storage stays in `.electron2d/tasks/*.e2task` and `.electron2d/tasks/board.e2tasks`.");
+        builder.AppendLine("> Markdown report only. Canonical task storage stays in `.taskboard/tasks/*.e2task` and `.taskboard/board.e2tasks`.");
         builder.AppendLine();
-        builder.AppendLine("- Source: `.electron2d/tasks/*.e2task`");
+        builder.AppendLine("- Source: `.taskboard/tasks/*.e2task`");
         builder.AppendLine($"- Filters: {query.FiltersText}");
         builder.AppendLine(CultureInfo.InvariantCulture, $"- Task count: {tasks.Count}");
         builder.AppendLine();
@@ -223,7 +592,6 @@ internal static class ProjectTasksMarkdownReport
         builder.AppendLine();
         builder.AppendLine(CultureInfo.InvariantCulture, $"- Status: {task.Status}");
         builder.AppendLine(CultureInfo.InvariantCulture, $"- Priority: {Escape(task.Priority)}");
-        builder.AppendLine(CultureInfo.InvariantCulture, $"- Rank: {Escape(task.Rank)}");
         builder.AppendLine(CultureInfo.InvariantCulture, $"- Assignee: {Escape(task.Assignee ?? "unassigned")}");
         builder.AppendLine(CultureInfo.InvariantCulture, $"- Labels: {LabelsText(task)}");
         builder.AppendLine(CultureInfo.InvariantCulture, $"- Created: {FormatDate(task.CreatedAt)}");
@@ -272,7 +640,7 @@ internal static class ProjectTasksMarkdownReport
 
     private static string ToTaskRelativePath(string path)
     {
-        return ".electron2d/tasks/" + Path.GetFileName(path).Replace('\\', '/');
+        return ProjectTaskStorage.ActiveTasksDirectory + "/" + Path.GetFileName(path).Replace('\\', '/');
     }
 
     private static int StatusIndex(ProjectTaskStatus status)

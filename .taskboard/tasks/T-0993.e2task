@@ -1,0 +1,178 @@
+{
+  "format": "Electron2D.TaskFile",
+  "version": 3,
+  "boardId": "main",
+  "taskUid": "task-7631e1fbfd28b4e2b74dd2dffe58868c",
+  "revision": 2,
+  "taskId": "T-0993",
+  "legacyAliases": [],
+  "title": "Добавить regression для duplicate `fullName` в manual API profile",
+  "description": "## T-0993 [ ] P3: Добавить regression для duplicate `fullName` в manual API profile\n\n- Создана: 2026-07-08T18:11:00+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-0990\n- Ссылки:\n  - Доменный документ: `docs/documentation/api-manifest.md`\n  - Исходный код: `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник follow-up: `docs/verdicts/release-management/t-0990-audit-r05.md`\n\n### Execution contract\n\n- Task type: test-hardening\n- Ready-to-start:\n  - task state is `open`.\n  - duplicate `fullName` rejection remains implemented in manual profile reader.\n  - a focused RED test can duplicate a profile `fullName` in an API compatibility fixture.\n- Stop conditions:\n  - the change would alter manual profile approval semantics instead of adding coverage.\n  - the test would depend on generated Wiki text instead of profile validation.\n- May change:\n  - focused integration tests for manual profile validation.\n  - profile verifier diagnostics only if the test reveals an actual gap.\n  - task notes and diary for this task.\n- Must not change:\n  - runtime public API implementation.\n  - approved/deferred/unsupported profile decisions.\n  - saved audit reports.\n- Required outputs:\n  - focused regression for diagnostic `E2D-BUILD-API-PROFILE-DUPLICATE-TYPE`.\n- Required commands:\n  - targeted duplicate-profile test.\n  - `dotnet run --project eng/Electron2D.Build -- verify audit-followups`\n  - `git diff --check`\n- External audit:\n  - not required unless bundled with a parent API tooling package.\n\n### Самодостаточное описание\n\nr05 primary audit for `T-0990` found that duplicate `fullName` rejection is implemented in production code, but the focused invalid-profile test set does not include an explicit regression for diagnostic `E2D-BUILD-API-PROFILE-DUPLICATE-TYPE`. This is a test-hardening follow-up, not a current blocker.\n\n### Internal substrate acceptance contract\n\n- Duplicate manual profile rows fail closed with a stable diagnostic.\n- Coverage remains fixture-driven and does not manually approve runtime public API types.\n- The task is limited to validation tests unless the RED test exposes a real implementation gap.\n\n### Критерии приёмки\n\n- [ ] Focused regression creates duplicate `fullName` rows and fails with `E2D-BUILD-API-PROFILE-DUPLICATE-TYPE`.\n- [ ] Existing invalid-profile validation tests remain green.\n- [ ] `verify audit-followups` passes with the closure note from r05.\n\n### Подзадачи\n\n- [ ] Add RED regression for duplicate manual profile `fullName`.\n- [ ] Fix verifier only if the RED test exposes an implementation gap.\n- [ ] Run focused invalid-profile checks, `verify audit-followups` and `git diff --check`.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r02.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-new\n  - target: T-0993\n  - rationale: Primary audit r02 classified missing duplicate-`fullName` regression as P3 test hardening. Duplicate rejection is already implemented, so this task tracks focused coverage without expanding current `T-0990` scope.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r03.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-new\n  - target: T-0993\n  - rationale: Primary audit r03 repeated the same missing duplicate-`fullName` regression finding. `T-0993` owns focused coverage across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r04.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-new\n  - target: T-0993\n  - rationale: Primary audit r04 repeated the same missing duplicate-`fullName` regression finding. `T-0993` owns focused coverage across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r05.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-new\n  - target: T-0993\n  - rationale: Primary audit r05 classified missing duplicate-`fullName` regression as P3 test hardening. Duplicate rejection is already implemented, so this task tracks focused coverage without expanding current `T-0990` scope.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r06.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-0993\n  - rationale: Primary audit r06 repeated the same missing duplicate-`fullName` regression finding and explicitly pointed to existing `T-0993`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r07.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-0993\n  - rationale: Accepted primary audit r07 repeated the same missing duplicate-`fullName` regression finding and explicitly pointed to existing `T-0993`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r08.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-0993\n  - rationale: Primary audit r08 repeated the same missing duplicate-`fullName` regression finding and explicitly pointed to existing `T-0993`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r09.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-0993\n  - rationale: Accepted primary audit r09 repeated the same missing duplicate-`fullName` regression finding and explicitly pointed to existing `T-0993`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r10.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-0993\n  - rationale: Accepted primary audit r10 repeated the same missing duplicate-`fullName` regression finding and explicitly pointed to existing `T-0993`; no new task is needed.\n\n### Заметки агента\n\n2026-07-08T18:11:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F3` из `docs/verdicts/release-management/t-0990-audit-r05.md`; finding перенесён в P3 manual profile validation test hardening.\n\n",
+  "status": "Ready",
+  "acceptanceState": "NotSubmitted",
+  "priority": "P3",
+  "tagIds": [
+    "tag-0013",
+    "tag-0015"
+  ],
+  "deadline": null,
+  "createdBy": "legacy-migration",
+  "parentTaskUid": null,
+  "relations": [
+    {
+      "relationId": "relation-0001",
+      "kind": "DependsOn",
+      "targetTaskUid": "task-90476c714273240a7f2ca627a532aab3"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterionId": "criterion-001",
+      "description": "Focused regression creates duplicate `fullName` rows and fails with `E2D-BUILD-API-PROFILE-DUPLICATE-TYPE`.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-002",
+      "description": "Existing invalid-profile validation tests remain green.",
+      "state": "Open",
+      "evidence": []
+    },
+    {
+      "criterionId": "criterion-003",
+      "description": "`verify audit-followups` passes with the closure note from r05.",
+      "state": "Open",
+      "evidence": []
+    }
+  ],
+  "blockers": [],
+  "activity": [
+    {
+      "activityEntryId": "legacy-activity-0001",
+      "actorId": "legacy-migration",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-08T15:11:00.0000000+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "AgentSummary",
+        "text": "Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F3` из `docs/verdicts/release-management/t-0990-audit-r05.md`; finding перенесён в P3 manual profile validation test hardening."
+      }
+    },
+    {
+      "activityEntryId": "legacy-external-audit-contract",
+      "actorId": "legacy-compatibility",
+      "actorKind": "ExternalFile",
+      "createdAt": "2026-07-13T00:59:43.5941006+00:00",
+      "kind": "Legacy",
+      "payload": {
+        "sourceKind": "ExternalAuditContract",
+        "text": "not required unless bundled with a parent API tooling package."
+      }
+    }
+  ],
+  "links": [
+    {
+      "linkId": "link-0001",
+      "kind": "File",
+      "value": "docs/documentation/api-manifest.md"
+    },
+    {
+      "linkId": "link-0002",
+      "kind": "File",
+      "value": "docs/verdicts/release-management/t-0990-audit-r05.md"
+    },
+    {
+      "linkId": "link-0003",
+      "kind": "File",
+      "value": "eng/Electron2D.Build/RepositoryPolicyVerifiers.cs"
+    },
+    {
+      "linkId": "link-0004",
+      "kind": "File",
+      "value": "tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs"
+    }
+  ],
+  "executionContract": {
+    "taskType": "test-hardening",
+    "readyToStart": [
+      "task state is `open`.",
+      "duplicate `fullName` rejection remains implemented in manual profile reader.",
+      "a focused RED test can duplicate a profile `fullName` in an API compatibility fixture."
+    ],
+    "stopConditions": [
+      "the change would alter manual profile approval semantics instead of adding coverage.",
+      "the test would depend on generated Wiki text instead of profile validation."
+    ],
+    "allowedChanges": [
+      "focused integration tests for manual profile validation.",
+      "profile verifier diagnostics only if the test reveals an actual gap.",
+      "task notes and diary for this task."
+    ],
+    "forbiddenChanges": [
+      "runtime public API implementation.",
+      "approved/deferred/unsupported profile decisions.",
+      "saved audit reports."
+    ],
+    "requiredOutputs": [
+      "focused regression for diagnostic `E2D-BUILD-API-PROFILE-DUPLICATE-TYPE`."
+    ],
+    "commands": [
+      {
+        "commandId": "command-0001",
+        "kind": "LegacyShell",
+        "text": "targeted duplicate-profile test.",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0002",
+        "kind": "LegacyShell",
+        "text": "`dotnet run --project eng/Electron2D.Build -- verify audit-followups`",
+        "execution": "ForbiddenUntilReviewed"
+      },
+      {
+        "commandId": "command-0003",
+        "kind": "LegacyShell",
+        "text": "`git diff --check`",
+        "execution": "ForbiddenUntilReviewed"
+      }
+    ],
+    "externalAudit": {
+      "mode": "None",
+      "independence": "NotRequired",
+      "instructions": null,
+      "requiredVerdicts": []
+    }
+  },
+  "attachments": [],
+  "previewAttachmentId": null,
+  "legacySourceFragments": [
+    {
+      "sourcePath": "TASKS.md",
+      "byteOffset": 431695,
+      "byteLength": 6374,
+      "encoding": "utf-8",
+      "hasBom": false,
+      "lineEnding": "lf",
+      "sha256": "d235ca4ae42ecde62df45c4466d30e550b3287b7760ffe156b5a530a579cf0ff",
+      "markdown": "## T-0993 [ ] P3: Добавить regression для duplicate `fullName` в manual API profile\n\n- Создана: 2026-07-08T18:11:00+03:00\n- Состояние: open\n- Приоритет: P3\n- Execution class: `internal-substrate`\n- Scheduling tier: `later`\n- Зависимости: T-0990\n- Ссылки:\n  - Доменный документ: `docs/documentation/api-manifest.md`\n  - Исходный код: `eng/Electron2D.Build/RepositoryPolicyVerifiers.cs`\n  - Тесты: `tests/Electron2D.Tests.Integration/RepositoryBuildToolTests.cs`\n  - Источник follow-up: `docs/verdicts/release-management/t-0990-audit-r05.md`\n\n### Execution contract\n\n- Task type: test-hardening\n- Ready-to-start:\n  - task state is `open`.\n  - duplicate `fullName` rejection remains implemented in manual profile reader.\n  - a focused RED test can duplicate a profile `fullName` in an API compatibility fixture.\n- Stop conditions:\n  - the change would alter manual profile approval semantics instead of adding coverage.\n  - the test would depend on generated Wiki text instead of profile validation.\n- May change:\n  - focused integration tests for manual profile validation.\n  - profile verifier diagnostics only if the test reveals an actual gap.\n  - task notes and diary for this task.\n- Must not change:\n  - runtime public API implementation.\n  - approved/deferred/unsupported profile decisions.\n  - saved audit reports.\n- Required outputs:\n  - focused regression for diagnostic `E2D-BUILD-API-PROFILE-DUPLICATE-TYPE`.\n- Required commands:\n  - targeted duplicate-profile test.\n  - `dotnet run --project eng/Electron2D.Build -- verify audit-followups`\n  - `git diff --check`\n- External audit:\n  - not required unless bundled with a parent API tooling package.\n\n### Самодостаточное описание\n\nr05 primary audit for `T-0990` found that duplicate `fullName` rejection is implemented in production code, but the focused invalid-profile test set does not include an explicit regression for diagnostic `E2D-BUILD-API-PROFILE-DUPLICATE-TYPE`. This is a test-hardening follow-up, not a current blocker.\n\n### Internal substrate acceptance contract\n\n- Duplicate manual profile rows fail closed with a stable diagnostic.\n- Coverage remains fixture-driven and does not manually approve runtime public API types.\n- The task is limited to validation tests unless the RED test exposes a real implementation gap.\n\n### Критерии приёмки\n\n- [ ] Focused regression creates duplicate `fullName` rows and fails with `E2D-BUILD-API-PROFILE-DUPLICATE-TYPE`.\n- [ ] Existing invalid-profile validation tests remain green.\n- [ ] `verify audit-followups` passes with the closure note from r05.\n\n### Подзадачи\n\n- [ ] Add RED regression for duplicate manual profile `fullName`.\n- [ ] Fix verifier only if the RED test exposes an implementation gap.\n- [ ] Run focused invalid-profile checks, `verify audit-followups` and `git diff --check`.\n\n### Current evidence\n\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r02.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-new\n  - target: T-0993\n  - rationale: Primary audit r02 classified missing duplicate-`fullName` regression as P3 test hardening. Duplicate rejection is already implemented, so this task tracks focused coverage without expanding current `T-0990` scope.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r03.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-new\n  - target: T-0993\n  - rationale: Primary audit r03 repeated the same missing duplicate-`fullName` regression finding. `T-0993` owns focused coverage across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r04.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-new\n  - target: T-0993\n  - rationale: Primary audit r04 repeated the same missing duplicate-`fullName` regression finding. `T-0993` owns focused coverage across all `T-0990` iterations.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r05.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-new\n  - target: T-0993\n  - rationale: Primary audit r05 classified missing duplicate-`fullName` regression as P3 test hardening. Duplicate rejection is already implemented, so this task tracks focused coverage without expanding current `T-0990` scope.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r06.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-0993\n  - rationale: Primary audit r06 repeated the same missing duplicate-`fullName` regression finding and explicitly pointed to existing `T-0993`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r07.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-0993\n  - rationale: Accepted primary audit r07 repeated the same missing duplicate-`fullName` regression finding and explicitly pointed to existing `T-0993`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r08.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-0993\n  - rationale: Primary audit r08 repeated the same missing duplicate-`fullName` regression finding and explicitly pointed to existing `T-0993`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r09.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-0993\n  - rationale: Accepted primary audit r09 repeated the same missing duplicate-`fullName` regression finding and explicitly pointed to existing `T-0993`; no new task is needed.\n- audit-followup-closure:\n  - source: docs/verdicts/release-management/t-0990-audit-r10.md\n  - id: FOLLOW_UP_FINDING F3\n  - state: tracked-existing\n  - target: T-0993\n  - rationale: Accepted primary audit r10 repeated the same missing duplicate-`fullName` regression finding and explicitly pointed to existing `T-0993`; no new task is needed.\n\n### Заметки агента\n\n2026-07-08T18:11:00+03:00 - Создано как `tracked-new` closure для `FOLLOW_UP_FINDING F3` из `docs/verdicts/release-management/t-0990-audit-r05.md`; finding перенесён в P3 manual profile validation test hardening.\n\n"
+    }
+  ],
+  "createdAt": "2026-07-08T15:11:00.0000000+00:00",
+  "updatedAt": "2026-07-13T00:59:43.5941006+00:00",
+  "submittedAt": null,
+  "completedAt": null,
+  "acceptedAt": null,
+  "acceptedBy": null,
+  "cancelledAt": null,
+  "cancellationReason": null,
+  "archivedAt": null,
+  "archivedBy": null,
+  "assignee": null,
+  "conversation": {
+    "lastMessageSequence": 0,
+    "messages": [],
+    "contextCheckpoints": []
+  },
+  "contextSnapshot": null,
+  "auditRuns": []
+}
