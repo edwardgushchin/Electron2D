@@ -27,7 +27,7 @@ The host still owns the elapsed-time source, native event pump, waiting/frame pa
 | `int PhysicsTicksPerSecond { get; set; }` | Positive fixed-step frequency; default `60`; a runtime change re-baselines fixed timing on the next frame |
 | `int MaxPhysicsStepsPerFrame { get; set; }` | Positive per-process-frame catch-up cap; default `8` |
 | `double PhysicsJitterFix { get; set; }` | Finite fixed-boundary smoothing tolerance; default `0.5`; negative input clamps to zero |
-| `double TimeScale { get; set; }` | Finite non-negative callback-delta multiplier; default `1`; zero freezes callback deltas without stopping callback cadence |
+| `double TimeScale { get; set; }` | Finite non-negative public callback-delta multiplier; default `1`; zero freezes scaled callbacks without stopping cadence or built-in timers configured to use original time |
 
 Configuration reads and writes are atomic and may occur from any thread. The first three properties use active project-setting feature overrides; `TimeScale` remains transient runtime state. `AdvanceFrame()` samples all four values once. Changing tick frequency discards an old-frequency fractional interval instead of mixing two step sizes.
 
@@ -68,7 +68,7 @@ Registry operations are serialized by one lock. A registered object can later be
 
 Each fixed callback increments `PhysicsFrames`, sets `IsInPhysicsFrame`, and clears it in `finally`. A fixed callback returning `true` skips remaining fixed callbacks, but the process callback still runs. The process counter and FPS measurement update only after the process callback returns, then one pending `ProjectSettings.SettingsChanged` invocation is flushed. A callback or settings-event exception propagates and restores the runtime to the running state without implicit finalization. Timing already consumed for the failed attempt is not replayed; a throwing settings event occurs after the process callback has been counted.
 
-`TimeScale` multiplies the fixed delta and the synchronized process delta, not callback frequency. If an extreme finite scale would overflow either effective delta, the frame is rejected with `InvalidOperationException` before user callbacks.
+`TimeScale` multiplies the fixed delta and the synchronized process delta, not callback frequency. Engine supplies both the effective scaled value and its original synchronized value to `MainLoop`; public callbacks receive the scaled value, while built-in scene behavior such as [`Timer.IgnoreTimeScale`](Timer.md) may select the original value. The two values are scoped to the current callback and cleared afterward. If an extreme finite scale would overflow either effective delta, the frame is rejected with `InvalidOperationException` before user callbacks.
 
 ## Lifecycle and failure states
 
@@ -126,6 +126,10 @@ The class depends on `ElectronObject`, `MainLoop`, `EngineVersionInfo`, `Project
 
 ## Verification and known limitations
 
-`tests/Electron2D.Tests/Program.cs` verifies singleton lifetime, project-setting defaults/feature overrides/event flushing, invalid configuration, typed property discovery, architecture/version data, registry validation/type/ownership/order/concurrency, loop publication during initialization/finalization, automatic initialization, existing `SceneTree` attachment, owner-thread enforcement, re-entry rejection, fixed-before-process order, scaling, jitter/interpolation boundaries, catch-up cap, stop combination, process and physics callback failures, failed initialization/finalization cleanup, counters, FPS, and zero steady-state allocation across a warmed empty frame path.
+`tests/Electron2D.Tests/Program.cs` verifies singleton lifetime, project-setting defaults/feature overrides/event flushing, invalid configuration, typed property discovery, architecture/version data, registry validation/type/ownership/order/concurrency, loop publication during initialization/finalization, automatic initialization, existing `SceneTree` attachment, owner-thread enforcement, re-entry rejection, fixed-before-process order, scaling, original-delta Timer delivery at zero scale in both lanes, jitter/interpolation boundaries, catch-up cap, stop combination, process and physics callback failures, failed initialization/finalization cleanup, counters, FPS, and zero steady-state allocation across a warmed empty frame path.
 
 The checks use deterministic supplied deltas, not a real SDL clock, display, renderer, operating-system event pump, or loaded game benchmark. They establish managed scheduling behavior, not hard real-time guarantees or visual acceptance.
+
+## Related scene decision
+
+- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)

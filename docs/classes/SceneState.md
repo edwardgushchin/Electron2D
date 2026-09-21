@@ -60,7 +60,7 @@ Disposing the source packed scene does not dispose externally held states. Such 
 
 ## Verification and limitations
 
-The executable harness verifies empty/live state identity, path propagation, node ordering and paths, owner/group metadata, absent connection/placeholder/inheritance metadata, typed property name/type/value access, invalid indices/casts, successful repack observation, concurrent cached-state disposal and path updates, and survival after source disposal.
+The executable harness verifies empty/live state identity, path propagation, node ordering and paths, owner/group metadata, absent connection/placeholder/inheritance metadata, typed property name/type/value access including Timer configuration, invalid indices/casts, successful repack observation, concurrent cached-state disposal and path updates, and survival after source disposal.
 
 The type intentionally omits connection-detail accessors, editable-instance metadata, inherited base state, placeholder loading, node-reference remapping metadata, and file-format internals because those producers do not exist. `GetNodeType()` is a diagnostic unqualified name, not a reflection-based factory key.
 

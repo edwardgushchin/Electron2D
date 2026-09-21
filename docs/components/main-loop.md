@@ -16,7 +16,7 @@ This Core component defines the host-facing application lifecycle, variable-step
 
 ## Runtime flow
 
-A direct host can call `Initialize()`, drive `Process(delta)` and `PhysicsProcess(delta)` in its chosen cadence, and then call `FinalizeLoop()` or `Dispose()`. The implemented [`Engine runtime`](engine-runtime.md) is the normal coordinator: `Engine.Start()` initializes a created loop or attaches an already running one, `AdvanceFrame()` schedules fixed callbacks before process, and `Stop()` finalizes without disposing. Hooks are synchronous and non-reentrant. A frame exception returns the loop to running state; initialization and finalization failures are terminal.
+A direct host can call `Initialize()`, drive `Process(delta)` and `PhysicsProcess(delta)` in its chosen cadence, and then call `FinalizeLoop()` or `Dispose()`. Direct calls treat the supplied delta as both effective and original elapsed time. The implemented [`Engine runtime`](engine-runtime.md) is the normal coordinator: `Engine.Start()` initializes a created loop or attaches an already running one, `AdvanceFrame()` schedules fixed callbacks before process while carrying scaled and original deltas, and `Stop()` finalizes without disposing. The original value is internal callback context used by built-in scene behavior such as [`Timer`](../classes/Timer.md); protected user callbacks continue to receive one effective delta. Hooks are synchronous and non-reentrant. A frame exception returns the loop to running state; initialization and finalization failures are terminal.
 
 The host may deliver system notifications through inherited `Notify(int)` and publishes a permission result through a protected typed endpoint supplied to platform integrations. `SceneTree` forwards system notifications to active nodes.
 
@@ -29,7 +29,7 @@ The component depends only on the Core object-lifecycle component and the .NET B
 - The constructing thread owns lifecycle, frames, permission-result publication, and disposal.
 - Exactly one successful initialization is paired with at most one finalization callback.
 - Frame callbacks execute only while running and never re-enter.
-- Deltas are finite and non-negative.
+- Effective and original deltas are finite and non-negative and exist only during the current frame callback.
 - Finalization reaches a terminal state even when user cleanup throws.
 - Disposal does not retry failed initialization or failed finalization.
 - The component creates no hidden thread, time source, event pump, or physics work.
@@ -48,3 +48,4 @@ Executable checks cover success, invalid order, delta boundaries, wrong-thread c
 - [0016: Process-wide Engine runtime and host-driven scheduling](../decisions/core-object-runtime.md#adr-0016)
 - [0002: C# events for signals](../decisions/product.md#adr-0002)
 - [0014: Managed Resource lifetime and realtime allocation](../decisions/resources.md#adr-0014)
+- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)

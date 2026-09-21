@@ -47,6 +47,14 @@ public class Node : ElectronObject
     /// <summary>Identifies the notification sent after the direct child order changes.</summary>
     public const int NotificationChildOrderChanged = 24;
 
+    /// <summary>Identifies an engine-internal process callback notification.</summary>
+    /// <remarks>Built-in node logic uses this lane independently of <see cref="ProcessEnabled"/>.</remarks>
+    public const int NotificationInternalProcess = 25;
+
+    /// <summary>Identifies an engine-internal physics-process callback notification.</summary>
+    /// <remarks>Built-in node logic uses this lane independently of <see cref="PhysicsProcessEnabled"/>.</remarks>
+    public const int NotificationInternalPhysicsProcess = 26;
+
     /// <summary>Identifies the notification sent after this node and its descendants finish entering a tree.</summary>
     public const int NotificationPostEnterTree = 27;
 
@@ -197,6 +205,10 @@ public class Node : ElectronObject
     private NodeProcessMode _processMode;
     private bool _processEnabled;
     private bool _physicsProcessEnabled;
+    private bool _internalProcessEnabled;
+    private bool _internalPhysicsProcessEnabled;
+    private double _unscaledProcessDeltaTime;
+    private double _unscaledPhysicsProcessDeltaTime;
 
     /// <summary>Initializes a detached node with its runtime class name and an identity transform.</summary>
     public Node()
@@ -1948,18 +1960,64 @@ public class Node : ElectronObject
         }
     }
 
-    internal void RunProcess(double delta, bool physics)
+    internal bool HasProcessCallback(bool physics) => physics
+        ? _physicsProcessEnabled || _internalPhysicsProcessEnabled
+        : _processEnabled || _internalProcessEnabled;
+
+    internal void SetInternalProcessing(bool processEnabled, bool physicsProcessEnabled)
+    {
+        EnsureMutable();
+        _internalProcessEnabled = processEnabled;
+        _internalPhysicsProcessEnabled = physicsProcessEnabled;
+    }
+
+    internal double GetUnscaledProcessDelta(bool physics) =>
+        physics ? _unscaledPhysicsProcessDeltaTime : _unscaledProcessDeltaTime;
+
+    internal void RunProcess(double delta, double unscaledDelta, bool physics)
     {
         if (physics)
         {
             PhysicsProcessDeltaTime = delta;
-            DispatchNotification(NotificationPhysicsProcess);
+            _unscaledPhysicsProcessDeltaTime = unscaledDelta;
         }
         else
         {
             ProcessDeltaTime = delta;
-            DispatchNotification(NotificationProcess);
+            _unscaledProcessDeltaTime = unscaledDelta;
         }
+
+        var internalEnabled = physics ? _internalPhysicsProcessEnabled : _internalProcessEnabled;
+        var externalEnabled = physics ? _physicsProcessEnabled : _processEnabled;
+        var expectedTree = Tree;
+        List<Exception>? errors = null;
+
+        if (internalEnabled)
+        {
+            try
+            {
+                DispatchNotification(physics ? NotificationInternalPhysicsProcess : NotificationInternalProcess);
+            }
+            catch (Exception error)
+            {
+                CollectException(ref errors, error);
+            }
+        }
+
+        if (!IsDisposed && ReferenceEquals(Tree, expectedTree) && externalEnabled &&
+            (physics ? _physicsProcessEnabled : _processEnabled))
+        {
+            try
+            {
+                DispatchNotification(physics ? NotificationPhysicsProcess : NotificationProcess);
+            }
+            catch (Exception error)
+            {
+                CollectException(ref errors, error);
+            }
+        }
+
+        ThrowCollected("One or more node process callbacks failed.", errors);
     }
 
     internal void EnterTree(SceneTree tree)

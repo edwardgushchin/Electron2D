@@ -13,16 +13,18 @@ Its production sources live under `src/Scene/Main/` and `src/Scene/Resources/`, 
 | Component | Responsibility | State |
 | --- | --- | --- |
 | [Unified 2D node](../components/unified-node.md) | Hierarchy, 2D transforms, paths, groups, visibility/Z state, process policy, lifecycle endpoints, and deletion requests | Implemented and verified |
-| [Scene tree](../components/scene-tree.md) | Active-root ownership, exception-safe lifecycle, pause state, frame dispatch/events/counts, typed group operations, one-shot timers, deferred work, and deletion execution | Implemented and verified |
+| [Scene tree](../components/scene-tree.md) | Active-root ownership, exception-safe lifecycle, pause state, frame dispatch/events/counts, reusable Node timers, lightweight one-shot timers, typed group operations, deferred work, and deletion execution | Implemented and verified |
 | [Packed scenes](../components/packed-scenes.md) | Typed in-memory owned-hierarchy capture, live metadata, detached reconstruction, and per-instance local resources | Implemented and verified |
 
-Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classes/NodeProcessMode.md), [`SceneTree`](../classes/SceneTree.md), [`SceneTreeTimer`](../classes/SceneTreeTimer.md), [`GroupCallFlags`](../classes/GroupCallFlags.md), [`PackedScene`](../classes/PackedScene.md), [`SceneState`](../classes/SceneState.md), and [`PackedSceneEditState`](../classes/PackedSceneEditState.md).
+Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classes/NodeProcessMode.md), [`SceneTree`](../classes/SceneTree.md), [`Timer`](../classes/Timer.md), [`TimerProcessCallback`](../classes/TimerProcessCallback.md), [`SceneTreeTimer`](../classes/SceneTreeTimer.md), [`GroupCallFlags`](../classes/GroupCallFlags.md), [`PackedScene`](../classes/PackedScene.md), [`SceneState`](../classes/SceneState.md), and [`PackedSceneEditState`](../classes/PackedSceneEditState.md).
 
 ## Public surface
 
 - `Node`: the primary public game-object base and one combined Godot-style `Node` + `Node2D` abstraction with ordered hierarchy, lifecycle, local/global `Transform` transforms, `Vector2` spatial helpers, logical canvas state, paths/search/groups, processing configuration, and queued deletion.
 - `NodeProcessMode`: inherited, pausable, paused-only, always, and disabled process policies.
 - `SceneTree`: concrete main loop and active hierarchy owner with failure-safe lifecycle/finalization, system-notification propagation, pause state, caller-driven process/physics frames, frame/tree events and counters, typed group work, timers, deferred actions, and deletion flushing.
+- `Timer`: reusable hierarchy-owned countdown with selected frame lane, one-shot/repeat, autostart, local/tree pause, optional time-scale bypass, and typed timeout event.
+- `TimerProcessCallback`: stable physics/process lane selection for `Timer`.
 - `SceneTreeTimer`: lightweight one-shot delay advanced by one selected frame lane and automatically disposed after timeout.
 - `GroupCallFlags`: immediate/reverse/deferred/unique policy for typed group operations.
 - `PackedScene`: `Resource` that captures any reusable typed owned-node hierarchy, from one composed game object through a complete level, and reconstructs independent detached instances.
@@ -47,9 +49,9 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - SceneTree-managed enter runs parent-first, ready runs child-first and once unless explicitly reset, and exit runs child-first. Lifecycle snapshots revalidate membership and lifecycle re-entry is rejected. Constructor failure terminally closes the failed tree, rolls membership and newly consumed ready state back, and disposes activation-created timers; later lifecycle failures complete their state transition and are aggregated. Manual `Notify(int)` dispatch is outside that state machine.
 - Attached state mutation, lifecycle delivery, frame execution, flushing, and disposal use the tree's creating thread. Deferred and deletion requests may be enqueued from other threads.
 - A non-top-level global transform is the ancestor global transform composed with the local transform. Transform inputs must be finite; operations needing an inverse reject singular transforms.
-- Process/physics callbacks are opt-in, synchronous, pause-aware, and ordered by their independent priority then captured tree order.
+- Public and engine-internal process/physics callbacks are opt-in, synchronous, pause-aware, and ordered by their independent priority then captured tree order. Internal built-in work precedes the same node's public callback and receives both scaled and original Engine deltas.
 - Queue acceptance is atomic with tree-disposal closure. Deferred work queued during a flush waits for the next flush. Captured queued deletion runs after deferred actions, survives detachment, transfers safely between trees, and disposes the complete subtree despite detach callback failures.
-- Frame and flush execution cannot be re-entered or started during lifecycle delivery. Timers advance after node callbacks and before deferred work in their selected lane. Pause delivery visits each eligible node at most once and rejects opposite re-entry.
+- Frame and flush execution cannot be re-entered or started during lifecycle delivery. Reusable Timer nodes advance during internal node processing; lightweight tree timers advance after node callbacks and before deferred work. Pause delivery visits each eligible node at most once and rejects opposite re-entry.
 - Typed group operations run in hierarchy/reverse order, revalidate membership, and can be deferred and coalesced without reflection or untyped values.
 - Typed node events pass their publisher first when an additional payload is present; Core event connections can schedule handlers through `SceneTree.Defer`.
 - Packed-scene capture stores only root-owned branches, static exact-type factories, persistent groups, and explicitly storage-enabled typed properties. It stores no live source nodes or event subscribers.
@@ -71,7 +73,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` verifies transform and hierarchy behavior, lifecycle order and failure rollback, cleanup continuation, inherited loop driving/finalization, system-notification propagation, tree/frame events and counters, typed group operations, timer behavior, paths/search/groups, visibility/Z, pause-aware process ordering, owner-thread enforcement, deferred batch isolation, concurrent enqueue/disposal stress, queued deletion, direct deterministic disposal, zero warmed idle-frame allocations, packed owned-branch capture/state/instantiation, local resources, factory/capture rejection, and packed rollback. It does not prove renderer, SDL, visual behavior, real-time cadence, disk scene compatibility, editor behavior, or large-scene performance.
+`tests/Electron2D.Tests/Program.cs` verifies transform and hierarchy behavior, lifecycle order and failure rollback, cleanup continuation, inherited loop driving/finalization, system-notification propagation, tree/frame events and counters, typed group operations, both timer models including unscaled Engine delivery, paths/search/groups, visibility/Z, pause-aware internal/public process ordering, owner-thread enforcement, deferred batch isolation, concurrent enqueue/disposal stress, queued deletion, direct deterministic disposal, zero warmed idle and active-Timer allocations, packed owned-branch capture/state/instantiation, local resources, factory/capture rejection, and packed rollback. It does not prove renderer, SDL, visual behavior, real-time cadence, disk scene compatibility, editor behavior, or large-scene performance.
 
 ## Relevant decisions
 
@@ -93,3 +95,4 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - [0031: Node trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
+- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)

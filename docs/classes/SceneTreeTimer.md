@@ -47,4 +47,4 @@ The timer depends on `SceneTree` for scheduling and ownership and on `ElectronOb
 
 ## Verification and known limitations
 
-Executable checks cover process and physics lanes, pause policy, finite-duration validation, timeout order, automatic disposal, and continuation after a throwing timeout handler. Direct tree calls supply delta unchanged; [`Engine`](Engine.md) applies its time scale before Engine-driven delivery. There is no per-timer ignore-time-scale option, real-time bypass, repeating mode, cancellation token, or wall-clock guarantee.
+Executable checks cover process and physics lanes, pause policy, finite-duration validation, timeout order, automatic disposal, and continuation after a throwing timeout handler. Direct tree calls supply delta unchanged; [`Engine`](Engine.md) applies its time scale before Engine-driven delivery. There is no per-timer ignore-time-scale option, repeating mode, cancellation token, or wall-clock guarantee; use hierarchy-owned [`Timer`](Timer.md) when repeat, autostart, local pause, packing, or time-scale bypass is required.

@@ -298,7 +298,7 @@ public sealed class Engine : ElectronObject
 
                 try
                 {
-                    if (mainLoop.PhysicsProcess(scaledPhysicsStep))
+                    if (mainLoop.PhysicsProcessForEngine(scaledPhysicsStep, physicsStep))
                     {
                         stopRequested = true;
                         break;
@@ -310,7 +310,7 @@ public sealed class Engine : ElectronObject
                 }
             }
 
-            if (mainLoop.Process(scaledProcessStep))
+            if (mainLoop.ProcessForEngine(scaledProcessStep, timing.ProcessStep))
                 stopRequested = true;
 
             Interlocked.Increment(ref _processFrames);

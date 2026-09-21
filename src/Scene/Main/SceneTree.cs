@@ -13,8 +13,6 @@ public sealed class SceneTree : MainLoop
     private const GroupCallFlags SupportedGroupCallFlags =
         GroupCallFlags.Reverse | GroupCallFlags.Deferred | GroupCallFlags.Unique;
 
-    private static readonly ScheduledNodeComparer ProcessOrderComparer = new();
-
     private static readonly IReadOnlyList<PropertyDescriptor> SceneTreeProperties = Array.AsReadOnly<PropertyDescriptor>(
     [
         new PropertyDescriptor<SceneTree, Node>(nameof(Root), tree => tree.Root),
@@ -551,7 +549,7 @@ public sealed class SceneTree : MainLoop
     /// <remarks>Runs the existing process-frame pipeline and never requests host termination.</remarks>
     protected override bool OnProcess(double delta)
     {
-        RunFrame(delta, physics: false);
+        RunFrame(delta, CurrentUnscaledFrameDelta, physics: false);
         return false;
     }
 
@@ -559,7 +557,7 @@ public sealed class SceneTree : MainLoop
     /// <remarks>Runs the existing physics-frame pipeline and never requests host termination.</remarks>
     protected override bool OnPhysicsProcess(double delta)
     {
-        RunFrame(delta, physics: true);
+        RunFrame(delta, CurrentUnscaledFrameDelta, physics: true);
         return false;
     }
 
@@ -788,7 +786,7 @@ public sealed class SceneTree : MainLoop
 
     internal void NotifyTreeChanged() => TreeChanged?.Invoke(this);
 
-    private void RunFrame(double delta, bool physics)
+    private void RunFrame(double delta, double unscaledDelta, bool physics)
     {
         ThrowIfDisposed();
         EnsureOwnerThread();
@@ -821,7 +819,7 @@ public sealed class SceneTree : MainLoop
 
             _scheduledNodes.Clear();
             CaptureScheduledNodes(physics);
-            _scheduledNodes.Sort(ProcessOrderComparer);
+            _scheduledNodes.Sort();
 
             foreach (var item in _scheduledNodes)
             {
@@ -829,12 +827,12 @@ public sealed class SceneTree : MainLoop
                 if (node.IsDisposed || !ReferenceEquals(node.Tree, this) || !node.CanProcess())
                     continue;
 
-                if (physics ? !node.PhysicsProcessEnabled : !node.ProcessEnabled)
+                if (!node.HasProcessCallback(physics))
                     continue;
 
                 try
                 {
-                    node.RunProcess(delta, physics);
+                    node.RunProcess(delta, unscaledDelta, physics);
                 }
                 catch (Exception error)
                 {
@@ -1184,14 +1182,12 @@ public sealed class SceneTree : MainLoop
             throw new AggregateException(message, errors);
     }
 
-    private readonly record struct ScheduledNode(Node Node, int Priority, int Order);
-
-    private sealed class ScheduledNodeComparer : IComparer<ScheduledNode>
+    private readonly record struct ScheduledNode(Node Node, int Priority, int Order) : IComparable<ScheduledNode>
     {
-        public int Compare(ScheduledNode left, ScheduledNode right)
+        public int CompareTo(ScheduledNode other)
         {
-            var priority = left.Priority.CompareTo(right.Priority);
-            return priority != 0 ? priority : left.Order.CompareTo(right.Order);
+            var priority = Priority.CompareTo(other.Priority);
+            return priority != 0 ? priority : Order.CompareTo(other.Order);
         }
     }
 

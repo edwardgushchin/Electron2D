@@ -34,6 +34,8 @@ Any self-contained root and its owned descendants can be captured by [`PackedSce
 | `NotificationSceneInstantiated` | `20` | This packed-scene root finished complete detached reconstruction |
 | `NotificationPathRenamed` | `23` | This node or an ancestor changed path |
 | `NotificationChildOrderChanged` | `24` | Direct child order changed |
+| `NotificationInternalProcess` | `25` | Engine-owned process work independent of the public callback switch |
+| `NotificationInternalPhysicsProcess` | `26` | Engine-owned physics-process work independent of the public callback switch |
 | `NotificationPostEnterTree` | `27` | This node's descendants finished entering |
 | `NotificationDisabled` | `28` | Effective process mode became `Disabled` |
 | `NotificationEnabled` | `29` | Effective process mode stopped being `Disabled` |
@@ -176,7 +178,7 @@ Every transform input must be finite. `Transform` uses X/Y basis columns and com
 
 For SceneTree-managed attachment, enter is parent-first, post-enter follows descendant entry, and ready is child-first. Ready is one-shot unless `RequestReady()` is called before a later attachment. Exit is child-first. Lifecycle phases attempt all applicable node and tree events before aggregating failures; exit always clears membership. Constructor activation rollback additionally restores ready flags newly consumed by that attempt. Manual inherited `Notify(int)` calls the mapped callback on the caller's thread but does not change membership/readiness or raise the corresponding tree event.
 
-Toggling `SceneTree.Paused` sends paused/unpaused notifications. A process-mode change that crosses effective `Disabled` sends disabled/enabled notification to the node and affected inheriting descendants. `ProcessFrame` and `PhysicsFrame` invoke only explicitly enabled nodes that remain live, attached, and eligible when their captured turn arrives. MainLoop system notifications `2009..2020` are propagated by the owning tree through a depth-first snapshot with lifetime and membership revalidation.
+Toggling `SceneTree.Paused` sends paused/unpaused notifications. A process-mode change that crosses effective `Disabled` sends disabled/enabled notification to the node and affected inheriting descendants. `ProcessFrame` and `PhysicsFrame` invoke nodes whose public or engine-internal lane is enabled and that remain live, attached, and eligible when their captured turn arrives. Internal notification `25` or `26` runs before the same node's public notification `17` or `16`; failures are collected while both phases are attempted. A public lane must have been enabled at capture and remain enabled after the internal phase; newly enabling it does not inject work, while disabling it, detaching, or disposing skips delivery. MainLoop system notifications `2009..2020` are propagated by the owning tree through a depth-first snapshot with lifetime and membership revalidation.
 
 Direct disposal and queued deletion both detach an active node and attempt to dispose every member of its complete owned subtree. An instantiated packed-scene root additionally owns every resource duplicate created for that instance and disposes them after child-node cleanup. Cleanup failures are aggregated after structural state, child/resource lifetimes, groups, and subscribers reach their final state. The disposal thread may inspect node state from pre-delete and exit callbacks; other threads observe disposal as started and are rejected.
 
@@ -197,6 +199,7 @@ Every node created by `PackedScene.Instantiate()` is also marked unfinished unti
 - A packed-scene node cannot enter an active tree or be disposed until its instantiation barrier is removed; final topology validation and rollback prevent callback-created hierarchy escape from surviving the operation.
 - `QueueFree` and `CancelFree` are atomic request operations usable from other threads; actual deletion runs on the owner thread. Detachment does not cancel deletion, while transfer to another tree transfers consumption of the request.
 - Access after disposal throws where the member checks lifetime. Simple relationship/status properties (`Parent`, `Children`, `Tree`, `IsInsideTree`, `IsNodeReady`, `IsQueuedForDeletion`) expose their final stored state directly.
+- Engine-internal process enablement and original frame deltas are in-assembly integration state for built-in nodes such as [`Timer`](Timer.md); they are not public gameplay switches or protected override points.
 
 ## Dependencies and interactions
 
@@ -204,9 +207,9 @@ Every node created by `PackedScene.Instantiate()` is also marked unfinished unti
 
 ## Verification and known limitations
 
-`tests/Electron2D.Tests/Program.cs` verifies lifecycle order, activation/ready rollback, stale snapshot rejection, lifecycle re-entry guards, failure-continuing exit and recursive disposal, disposing-parent mutation rejection, hierarchy validation, reparenting, owner cleanup, paths/search/persistent groups, packed capture and instantiation guards/factories/escape rollback/resource ownership, node/tree event order, child order and sender-first child event arguments, transform behavior, visibility and Z state, spatial helpers, pause modes/priorities/deltas, inherited disable/enable notifications, MainLoop system aliases and tree propagation, owner-thread rejection, direct disposal, detached/cross-tree queued deletion, and queued recursive disposal.
+`tests/Electron2D.Tests/Program.cs` verifies lifecycle order, activation/ready rollback, stale snapshot rejection, lifecycle re-entry guards, failure-continuing exit and recursive disposal, disposing-parent mutation rejection, hierarchy validation, reparenting, owner cleanup, paths/search/persistent groups, packed capture and instantiation guards/factories/escape rollback/resource ownership, node/tree event order, child order and sender-first child event arguments, transform behavior, visibility and Z state, spatial helpers, pause modes/priorities/scaled and original deltas, internal-before-public processing and failure continuation, inherited disable/enable notifications, MainLoop system aliases and tree propagation, owner-thread rejection, direct disposal, detached/cross-tree queued deletion, and queued recursive disposal.
 
-There is no renderer-backed canvas behavior, native system-event creation, focus-to-input state synchronization, ordinary input propagation, collision/rigid-body physics, scene file loader/saver, inherited/nested scene authoring, editable-instance metadata, persistent event endpoint schema, RPC/multiplayer, internal processing lane, process auto-enable by override detection, unique-name shorthand, or separate spatial-node subclass. Visibility and Z are currently logical state only.
+There is no renderer-backed canvas behavior, native system-event creation, focus-to-input state synchronization, ordinary input propagation, collision/rigid-body physics, scene file loader/saver, inherited/nested scene authoring, editable-instance metadata, persistent event endpoint schema, RPC/multiplayer, public control of internal processing, process auto-enable by override detection, unique-name shorthand, or separate spatial-node subclass. Visibility and Z are currently logical state only.
 
 ## Relevant decisions
 
@@ -215,3 +218,4 @@ There is no renderer-backed canvas behavior, native system-event creation, focus
 - [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
+- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)

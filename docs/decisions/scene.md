@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 This bounded log owns the complete architectural records for scene. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
-Decisions in this log: [0006](#adr-0006), [0008](#adr-0008), [0011](#adr-0011), [0023](#adr-0023), [0031](#adr-0031).
+Decisions in this log: [0006](#adr-0006), [0008](#adr-0008), [0011](#adr-0011), [0023](#adr-0023), [0031](#adr-0031), [0036](#adr-0036).
 
 <a id="adr-0006"></a>
 ## ADR 0006: Own hierarchy, deferred work, and queued deletion in SceneTree
@@ -257,3 +257,57 @@ The implemented `PackedScene` contract is typed, runtime-only, and in-memory. It
 - Introduce a separate public `GameObject`, entity, or ECS hierarchy: rejected because it would split ownership, lifecycle, paths, processing, and editor semantics across competing models.
 - Activate every scene during instantiation: rejected because reuse requires safe detached construction before explicit tree ownership.
 - Wait for the editor or disk format before defining scenes as the reuse unit: rejected because the current in-memory implementation already provides the runtime boundary and future tools need a stable target.
+
+<a id="adr-0036"></a>
+## ADR 0036: Reusable Node timer and dual-delta frame delivery
+
+Last updated: 2026-09-21
+
+- Status: Accepted
+- Scope: Reusable countdown nodes, internal Node processing, and scaled/original frame timing
+- Builds on: [0008](scene.md#adr-0008), [0011](scene.md#adr-0011), [0016](core-object-runtime.md#adr-0016), and [0014](resources.md#adr-0014)
+
+### Context
+
+Electron2D already provides a lightweight `SceneTreeTimer` for one-shot deferred work, but reusable scenes also need a configurable countdown that participates in Node hierarchy, pause, packing, and lifecycle semantics. Its ignore-time-scale option cannot be implemented correctly if Engine supplies only the scaled delta: a zero time scale erases the elapsed duration. Reusing public `ProcessEnabled` would also make engine behavior depend on whether a game enables or disables its own process callback.
+
+The current stable [`Timer` reference](https://docs.godotengine.org/en/stable/classes/class_timer.html) and 4.7.2 stable [`timer.h`](https://github.com/godotengine/godot/blob/4.7.2-stable/scene/main/timer.h)/[`timer.cpp`](https://github.com/godotengine/godot/blob/4.7.2-stable/scene/main/timer.cpp) were audited with the complete `Node` and `Object` inheritance chain. The reference describes expiration on reaching the end, while the native implementation tests strict negativity; Electron2D deliberately uses zero as the expiration boundary so documented exact-end behavior is deterministic. The reference also promises real elapsed time when scaling is ignored, so Electron2D gives physics timers the original fixed step instead of reproducing the audited implementation's reuse of the variable process step at non-default physics rates.
+
+The engine is typed C#, uses direct frame traversal for hot paths, and forbids inert compatibility stubs. The solution therefore has to integrate with existing Node/SceneTree/MainLoop/Engine flow, preserve allocation-free warmed frames, and expose no separate task or clock scheduler.
+
+### Decision
+
+- Add `Timer : Node` and `TimerProcessCallback` to the Scene tree component.
+- Timer configuration consists of process lane, finite positive wait time, one-shot, autostart, and ignore-time-scale state. Runtime-only state consists of local pause and remaining time.
+- `Start()` uses the configured wait; `Start(double)` validates and stores an explicit duration. These overloads replace a negative sentinel default. Start requires active tree membership, resets a running timer, and never clears local pause. `Stop()` is valid while detached, emits nothing, and clears autostart.
+- Ready-time autostart starts after inherited ready handling and clears the flag. Exact zero is an expiration boundary.
+- One-shot expiration stops before synchronous typed event delivery. Repeating expiration adds the current wait before delivery. Overshoot is retained, but at most one timeout is delivered per frame; public remaining time is clamped to zero while residual time is non-positive.
+- Node owns private internal process and physics enable flags in addition to public gameplay callback flags. SceneTree schedules a node when either lane is enabled, dispatches the internal notification before the public callback, and attempts both callbacks when the internal callback fails. Public enablement is captured and revalidated: disabling the lane, disposing, or detaching during internal delivery skips the public callback, while newly enabling it does not inject a callback into the current turn.
+- Internal notification IDs `25` and `26` remain public stable identifiers, while scheduling controls and original delta access remain internal engine integration.
+- MainLoop carries a scaled delta plus an original delta only inside the current callback. Direct calls use the same value for both. Engine supplies its effective scaled delta and original synchronized step separately, including when `TimeScale` is zero. Timer selects the original delta only when configured to ignore scaling.
+- SceneTree continues using its reusable scheduler buffers. Scheduled-node values compare themselves by priority and captured tree order so sorting creates no steady-state managed allocation.
+- Exact Timer configuration is stored by `PackedScene`; runtime pause and remaining time are not. Derived Timer types follow the existing explicit exact-type factory rule.
+
+### Consequences
+
+- Reusable scene hierarchies can own configurable timers without a second scheduler, thread, task, or native clock.
+- Game code may independently enable public process callbacks on a Timer-derived node without controlling whether its countdown runs.
+- Ignore-time-scale remains meaningful at every non-negative Engine time scale.
+- Internal callbacks become a deliberate Node/SceneTree integration point for future built-in nodes; they are not a new public override surface.
+- A very short wait is still quantized by delivered frames, and large overshoots catch up at no more than one event per frame.
+- `SceneTreeTimer` remains the smaller auto-disposed one-shot facility and does not gain repeating, Node, packing, or ignore-time-scale behavior in this change.
+
+### Rejected alternatives
+
+- Run the timer through public `ProcessEnabled`: rejected because user callback configuration must not disable built-in state.
+- Add a background timer or task: rejected because it breaks owner-thread event delivery, pause ordering, deterministic tests, and host-driven time.
+- Store only scaled deltas and divide by `TimeScale`: rejected because zero cannot be reconstructed and changing scale would introduce numeric ambiguity.
+- Add a second SceneTree timer list for reusable Timer nodes: rejected because existing priority/pause-aware Node traversal already supplies the required lifecycle.
+- Emit multiple timeouts in one frame: rejected because frame-quantized event behavior and bounded callback work are part of the reference contract.
+- Preserve the optional negative duration sentinel: rejected in favor of typed overloads with explicit validation.
+
+### Verification
+
+The executable harness covers defaults and stable identities, descriptors and packed storage, invalid rollback, detached start/stop, both frame lanes and live lane migration, exact-zero and overshoot behavior, one-shot/repeating state observed by subscribers, local and tree pause, autostart, owner-thread mutation, callback failure continuation, detachment during timeout, zero time scale, and zero warmed allocations.
+
+It does not establish real host cadence, wall-clock precision, platform scheduling, editor warnings, or loaded-scene performance.

@@ -43,8 +43,8 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `FileAccessMode`, `FileCompressionMode`, and `UnixPermissionFlags`: exact typed mode, codec, and Unix mode-bit identities.
 - `ProjectSetting<T>`: immutable typed setting identity, default snapshot, and optional validator.
 - `ProjectSettings`: process and isolated registries, feature overrides, metadata, dirty/event state, project persistence/discovery, and directory-backed virtual paths.
-- `MainLoop`: explicit initialization, variable/fixed frame callbacks, host-stop results, finalization, system notification IDs, and typed permission results.
-- `Engine`: singleton runtime configuration, bounded host-driven scheduling, time scaling, callback metrics, architecture/version data, and typed named-singleton lookup.
+- `MainLoop`: explicit initialization, variable/fixed frame callbacks, host-stop results, finalization, system notification IDs, typed permission results, and internal original-delta context for built-in scene behavior.
+- `Engine`: singleton runtime configuration, bounded host-driven scheduling, scaled/original delta delivery, callback metrics, architecture/version data, and typed named-singleton lookup.
 - `EngineVersionInfo`: immutable typed assembly version metadata.
 - `Mathf`: seven scalar constants and 127 integer/float/double/decimal operations covering transcendental math, angles, interpolation, approximation, rounding, periodic values, and audio conversion.
 - `Color`: sequential floating-point RGBA value with color-space conversion, math, composition, packing, text, and comparison behavior.
@@ -82,8 +82,8 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - Disposal is explicit and idempotent.
 - Starting disposal makes the object unavailable to other threads immediately; the winning disposal thread may inspect guarded state while running teardown callbacks.
 - Dynamic Godot facilities are not recreated with `dynamic` or broad `object` containers.
-- Main-loop lifecycle and frames are one-shot/non-reentrant owner-thread operations; no hidden thread or clock exists.
-- Engine is process-wide and non-disposable; it schedules only from host-supplied elapsed time, bounds catch-up, and never takes disposal ownership of the active loop or registered singletons.
+- Main-loop lifecycle and frames are one-shot/non-reentrant owner-thread operations; effective/original deltas are finite, non-negative, and frame-scoped; no hidden thread or clock exists.
+- Engine is process-wide and non-disposable; it schedules only from host-supplied elapsed time, bounds catch-up, carries original time independently of scaling, and never takes disposal ownership of the active loop or registered singletons.
 - Configuration keys reject universal-value and engine-object types. Parsing is transactional, mutation is lock-serialized, and saves replace through flushed same-directory temporary files. Encrypted files are authenticated before parsing.
 - Project settings require exact typed definition identities, validate a complete candidate before load replacement, preserve unknown persisted entries, and lexically confine directory-backed virtual paths.
 - File access enforces exact modes, complete scalar reads, strict UTF-8, authenticated-before-exposure encrypted reads, and lock-serialized instance calls. It is blocking/allocating and excluded from real-time hot paths.
@@ -109,7 +109,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` verifies concurrent identity allocation, notifications, the `ElectronObject` lifetime contract, typed property discovery/access/validation/revert, property-list/script-change events, event-connection lifecycle/concurrency, the exact `Mathf` constant/overload surface and numeric boundaries, complete color behavior, all four vector surfaces and numeric boundaries, floating-point and integer rectangle layout/geometry/conversions/boundaries, transform decomposition/composition/inversion/interpolation/rectangle operations, Node vector/transform integration, strict persistence, packed-scene storage, allocation behavior, configuration parsing/encoding/persistence/encryption/concurrency, file and directory access, MainLoop state/error/thread behavior, and Engine scheduling/integration. It does not verify SDL or rendering behavior because those domains do not exist yet.
+`tests/Electron2D.Tests/Program.cs` verifies concurrent identity allocation, notifications, the `ElectronObject` lifetime contract, typed property discovery/access/validation/revert, property-list/script-change events, event-connection lifecycle/concurrency, the exact `Mathf` constant/overload surface and numeric boundaries, complete color behavior, all four vector surfaces and numeric boundaries, floating-point and integer rectangle layout/geometry/conversions/boundaries, transform decomposition/composition/inversion/interpolation/rectangle operations, Node vector/transform integration, strict persistence, packed-scene storage, allocation behavior, configuration parsing/encoding/persistence/encryption/concurrency, file and directory access, MainLoop state/error/thread behavior, and Engine scaled/original scheduling integration. It does not verify SDL or rendering behavior because those domains do not exist yet.
 
 The same harness verifies project-setting registration, value snapshots, validators, metadata, overrides, changes/events, persistence, virtual paths, transaction rollback, concurrency, disposal, and Engine integration.
 
@@ -139,3 +139,4 @@ The same harness verifies project-setting registration, value snapshots, validat
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
 - [0035: Foreseeable public type-family completeness](../decisions/core-math.md#adr-0035)
+- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)

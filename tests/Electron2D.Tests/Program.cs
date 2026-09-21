@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
+using EngineTimer = Electron2D.Timer;
 
 VerifyInstanceIds();
 VerifyLifetime();
@@ -32,6 +33,7 @@ VerifyNodeHierarchyAndTransforms();
 VerifyProcessing();
 VerifySceneTree();
 VerifySceneTreeGroupsEventsAndTimers();
+VerifyTimers();
 VerifySceneTreeFailureSafety();
 
 Console.WriteLine("Electron2D checks passed.");
@@ -4129,6 +4131,324 @@ static void VerifySceneTreeGroupsEventsAndTimers()
         "Disposal from a frame or flush callback must be rejected before lifetime changes.");
 }
 
+static void VerifyTimers()
+{
+    Require((int)TimerProcessCallback.Physics == 0 && (int)TimerProcessCallback.Idle == 1 &&
+            Node.NotificationInternalProcess == 25 && Node.NotificationInternalPhysicsProcess == 26,
+        "Timer process lanes and internal Node notifications must retain their stable identities.");
+
+    using (var detached = new EngineTimer())
+    {
+        Require(detached.ProcessCallback == TimerProcessCallback.Idle && DoubleNearlyEqual(detached.WaitTime, 1d) &&
+                !detached.OneShot && !detached.Autostart && !detached.Paused && !detached.IgnoreTimeScale &&
+                detached.TimeLeft == 0d && detached.IsStopped(),
+            "A Timer must begin stopped with the documented defaults.");
+
+        var descriptors = detached.GetPropertyList().ToDictionary(property => property.Name, StringComparer.Ordinal);
+        Require(descriptors[nameof(EngineTimer.ProcessCallback)].IsStored &&
+                descriptors[nameof(EngineTimer.WaitTime)].IsStored &&
+                descriptors[nameof(EngineTimer.OneShot)].IsStored &&
+                descriptors[nameof(EngineTimer.Autostart)].IsStored &&
+                descriptors[nameof(EngineTimer.IgnoreTimeScale)].IsStored &&
+                !descriptors[nameof(EngineTimer.Paused)].IsStored &&
+                descriptors[nameof(EngineTimer.TimeLeft)].IsReadOnly &&
+                !descriptors[nameof(EngineTimer.TimeLeft)].IsStored,
+            "Timer descriptors must distinguish stored configuration from runtime-only state.");
+
+        detached.Autostart = true;
+        detached.Stop();
+        Require(!detached.Autostart && detached.IsStopped(),
+            "Stopping a detached Timer must clear autostart without emitting a timeout.");
+        Expect<InvalidOperationException>(detached.Start,
+            "A detached Timer must reject Start while allowing Stop.");
+
+        foreach (var invalid in new[] { 0d, -1d, double.NaN, double.PositiveInfinity })
+        {
+            Expect<ArgumentOutOfRangeException>(() => detached.WaitTime = invalid,
+                "Timer.WaitTime must reject non-positive and non-finite values.");
+        }
+
+        Expect<ArgumentOutOfRangeException>(
+            () => detached.ProcessCallback = (TimerProcessCallback)99,
+            "Timer must reject undefined callback lanes.");
+        Require(DoubleNearlyEqual(detached.WaitTime, 1d) && detached.ProcessCallback == TimerProcessCallback.Idle,
+            "Rejected Timer configuration must preserve prior state.");
+    }
+
+    var root = new Node { Name = "timer-root" };
+    var timer = new EngineTimer { Name = "timer", WaitTime = 0.5d };
+    root.AddChild(timer);
+    using (var tree = new SceneTree(root))
+    {
+        var timeoutCount = 0;
+        var timeoutObservedReload = false;
+        timer.Timeout += source =>
+        {
+            timeoutCount++;
+            timeoutObservedReload = !source.IsStopped() && DoubleNearlyEqual(source.TimeLeft, source.WaitTime);
+        };
+
+        timer.Start();
+        tree.ProcessFrame(0.2d);
+        Require(timeoutCount == 0 && DoubleNearlyEqual(timer.TimeLeft, 0.3d) && !timer.IsStopped(),
+            "A running process Timer must expose its remaining countdown.");
+        timer.WaitTime = 0.25d;
+        Require(DoubleNearlyEqual(timer.TimeLeft, 0.3d),
+            "Changing WaitTime must not reset the active countdown.");
+        tree.ProcessFrame(0.3d);
+        Require(timeoutCount == 1 && timeoutObservedReload && DoubleNearlyEqual(timer.TimeLeft, 0.25d),
+            "A repeating Timer must reload before synchronous timeout delivery.");
+
+        timer.OneShot = true;
+        timer.Start(0.1d);
+        timeoutObservedReload = false;
+        tree.ProcessFrame(0.1d);
+        Require(timeoutCount == 2 && timer.IsStopped() && timer.TimeLeft == 0d && !timeoutObservedReload,
+            "A one-shot Timer must stop before timeout delivery when the countdown reaches zero exactly.");
+
+        timer.OneShot = false;
+        timer.Start(0.25d);
+        timer.Paused = true;
+        tree.ProcessFrame(1d);
+        Require(DoubleNearlyEqual(timer.TimeLeft, 0.25d) && timeoutCount == 2,
+            "A locally paused Timer must preserve its countdown.");
+        timer.Start(0.2d);
+        tree.ProcessFrame(1d);
+        Require(DoubleNearlyEqual(timer.TimeLeft, 0.2d),
+            "Starting a paused Timer must reset without resuming it.");
+        timer.Paused = false;
+        tree.ProcessFrame(0.2d);
+        Require(timeoutCount == 3,
+            "Unpausing a running Timer must resume its preserved countdown.");
+
+        timer.OneShot = true;
+        timer.ProcessCallback = TimerProcessCallback.Idle;
+        timer.Start(0.2d);
+        tree.ProcessFrame(0.05d);
+        timer.ProcessCallback = TimerProcessCallback.Physics;
+        tree.ProcessFrame(1d);
+        Require(!timer.IsStopped() && DoubleNearlyEqual(timer.TimeLeft, 0.15d),
+            "Moving a running Timer to the physics lane must preserve its countdown and ignore process frames.");
+        tree.PhysicsFrame(0.2d);
+        Require(timer.IsStopped() && timeoutCount == 4,
+            "A physics Timer must expire only in its selected lane.");
+
+        timer.ProcessCallback = TimerProcessCallback.Idle;
+        timer.OneShot = false;
+        timer.Start(0.1d);
+        tree.ProcessFrame(0.35d);
+        Require(timeoutCount == 5 && timer.TimeLeft == 0d,
+            "A repeating Timer must emit at most once per frame even when one delta spans several periods.");
+
+        timer.OneShot = true;
+        timer.Start(0.1d);
+        Expect<ArgumentOutOfRangeException>(() => timer.Start(0d),
+            "Timer.Start(duration) must reject a non-positive duration without changing the active countdown.");
+        Require(DoubleNearlyEqual(timer.WaitTime, 0.1d) && DoubleNearlyEqual(timer.TimeLeft, 0.1d),
+            "A rejected Timer restart must preserve wait and countdown state.");
+        tree.Paused = true;
+        tree.ProcessFrame(1d);
+        Require(!timer.IsStopped() && DoubleNearlyEqual(timer.TimeLeft, 0.1d),
+            "A Timer must honor inherited scene-tree pause policy.");
+        timer.ProcessMode = NodeProcessMode.Always;
+        tree.ProcessFrame(0.1d);
+        Require(timer.IsStopped() && timeoutCount == 6,
+            "Always-processing mode must allow a Timer to advance while the tree is paused.");
+        tree.Paused = false;
+
+        timer.Start(0.5d);
+        timer.Stop();
+        tree.ProcessFrame(1d);
+        Require(timer.IsStopped() && timeoutCount == 6,
+            "Stop must disable internal processing and must not emit Timeout.");
+
+        var wrongThreadWait = Task.Run(() => Capture(() => timer.WaitTime = 1d)).GetAwaiter().GetResult();
+        var wrongThreadStart = Task.Run(() => Capture(timer.Start)).GetAwaiter().GetResult();
+        var wrongThreadStop = Task.Run(() => Capture(timer.Stop)).GetAwaiter().GetResult();
+        Require(wrongThreadWait is InvalidOperationException && wrongThreadStart is InvalidOperationException &&
+                wrongThreadStop is InvalidOperationException,
+            "Attached Timer mutation must retain scene-tree owner-thread affinity.");
+    }
+
+    var autostartRoot = new Node { Name = "autostart-root" };
+    using (var autostartTree = new SceneTree(autostartRoot))
+    {
+        var autostartTimer = new EngineTimer
+        {
+            Name = "autostart-timer",
+            Autostart = true,
+            OneShot = true,
+            WaitTime = 0.2d,
+        };
+        var autostartTimeouts = 0;
+        autostartTimer.Timeout += _ => autostartTimeouts++;
+        autostartRoot.AddChild(autostartTimer);
+        Require(!autostartTimer.Autostart && !autostartTimer.IsStopped() &&
+                DoubleNearlyEqual(autostartTimer.TimeLeft, 0.2d),
+            "Autostart must start during ready delivery and clear itself.");
+        autostartTree.ProcessFrame(0.2d);
+        Require(autostartTimeouts == 1 && autostartTimer.IsStopped(),
+            "An automatically started one-shot Timer must expire normally.");
+    }
+
+    var order = new List<string>();
+    var orderRoot = new Node { Name = "order-root" };
+    var orderingTimer = new ProcessingTimer(order)
+    {
+        Name = "ordering-timer",
+        OneShot = true,
+        WaitTime = 0.1d,
+        ProcessEnabled = true,
+        ProcessPriority = -1,
+    };
+    var laterNode = new ProcessingNode("later", order) { ProcessEnabled = true, ProcessPriority = 1 };
+    orderingTimer.Timeout += _ =>
+    {
+        order.Add("timeout");
+        throw new InvalidOperationException("expected Timer timeout failure");
+    };
+    orderRoot.AddChild(orderingTimer);
+    orderRoot.AddChild(laterNode);
+    using (var orderTree = new SceneTree(orderRoot))
+    {
+        orderingTimer.Start();
+        Require(Capture(() => orderTree.ProcessFrame(0.1d)) is AggregateException &&
+                order.SequenceEqual(["timeout", "process:timer:0.1", "process:later:0.1"]),
+            "Internal timeout failures must not suppress the node's public callback or later scheduled nodes.");
+    }
+
+    var disableLog = new List<string>();
+    var disableRoot = new Node();
+    var disablingTimer = new ProcessingTimer(disableLog)
+    {
+        OneShot = true,
+        WaitTime = 0.1d,
+        ProcessEnabled = true,
+    };
+    disableRoot.AddChild(disablingTimer);
+    using (var disableTree = new SceneTree(disableRoot))
+    {
+        disablingTimer.Timeout += source => source.ProcessEnabled = false;
+        disablingTimer.Start();
+        disableTree.ProcessFrame(0.1d);
+        Require(disableLog.Count == 0,
+            "A Timer that disables its public callback during timeout must not receive that callback later in the frame.");
+    }
+
+    var removalLog = new List<string>();
+    var removalRoot = new Node();
+    var removedTimer = new ProcessingTimer(removalLog)
+    {
+        OneShot = true,
+        WaitTime = 0.1d,
+        ProcessEnabled = true,
+    };
+    removalRoot.AddChild(removedTimer);
+    using (var removalTree = new SceneTree(removalRoot))
+    {
+        removedTimer.Timeout += _ => removalRoot.RemoveChild(removedTimer);
+        removedTimer.Start();
+        removalTree.ProcessFrame(0.1d);
+        Require(removedTimer.Tree is null && removalLog.Count == 0,
+            "A Timer removed by its internal timeout callback must not receive its public callback later in the frame.");
+        removedTimer.Dispose();
+    }
+
+    using (var packed = new PackedScene())
+    {
+        var source = new EngineTimer
+        {
+            Name = "packed-timer",
+            ProcessCallback = TimerProcessCallback.Physics,
+            WaitTime = 2.5d,
+            OneShot = true,
+            Autostart = true,
+            Paused = true,
+            IgnoreTimeScale = true,
+        };
+        packed.Pack(source);
+        source.Dispose();
+        using var instance = (EngineTimer)packed.Instantiate();
+        Require(instance.Name == "packed-timer" && instance.ProcessCallback == TimerProcessCallback.Physics &&
+                DoubleNearlyEqual(instance.WaitTime, 2.5d) && instance.OneShot && instance.Autostart &&
+                instance.IgnoreTimeScale && !instance.Paused && instance.IsStopped(),
+            "PackedScene must preserve Timer configuration without persisting runtime pause or countdown state.");
+    }
+
+    var engine = Engine.Instance;
+    var previousTimeScale = engine.TimeScale;
+    var scaledRoot = new Node { Name = "scaled-timer-root" };
+    var scaledTimer = new EngineTimer { Name = "scaled", Autostart = true, OneShot = true, WaitTime = 0.1d };
+    var unscaledTimer = new EngineTimer
+    {
+        Name = "unscaled",
+        Autostart = true,
+        OneShot = true,
+        WaitTime = 0.1d,
+        IgnoreTimeScale = true,
+    };
+    var unscaledPhysicsTimer = new EngineTimer
+    {
+        Name = "unscaled-physics",
+        Autostart = true,
+        OneShot = true,
+        WaitTime = 0.05d,
+        IgnoreTimeScale = true,
+        ProcessCallback = TimerProcessCallback.Physics,
+    };
+    scaledRoot.AddChild(scaledTimer);
+    scaledRoot.AddChild(unscaledTimer);
+    scaledRoot.AddChild(unscaledPhysicsTimer);
+    using (var scaledTree = new SceneTree(scaledRoot))
+    {
+        var unscaledTimeouts = 0;
+        unscaledTimer.Timeout += _ => unscaledTimeouts++;
+        unscaledPhysicsTimer.Timeout += _ => unscaledTimeouts++;
+        try
+        {
+            engine.TimeScale = 0d;
+            engine.Start(scaledTree);
+            _ = engine.AdvanceFrame(1d);
+            Require(!scaledTimer.IsStopped() && DoubleNearlyEqual(scaledTimer.TimeLeft, 0.1d) &&
+                    unscaledTimer.IsStopped() && unscaledPhysicsTimer.IsStopped() && unscaledTimeouts == 2,
+                "IgnoreTimeScale must use Engine's original process and physics deltas even when scaled time is frozen.");
+            engine.Stop();
+        }
+        finally
+        {
+            if (ReferenceEquals(engine.MainLoop, scaledTree))
+                engine.Stop();
+            engine.TimeScale = previousTimeScale;
+        }
+    }
+
+    var allocationRoot = new Node();
+    var allocationTimer = new EngineTimer { WaitTime = 100d };
+    allocationRoot.AddChild(allocationTimer);
+    using (var allocationTree = new SceneTree(allocationRoot))
+    {
+        allocationTimer.Start();
+        for (var index = 0; index < 16; index++)
+            allocationTree.ProcessFrame(0d);
+        var beforeNotify = GC.GetAllocatedBytesForCurrentThread();
+        for (var index = 0; index < 128; index++)
+            allocationTimer.Notify(Node.NotificationInternalProcess);
+        var notifyAllocated = GC.GetAllocatedBytesForCurrentThread() - beforeNotify;
+        allocationTimer.Stop();
+        var beforeStopped = GC.GetAllocatedBytesForCurrentThread();
+        for (var index = 0; index < 128; index++)
+            allocationTree.ProcessFrame(0d);
+        var stoppedAllocated = GC.GetAllocatedBytesForCurrentThread() - beforeStopped;
+        allocationTimer.Start();
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        for (var index = 0; index < 128; index++)
+            allocationTree.ProcessFrame(0d);
+        var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+        Require(notifyAllocated == 0 && stoppedAllocated == 0 && allocated == 0,
+            $"A warmed Timer process hot path must not allocate managed memory; observed {allocated} bytes after {notifyAllocated} notification bytes and {stoppedAllocated} stopped bytes.");
+    }
+}
+
 static void VerifySceneTreeFailureSafety()
 {
     var enterRoot = new FailingLifecycleNode
@@ -6045,6 +6365,11 @@ sealed class ProcessingNode : Node
     protected override void OnProcess(double delta) => _log.Add($"process:{Name}:{delta}");
 
     protected override void OnPhysicsProcess(double delta) => _log.Add($"physics:{Name}:{delta}");
+}
+
+sealed class ProcessingTimer(List<string> log) : EngineTimer
+{
+    protected override void OnProcess(double delta) => log.Add($"process:timer:{delta}");
 }
 
 sealed class GroupNode : Node
