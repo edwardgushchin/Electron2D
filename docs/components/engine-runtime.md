@@ -47,7 +47,7 @@ Executable checks cover success, invalid values/order, wrong threads, lifecycle 
 
 ## Decisions
 
-- [0016: Process-wide Engine runtime and host-driven scheduling](../decisions/0016-engine-runtime.md)
-- [0015: Main-loop lifecycle and host boundary](../decisions/0015-main-loop-contract.md)
-- [0014: Managed Resource lifetime and realtime allocation](../decisions/0014-managed-resource-lifetime.md)
-- [0019: Typed project settings and directory-backed virtual paths](../decisions/0019-typed-project-settings.md)
+- [0016: Process-wide Engine runtime and host-driven scheduling](../decisions/core-object-runtime.md#adr-0016)
+- [0015: Main-loop lifecycle and host boundary](../decisions/core-object-runtime.md#adr-0015)
+- [0014: Managed Resource lifetime and realtime allocation](../decisions/resources.md#adr-0014)
+- [0019: Typed project settings and directory-backed virtual paths](../decisions/core-data-io.md#adr-0019)

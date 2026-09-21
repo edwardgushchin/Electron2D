@@ -98,7 +98,7 @@ There is no comment preservation, direct virtual path resolution, asynchronous o
 
 ## Decisions
 
-- [0018: Typed configuration files](../decisions/0018-typed-config-files.md)
-- [0024: Typed color values and portable quantization](../decisions/0024-typed-color-values.md)
-- [0025: Typed axis-aligned rectangle geometry](../decisions/0025-typed-rectangle-geometry.md)
-- [0029: Typed Transform2D value and affine semantics](../decisions/0029-typed-transform2d-value.md)
+- [0018: Typed configuration files](../decisions/core-data-io.md#adr-0018)
+- [0024: Typed color values and portable quantization](../decisions/core-math.md#adr-0024)
+- [0025: Typed axis-aligned rectangle geometry](../decisions/core-math.md#adr-0025)
+- [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)

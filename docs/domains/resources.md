@@ -42,15 +42,15 @@ There are no concrete asset types, asset loader/saver, cache modes, importer, re
 
 ## Decisions
 
-- [ADR 0001: Typed C# without Variant](../decisions/0001-typed-csharp-without-variant.md)
-- [ADR 0002: C# events for signals](../decisions/0002-csharp-events-for-signals.md)
-- [ADR 0003: ElectronObject lifetime](../decisions/0003-electron-object-lifetime.md)
-- [ADR 0004: 2D API in one Electron2D-owned assembly](../decisions/0004-2d-api-single-assembly.md)
-- [ADR 0013: Managed typed Resource contract](../decisions/0013-managed-resource-contract.md)
-- [ADR 0014: Managed Resource lifetime and realtime allocation](../decisions/0014-managed-resource-lifetime.md)
-- [ADR 0017: Source-tree module layout](../decisions/0017-source-tree-layout.md)
-- [ADR 0021: Cross-platform runtime target matrix](../decisions/0021-cross-platform-runtime-targets.md)
-- [ADR 0023: Typed in-memory packed scenes](../decisions/0023-typed-packed-scenes.md)
+- [ADR 0001: Typed C# without Variant](../decisions/product.md#adr-0001)
+- [ADR 0002: C# events for signals](../decisions/product.md#adr-0002)
+- [ADR 0003: ElectronObject lifetime](../decisions/core-object-runtime.md#adr-0003)
+- [ADR 0004: 2D API in one Electron2D-owned assembly](../decisions/product.md#adr-0004)
+- [ADR 0013: Managed typed Resource contract](../decisions/resources.md#adr-0013)
+- [ADR 0014: Managed Resource lifetime and realtime allocation](../decisions/resources.md#adr-0014)
+- [ADR 0017: Source-tree module layout](../decisions/product.md#adr-0017)
+- [ADR 0021: Cross-platform runtime target matrix](../decisions/product.md#adr-0021)
+- [ADR 0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
 
 ## Verification
 

@@ -44,7 +44,7 @@ Executable checks cover success, invalid order, delta boundaries, wrong-thread c
 
 ## Decisions
 
-- [0015: Main-loop lifecycle and host boundary](../decisions/0015-main-loop-contract.md)
-- [0016: Process-wide Engine runtime and host-driven scheduling](../decisions/0016-engine-runtime.md)
-- [0002: C# events for signals](../decisions/0002-csharp-events-for-signals.md)
-- [0014: Managed Resource lifetime and realtime allocation](../decisions/0014-managed-resource-lifetime.md)
+- [0015: Main-loop lifecycle and host boundary](../decisions/core-object-runtime.md#adr-0015)
+- [0016: Process-wide Engine runtime and host-driven scheduling](../decisions/core-object-runtime.md#adr-0016)
+- [0002: C# events for signals](../decisions/product.md#adr-0002)
+- [0014: Managed Resource lifetime and realtime allocation](../decisions/resources.md#adr-0014)

@@ -189,5 +189,4 @@ The executable harness reflects the public static properties and requires exactl
 
 ## Decisions
 
-- [0024: Typed color values and portable quantization](../decisions/0024-typed-color-values.md)
-
+- [0024: Typed color values and portable quantization](../decisions/core-math.md#adr-0024)

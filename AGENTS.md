@@ -9,7 +9,7 @@ Every engine domain, component, and production type must have a living document 
 - Domain documents live in `docs/domains/`.
 - Component documents live in `docs/components/`.
 - Production class, struct, interface, enum, and delegate documents live in `docs/classes/`.
-- Cross-cutting decisions live in `docs/decisions/` as ADRs.
+- `docs/decisions/index.md` routes durable architectural decisions to bounded domain logs under `docs/decisions/`; ADR records use permanent `adr-NNNN` anchors. See ADR 0030 in `docs/decisions/product.md`.
 - `docs/inventory.md` is the exhaustive map from domains to components, production types, sources, and documents.
 - Test-only helpers under `tests/` and generated files do not need separate class pages; their relevant coverage belongs in the documented production type or component.
 
@@ -20,9 +20,9 @@ When adding, renaming, moving, or deleting a production type:
 1. Create, move, or remove its class document.
 2. Update its component and domain documents.
 3. Update `docs/inventory.md` and every affected link.
-4. Record a new ADR when the change introduces or reverses a durable design decision.
+4. Append a new numbered ADR record to the narrowest owning decision log and update `docs/decisions/index.md` when the change introduces or reverses a durable design decision.
 
-ADRs preserve decision history. Do not silently rewrite an accepted decision after the architecture changes; add a new ADR, mark the old one superseded, and update current-state documents.
+Before architectural work, read `docs/decisions/index.md`, the affected bounded log, and only cross-domain logs explicitly referenced by relevant ADRs. ADR numbers and anchors are permanent. Do not silently rewrite an accepted decision after the architecture changes; append a new ADR to the appropriate log, mark the old record superseded, update the routing index, and update current-state documents. Do not recreate one-file-per-decision ADRs or one repository-wide monolith. Keep each decision log below 500 lines; split it along a cohesive subdomain boundary before adding a record that would exceed that limit.
 
 ## Required document contents
 
@@ -97,17 +97,17 @@ Documentation must describe current executable behavior exactly. A public declar
 
 ## Current architectural decisions
 
-- Electron2D is exclusively a 2D engine. Do not add 3D types, APIs, render paths, physics, assets, examples, or abstractions. Its high-level API follows Godot's 2D concepts and naming where they fit typed C#. See ADR 0004 and `docs/decisions/0012-external-runtime-dependencies.md`, which amends only ADR 0004's external-dependency packaging rule.
+- Electron2D is exclusively a 2D engine. Do not add 3D types, APIs, render paths, physics, assets, examples, or abstractions. Its high-level API follows Godot's 2D concepts and naming where they fit typed C#. See ADR 0004 and `docs/decisions/product.md#adr-0012`, which amends only ADR 0004's external-dependency packaging rule.
 - The Electron2D runtime targets Linux, Windows, macOS, Android, and iOS. Runtime APIs and semantics must remain portable across all five targets; isolate unavoidable platform code behind internal backends, fail explicitly for unavailable capabilities, and document build, implementation, packaging, and native-host verification separately. Do not claim cross-platform verification until every applicable target has been exercised. A future editor may support a narrower host set, but it must not change the portable runtime contract. See ADR 0021.
 - Electron2D-owned runtime production code remains one managed assembly named `Electron2D.dll`; do not split runtime domains into additional assemblies. The separately shipped editor executable and game/example executables are consumers of that runtime, not additional runtime-domain assemblies. Separately shipped managed runtime dependencies are allowed only through an accepted ADR. `Box2D.NET` is approved as the future 2D-physics dependency and must remain an external package rather than vendored or merged source; it is not integrated yet. Native SDL packaging remains unresolved until SDL3-CS is integrated and must not be described as complete. See ADR 0012 and ADR 0027.
-- Electron2D is a typed C# API. It has no `Variant`, `dynamic`, string-based `Get`/`Set`/`Call`, or untyped metadata bag. See `docs/decisions/0001-typed-csharp-without-variant.md`.
-- Game signals are typed C# events. Frame, physics, rendering, and tree traversal use direct calls rather than events. See `docs/decisions/0002-csharp-events-for-signals.md`.
+- Electron2D is a typed C# API. It has no `Variant`, `dynamic`, string-based `Get`/`Set`/`Call`, or untyped metadata bag. See `docs/decisions/product.md#adr-0001`.
+- Game signals are typed C# events. Frame, physics, rendering, and tree traversal use direct calls rather than events. See `docs/decisions/product.md#adr-0002`.
 - Managed object memory is reclaimed by the runtime; `IDisposable` provides deterministic logical cleanup and native-handle release, not managed-memory reclamation. Native SDL handles must be wrapped in `SafeHandle` instead of adding finalizers to every engine object. See ADR 0003 and ADR 0014.
-- The single thread that wins disposal may inspect the object from pre-delete and derived cleanup callbacks; every other caller is rejected after disposal starts. See `docs/decisions/0009-disposal-callback-access.md`.
-- Notifications retain Godot's numeric IDs but use `Notify(int)` and overridable `OnNotification(int)`; editor exposure uses typed `PropertyDescriptor<TOwner, TValue>` rather than Variant dictionaries. See `docs/decisions/0005-notifications-and-typed-properties.md`.
-- `SceneTree` owns the node tree, processes one captured deferred batch at a time, and applies queued deletion after deferred actions. Scene mutation, flushing, and disposal are owner-thread operations. See `docs/decisions/0006-scene-tree-deferred-and-deletion.md`.
-- Localization is provided by the process-wide, thread-safe `TranslationServer`; objects opt in per instance through a domain and translation-enabled flag. See `docs/decisions/0007-typed-localization.md`.
-- Electron2D has one unified `Node`; there is no separate `Node2D`. `Node` combines hierarchy/lifecycle with 2D transforms, visibility, Z ordering, paths, groups, and process configuration using `System.Numerics`. See `docs/decisions/0008-unified-2d-node.md`.
+- The single thread that wins disposal may inspect the object from pre-delete and derived cleanup callbacks; every other caller is rejected after disposal starts. See `docs/decisions/core-object-runtime.md#adr-0009`.
+- Notifications retain Godot's numeric IDs but use `Notify(int)` and overridable `OnNotification(int)`; editor exposure uses typed `PropertyDescriptor<TOwner, TValue>` rather than Variant dictionaries. See `docs/decisions/core-object-runtime.md#adr-0005`.
+- `SceneTree` owns the node tree, processes one captured deferred batch at a time, and applies queued deletion after deferred actions. Scene mutation, flushing, and disposal are owner-thread operations. See `docs/decisions/scene.md#adr-0006`.
+- Localization is provided by the process-wide, thread-safe `TranslationServer`; objects opt in per instance through a domain and translation-enabled flag. See `docs/decisions/localization.md#adr-0007`.
+- Electron2D has one unified `Node`; there is no separate `Node2D`. `Node` combines hierarchy/lifecycle with 2D transforms, visibility, Z ordering, paths, groups, and process configuration using `System.Numerics`. See `docs/decisions/scene.md#adr-0008`.
 - `Resource` uses managed memory, deterministic logical disposal, typed events, weak single-owner path registration, explicit derived duplication hooks that preserve graph identity, and a scene-local owner association used by packed-scene instancing. Do not add a public `RefCounted` lifetime protocol. A future resource manager may use internal disposable leases with reference counts solely to retain and release shared native-backed asset payloads; add that mechanism only with the first concrete loader/native-backed asset and verified ownership transitions. Renderer IDs, asset loading/saving, import IDs, and general resource serialization remain absent rather than stubbed. See ADR 0013, ADR 0014, and ADR 0023.
 - `PackedScene` provides typed in-memory capture and detached runtime instantiation through storage-enabled property descriptors, `Node.Owner`, persistent groups, reusable source-independent node factories, live `SceneState` metadata, and alias-preserving scene-local resource duplication. File formats/loaders, scene inheritance authoring, editor edit states, placeholders, and persistent typed event endpoints remain explicitly deferred to their missing domains. See ADR 0023.
 - Frame, fixed-step physics, future rendering, input dispatch, and audio-mixing hot paths must avoid steady-state managed allocations. Prefer preallocation, value types, bounded reusable buffers, and pools; add GC latency tuning or no-GC regions only after allocation and frame-time measurements demonstrate a need and define a safe memory budget. See ADR 0014.

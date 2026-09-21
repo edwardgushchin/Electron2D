@@ -71,7 +71,7 @@ Implemented and covered locally: in-memory owned-branch capture, storage-enabled
 
 ## Decision
 
-- [0023: Typed in-memory packed scenes](../decisions/0023-typed-packed-scenes.md)
-- [0024: Typed color values and portable quantization](../decisions/0024-typed-color-values.md)
-- [0025: Typed axis-aligned rectangle geometry](../decisions/0025-typed-rectangle-geometry.md)
-- [0029: Typed Transform2D value and affine semantics](../decisions/0029-typed-transform2d-value.md)
+- [0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
+- [0024: Typed color values and portable quantization](../decisions/core-math.md#adr-0024)
+- [0025: Typed axis-aligned rectangle geometry](../decisions/core-math.md#adr-0025)
+- [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)

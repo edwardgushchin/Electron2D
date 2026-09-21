@@ -110,9 +110,9 @@ Execution is currently verified only on Linux/.NET 8. The type has not been exer
 
 ## Decisions
 
-- [0001: Typed C# without Variant](../decisions/0001-typed-csharp-without-variant.md)
-- [0014: Managed lifetime and realtime allocation](../decisions/0014-managed-resource-lifetime.md)
-- [0017: Source-tree module layout](../decisions/0017-source-tree-layout.md)
-- [0025: Typed axis-aligned rectangle geometry](../decisions/0025-typed-rectangle-geometry.md)
-- [0026: Separate Transform2D foundational type](../decisions/0026-separate-transform2d-type.md)
-- [0029: Typed Transform2D value and affine semantics](../decisions/0029-typed-transform2d-value.md)
+- [0001: Typed C# without Variant](../decisions/product.md#adr-0001)
+- [0014: Managed lifetime and realtime allocation](../decisions/resources.md#adr-0014)
+- [0017: Source-tree module layout](../decisions/product.md#adr-0017)
+- [0025: Typed axis-aligned rectangle geometry](../decisions/core-math.md#adr-0025)
+- [0026: Separate Transform2D foundational type](../decisions/core-math.md#adr-0026)
+- [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)

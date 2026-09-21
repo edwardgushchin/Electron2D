@@ -59,7 +59,7 @@ Tests cover valid and failing activation, packed-factory/unfinished-node activat
 
 ## Decisions
 
-- [0006: Scene-tree ownership, deferred work, and deletion](../decisions/0006-scene-tree-deferred-and-deletion.md)
-- [0011: Exception-safe lifecycle, typed groups, and timers](../decisions/0011-scene-tree-production-contract.md)
-- [0015: Main-loop lifecycle and host boundary](../decisions/0015-main-loop-contract.md)
-- [0016: Process-wide Engine runtime and host-driven scheduling](../decisions/0016-engine-runtime.md)
+- [0006: Scene-tree ownership, deferred work, and deletion](../decisions/scene.md#adr-0006)
+- [0011: Exception-safe lifecycle, typed groups, and timers](../decisions/scene.md#adr-0011)
+- [0015: Main-loop lifecycle and host boundary](../decisions/core-object-runtime.md#adr-0015)
+- [0016: Process-wide Engine runtime and host-driven scheduling](../decisions/core-object-runtime.md#adr-0016)

@@ -37,4 +37,4 @@ Enum values are immutable, allocation-free, and safe to copy or read on any thre
 
 ## Decision
 
-- [0025: Typed axis-aligned rectangle geometry](../decisions/0025-typed-rectangle-geometry.md)
+- [0025: Typed axis-aligned rectangle geometry](../decisions/core-math.md#adr-0025)

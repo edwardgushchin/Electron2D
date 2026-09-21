@@ -139,10 +139,10 @@ The executable evidence is Linux-only. Windows/macOS link, file-identity, drive,
 
 ## Decisions
 
-- [0001: Typed C# without Variant](../decisions/0001-typed-csharp-without-variant.md)
-- [0003: ElectronObject lifetime](../decisions/0003-electron-object-lifetime.md)
-- [0014: Managed lifetime and realtime allocation](../decisions/0014-managed-resource-lifetime.md)
-- [0019: Typed project settings and directory-backed virtual paths](../decisions/0019-typed-project-settings.md)
-- [0020: Typed file access and transformed-file containers](../decisions/0020-file-access.md)
-- [0021: Cross-platform runtime target matrix](../decisions/0021-cross-platform-runtime-targets.md)
-- [0022: Typed directory access](../decisions/0022-directory-access.md)
+- [0001: Typed C# without Variant](../decisions/product.md#adr-0001)
+- [0003: ElectronObject lifetime](../decisions/core-object-runtime.md#adr-0003)
+- [0014: Managed lifetime and realtime allocation](../decisions/resources.md#adr-0014)
+- [0019: Typed project settings and directory-backed virtual paths](../decisions/core-data-io.md#adr-0019)
+- [0020: Typed file access and transformed-file containers](../decisions/core-data-io.md#adr-0020)
+- [0021: Cross-platform runtime target matrix](../decisions/product.md#adr-0021)
+- [0022: Typed directory access](../decisions/core-data-io.md#adr-0022)

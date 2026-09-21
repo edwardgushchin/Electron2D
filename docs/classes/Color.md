@@ -92,7 +92,7 @@ Execution is currently verified on Linux/.NET 8. Native backend conversion and r
 
 ## Decisions
 
-- [0001: Typed C# without Variant](../decisions/0001-typed-csharp-without-variant.md)
-- [0014: Managed lifetime and realtime allocation](../decisions/0014-managed-resource-lifetime.md)
-- [0017: Source-tree module layout](../decisions/0017-source-tree-layout.md)
-- [0024: Typed color values and portable quantization](../decisions/0024-typed-color-values.md)
+- [0001: Typed C# without Variant](../decisions/product.md#adr-0001)
+- [0014: Managed lifetime and realtime allocation](../decisions/resources.md#adr-0014)
+- [0017: Source-tree module layout](../decisions/product.md#adr-0017)
+- [0024: Typed color values and portable quantization](../decisions/core-math.md#adr-0024)

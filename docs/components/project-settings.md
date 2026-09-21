@@ -62,7 +62,7 @@ Implemented and covered by the executable harness. The process singleton is regi
 
 ## Decisions
 
-- [0019: Typed project settings and virtual paths](../decisions/0019-typed-project-settings.md)
-- [0018: Typed configuration files](../decisions/0018-typed-config-files.md)
-- [0016: Process-wide Engine runtime](../decisions/0016-engine-runtime.md)
-- [0001: Typed C# without Variant](../decisions/0001-typed-csharp-without-variant.md)
+- [0019: Typed project settings and virtual paths](../decisions/core-data-io.md#adr-0019)
+- [0018: Typed configuration files](../decisions/core-data-io.md#adr-0018)
+- [0016: Process-wide Engine runtime](../decisions/core-object-runtime.md#adr-0016)
+- [0001: Typed C# without Variant](../decisions/product.md#adr-0001)

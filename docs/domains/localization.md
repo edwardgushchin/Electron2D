@@ -49,7 +49,7 @@ The production type is [`TranslationServer`](../classes/TranslationServer.md). `
 
 ## Decisions
 
-- [0001: Typed C# without Variant](../decisions/0001-typed-csharp-without-variant.md)
-- [0007: Typed localization](../decisions/0007-typed-localization.md)
-- [0017: Source-tree module layout](../decisions/0017-source-tree-layout.md)
-- [0021: Cross-platform runtime target matrix](../decisions/0021-cross-platform-runtime-targets.md)
+- [0001: Typed C# without Variant](../decisions/product.md#adr-0001)
+- [0007: Typed localization](../decisions/localization.md#adr-0007)
+- [0017: Source-tree module layout](../decisions/product.md#adr-0017)
+- [0021: Cross-platform runtime target matrix](../decisions/product.md#adr-0021)

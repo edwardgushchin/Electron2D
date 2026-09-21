@@ -39,4 +39,4 @@ The executable harness verifies `Disabled`, rejection of the defined `Instance` 
 
 ## Decision
 
-- [0023: Typed in-memory packed scenes](../decisions/0023-typed-packed-scenes.md)
+- [0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)

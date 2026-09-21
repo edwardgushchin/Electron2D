@@ -210,6 +210,6 @@ There is no renderer-backed canvas behavior, native system-event creation, focus
 
 ## Relevant decisions
 
-- [0008: Unified Node combines Node and Node2D](../decisions/0008-unified-2d-node.md)
-- [0026: Separate Transform2D foundational type](../decisions/0026-separate-transform2d-type.md)
-- [0029: Typed Transform2D value and affine semantics](../decisions/0029-typed-transform2d-value.md)
+- [0008: Unified Node combines Node and Node2D](../decisions/scene.md#adr-0008)
+- [0026: Separate Transform2D foundational type](../decisions/core-math.md#adr-0026)
+- [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)

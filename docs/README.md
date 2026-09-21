@@ -12,6 +12,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Public engine assembly: one managed `Electron2D.dll` class library. Accepted runtime dependencies may ship as separate assemblies; the current build has none.
 - Product source boundary: runtime engine code lives in `src/`; the future self-hosted editor belongs to a separate executable project under `editor/Electron2D.Editor/`; first-party example games and templates belong under `examples/<Game>/`. Editor and games depend on the public runtime API, never the reverse.
 - Production source root: `src/`, organized by engine module while retaining the flat public `Electron2D` namespace.
+- Architecture context: `decisions/index.md` routes to bounded domain logs; read only the affected logs and explicit cross-domain dependencies. No decision log may exceed 500 lines.
 - Target framework: .NET 8 (`net8.0`).
 - Implemented domains: Core, Scene, Localization, and Resources.
 - Implemented components: Object lifecycle, typed event connections, typed editor properties, color values, geometry values, configuration files, file and directory access, project settings, main loop, engine runtime, unified 2D node, scene tree, packed scenes, translation, and the resource base.
@@ -85,35 +86,6 @@ This directory describes the engine as it exists now. Planned features are liste
 - Class: [TranslationServer](classes/TranslationServer.md)
 - Class: [Resource](classes/Resource.md)
 - Enum: [DeepDuplicateMode](classes/DeepDuplicateMode.md)
-- Decisions:
-  - [0001: Typed C# without Variant](decisions/0001-typed-csharp-without-variant.md)
-  - [0002: C# events for signals](decisions/0002-csharp-events-for-signals.md)
-  - [0003: ElectronObject lifetime](decisions/0003-electron-object-lifetime.md)
-  - [0004: 2D API in one Electron2D-owned assembly](decisions/0004-2d-api-single-assembly.md)
-  - [0005: Notifications and typed editor properties](decisions/0005-notifications-and-typed-properties.md)
-  - [0006: Scene-tree deferred work and queued deletion](decisions/0006-scene-tree-deferred-and-deletion.md)
-  - [0007: Typed localization](decisions/0007-typed-localization.md)
-  - [0008: Unified Node combines Node and Node2D](decisions/0008-unified-2d-node.md)
-  - [0009: Disposal-thread callback access](decisions/0009-disposal-callback-access.md)
-  - [0010: Typed event connections](decisions/0010-typed-event-connections.md)
-  - [0011: SceneTree production contract](decisions/0011-scene-tree-production-contract.md)
-  - [0012: External runtime dependencies and Box2D.NET](decisions/0012-external-runtime-dependencies.md)
-  - [0013: Managed typed Resource contract](decisions/0013-managed-resource-contract.md)
-  - [0014: Managed Resource lifetime and realtime allocation](decisions/0014-managed-resource-lifetime.md)
-  - [0015: Main-loop lifecycle and host boundary](decisions/0015-main-loop-contract.md)
-  - [0016: Process-wide Engine runtime and host-driven scheduling](decisions/0016-engine-runtime.md)
-  - [0017: Source-tree module layout](decisions/0017-source-tree-layout.md)
-  - [0018: Typed configuration files](decisions/0018-typed-config-files.md)
-  - [0019: Typed project settings and directory-backed virtual paths](decisions/0019-typed-project-settings.md)
-  - [0020: Typed file access and transformed-file containers](decisions/0020-file-access.md)
-  - [0021: Cross-platform runtime target matrix](decisions/0021-cross-platform-runtime-targets.md)
-  - [0022: Typed directory access](decisions/0022-directory-access.md)
-  - [0023: Typed in-memory packed scenes](decisions/0023-typed-packed-scenes.md)
-  - [0024: Typed color values and portable quantization](decisions/0024-typed-color-values.md)
-  - [0025: Typed axis-aligned rectangle geometry](decisions/0025-typed-rectangle-geometry.md)
-  - [0026: Separate Transform2D foundational type](decisions/0026-separate-transform2d-type.md)
-  - [0027: Self-hosted editor and game project boundary](decisions/0027-self-hosted-editor-and-games.md)
-  - [0028: GPU-first 2D rendering, shaders, and SDL_Renderer fallback](decisions/0028-gpu-primary-renderer-fallback.md)
-  - [0029: Typed Transform2D value and affine semantics](decisions/0029-typed-transform2d-value.md)
+- Decisions: [routing index](decisions/index.md) with bounded logs for [Product architecture](decisions/product.md), [Core object/runtime](decisions/core-object-runtime.md), [Core data/I/O](decisions/core-data-io.md), [Core math](decisions/core-math.md), [Scene](decisions/scene.md), [Resources](decisions/resources.md), [Localization](decisions/localization.md), and [Rendering](decisions/rendering.md).
 
 The maintenance rules for this documentation are mandatory and live in the repository root [AGENTS.md](../AGENTS.md).

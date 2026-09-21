@@ -1,12 +1,21 @@
-# ADR 0028: GPU-first 2D rendering, shaders, and SDL_Renderer fallback
+# Electron2D rendering decisions
 
 Last updated: 2026-09-21
 
-## Status
+This bounded log owns the complete architectural records for rendering. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
+
+Decisions in this log: [0028](#adr-0028).
+
+<a id="adr-0028"></a>
+## ADR 0028: GPU-first 2D rendering, shaders, and SDL_Renderer fallback
+
+Last updated: 2026-09-21
+
+### Status
 
 Accepted.
 
-## Context
+### Context
 
 Electron2D needs one portable 2D rendering contract for Linux, Windows, macOS, Android, and iOS. That contract must support user-authored shaders without making simple 2D output depend on every target successfully creating a programmable graphics pipeline.
 
@@ -14,7 +23,7 @@ SDL exposes two relevant layers. The [SDL GPU API](https://wiki.libsdl.org/SDL3/
 
 SDL3-CS, native SDL packaging, an application host, and the Electron2D rendering domain are not implemented yet. This decision fixes the future boundary without introducing placeholder renderer or shader types.
 
-## Decision
+### Decision
 
 - The primary Electron2D rendering backend will use the SDL3 GPU API through the future SDL3-CS integration.
 - Electron2D will support engine-provided and user-authored graphics shaders for 2D rendering on the GPU backend. Three-dimensional pipelines and shader functionality are outside the product boundary.
@@ -26,7 +35,7 @@ SDL3-CS, native SDL packaging, an application host, and the Electron2D rendering
 - Native resources remain internal and are deterministically released through `SafeHandle`-based ownership. Render-frame hot paths must avoid steady-state managed allocations.
 - The concrete public types, baseline operation set, threading contract, shader source language, accepted binary formats, offline compilation and cross-compilation tooling, cache/import pipeline, material model, backend-selection setting, and device-loss policy will be specified by the first complete rendering vertical slice. None is represented now by an empty API.
 
-## Consequences
+### Consequences
 
 - The GPU path is the normal rendering path and the only path that guarantees programmable shader behavior.
 - The fallback keeps basic 2D games and editor recovery UI possible on systems where the GPU path cannot start, while its reduced capability remains visible to callers.
@@ -34,7 +43,7 @@ SDL3-CS, native SDL packaging, an application host, and the Electron2D rendering
 - Rendering code and resources belong to `Electron2D.dll`; SDL3-CS and native SDL remain deployment dependencies whose exact packaging is unresolved.
 - Every implemented rendering feature must be tested against each backend that claims it. Shader compilation and visual correctness additionally require backend- and platform-specific executable or image-based verification.
 
-## Rejected alternatives
+### Rejected alternatives
 
 - **Use SDL_Renderer as the only or primary backend:** rejected because its simple 2D API cannot provide the required arbitrary shader pipeline.
 - **Require the GPU backend with no fallback:** rejected because a reduced but explicit baseline renderer improves portability and startup recovery.
@@ -43,16 +52,16 @@ SDL3-CS, native SDL packaging, an application host, and the Electron2D rendering
 - **Expose SDL handles in the public API:** rejected because it would couple games and the editor to one backend and prevent controlled backend evolution.
 - **Add renderer interfaces and shader resources immediately:** rejected because no SDL integration or executable rendering behavior exists yet.
 
-## Current implementation boundary
+### Current implementation boundary
 
 This ADR selects a future architecture only. The repository currently contains no rendering domain, backend, graphics device, window host, texture, material, shader, pipeline, canvas, draw command, or render test. Existing visibility, Z-order, color, geometry, timing, and node state do not produce pixels. No cross-platform graphics behavior or shader support is claimed as implemented or verified.
 
-## Related decisions
+### Related decisions
 
-- [0004: 2D API in one Electron2D-owned assembly](0004-2d-api-single-assembly.md)
-- [0012: External runtime dependencies and Box2D.NET](0012-external-runtime-dependencies.md)
-- [0014: Managed Resource lifetime and realtime allocation](0014-managed-resource-lifetime.md)
-- [0015: Main-loop lifecycle and host boundary](0015-main-loop-contract.md)
-- [0016: Process-wide Engine runtime and host-driven scheduling](0016-engine-runtime.md)
-- [0021: Cross-platform runtime target matrix](0021-cross-platform-runtime-targets.md)
-- [0027: Self-hosted editor and game project boundary](0027-self-hosted-editor-and-games.md)
+- [0004: 2D API in one Electron2D-owned assembly](product.md#adr-0004)
+- [0012: External runtime dependencies and Box2D.NET](product.md#adr-0012)
+- [0014: Managed Resource lifetime and realtime allocation](resources.md#adr-0014)
+- [0015: Main-loop lifecycle and host boundary](core-object-runtime.md#adr-0015)
+- [0016: Process-wide Engine runtime and host-driven scheduling](core-object-runtime.md#adr-0016)
+- [0021: Cross-platform runtime target matrix](product.md#adr-0021)
+- [0027: Self-hosted editor and game project boundary](product.md#adr-0027)

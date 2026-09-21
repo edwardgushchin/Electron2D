@@ -66,4 +66,4 @@ The type intentionally omits connection-detail accessors, editable-instance meta
 
 ## Decision
 
-- [0023: Typed in-memory packed scenes](../decisions/0023-typed-packed-scenes.md)
+- [0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
