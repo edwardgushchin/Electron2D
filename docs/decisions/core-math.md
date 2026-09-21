@@ -351,6 +351,7 @@ Electron2D owns four canonical vector values: `Vector2`, `Vector2I`, `Vector4`, 
 - The completed migration is source-breaking from both the former external numerics surface and ADR 0032's unimplemented `Vector` spelling. The repository is pre-release and retains only the final contract.
 - `Vector4` and `Vector4I` can later cross a typed GPU boundary without requiring placeholder shader or renderer APIs now.
 - `Vector2I` and `Vector4I` use explicit managed integer behavior: ordinary arithmetic wraps, invalid division throws, squared values can wrap, and float-to-integer conversion rejects non-finite or out-of-range components.
+- Their floating-scalar division returns a floating vector with IEEE 754 results, including infinity or NaN for a zero divisor. The typed API has no dynamic `Variant` error state under ADR 0001.
 - The current executable verification is Linux/.NET 8 only. Sequential managed layout is verified, but native ABI and the full five-target matrix are not.
 
 ### Rejected alternatives

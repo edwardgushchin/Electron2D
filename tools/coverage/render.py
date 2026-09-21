@@ -331,6 +331,7 @@ def render():
         raise ValueError("Duplicate upstream declaration")
     manual_mappings = defaultdict(list)
     manual_extras = {}
+    manual_statuses = {}
     for path in OVERRIDES:
         if not path.exists():
             continue
@@ -343,6 +344,14 @@ def render():
             if row["electron2d"] not in engine_by_id or not row.get("reason") or row["electron2d"] in manual_extras:
                 raise ValueError(f"Invalid extra in {path}: {row}")
             manual_extras[row["electron2d"]] = row
+        for group in overrides.get("statusGroups", []):
+            if (group.get("state") not in {"Implemented", "Partial", "Unimplemented", "Blocked", "Excluded"}
+                    or not group.get("reason") or not group.get("godot")):
+                raise ValueError(f"Invalid status group in {path}: {group}")
+            for godot in group["godot"]:
+                if godot not in expected_upstream or godot in manual_statuses:
+                    raise ValueError(f"Invalid status target in {path}: {godot}")
+                manual_statuses[godot] = group
 
     seen_upstream, used_engine = set(), set()
     page_text = {}
@@ -359,6 +368,11 @@ def render():
         class_state, class_reason = reason_for_type(godot_type, type_lookup)
         if owners:
             class_state, class_reason = "Partial", "Typed C# type exists; inheritance, signatures and behavior require row-level audit."
+        if godot_type["id"] in manual_statuses:
+            row = manual_statuses[godot_type["id"]]
+            if row["state"] == "Implemented" and not owners:
+                raise ValueError(f"Implemented class has no Electron2D declaration: {godot_type['id']}")
+            class_state, class_reason = row["state"], row["reason"]
         source = godot_type["source"]
         url = f"https://github.com/godotengine/godot/blob/{COMMIT}/{source}"
         inherited = f"[{godot_type['inherits']}]({godot_type['inherits']}.md)" if godot_type["inherits"] else "—"
@@ -437,6 +451,11 @@ def render():
                 state, reason = "Unimplemented", f"No mapped C# declaration; trigger: next complete {name} API slice."
             else:
                 state, reason = class_state, class_reason
+            if member["id"] in manual_statuses:
+                row = manual_statuses[member["id"]]
+                if row["state"] == "Implemented" and not (matches or adapted):
+                    raise ValueError(f"Implemented member has no Electron2D declaration: {member['id']}")
+                state, reason = row["state"], row["reason"]
             counts[state] += 1
             member_states[state] += 1
             target = "<br>".join(engine_link(match) for match in matches) if matches else code(adapted) if adapted else "—"
@@ -470,12 +489,14 @@ def render():
                "| Godot class | Base | Class state | Declared members |", "| --- | --- | --- | ---: |"]
     for item in upstream["types"]:
         state = "Partial" if engine_name(aliases.get("classes", {}).get(item["name"], item["name"])) in engine_types else reason_for_type(item, type_lookup)[0]
+        if item["id"] in manual_statuses:
+            state = manual_statuses[item["id"]]["state"]
         catalog.append(f"| [{cell(item['name'])}](classes/{item['name']}.md) | {cell(item['inherits'] or '—')} | {state} | {len(item['members'])} |")
     page_text[COVERAGE / "catalog.md"] = "\n".join(catalog) + "\n"
     actionable_note = (" Start with the independent " + ", ".join(f"[{name}](classes/{name}.md)" for name in actionable) + " class slices.") if actionable else ""
     road = ["# Coverage roadmap", "", "Last updated: 2026-09-22", "",
-            "The order follows concrete dependencies. `Partial` rows need a semantic audit before they can be called implemented; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.", "",
-            f"1. Audit {counts['Partial']} structurally mapped rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.",
+            "The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.", "",
+            f"1. Review {counts['Partial']} partially implemented rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains. Four Vector2i length/distance rows are already audited and require a deliberate ADR 0033 contract change for native parity.",
             f"2. Complete {counts['Unimplemented']} missing declarations in already represented type families; split each type by its documented dependency trigger.{actionable_note}",
             "3. Implement the blocked domains in dependency order: SDL host/input and display; SDL3 GPU 2D rendering; GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; self-hosted editor.", "",
             "## Existing type backlog", "",

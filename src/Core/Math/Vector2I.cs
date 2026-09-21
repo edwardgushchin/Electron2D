@@ -206,12 +206,14 @@ public struct Vector2I : IEquatable<Vector2I>
     /// <summary>Snaps each component to the nearest multiple of the corresponding step.</summary>
     /// <param name="step">The componentwise step. A zero component leaves the corresponding value unchanged.</param>
     /// <returns>The snapped vector.</returns>
+    /// <remarks>Midpoint ties go toward larger values for a positive step and smaller values for a negative step.</remarks>
     /// <exception cref="OverflowException">A snapped component is outside the 32-bit signed integer range.</exception>
     public readonly Vector2I Snapped(Vector2I step) => new(Snap(X, step.X), Snap(Y, step.Y));
 
     /// <summary>Snaps both components to the nearest multiple of a scalar step.</summary>
     /// <param name="step">The scalar step. Zero leaves both values unchanged.</param>
     /// <returns>The snapped vector.</returns>
+    /// <remarks>Midpoint ties go toward larger values for a positive step and smaller values for a negative step.</remarks>
     /// <exception cref="OverflowException">A snapped component is outside the 32-bit signed integer range.</exception>
     public readonly Vector2I Snapped(int step) => new(Snap(X, step), Snap(Y, step));
 

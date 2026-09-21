@@ -1477,5 +1477,201 @@
       "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
       "adr": "resources.md#adr-0039"
     }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:Vector2i"
+      ],
+      "state": "Partial",
+      "reason": "All 53 members are accounted for and the C# value type has no inherited engine API. Four length/distance rows retain the accepted 32-bit managed calculation, which differs from the native 64-bit calculation (ADR 0033); boolean truth conversion is excluded by ADR 0001."
+    },
+    {
+      "godot": [
+        "Vector2i::constant:DOWN",
+        "Vector2i::constant:LEFT",
+        "Vector2i::constant:MAX",
+        "Vector2i::constant:MIN",
+        "Vector2i::constant:ONE",
+        "Vector2i::constant:RIGHT",
+        "Vector2i::constant:UP",
+        "Vector2i::constant:ZERO"
+      ],
+      "state": "Implemented",
+      "reason": "Values match the pinned XML and Vector2I properties; layout and constants are checked by VerifyVector2IValues."
+    },
+    {
+      "godot": [
+        "Vector2i::constructor:Vector2i()",
+        "Vector2i::constructor:Vector2i(Vector2i:)",
+        "Vector2i::constructor:Vector2i(int:,int:)",
+        "Vector2i::property:x",
+        "Vector2i::property:y"
+      ],
+      "state": "Implemented",
+      "reason": "The zero-initialized and copied C# struct preserves both components; the two-int constructor and mutable fields are checked by VerifyVector2IValues."
+    },
+    {
+      "godot": [
+        "Vector2i::enum:Axis"
+      ],
+      "state": "Implemented",
+      "reason": "Both axes are present with X=0 and Y=1, matching the pinned enum and MaxAxisIndex/MinAxisIndex results."
+    },
+    {
+      "godot": [
+        "Vector2i::method:abs()"
+      ],
+      "state": "Implemented",
+      "reason": "Componentwise absolute value matches the reference for representable values; int.MinValue throws OverflowException as a documented managed boundary."
+    },
+    {
+      "godot": [
+        "Vector2i::method:aspect()"
+      ],
+      "state": "Implemented",
+      "reason": "X divided by floating-point Y matches the reference, including IEEE results when Y is zero."
+    },
+    {
+      "godot": [
+        "Vector2i::method:clamp(Vector2i:,Vector2i:)",
+        "Vector2i::method:clampi(int:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "Componentwise clamping matches the pinned XML and managed binding; reversed bounds throw ArgumentException under the typed C# contract."
+    },
+    {
+      "godot": [
+        "Vector2i::method:length_squared()"
+      ],
+      "state": "Partial",
+      "reason": "The accepted managed C# int calculation wraps at 32 bits, while the pinned native implementation computes an int64 square. For (50000, 0), the native result is 2500000000 and Electron2D wraps; Trigger: separately approve widened integer-vector norms in ADR 0033 and correct Vector2I/Vector4I together in the first slice of that capability."
+    },
+    {
+      "godot": [
+        "Vector2i::method:distance_squared_to(Vector2i:)"
+      ],
+      "state": "Partial",
+      "reason": "Distance first subtracts in Vector2I, then uses the accepted managed 32-bit squared calculation; the pinned native implementation uses an int64 square. Trigger: separately approve widened integer-vector norms in ADR 0033 and correct Vector2I/Vector4I together in the first slice of that capability."
+    },
+    {
+      "godot": [
+        "Vector2i::method:length()"
+      ],
+      "state": "Partial",
+      "reason": "The square root uses the accepted managed 32-bit squared result, so moderate magnitudes can return NaN after overflow; the pinned native implementation takes the square root of an int64 square. Trigger: separately approve widened integer-vector norms in ADR 0033 and correct Vector2I/Vector4I together in the first slice of that capability."
+    },
+    {
+      "godot": [
+        "Vector2i::method:distance_to(Vector2i:)"
+      ],
+      "state": "Partial",
+      "reason": "Distance first subtracts in Vector2I and uses the accepted managed 32-bit squared result, which can make the distance NaN; the pinned native implementation uses an int64 square. Trigger: separately approve widened integer-vector norms in ADR 0033 and correct Vector2I/Vector4I together in the first slice of that capability."
+    },
+    {
+      "godot": [
+        "Vector2i::method:max(Vector2i:)",
+        "Vector2i::method:maxi(int:)",
+        "Vector2i::method:min(Vector2i:)",
+        "Vector2i::method:mini(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "Componentwise integer min/max agrees with the pinned methods and is exercised by VerifyVector2IValues."
+    },
+    {
+      "godot": [
+        "Vector2i::method:max_axis_index()",
+        "Vector2i::method:min_axis_index()"
+      ],
+      "state": "Implemented",
+      "reason": "X wins maximum ties and Y wins minimum ties, matching the pinned reference and boundary tests."
+    },
+    {
+      "godot": [
+        "Vector2i::method:sign()"
+      ],
+      "state": "Implemented",
+      "reason": "Each component becomes -1, 0, or 1 as in the pinned reference; negative and zero components are tested."
+    },
+    {
+      "godot": [
+        "Vector2i::method:snapped(Vector2i:)",
+        "Vector2i::method:snappedi(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "Each component follows floor(value/step + 0.5) * step, including negative steps and zero-step preservation; checked overflow is a documented C# safety boundary."
+    },
+    {
+      "godot": [
+        "Vector2i::operator:operator !=(Vector2i:)",
+        "Vector2i::operator:operator ==(Vector2i:)",
+        "Vector2i::operator:operator <(Vector2i:)",
+        "Vector2i::operator:operator <=(Vector2i:)",
+        "Vector2i::operator:operator >(Vector2i:)",
+        "Vector2i::operator:operator >=(Vector2i:)"
+      ],
+      "state": "Implemented",
+      "reason": "Componentwise equality and lexicographic X-then-Y ordering match the pinned operators and are exercised by VerifyVector2IValues."
+    },
+    {
+      "godot": [
+        "Vector2i::operator:operator %(Vector2i:)",
+        "Vector2i::operator:operator %(int:)",
+        "Vector2i::operator:operator *(Vector2i:)",
+        "Vector2i::operator:operator *(int:)",
+        "Vector2i::operator:operator +(Vector2i:)",
+        "Vector2i::operator:operator -(Vector2i:)",
+        "Vector2i::operator:operator /(Vector2i:)",
+        "Vector2i::operator:operator /(int:)",
+        "Vector2i::operator:operator unary-()"
+      ],
+      "state": "Implemented",
+      "reason": "The vector/int operators use componentwise 32-bit arithmetic and C# truncated division/remainder; wrapping and invalid division are documented managed adaptations and have boundary tests."
+    },
+    {
+      "godot": [
+        "Vector2i::operator:operator *(float:)"
+      ],
+      "state": "Implemented",
+      "reason": "The float overload returns Vector2 and performs componentwise IEEE 754 multiplication, as documented in the typed vector contract (ADR 0033)."
+    },
+    {
+      "godot": [
+        "Vector2i::operator:operator /(float:)"
+      ],
+      "state": "Implemented",
+      "reason": "The float overload returns Vector2 and performs componentwise IEEE 754 division, including infinity or NaN for a zero divisor; ADR 0033 accepts this typed result in place of a dynamic Variant error state excluded by ADR 0001."
+    },
+    {
+      "godot": [
+        "Vector2i::operator:operator [](int:)"
+      ],
+      "state": "Implemented",
+      "reason": "C# indexer reads or writes X/Y for indices 0/1 and rejects other indices with ArgumentOutOfRangeException, a documented managed safety boundary."
+    },
+    {
+      "godot": [
+        "Vector2i::operator:operator unary+()"
+      ],
+      "state": "Implemented",
+      "reason": "Unary plus returns the same value, including both components."
+    },
+    {
+      "godot": [
+        "Vector2i::constructor:Vector2i(Vector2:)"
+      ],
+      "state": "Implemented",
+      "reason": "The Vector2-to-Vector2I constructor truncates finite in-range components toward zero; rejecting nonfinite/out-of-range input is the accepted typed C# safety rule in ADR 0033."
+    },
+    {
+      "godot": [
+        "Vector4i::method:distance_squared_to(Vector4i:)",
+        "Vector4i::method:distance_to(Vector4i:)",
+        "Vector4i::method:length()",
+        "Vector4i::method:length_squared()"
+      ],
+      "state": "Partial",
+      "reason": "Sibling audit: the accepted managed C# 32-bit squared calculation can wrap and make length/distance NaN for moderate components, while the pinned native implementation uses int64. Trigger: separately approve widened integer-vector norms in ADR 0033 and correct Vector2I/Vector4I together in the first slice of that capability."
+    }
   ]
 }

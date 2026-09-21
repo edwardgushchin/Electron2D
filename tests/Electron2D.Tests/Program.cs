@@ -1173,7 +1173,21 @@ static void VerifyVector2IValues()
     Require(value[0] == 3 && value[1] == 4 && x == 3 && y == 4 && value.LengthSquared() == 25 && value.Length() == 5f &&
             value.DistanceSquaredTo(Vector2I.Zero) == 25 && value.DistanceTo(Vector2I.Zero) == 5f && value.Aspect() == 0.75f,
         "Vector2I indexing, deconstruction, length, distance, and aspect must be stable.");
+    var copy = value;
+    copy[0] = -7;
+    copy[1] = 9;
+    Require(copy == new Vector2I(-7, 9) && value == new Vector2I(3, 4),
+        "Vector2I component writes must not mutate a copied value.");
     Expect<ArgumentOutOfRangeException>(() => _ = value[2], "Vector2I must reject indices after Y.");
+    Expect<ArgumentOutOfRangeException>(() => _ = value[-1], "Vector2I must reject negative indices.");
+    Expect<ArgumentOutOfRangeException>(() => copy[2] = 1, "Vector2I must reject out-of-range component writes.");
+    Require(float.IsPositiveInfinity(new Vector2I(1, 0).Aspect()) && float.IsNaN(Vector2I.Zero.Aspect()),
+        "Vector2I aspect must preserve IEEE zero-division results.");
+    var large = new Vector2I(50_000, 0);
+    Require(large.LengthSquared() == unchecked((int)2_500_000_000L) &&
+            large.DistanceSquaredTo(Vector2I.Zero) == unchecked((int)2_500_000_000L) &&
+            float.IsNaN(large.Length()) && float.IsNaN(large.DistanceTo(Vector2I.Zero)),
+        "Vector2I must retain the accepted managed 32-bit squared-length limit.");
     Require(new Vector2I(-3, 4).Abs() == value && new Vector2I(-3, 0).Sign() == new Vector2I(-1, 0) &&
             new Vector2I(5, -2).Clamp(0, 4) == new Vector2I(4, 0) &&
             new Vector2I(5, -2).Clamp(new Vector2I(1, -1), new Vector2I(4, 3)) == new Vector2I(4, -1),
@@ -1188,6 +1202,12 @@ static void VerifyVector2IValues()
             new Vector2I(5, -5).Snapped(2) == new Vector2I(6, -4) &&
             new Vector2I(5, -5).Snapped(new Vector2I(2, 5)) == new Vector2I(6, -5),
         "Vector2I min, max, axis tie-breaking, and snapping must be stable.");
+    Require(new Vector2I(5, -5).Snapped(-2) == new Vector2I(4, -6) &&
+            new Vector2I(5, -5).Snapped(new Vector2I(-2, 0)) == new Vector2I(4, -5) &&
+            value.Snapped(0) == value,
+        "Vector2I negative and zero snapping steps must match the scalar formula.");
+    Expect<OverflowException>(() => _ = Vector2I.MaxValue.Snapped(2),
+        "Vector2I snapping must reject results outside Int32 range.");
     Require(value + Vector2I.One == new Vector2I(4, 5) && +value == value && value - Vector2I.One == new Vector2I(2, 3) &&
             -value == new Vector2I(-3, -4) && value * 2 == 2 * value &&
             value * 0.5f == 0.5f * value && value / 2f == new Vector2(1.5f, 2f) &&
@@ -1200,8 +1220,13 @@ static void VerifyVector2IValues()
     Require(Vector2I.MaxValue + Vector2I.One == Vector2I.MinValue && -new Vector2I(int.MinValue, 0) == new Vector2I(int.MinValue, 0),
         "Vector2I ordinary overflow must wrap deterministically.");
     Expect<DivideByZeroException>(() => _ = value / 0, "Vector2I division must reject zero.");
+    Require(float.IsPositiveInfinity((new Vector2I(1, 0) / 0f).X) &&
+            float.IsNaN((new Vector2I(1, 0) / 0f).Y),
+        "Vector2I floating-point division must retain IEEE zero-division behavior.");
     Expect<DivideByZeroException>(() => _ = value % new Vector2I(1, 0), "Vector2I remainder must reject zero components.");
     Expect<OverflowException>(() => _ = new Vector2I(int.MinValue, 0) / -1, "Vector2I division must surface minimum-integer overflow.");
+    Expect<OverflowException>(() => _ = new Vector2I(int.MinValue, 0) % -1,
+        "Vector2I remainder must surface minimum-integer overflow.");
     Require(new Vector2I(1, 2) < new Vector2I(1, 3) && new Vector2I(1, 2) <= new Vector2I(1, 2) &&
             new Vector2I(2, 0) > new Vector2I(1, 99) && new Vector2I(2, 0) >= new Vector2I(2, 0) &&
             value.Equals((object)new Vector2I(3, 4)) && value.GetHashCode() == new Vector2I(3, 4).GetHashCode(),

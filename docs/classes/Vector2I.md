@@ -1,6 +1,6 @@
 # Vector2I
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** —
 
@@ -399,6 +399,8 @@ Snaps each component to the nearest multiple of the corresponding step.
 
 **Returns:** The snapped vector.
 
+Midpoint ties go toward larger values for a positive step and smaller values for a negative step.
+
 **Exceptions**
 
 - `OverflowException`: A snapped component is outside the 32-bit signed integer range.
@@ -413,6 +415,8 @@ Snaps both components to the nearest multiple of a scalar step.
 - `step`: The scalar step. Zero leaves both values unchanged.
 
 **Returns:** The snapped vector.
+
+Midpoint ties go toward larger values for a positive step and smaller values for a negative step.
 
 **Exceptions**
 
@@ -790,10 +794,10 @@ Converts a finite in-range floating-point vector by truncating each component to
 
 ## Numeric invariants and error behavior
 
-- Addition, subtraction, multiplication, and negation explicitly wrap in 32-bit two's-complement arithmetic. Squared length and squared distance also wrap, so their negative overflow can make `Length()` or `DistanceTo()` return NaN.
+- Addition, subtraction, multiplication, and negation explicitly wrap in 32-bit two's-complement arithmetic. Squared length and squared distance also wrap: `(50000, 0).LengthSquared()` is negative, and its `Length()` is NaN even though the mathematical length is 50000. Use a floating vector when that range matters.
 - Integer division truncates toward zero; remainder has the dividend's sign. A zero scalar or component divisor throws `DivideByZeroException`; `int.MinValue / -1` and `int.MinValue % -1` throw `OverflowException`.
 - `Abs` throws `OverflowException` for `int.MinValue`. Clamp overloads throw `ArgumentException` for reversed bounds. The indexer throws `ArgumentOutOfRangeException`.
-- Maximum-axis ties choose X; minimum-axis ties choose Y. Snapping uses double intermediate arithmetic and ties toward positive infinity; zero steps preserve the value and an out-of-range snapped result throws `OverflowException`.
+- Maximum-axis ties choose X; minimum-axis ties choose Y. Snapping uses double intermediate arithmetic; midpoint ties go toward larger values for positive steps and smaller values for negative steps. Zero steps preserve the value and an out-of-range snapped result throws `OverflowException`.
 - Float conversion truncates toward zero and rejects non-finite or out-of-range input with `ArgumentOutOfRangeException`. Conversion to `Vector2` can lose integer precision above 2^24.
 - Invalid numeric formats throw `FormatException`.
 

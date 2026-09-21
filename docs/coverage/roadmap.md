@@ -2,9 +2,9 @@
 
 Last updated: 2026-09-22
 
-The order follows concrete dependencies. `Partial` rows need a semantic audit before they can be called implemented; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
+The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Audit 1609 structurally mapped rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+1. Review 1562 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains. Four Vector2i length/distance rows are already audited and require a deliberate ADR 0033 contract change for native parity.
 2. Complete 676 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [BitMap](classes/BitMap.md), [Curve](classes/Curve.md), [Curve2D](classes/Curve2D.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
 3. Implement the blocked domains in dependency order: SDL host/input and display; SDL3 GPU 2D rendering; GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; self-hosted editor.
 
@@ -35,7 +35,6 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [InputEventWithModifiers](classes/InputEventWithModifiers.md) | 1 | 7 |
 | [InputEventMouse](classes/InputEventMouse.md) | 1 | 3 |
 | [InputEventGesture](classes/InputEventGesture.md) | 1 | 1 |
-| [Vector2i](classes/Vector2i.md) | 0 | 51 |
 | [Vector4i](classes/Vector4i.md) | 0 | 48 |
 | [Tween](classes/Tween.md) | 0 | 35 |
 | [Rect2](classes/Rect2.md) | 0 | 27 |
@@ -53,6 +52,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [MainLoop](classes/MainLoop.md) | 0 | 5 |
 | [PackedScene](classes/PackedScene.md) | 0 | 5 |
 | [InputEventAction](classes/InputEventAction.md) | 0 | 4 |
+| [Vector2i](classes/Vector2i.md) | 0 | 4 |
 | [InputEventJoypadButton](classes/InputEventJoypadButton.md) | 0 | 3 |
 | [MethodTweener](classes/MethodTweener.md) | 0 | 3 |
 | [InputEventJoypadMotion](classes/InputEventJoypadMotion.md) | 0 | 2 |
