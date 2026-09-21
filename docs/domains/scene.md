@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 ## Responsibility
 
-Scene owns Electron2D's unified hierarchical/spatial game objects, typed in-memory packed scenes, and the active [`MainLoop`](../classes/MainLoop.md) implementation that delivers lifecycle, frame, pause, deferred-work, and deletion phases. It is a 2D-only runtime domain for Linux, Windows, macOS, Android, and iOS and compiles into the single `Electron2D.dll` assembly.
+Scene owns Electron2D's primary Node-based game-object model, reusable typed in-memory scenes, and the active [`MainLoop`](../classes/MainLoop.md) implementation that delivers lifecycle, frame, pause, deferred-work, and deletion phases. A game object, composed subsystem, or complete world is represented by a Node hierarchy; the same hierarchy can be packed and instantiated for reuse. It is a 2D-only runtime domain for Linux, Windows, macOS, Android, and iOS and compiles into the single `Electron2D.dll` assembly.
 
 Its production sources live under `src/Scene/Main/` and `src/Scene/Resources/`, matching their engine-module ownership without changing the flat public `Electron2D` namespace.
 
@@ -20,12 +20,12 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 
 ## Public surface
 
-- `Node`: one combined Godot-style `Node` + `Node2D` abstraction with ordered hierarchy, lifecycle, local/global `Matrix3x2` transforms, `Vector2` spatial helpers, logical canvas state, paths/search/groups, processing configuration, and queued deletion.
+- `Node`: the primary public game-object base and one combined Godot-style `Node` + `Node2D` abstraction with ordered hierarchy, lifecycle, local/global `Matrix3x2` transforms, `Vector2` spatial helpers, logical canvas state, paths/search/groups, processing configuration, and queued deletion.
 - `NodeProcessMode`: inherited, pausable, paused-only, always, and disabled process policies.
 - `SceneTree`: concrete main loop and active hierarchy owner with failure-safe lifecycle/finalization, system-notification propagation, pause state, caller-driven process/physics frames, frame/tree events and counters, typed group work, timers, deferred actions, and deletion flushing.
 - `SceneTreeTimer`: lightweight one-shot delay advanced by one selected frame lane and automatically disposed after timeout.
 - `GroupCallFlags`: immediate/reverse/deferred/unique policy for typed group operations.
-- `PackedScene`: `Resource` that captures one typed owned-node hierarchy and reconstructs independent detached instances.
+- `PackedScene`: `Resource` that captures any reusable typed owned-node hierarchy, from one composed game object through a complete level, and reconstructs independent detached instances.
 - `SceneState`: live read-only typed metadata view for current packed data.
 - `PackedSceneEditState`: instantiation policy whose runtime `Disabled` value is implemented and whose editor values fail explicitly.
 
@@ -40,6 +40,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 
 ## Domain-wide invariants
 
+- `Node` hierarchies are the primary public game-object and world model. Reusable objects and complete levels use the same `PackedScene` capture and instantiation boundary; Scene does not expose a competing entity hierarchy.
 - A node has at most one parent and one active `SceneTree`; cycles and cross-tree insertion are rejected before mutation.
 - An active root can be disposed only by its owning `SceneTree`.
 - Sibling names are ordinal-unique, and path separators/reserved path tokens cannot be names.
@@ -90,3 +91,4 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - [0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
 - [0026: Separate Transform2D foundational type](../decisions/core-math.md#adr-0026)
 - [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
+- [0031: Node trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)

@@ -12,7 +12,7 @@ Last updated: 2026-09-21
 
 ## Responsibility and ownership
 
-`PackedScene` stores an in-memory, typed snapshot of one node hierarchy and constructs independent detached runtime instances from it. It is a managed [`Resource`](Resource.md) in `Electron2D.dll`; it is not a text/binary scene file, loader, saver, import artifact, or editor document.
+`PackedScene` is the reuse boundary for Electron2D's Node-based game objects. It stores an in-memory, typed snapshot of one Node hierarchy and constructs independent detached runtime instances from it. The hierarchy may represent one composed game object, a reusable subsystem, or a complete level; these cases use the same capture and instantiation contract. It is a managed [`Resource`](Resource.md) in `Electron2D.dll`; it is not a text/binary scene file, loader, saver, import artifact, or editor document.
 
 The snapshot owns no source [`Node`](Node.md). It retains source-independent static node factories, immutable node metadata, typed stored-property values, and references to resources used by those values. Shared source resources remain caller-owned. During instantiation, the returned root owns all created child nodes and every duplicated scene resource; disposing that root disposes the complete hierarchy and those duplicates.
 
@@ -108,3 +108,4 @@ The current contract is runtime-only and in-memory. It has no `.tscn`/binary loa
 - [0024: Typed color values and portable quantization](../decisions/core-math.md#adr-0024)
 - [0025: Typed axis-aligned rectangle geometry](../decisions/core-math.md#adr-0025)
 - [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
+- [0031: Node trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)

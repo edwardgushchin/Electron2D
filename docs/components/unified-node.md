@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 ## Scope
 
-This Scene component provides Electron2D's only game-object type. [`Node`](../classes/Node.md) deliberately combines Godot-like `Node` hierarchy/lifecycle behavior with the transform and canvas-state behavior normally associated with `Node2D`. A separate `Node2D` type does not exist.
+This Scene component provides Electron2D's primary and only public game-object base. A game object, composed subsystem, or complete world is an ordered hierarchy of [`Node`](../classes/Node.md) instances. `Node` deliberately combines Godot-like hierarchy/lifecycle behavior with the transform and canvas-state behavior normally associated with `Node2D`; specialized gameplay objects derive from it and may compose child Nodes and typed resources. A separate `Node2D`, `GameObject`, or public entity hierarchy does not exist.
 
 ## Owned types
 
@@ -19,7 +19,7 @@ Local transforms are stored as `System.Numerics.Matrix3x2`. A non-top-level node
 
 Hierarchy operations maintain one parent, ordered unique-name children, path addressability, optional ancestor `Owner` metadata for packed storage, and at most one active [`SceneTree`](../classes/SceneTree.md). Tree membership drives enter/ready/exit callbacks, tree-level node/change events, pause-aware processing, group operations, queued deletion, and depth-first propagation of MainLoop system notifications. Core [`Engine`](../classes/Engine.md) can schedule the tree and applies time scaling before process deltas reach nodes. Lifecycle and disposal cleanup attempt every owned stage before aggregating callback failures. Child-related events pass the publishing parent first and the affected child second; self events pass the publishing node. Visibility and relative Z state are inherited through the same hierarchy but do not render by themselves.
 
-The [Packed scenes](packed-scenes.md) component freezes a source hierarchy during capture, stores explicitly enabled properties and persistent groups, reconstructs detached instances through a static factory hook, and transfers per-instance resource ownership to the new root. `SceneFilePath` records only an external packed-scene source on an instantiated root.
+The [Packed scenes](packed-scenes.md) component is the reuse boundary for Node hierarchies. It freezes a source hierarchy during capture, stores explicitly enabled properties and persistent groups, reconstructs independent detached instances through a static factory hook, and transfers per-instance resource ownership to the new root. The packed hierarchy may be one reusable game object or a complete level; `SceneFilePath` records only an external packed-scene source on an instantiated root.
 
 ## Dependencies
 
@@ -67,3 +67,4 @@ Implemented: ordered hierarchy and reparenting, lifecycle and typed events, rela
 - [0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
 - [0026: Separate Transform2D foundational type](../decisions/core-math.md#adr-0026)
 - [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
+- [0031: Node trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)

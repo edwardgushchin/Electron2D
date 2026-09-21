@@ -12,9 +12,11 @@ Last updated: 2026-09-21
 
 ## Responsibility and ownership
 
-`Node` is Electron2D's single hierarchical and spatial game-object base. It intentionally combines Godot-like `Node` and `Node2D` responsibilities: ordered ownership, lifecycle, paths, groups, pause-aware processing, deletion, local/global 2D transforms, visibility, and Z state. There is no separate `Node2D`.
+`Node` is Electron2D's primary and single public hierarchical and spatial game-object base. Individual game objects, composed subsystems, and complete worlds use the same ordered Node hierarchy. Specialized gameplay objects derive from `Node` and can compose child Nodes and typed resources. It intentionally combines Godot-like `Node` and `Node2D` responsibilities: ordered ownership, lifecycle, paths, groups, pause-aware processing, deletion, local/global 2D transforms, visibility, and Z state. There is no separate `Node2D`, `GameObject`, or public entity hierarchy.
 
 A parent owns its children. An active [`SceneTree`](SceneTree.md) owns its root and therefore the whole hierarchy. A node owns no renderer or native SDL handle. Its current transform surface is `Matrix3x2`; the standalone [`Transform2D`](Transform2D.md) now exists, but migration of this public surface remains a separate source-breaking slice under ADR 0026 and ADR 0029.
+
+Any self-contained root and its owned descendants can be captured by [`PackedScene`](PackedScene.md) as a reusable scene. Instantiation returns an independent detached hierarchy; lifecycle begins only after explicit attachment to a `SceneTree`.
 
 ## Constants
 

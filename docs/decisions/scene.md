@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 This bounded log owns the complete architectural records for scene. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
-Decisions in this log: [0006](#adr-0006), [0008](#adr-0008), [0011](#adr-0011), [0023](#adr-0023).
+Decisions in this log: [0006](#adr-0006), [0008](#adr-0008), [0011](#adr-0011), [0023](#adr-0023), [0031](#adr-0031).
 
 <a id="adr-0006"></a>
 ## ADR 0006: Own hierarchy, deferred work, and queued deletion in SceneTree
@@ -212,3 +212,48 @@ There is no scene file loader/saver, import/UID remapping, editor, inheritance a
 The executable harness covers the current in-memory contract: empty and unsupported modes, capture selection/order, owner/path/group metadata, typed stored values, source disposal independence, repeated instances, local-resource aliasing/setup/ownership, live-state and path races, duplication, capture failure semantics, capture mutation rejection, factory closure/type/identity rejection, setup cleanup, detached-parent and active-tree escape rollback, and final snapshot survival. Repository verification also checks formatting, Release compilation, generated XML, documentation inventory, internal links, and the absence of prohibited production naming.
 
 It does not establish disk format compatibility, editor behavior, performance on very large loaded scenes, platform asset packaging, persistent connections, script state, visual output, or owner acceptance.
+
+<a id="adr-0031"></a>
+## ADR 0031: Make Node trees and reusable scenes the primary game-object model
+
+Last updated: 2026-09-21
+
+- Status: Accepted
+- Scope: Public game-object, world-composition, and scene-reuse model
+- Builds on: [0008](scene.md#adr-0008), [0011](scene.md#adr-0011), and [0023](scene.md#adr-0023)
+
+### Context
+
+Electron2D already has a unified `Node`, an active `SceneTree`, and typed in-memory `PackedScene` capture and instantiation. Those decisions define the mechanics but do not yet state the product-level model strongly enough. Future gameplay, editor, serialization, rendering, and physics work needs one stable answer to what a game object is, how a running world is structured, and what may be packaged and reused.
+
+The intended model follows the proven Node-based, scene-oriented structure familiar from Godot while retaining Electron2D's typed C# contracts, unified 2D node, and explicit lifecycle boundaries. A scene must not be mistaken for only a level file, and a later subsystem must not accidentally introduce a second public entity hierarchy alongside `Node`.
+
+### Decision
+
+- Electron2D is a Node-based, scene-oriented 2D engine. `Node` is the primary public game-object base, and an ordered Node hierarchy is the public representation of a game object, a composed subsystem, and the running game world.
+- Specialized gameplay objects derive from `Node` and compose behavior through child Nodes and typed `Resource` values. Electron2D keeps its single unified `Node`; it does not add `Node2D` or any 3D hierarchy.
+- `SceneTree` owns the one active root hierarchy and controls its lifecycle, frame callbacks, deferred work, and deletion. A detached hierarchy is inert until the caller explicitly attaches it to an active tree.
+- A scene is a reusable packed Node hierarchy, not merely a level. Any self-contained root and its owned descendants may represent a character, projectile, controller hierarchy, reusable environment object, or complete level without changing the storage model.
+- `PackedScene` is the reuse boundary. Each instantiation creates a fresh detached Node hierarchy. Scene-local resources are duplicated with graph identity preserved, while non-local resources remain shared according to the existing resource contract.
+- Larger game objects and worlds are built by composing independently reusable scene instances into Node hierarchies. Repeated instantiation must not share mutable Node identity or silently activate lifecycle callbacks.
+- The editor and first-party games must use the same public `Node`, `SceneTree`, `Resource`, and `PackedScene` contracts as other consumers. They must not depend on privileged alternate game-object semantics.
+- An entity-component or data-oriented implementation may later exist behind a subsystem when measurements justify it, but it must remain an internal implementation detail. Replacing or competing with the public Node/scene model requires a superseding ADR.
+
+### Current implementation boundary
+
+The implemented `PackedScene` contract is typed, runtime-only, and in-memory. It can capture one owned Node hierarchy and construct independent detached instances now. Scene files, loaders/savers, editor authoring, nested scene-instance metadata, inherited scenes, editable overrides, scripting, and persistent typed event endpoints remain absent. Composition is currently performed by ordinary Node parenting and packing; this decision does not claim those future authoring workflows are implemented.
+
+### Consequences
+
+- Engine domains can use `Node` as the common public ownership and lifecycle anchor instead of inventing parallel game-object bases.
+- Reusable gameplay objects and complete levels use the same packing and instantiation semantics.
+- Scene reuse remains explicit and testable: construction is detached, activation is caller-controlled, and instances have independent Node identity.
+- File serialization and editor tooling must preserve the typed Node/PackedScene model rather than redefining it.
+- Internal performance-oriented storage is permitted only when it does not leak a competing public object model.
+
+### Rejected alternatives
+
+- Treat scenes only as complete levels: rejected because characters, projectiles, controllers, and other reusable hierarchies need the same composition boundary.
+- Introduce a separate public `GameObject`, entity, or ECS hierarchy: rejected because it would split ownership, lifecycle, paths, processing, and editor semantics across competing models.
+- Activate every scene during instantiation: rejected because reuse requires safe detached construction before explicit tree ownership.
+- Wait for the editor or disk format before defining scenes as the reuse unit: rejected because the current in-memory implementation already provides the runtime boundary and future tools need a stable target.

@@ -8,7 +8,7 @@ This directory describes the engine as it exists now. Planned features are liste
 
 - Product boundary: exclusively 2D; 3D is out of scope.
 - Runtime target matrix: Linux, Windows, macOS, Android, and iOS. This is the required product boundary, not a claim of completed native delivery on every target.
-- API direction: familiar scene-oriented 2D concepts expressed as typed C#.
+- Game-object model: Node-based and scene-oriented. `Node` is the primary public game object, `SceneTree` owns the active hierarchy, and `PackedScene` packages any reusable Node hierarchy—from one composed object to a complete level—for independent instantiation. The current packing implementation is typed and in-memory; disk and editor workflows are not implemented.
 - Public engine assembly: one managed `Electron2D.dll` class library. Accepted runtime dependencies may ship as separate assemblies; the current build has none.
 - Product source boundary: runtime engine code lives in `src/`; the future self-hosted editor belongs to a separate executable project under `editor/Electron2D.Editor/`; first-party example games and templates belong under `examples/<Game>/`. Editor and games depend on the public runtime API, never the reverse.
 - Production source root: `src/`, organized by engine module while retaining the flat public `Electron2D` namespace.

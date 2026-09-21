@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 ## Scope
 
-This Scene component provides typed, runtime-only, in-memory capture and reconstruction of detached 2D node hierarchies. It connects the [Unified 2D node](unified-node.md), [Typed editor properties](editor-properties.md), and [Resource base](resources.md) components without adding a dynamic value system, reflection-driven invocation, filesystem scene format, editor runtime, or second assembly.
+This Scene component provides the common reuse boundary for Electron2D's Node-based game objects. It performs typed, runtime-only, in-memory capture and reconstruction of detached 2D Node hierarchies; the same representation covers a reusable object or subsystem and a complete level. It connects the [Unified 2D node](unified-node.md), [Typed editor properties](editor-properties.md), and [Resource base](resources.md) components without adding a dynamic value system, reflection-driven invocation, filesystem scene format, editor runtime, or second assembly.
 
 ## Owned types
 
@@ -57,6 +57,8 @@ User factories, descriptor delegates, resource copy/setup callbacks, node notifi
 
 Implemented and covered locally: in-memory owned-branch capture, storage-enabled typed properties, derived node factories, persistent groups, owner/path metadata, live typed state inspection, independent detached instantiation, root-only scene notification, scene-local resource duplication/setup/ownership, packed-resource duplication/reset/copy behavior, capture and instantiation barriers, factory identity checks, callback topology validation, and failure rollback.
 
+The implemented runtime treats any valid owned hierarchy uniformly: callers can pack and repeatedly instantiate a small composed game object or a complete level. Composition currently uses ordinary Node parenting before packing; no nested-scene authoring metadata or editor workflow is implied.
+
 ## Exclusions
 
 - No text/binary scene loader or saver, exported-pack integration, UID/import remapping, dependency scanning, or missing-resource recovery.
@@ -75,3 +77,4 @@ Implemented and covered locally: in-memory owned-branch capture, storage-enabled
 - [0024: Typed color values and portable quantization](../decisions/core-math.md#adr-0024)
 - [0025: Typed axis-aligned rectangle geometry](../decisions/core-math.md#adr-0025)
 - [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
+- [0031: Node trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)
