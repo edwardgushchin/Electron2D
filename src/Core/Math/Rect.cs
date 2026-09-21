@@ -14,8 +14,6 @@ namespace Electron2D;
 [StructLayout(LayoutKind.Sequential)]
 public struct Rect : IEquatable<Rect>
 {
-    private const float ComparisonEpsilon = 0.00001f;
-
     private Vector2 _position;
     private Vector2 _size;
 
@@ -212,19 +210,19 @@ public struct Rect : IEquatable<Rect>
     /// <summary>Tests whether all position and size components are finite.</summary>
     /// <returns><see langword="true"/> when no component is NaN or infinity.</returns>
     public readonly bool IsFinite() =>
-        float.IsFinite(_position.X) &&
-        float.IsFinite(_position.Y) &&
-        float.IsFinite(_size.X) &&
-        float.IsFinite(_size.Y);
+        Mathf.IsFinite(_position.X) &&
+        Mathf.IsFinite(_position.Y) &&
+        Mathf.IsFinite(_size.X) &&
+        Mathf.IsFinite(_size.Y);
 
     /// <summary>Tests position and size for scale-aware approximate equality.</summary>
     /// <param name="other">The other rectangle.</param>
     /// <returns><see langword="true"/> when every component is approximately equal.</returns>
     public readonly bool IsEqualApprox(Rect other) =>
-        IsComponentEqualApprox(_position.X, other._position.X) &&
-        IsComponentEqualApprox(_position.Y, other._position.Y) &&
-        IsComponentEqualApprox(_size.X, other._size.X) &&
-        IsComponentEqualApprox(_size.Y, other._size.Y);
+        Mathf.IsEqualApprox(_position.X, other._position.X) &&
+        Mathf.IsEqualApprox(_position.Y, other._position.Y) &&
+        Mathf.IsEqualApprox(_size.X, other._size.X) &&
+        Mathf.IsEqualApprox(_size.Y, other._size.Y);
 
     /// <summary>Returns the smallest edge-aligned rectangle enclosing this rectangle and another.</summary>
     /// <param name="other">The other rectangle.</param>
@@ -272,15 +270,4 @@ public struct Rect : IEquatable<Rect>
     /// <exception cref="FormatException"><paramref name="format"/> is invalid.</exception>
     public readonly string ToString(string? format) => $"{_position.ToString(format)}, {_size.ToString(format)}";
 
-    private static bool IsComponentEqualApprox(float left, float right)
-    {
-        if (left == right)
-            return true;
-
-        var tolerance = ComparisonEpsilon * MathF.Abs(left);
-        if (tolerance < ComparisonEpsilon)
-            tolerance = ComparisonEpsilon;
-
-        return MathF.Abs(left - right) < tolerance;
-    }
 }

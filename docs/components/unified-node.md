@@ -24,7 +24,7 @@ The [Packed scenes](packed-scenes.md) component is the reuse boundary for Node h
 ## Dependencies
 
 - Core's [`ElectronObject`](../classes/ElectronObject.md), [`MainLoop`](../classes/MainLoop.md) notification identifiers, and typed property descriptors.
-- Core [`Vector2`](../classes/Vector2.md) and [`Transform`](../classes/Transform.md) as the implemented Node spatial surface.
+- Core [`Mathf`](../classes/Mathf.md), [`Vector2`](../classes/Vector2.md), and [`Transform`](../classes/Transform.md) as the implemented Node scalar and spatial surface.
 - `System.IO.Enumeration.FileSystemName` for `*`/`?` hierarchy-name matching.
 - [`SceneTree`](../classes/SceneTree.md) for active lifecycle, frame delivery, pause state, group operations, tree events, and deferred deletion.
 - [`PackedScene`](../classes/PackedScene.md) and the Resource base for capture factories, owner selection, stored state, and per-instance resource ownership.
@@ -68,3 +68,4 @@ Implemented: ordered hierarchy and reparenting, lifecycle and typed events, rela
 - [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0031: Node trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
+- [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)

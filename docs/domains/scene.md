@@ -31,7 +31,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 
 ## Dependency direction
 
-- Scene depends on Core's `Vector2`/`Transform` math, Resources including `Resource`, and .NET collections and filesystem-name matching.
+- Scene depends on Core's `Mathf`/`Vector2`/`Transform` math, Resources including `Resource`, and .NET collections and filesystem-name matching.
 - Resources has a narrow reciprocal dependency on `Node` for `Resource.GetLocalScene()` under ADR 0023. This is an intentional in-assembly type cycle, not another managed assembly.
 - Scene does not depend on SDL3-CS, rendering, input, audio, collision physics, asset loading/saving, file serialization, tweening, scripting, networking, or Localization.
 - Future gameplay, rendering, input, and 2D physics types may depend on Scene.
@@ -92,3 +92,4 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0031: Node trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
+- [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)

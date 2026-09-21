@@ -13,7 +13,6 @@ namespace Electron2D;
 [StructLayout(LayoutKind.Sequential)]
 public struct Vector4 : IEquatable<Vector4>
 {
-    private const float ComparisonEpsilon = 0.00001f;
     private const float NormalizedEpsilon = 0.001f;
 
     private static readonly Vector4 ZeroValue = new(0f, 0f, 0f, 0f);
@@ -135,11 +134,11 @@ public struct Vector4 : IEquatable<Vector4>
 
     /// <summary>Returns the componentwise absolute value.</summary>
     /// <returns>A vector with nonnegative components, except that NaN remains NaN.</returns>
-    public readonly Vector4 Abs() => new(MathF.Abs(X), MathF.Abs(Y), MathF.Abs(Z), MathF.Abs(W));
+    public readonly Vector4 Abs() => new(Mathf.Abs(X), Mathf.Abs(Y), Mathf.Abs(Z), Mathf.Abs(W));
 
     /// <summary>Rounds every component upward toward positive infinity.</summary>
     /// <returns>The componentwise ceiling.</returns>
-    public readonly Vector4 Ceil() => new(MathF.Ceiling(X), MathF.Ceiling(Y), MathF.Ceiling(Z), MathF.Ceiling(W));
+    public readonly Vector4 Ceil() => new(Mathf.Ceil(X), Mathf.Ceil(Y), Mathf.Ceil(Z), Mathf.Ceil(W));
 
     /// <summary>Clamps each component between corresponding vector bounds.</summary>
     /// <param name="min">The componentwise lower bounds.</param>
@@ -147,10 +146,10 @@ public struct Vector4 : IEquatable<Vector4>
     /// <returns>The clamped vector.</returns>
     /// <exception cref="ArgumentException">A lower bound is greater than its corresponding upper bound.</exception>
     public readonly Vector4 Clamp(Vector4 min, Vector4 max) => new(
-        Math.Clamp(X, min.X, max.X),
-        Math.Clamp(Y, min.Y, max.Y),
-        Math.Clamp(Z, min.Z, max.Z),
-        Math.Clamp(W, min.W, max.W));
+        Mathf.Clamp(X, min.X, max.X),
+        Mathf.Clamp(Y, min.Y, max.Y),
+        Mathf.Clamp(Z, min.Z, max.Z),
+        Mathf.Clamp(W, min.W, max.W));
 
     /// <summary>Clamps every component between scalar bounds.</summary>
     /// <param name="min">The lower bound.</param>
@@ -158,7 +157,7 @@ public struct Vector4 : IEquatable<Vector4>
     /// <returns>The clamped vector.</returns>
     /// <exception cref="ArgumentException"><paramref name="min"/> is greater than <paramref name="max"/>.</exception>
     public readonly Vector4 Clamp(float min, float max) => new(
-        Math.Clamp(X, min, max), Math.Clamp(Y, min, max), Math.Clamp(Z, min, max), Math.Clamp(W, min, max));
+        Mathf.Clamp(X, min, max), Mathf.Clamp(Y, min, max), Mathf.Clamp(Z, min, max), Mathf.Clamp(W, min, max));
 
     /// <summary>Performs Catmull-Rom cubic interpolation between this vector and another.</summary>
     /// <param name="b">The destination vector.</param>
@@ -167,10 +166,10 @@ public struct Vector4 : IEquatable<Vector4>
     /// <param name="weight">The interpolation weight; values outside zero through one extrapolate.</param>
     /// <returns>The interpolated vector.</returns>
     public readonly Vector4 CubicInterpolate(Vector4 b, Vector4 preA, Vector4 postB, float weight) => new(
-        Cubic(X, b.X, preA.X, postB.X, weight),
-        Cubic(Y, b.Y, preA.Y, postB.Y, weight),
-        Cubic(Z, b.Z, preA.Z, postB.Z, weight),
-        Cubic(W, b.W, preA.W, postB.W, weight));
+        Mathf.CubicInterpolate(X, b.X, preA.X, postB.X, weight),
+        Mathf.CubicInterpolate(Y, b.Y, preA.Y, postB.Y, weight),
+        Mathf.CubicInterpolate(Z, b.Z, preA.Z, postB.Z, weight),
+        Mathf.CubicInterpolate(W, b.W, preA.W, postB.W, weight));
 
     /// <summary>Performs time-aware Barry-Goldman cubic interpolation.</summary>
     /// <param name="b">The destination vector.</param>
@@ -189,10 +188,10 @@ public struct Vector4 : IEquatable<Vector4>
         float bTime,
         float preATime,
         float postBTime) => new(
-            CubicInTime(X, b.X, preA.X, postB.X, weight, bTime, preATime, postBTime),
-            CubicInTime(Y, b.Y, preA.Y, postB.Y, weight, bTime, preATime, postBTime),
-            CubicInTime(Z, b.Z, preA.Z, postB.Z, weight, bTime, preATime, postBTime),
-            CubicInTime(W, b.W, preA.W, postB.W, weight, bTime, preATime, postBTime));
+            Mathf.CubicInterpolateInTime(X, b.X, preA.X, postB.X, weight, bTime, preATime, postBTime),
+            Mathf.CubicInterpolateInTime(Y, b.Y, preA.Y, postB.Y, weight, bTime, preATime, postBTime),
+            Mathf.CubicInterpolateInTime(Z, b.Z, preA.Z, postB.Z, weight, bTime, preATime, postBTime),
+            Mathf.CubicInterpolateInTime(W, b.W, preA.W, postB.W, weight, bTime, preATime, postBTime));
 
     /// <summary>Returns the normalized direction from this point to another point.</summary>
     /// <param name="to">The destination point.</param>
@@ -216,7 +215,7 @@ public struct Vector4 : IEquatable<Vector4>
 
     /// <summary>Rounds every component downward toward negative infinity.</summary>
     /// <returns>The componentwise floor.</returns>
-    public readonly Vector4 Floor() => new(MathF.Floor(X), MathF.Floor(Y), MathF.Floor(Z), MathF.Floor(W));
+    public readonly Vector4 Floor() => new(Mathf.Floor(X), Mathf.Floor(Y), Mathf.Floor(Z), Mathf.Floor(W));
 
     /// <summary>Returns the componentwise reciprocal.</summary>
     /// <returns><c>(1 / X, 1 / Y, 1 / Z, 1 / W)</c>, including IEEE 754 zero-division behavior.</returns>
@@ -224,15 +223,15 @@ public struct Vector4 : IEquatable<Vector4>
 
     /// <summary>Tests whether every component is finite.</summary>
     /// <returns><see langword="true"/> when no component is NaN or infinity.</returns>
-    public readonly bool IsFinite() => float.IsFinite(X) && float.IsFinite(Y) && float.IsFinite(Z) && float.IsFinite(W);
+    public readonly bool IsFinite() => Mathf.IsFinite(X) && Mathf.IsFinite(Y) && Mathf.IsFinite(Z) && Mathf.IsFinite(W);
 
     /// <summary>Tests whether the squared length is approximately one.</summary>
     /// <returns><see langword="true"/> when the vector is approximately unit length.</returns>
-    public readonly bool IsNormalized() => MathF.Abs(LengthSquared() - 1f) < NormalizedEpsilon;
+    public readonly bool IsNormalized() => Mathf.Abs(LengthSquared() - 1f) < NormalizedEpsilon;
 
     /// <summary>Returns the Euclidean length.</summary>
     /// <returns>The square root of <see cref="LengthSquared"/>.</returns>
-    public readonly float Length() => MathF.Sqrt(LengthSquared());
+    public readonly float Length() => Mathf.Sqrt(LengthSquared());
 
     /// <summary>Returns the squared Euclidean length.</summary>
     /// <returns>The sum of the four squared components.</returns>
@@ -248,12 +247,12 @@ public struct Vector4 : IEquatable<Vector4>
     /// <param name="with">The other vector.</param>
     /// <returns>The componentwise maximum.</returns>
     public readonly Vector4 Max(Vector4 with) => new(
-        MathF.Max(X, with.X), MathF.Max(Y, with.Y), MathF.Max(Z, with.Z), MathF.Max(W, with.W));
+        Mathf.Max(X, with.X), Mathf.Max(Y, with.Y), Mathf.Max(Z, with.Z), Mathf.Max(W, with.W));
 
     /// <summary>Returns the componentwise maximum with a scalar.</summary>
     /// <param name="with">The scalar compared with every component.</param>
     /// <returns>The componentwise maximum.</returns>
-    public readonly Vector4 Max(float with) => new(MathF.Max(X, with), MathF.Max(Y, with), MathF.Max(Z, with), MathF.Max(W, with));
+    public readonly Vector4 Max(float with) => new(Mathf.Max(X, with), Mathf.Max(Y, with), Mathf.Max(Z, with), Mathf.Max(W, with));
 
     /// <summary>Returns the axis containing the greatest component.</summary>
     /// <returns><see cref="Axis.X"/> when all components are equal; otherwise the first greatest axis.</returns>
@@ -277,12 +276,12 @@ public struct Vector4 : IEquatable<Vector4>
     /// <param name="with">The other vector.</param>
     /// <returns>The componentwise minimum.</returns>
     public readonly Vector4 Min(Vector4 with) => new(
-        MathF.Min(X, with.X), MathF.Min(Y, with.Y), MathF.Min(Z, with.Z), MathF.Min(W, with.W));
+        Mathf.Min(X, with.X), Mathf.Min(Y, with.Y), Mathf.Min(Z, with.Z), Mathf.Min(W, with.W));
 
     /// <summary>Returns the componentwise minimum with a scalar.</summary>
     /// <param name="with">The scalar compared with every component.</param>
     /// <returns>The componentwise minimum.</returns>
-    public readonly Vector4 Min(float with) => new(MathF.Min(X, with), MathF.Min(Y, with), MathF.Min(Z, with), MathF.Min(W, with));
+    public readonly Vector4 Min(float with) => new(Mathf.Min(X, with), Mathf.Min(Y, with), Mathf.Min(Z, with), Mathf.Min(W, with));
 
     /// <summary>Returns the axis containing the least component.</summary>
     /// <returns><see cref="Axis.W"/> when all components are equal; otherwise the last least axis.</returns>
@@ -307,40 +306,41 @@ public struct Vector4 : IEquatable<Vector4>
     public readonly Vector4 Normalized()
     {
         var squaredLength = LengthSquared();
-        return squaredLength == 0f ? Zero : this / MathF.Sqrt(squaredLength);
+        return squaredLength == 0f ? Zero : this / Mathf.Sqrt(squaredLength);
     }
 
     /// <summary>Applies positive modulus to every component.</summary>
     /// <param name="mod">The scalar divisor.</param>
     /// <returns>The componentwise canonical remainder using the divisor's sign.</returns>
     public readonly Vector4 PosMod(float mod) => new(
-        PositiveMod(X, mod), PositiveMod(Y, mod), PositiveMod(Z, mod), PositiveMod(W, mod));
+        Mathf.PosMod(X, mod), Mathf.PosMod(Y, mod), Mathf.PosMod(Z, mod), Mathf.PosMod(W, mod));
 
     /// <summary>Applies componentwise positive modulus.</summary>
     /// <param name="mod">The component divisors.</param>
     /// <returns>The componentwise canonical remainders using each divisor's sign.</returns>
     public readonly Vector4 PosMod(Vector4 mod) => new(
-        PositiveMod(X, mod.X), PositiveMod(Y, mod.Y), PositiveMod(Z, mod.Z), PositiveMod(W, mod.W));
+        Mathf.PosMod(X, mod.X), Mathf.PosMod(Y, mod.Y), Mathf.PosMod(Z, mod.Z), Mathf.PosMod(W, mod.W));
 
     /// <summary>Rounds every component to the nearest integer using midpoint-to-even behavior.</summary>
     /// <returns>The componentwise rounded vector.</returns>
-    public readonly Vector4 Round() => new(MathF.Round(X), MathF.Round(Y), MathF.Round(Z), MathF.Round(W));
+    public readonly Vector4 Round() => new(Mathf.Round(X), Mathf.Round(Y), Mathf.Round(Z), Mathf.Round(W));
 
     /// <summary>Returns the sign of every component.</summary>
     /// <returns>Components containing negative one, zero, or positive one.</returns>
     /// <exception cref="ArithmeticException">A component is NaN.</exception>
-    public readonly Vector4 Sign() => new(MathF.Sign(X), MathF.Sign(Y), MathF.Sign(Z), MathF.Sign(W));
+    public readonly Vector4 Sign() => new(Mathf.Sign(X), Mathf.Sign(Y), Mathf.Sign(Z), Mathf.Sign(W));
 
     /// <summary>Snaps each component to the nearest multiple of the corresponding step.</summary>
     /// <param name="step">The componentwise step. A zero component leaves the corresponding value unchanged.</param>
     /// <returns>The snapped vector.</returns>
     public readonly Vector4 Snapped(Vector4 step) => new(
-        Snap(X, step.X), Snap(Y, step.Y), Snap(Z, step.Z), Snap(W, step.W));
+        Mathf.Snapped(X, step.X), Mathf.Snapped(Y, step.Y), Mathf.Snapped(Z, step.Z), Mathf.Snapped(W, step.W));
 
     /// <summary>Snaps every component to the nearest multiple of a scalar step.</summary>
     /// <param name="step">The scalar step. Zero leaves every value unchanged.</param>
     /// <returns>The snapped vector.</returns>
-    public readonly Vector4 Snapped(float step) => new(Snap(X, step), Snap(Y, step), Snap(Z, step), Snap(W, step));
+    public readonly Vector4 Snapped(float step) => new(
+        Mathf.Snapped(X, step), Mathf.Snapped(Y, step), Mathf.Snapped(Z, step), Mathf.Snapped(W, step));
 
     /// <summary>Adds two vectors componentwise.</summary>
     /// <param name="left">The first vector.</param>
@@ -516,13 +516,14 @@ public struct Vector4 : IEquatable<Vector4>
     /// <param name="other">The vector to compare.</param>
     /// <returns><see langword="true"/> when all corresponding components are approximately equal.</returns>
     public readonly bool IsEqualApprox(Vector4 other) =>
-        Approx(X, other.X) && Approx(Y, other.Y) && Approx(Z, other.Z) && Approx(W, other.W);
+        Mathf.IsEqualApprox(X, other.X) && Mathf.IsEqualApprox(Y, other.Y) &&
+        Mathf.IsEqualApprox(Z, other.Z) && Mathf.IsEqualApprox(W, other.W);
 
     /// <summary>Tests whether every component is approximately zero.</summary>
     /// <returns><see langword="true"/> when every component is within the zero tolerance.</returns>
     public readonly bool IsZeroApprox() =>
-        MathF.Abs(X) < ComparisonEpsilon && MathF.Abs(Y) < ComparisonEpsilon &&
-        MathF.Abs(Z) < ComparisonEpsilon && MathF.Abs(W) < ComparisonEpsilon;
+        Mathf.IsZeroApprox(X) && Mathf.IsZeroApprox(Y) &&
+        Mathf.IsZeroApprox(Z) && Mathf.IsZeroApprox(W);
 
     /// <summary>Returns a hash code based on all components.</summary>
     /// <returns>The component hash code.</returns>
@@ -539,51 +540,4 @@ public struct Vector4 : IEquatable<Vector4>
     public readonly string ToString(string? format) =>
         $"({X.ToString(format, CultureInfo.InvariantCulture)}, {Y.ToString(format, CultureInfo.InvariantCulture)}, {Z.ToString(format, CultureInfo.InvariantCulture)}, {W.ToString(format, CultureInfo.InvariantCulture)})";
 
-    private static bool Approx(float left, float right)
-    {
-        if (left == right)
-            return true;
-        var tolerance = MathF.Max(ComparisonEpsilon * MathF.Abs(left), ComparisonEpsilon);
-        return MathF.Abs(left - right) < tolerance;
-    }
-
-    private static float Cubic(float from, float to, float pre, float post, float weight)
-    {
-        var squared = weight * weight;
-        return 0.5f * ((from * 2f) + ((-pre + to) * weight) +
-                       (((2f * pre) - (5f * from) + (4f * to) - post) * squared) +
-                       ((-pre + (3f * from) - (3f * to) + post) * squared * weight));
-    }
-
-    private static float CubicInTime(
-        float from,
-        float to,
-        float pre,
-        float post,
-        float weight,
-        float toTime,
-        float preTime,
-        float postTime)
-    {
-        var time = ScalarLerp(0f, toTime, weight);
-        var a1 = ScalarLerp(pre, from, preTime == 0f ? 0f : (time - preTime) / -preTime);
-        var a2 = ScalarLerp(from, to, toTime == 0f ? 0.5f : time / toTime);
-        var a3 = ScalarLerp(to, post, postTime - toTime == 0f ? 1f : (time - toTime) / (postTime - toTime));
-        var b1 = ScalarLerp(a1, a2, toTime - preTime == 0f ? 0f : (time - preTime) / (toTime - preTime));
-        var b2 = ScalarLerp(a2, a3, postTime == 0f ? 1f : time / postTime);
-        return ScalarLerp(b1, b2, toTime == 0f ? 0.5f : time / toTime);
-    }
-
-    private static float PositiveMod(float value, float divisor)
-    {
-        var remainder = value % divisor;
-        if ((remainder < 0f && divisor > 0f) || (remainder > 0f && divisor < 0f))
-            remainder += divisor;
-        return remainder;
-    }
-
-    private static float ScalarLerp(float from, float to, float weight) => from + ((to - from) * weight);
-
-    private static float Snap(float value, float step) =>
-        step == 0f ? value : MathF.Floor((value / step) + 0.5f) * step;
 }

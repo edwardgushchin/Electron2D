@@ -14,8 +14,6 @@ namespace Electron2D;
 [StructLayout(LayoutKind.Sequential)]
 public struct Transform : IEquatable<Transform>
 {
-    private const float ComparisonEpsilon = 0.00001f;
-
     private static readonly Transform IdentityValue = new(1f, 0f, 0f, 1f, 0f, 0f);
     private static readonly Transform FlipXValue = new(-1f, 0f, 0f, 1f, 0f, 0f);
     private static readonly Transform FlipYValue = new(1f, 0f, 0f, -1f, 0f, 0f);
@@ -45,7 +43,7 @@ public struct Transform : IEquatable<Transform>
 
     /// <summary>Gets the clockwise screen-space rotation in radians.</summary>
     /// <value>The angle of <see cref="X"/>, measured from positive X toward positive Y.</value>
-    public readonly float Rotation => MathF.Atan2(X.Y, X.X);
+    public readonly float Rotation => Mathf.Atan2(X.Y, X.X);
 
     /// <summary>Gets the lengths of the basis axes with reflection encoded in the vertical component.</summary>
     /// <value>
@@ -57,7 +55,7 @@ public struct Transform : IEquatable<Transform>
     /// <summary>Gets the angular skew between the basis axes in radians.</summary>
     /// <value>Zero for an orthogonal basis, with reflection accounted for by the determinant sign.</value>
     public readonly float Skew =>
-        MathF.Acos(NormalizedOrZero(X).Dot(Sign(Determinant()) * NormalizedOrZero(Y))) - (MathF.PI * 0.5f);
+        Mathf.Acos(NormalizedOrZero(X).Dot(Sign(Determinant()) * NormalizedOrZero(Y))) - (Mathf.Pi * 0.5f);
 
     /// <summary>Gets or sets a complete matrix column.</summary>
     /// <param name="column">Zero for <see cref="X"/>, one for <see cref="Y"/>, or two for <see cref="Origin"/>.</param>
@@ -157,7 +155,7 @@ public struct Transform : IEquatable<Transform>
     /// <param name="origin">The translation offset.</param>
     public Transform(float rotation, Vector2 origin)
     {
-        var (sine, cosine) = MathF.SinCos(rotation);
+        var (sine, cosine) = Mathf.SinCos(rotation);
         X = new Vector2(cosine, sine);
         Y = new Vector2(-sine, cosine);
         Origin = origin;
@@ -170,8 +168,8 @@ public struct Transform : IEquatable<Transform>
     /// <param name="origin">The translation offset.</param>
     public Transform(float rotation, Vector2 scale, float skew, Vector2 origin)
     {
-        var (rotationSine, rotationCosine) = MathF.SinCos(rotation);
-        var (skewedSine, skewedCosine) = MathF.SinCos(rotation + skew);
+        var (rotationSine, rotationCosine) = Mathf.SinCos(rotation);
+        var (skewedSine, skewedCosine) = Mathf.SinCos(rotation + skew);
         X = new Vector2(rotationCosine * scale.X, rotationSine * scale.X);
         Y = new Vector2(-skewedSine * scale.Y, skewedCosine * scale.Y);
         Origin = origin;
@@ -221,9 +219,9 @@ public struct Transform : IEquatable<Transform>
     /// <param name="weight">The interpolation weight; values outside zero through one extrapolate.</param>
     /// <returns>A transform built from shortest-path angle interpolation, linear scale, skew, and origin interpolation.</returns>
     public readonly Transform InterpolateWith(Transform other, float weight) => new(
-        LerpAngle(Rotation, other.Rotation, weight),
+        Mathf.LerpAngle(Rotation, other.Rotation, weight),
         Scale.Lerp(other.Scale, weight),
-        LerpAngle(Skew, other.Skew, weight),
+        Mathf.LerpAngle(Skew, other.Skew, weight),
         Origin.Lerp(other.Origin, weight));
 
     /// <summary>Returns the fast inverse for an orthonormal basis.</summary>
@@ -243,20 +241,18 @@ public struct Transform : IEquatable<Transform>
     /// <summary>Tests whether the basis preserves angles up to uniform scale and optional reflection.</summary>
     /// <returns><see langword="true"/> for approximately orthogonal axes of approximately equal length.</returns>
     public readonly bool IsConformal() =>
-        (IsComponentEqualApprox(X.X, Y.Y) && IsComponentEqualApprox(X.Y, -Y.X)) ||
-        (IsComponentEqualApprox(X.X, -Y.Y) && IsComponentEqualApprox(X.Y, Y.X));
+        (Mathf.IsEqualApprox(X.X, Y.Y) && Mathf.IsEqualApprox(X.Y, -Y.X)) ||
+        (Mathf.IsEqualApprox(X.X, -Y.Y) && Mathf.IsEqualApprox(X.Y, Y.X));
 
     /// <summary>Tests all three columns for scale-aware approximate equality.</summary>
     /// <param name="other">The transform to compare.</param>
     /// <returns><see langword="true"/> when every corresponding component is approximately equal.</returns>
     public readonly bool IsEqualApprox(Transform other) =>
-        IsVectorEqualApprox(X, other.X) &&
-        IsVectorEqualApprox(Y, other.Y) &&
-        IsVectorEqualApprox(Origin, other.Origin);
+        X.IsEqualApprox(other.X) && Y.IsEqualApprox(other.Y) && Origin.IsEqualApprox(other.Origin);
 
     /// <summary>Tests whether every matrix component is finite.</summary>
     /// <returns><see langword="true"/> when no component is NaN or infinity.</returns>
-    public readonly bool IsFinite() => IsVectorFinite(X) && IsVectorFinite(Y) && IsVectorFinite(Origin);
+    public readonly bool IsFinite() => X.IsFinite() && Y.IsFinite() && Origin.IsFinite();
 
     /// <summary>Returns a rotation-only transform turned toward a target through this transform's affine local space.</summary>
     /// <param name="target">The global target point.</param>
@@ -270,7 +266,7 @@ public struct Transform : IEquatable<Transform>
     {
         var localTarget = AffineInverse() * target;
         var scaledTarget = localTarget * Scale;
-        return new Transform(Rotation + MathF.Atan2(scaledTarget.Y, scaledTarget.X), Origin);
+        return new Transform(Rotation + Mathf.Atan2(scaledTarget.Y, scaledTarget.X), Origin);
     }
 
     /// <summary>Returns a transform with a Gram-Schmidt orthonormalized basis.</summary>
@@ -456,27 +452,4 @@ public struct Transform : IEquatable<Transform>
         return length == 0f ? Vector2.Zero : value / length;
     }
 
-    private static float LerpAngle(float from, float to, float weight)
-    {
-        var difference = (to - from) % MathF.Tau;
-        var distance = ((2f * difference) % MathF.Tau) - difference;
-        return from + (distance * weight);
-    }
-
-    private static bool IsVectorEqualApprox(Vector2 left, Vector2 right) =>
-        IsComponentEqualApprox(left.X, right.X) && IsComponentEqualApprox(left.Y, right.Y);
-
-    private static bool IsComponentEqualApprox(float left, float right)
-    {
-        if (left == right)
-            return true;
-
-        var tolerance = ComparisonEpsilon * MathF.Abs(left);
-        if (tolerance < ComparisonEpsilon)
-            tolerance = ComparisonEpsilon;
-
-        return MathF.Abs(left - right) < tolerance;
-    }
-
-    private static bool IsVectorFinite(Vector2 value) => float.IsFinite(value.X) && float.IsFinite(value.Y);
 }

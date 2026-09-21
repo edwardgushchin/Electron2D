@@ -200,7 +200,7 @@ Every node created by `PackedScene.Instantiate()` is also marked unfinished unti
 
 ## Dependencies and interactions
 
-`Node` depends on `ElectronObject`, `MainLoop` notification identifiers, `PropertyDescriptor`, `NodeProcessMode`, `SceneTree`, the Resource base for owned scene duplicates, `Vector2`, `Transform`, LINQ, `FileSystemName`, and atomic operations. It does not depend on SDL3-CS, a renderer, input, audio, collision physics, scene file serialization, or a scripting runtime.
+`Node` depends on `ElectronObject`, `MainLoop` notification identifiers, `PropertyDescriptor`, `NodeProcessMode`, `SceneTree`, the Resource base for owned scene duplicates, [`Mathf`](Mathf.md), `Vector2`, `Transform`, LINQ, `FileSystemName`, and atomic operations. Degree/radian conversion and scalar transform math use the canonical `Mathf` contract. It does not depend on SDL3-CS, a renderer, input, audio, collision physics, scene file serialization, or a scripting runtime.
 
 ## Verification and known limitations
 
@@ -214,3 +214,4 @@ There is no renderer-backed canvas behavior, native system-event creation, focus
 - [0026: Separate Transform foundational type](../decisions/core-math.md#adr-0026)
 - [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
+- [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)

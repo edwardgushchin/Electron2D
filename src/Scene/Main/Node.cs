@@ -132,7 +132,7 @@ public class Node : ElectronObject
             node => node.RotationDegrees,
             (node, value) => node.RotationDegrees = value,
             _ => 0f,
-            (_, value) => float.IsFinite(value),
+            (_, value) => Mathf.IsFinite(value),
             stored: true),
         new PropertyDescriptor<Node, Vector2>(
             nameof(Scale),
@@ -146,7 +146,7 @@ public class Node : ElectronObject
             node => node.Skew,
             (node, value) => node.Skew = value,
             _ => 0f,
-            (_, value) => float.IsFinite(value),
+            (_, value) => Mathf.IsFinite(value),
             stored: true),
         new PropertyDescriptor<Node, bool>(nameof(Visible), node => node.Visible, (node, value) => node.Visible = value, _ => true, stored: true),
         new PropertyDescriptor<Node, int>(
@@ -468,8 +468,12 @@ public class Node : ElectronObject
     /// <exception cref="Exception">A transform notification or event handler throws after the rotation changes.</exception>
     public float RotationDegrees
     {
-        get => RadiansToDegrees(Rotation);
-        set => Rotation = DegreesToRadians(value);
+        get => Mathf.RadToDeg(Rotation);
+        set
+        {
+            EnsureFinite(value, "degrees");
+            Rotation = Mathf.DegToRad(value);
+        }
     }
 
     /// <summary>Gets or sets hierarchy-global rotation in radians.</summary>
@@ -498,8 +502,12 @@ public class Node : ElectronObject
     /// <exception cref="Exception">A transform notification or event handler throws after the rotation changes.</exception>
     public float GlobalRotationDegrees
     {
-        get => RadiansToDegrees(GlobalRotation);
-        set => GlobalRotation = DegreesToRadians(value);
+        get => Mathf.RadToDeg(GlobalRotation);
+        set
+        {
+            EnsureFinite(value, "degrees");
+            GlobalRotation = Mathf.DegToRad(value);
+        }
     }
 
     /// <summary>Gets or sets local scale.</summary>
@@ -676,7 +684,7 @@ public class Node : ElectronObject
     /// <value>The accumulated or absolute value, clamped to the supported Z range.</value>
     /// <exception cref="ObjectDisposedException">This node or a queried ancestor is disposing on another thread, or has finished disposing.</exception>
     public int EffectiveZIndex => ZAsRelative && Parent is not null
-        ? Math.Clamp(Parent.EffectiveZIndex + ZIndex, MinimumZIndex, MaximumZIndex)
+        ? Mathf.Clamp(Parent.EffectiveZIndex + ZIndex, MinimumZIndex, MaximumZIndex)
         : ZIndex;
 
     /// <summary>Gets or sets whether local transform changes dispatch <see cref="NotificationLocalTransformChanged"/>.</summary>
@@ -1528,7 +1536,7 @@ public class Node : ElectronObject
     {
         EnsureFinite(globalPoint, nameof(globalPoint));
         var direction = globalPoint - GlobalPosition;
-        return direction == Vector2.Zero ? 0f : NormalizeAngle(MathF.Atan2(direction.Y, direction.X) - GlobalRotation);
+        return direction == Vector2.Zero ? 0f : NormalizeAngle(Mathf.Atan2(direction.Y, direction.X) - GlobalRotation);
     }
 
     /// <summary>Rotates this node so its positive local X direction points at a global point.</summary>
@@ -2234,11 +2242,11 @@ public class Node : ElectronObject
 
     private static Node CreateDefaultSceneNode() => new();
 
-    private static bool IsFinite(Vector2 value) => float.IsFinite(value.X) && float.IsFinite(value.Y);
+    private static bool IsFinite(Vector2 value) => Mathf.IsFinite(value.X) && Mathf.IsFinite(value.Y);
 
     private static void EnsureFinite(float value, string parameterName)
     {
-        if (!float.IsFinite(value))
+        if (!Mathf.IsFinite(value))
             throw new ArgumentOutOfRangeException(parameterName, value, "The value must be finite.");
     }
 
@@ -2268,15 +2276,7 @@ public class Node : ElectronObject
         return index;
     }
 
-    private static float DegreesToRadians(float degrees)
-    {
-        EnsureFinite(degrees, nameof(degrees));
-        return degrees * (MathF.PI / 180f);
-    }
-
-    private static float RadiansToDegrees(float radians) => radians * (180f / MathF.PI);
-
-    private static float NormalizeAngle(float angle) => MathF.IEEERemainder(angle, MathF.Tau);
+    private static float NormalizeAngle(float angle) => MathF.IEEERemainder(angle, Mathf.Tau);
 
     private static Transform ToLocalTransform(Transform global, Node? parent, bool topLevel)
     {

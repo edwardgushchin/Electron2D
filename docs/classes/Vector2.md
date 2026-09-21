@@ -35,7 +35,7 @@ Last updated: 2026-09-21
 ## Numeric invariants and error behavior
 
 - Ordinary arithmetic, division, remainder, reciprocal, projection, and interpolation retain IEEE 754 NaN and infinity propagation.
-- `Normalized()` and `DirectionTo()` return `Zero` for an exactly zero squared length. `IsNormalized()` uses the engine's `0.001` unit-length tolerance; approximate component comparisons use `0.00001` with exact equality first.
+- `Normalized()` and `DirectionTo()` return `Zero` for an exactly zero squared length. `IsNormalized()` uses the engine's `0.001` unit-length tolerance; approximate component comparisons use [`Mathf.Epsilon`](Mathf.md) (`1e-6f`) with exact equality first.
 - Angles are radians; positive angles rotate positive X toward positive Y and therefore appear clockwise in screen coordinates.
 - `Reflect` follows the line-reflection convention `2 * Dot(normal) * normal - value`; `Bounce` negates it. `Reflect`, `Bounce`, and `Slide` require a normalized normal and do not validate it.
 - `Project(Zero)` produces NaN components. `PosMod` with a nonzero divisor uses the divisor's sign; zero divisors produce IEEE NaN.
@@ -47,7 +47,7 @@ Last updated: 2026-09-21
 
 Copies are independent values. Concurrent reads of independent copies are safe; concurrent writes to the same storage location are an ordinary unsynchronized data race. Numeric operations allocate no managed memory after JIT warmup; string formatting allocates.
 
-The type depends only on platform floating-point, formatting, and layout primitives. [`Rect`](Rect.md), [`Transform`](Transform.md), and [`Node`](Node.md) use it throughout their public 2D API. [`ConfigFile`](ConfigFile.md) persists finite values as exactly `X` and `Y`; [`PackedScene`](PackedScene.md) stores it directly through typed property descriptors.
+The type depends on canonical scalar [`Mathf`](Mathf.md) plus formatting and layout primitives. [`Rect`](Rect.md), [`Transform`](Transform.md), and [`Node`](Node.md) use it throughout their public 2D API. [`ConfigFile`](ConfigFile.md) persists finite values as exactly `X` and `Y`; [`PackedScene`](PackedScene.md) stores it directly through typed property descriptors.
 
 ## Coverage, verification, and limitations
 
@@ -60,3 +60,4 @@ The executable harness covers layout, constants, index failures, construction an
 - [0001: Typed C# without Variant](../decisions/product.md#adr-0001)
 - [0014: Managed lifetime and realtime allocation](../decisions/resources.md#adr-0014)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
+- [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)

@@ -24,6 +24,7 @@ Electron2D is 2D-only, and its runtime targets Linux, Windows, macOS, Android, a
 | [Core](domains/core.md) | [Main loop](components/main-loop.md) | [`MainLoop`](classes/MainLoop.md) | [`MainLoop.cs`](../src/Core/OS/MainLoop.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Engine runtime](components/engine-runtime.md) | [`Engine`](classes/Engine.md) | [`Engine.cs`](../src/Core/Config/Engine.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Engine runtime](components/engine-runtime.md) | [`EngineVersionInfo`](classes/EngineVersionInfo.md) | [`EngineVersionInfo.cs`](../src/Core/Config/EngineVersionInfo.cs) | Current | Implemented and verified |
+| [Core](domains/core.md) | [Scalar math](components/scalar-math.md) | [`Mathf`](classes/Mathf.md) | [`Mathf.cs`](../src/Core/Math/Mathf.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Color values](components/color-values.md) | [`Color`](classes/Color.md) | [`Color.cs`](../src/Core/Math/Color.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Color values](components/color-values.md) | [`Colors`](classes/Colors.md) | [`Colors.cs`](../src/Core/Math/Colors.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Geometry values](components/geometry-values.md) | [`Vector2`](classes/Vector2.md) | [`Vector2.cs`](../src/Core/Math/Vector2.cs) | Current | Implemented and verified |

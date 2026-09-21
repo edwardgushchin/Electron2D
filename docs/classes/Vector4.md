@@ -35,7 +35,7 @@ Last updated: 2026-09-21
 ## Numeric invariants and error behavior
 
 - Arithmetic retains IEEE 754 behavior. Zero scalar/component division produces infinity or NaN; zero remainder or positive modulus produces NaN; reciprocal preserves signed zero through signed infinity.
-- Exact zero normalization and equal-point direction return `Zero`. Non-finite normalization follows ordinary managed floating-point propagation. `IsNormalized` uses tolerance `0.001`; approximate component predicates use `0.00001` with exact equality first.
+- Exact zero normalization and equal-point direction return `Zero`. Non-finite normalization follows ordinary managed floating-point propagation. `IsNormalized` uses tolerance `0.001`; approximate component predicates use [`Mathf.Epsilon`](Mathf.md) (`1e-6f`) with exact equality first.
 - Maximum-axis ties choose the first maximum; minimum-axis ties choose the last minimum. NaN is skipped by ordered comparisons, and an initial NaN therefore keeps X.
 - Relational operators compare X, then Y, then Z, then W directly. If the first differing component is NaN, all four relational results are false; no artificial total ordering is introduced.
 - `Round` is midpoint-to-even. `Snapped` uses `floor(value / step + 0.5) * step`; zero steps preserve components. `Sign` throws `ArithmeticException` for NaN.
@@ -45,7 +45,7 @@ Last updated: 2026-09-21
 
 Copies are independent, with no state transition. Numeric operations allocate no managed memory after warmup; formatting allocates. Independent copies are thread-safe to read or mutate independently; shared writes are unsynchronized.
 
-The type depends only on scalar math, formatting, layout primitives, and [`Vector4I`](Vector4I.md). [`ConfigFile`](ConfigFile.md) accepts only finite values and persists exact `X/Y/Z/W` fields. [`PackedScene`](PackedScene.md) stores the value directly.
+The type depends on canonical scalar [`Mathf`](Mathf.md), formatting/layout primitives, and [`Vector4I`](Vector4I.md). [`ConfigFile`](ConfigFile.md) accepts only finite values and persists exact `X/Y/Z/W` fields. [`PackedScene`](PackedScene.md) stores the value directly.
 
 ## Coverage, verification, and limitations
 
@@ -58,3 +58,4 @@ The executable harness covers layout, constants, indexing, conversions, every me
 - [0001: Typed C# without Variant](../decisions/product.md#adr-0001)
 - [0014: Managed lifetime and realtime allocation](../decisions/resources.md#adr-0014)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
+- [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)

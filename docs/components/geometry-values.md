@@ -21,7 +21,7 @@ This Core component owns the engine's backend-independent value mathematics: two
 ## Runtime flow
 
 1. Callers construct or copy mutable values; zero-initialized structs retain normal all-zero C# state.
-2. Vector operations return scalar or vector results without global state or steady-state allocation.
+2. Vector operations route shared scalar formulas through [`Mathf`](../classes/Mathf.md) and return results without global state or steady-state allocation.
 3. Rectangle operations preserve stored position/size and normalize negative sizes only when `Abs()` is called explicitly.
 4. Transform operations use X/Y basis columns plus Origin; callers choose general affine or orthonormal inverse behavior explicitly.
 5. `Transform` composes `Node` local/global state and transforms `Rect` corners into axis-aligned bounds.
@@ -29,7 +29,7 @@ This Core component owns the engine's backend-independent value mathematics: two
 
 ## Dependencies
 
-- .NET scalar numeric, globalization, serialization, and interop-layout primitives.
+- Canonical scalar [`Mathf`](../classes/Mathf.md), plus .NET globalization, serialization, and interop-layout primitives.
 - Existing typed `ConfigFile`, property descriptor, packed-scene, and `Node` integration boundaries.
 - No public external numerics dependency and no external package or native library.
 
@@ -38,6 +38,7 @@ This Core component owns the engine's backend-independent value mathematics: two
 - `Vector2` and `Vector2I` are sequential X/Y values of 8 bytes; `Vector4` and `Vector4I` are sequential X/Y/Z/W values of 16 bytes.
 - `Rect` is 16 bytes containing `Vector2 Position` then `Vector2 Size`; `Transform` is 24 bytes containing `Vector2 X`, `Y`, then `Origin`.
 - Floating-point ordinary math retains IEEE values; finite persistence validates only at its serialization boundary.
+- Floating-point component approximation uses strict `Mathf.Epsilon` (`1e-6f`) and accepts exact equality first; unit-vector checks retain their separate `0.001` tolerance.
 - Integer ordinary arithmetic wraps explicitly; division and invalid absolute values retain managed exceptions; integer squared values can wrap.
 - Float-to-integer vector conversion truncates toward zero and rejects non-finite or out-of-range components. Integer-to-float conversion can lose low-order precision above 2^24.
 - Maximum-axis ties select the first component; minimum-axis ties select the last component.
@@ -48,7 +49,7 @@ This Core component owns the engine's backend-independent value mathematics: two
 
 ## Current implementation status
 
-Implemented and verified. `Rect`, `Transform`, and `Node` use the engine-owned `Vector2` directly. `Vector2I`, `Vector4`, and `Vector4I` provide their complete currently implementable value contracts, including conversions within each dimensional pair. Strict configuration schemas and direct packed-scene storage exist for all four vectors, rectangles, and transforms.
+Implemented and verified. `Rect`, `Transform`, and `Node` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `Mathf`. `Vector2I`, `Vector4`, and `Vector4I` provide their complete currently implementable value contracts, including conversions within each dimensional pair. Strict configuration schemas and direct packed-scene storage exist for all four vectors, rectangles, and transforms.
 
 ## Exclusions and limitations
 
@@ -61,7 +62,7 @@ Implemented and verified. `Rect`, `Transform`, and `Node` use the engine-owned `
 
 ## Verification
 
-The executable harness covers every method/operator family, layouts and constants, index failures, interpolation, NaN/infinity/signed-zero behavior, integer wrap/overflow/zero division, conversion boundaries, axis ties, rectangle boundaries, affine order/inversion/decomposition, Node integration, strict malformed persistence, packed-scene value copying, invariant formatting, and warmed allocation behavior.
+The executable harness covers every method/operator family, layouts and constants, index failures, interpolation, strict `Mathf.Epsilon` migration boundaries, NaN/infinity/signed-zero behavior, integer wrap/overflow/zero division, conversion boundaries, axis ties, rectangle boundaries, affine order/inversion/decomposition, Node integration, strict malformed persistence, packed-scene value copying, invariant formatting, and warmed allocation behavior.
 
 Execution is verified on Linux/.NET 8 only. Native ABI and the Linux/Windows/macOS/Android/iOS build and host matrix remain unverified.
 
@@ -74,3 +75,4 @@ Execution is verified on Linux/.NET 8 only. Native ABI and the Linux/Windows/mac
 - [0029: Typed affine semantics](../decisions/core-math.md#adr-0029)
 - [0032: Engine-owned math vocabulary](../decisions/core-math.md#adr-0032)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
+- [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)

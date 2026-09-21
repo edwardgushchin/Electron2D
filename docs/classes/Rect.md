@@ -40,7 +40,7 @@ The value owns no resources, identity, handles, callbacks, or managed references
 | `HasPoint(Vector2)` | Uses half-open containment: left/top included, right/bottom excluded |
 | `Intersection(Rect)` | Returns overlap or `default` for separation or border-only contact; a contained zero-size rectangle retains its position |
 | `Intersects(Rect, bool = false)` | Tests overlap, optionally counting border-only contact |
-| `IsEqualApprox(Rect)` | Per-component relative epsilon `0.00001`, with exact equality first |
+| `IsEqualApprox(Rect)` | Per-component scale-aware [`Mathf.Epsilon`](Mathf.md) (`1e-6f`), with exact equality first |
 | `IsFinite()` | Requires all four components to be neither NaN nor infinity |
 | `Merge(Rect)` | Returns the smallest axis-aligned rectangle containing both inputs |
 | `Transform * Rect` | Transforms all four corners and returns their axis-aligned bounds |
@@ -70,7 +70,7 @@ Construction, geometry, comparison, and hashing are value-only and allocate no m
 
 ## Dependencies and integration
 
-The public type depends on [`Vector2`](Vector2.md), [`Transform`](Transform.md), [`Side`](Side.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores only finite rectangles using the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect` directly as a reference-free value.
+The public type depends on canonical scalar [`Mathf`](Mathf.md), [`Vector2`](Vector2.md), [`Transform`](Transform.md), [`Side`](Side.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores only finite rectangles using the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect` directly as a reference-free value.
 
 There is no dependency on Scene, rendering, SDL, input, audio, physics, resources, scripting, or an editor. Integer-rectangle conversion remains absent until an integer rectangle type is justified and implemented. Language-specific boolean truth conversion is permanently excluded from the typed C# surface.
 
@@ -89,3 +89,4 @@ Execution is currently verified on Linux/.NET 8. Native backend interop and the 
 - [0026: Separate Transform type](../decisions/core-math.md#adr-0026)
 - [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
+- [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)

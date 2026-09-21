@@ -15,14 +15,15 @@ This directory describes the engine as it exists now. Planned features are liste
 - Architecture context: `decisions/index.md` routes to bounded domain logs; read only the affected logs and explicit cross-domain dependencies. No decision log may exceed 500 lines.
 - Target framework: .NET 8 (`net8.0`).
 - Implemented domains: Core, Scene, Localization, and Resources.
-- Implemented components: Object lifecycle, typed event connections, typed editor properties, color values, geometry values, configuration files, file and directory access, project settings, main loop, engine runtime, unified 2D node, scene tree, packed scenes, translation, and the resource base.
-- Implemented production types: `ElectronObject`, `EventConnection`, `PropertyDescriptor`, `PropertyDescriptor<TOwner, TValue>`, `Color`, `Colors`, `Vector2`, `Vector2I`, `Vector4`, `Vector4I`, `Rect`, `Transform`, `Side`, `ConfigKey<T>`, `ConfigFile`, `FileAccess`, `DirAccess`, `FileAccessMode`, `FileCompressionMode`, `UnixPermissionFlags`, `ProjectSetting<T>`, `ProjectSettings`, `MainLoop`, `Engine`, `EngineVersionInfo`, `Node`, `NodeProcessMode`, `SceneTree`, `SceneTreeTimer`, `GroupCallFlags`, `PackedScene`, `SceneState`, `PackedSceneEditState`, `TranslationServer`, `Resource`, and `DeepDuplicateMode`.
+- Implemented components: Object lifecycle, typed event connections, typed editor properties, scalar math, color values, geometry values, configuration files, file and directory access, project settings, main loop, engine runtime, unified 2D node, scene tree, packed scenes, translation, and the resource base.
+- Implemented production types: `ElectronObject`, `EventConnection`, `PropertyDescriptor`, `PropertyDescriptor<TOwner, TValue>`, `Mathf`, `Color`, `Colors`, `Vector2`, `Vector2I`, `Vector4`, `Vector4I`, `Rect`, `Transform`, `Side`, `ConfigKey<T>`, `ConfigFile`, `FileAccess`, `DirAccess`, `FileAccessMode`, `FileCompressionMode`, `UnixPermissionFlags`, `ProjectSetting<T>`, `ProjectSettings`, `MainLoop`, `Engine`, `EngineVersionInfo`, `Node`, `NodeProcessMode`, `SceneTree`, `SceneTreeTimer`, `GroupCallFlags`, `PackedScene`, `SceneState`, `PackedSceneEditState`, `TranslationServer`, `Resource`, and `DeepDuplicateMode`.
 - SDL3-CS integration: not implemented.
 - Native SDL packaging: not designed or verified yet.
 - Platform delivery status: the current `net8.0` project and executable harness are verified on Linux. There is no five-platform CI matrix, SDL application host, Android package, iOS bundle, signing workflow, or native-device verification for all targets yet.
 - 2D physics backend: `Box2D.NET` is selected as a future external managed dependency, but neither its package nor a physics domain is integrated yet.
 - Rendering architecture: the SDL3 GPU API is selected as the primary future backend with 2D shader support; SDL_Renderer is the reduced-capability fallback for baseline 2D drawing. The public API will expose backend capabilities and reject unsupported shader use explicitly. No rendering or shader code is implemented yet.
 - Managed memory remains runtime-owned; `IDisposable` controls deterministic logical/native cleanup. Public manual reference counting is excluded, while internal asset leases are reserved for a future resource manager with concrete native-backed assets.
+- Canonical scalar mathematics with seven constants, 127 typed overloads, strict `1e-6f`/`1e-14` approximation, angle/interpolation/wrapping helpers, documented managed failures, and allocation-free warmed execution: implemented in `Mathf`. Geometry and Node transform math use this shared contract.
 - Floating-point RGBA values, HSV and perceptual OKHSL conversion, straight-alpha blend, arithmetic/comparison, packed/HTML formats, strict finite configuration serialization, packed-scene value storage, and all 146 standard named colors: implemented without a renderer dependency.
 - Engine-owned `Vector2`/`Vector2I` and `Vector4`/`Vector4I` families with complete float/integer value math, strict typed configuration schemas, packed-scene storage, documented IEEE/overflow behavior, and allocation-free warmed numeric paths: implemented. The four-component values are numeric tuples and do not introduce 3D/4D scene geometry.
 - Floating-point `Rect` geometry with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge/support and transform-bound operations, strict finite configuration serialization, packed-scene storage, and stable side identities: implemented without renderer, UI, or physics dependencies.
@@ -43,6 +44,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Component: [Object lifecycle](components/object-lifecycle.md)
 - Component: [Typed event connections](components/event-connections.md)
 - Component: [Typed editor properties](components/editor-properties.md)
+- Component: [Scalar math](components/scalar-math.md)
 - Component: [Color values](components/color-values.md)
 - Component: [Geometry values](components/geometry-values.md)
 - Component: [Configuration files](components/config-files.md)
@@ -59,6 +61,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Class: [EventConnection](classes/EventConnection.md)
 - Class: [PropertyDescriptor](classes/PropertyDescriptor.md)
 - Class: [PropertyDescriptor&lt;TOwner, TValue&gt;](classes/PropertyDescriptor.Generic.md)
+- Static class: [Mathf](classes/Mathf.md)
 - Struct: [Color](classes/Color.md)
 - Static class: [Colors](classes/Colors.md)
 - Struct: [Vector2](classes/Vector2.md)

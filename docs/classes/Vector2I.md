@@ -41,7 +41,7 @@ Last updated: 2026-09-21
 
 Copies are independent. Numeric operations allocate no managed memory after warmup; formatting allocates. Independent copies can be used concurrently; shared mutation is unsynchronized.
 
-The type depends only on integer, floating-point, formatting, and layout primitives and its paired [`Vector2`](Vector2.md). [`ConfigFile`](ConfigFile.md) persists exactly two 32-bit integer fields; [`PackedScene`](PackedScene.md) stores it directly.
+The type depends on canonical scalar [`Mathf`](Mathf.md) for snapping and scalar operations, plus formatting/layout primitives and its paired [`Vector2`](Vector2.md). [`ConfigFile`](ConfigFile.md) persists exactly two 32-bit integer fields; [`PackedScene`](PackedScene.md) stores it directly.
 
 ## Coverage, verification, and limitations
 
@@ -54,3 +54,4 @@ The executable harness covers layout, constants, indexing, construction/conversi
 - [0001: Typed C# without Variant](../decisions/product.md#adr-0001)
 - [0014: Managed lifetime and realtime allocation](../decisions/resources.md#adr-0014)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
+- [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)

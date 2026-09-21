@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 This bounded log owns the complete architectural records for core math. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
-Decisions in this log: [0024](#adr-0024), [0025](#adr-0025), [0026](#adr-0026), [0029](#adr-0029), [0032](#adr-0032), [0033](#adr-0033).
+Decisions in this log: [0024](#adr-0024), [0025](#adr-0025), [0026](#adr-0026), [0029](#adr-0029), [0032](#adr-0032), [0033](#adr-0033), [0034](#adr-0034).
 
 <a id="adr-0024"></a>
 ## ADR 0024: Typed color values and portable quantization
@@ -13,7 +13,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted.
+Accepted. ADR 0034 supersedes only the former implicit component-approximation tolerance by making `Mathf` authoritative.
 
 ### Context
 
@@ -72,7 +72,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted for rectangle semantics. The old `Rect2` name and external vector dependency are superseded by [ADR 0032](core-math.md#adr-0032) and [ADR 0033](core-math.md#adr-0033); the production type is now `Rect` over `Vector2`.
+Accepted for rectangle semantics. The old `Rect2` name and external vector dependency are superseded by [ADR 0032](core-math.md#adr-0032) and [ADR 0033](core-math.md#adr-0033); the production type is now `Rect` over `Vector2`. ADR 0034 supersedes the historical `0.00001` approximate-comparison tolerance.
 
 ### Context
 
@@ -192,7 +192,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted for affine semantics. This decision fulfills ADR 0026's standalone value requirement. ADRs 0032 and 0033 supersede the old type name and external vector dependency; the complete `Vector2`/`Rect`/`Transform`/`Node` migration is now implemented.
+Accepted for affine semantics. This decision fulfills ADR 0026's standalone value requirement. ADRs 0032 and 0033 supersede the old type name and external vector dependency; the complete `Vector2`/`Rect`/`Transform`/`Node` migration is now implemented. ADR 0034 supersedes the historical `0.00001` approximate-comparison tolerance.
 
 ### Context
 
@@ -375,3 +375,61 @@ The post-implementation checks also audit production/test sources for old vector
 - [0026: Separate affine-transform foundation](core-math.md#adr-0026)
 - [0029: Typed affine semantics](core-math.md#adr-0029)
 - [0032: Own the complete unsuffixed 2D math vocabulary](core-math.md#adr-0032)
+
+<a id="adr-0034"></a>
+## ADR 0034: Canonical scalar mathematics and pre-release correction
+
+Last updated: 2026-09-21
+
+### Status
+
+Accepted and fulfilled. This decision supersedes only the former `0.00001` component-approximation clauses in ADRs 0024, 0025, and 0029. Their remaining color, rectangle, and affine contracts stay accepted.
+
+### Context
+
+Scalar formulas were duplicated across vectors, colors, rectangles, transforms, and nodes. The duplicates could drift in angle wrapping, interpolation, snapping, positive modulus, and approximate comparison. The current official 4.7.2 stable C# `Mathf.cs` and `MathfEx.cs` expose seven constants and 127 typed overloads, including float/double behavior and managed-only conveniences.
+
+Earlier Electron2D values used a `0.00001f` component tolerance. The audited current scalar contract uses `1e-6f` for float comparison and `1e-14` for double comparison. Electron2D has no first public release or compatibility users, so retaining a known-wrong tolerance would create compatibility debt before compatibility exists.
+
+### Decision
+
+`Electron2D.Mathf` is the canonical public scalar-math type.
+
+- It implements the complete audited typed surface: `Tau`, `Pi`, `Inf`, `NaN`, `E`, `Sqrt2`, `Epsilon`, and 127 integer/float/double/decimal method overloads.
+- Single precision remains the engine's primary scalar. The public epsilon is exactly `1e-6f`; double approximate operations use `1e-14` internally.
+- API behavior follows typed C# and .NET semantics explicitly: radians by default, midpoint-to-even `Round`, unchecked integer-returning float conversion, managed exceptions for invalid integer operations, and ordinary IEEE NaN/infinity propagation.
+- Matching formulas in `Vector2`, `Vector4`, `Rect`, `Transform`, `Color`, their integer snapping paths, internal color math, and `Node` degree conversion route through `Mathf`. Operations without an audited member, such as cube root and IEEE remainder normalization, continue to use the BCL directly.
+- The old component tolerance is corrected rather than preserved. Geometry and color approximate predicates now share `Mathf.Epsilon`; strict threshold behavior is verified directly.
+- Before Electron2D's first public release, known incorrect behavior is not retained solely for compatibility. An audited correction replaces it, updates tests/XML/living documents in the same change, and is recorded in the appropriate ADR. This does not authorize unrelated source breakage or silent semantic changes.
+- No generic numeric facade, injectable math provider, compatibility switch, second epsilon, vector overload layer, SIMD abstraction, or dependency is introduced.
+
+### Consequences
+
+- Engine/game code receives one complete and documented scalar vocabulary.
+- Duplicate interpolation, modulus, snapping, angle, and comparison helpers are removed; future fixes land once.
+- The approximation correction can change results for differences from `1e-6f` through `1e-5f`. This is an intentional pre-release correctness change, not a behavior-preserving part of the mechanical migration.
+- All other migrated formulas preserve their prior executable behavior and exception surface.
+- Methods are stateless and thread-safe; normal nonthrowing paths are allocation-free after warmup. Transcendental implementations still come from the target .NET runtime.
+
+### Rejected alternatives
+
+- **Keep `1e-5f` for compatibility:** rejected because the project has no released compatibility baseline and the value conflicts with the audited canonical contract.
+- **Expose configurable or per-type epsilon:** rejected because it fragments core semantics; callers needing another tolerance already have explicit-tolerance overloads.
+- **Leave duplicated helpers in each value:** rejected because identical formulas would drift and make audits repeat the same work.
+- **Wrap every BCL math operation throughout unrelated domains:** rejected because centralization applies where `Mathf` is the engine-facing contract, not as a ban on ordinary implementation primitives.
+- **Add generic math or SIMD now:** rejected because no measured requirement justifies a second API or abstraction.
+
+### Verification
+
+The executable harness reflects exactly seven constants and 127 method overloads; exercises every family across float and double paths; verifies positive, negative, NaN, infinity, exception, overflow, degenerate, angle-tie, and strict-epsilon cases; verifies migrated downstream values; and measures zero warmed allocations. Release XML generation and repository-wide identity checks remain part of the full gate.
+
+Verification is Linux/.NET 8 only. It does not establish bit-identical transcendental results, AOT behavior, or native execution across Windows, macOS, Android, or iOS.
+
+### Related decisions
+
+- [0004: 2D scene-oriented API](product.md#adr-0004)
+- [0014: Managed lifetime and realtime allocation](resources.md#adr-0014)
+- [0024: Typed color values and portable quantization](core-math.md#adr-0024)
+- [0025: Typed axis-aligned rectangle geometry](core-math.md#adr-0025)
+- [0029: Typed affine semantics](core-math.md#adr-0029)
+- [0033: Dimensioned engine-owned vector family](core-math.md#adr-0033)

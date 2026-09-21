@@ -38,7 +38,7 @@ Zero initialization produces six zero components and is intentionally different 
 | `InterpolateWith(Transform, float)` | Decomposes, shortest-path interpolates angles, linearly interpolates scale/origin, and recomposes; extrapolation is allowed |
 | `Inverse()` | Fast transpose-based inverse under the caller-supplied orthonormal-basis precondition |
 | `IsConformal()` | Tests approximate orthogonality and uniform scale, including reflection |
-| `IsEqualApprox(Transform)` | Per-component scale-aware epsilon `0.00001`, with exact equality first |
+| `IsEqualApprox(Transform)` | Per-component scale-aware [`Mathf.Epsilon`](Mathf.md) (`1e-6f`), with exact equality first |
 | `IsFinite()` | Requires all six components to be neither NaN nor infinity |
 | `LookingAt(Vector2)` | Uses the inverse-local target and signed source scale to adjust rotation while retaining Origin and removing scale/skew; a skewed source does not reduce to the raw global target angle |
 | `Orthonormalized()` | Applies Gram-Schmidt to the basis and preserves Origin |
@@ -83,7 +83,7 @@ Constructors, scalar math, decomposition, composition, point transformation, inv
 
 ## Dependencies and integration
 
-The public type depends only on [`Vector2`](Vector2.md), [`Rect`](Rect.md), floating-point math, globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores finite transforms using exact nested `X.X/Y`, `Y.X/Y`, and `Origin.X/Y` fields. Typed property descriptors and [`PackedScene`](PackedScene.md) preserve the reference-free value directly.
+The public type depends on canonical scalar [`Mathf`](Mathf.md), [`Vector2`](Vector2.md), [`Rect`](Rect.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores finite transforms using exact nested `X.X/Y`, `Y.X/Y`, and `Origin.X/Y` fields. Typed property descriptors and [`PackedScene`](PackedScene.md) preserve the reference-free value directly.
 
 `Node.Transform`, `Node.GlobalTransform`, point conversion, reparenting, and relative transforms use this value directly. There is no public implicit or explicit conversion to another numerics library; native or package adapters must remain localized at their future integration boundary.
 
@@ -118,3 +118,4 @@ Execution is currently verified only on Linux/.NET 8. The type has not been exer
 - [0026: Separate Transform foundational type](../decisions/core-math.md#adr-0026)
 - [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
+- [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
