@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 ## Scope
 
-This Core component owns the engine's backend-independent value mathematics: two- and four-component floating-point/integer vectors, the 2D axis-aligned rectangle, the 2D affine transform, and rectangle side identities. It contains no renderer, physics, input, asset, scene ownership, native handles, or global state.
+This Core component owns the engine's backend-independent value mathematics: two- and four-component floating-point/integer vectors, floating-point and integer 2D axis-aligned rectangles, the 2D affine transform, and rectangle side identities. It contains no renderer, physics, input, asset, scene ownership, native handles, or global state.
 
 ## Owned types
 
@@ -15,6 +15,7 @@ This Core component owns the engine's backend-independent value mathematics: two
 | [`Vector4`](../classes/Vector4.md) | Four-component floating-point numeric tuple | [`Vector4.cs`](../../src/Core/Math/Vector4.cs) |
 | [`Vector4I`](../classes/Vector4I.md) | Four-component integer numeric tuple | [`Vector4I.cs`](../../src/Core/Math/Vector4I.cs) |
 | [`Rect`](../classes/Rect.md) | Mutable sequential rectangle and typed geometry operations | [`Rect.cs`](../../src/Core/Math/Rect.cs) |
+| [`RectI`](../classes/RectI.md) | Mutable sequential integer rectangle and typed geometry operations | [`RectI.cs`](../../src/Core/Math/RectI.cs) |
 | [`Transform`](../classes/Transform.md) | Mutable sequential affine value, composition, inversion, and bounds transformation | [`Transform.cs`](../../src/Core/Math/Transform.cs) |
 | [`Side`](../classes/Side.md) | Stable identity for the four rectangle edges | [`Side.cs`](../../src/Core/Math/Side.cs) |
 
@@ -22,10 +23,10 @@ This Core component owns the engine's backend-independent value mathematics: two
 
 1. Callers construct or copy mutable values; zero-initialized structs retain normal all-zero C# state.
 2. Vector operations route shared scalar formulas through [`Mathf`](../classes/Mathf.md) and return results without global state or steady-state allocation.
-3. Rectangle operations preserve stored position/size and normalize negative sizes only when `Abs()` is called explicitly.
+3. Floating-point and integer rectangle operations preserve stored position/size and normalize negative sizes only when `Abs()` is called explicitly.
 4. Transform operations use X/Y basis columns plus Origin; callers choose general affine or orthonormal inverse behavior explicitly.
 5. `Transform` composes `Node` local/global state and transforms `Rect` corners into axis-aligned bounds.
-6. Typed persistence accepts only finite floating-point vectors, rectangles, and transforms; integer vectors retain all `int` values. Packed scenes copy every value directly.
+6. Typed persistence accepts only finite floating-point vectors, rectangles, and transforms; integer vectors and rectangles retain all `int` values. Packed scenes copy every value directly.
 
 ## Dependencies
 
@@ -36,33 +37,32 @@ This Core component owns the engine's backend-independent value mathematics: two
 ## Invariants
 
 - `Vector2` and `Vector2I` are sequential X/Y values of 8 bytes; `Vector4` and `Vector4I` are sequential X/Y/Z/W values of 16 bytes.
-- `Rect` is 16 bytes containing `Vector2 Position` then `Vector2 Size`; `Transform` is 24 bytes containing `Vector2 X`, `Y`, then `Origin`.
+- `Rect` is 16 bytes containing `Vector2 Position` then `Vector2 Size`; `RectI` is 16 bytes containing `Vector2I Position` then `Vector2I Size`; `Transform` is 24 bytes containing `Vector2 X`, `Y`, then `Origin`.
 - Floating-point ordinary math retains IEEE values; finite persistence validates only at its serialization boundary.
 - Floating-point component approximation uses strict `Mathf.Epsilon` (`1e-6f`) and accepts exact equality first; unit-vector checks retain their separate `0.001` tolerance.
 - Integer ordinary arithmetic wraps explicitly; division and invalid absolute values retain managed exceptions; integer squared values can wrap.
 - Float-to-integer vector conversion truncates toward zero and rejects non-finite or out-of-range components. Integer-to-float conversion can lose low-order precision above 2^24.
 - Maximum-axis ties select the first component; minimum-axis ties select the last component.
 - Numeric hot paths allocate no managed memory after warmup; formatting, transform array operators, and persistence allocate by contract.
-- Rectangle containment is half-open on right/bottom, and rectangle sizes never normalize implicitly.
+- Floating-point and integer rectangle containment is half-open on right/bottom, and rectangle sizes never normalize implicitly. Integer rectangle arithmetic wraps except for the documented `Abs()` minimum-value failure.
 - Transform multiplication applies the right operand first; general inversion rejects an exactly singular basis, while reverse point/rectangle operations have an orthonormal-basis precondition.
 - `Side` values remain left `0`, top `1`, right `2`, bottom `3`.
 
 ## Current implementation status
 
-Implemented and verified. `Rect`, `Transform`, and `Node` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `Mathf`. `Vector2I`, `Vector4`, and `Vector4I` provide their complete currently implementable value contracts, including conversions within each dimensional pair. Strict configuration schemas and direct packed-scene storage exist for all four vectors, rectangles, and transforms.
+Implemented and verified. `Rect`, `Transform`, and `Node` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `Mathf`. `Vector2I`, `Vector4`, `Vector4I`, and `RectI` provide their complete currently implementable value contracts, including typed conversions within vector and rectangle dimensional pairs. Strict configuration schemas and direct packed-scene storage exist for all four vectors, both rectangles, and transforms.
 
 ## Exclusions and limitations
 
 - Universal-value truth conversion is permanently excluded by the typed C# architecture.
 - Four-component projection operations are excluded because the engine has no 3D projection type.
 - `Vector3`, `Vector3I`, 3D rectangles, and 3D transforms are outside the 2D product boundary.
-- `RectI` and typed `Rect` conversions are required by the foreseeable-family policy but are not implemented yet; absence of a current consumer is no longer a deferral reason.
 - No public external-numerics adapter exists. Future native/package adapters must remain localized at integration boundaries.
 - No renderer, shader-uniform binding, physics, UI layout, atlas, or native ABI integration is claimed by these pure values.
 
 ## Verification
 
-The executable harness covers every method/operator family, layouts and constants, index failures, interpolation, strict `Mathf.Epsilon` migration boundaries, NaN/infinity/signed-zero behavior, integer wrap/overflow/zero division, conversion boundaries, axis ties, rectangle boundaries, affine order/inversion/decomposition, Node integration, strict malformed persistence, packed-scene value copying, invariant formatting, and warmed allocation behavior.
+The executable harness covers every method/operator family, layouts and constants, index failures, interpolation, strict `Mathf.Epsilon` migration boundaries, NaN/infinity/signed-zero behavior, integer wrap/overflow/zero division, conversion boundaries, axis ties, floating-point and integer rectangle boundaries, affine order/inversion/decomposition, Node integration, strict malformed persistence, packed-scene value copying, invariant formatting, and warmed allocation behavior.
 
 Execution is verified on Linux/.NET 8 only. Native ABI and the Linux/Windows/macOS/Android/iOS build and host matrix remain unverified.
 

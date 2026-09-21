@@ -12,7 +12,7 @@ Last updated: 2026-09-21
 
 ## Responsibility and ownership
 
-`Vector2I` is the engine-owned mutable two-component 32-bit integer value for pixels, grid and tile coordinates, texture dimensions, chunk addresses, and integer pairs. Sequential X/Y layout is verified as 8 bytes. It owns no resources or lifecycle.
+`Vector2I` is the engine-owned mutable two-component 32-bit integer value for pixels, grid and tile coordinates, texture dimensions, chunk addresses, integer pairs, and [`RectI`](RectI.md) geometry. Sequential X/Y layout is verified as 8 bytes. It owns no resources or lifecycle.
 
 ## Complete public and nested API
 
@@ -41,7 +41,7 @@ Last updated: 2026-09-21
 
 Copies are independent. Numeric operations allocate no managed memory after warmup; formatting allocates. Independent copies can be used concurrently; shared mutation is unsynchronized.
 
-The type depends on canonical scalar [`Mathf`](Mathf.md) for snapping and scalar operations, plus formatting/layout primitives and its paired [`Vector2`](Vector2.md). [`ConfigFile`](ConfigFile.md) persists exactly two 32-bit integer fields; [`PackedScene`](PackedScene.md) stores it directly.
+The type depends on canonical scalar [`Mathf`](Mathf.md) for snapping and scalar operations, plus formatting/layout primitives and its paired [`Vector2`](Vector2.md). [`RectI`](RectI.md) uses it for position, size, and integer geometry. [`ConfigFile`](ConfigFile.md) persists exactly two 32-bit integer fields; [`PackedScene`](PackedScene.md) stores it directly.
 
 ## Coverage, verification, and limitations
 

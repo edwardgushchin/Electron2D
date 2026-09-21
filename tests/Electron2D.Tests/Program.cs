@@ -18,6 +18,7 @@ VerifyVector2IValues();
 VerifyVector4Values();
 VerifyVector4IValues();
 VerifyRectangles();
+VerifyIntegerRectangles();
 VerifyTransforms();
 VerifyConfigFiles();
 VerifyFileAccess();
@@ -1116,6 +1117,159 @@ static Rect ExerciseRectHotPath(int iterations)
     {
         value = value.Grow(0.0001f).Intersection(bounds);
         value = value.Merge(new Rect(1f, 2f, 3f, 4f));
+    }
+
+    return value;
+}
+
+static void VerifyIntegerRectangles()
+{
+    Require(Marshal.SizeOf<RectI>() == 16 && typeof(RectI).IsDefined(typeof(SerializableAttribute), inherit: false) &&
+            typeof(RectI).StructLayoutAttribute?.Value == LayoutKind.Sequential,
+        "RectI must be a serializable sequential four-integer value type.");
+    Require(default(RectI) == new RectI(Vector2I.Zero, Vector2I.Zero) &&
+            new RectI(new Vector2I(1, 2), new Vector2I(3, 4)) == new RectI(1, 2, 3, 4) &&
+            new RectI(new Vector2I(1, 2), 3, 4) == new RectI(1, 2, new Vector2I(3, 4)),
+        "Zero initialization and every RectI constructor must preserve position and size.");
+
+    var mutable = new RectI(new Vector2I(1, 2), new Vector2I(3, 4));
+    mutable.Position = new Vector2I(2, 3);
+    mutable.Size = new Vector2I(5, 6);
+    Require(mutable.End == new Vector2I(7, 9),
+        "RectI Position and Size mutation must update the computed end.");
+    mutable.End = new Vector2I(10, 12);
+    Require(mutable.Position == new Vector2I(2, 3) && mutable.Size == new Vector2I(8, 9),
+        "Assigning RectI.End must preserve Position and derive Size.");
+    Require(new RectI(0, 0, 3, 4).Area == 12 && new RectI(0, 0, -3, -4).Area == 12 &&
+            !new RectI(0, 0, -3, -4).HasArea() &&
+            new RectI(int.MaxValue, 0, 1, 1).End.X == int.MinValue &&
+            new RectI(0, 0, int.MaxValue, 2).Area == -2,
+        "RectI area, end, and ordinary overflow must use documented 32-bit behavior.");
+
+    var normalized = new RectI(25, 25, -100, -50).Abs();
+    Require(normalized == new RectI(-75, -25, 100, 50),
+        "RectI.Abs must move the origin and normalize both size components.");
+    Expect<OverflowException>(() => _ = new RectI(0, 0, int.MinValue, 1).Abs(),
+        "RectI.Abs must expose minimum-integer absolute-value overflow.");
+
+    var outer = new RectI(0, 0, 10, 10);
+    Require(outer.Encloses(new RectI(0, 0, 10, 10)) &&
+            outer.Encloses(new RectI(2, 3, 4, 5)) &&
+            !outer.Encloses(new RectI(-1, 3, 4, 5)),
+        "RectI.Encloses must accept coincident edges and reject an escaped edge.");
+    Require(new RectI(0, 0, 5, 5).Expand(new Vector2I(-2, 7)) == new RectI(-2, 0, 7, 7) &&
+            outer.Expand(new Vector2I(10, 10)) == outer &&
+            new RectI(1, 2, 3, 5).GetCenter() == new Vector2I(2, 4),
+        "RectI expansion and integer center rounding must preserve edge semantics.");
+
+    var baseRect = new RectI(1, 2, 3, 4);
+    Require(baseRect.Grow(2) == new RectI(-1, 0, 7, 8) &&
+            baseRect.Grow(-1) == new RectI(2, 3, 1, 2) &&
+            baseRect.GrowIndividual(1, 2, 3, 4) == new RectI(0, 0, 7, 10),
+        "RectI growth must move origins and add matching side amounts.");
+    Require(baseRect.GrowSide(Side.Left, 1) == new RectI(0, 2, 4, 4) &&
+            baseRect.GrowSide(Side.Top, 1) == new RectI(1, 1, 3, 5) &&
+            baseRect.GrowSide(Side.Right, 1) == new RectI(1, 2, 4, 4) &&
+            baseRect.GrowSide(Side.Bottom, 1) == new RectI(1, 2, 3, 5) &&
+            baseRect.GrowSide((Side)99, 1) == baseRect &&
+            new RectI(int.MinValue, 0, 1, 1).Grow(1).Position.X == int.MaxValue,
+        "RectI.GrowSide must cover every side, undefined values, and unchecked overflow.");
+
+    Require(outer.HasArea() && !new RectI(0, 0, 0, 1).HasArea() &&
+            !new RectI(0, 0, 1, -1).HasArea(),
+        "RectI.HasArea must reject zero and negative size components.");
+    Require(outer.HasPoint(Vector2I.Zero) && outer.HasPoint(new Vector2I(9, 9)) &&
+            !outer.HasPoint(new Vector2I(10, 5)) && !outer.HasPoint(new Vector2I(5, 10)) &&
+            !outer.HasPoint(new Vector2I(-1, 5)),
+        "RectI.HasPoint must include left/top edges and exclude right/bottom edges.");
+
+    var overlap = new RectI(8, 4, 5, 8);
+    var touching = new RectI(10, 2, 4, 3);
+    var containedEmpty = new RectI(5, 6, 0, 0);
+    Require(outer.Intersects(overlap) && outer.Intersection(overlap) == new RectI(8, 4, 2, 6) &&
+            !outer.Intersects(touching) && outer.Intersection(touching) == default &&
+            !outer.Intersects(new RectI(11, 0, 1, 1)) && outer.Intersects(containedEmpty) &&
+            outer.Intersection(containedEmpty) == containedEmpty,
+        "RectI intersections must distinguish positive overlap, touching borders, separation, and contained emptiness.");
+    Require(outer.Merge(overlap) == new RectI(0, 0, 13, 12),
+        "RectI.Merge must return the smallest enclosing rectangle.");
+
+    var exact = new RectI(1, 2, 3, 4);
+    Require(exact == new RectI(1, 2, 3, 4) && exact != new RectI(1, 2, 3, 5) &&
+            exact.Equals((object)new RectI(1, 2, 3, 4)) && exact.Equals(new RectI(1, 2, 3, 4)) &&
+            exact.GetHashCode() == new RectI(1, 2, 3, 4).GetHashCode(),
+        "RectI exact equality and hashing must use position and size.");
+    Require((Rect)exact == new Rect(1f, 2f, 3f, 4f) &&
+            (RectI)new Rect(1.9f, -2.9f, 3.9f, -4.9f) == new RectI(1, -2, 3, -4),
+        "Rect and RectI conversions must widen implicitly and truncate explicitly.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (RectI)new Rect(float.NaN, 0f, 1f, 1f),
+        "Rect to RectI conversion must reject non-finite components.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (RectI)new Rect(2147483648f, 0f, 1f, 1f),
+        "Rect to RectI conversion must reject out-of-range components.");
+    VerifyInvariantString(() => new RectI(1, 2, 3, 4).ToString("D2"), "(01, 02), (03, 04)", "RectI");
+    Expect<FormatException>(() => _ = exact.ToString("Q"),
+        "RectI formatting must surface invalid numeric formats.");
+
+    var rectangleKey = new ConfigKey<RectI>("geometry", "integer_bounds");
+    using (var config = new ConfigFile())
+    {
+        var stored = new RectI(-2, -3, 8, 9);
+        config.SetValue(rectangleKey, stored);
+        Require(config.EncodeToText() ==
+                "[geometry]\n\ninteger_bounds={\"Position\":{\"X\":-2,\"Y\":-3},\"Size\":{\"X\":8,\"Y\":9}}\n" &&
+                config.GetValue(rectangleKey) == stored,
+            "ConfigFile must preserve the strict RectI Position/Size schema.");
+
+        config.Parse("[geometry]\ninteger_bounds={\"Position\":{\"X\":1,\"Y\":2}}\n");
+        Expect<InvalidDataException>(() => config.GetValue(rectangleKey),
+            "ConfigFile must reject a RectI with a missing field.");
+        config.Parse("[geometry]\ninteger_bounds={\"Position\":{\"X\":1,\"Y\":2},\"Size\":{\"X\":3,\"Y\":4},\"End\":{\"X\":4,\"Y\":6}}\n");
+        Expect<InvalidDataException>(() => config.GetValue(rectangleKey),
+            "ConfigFile must reject unknown RectI fields.");
+        config.Parse("[geometry]\ninteger_bounds={\"Position\":{\"X\":1,\"X\":2,\"Y\":2},\"Size\":{\"X\":3,\"Y\":4}}\n");
+        Expect<InvalidDataException>(() => config.GetValue(rectangleKey),
+            "ConfigFile must reject duplicate RectI vector components.");
+        config.Parse("[geometry]\ninteger_bounds={\"Position\":{\"X\":1,\"Y\":2},\"Position\":{\"X\":1,\"Y\":2},\"Size\":{\"X\":3,\"Y\":4}}\n");
+        Expect<InvalidDataException>(() => config.GetValue(rectangleKey),
+            "ConfigFile must reject duplicate RectI fields.");
+        config.Parse("[geometry]\ninteger_bounds={\"Position\":{\"X\":1,\"Y\":2},\"Size\":{\"X\":2147483648,\"Y\":4}}\n");
+        Expect<InvalidDataException>(() => config.GetValue(rectangleKey),
+            "ConfigFile must reject out-of-range RectI components.");
+        config.Parse("[geometry]\ninteger_bounds={\"Position\":{\"X\":1.5,\"Y\":2},\"Size\":{\"X\":3,\"Y\":4}}\n");
+        Expect<InvalidDataException>(() => config.GetValue(rectangleKey),
+            "ConfigFile must reject non-integer RectI components.");
+    }
+
+    using (var scene = new PackedScene())
+    {
+        var source = new ColorPackedNode
+        {
+            Name = "IntegerGeometryRoot",
+            BoundsI = new RectI(-2, -3, 8, 9),
+        };
+        scene.Pack(source);
+        source.Dispose();
+        using var instance = (ColorPackedNode)scene.Instantiate();
+        Require(instance.BoundsI == new RectI(-2, -3, 8, 9),
+            "PackedScene must preserve stored RectI properties.");
+    }
+
+    _ = ExerciseRectIHotPath(32);
+    var beforeAllocations = GC.GetAllocatedBytesForCurrentThread();
+    var hotResult = ExerciseRectIHotPath(10_000);
+    var allocated = GC.GetAllocatedBytesForCurrentThread() - beforeAllocations;
+    Require(allocated == 0 && hotResult.HasArea(),
+        "Warmed RectI geometry operations must not allocate managed memory.");
+}
+
+static RectI ExerciseRectIHotPath(int iterations)
+{
+    var value = new RectI(1, 2, 3, 4);
+    var bounds = new RectI(-100_000, -100_000, 200_000, 200_000);
+    for (var index = 0; index < iterations; index++)
+    {
+        value = value.Grow(1).Intersection(bounds);
+        value = value.Merge(new RectI(1, 2, 3, 4));
     }
 
     return value;
@@ -4919,6 +5073,12 @@ sealed class ColorPackedNode : Node
         (node, value) => node.Bounds = value,
         _ => default,
         stored: true);
+    private static readonly PropertyDescriptor<ColorPackedNode, RectI> BoundsIProperty = new(
+        nameof(BoundsI),
+        node => node.BoundsI,
+        (node, value) => node.BoundsI = value,
+        _ => default,
+        stored: true);
     private static readonly PropertyDescriptor<ColorPackedNode, Transform> TransformProperty = new(
         nameof(PackedTransform),
         node => node.PackedTransform,
@@ -4952,6 +5112,7 @@ sealed class ColorPackedNode : Node
 
     private Color _tint = Colors.White;
     private Rect _bounds;
+    private RectI _boundsI;
     private Transform _transform = Transform.Identity;
     private Vector2 _vector2;
     private Vector2I _vector2I;
@@ -4975,6 +5136,16 @@ sealed class ColorPackedNode : Node
         {
             EnsureMutable();
             _bounds = value;
+        }
+    }
+
+    public RectI BoundsI
+    {
+        get => _boundsI;
+        set
+        {
+            EnsureMutable();
+            _boundsI = value;
         }
     }
 
@@ -5034,6 +5205,7 @@ sealed class ColorPackedNode : Node
         base.GetPropertyDescriptors()
             .Append(TintProperty)
             .Append(BoundsProperty)
+            .Append(BoundsIProperty)
             .Append(TransformProperty)
             .Append(Vector2Property)
             .Append(Vector2IProperty)

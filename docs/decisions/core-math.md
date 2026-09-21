@@ -72,7 +72,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted for rectangle semantics. The old `Rect2` name and external vector dependency are superseded by [ADR 0032](core-math.md#adr-0032) and [ADR 0033](core-math.md#adr-0033); the production type is now `Rect` over `Vector2`. ADR 0034 supersedes the historical `0.00001` approximate-comparison tolerance. ADR 0035 supersedes only the consumer-gated deferral of the integer rectangle and requires the complete `RectI` sibling.
+Accepted for rectangle semantics. The old `Rect2` name and external vector dependency are superseded by [ADR 0032](core-math.md#adr-0032) and [ADR 0033](core-math.md#adr-0033); the production type is now `Rect` over `Vector2`. ADR 0034 supersedes the historical `0.00001` approximate-comparison tolerance. ADR 0035 supersedes the consumer-gated deferral and has delivered the complete `RectI` sibling.
 
 ### Context
 
@@ -123,7 +123,7 @@ No renderer, UI, physics, or platform abstraction is created by this decision.
 
 `tests/Electron2D.Tests/Program.cs` covers layout/defaults, every implemented constructor/member/operator, negative/zero size boundaries, all side values and undefined input, half-open containment, overlap and border behavior, IEEE values, invariant formatting, strict configuration shape and failure rollback, packed-scene copying, and zero allocations in a warmed geometry loop.
 
-Verification is currently Linux/.NET 8. Native structure equivalence, renderer/physics use, integer rectangles, transform multiplication, and the full five-platform matrix remain unavailable.
+Verification is currently Linux/.NET 8. ADR 0029 has since delivered transform multiplication, and ADR 0035 has delivered the integer rectangle and typed conversions. Native structure equivalence, renderer/physics use, and the full five-platform matrix remain unavailable.
 
 ### Related decision
 
@@ -442,7 +442,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted. This decision supersedes only ADR 0025's rule that the integer rectangle waits for a current consumer. It does not claim that `RectI` is implemented.
+Accepted and fulfilled. This decision supersedes only ADR 0025's rule that the integer rectangle waits for a current consumer. `RectI`, its typed `Rect` conversions, persistence, packed-scene storage, documentation, and executable coverage are implemented.
 
 ### Context
 
@@ -456,20 +456,24 @@ Some paired value types have distinct storage and behavior but form one predicta
 - A sibling is included in the same production-ready vertical slice when its future role is concrete and belongs to an accepted Electron2D domain, even if no current consumer exists.
 - The sibling receives its full own API, XML/living documentation, persistence and integration where supported, positive/negative/boundary tests, and post-implementation audit. Empty shells and compatibility aliases remain forbidden.
 - Pure symmetry is insufficient: speculative types, 3D families, and concepts outside the accepted architecture remain excluded.
-- `RectI` is the required integer sibling of `Rect`. Its complete implementation must include the audited integer-rectangle contract and typed conversions in both rectangle types.
-- Because `Rect` predates this rule, `RectI` is recorded as a known unimplemented obligation. This documentation-only decision does not present it as shipped; the next rectangle-family implementation must close the gap before that family can be declared complete.
+- `RectI` is the required integer sibling of `Rect`. Its complete implementation includes the audited integer-rectangle contract and typed conversions in both rectangle types.
+- The delivered type uses `Vector2I`, explicit normalization, unchecked ordinary integer arithmetic, strict typed persistence, and direct reference-free packed-scene storage without adding an absent consumer domain.
 
 ### Consequences
 
 - Future `реализуй X` scopes can include a foreseeable sibling even without a current consumer.
-- Rectangle-family work grows to include `RectI`, but later image, atlas, grid, renderer, and UI work receives a stable integer geometry primitive instead of inventing one locally.
-- Current inventory and class/component/domain documents must continue to mark `RectI` absent until its complete implementation is committed.
+- Rectangle-family work includes `RectI`, so later image, atlas, grid, renderer, and UI work receives a stable integer geometry primitive instead of inventing one locally.
+- Current inventory and class/component/domain documents list both `Rect` and `RectI` as implemented while leaving their absent consumer domains explicit.
 
 ### Rejected alternatives
 
 - **Require an existing consumer:** rejected because it knowingly leaves predictable foundational holes.
 - **Implement every matching name:** rejected because symmetry alone does not establish product need.
 - **Reserve only the name or add a stub:** rejected because it creates misleading public surface.
+
+### Verification
+
+The executable harness covers the complete audited member surface, signed and overflowing arithmetic, minimum-integer normalization failure, edge and empty intersections, both conversions and invalid inputs, invariant formatting, exact configuration schema and malformed data, packed-scene restoration, and warmed allocation behavior. Verification is currently Linux/.NET 8; native ABI and the full host matrix remain unverified.
 
 ### Related decisions
 

@@ -50,7 +50,7 @@ For each included node, capture stores:
 - every writable [`PropertyDescriptor`](PropertyDescriptor.md) whose `IsStored` flag is `true`, except `Name`, which has its dedicated field;
 - runtime-only empty metadata for nested-scene instances and placeholders, which are not authored by the current implementation.
 
-Supported stored values are strings, `Resource` subtypes, and value types that contain no managed references. This includes [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2I`](Vector2I.md), [`Vector4`](Vector4.md), [`Vector4I`](Vector4I.md), [`Rect`](Rect.md), and [`Transform`](Transform.md), whose numeric, ordinary/HDR, negative, or affine components are copied exactly. Reference-shaped values such as arbitrary objects, collections, delegates, and node references are rejected with `NotSupportedException`; no reflection-driven discovery or invocation, dynamic value container, or string-addressed property call is used.
+Supported stored values are strings, `Resource` subtypes, and value types that contain no managed references. This includes [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2I`](Vector2I.md), [`Vector4`](Vector4.md), [`Vector4I`](Vector4I.md), [`Rect`](Rect.md), [`RectI`](RectI.md), and [`Transform`](Transform.md), whose numeric, ordinary/HDR, negative, integer, or affine components are copied exactly. Reference-shaped values such as arbitrary objects, collections, delegates, and node references are rejected with `NotSupportedException`; no reflection-driven discovery or invocation, dynamic value container, or string-addressed property call is used.
 
 `Pack(null)` fails before capture and preserves the previous state. Once a non-null capture begins, the published state is cleared first. Any later factory/property/schema/capture failure leaves the packed scene empty. Both the empty transition and a successful replacement are visible to a live `SceneState`. `Changed` is emitted after the attempt; a throwing handler does not roll back the already committed result.
 
@@ -98,7 +98,7 @@ No hard real-time or allocation-free guarantee is made for packing or instantiat
 
 ## Verification and limitations
 
-`tests/Electron2D.Tests/Program.cs` covers empty state, runtime and invalid edit modes, owned-branch pruning, paths/owners/groups, typed state queries including `Color`, all four vector values, `Rect`, and `Transform` restoration, source disposal independence, scene-local aliasing and setup, repeated independent instances, packed-scene duplication, live-state replacement and disposal races, concurrent path updates, failed capture clearing, capture mutation rejection, capturing/source-returning/wrong-type/reused factories, detached-parent and active-tree escape rollback, setup failure cleanup, and state survival after packed-scene disposal.
+`tests/Electron2D.Tests/Program.cs` covers empty state, runtime and invalid edit modes, owned-branch pruning, paths/owners/groups, typed state queries including `Color`, all four vector values, `Rect`, `RectI`, and `Transform` restoration, source disposal independence, scene-local aliasing and setup, repeated independent instances, packed-scene duplication, live-state replacement and disposal races, concurrent path updates, failed capture clearing, capture mutation rejection, capturing/source-returning/wrong-type/reused factories, detached-parent and active-tree escape rollback, setup failure cleanup, and state survival after packed-scene disposal.
 
 The current contract is runtime-only and in-memory. It has no `.tscn`/binary loader or saver, resource UID/import remapping, inherited-scene authoring, nested packed-scene overrides, editable instances, placeholders, missing-resource recovery, script state, persistent event endpoint schema, or editor mode implementation. `SceneState` exposes honest empty/null answers for those absent metadata categories.
 
@@ -107,6 +107,7 @@ The current contract is runtime-only and in-memory. It has no `.tscn`/binary loa
 - [0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
 - [0024: Typed color values and portable quantization](../decisions/core-math.md#adr-0024)
 - [0025: Typed axis-aligned rectangle geometry](../decisions/core-math.md#adr-0025)
+- [0035: Foreseeable public type-family completeness](../decisions/core-math.md#adr-0035)
 - [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 - [0031: Node trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)

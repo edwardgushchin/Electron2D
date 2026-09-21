@@ -28,7 +28,7 @@ The domain currently contains eleven implemented components:
 | [Color values](../components/color-values.md) | Floating-point RGBA math, HSV/OKHSL conversion, packing/parsing, and the standard named catalog | Implemented and verified |
 | [Geometry values](../components/geometry-values.md) | Engine-owned two/four-component vectors, rectangles, affine transforms, side identities, numeric and spatial operations | Implemented and verified |
 
-Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`FileAccessMode`](../classes/FileAccessMode.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Mathf`](../classes/Mathf.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`Transform`](../classes/Transform.md), and [`Side`](../classes/Side.md).
+Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`FileAccessMode`](../classes/FileAccessMode.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Mathf`](../classes/Mathf.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), [`Transform`](../classes/Transform.md), and [`Side`](../classes/Side.md).
 
 ## Public surface
 
@@ -51,7 +51,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `Colors`: immutable 146-entry named color surface and lookup catalog.
 - `Vector2` and `Vector2I`: complete two-component floating-point/integer values for 2D spatial, grid, and numeric behavior.
 - `Vector4` and `Vector4I`: complete four-component floating-point/integer numeric tuples without 3D scene semantics.
-- `Rect`: sequential floating-point axis-aligned rectangle with complete backend-independent geometry behavior and transform bounds operators.
+- `Rect` and `RectI`: sequential floating-point/integer axis-aligned rectangles with complete backend-independent geometry, typed conversions, strict persistence, and packed-scene storage; `Rect` additionally provides transform bounds operators.
 - `Transform`: sequential affine 2D value with basis/origin decomposition, composition, inversion, interpolation, local/global operations, and typed point/vector/rectangle transforms.
 - `Side`: stable identity of the four rectangle edges.
 
@@ -91,7 +91,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `Mathf` is stateless, and normal nonthrowing calls are allocation-free after warmup. Single-precision approximate comparison uses strict `1e-6f`; double precision uses strict `1e-14`; documented managed exceptions remain visible.
 - Colors are sequential four-float values. Ordinary arithmetic retains HDR and IEEE 754 values; packed and HTML output are clamped/deterministic, and named lookup is immutable and thread-safe.
 - Vectors are sequential two- or four-component float/int values. Floating math retains IEEE behavior; integer arithmetic wraps except for documented managed failures; numeric hot paths allocate no managed memory after warmup.
-- Rectangles are sequential four-float values. Ordinary storage retains negative and IEEE 754 components, normalization is explicit, point containment is half-open, and numeric geometry is allocation-free after warmup.
+- Rectangles are sequential four-component values. Ordinary storage retains signed components and floating IEEE 754 values, normalization is explicit, point containment is half-open, integer math wraps except for documented managed failures, and numeric geometry is allocation-free after warmup.
 - Transforms are sequential six-float column values. Ordinary math retains IEEE 754 components, left/right composition order is explicit, general and orthonormal inverse contracts are distinct, and numeric math is allocation-free after warmup.
 
 ## Not implemented
@@ -99,7 +99,6 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - No global object registry or lookup by `InstanceId`.
 - No untyped metadata store.
 - No reflection-based property or method invocation.
-- No integer rectangle production type yet. `RectI` is an accepted required sibling of `Rect`, not an optional consumer-gated idea; its implementation and conversions remain a tracked gap under ADR 0035.
 - No `Vector3`, `Vector3I`, 3D rectangle, transform, node, renderer, or physics type. Four-component vectors are numeric tuples rather than spatial 4D types.
 - No script attachment, script runtime, editor application, or general file serialization. Only the typed `ScriptChanged` notification contract exists for the confirmed future scripting component.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers, and persistence requires a typed stable endpoint identity/binding schema.
@@ -110,7 +109,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` verifies concurrent identity allocation, notifications, the `ElectronObject` lifetime contract, typed property discovery/access/validation/revert, property-list/script-change events, event-connection lifecycle/concurrency, the exact `Mathf` constant/overload surface and numeric boundaries, complete color behavior, all four vector surfaces and numeric boundaries, rectangle layout/geometry/boundaries, transform decomposition/composition/inversion/interpolation/rectangle operations, Node vector/transform integration, strict persistence, packed-scene storage, allocation behavior, configuration parsing/encoding/persistence/encryption/concurrency, file and directory access, MainLoop state/error/thread behavior, and Engine scheduling/integration. It does not verify SDL or rendering behavior because those domains do not exist yet.
+`tests/Electron2D.Tests/Program.cs` verifies concurrent identity allocation, notifications, the `ElectronObject` lifetime contract, typed property discovery/access/validation/revert, property-list/script-change events, event-connection lifecycle/concurrency, the exact `Mathf` constant/overload surface and numeric boundaries, complete color behavior, all four vector surfaces and numeric boundaries, floating-point and integer rectangle layout/geometry/conversions/boundaries, transform decomposition/composition/inversion/interpolation/rectangle operations, Node vector/transform integration, strict persistence, packed-scene storage, allocation behavior, configuration parsing/encoding/persistence/encryption/concurrency, file and directory access, MainLoop state/error/thread behavior, and Engine scheduling/integration. It does not verify SDL or rendering behavior because those domains do not exist yet.
 
 The same harness verifies project-setting registration, value snapshots, validators, metadata, overrides, changes/events, persistence, virtual paths, transaction rollback, concurrency, disposal, and Engine integration.
 

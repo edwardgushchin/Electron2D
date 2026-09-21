@@ -81,6 +81,7 @@ public sealed class ConfigFile : ElectronObject
             new Vector4JsonConverter(),
             new Vector4IJsonConverter(),
             new RectJsonConverter(),
+            new RectIJsonConverter(),
             new TransformJsonConverter(),
         }
     };
@@ -1368,6 +1369,63 @@ internal sealed class RectJsonConverter : JsonConverter<Rect>
         writer.WriteStartObject();
         Vector2JsonFields.Write(writer, nameof(Rect.Position), value.Position);
         Vector2JsonFields.Write(writer, nameof(Rect.Size), value.Size);
+        writer.WriteEndObject();
+    }
+}
+
+internal sealed class RectIJsonConverter : JsonConverter<RectI>
+{
+    private const int Position = 1;
+    private const int Size = 2;
+    private const int Complete = Position | Size;
+
+    public override RectI Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException("An integer rectangle must be a JSON object.");
+
+        var position = default(Vector2I);
+        var size = default(Vector2I);
+        var fields = 0;
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
+        {
+            if (reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException("An integer rectangle contains an invalid JSON token.");
+
+            var propertyName = reader.GetString();
+            var field = propertyName switch
+            {
+                nameof(RectI.Position) => Position,
+                nameof(RectI.Size) => Size,
+                _ => throw new JsonException($"An integer rectangle contains unknown field '{propertyName}'."),
+            };
+            if ((fields & field) != 0)
+                throw new JsonException($"An integer rectangle contains duplicate field '{propertyName}'.");
+            if (!reader.Read())
+                throw new JsonException($"Integer rectangle field '{propertyName}' is incomplete.");
+
+            fields |= field;
+            if (field == Position)
+                position = JsonSerializer.Deserialize<Vector2I>(ref reader, options);
+            else
+                size = JsonSerializer.Deserialize<Vector2I>(ref reader, options);
+        }
+
+        if (reader.TokenType != JsonTokenType.EndObject)
+            throw new JsonException("An integer rectangle JSON object is incomplete.");
+        if (fields != Complete)
+            throw new JsonException("An integer rectangle must contain exactly Position and Size fields.");
+
+        return new RectI(position, size);
+    }
+
+    public override void Write(Utf8JsonWriter writer, RectI value, JsonSerializerOptions options)
+    {
+        writer.WriteStartObject();
+        writer.WritePropertyName(nameof(RectI.Position));
+        JsonSerializer.Serialize(writer, value.Position, options);
+        writer.WritePropertyName(nameof(RectI.Size));
+        JsonSerializer.Serialize(writer, value.Size, options);
         writer.WriteEndObject();
     }
 }
