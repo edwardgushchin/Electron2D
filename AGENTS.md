@@ -37,6 +37,19 @@ Class documents must state:
 - dependencies and interactions;
 - verified tests and known limitations.
 
+Class documents are also the source material for Electron2D's future public wiki. Each page under `docs/classes/` must therefore be a complete reference page, using the same information architecture as the corresponding official Godot class reference where one exists, while documenting Electron2D's actual typed C# contract rather than copying unsupported upstream behavior.
+
+Use this ordered structure, omitting a section only when it cannot apply to that declaration kind:
+
+1. Type name, source/declaration metadata, `Inherits`, and `Inherited By`, with links to every documented current Electron2D base and derived production type.
+2. A concise purpose statement followed by a detailed `Description` covering the mental model, ownership, lifecycle, ordering, coordinate spaces or units, threading, and important caveats.
+3. `Tutorials` or `Examples` with at least one minimal idiomatic C# usage example for every nontrivial type. Examples must compile against the current public API when practical; label intentionally partial snippets and required surrounding context explicitly.
+4. API summary tables for every applicable category: constructors, properties, methods, events, enumerations, constants, operators, indexers, delegates, and protected extension points. Show complete C# signatures, types, modifiers, default values, and overloads; do not collapse distinct overloads into an ambiguous row.
+5. Detailed sections named `Property Descriptions`, `Method Descriptions`, `Event Descriptions`, `Enumeration Descriptions`, `Constant Descriptions`, and equivalent sections for other applicable member categories. Give every member its own anchor and explain parameters, return values, defaults, units, ordering, side effects, ownership, exceptions, threading, lifecycle timing, caveats, and related members as applicable.
+6. Lifecycle/state transitions, invariants/error behavior, dependencies/interactions, verification, known limitations, and relevant decisions.
+
+The summaries and detailed descriptions must cover the complete current public and protected API, including inherited behavior that materially affects use of the type. Keep links navigable and member anchors stable so the Markdown can be published as a wiki without reconstructing the reference. Never list an upstream member as Electron2D API unless it exists. Record excluded or dependency-blocked counterparts separately as coverage/limitation notes with their accepted decision or exact implementation trigger, not in implemented API tables. A page that is only an engineering status card, lacks per-member descriptions, or has no usable example for a nontrivial type is incomplete.
+
 Component documents must state their scope, owned types, runtime flow, dependencies, invariants, current implementation status, exclusions, and verification.
 
 Domain documents must state their responsibility, component inventory, public surface, dependency direction, domain-wide invariants, current limitations, and relevant ADRs.
