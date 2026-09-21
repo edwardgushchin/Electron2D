@@ -1,0 +1,34 @@
+# UPNPDevice API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [modules/upnp/doc_classes/UPNPDevice.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: [RefCounted](RefCounted.md). Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class UPNPDevice`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`enum IGDStatus`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`enum_value IGD_STATUS_DISCONNECTED [IGDStatus] = 5`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`enum_value IGD_STATUS_HTTP_EMPTY [IGDStatus] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`enum_value IGD_STATUS_HTTP_ERROR [IGDStatus] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`enum_value IGD_STATUS_INVALID_CONTROL [IGDStatus] = 7`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`enum_value IGD_STATUS_MALLOC_ERROR [IGDStatus] = 8`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`enum_value IGD_STATUS_NO_IGD [IGDStatus] = 4`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`enum_value IGD_STATUS_NO_URLS [IGDStatus] = 3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`enum_value IGD_STATUS_OK [IGDStatus] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`enum_value IGD_STATUS_UNKNOWN_DEVICE [IGDStatus] = 6`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`enum_value IGD_STATUS_UNKNOWN_ERROR [IGDStatus] = 9`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`method add_port_mapping(int port, int port_internal = 0, String desc = "", String proto = "UDP", int duration = 0) -> int`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`method delete_port_mapping(int port, String proto = "UDP") -> int`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`method is_valid_gateway() -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`method query_external_address() -> String`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`property String description_url = ""`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`property String igd_control_url = ""`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`property String igd_our_addr = ""`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`property String igd_service_type = ""`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`property int igd_status [UPNPDevice.IGDStatus] = 9`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`property String service_type = ""`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/upnp/doc_classes/UPNPDevice.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |

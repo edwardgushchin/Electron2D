@@ -1,0 +1,906 @@
+{
+  "mappings": [
+    {
+      "electron2d": "method:Electron2D.ConfigFile.EraseSectionKey`1(ConfigKey<T>)",
+      "godot": "ConfigFile::method:erase_section_key(String:,String:)",
+      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+    },
+    {
+      "electron2d": "method:Electron2D.ConfigFile.GetSections()",
+      "godot": "ConfigFile::method:get_sections()",
+      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+    },
+    {
+      "electron2d": "method:Electron2D.ConfigFile.GetValue`1(ConfigKey<T>)",
+      "godot": "ConfigFile::method:get_value(String:,String:,Variant:)",
+      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+    },
+    {
+      "electron2d": "method:Electron2D.ConfigFile.GetValue`1(ConfigKey<T>,T)",
+      "godot": "ConfigFile::method:get_value(String:,String:,Variant:)",
+      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+    },
+    {
+      "electron2d": "method:Electron2D.ConfigFile.HasSectionKey`1(ConfigKey<T>)",
+      "godot": "ConfigFile::method:has_section_key(String:,String:)",
+      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+    },
+    {
+      "electron2d": "method:Electron2D.ConfigFile.SetValue`1(ConfigKey<T>,T)",
+      "godot": "ConfigFile::method:set_value(String:,String:,Variant:)",
+      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+    },
+    {
+      "electron2d": "method:Electron2D.ConfigFile.TryGetValue`1(ConfigKey<T>,ref T)",
+      "godot": "ConfigFile::method:get_value(String:,String:,Variant:)",
+      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+    },
+    {
+      "electron2d": "method:Electron2D.DirAccess.GetCurrentDrive()",
+      "godot": "DirAccess::method:get_current_drive()",
+      "reason": "Managed return/error form of the same directory operation (ADR 0022)."
+    },
+    {
+      "electron2d": "method:Electron2D.DirAccess.GetDirectories()",
+      "godot": "DirAccess::method:get_directories()",
+      "reason": "Managed return/error form of the same directory operation (ADR 0022)."
+    },
+    {
+      "electron2d": "method:Electron2D.DirAccess.GetDriveCount()",
+      "godot": "DirAccess::method:get_drive_count()",
+      "reason": "Managed return/error form of the same directory operation (ADR 0022)."
+    },
+    {
+      "electron2d": "method:Electron2D.DirAccess.GetFiles()",
+      "godot": "DirAccess::method:get_files()",
+      "reason": "Managed return/error form of the same directory operation (ADR 0022)."
+    },
+    {
+      "electron2d": "method:Electron2D.DirAccess.GetFilesystemType()",
+      "godot": "DirAccess::method:get_filesystem_type()",
+      "reason": "Managed return/error form of the same directory operation (ADR 0022)."
+    },
+    {
+      "electron2d": "method:Electron2D.DirAccess.GetNext()",
+      "godot": "DirAccess::method:get_next()",
+      "reason": "Managed return/error form of the same directory operation (ADR 0022)."
+    },
+    {
+      "electron2d": "method:Electron2D.DirAccess.GetSpaceLeft()",
+      "godot": "DirAccess::method:get_space_left()",
+      "reason": "Managed return/error form of the same directory operation (ADR 0022)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadAllText(System.Boolean)",
+      "godot": "FileAccess::method:get_as_text()",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadByte()",
+      "godot": "FileAccess::method:get_8()",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadBytes(System.Int32)",
+      "godot": "FileAccess::method:get_buffer(int:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadCsvLine(System.Char)",
+      "godot": "FileAccess::method:get_csv_line(String:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadDouble()",
+      "godot": "FileAccess::method:get_double()",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadHalf()",
+      "godot": "FileAccess::method:get_half()",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadLine()",
+      "godot": "FileAccess::method:get_line()",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadPascalString()",
+      "godot": "FileAccess::method:get_pascal_string()",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadReal()",
+      "godot": "FileAccess::method:get_real()",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadSingle()",
+      "godot": "FileAccess::method:get_float()",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadUInt16()",
+      "godot": "FileAccess::method:get_16()",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadUInt32()",
+      "godot": "FileAccess::method:get_32()",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadUInt64()",
+      "godot": "FileAccess::method:get_64()",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.WriteByte(System.Byte)",
+      "godot": "FileAccess::method:store_8(int:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.WriteBytes(System.ReadOnlySpan<System.Byte>)",
+      "godot": "FileAccess::method:store_buffer(PackedByteArray:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.WriteCsvLine(System.Collections.Generic.IEnumerable<System.String>,System.Char)",
+      "godot": "FileAccess::method:store_csv_line(PackedStringArray:,String:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.WriteDouble(System.Double)",
+      "godot": "FileAccess::method:store_double(float:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.WriteHalf(System.Half)",
+      "godot": "FileAccess::method:store_half(float:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.WriteLine(System.String)",
+      "godot": "FileAccess::method:store_line(String:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.WritePascalString(System.String)",
+      "godot": "FileAccess::method:store_pascal_string(String:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.WriteReal(System.Single)",
+      "godot": "FileAccess::method:store_real(float:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.WriteSingle(System.Single)",
+      "godot": "FileAccess::method:store_float(float:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.WriteString(System.String)",
+      "godot": "FileAccess::method:store_string(String:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.WriteUInt16(System.UInt16)",
+      "godot": "FileAccess::method:store_16(int:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.WriteUInt32(System.UInt32)",
+      "godot": "FileAccess::method:store_32(int:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.WriteUInt64(System.UInt64)",
+      "godot": "FileAccess::method:store_64(int:)",
+      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.IsHidden(System.String)",
+      "godot": "FileAccess::method:get_hidden_attribute(String:)",
+      "reason": "Typed equivalent; encryption intentionally uses authenticated envelope (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.SetHidden(System.String,System.Boolean)",
+      "godot": "FileAccess::method:set_hidden_attribute(String:,bool:)",
+      "reason": "Typed equivalent; encryption intentionally uses authenticated envelope (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.IsReadOnly(System.String)",
+      "godot": "FileAccess::method:get_read_only_attribute(String:)",
+      "reason": "Typed equivalent; encryption intentionally uses authenticated envelope (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.SetReadOnly(System.String,System.Boolean)",
+      "godot": "FileAccess::method:set_read_only_attribute(String:,bool:)",
+      "reason": "Typed equivalent; encryption intentionally uses authenticated envelope (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.OpenEncrypted(System.String,Electron2D.FileAccessMode,System.ReadOnlySpan<System.Byte>)",
+      "godot": "FileAccess::method:open_encrypted(String:,int:FileAccess.ModeFlags,PackedByteArray:,PackedByteArray:)",
+      "reason": "Typed equivalent; encryption intentionally uses authenticated envelope (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.OpenEncryptedWithPassword(System.String,Electron2D.FileAccessMode,System.String)",
+      "godot": "FileAccess::method:open_encrypted_with_pass(String:,int:FileAccess.ModeFlags,String:)",
+      "reason": "Typed equivalent; encryption intentionally uses authenticated envelope (ADR 0020)."
+    },
+    {
+      "electron2d": "property:Electron2D.FileAccess.AbsolutePath()",
+      "godot": "FileAccess::method:get_path_absolute()",
+      "reason": "C# property for upstream query (ADR 0020)."
+    },
+    {
+      "electron2d": "property:Electron2D.FileAccess.EofReached()",
+      "godot": "FileAccess::method:eof_reached()",
+      "reason": "C# property for upstream query (ADR 0020)."
+    },
+    {
+      "electron2d": "property:Electron2D.FileAccess.IsOpen()",
+      "godot": "FileAccess::method:is_open()",
+      "reason": "C# property for upstream query (ADR 0020)."
+    },
+    {
+      "electron2d": "property:Electron2D.FileAccess.Hidden()",
+      "godot": "FileAccess::method:get_hidden_attribute(String:)",
+      "reason": "C# property for upstream query (ADR 0020)."
+    },
+    {
+      "electron2d": "property:Electron2D.FileAccess.ReadOnly()",
+      "godot": "FileAccess::method:get_read_only_attribute(String:)",
+      "reason": "C# property for upstream query (ADR 0020)."
+    },
+    {
+      "electron2d": "property:Electron2D.FileAccess.UnixPermissions()",
+      "godot": "FileAccess::method:get_unix_permissions(String:)",
+      "reason": "C# property for upstream query (ADR 0020)."
+    },
+    {
+      "electron2d": "property:Electron2D.FileAccess.Hidden()",
+      "godot": "FileAccess::method:set_hidden_attribute(String:,bool:)",
+      "reason": "C# property setter for upstream mutation (ADR 0020)."
+    },
+    {
+      "electron2d": "property:Electron2D.FileAccess.ReadOnly()",
+      "godot": "FileAccess::method:set_read_only_attribute(String:,bool:)",
+      "reason": "C# property setter for upstream mutation (ADR 0020)."
+    },
+    {
+      "electron2d": "property:Electron2D.FileAccess.UnixPermissions()",
+      "godot": "FileAccess::method:set_unix_permissions(String:,int:FileAccess.UnixPermissionFlags)",
+      "reason": "C# property setter for upstream mutation (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.Notify(System.Int32)",
+      "godot": "Object::method:notification(int:,bool:)",
+      "reason": "Typed notification/property callback adaptation (ADRs 0005 and 0009)."
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.OnNotification(System.Int32)",
+      "godot": "Object::method:_notification(int:)",
+      "reason": "Typed notification/property callback adaptation (ADRs 0005 and 0009)."
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.GetPropertyDescriptors()",
+      "godot": "Object::method:_get_property_list()",
+      "reason": "Typed notification/property callback adaptation (ADRs 0005 and 0009)."
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.CanRevertProperty(Electron2D.PropertyDescriptor)",
+      "godot": "Object::method:_property_can_revert(StringName:)",
+      "reason": "Typed notification/property callback adaptation (ADRs 0005 and 0009)."
+    },
+    {
+      "electron2d": "property:Electron2D.ElectronObject.ClassName()",
+      "godot": "Object::method:get_class()",
+      "reason": "C# property form of upstream Object operation (ADRs 0005 and 0007)."
+    },
+    {
+      "electron2d": "property:Electron2D.ElectronObject.CanTranslateMessages()",
+      "godot": "Object::method:can_translate_messages()",
+      "reason": "C# property form of upstream Object operation (ADRs 0005 and 0007)."
+    },
+    {
+      "electron2d": "property:Electron2D.ElectronObject.CanTranslateMessages()",
+      "godot": "Object::method:set_message_translation(bool:)",
+      "reason": "C# property form of upstream Object operation (ADRs 0005 and 0007)."
+    },
+    {
+      "electron2d": "method:Electron2D.Resource.GetLocalScene()",
+      "godot": "Resource::method:get_local_scene()",
+      "reason": "Managed Resource query or virtual-hook adaptation (ADR 0013)."
+    },
+    {
+      "electron2d": "property:Electron2D.Resource.IsBuiltIn()",
+      "godot": "Resource::method:is_built_in()",
+      "reason": "Managed Resource query or virtual-hook adaptation (ADR 0013)."
+    },
+    {
+      "electron2d": "method:Electron2D.Resource.OnPathCacheSet(System.String)",
+      "godot": "Resource::method:_set_path_cache(String:)",
+      "reason": "Managed Resource query or virtual-hook adaptation (ADR 0013)."
+    },
+    {
+      "electron2d": "method:Electron2D.Resource.OnResetState()",
+      "godot": "Resource::method:_reset_state()",
+      "reason": "Managed Resource query or virtual-hook adaptation (ADR 0013)."
+    },
+    {
+      "electron2d": "method:Electron2D.Resource.OnSetupLocalToScene()",
+      "godot": "Resource::method:_setup_local_to_scene()",
+      "reason": "Managed Resource query or virtual-hook adaptation (ADR 0013)."
+    },
+    {
+      "electron2d": "method:Electron2D.Resource.GetPropertyDescriptors()",
+      "godot": "Object::method:_get_property_list()",
+      "reason": "Typed inherited property-list hook (ADRs 0005 and 0013)."
+    },
+    {
+      "electron2d": "method:Electron2D.TranslationServer.AddTranslation(System.Globalization.CultureInfo,System.String,System.String,System.String,System.String)",
+      "godot": "TranslationServer::method:add_translation(Translation:)",
+      "reason": "CultureInfo/domain and string-catalog adaptation in place of Translation resources (ADR 0007)."
+    },
+    {
+      "electron2d": "method:Electron2D.TranslationServer.AddPluralTranslation(System.Globalization.CultureInfo,System.String,System.String,System.String,System.Func<System.Int64, System.String>,System.String)",
+      "godot": "TranslationServer::method:add_translation(Translation:)",
+      "reason": "CultureInfo/domain and string-catalog adaptation in place of Translation resources (ADR 0007)."
+    },
+    {
+      "electron2d": "method:Electron2D.TranslationServer.Translate(System.String,System.String,System.String)",
+      "godot": "TranslationServer::method:translate(StringName:,StringName:)",
+      "reason": "CultureInfo/domain and string-catalog adaptation in place of Translation resources (ADR 0007)."
+    },
+    {
+      "electron2d": "method:Electron2D.TranslationServer.TranslatePlural(System.String,System.String,System.String,System.Int64,System.String)",
+      "godot": "TranslationServer::method:translate_plural(StringName:,StringName:,int:,StringName:)",
+      "reason": "CultureInfo/domain and string-catalog adaptation in place of Translation resources (ADR 0007)."
+    },
+    {
+      "electron2d": "property:Electron2D.TranslationServer.Culture()",
+      "godot": "TranslationServer::method:get_locale()",
+      "reason": "CultureInfo property replaces locale-string operation (ADR 0007)."
+    },
+    {
+      "electron2d": "property:Electron2D.TranslationServer.Culture()",
+      "godot": "TranslationServer::method:set_locale(String:)",
+      "reason": "CultureInfo property replaces locale-string operation (ADR 0007)."
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.GetChangedSettings()",
+      "godot": "ProjectSettings::method:get_changed_settings()",
+      "reason": "Typed ProjectSetting<T> key replaces string/Variant access; verify semantics (ADR 0019)."
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.Get`1(ProjectSetting<T>)",
+      "godot": "ProjectSettings::method:get_setting(String:,Variant:)",
+      "reason": "Typed ProjectSetting<T> key replaces string/Variant access; verify semantics (ADR 0019)."
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.Set`1(ProjectSetting<T>,T)",
+      "godot": "ProjectSettings::method:set_setting(String:,Variant:)",
+      "reason": "Typed ProjectSetting<T> key replaces string/Variant access; verify semantics (ADR 0019)."
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.Reset`1(ProjectSetting<T>)",
+      "godot": "ProjectSettings::method:clear(String:)",
+      "reason": "Typed ProjectSetting<T> key replaces string/Variant access; verify semantics (ADR 0019)."
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.Unregister`1(ProjectSetting<T>)",
+      "godot": "ProjectSettings::method:clear(String:)",
+      "reason": "Typed ProjectSetting<T> key replaces string/Variant access; verify semantics (ADR 0019)."
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.Register`1(ProjectSetting<T>)",
+      "godot": "ProjectSettings::method:set_initial_value(String:,Variant:)",
+      "reason": "Typed ProjectSetting<T> key replaces string/Variant access; verify semantics (ADR 0019)."
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.GetWithOverride`1(ProjectSetting<T>)",
+      "godot": "ProjectSettings::method:get_setting_with_override(StringName:)",
+      "reason": "Typed key and current feature set (ADR 0019)."
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.GetWithOverride`1(ProjectSetting<T>,System.Collections.Generic.IEnumerable<System.String>)",
+      "godot": "ProjectSettings::method:get_setting_with_override_and_custom_features(StringName:,PackedStringArray:)",
+      "reason": "Typed key plus explicit features (ADR 0019)."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.ApplicationName()",
+      "godot": "ProjectSettings::property:application/config/name",
+      "reason": "Typed key identity for upstream setting; Get/Set access values (ADR 0019)."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.ApplicationVersion()",
+      "godot": "ProjectSettings::property:application/config/version",
+      "reason": "Typed key identity for upstream setting; Get/Set access values (ADR 0019)."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.MaxPhysicsStepsPerFrame()",
+      "godot": "ProjectSettings::property:physics/common/max_physics_steps_per_frame",
+      "reason": "Typed key identity for upstream setting; Get/Set access values (ADR 0019)."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.PhysicsJitterFix()",
+      "godot": "ProjectSettings::property:physics/common/physics_jitter_fix",
+      "reason": "Typed key identity for upstream setting; Get/Set access values (ADR 0019)."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.PhysicsTicksPerSecond()",
+      "godot": "ProjectSettings::property:physics/common/physics_ticks_per_second",
+      "reason": "Typed key identity for upstream setting; Get/Set access values (ADR 0019)."
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.GetPropertyList()",
+      "godot": "Object::method:get_property_list()",
+      "reason": "Typed PropertyDescriptor list replaces Variant dictionaries (ADR 0005)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.GetUnixPermissions(System.String)",
+      "godot": "FileAccess::method:get_unix_permissions(String:)",
+      "reason": "Typed flags and C# error behavior for the same filesystem query (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.SetUnixPermissions(System.String,Electron2D.UnixPermissionFlags)",
+      "godot": "FileAccess::method:set_unix_permissions(String:,int:FileAccess.UnixPermissionFlags)",
+      "reason": "Typed flags and C# error behavior for the same filesystem mutation (ADR 0020)."
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.GetPropertyDescriptors()",
+      "godot": "Object::method:_get_property_list()",
+      "reason": "Inherited typed descriptor callback for registered settings (ADRs 0005 and 0019)."
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.SetInitialValue`1(ProjectSetting<T>,T)",
+      "godot": "ProjectSettings::method:set_initial_value(String:,Variant:)",
+      "reason": "Typed setting-key identity and value replace name/Variant parameters (ADR 0019)."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.ConfigKey<T>",
+      "reason": "Typed section/key identity in place of string/Variant parameters; no upstream helper type.",
+      "adr": "adr-0018"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ConfigKey<T>..ctor(System.String,System.String)",
+      "reason": "Typed section/key identity in place of string/Variant parameters; no upstream helper type.",
+      "adr": "adr-0018"
+    },
+    {
+      "electron2d": "method:Electron2D.ConfigKey<T>.ToString()",
+      "reason": "Typed section/key identity in place of string/Variant parameters; no upstream helper type.",
+      "adr": "adr-0018"
+    },
+    {
+      "electron2d": "property:Electron2D.ConfigKey<T>.Name()",
+      "reason": "Typed section/key identity in place of string/Variant parameters; no upstream helper type.",
+      "adr": "adr-0018"
+    },
+    {
+      "electron2d": "property:Electron2D.ConfigKey<T>.Section()",
+      "reason": "Typed section/key identity in place of string/Variant parameters; no upstream helper type.",
+      "adr": "adr-0018"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ConfigFile..ctor()",
+      "reason": "Managed construction has no separate XML constructor declaration.",
+      "adr": "adr-0018"
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.ReadString(System.Int32)",
+      "reason": "Strict UTF-8 decode of a byte count; upstream only exposes raw get_buffer.",
+      "adr": "adr-0020"
+    },
+    {
+      "electron2d": "event:Electron2D.ElectronObject.Disposed()",
+      "reason": "Typed deterministic-disposal event, not an upstream signal.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "property:Electron2D.ElectronObject.IsDisposed()",
+      "reason": "Managed logical lifetime differs from queued deletion.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.Dispose()",
+      "reason": "IDisposable logical cleanup.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.Dispose(System.Boolean)",
+      "reason": "IDisposable logical cleanup.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.NotifyScriptChanged()",
+      "reason": "Protected emitter for the typed ScriptChanged event.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.RevertProperty(Electron2D.PropertyDescriptor)",
+      "reason": "Typed property-descriptor application helper.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.ThrowIfDisposed()",
+      "reason": "Protected lifetime guard.",
+      "adr": "adr-0009"
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.ValidateDisposal()",
+      "reason": "Protected lifetime/owner-thread hook.",
+      "adr": "adr-0009"
+    },
+    {
+      "electron2d": "method:Electron2D.ElectronObject.ValidateMutation()",
+      "reason": "Protected lifetime/owner-thread hook.",
+      "adr": "adr-0009"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ElectronObject..ctor()",
+      "reason": "Protected managed base construction has no XML constructor declaration.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.Resource.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Managed duplication/path/string extension point with no exact upstream declaration.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.Resource.CreateDuplicateInstance()",
+      "reason": "Managed duplication/path/string extension point with no exact upstream declaration.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.Resource.OnResourcePathChanged(System.String)",
+      "reason": "Managed duplication/path/string extension point with no exact upstream declaration.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.Resource.ToString()",
+      "reason": "Managed duplication/path/string extension point with no exact upstream declaration.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Resource..ctor()",
+      "reason": "Managed Resource construction and ownership.",
+      "adr": "adr-0013"
+    },
+    {
+      "electron2d": "property:Electron2D.TranslationServer.Enabled()",
+      "reason": "Process-wide translation switch; upstream Object has per-instance flags.",
+      "adr": "adr-0007"
+    },
+    {
+      "electron2d": "T:Electron2D.ProjectSetting<T>",
+      "reason": "Typed setting identity/default/validation object; no upstream helper type.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ProjectSetting<T>..ctor(System.String,T,Func<T, System.Boolean>)",
+      "reason": "Typed setting identity/default/validation object; no upstream helper type.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSetting<T>.DefaultValue()",
+      "reason": "Typed setting identity/default/validation object; no upstream helper type.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSetting<T>.Name()",
+      "reason": "Typed setting identity/default/validation object; no upstream helper type.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSetting<T>.ValueType()",
+      "reason": "Typed setting identity/default/validation object; no upstream helper type.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "constant:Electron2D.ProjectSettings.OverrideFileName()",
+      "reason": "Electron2D file or data directory naming, not an upstream constant.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "constant:Electron2D.ProjectSettings.ProjectDataDirectoryName()",
+      "reason": "Electron2D file or data directory naming, not an upstream constant.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "constant:Electron2D.ProjectSettings.ProjectFileName()",
+      "reason": "Electron2D file or data directory naming, not an upstream constant.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.AddCustomFeature(System.String)",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.ClearFeatureOverride`1(ProjectSetting<T>,System.String)",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.ConfigurePaths(System.String,System.String)",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.FindProjectRoot(System.String)",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.FlushChanges()",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.GetActiveFeatures()",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.GetFeatureOverrides`1(ProjectSetting<T>)",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.GetSettingNames(System.Boolean)",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.HasFeature(System.String)",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.IsBasic`1(ProjectSetting<T>)",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.IsInternal`1(ProjectSetting<T>)",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.IsRestartRequired`1(ProjectSetting<T>)",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.Load()",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.LoadCustom(System.String)",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.RemoveCustomFeature(System.String)",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.SetFeatureOverride`1(ProjectSetting<T>,System.String,T)",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.ProjectRoot()",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.UserDataRoot()",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.ProjectDataPath()",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.ProjectFilePath()",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.OverrideFilePath()",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.Version()",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.Instance()",
+      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "T:Electron2D.EventConnection",
+      "reason": "Typed event subscription/disconnection replacing dynamic signals.",
+      "adr": "adr-0010"
+    },
+    {
+      "electron2d": "method:Electron2D.EventConnection.Dispose()",
+      "reason": "Typed event subscription/disconnection replacing dynamic signals.",
+      "adr": "adr-0010"
+    },
+    {
+      "electron2d": "method:Electron2D.EventConnection.Subscribe(System.Action<System.Action>,System.Action<System.Action>,System.Action,System.Boolean,System.Action<System.Action>)",
+      "reason": "Typed event subscription/disconnection replacing dynamic signals.",
+      "adr": "adr-0010"
+    },
+    {
+      "electron2d": "method:Electron2D.EventConnection.Subscribe`1(Action<Action<T>>,Action<Action<T>>,Action<T>,System.Boolean,System.Action<System.Action>)",
+      "reason": "Typed event subscription/disconnection replacing dynamic signals.",
+      "adr": "adr-0010"
+    },
+    {
+      "electron2d": "method:Electron2D.EventConnection.Subscribe`2(Action<Action<T1, T2>>,Action<Action<T1, T2>>,Action<T1, T2>,System.Boolean,System.Action<System.Action>)",
+      "reason": "Typed event subscription/disconnection replacing dynamic signals.",
+      "adr": "adr-0010"
+    },
+    {
+      "electron2d": "property:Electron2D.EventConnection.IsConnected()",
+      "reason": "Typed event subscription/disconnection replacing dynamic signals.",
+      "adr": "adr-0010"
+    },
+    {
+      "electron2d": "T:Electron2D.PropertyDescriptor",
+      "reason": "Typed property descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PropertyDescriptor..ctor(System.String,System.Type,System.Type,System.Boolean,System.Boolean)",
+      "reason": "Typed property descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.PropertyDescriptor.CanRevert(Electron2D.ElectronObject)",
+      "reason": "Typed property descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.PropertyDescriptor.Revert(Electron2D.ElectronObject)",
+      "reason": "Typed property descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "property:Electron2D.PropertyDescriptor.IsReadOnly()",
+      "reason": "Typed property descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "property:Electron2D.PropertyDescriptor.IsStored()",
+      "reason": "Typed property descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "property:Electron2D.PropertyDescriptor.Name()",
+      "reason": "Typed property descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "property:Electron2D.PropertyDescriptor.OwnerType()",
+      "reason": "Typed property descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "property:Electron2D.PropertyDescriptor.ValueType()",
+      "reason": "Typed property descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "T:Electron2D.PropertyDescriptor<TOwner, TValue>",
+      "reason": "Typed owner/value descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PropertyDescriptor<TOwner, TValue>..ctor(System.String,Func<TOwner, TValue>,Action<TOwner, TValue>,Func<TOwner, TValue>,Func<TOwner, TValue, System.Boolean>,System.Boolean)",
+      "reason": "Typed owner/value descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.CanRevert(Electron2D.ElectronObject)",
+      "reason": "Typed owner/value descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.GetValue(TOwner)",
+      "reason": "Typed owner/value descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.Revert(Electron2D.ElectronObject)",
+      "reason": "Typed owner/value descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.SetValue(TOwner,TValue)",
+      "reason": "Typed owner/value descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.PropertyDescriptor<TOwner, TValue>.TryGetRevertValue(TOwner,ref TValue)",
+      "reason": "Typed owner/value descriptor replacing Variant dictionaries.",
+      "adr": "adr-0005"
+    },
+    {
+      "electron2d": "T:Electron2D.EngineVersionInfo",
+      "reason": "Typed engine-version result rather than a Variant dictionary.",
+      "adr": "adr-0016"
+    },
+    {
+      "electron2d": "method:Electron2D.EngineVersionInfo.ToString()",
+      "reason": "Typed engine-version result rather than a Variant dictionary.",
+      "adr": "adr-0016"
+    },
+    {
+      "electron2d": "property:Electron2D.EngineVersionInfo.AssemblyVersion()",
+      "reason": "Typed engine-version result rather than a Variant dictionary.",
+      "adr": "adr-0016"
+    },
+    {
+      "electron2d": "property:Electron2D.EngineVersionInfo.InformationalVersion()",
+      "reason": "Typed engine-version result rather than a Variant dictionary.",
+      "adr": "adr-0016"
+    },
+    {
+      "electron2d": "method:Electron2D.ConfigFile.Dispose(System.Boolean)",
+      "reason": "Derived IDisposable cleanup hook.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.DirAccess.Dispose(System.Boolean)",
+      "reason": "Derived IDisposable cleanup hook.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.Dispose(System.Boolean)",
+      "reason": "Derived IDisposable cleanup hook.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.Dispose(System.Boolean)",
+      "reason": "Derived IDisposable cleanup hook.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.Resource.Dispose(System.Boolean)",
+      "reason": "Derived IDisposable cleanup hook.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ProjectSettings..ctor(System.String)",
+      "reason": "Directory-backed managed settings construction; upstream singleton has no constructor declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ProjectSettings..ctor(System.String,System.String)",
+      "reason": "Explicit project and user-data roots for the managed directory-backed registry; upstream singleton has no constructor declaration.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettings.ValidateDisposal()",
+      "reason": "Protected lifetime and owner-thread validation override with no upstream callback.",
+      "adr": "adr-0009"
+    }
+  ]
+}

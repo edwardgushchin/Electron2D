@@ -1,0 +1,14 @@
+# EditorScriptPicker API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [doc/classes/EditorScriptPicker.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScriptPicker.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: [EditorResourcePicker](EditorResourcePicker.md). Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class EditorScriptPicker`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScriptPicker.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`property Node script_owner`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScriptPicker.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |

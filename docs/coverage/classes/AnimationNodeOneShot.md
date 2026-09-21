@@ -1,0 +1,31 @@
+# AnimationNodeOneShot API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [doc/classes/AnimationNodeOneShot.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: [AnimationNodeSync](AnimationNodeSync.md). Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class AnimationNodeOneShot`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum MixMode`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum OneShotRequest`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value MIX_MODE_ADD [MixMode] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value MIX_MODE_BLEND [MixMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value ONE_SHOT_REQUEST_ABORT [OneShotRequest] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value ONE_SHOT_REQUEST_FADE_OUT [OneShotRequest] = 3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value ONE_SHOT_REQUEST_FIRE [OneShotRequest] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value ONE_SHOT_REQUEST_NONE [OneShotRequest] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property bool abort_on_reset = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property bool autorestart = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property float autorestart_delay = 1.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property float autorestart_random_delay = 0.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property bool break_loop_at_end = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property Curve fadein_curve`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property float fadein_time = 0.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property Curve fadeout_curve`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property float fadeout_time = 0.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property int mix_mode [AnimationNodeOneShot.MixMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeOneShot.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |

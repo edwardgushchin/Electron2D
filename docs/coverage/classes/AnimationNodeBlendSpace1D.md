@@ -1,0 +1,41 @@
+# AnimationNodeBlendSpace1D API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [doc/classes/AnimationNodeBlendSpace1D.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: [AnimationRootNode](AnimationRootNode.md). Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class AnimationNodeBlendSpace1D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum BlendMode`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum SyncMode`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value BLEND_MODE_DISCRETE [BlendMode] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value BLEND_MODE_DISCRETE_CARRY [BlendMode] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value BLEND_MODE_INTERPOLATED [BlendMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value SYNC_MODE_CYCLIC_CONSTANT [SyncMode] = 3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value SYNC_MODE_CYCLIC_MUTABLE [SyncMode] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value SYNC_MODE_INDEPENDENT [SyncMode] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value SYNC_MODE_NONE [SyncMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method add_blend_point(AnimationRootNode node, float pos, int at_index = -1, StringName name = &"") -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method find_blend_point_by_name(StringName name) -> int`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_blend_point_count() -> int`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_blend_point_name(int point) -> StringName`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_blend_point_node(int point) -> AnimationRootNode`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_blend_point_position(int point) -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method remove_blend_point(int point) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method reorder_blend_point(int from_index, int to_index) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method set_blend_point_name(int point, StringName name) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method set_blend_point_node(int point, AnimationRootNode node) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method set_blend_point_position(int point, float pos) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property int blend_mode [AnimationNodeBlendSpace1D.BlendMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property float cyclic_length = 0.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property float max_space = 1.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property float min_space = -1.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property float snap = 0.1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property bool sync`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property int sync_mode [AnimationNodeBlendSpace1D.SyncMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property String value_label = "value"`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeBlendSpace1D.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |

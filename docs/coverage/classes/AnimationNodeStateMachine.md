@@ -1,0 +1,40 @@
+# AnimationNodeStateMachine API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [doc/classes/AnimationNodeStateMachine.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: [AnimationRootNode](AnimationRootNode.md). Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class AnimationNodeStateMachine`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum StateMachineType`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value STATE_MACHINE_TYPE_GROUPED [StateMachineType] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value STATE_MACHINE_TYPE_NESTED [StateMachineType] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`enum_value STATE_MACHINE_TYPE_ROOT [StateMachineType] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method add_node(StringName name, AnimationNode node, Vector2 position = Vector2(0, 0)) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method add_transition(StringName from, StringName to, AnimationNodeStateMachineTransition transition) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_graph_offset() -> Vector2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_node(StringName name) -> AnimationNode`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_node_list() -> StringName[]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_node_name(AnimationNode node) -> StringName`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_node_position(StringName name) -> Vector2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_transition(int idx) -> AnimationNodeStateMachineTransition`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_transition_count() -> int`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_transition_from(int idx) -> StringName`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_transition_to(int idx) -> StringName`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method has_node(StringName name) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method has_transition(StringName from, StringName to) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method remove_node(StringName name) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method remove_transition(StringName from, StringName to) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method remove_transition_by_index(int idx) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method rename_node(StringName name, StringName new_name) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method replace_node(StringName name, AnimationNode node) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method set_graph_offset(Vector2 offset) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method set_node_position(StringName name, Vector2 position) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property bool allow_transition_to_self = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property bool reset_ends = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property int state_machine_type [AnimationNodeStateMachine.StateMachineType] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachine.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |

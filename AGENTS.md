@@ -2,6 +2,14 @@
 
 These instructions apply to the entire repository.
 
+## Bidirectional API coverage
+
+`docs/coverage/index.md` is the entry point for the living comparison of Electron2D with the current official Godot API. Its linked tables must account for 100% of the pinned official class reference, including excluded 3D and editor APIs, and 100% of Electron2D-owned public and protected production declarations. Count types, inheritance, constructors, every method overload, properties, signals/events, notifications and callbacks, enum types and each value, constants, operators, indexers, and delegates. Record inherited members once at their declaring type and link the inheritance path; do not silently omit them from derived-type audits. Exclude only compiler-generated artifacts, test helpers, internal declarations, and inherited .NET framework members not declared by Electron2D. Each row identifies the exact API on both sides, or an explicit missing counterpart.
+
+Every row has one current status: implemented, partially implemented, unimplemented, blocked by a named missing prerequisite, or permanently excluded by an accepted decision with its exact reason. A typed-C# adaptation is a mapping, not proof of implementation; record its behavior and any remaining gap. Electron2D-only declarations require an explicit rationale. Blocked rows name the exact domain, backend, product decision, or executable integration that unlocks them and whether they belong in its first vertical slice or a separately approved capability. An unreviewed or unknown row is an audit failure, never a completion status. The register distinguishes complete accounting from behavioral compatibility; do not infer the latter from matching names or passing compilation.
+
+Pin the upstream stable release and source revision in the coverage index, date each comparison, and update the register in the same change as any public API or relevant behavior change. Refresh it when the official stable reference changes. Verify both directions against the reference inventory and the compiled Electron2D surface, resolving missing, duplicate, stale, and unjustified extra rows before claiming complete coverage. The roadmap linked from `docs/coverage/index.md` must derive from incomplete product-relevant rows and their prerequisite order; permanently excluded rows are recorded but are not implementation work. Keep `docs/inventory.md` as the map of implemented Electron2D production types, not the compatibility register.
+
 ## Documentation is part of the implementation
 
 Every engine domain, component, and production type must have a living document that describes its current implemented state exactly.

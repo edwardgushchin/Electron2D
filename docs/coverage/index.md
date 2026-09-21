@@ -1,0 +1,61 @@
+# API coverage register
+
+Last updated: 2026-09-22
+
+This is the entry point for the living, bidirectional comparison between the official stable Godot API and the Electron2D production API. The register accounts for upstream declarations even when they are outside Electron2D's 2D product, and for Electron2D declarations that have no upstream counterpart. It is a census and roadmap, not a claim that every listed member is implemented.
+
+The current official baseline is [Godot 4.7.2 stable](https://godotengine.org/article/maintenance-release-godot-4-7-2/), released 2026-08-18, at source commit [`ed1daf0bf001b61586d9930840f2f1394092c079`](https://github.com/godotengine/godot/tree/ed1daf0bf001b61586d9930840f2f1394092c079). Retrieved 2026-09-22. The source is the class-reference XML under `doc/classes/`, `modules/*/doc_classes/`, and `platform/*/doc_classes/`; declarations were extracted without prose descriptions. The upstream source's MIT terms are preserved in [GODOT-LICENSE.txt](GODOT-LICENSE.txt).
+
+Open the [class catalog](catalog.md), [dependency roadmap](roadmap.md), and [Electron2D declarations without a verified pairing](electron2d-unmapped.md). The pinned machine inventories are [Godot](data/godot-4.7.2.json) and [Electron2D](data/electron2d.json).
+
+## Reference and scope
+
+The upstream baseline must be an exact official stable release and source revision, with a retrieval date and link to its class reference. A moving `/stable/` URL alone is insufficient to reproduce a comparison. On each stable release, review the upstream delta and update the pinned revision, tables, counts, and roadmap together. Each comparison page records its last audited revision and date. The Electron2D baseline is the compiled production assembly from the same repository revision as the register.
+
+Count every upstream class and global API declaration, including 3D, editor, platform-specific, and deprecated declarations. Count every Electron2D-owned public and protected production declaration. The unit of accounting is the *declaration*: each overload, constructor, property, signal/event, notification, callback, enum type and enum value, constant, operator, indexer, delegate, and type/inheritance relationship receives a stable identity. A member inherited from an engine-owned base is recorded once at its declaring type and linked from derived-type coverage; inherited .NET framework members not declared by Electron2D, compiler-generated artifacts, tests, and internal declarations are outside this census. Enum values retain their numeric identities and methods retain full signatures and defaults.
+
+The table for each family uses this minimum schema; the page header links to the pinned official XML source, and the Electron2D inventory comes from the compiled runtime:
+
+| Godot API | Electron2D API | State | Mapping, reason, or exact implementation trigger |
+| --- | --- | --- | --- |
+
+Use an explicit `—` when either side has no counterpart. Type and member links must resolve to their class reference or source declaration; do not infer a match solely from similar names. One upstream declaration can map to multiple C# overloads or events, and several upstream declarations can map to one typed API when the behavior is preserved. Record every declaration in such mappings so that neither side disappears from the census. Electron2D-only rows require a concrete product rationale or owning decision. Keep behavior gaps in the same row or a linked, per-member note: units, coordinate space, return values, state transitions, lifecycle timing, ordering, errors, ownership, and thread affinity matter as much as names.
+
+## State vocabulary
+
+Each row has exactly one state. Typed-C# adaptation is a *mapping description* and may accompany any state.
+
+| State | Meaning | Required evidence |
+| --- | --- | --- |
+| Implemented | The mapped Electron2D behavior is executable and matches the relevant accepted contract. | Source declaration, semantic check or test, and any accepted adaptation. |
+| Partially implemented | A real declaration exists, but complete semantic parity has not yet been established or a specific behavior differs. | Exact known gap, or the explicit signature/behavior audit needed before an implemented claim. |
+| Unimplemented | The relevant prerequisite exists or is unnecessary, but there is no production behavior. | Intended owner and next vertical slice. |
+| Blocked | A named absent domain, backend, product decision, or executable integration is required first. | Exact prerequisite, integration boundary, and whether the member belongs in that prerequisite's first slice or a separately approved capability. |
+| Permanently excluded | An accepted product decision rules out the declaration, such as a 3D-only API under ADR 0004. | Exact reason and stable decision link; a missing caller or implementation effort is insufficient. |
+
+`Unmapped` in the Electron2D-only review page, `unknown`, `unreviewed`, and a blank state are audit failures, not final states. A declared stub is not implemented. Status describes current executable semantics, not intention. Record platform-specific verification limits without presenting them as missing API when the contract is implemented but not yet tested on every target.
+
+## Completeness gate
+
+The register is complete only when all of the following hold for one pinned upstream revision and one Electron2D commit:
+
+1. Extract the upstream declaration inventory from the official class reference, retaining owner, kind, full signature, defaults, enum values, inheritance, and source identity. Extract the Electron2D-owned public and protected inventory from the compiled assembly and source where metadata does not retain the required declaration detail.
+2. Reconcile both inventories against the coverage tables by stable identity. Require zero missing, duplicate, unresolved, stale, or unjustified extra declarations on either side. Verify links and every accepted-decision or blocked-prerequisite reference.
+3. Review semantics for every `Implemented` and `Partially implemented` row against source, XML documentation, class documents, and executable checks. Record the verification limit; compilation and name matching alone do not establish parity.
+4. Publish separate totals for upstream accounting, Electron2D accounting, and implemented behavioral parity. `100% accounted for` means every declaration has a classified row; it does not mean `100% implemented`.
+
+Update the affected coverage rows, family totals, and roadmap in the same change as any public declaration or behavior change. A release of the upstream stable reference requires a fresh delta review before claiming that the register describes that release.
+
+## Roadmap rule
+
+Build the implementation roadmap from the incomplete rows that belong to the accepted 2D product. Group blocked rows by their exact prerequisite and link them to the relevant ADR and domain boundary. Order prerequisites before their dependent members, then list actionable `Partially implemented` and `Unimplemented` rows with the owner and smallest complete vertical slice. Mark whether a blocked member enters the prerequisite's first slice or awaits a separately accepted capability. Keep permanently excluded rows visible in the census but out of delivery milestones. Recalculate the order whenever an upstream release, product decision, or completed domain changes the dependency graph; do not assign speculative dates.
+
+## Rebuild and verification
+
+From the repository root, run `python3 -B tools/coverage/godot_xml.py /path/to/pinned/godot docs/coverage/data/godot-4.7.2.json` only when refreshing the pinned official source. Run `dotnet run --project tools/coverage/Exporter.csproj -c Release -- docs/coverage/data/electron2d.json` after a public API change, then `python3 -B tools/coverage/render.py`. Run `tools/coverage/check.sh /path/to/pinned/godot` to compare both manifests and every generated table against current sources; omit the path to check the local engine and generated tables only. The renderer rejects duplicate IDs and missing rows in either manifest.
+
+## Current audit state
+
+The pinned inventory contains 1,078 upstream classes and 26,215 declared members, all represented by a row in the class pages. The compiled Electron2D inventory contains 2,116 public or protected declarations: 1,807 are paired with at least one upstream row and 309 are [reviewed Electron2D-only declarations](electron2d-unmapped.md) with a stated rationale. There are zero unresolved Electron2D declarations. `tools/coverage/check.sh /path/to/pinned/godot` verifies the two inventories and generated tables; `test_render.py` requires complete accounting and zero unmapped declarations.
+
+This is **100% declaration accounting**, not full behavioral compatibility. Only 461 upstream rows currently have an `Implemented` state based on a matching numeric constant or enum identity; 1,609 are `Partial`, 676 `Unimplemented`, 17,148 `Blocked`, and 7,399 `Excluded`. Structural matches remain `Partial` until behavior, defaults, values, ordering, and errors are audited against code and tests. Known differences, such as the upper Z bound, remain explicit in their rows. The 2,116-declaration snapshot describes the clean branch baseline; an unfinished local checkout can expose additional, uncommitted API until its own coverage update is made. [The engine inventory](../inventory.md) maps implemented production types and is not a substitute for this comparison.

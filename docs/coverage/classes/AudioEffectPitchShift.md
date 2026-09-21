@@ -1,0 +1,23 @@
+# AudioEffectPitchShift API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [doc/classes/AudioEffectPitchShift.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectPitchShift.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: [AudioEffect](AudioEffect.md). Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class AudioEffectPitchShift`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectPitchShift.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`enum FFTSize`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectPitchShift.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`enum_value FFT_SIZE_1024 [FFTSize] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectPitchShift.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`enum_value FFT_SIZE_2048 [FFTSize] = 3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectPitchShift.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`enum_value FFT_SIZE_256 [FFTSize] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectPitchShift.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`enum_value FFT_SIZE_4096 [FFTSize] = 4`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectPitchShift.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`enum_value FFT_SIZE_512 [FFTSize] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectPitchShift.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`enum_value FFT_SIZE_MAX [FFTSize] = 5`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectPitchShift.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`property int fft_size [AudioEffectPitchShift.FFTSize] = 3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectPitchShift.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`property int oversampling = 4`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectPitchShift.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`property float pitch_scale = 1.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectPitchShift.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
