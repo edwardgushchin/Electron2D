@@ -2,27 +2,54 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** —
 
-- Source: [`DeepDuplicateMode.cs`](../../src/Core/IO/DeepDuplicateMode.cs)
-- Namespace: `Electron2D`
-- Declaration: `public enum DeepDuplicateMode`
-- Domain: [Resources](../domains/resources.md)
-- Component: [Resource base](../components/resources.md)
+**Inherited By:** —
 
-## Responsibility
+- **Source:** [`src/Core/IO/DeepDuplicateMode.cs`](../../src/Core/IO/DeepDuplicateMode.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public enum DeepDuplicateMode`
+
+> Controls which nested resources are copied during deep resource duplication.
+
+## Description
+
+Controls which nested resources are copied during deep resource duplication.
 
 `DeepDuplicateMode` selects which nested [`Resource`](Resource.md) instances are copied by `Resource.DuplicateDeep`. It does not decide whether typed collection containers are copied: a derived resource copies its containers whenever the `deep` argument supplied to its duplication hook is `true`.
 
-## Values
+## Examples
 
-| Value | Numeric value | Current behavior |
-| --- | ---: | --- |
-| `None` | `0` | Shares every nested resource while derived types may still copy their typed collection containers |
-| `Internal` | `1` | Duplicates nested resources whose `IsBuiltIn` property is `true`; shares standalone external resources |
-| `All` | `2` | Duplicates every reachable nested resource |
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
-Repeated references and cycles retain graph identity for every resource selected for duplication. Every duplicate receives an empty resource path and scene-unique ID.
+```csharp
+var value = DeepDuplicateMode.None;
+```
+
+## Constants
+
+| Member | Description |
+| --- | --- |
+| [`None = 0`](#f-electron2d-deepduplicatemode-none) | Shares every nested resource while still allowing derived resources to copy their collection containers. |
+| [`Internal = 1`](#f-electron2d-deepduplicatemode-internal) | Duplicates only nested resources that are embedded or do not have an external path. |
+| [`All = 2`](#f-electron2d-deepduplicatemode-all) | Duplicates every nested resource, including resources with external paths. |
+
+## Constant Descriptions
+
+<a id="f-electron2d-deepduplicatemode-none"></a>
+### `None = 0`
+
+Shares every nested resource while still allowing derived resources to copy their collection containers.
+
+<a id="f-electron2d-deepduplicatemode-internal"></a>
+### `Internal = 1`
+
+Duplicates only nested resources that are embedded or do not have an external path.
+
+<a id="f-electron2d-deepduplicatemode-all"></a>
+### `All = 2`
+
+Duplicates every nested resource, including resources with external paths.
 
 ## Errors, threading, and dependencies
 

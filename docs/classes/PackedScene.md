@@ -2,42 +2,190 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** [Resource](Resource.md)
 
-- Source: [`PackedScene.cs`](../../src/Scene/Resources/PackedScene.cs)
-- Namespace: `Electron2D`
-- Declaration: `public sealed class PackedScene : Resource`
-- Domain: [Scene](../domains/scene.md)
-- Component: [Packed scenes](../components/packed-scenes.md)
+**Inherited By:** —
 
-## Responsibility and ownership
+- **Source:** [`src/Scene/Resources/PackedScene.cs`](../../src/Scene/Resources/PackedScene.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public sealed class PackedScene : Resource`
+
+> Stores a reusable in-memory node hierarchy and creates independent runtime instances from it.
+
+## Description
+
+Stores a reusable in-memory node hierarchy and creates independent runtime instances from it.
 
 `PackedScene` is the reuse boundary for Electron2D's Node-based game objects. It stores an in-memory, typed snapshot of one Node hierarchy and constructs independent detached runtime instances from it. The hierarchy may represent one composed game object, a reusable subsystem, or a complete level; these cases use the same capture and instantiation contract. It is a managed [`Resource`](Resource.md) in `Electron2D.dll`; it is not a text/binary scene file, loader, saver, import artifact, or editor document.
 
 The snapshot owns no source [`Node`](Node.md). It retains source-independent static node factories, immutable node metadata, typed stored-property values, and references to resources used by those values. Shared source resources remain caller-owned. During instantiation, the returned root owns all created child nodes and every duplicated scene resource; disposing that root disposes the complete hierarchy and those duplicates.
 
-## Public API
+Runtime packing is typed and uses storage-enabled [`PropertyDescriptor`](PropertyDescriptor.md) instances. Text and binary scene
+files, editor metadata, inheritance authoring, placeholders, and persistent event endpoints belong to later domains.
 
-| Member | Current behavior |
+## Examples
+
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+using var source = new Node { Name = "Enemy" };
+using var scene = new PackedScene();
+scene.Pack(source);
+using Node instance = scene.Instantiate();
+```
+
+## Constructors
+
+| Member | Description |
 | --- | --- |
-| `PackedScene()` | Creates an empty resource and its initial live empty [`SceneState`](SceneState.md) |
-| `bool CanInstantiate()` | Reports whether the current state contains at least one node |
-| `SceneState GetState()` | Returns the current live read-only metadata object; repeated calls reuse it until that state is disposed |
-| `Node Instantiate(PackedSceneEditState editState = Disabled)` | Reconstructs and returns a detached hierarchy; only runtime `Disabled` mode is accepted |
-| `void Pack(Node root)` | Replaces current contents with a typed snapshot of `root` and the descendant branches owned by that root |
+| [`public PackedScene()`](#m-electron2d-packedscene-ctor) | Initializes an empty packed scene. |
 
-Inherited resource API remains available. Shallow `Duplicate()` and `CopyFromResource()` share immutable packed data. Deep duplication remaps stored resource references through the existing graph-preserving resource duplication session. `ResetState()` empties the packed contents. A duplicate never inherits the resource path or scene ID.
+## Methods
 
-## Protected extension API
-
-| Member | Current behavior |
+| Member | Description |
 | --- | --- |
-| `Resource CreateDuplicateInstance()` | Creates an empty `PackedScene` target for the inherited typed duplication workflow |
-| `void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)` | Shares immutable packed data for a shallow copy and remaps stored resource references for a deep copy; updates the target state and emits its `Changed` event |
-| `void OnResetState()` | Replaces packed data with the empty state and emits `Changed` |
-| `void OnResourcePathChanged(string path)` | Publishes the currently committed `ResourcePath` to the live `SceneState`; replaces a concurrently disposed state when necessary |
+| [`public bool CanInstantiate()`](#m-electron2d-packedscene-caninstantiate) | Gets whether this resource contains a scene that can be instantiated. |
+| [`public SceneState GetState()`](#m-electron2d-packedscene-getstate) | Gets the live read-only metadata object for this resource. |
+| [`public Node Instantiate(PackedSceneEditState editState = PackedSceneEditState.Disabled)`](#m-electron2d-packedscene-instantiate-electron2d-packedsceneeditstate) | Creates an independent detached node hierarchy from the stored scene. |
+| [`public void Pack(Node root)`](#m-electron2d-packedscene-pack-electron2d-node) | Replaces this resource's contents with a typed snapshot of a node hierarchy. |
+| [`protected override Resource CreateDuplicateInstance()`](#m-electron2d-packedscene-createduplicateinstance) | Creates a fresh default instance used as the target of duplication. |
+| [`protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource, Resource> duplicateSubresource, Func<Resource, Resource> forceDuplicateSubresource)`](#m-electron2d-packedscene-copycustomstateto-electron2d-resource-system-boolean-electron2d-deepduplicatemode-system-func-electron2d-resource-electron2d-resource-system-func-electron2d-resource-electron2d-resource) | Copies derived stored state into a duplicate or copy target. |
+| [`protected override void OnResetState()`](#m-electron2d-packedscene-onresetstate) | Clears non-stored state when [`Resource.ResetState`](Resource.md#m-electron2d-resource-resetstate) or [`Resource.CopyFromResource(Resource)`](Resource.md#m-electron2d-resource-copyfromresource-electron2d-resource) requests it. |
+| [`protected override void OnResourcePathChanged(string path)`](#m-electron2d-packedscene-onresourcepathchanged-system-string) | Handles any committed change to this resource's visible path. |
 
-These are sealed-class overrides used by inherited `Resource` operations, not further subclassing points.
+## Constructor Descriptions
+
+<a id="m-electron2d-packedscene-ctor"></a>
+### `public PackedScene()`
+
+Initializes an empty packed scene.
+
+## Method Descriptions
+
+<a id="m-electron2d-packedscene-caninstantiate"></a>
+### `public bool CanInstantiate()`
+
+Gets whether this resource contains a scene that can be instantiated.
+
+**Returns:** `true` after a successful nonempty pack or state copy; otherwise `false`.
+
+**Exceptions**
+
+- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-packedscene-getstate"></a>
+### `public SceneState GetState()`
+
+Gets the live read-only metadata object for this resource.
+
+**Returns:** A state object that observes later content and path transitions until either object is disposed.
+
+**Exceptions**
+
+- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+
+**Remarks:** If a caller disposes a previously returned state, the next call creates a replacement.
+
+<a id="m-electron2d-packedscene-instantiate-electron2d-packedsceneeditstate"></a>
+### `public Node Instantiate(PackedSceneEditState editState = PackedSceneEditState.Disabled)`
+
+Creates an independent detached node hierarchy from the stored scene.
+
+**Parameters**
+
+- `editState`: The editor-state policy. Runtime instantiation accepts only [`PackedSceneEditState.Disabled`](PackedSceneEditState.md#f-electron2d-packedsceneeditstate-disabled).
+
+**Returns:** The live, detached root node. It has not entered a [`SceneTree`](SceneTree.md).
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `editState` is not defined.
+- `NotSupportedException`: `editState` requests editor-only behavior.
+- `InvalidOperationException`: The scene is empty or stored node schema cannot be reconstructed safely.
+- `ObjectDisposedException`: The resource or a referenced stored resource is disposing or disposed.
+- `Exception`: A factory, property setter, setup callback, notification, or cleanup operation fails.
+
+**Remarks:** Nodes are constructed parent-first. Stored properties and persistent groups are restored before parenting;
+owners and scene-local resources are assigned after the hierarchy is complete. Only the root receives
+[`Node.NotificationSceneInstantiated`](Node.md#f-electron2d-node-notificationsceneinstantiated).
+
+<a id="m-electron2d-packedscene-pack-electron2d-node"></a>
+### `public void Pack(Node root)`
+
+Replaces this resource's contents with a typed snapshot of a node hierarchy.
+
+**Parameters**
+
+- `root`: The live root to capture. A `null` argument is rejected without changing existing state.
+
+**Exceptions**
+
+- `ArgumentNullException`: `root` is `null`.
+- `InvalidOperationException`: Capture is re-entered, the hierarchy changes, or a node factory is unsafe.
+- `NotSupportedException`: A stored property uses an unsupported typed representation.
+- `ObjectDisposedException`: This resource, a captured node, or a captured resource is disposing or disposed.
+- `Exception`: Property discovery, capture, change notification, or cleanup fails.
+
+**Remarks:** The root is always captured. A descendant branch is captured only when its first node is owned by
+`root`; rejected branches are pruned. After capture starts, any failure leaves this resource empty.
+
+<a id="m-electron2d-packedscene-createduplicateinstance"></a>
+### `protected override Resource CreateDuplicateInstance()`
+
+Creates a fresh default instance used as the target of duplication.
+
+**Returns:** A live resource of the exact same runtime type with empty path and scene ID.
+
+**Exceptions**
+
+- `NotSupportedException`: The runtime type derives from [`Resource`](Resource.md) and has not overridden this method.
+
+**Remarks:** The base implementation supports only an exact [`Resource`](Resource.md) instance. Every derived class must
+override this method, even when it adds no state, so duplication support is explicit.
+
+<a id="m-electron2d-packedscene-copycustomstateto-electron2d-resource-system-boolean-electron2d-deepduplicatemode-system-func-electron2d-resource-electron2d-resource-system-func-electron2d-resource-electron2d-resource"></a>
+### `protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource, Resource> duplicateSubresource, Func<Resource, Resource> forceDuplicateSubresource)`
+
+Copies derived stored state into a duplicate or copy target.
+
+**Parameters**
+
+- `target`: A live resource with the exact same runtime type.
+- `deep`: Whether typed collection containers should be cloned recursively.
+- `subresourceMode`: The nested-resource policy for this copy.
+- `duplicateSubresource`: A graph-preserving function that returns the correct shared or duplicated instance for a nested resource.
+Pass every nested resource through this function when `deep` is `true`.
+- `forceDuplicateSubresource`: A graph-preserving function that duplicates a nested resource even when the current policy would share it.
+Use it for typed properties whose contract requires duplication; assign the original reference directly for
+properties whose contract forbids duplication.
+
+**Exceptions**
+
+- `NotSupportedException`: A derived resource has not explicitly implemented custom-state copying.
+
+**Remarks:** The base implementation supports only an exact [`Resource`](Resource.md) instance. Derived implementations must
+copy all stored custom state and call the base implementation only when they intentionally want its validation.
+Assigning the original nested-resource reference directly expresses a never-duplicate property.
+
+<a id="m-electron2d-packedscene-onresetstate"></a>
+### `protected override void OnResetState()`
+
+Clears non-stored state when [`Resource.ResetState`](Resource.md#m-electron2d-resource-resetstate) or [`Resource.CopyFromResource(Resource)`](Resource.md#m-electron2d-resource-copyfromresource-electron2d-resource) requests it.
+
+<a id="m-electron2d-packedscene-onresourcepathchanged-system-string"></a>
+### `protected override void OnResourcePathChanged(string path)`
+
+Handles any committed change to this resource's visible path.
+
+**Parameters**
+
+- `path`: The newly committed path, or an empty string after displacement.
+
+**Remarks:** The path has already changed when this callback runs.
+
+## Inherited API
+
+Public and protected members inherited from [Resource](Resource.md). Their lifecycle and error contracts remain applicable unless this page states an override.
 
 ## Capture selection and stored state
 

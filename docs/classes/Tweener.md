@@ -2,10 +2,19 @@
 
 Last updated: 2026-09-21
 
-Source: [`src/Scene/Animation/Tweeners.cs`](../../src/Scene/Animation/Tweeners.cs)
-Declaration: `public abstract class Tweener : ElectronObject`
+**Inherits:** [ElectronObject](ElectronObject.md)
 
-## Responsibility and ownership
+**Inherited By:** [AwaitTweener](AwaitTweener.md), [CallbackTweener](CallbackTweener.md), [IntervalTweener](IntervalTweener.md), [MethodTweener<TValue>](MethodTweener.Generic.md), [PropertyTweener<TValue>](PropertyTweener.Generic.md), [SubtweenTweener](SubtweenTweener.md)
+
+- **Source:** [`src/Scene/Animation/Tweeners.cs`](../../src/Scene/Animation/Tweeners.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public abstract class Tweener : ElectronObject`
+
+> Defines one task executed as part of a [`Tween`](Tween.md) step.
+
+## Description
+
+Defines one task executed as part of a [`Tween`](Tween.md) step.
 
 `Tweener` is the non-constructible public base for one task owned by a [`Tween`](Tween.md). Its sole declared public member is `event Action<Tweener>? Finished`, raised synchronously after successful task completion or loss/disposal of a task target. Killing a parent does not report unfinished tweeners as finished. Inherited `ElectronObject` API remains available.
 
@@ -15,4 +24,69 @@ User completion subscriber exceptions propagate into the parent step. Parallel s
 
 Dependencies are `ElectronObject` and `Tween`. Tests verify completion ordering, loops, invalid targets, parallel failure continuation, waits, nested cancellation, and owner-thread behavior. There is no public custom-Tweener extension point, serialization, reference-counted lifetime, or standalone scheduler.
 
-Official-reference audit: the current stable [`Tweener`](https://docs.godotengine.org/en/stable/classes/class_tweener.html) abstract role and `finished` signal are implemented; reference-counted ownership is deliberately adapted to managed ownership and explicit disposal.
+Tweeners are created only by the corresponding [`Tween`](Tween.md) append methods. They are owned by that tween,
+can run sequentially or in a parallel group, and use the same owner-thread contract.
+
+## Examples
+
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+Tweener step = tween.TweenInterval(0.5);
+step.Finished += _ => Console.WriteLine("Step complete");
+```
+
+## Methods
+
+| Member | Description |
+| --- | --- |
+| [`protected override void ValidateDisposal()`](#m-electron2d-tweener-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
+| [`protected override void Dispose(bool disposing)`](#m-electron2d-tweener-dispose-system-boolean) | Releases resources owned by a derived class. |
+
+## Events
+
+| Member | Description |
+| --- | --- |
+| [`public event Action<Tweener> Finished`](#e-electron2d-tweener-finished) | Occurs immediately after this tweener completes or its target becomes unavailable. |
+
+## Method Descriptions
+
+<a id="m-electron2d-tweener-validatedisposal"></a>
+### `protected override void ValidateDisposal()`
+
+Validates caller-specific disposal preconditions before this caller attempts the disposal transition.
+
+**Exceptions**
+
+- `InvalidOperationException`: The caller is not the owning tween's thread.
+
+**Remarks:** This method can run concurrently in multiple callers and can race with another caller starting disposal.
+Overrides must therefore be side-effect-free and tolerate repeated execution.
+
+Requires the owning tween's thread while attached.
+
+<a id="m-electron2d-tweener-dispose-system-boolean"></a>
+### `protected override void Dispose(bool disposing)`
+
+Releases resources owned by a derived class.
+
+**Parameters**
+
+- `disposing`: `true` when called from [`ElectronObject.Dispose`](ElectronObject.md#m-electron2d-electronobject-dispose).
+
+**Remarks:** Overrides release managed resources when `disposing` is true and then call the base implementation.
+
+Cancels owned subscriptions, clears completion subscribers, and calls the base implementation.
+
+## Event Descriptions
+
+<a id="e-electron2d-tweener-finished"></a>
+### `public event Action<Tweener> Finished`
+
+Occurs immediately after this tweener completes or its target becomes unavailable.
+
+**Remarks:** The source tweener is passed as the sole argument. A killed tween does not complete unfinished tweeners.
+
+## Inherited API
+
+Public and protected members inherited from [ElectronObject](ElectronObject.md). Their lifecycle and error contracts remain applicable unless this page states an override.

@@ -2,31 +2,152 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** —
 
-- Source: [`PropertyDescriptor.cs`](../../src/Core/Object/PropertyDescriptor.cs)
-- Namespace: `Electron2D`
-- Declaration: `public abstract class PropertyDescriptor`
-- Domain: [Core](../domains/core.md)
-- Component: [Typed editor properties](../components/editor-properties.md)
+**Inherited By:** [PropertyDescriptor<TOwner, TValue>](PropertyDescriptor.Generic.md)
 
-## Responsibility
+- **Source:** [`src/Core/Object/PropertyDescriptor.cs`](../../src/Core/Object/PropertyDescriptor.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public abstract class PropertyDescriptor`
+
+> Describes a typed property exposed to Electron2D tooling.
+
+## Description
+
+Describes a typed property exposed to Electron2D tooling.
 
 `PropertyDescriptor` is the non-generic identity and compatibility surface for one property exposed to tooling and optional packed-scene storage. It carries the property name, required owner type, value type, read-only state, and explicit storage state while delegating typed access to [`PropertyDescriptor<TOwner, TValue>`](PropertyDescriptor.Generic.md).
 
-## Public API
+This is the non-generic discovery surface used in property lists. It contains immutable metadata and revert
+operations but deliberately exposes no Variant-like untyped getter or setter.
 
-| Member | Current behavior |
+## Examples
+
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+PropertyDescriptor descriptor = new PropertyDescriptor<Node, string>(
+    nameof(Node.Name), node => node.Name, (node, value) => node.Name = value, _ => "Node");
+```
+
+## Constructors
+
+| Member | Description |
 | --- | --- |
-| `string Name { get; }` | Non-empty property name; comparisons in a resolved property list are ordinal |
-| `Type OwnerType { get; }` | The runtime type accepted by the descriptor; the generic implementation guarantees an `ElectronObject` subtype, while the protected base constructor only rejects null |
-| `Type ValueType { get; }` | The exact property value type |
-| `bool IsReadOnly { get; }` | `true` when the typed descriptor has no setter |
-| `bool IsStored { get; }` | `true` only when a writable descriptor explicitly opts into packed-scene node storage |
-| `bool CanRevert(ElectronObject owner)` | Reports whether the compatible live owner's current value differs from the typed revert value |
-| `void Revert(ElectronObject owner)` | Restores the typed revert value or throws when no revert behavior exists |
+| [`protected PropertyDescriptor(string name, Type ownerType, Type valueType, bool isReadOnly, bool isStored = false)`](#m-electron2d-propertydescriptor-ctor-system-string-system-type-system-type-system-boolean-system-boolean) | Initializes immutable metadata for a tooling property. |
 
-The protected constructor also accepts `isStored`, which defaults to `false`. It validates that `name` is not null, empty, or whitespace and that both type arguments are non-null. It does not enforce that `ownerType` derives from `ElectronObject`; custom derived descriptors own that invariant. The shipped generic descriptor enforces it through its `TOwner : ElectronObject` constraint and rejects a stored descriptor without a setter.
+## Properties
+
+| Member | Description |
+| --- | --- |
+| [`public string Name { get; }`](#p-electron2d-propertydescriptor-name) | Gets the property name. |
+| [`public Type OwnerType { get; }`](#p-electron2d-propertydescriptor-ownertype) | Gets the runtime owner type accepted by this descriptor. |
+| [`public Type ValueType { get; }`](#p-electron2d-propertydescriptor-valuetype) | Gets the property's exact value type. |
+| [`public bool IsReadOnly { get; }`](#p-electron2d-propertydescriptor-isreadonly) | Gets whether the property has no setter. |
+| [`public bool IsStored { get; }`](#p-electron2d-propertydescriptor-isstored) | Gets whether packed scenes should store this property when its owner is a node. |
+
+## Methods
+
+| Member | Description |
+| --- | --- |
+| [`public abstract bool CanRevert(ElectronObject owner)`](#m-electron2d-propertydescriptor-canrevert-electron2d-electronobject) | Determines whether a compatible live owner's value currently differs from its revert value. |
+| [`public abstract void Revert(ElectronObject owner)`](#m-electron2d-propertydescriptor-revert-electron2d-electronobject) | Restores a compatible live owner's property to its current revert value. |
+
+## Constructor Descriptions
+
+<a id="m-electron2d-propertydescriptor-ctor-system-string-system-type-system-type-system-boolean-system-boolean"></a>
+### `protected PropertyDescriptor(string name, Type ownerType, Type valueType, bool isReadOnly, bool isStored = false)`
+
+Initializes immutable metadata for a tooling property.
+
+**Parameters**
+
+- `name`: The nonblank property name.
+- `ownerType`: The runtime owner type accepted by this descriptor. The base constructor checks only for null; custom derived
+descriptors are responsible for supplying an [`ElectronObject`](ElectronObject.md)-compatible type.
+- `valueType`: The exact type of the property value.
+- `isReadOnly`: Whether the descriptor has no setter.
+- `isStored`: Whether packed scenes should store this property when it belongs to a node.
+
+**Exceptions**
+
+- `ArgumentException`: `name` is empty or consists only of whitespace.
+- `ArgumentNullException`: `name`, `ownerType`, or `valueType` is `null`.
+
+## Property Descriptions
+
+<a id="p-electron2d-propertydescriptor-name"></a>
+### `public string Name { get; }`
+
+Gets the property name.
+
+**Value:** A nonblank name that is immutable for the descriptor's lifetime.
+
+<a id="p-electron2d-propertydescriptor-ownertype"></a>
+### `public Type OwnerType { get; }`
+
+Gets the runtime owner type accepted by this descriptor.
+
+**Value:** The required owner type. [`PropertyDescriptor`2`](PropertyDescriptor.Generic.md) always supplies an
+[`ElectronObject`](ElectronObject.md) subtype; the protected base constructor does not enforce that constraint.
+
+<a id="p-electron2d-propertydescriptor-valuetype"></a>
+### `public Type ValueType { get; }`
+
+Gets the property's exact value type.
+
+**Value:** The value type supplied when the descriptor was constructed.
+
+<a id="p-electron2d-propertydescriptor-isreadonly"></a>
+### `public bool IsReadOnly { get; }`
+
+Gets whether the property has no setter.
+
+**Value:** `true` for a read-only descriptor; otherwise `false`.
+
+<a id="p-electron2d-propertydescriptor-isstored"></a>
+### `public bool IsStored { get; }`
+
+Gets whether packed scenes should store this property when its owner is a node.
+
+**Value:** `true` only for an explicitly storage-enabled writable descriptor.
+
+## Method Descriptions
+
+<a id="m-electron2d-propertydescriptor-canrevert-electron2d-electronobject"></a>
+### `public abstract bool CanRevert(ElectronObject owner)`
+
+Determines whether a compatible live owner's value currently differs from its revert value.
+
+**Parameters**
+
+- `owner`: The owner whose property is inspected.
+
+**Returns:** `true` when the property can currently be reverted; otherwise `false`.
+
+**Exceptions**
+
+- `ArgumentNullException`: `owner` is `null`.
+- `ArgumentException`: `owner` is not assignable to [`PropertyDescriptor.OwnerType`](PropertyDescriptor.md#p-electron2d-propertydescriptor-ownertype).
+- `ObjectDisposedException`: Disposal of `owner` has started.
+- `Exception`: A configured getter or revert-value delegate throws.
+
+<a id="m-electron2d-propertydescriptor-revert-electron2d-electronobject"></a>
+### `public abstract void Revert(ElectronObject owner)`
+
+Restores a compatible live owner's property to its current revert value.
+
+**Parameters**
+
+- `owner`: The owner whose property is restored.
+
+**Exceptions**
+
+- `ArgumentNullException`: `owner` is `null`.
+- `ArgumentException`: `owner` is not assignable to [`PropertyDescriptor.OwnerType`](PropertyDescriptor.md#p-electron2d-propertydescriptor-ownertype).
+- `InvalidOperationException`: The descriptor has no writable revert value.
+- `ObjectDisposedException`: Disposal of `owner` has started.
+- `Exception`: A configured getter, revert-value, validator, or setter delegate throws.
 
 ## Lifecycle and ownership
 

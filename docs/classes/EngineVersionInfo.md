@@ -2,28 +2,69 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** —
 
-- Source: [`EngineVersionInfo.cs`](../../src/Core/Config/EngineVersionInfo.cs)
-- Namespace: `Electron2D`
-- Declaration: `public sealed class EngineVersionInfo`
-- Domain: [Core](../domains/core.md)
-- Component: [Engine runtime](../components/engine-runtime.md)
-- Owner: [`Engine`](Engine.md)
+**Inherited By:** —
 
-## Responsibility and ownership
+- **Source:** [`src/Core/Config/EngineVersionInfo.cs`](../../src/Core/Config/EngineVersionInfo.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public sealed class EngineVersionInfo`
+
+> Describes the version embedded in the Electron2D assembly.
+
+## Description
+
+Describes the version embedded in the Electron2D assembly.
 
 `EngineVersionInfo` is the immutable typed replacement for an untyped version dictionary. `Engine` creates one process-wide value from the loaded `Electron2D.dll` metadata and retains it for the process lifetime. Consumers neither own nor dispose it.
 
-## Complete public API
+## Examples
 
-| Member | Current behavior |
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+EngineVersionInfo version = Engine.Instance.VersionInfo;
+Console.WriteLine(version.String);
+```
+
+## Properties
+
+| Member | Description |
 | --- | --- |
-| `Version AssemblyVersion { get; }` | Numeric assembly version, falling back to `0.0` only if metadata is absent |
-| `string InformationalVersion { get; }` | Assembly informational version, or the numeric version string when absent |
-| `string ToString()` | Returns `InformationalVersion` |
+| [`public Version AssemblyVersion { get; }`](#p-electron2d-engineversioninfo-assemblyversion) | Gets the numeric assembly version. |
+| [`public string InformationalVersion { get; }`](#p-electron2d-engineversioninfo-informationalversion) | Gets the complete product version string. |
 
-Construction is assembly-internal so callers cannot fabricate a descriptor that appears to describe the loaded engine.
+## Methods
+
+| Member | Description |
+| --- | --- |
+| [`public override string ToString()`](#m-electron2d-engineversioninfo-tostring) | Returns the complete product version string. |
+
+## Property Descriptions
+
+<a id="p-electron2d-engineversioninfo-assemblyversion"></a>
+### `public Version AssemblyVersion { get; }`
+
+Gets the numeric assembly version.
+
+**Value:** The immutable version reported by the loaded Electron2D assembly.
+
+<a id="p-electron2d-engineversioninfo-informationalversion"></a>
+### `public string InformationalVersion { get; }`
+
+Gets the complete product version string.
+
+**Value:** The assembly informational version when one is present; otherwise the numeric
+[`EngineVersionInfo.AssemblyVersion`](EngineVersionInfo.md#p-electron2d-engineversioninfo-assemblyversion) converted to a string.
+
+## Method Descriptions
+
+<a id="m-electron2d-engineversioninfo-tostring"></a>
+### `public override string ToString()`
+
+Returns the complete product version string.
+
+**Returns:** [`EngineVersionInfo.InformationalVersion`](EngineVersionInfo.md#p-electron2d-engineversioninfo-informationalversion).
 
 ## Lifecycle, invariants, and errors
 

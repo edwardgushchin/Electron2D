@@ -2,184 +2,1853 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** [ElectronObject](ElectronObject.md)
 
-- Source: [`Node.cs`](../../src/Scene/Main/Node.cs)
-- Namespace: `Electron2D`
-- Declaration: `public class Node : ElectronObject`
-- Domain: [Scene](../domains/scene.md)
-- Component: [Unified 2D node](../components/unified-node.md)
+**Inherited By:** [Timer](Timer.md)
 
-## Responsibility and ownership
+- **Source:** [`src/Scene/Main/Node.cs`](../../src/Scene/Main/Node.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public class Node : ElectronObject`
 
-`Node` is Electron2D's primary and single public hierarchical and spatial game-object base. Individual game objects, composed subsystems, and complete worlds use the same ordered Node hierarchy. Specialized gameplay objects derive from `Node` and can compose child Nodes and typed resources. It intentionally combines Godot-like `Node` and `Node2D` responsibilities: ordered ownership, lifecycle, paths, groups, pause-aware processing, deletion, local/global 2D transforms, visibility, and Z state. There is no separate `Node2D`, `GameObject`, or public entity hierarchy.
+> Provides Electron2D's unified hierarchical, input-aware game object and 2D transform type.
+
+## Description
+
+Provides Electron2D's unified hierarchical, input-aware game object and 2D transform type.
 
 A parent owns its children. An active [`SceneTree`](SceneTree.md) owns its root and therefore the whole hierarchy. A node owns no renderer or native SDL handle. Its complete spatial surface uses engine-owned [`Vector2`](Vector2.md) and [`Transform`](Transform.md) values.
 
 Any self-contained root and its owned descendants can be captured by [`PackedScene`](PackedScene.md) as a reusable scene. Instantiation returns an independent detached hierarchy; lifecycle begins only after explicit attachment to a `SceneTree`.
 
-## Constants
+The type combines ordered child ownership, tree lifecycle, paths, groups, processing, typed input callbacks, queued
+deletion, visibility, Z ordering, and 2D spatial state. Logical visibility and Z state do not render anything until
+a renderer domain is added.
 
-| Constant | Value | Meaning |
-| --- | ---: | --- |
-| `NotificationEnterTree` | `10` | Entering an active tree |
-| `NotificationExitTree` | `11` | Leaving an active tree |
-| `NotificationReady` | `13` | SceneTree-managed ready delivery |
-| `NotificationPaused` | `14` | Tree pause state became paused |
-| `NotificationUnpaused` | `15` | Tree pause state became running |
-| `NotificationPhysicsProcess` | `16` | Physics-process callback lane |
-| `NotificationProcess` | `17` | Process callback lane |
-| `NotificationParented` | `18` | Parent reference was assigned |
-| `NotificationUnparented` | `19` | Parent reference was cleared |
-| `NotificationSceneInstantiated` | `20` | This packed-scene root finished complete detached reconstruction |
-| `NotificationPathRenamed` | `23` | This node or an ancestor changed path |
-| `NotificationChildOrderChanged` | `24` | Direct child order changed |
-| `NotificationInternalProcess` | `25` | Engine-owned process work independent of the public callback switch |
-| `NotificationInternalPhysicsProcess` | `26` | Engine-owned physics-process work independent of the public callback switch |
-| `NotificationPostEnterTree` | `27` | This node's descendants finished entering |
-| `NotificationDisabled` | `28` | Effective process mode became `Disabled` |
-| `NotificationEnabled` | `29` | Effective process mode stopped being `Disabled` |
-| `NotificationVisibilityChanged` | `31` | Local/ancestor visibility propagation occurred |
-| `NotificationLocalTransformChanged` | `35` | Local transform changed and local notifications are enabled |
-| `NotificationTransformChanged` | `2000` | Global transform changed and global notifications are enabled |
-| `NotificationOsMemoryWarning` | `2009` | Propagated operating-system memory warning |
-| `NotificationTranslationChanged` | `2010` | Translated messages may have changed |
-| `NotificationWmAbout` | `2011` | Operating-system application-information request |
-| `NotificationCrash` | `2012` | Unrecoverable crash is imminent |
-| `NotificationOsImeUpdate` | `2013` | Input-method composition update |
-| `NotificationApplicationResumed` | `2014` | Application resumed |
-| `NotificationApplicationPaused` | `2015` | Application is about to suspend |
-| `NotificationApplicationFocusIn` | `2016` | Keyboard focus gained |
-| `NotificationApplicationFocusOut` | `2017` | Keyboard focus lost |
-| `NotificationTextServerChanged` | `2018` | Active text service changed |
-| `NotificationApplicationPipModeEntered` | `2019` | Picture-in-picture mode entered |
-| `NotificationApplicationPipModeExited` | `2020` | Picture-in-picture mode exited |
-| `MinimumZIndex` | `-4096` | Minimum accepted/effective Z index |
-| `MaximumZIndex` | `4095` | Maximum accepted/effective Z index |
+## Examples
 
-## Public state API
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
-| Member | Current behavior |
+```csharp
+using var root = new Node { Name = "World" };
+root.AddChild(new Node { Name = "Player", Position = new Vector2(32f, 16f) });
+```
+
+## Constructors
+
+| Member | Description |
 | --- | --- |
-| `Node()` | Initializes `Name` to the runtime class name and the transform to identity |
-| `string Name { get; set; }` | Non-blank ordinal sibling key; rejects `.`, `..`, and `/`; renaming an active node propagates path notification |
-| `Node? Parent { get; }` | Direct parent or `null` |
-| `string SceneFilePath { get; }` | External packed-resource path on an instantiated scene root; empty for other nodes and built-in scenes |
-| `Node? Owner { get; set; }` | Strict ancestor selecting this node for packed-scene storage, or `null`; a root never owns itself |
-| `IReadOnlyList<Node> Children { get; }` | Live read-only view of ordered direct children |
-| `int ChildCount { get; }` | Direct-child count |
-| `SceneTree? Tree { get; }` | Active owner tree or `null` |
-| `bool IsInsideTree { get; }` | Whether `Tree` is non-null |
-| `bool IsNodeReady { get; }` | Whether SceneTree-managed ready has been consumed since construction or the last `RequestReady()`; the stored flag remains `true` after detachment |
-| `bool IsQueuedForDeletion { get; }` | Atomic deletion-request state |
-| `Transform Transform { get; set; }` | Local 2D affine transform |
-| `Transform GlobalTransform { get; set; }` | World transform; setting it solves a local transform unless top-level |
-| `Vector2 Position/GlobalPosition { get; set; }` | Local/global translation |
-| `float Rotation/GlobalRotation { get; set; }` | Local/global rotation in radians |
-| `float RotationDegrees/GlobalRotationDegrees { get; set; }` | Degree projections of local/global rotation |
-| `Vector2 Scale/GlobalScale { get; set; }` | Canonical local/global scale decomposition |
-| `float Skew/GlobalSkew { get; set; }` | Local/global angle between the transformed basis axes relative to an unskewed basis |
-| `bool TopLevel { get; set; }` | Ignores parent transform while preserving the current global transform when toggled |
-| `bool Visible { get; set; }` | Local logical visibility, default `true` |
-| `bool IsVisibleInTree { get; }` | `true` only when active and every ancestor plus this node is visible |
-| `int ZIndex { get; set; }` | Local Z value in `-4096..4095` |
-| `bool ZAsRelative { get; set; }` | Whether effective Z accumulates ancestors, default `true` |
-| `int EffectiveZIndex { get; }` | Relative accumulated or absolute Z, clamped to the supported range |
-| `bool NotifyLocalTransformChanges { get; set; }` | Enables notification `35`; typed event delivery remains enabled |
-| `bool NotifyTransformChanges { get; set; }` | Enables notification `2000`; typed event delivery remains enabled |
-| `NodeProcessMode ProcessMode { get; set; }` | Pause policy, default `Inherit`; undefined enum values are rejected |
-| `bool ProcessEnabled { get; set; }` | Explicit opt-in for `OnProcess`, default `false` |
-| `bool PhysicsProcessEnabled { get; set; }` | Explicit opt-in for `OnPhysicsProcess`, default `false` |
-| `bool InputEnabled { get; set; }` | Explicit opt-in for first-stage `OnInput`, default `false` |
-| `bool UnhandledKeyInputEnabled { get; set; }` | Explicit opt-in for keyboard-only unhandled delivery, default `false` |
-| `bool UnhandledInputEnabled { get; set; }` | Explicit opt-in for final unhandled delivery, default `false` |
-| `int ProcessPriority { get; set; }` | Ascending process order key, default `0` |
-| `int PhysicsProcessPriority { get; set; }` | Independent ascending physics-process order key, default `0` |
-| `double ProcessDeltaTime { get; }` | Most recent SceneTree-managed process delta, initially `0`; Engine applies its time scale before Engine-driven delivery, and manual notification does not update it |
-| `double PhysicsProcessDeltaTime { get; }` | Most recent SceneTree-managed physics-process delta, initially `0`; Engine applies its time scale before Engine-driven delivery, and manual notification does not update it |
+| [`public Node()`](#m-electron2d-node-ctor) | Initializes a detached node with its runtime class name and an identity transform. |
 
-`Name`, `Transform`'s scalar projections `Position`/`RotationDegrees`/`Scale`/`Skew`, `Visible`, `ZIndex`, `ZAsRelative`, `TopLevel`, `ProcessMode`, both frame-enable flags, all three input-enable flags, and both priorities are included in the typed property list and marked for packed-scene storage. Inherited `CanTranslateMessages` and `TranslationDomain` are stored as well. `Transform` itself and computed/global state are not descriptors. All inherited identity, notification, property, translation, and disposal API follows [`ElectronObject`](ElectronObject.md).
+## Properties
+
+| Member | Description |
+| --- | --- |
+| [`public string Name { get; set; }`](#p-electron2d-node-name) | Gets or sets the node name used in sibling lookup and paths. |
+| [`public Node Parent { get; }`](#p-electron2d-node-parent) | Gets the direct parent. |
+| [`public string SceneFilePath { get; }`](#p-electron2d-node-scenefilepath) | Gets the external resource path from which this scene root was instantiated. |
+| [`public Node Owner { get; set; }`](#p-electron2d-node-owner) | Gets or sets the ancestor that owns this node for packed-scene storage. |
+| [`public IReadOnlyList<Node> Children { get; }`](#p-electron2d-node-children) | Gets a live read-only view of the ordered direct children. |
+| [`public int ChildCount { get; }`](#p-electron2d-node-childcount) | Gets the number of direct children. |
+| [`public SceneTree Tree { get; }`](#p-electron2d-node-tree) | Gets the active scene tree containing this node. |
+| [`public bool IsInsideTree { get; }`](#p-electron2d-node-isinsidetree) | Gets whether this node currently belongs to a scene tree. |
+| [`public bool IsNodeReady { get; }`](#p-electron2d-node-isnodeready) | Gets whether SceneTree-managed ready delivery has occurred since construction or the last ready reset. |
+| [`public bool IsQueuedForDeletion { get; }`](#p-electron2d-node-isqueuedfordeletion) | Gets whether deletion has been requested through [`Node.QueueFree`](Node.md#m-electron2d-node-queuefree). |
+| [`public Transform Transform { get; set; }`](#p-electron2d-node-transform) | Gets or sets the affine transform relative to the parent. |
+| [`public Transform GlobalTransform { get; set; }`](#p-electron2d-node-globaltransform) | Gets or sets the affine transform in hierarchy-global coordinates. |
+| [`public Vector2 Position { get; set; }`](#p-electron2d-node-position) | Gets or sets local translation in pixels or other host-defined 2D units. |
+| [`public Vector2 GlobalPosition { get; set; }`](#p-electron2d-node-globalposition) | Gets or sets translation in hierarchy-global coordinates. |
+| [`public float Rotation { get; set; }`](#p-electron2d-node-rotation) | Gets or sets local rotation in radians. |
+| [`public float RotationDegrees { get; set; }`](#p-electron2d-node-rotationdegrees) | Gets or sets local rotation in degrees. |
+| [`public float GlobalRotation { get; set; }`](#p-electron2d-node-globalrotation) | Gets or sets hierarchy-global rotation in radians. |
+| [`public float GlobalRotationDegrees { get; set; }`](#p-electron2d-node-globalrotationdegrees) | Gets or sets hierarchy-global rotation in degrees. |
+| [`public Vector2 Scale { get; set; }`](#p-electron2d-node-scale) | Gets or sets local scale. |
+| [`public Vector2 GlobalScale { get; set; }`](#p-electron2d-node-globalscale) | Gets or sets hierarchy-global scale. |
+| [`public float Skew { get; set; }`](#p-electron2d-node-skew) | Gets or sets the local skew angle in radians. |
+| [`public float GlobalSkew { get; set; }`](#p-electron2d-node-globalskew) | Gets or sets the hierarchy-global skew angle in radians. |
+| [`public bool TopLevel { get; set; }`](#p-electron2d-node-toplevel) | Gets or sets whether this node ignores its parent's transform. |
+| [`public bool Visible { get; set; }`](#p-electron2d-node-visible) | Gets or sets this node's local logical visibility. |
+| [`public bool IsVisibleInTree { get; }`](#p-electron2d-node-isvisibleintree) | Gets whether this node is active and locally visible through its complete ancestor chain. |
+| [`public int ZIndex { get; set; }`](#p-electron2d-node-zindex) | Gets or sets this node's local Z-order value. |
+| [`public bool ZAsRelative { get; set; }`](#p-electron2d-node-zasrelative) | Gets or sets whether effective Z order accumulates ancestor Z values. |
+| [`public int EffectiveZIndex { get; }`](#p-electron2d-node-effectivezindex) | Gets the Z order after optional ancestor accumulation. |
+| [`public bool NotifyLocalTransformChanges { get; set; }`](#p-electron2d-node-notifylocaltransformchanges) | Gets or sets whether local transform changes dispatch [`Node.NotificationLocalTransformChanged`](Node.md#f-electron2d-node-notificationlocaltransformchanged). |
+| [`public bool NotifyTransformChanges { get; set; }`](#p-electron2d-node-notifytransformchanges) | Gets or sets whether global transform changes dispatch [`Node.NotificationTransformChanged`](Node.md#f-electron2d-node-notificationtransformchanged). |
+| [`public NodeProcessMode ProcessMode { get; set; }`](#p-electron2d-node-processmode) | Gets or sets the pause policy used by both process callback lanes. |
+| [`public bool ProcessEnabled { get; set; }`](#p-electron2d-node-processenabled) | Gets or sets whether this node participates in host-driven process frames. |
+| [`public bool PhysicsProcessEnabled { get; set; }`](#p-electron2d-node-physicsprocessenabled) | Gets or sets whether this node participates in host-driven physics-process frames. |
+| [`public bool InputEnabled { get; set; }`](#p-electron2d-node-inputenabled) | Gets or sets whether this node receives the first input-propagation stage. |
+| [`public bool UnhandledInputEnabled { get; set; }`](#p-electron2d-node-unhandledinputenabled) | Gets or sets whether this node receives input left unhandled by earlier stages. |
+| [`public bool UnhandledKeyInputEnabled { get; set; }`](#p-electron2d-node-unhandledkeyinputenabled) | Gets or sets whether this node receives unhandled keyboard events before general unhandled input. |
+| [`public int ProcessPriority { get; set; }`](#p-electron2d-node-processpriority) | Gets or sets this node's ascending process-frame order key. |
+| [`public int PhysicsProcessPriority { get; set; }`](#p-electron2d-node-physicsprocesspriority) | Gets or sets this node's ascending physics-process order key. |
+| [`public double ProcessDeltaTime { get; }`](#p-electron2d-node-processdeltatime) | Gets the delta from the most recent SceneTree-managed process frame delivered to this node. |
+| [`public double PhysicsProcessDeltaTime { get; }`](#p-electron2d-node-physicsprocessdeltatime) | Gets the delta from the most recent SceneTree-managed physics-process frame delivered to this node. |
+
+## Methods
+
+| Member | Description |
+| --- | --- |
+| [`public void AddChild(Node child)`](#m-electron2d-node-addchild-electron2d-node) | Appends a detached node as the last direct child. |
+| [`public void AddSibling(Node sibling)`](#m-electron2d-node-addsibling-electron2d-node) | Inserts a detached node immediately after this node in its parent's child order. |
+| [`public bool RemoveChild(Node child)`](#m-electron2d-node-removechild-electron2d-node) | Removes a direct child without disposing it. |
+| [`public void MoveChild(Node child, int index)`](#m-electron2d-node-movechild-electron2d-node-system-int32) | Moves a direct child to another sibling index. |
+| [`public void MoveToFront()`](#m-electron2d-node-movetofront) | Moves this node to the last position among its siblings. |
+| [`public void Reparent(Node newParent, bool keepGlobalTransform = true)`](#m-electron2d-node-reparent-electron2d-node-system-boolean) | Moves this non-root node under a new parent. |
+| [`public Node GetChild(int index)`](#m-electron2d-node-getchild-system-int32) | Gets a direct child by index. |
+| [`public int GetIndex()`](#m-electron2d-node-getindex) | Gets this node's index in its parent's ordered child list. |
+| [`public bool IsAncestorOf(Node node)`](#m-electron2d-node-isancestorof-electron2d-node) | Determines whether this node is a strict ancestor of another node. |
+| [`public Node FindChild(string pattern, bool recursive = true)`](#m-electron2d-node-findchild-system-string-system-boolean) | Finds the first descendant whose name matches a wildcard pattern. |
+| [`public TNode FindChild<TNode>(string pattern = "*", bool recursive = true)`](#m-electron2d-node-findchild-1-system-string-system-boolean) | Finds the first descendant of a requested type whose name matches a wildcard pattern. |
+| [`public IReadOnlyList<Node> FindChildren(string pattern, bool recursive = true)`](#m-electron2d-node-findchildren-system-string-system-boolean) | Finds all descendants whose names match a wildcard pattern. |
+| [`public IReadOnlyList<TNode> FindChildren<TNode>(string pattern = "*", bool recursive = true)`](#m-electron2d-node-findchildren-1-system-string-system-boolean) | Finds all descendants of a requested type whose names match a wildcard pattern. |
+| [`public Node FindParent(string pattern)`](#m-electron2d-node-findparent-system-string) | Finds the nearest ancestor whose name matches a wildcard pattern. |
+| [`public string GetPath()`](#m-electron2d-node-getpath) | Builds this node's absolute path from the root of its current hierarchy. |
+| [`public string GetPathTo(Node node)`](#m-electron2d-node-getpathto-electron2d-node) | Builds a relative path from this node to another node in the same hierarchy. |
+| [`public Node GetNode(string path)`](#m-electron2d-node-getnode-system-string) | Resolves a required relative or absolute node path. |
+| [`public TNode GetNode<TNode>(string path)`](#m-electron2d-node-getnode-1-system-string) | Resolves a required relative or absolute path to a requested node type. |
+| [`public Node GetNodeOrNull(string path)`](#m-electron2d-node-getnodeornull-system-string) | Attempts to resolve a relative or absolute node path. |
+| [`public void AddToGroup(string group, bool persistent = false)`](#m-electron2d-node-addtogroup-system-string-system-boolean) | Adds this node to a case-sensitive group. |
+| [`public bool RemoveFromGroup(string group)`](#m-electron2d-node-removefromgroup-system-string) | Removes this node from a case-sensitive group. |
+| [`public bool IsInGroup(string group)`](#m-electron2d-node-isingroup-system-string) | Determines whether this node belongs to a case-sensitive group. |
+| [`public IReadOnlyList<string> GetGroups()`](#m-electron2d-node-getgroups) | Returns this node's group memberships. |
+| [`public bool CanProcess()`](#m-electron2d-node-canprocess) | Determines whether the resolved process mode allows callbacks in the current tree pause state. |
+| [`public void RequestReady()`](#m-electron2d-node-requestready) | Requests ready delivery the next time SceneTree attachment reaches the ready phase. |
+| [`public Tween CreateTween()`](#m-electron2d-node-createtween) | Creates a tween in this node's scene tree and binds it to this node. |
+| [`public void QueueFree()`](#m-electron2d-node-queuefree) | Atomically requests this node's deferred disposal at a future scene-tree safe point. |
+| [`public bool CancelFree()`](#m-electron2d-node-cancelfree) | Atomically cancels a pending deletion request. |
+| [`public void Show()`](#m-electron2d-node-show) | Sets [`Node.Visible`](Node.md#p-electron2d-node-visible) to `true`. |
+| [`public void Hide()`](#m-electron2d-node-hide) | Sets [`Node.Visible`](Node.md#p-electron2d-node-visible) to `false`. |
+| [`public void ApplyScale(Vector2 ratio)`](#m-electron2d-node-applyscale-electron2d-vector2) | Component-multiplies the local scale by a ratio. |
+| [`public void Rotate(float radians)`](#m-electron2d-node-rotate-system-single) | Adds an angle to the local rotation. |
+| [`public void Translate(Vector2 offset)`](#m-electron2d-node-translate-electron2d-vector2) | Moves this node by an offset rotated by its local rotation. |
+| [`public void GlobalTranslate(Vector2 offset)`](#m-electron2d-node-globaltranslate-electron2d-vector2) | Moves this node by a hierarchy-global offset. |
+| [`public void MoveLocalX(float delta, bool scaled = false)`](#m-electron2d-node-movelocalx-system-single-system-boolean) | Moves this node along its local X basis axis. |
+| [`public void MoveLocalY(float delta, bool scaled = false)`](#m-electron2d-node-movelocaly-system-single-system-boolean) | Moves this node along its local Y basis axis. |
+| [`public float GetAngleTo(Vector2 globalPoint)`](#m-electron2d-node-getangleto-electron2d-vector2) | Computes the signed angle from this node's global positive X direction to a global point. |
+| [`public void LookAt(Vector2 globalPoint)`](#m-electron2d-node-lookat-electron2d-vector2) | Rotates this node so its positive local X direction points at a global point. |
+| [`public Vector2 ToGlobal(Vector2 localPoint)`](#m-electron2d-node-toglobal-electron2d-vector2) | Transforms a point from this node's local coordinates to hierarchy-global coordinates. |
+| [`public Vector2 ToLocal(Vector2 globalPoint)`](#m-electron2d-node-tolocal-electron2d-vector2) | Transforms a point from hierarchy-global coordinates to this node's local coordinates. |
+| [`public Transform GetRelativeTransformToParent(Node parent)`](#m-electron2d-node-getrelativetransformtoparent-electron2d-node) | Returns this node's transform relative to an ancestor. |
+| [`protected virtual Func<Node> CreateSceneInstanceFactory()`](#m-electron2d-node-createsceneinstancefactory) | Creates a reusable factory for packed-scene instances of this exact runtime node type. |
+| [`protected virtual void OnEnterTree()`](#m-electron2d-node-onentertree) | Called synchronously when this node enters an active scene tree. |
+| [`protected virtual void OnExitTree()`](#m-electron2d-node-onexittree) | Called synchronously when this node exits an active scene tree. |
+| [`protected virtual void OnReady()`](#m-electron2d-node-onready) | Called synchronously when this node receives SceneTree-managed ready delivery. |
+| [`protected virtual void OnProcess(double delta)`](#m-electron2d-node-onprocess-system-double) | Called during an eligible host-driven process frame. |
+| [`protected virtual void OnPhysicsProcess(double delta)`](#m-electron2d-node-onphysicsprocess-system-double) | Called during an eligible host-driven physics-process frame. |
+| [`protected virtual void OnInput(InputEvent event)`](#m-electron2d-node-oninput-electron2d-inputevent) | Receives an input event during the first scene-input propagation stage. |
+| [`protected virtual void OnUnhandledKeyInput(InputEventKey event)`](#m-electron2d-node-onunhandledkeyinput-electron2d-inputeventkey) | Receives a keyboard event that remains unhandled after the first input stage. |
+| [`protected virtual void OnUnhandledInput(InputEvent event)`](#m-electron2d-node-onunhandledinput-electron2d-inputevent) | Receives an event that remains unhandled after earlier scene-input stages. |
+| [`protected override void OnNotification(int what)`](#m-electron2d-node-onnotification-system-int32) | Handles an engine notification delivered to this object. |
+| [`protected override void ValidateMutation()`](#m-electron2d-node-validatemutation) | Validates that mutable base state may change at the current lifecycle point. |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-node-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
+| [`protected override void ValidateDisposal()`](#m-electron2d-node-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
+| [`protected override void Dispose(bool disposing)`](#m-electron2d-node-dispose-system-boolean) | Releases resources owned by a derived class. |
+| [`protected void EnsureMutable()`](#m-electron2d-node-ensuremutable) | Validates that this node may be mutated at the current lifecycle point. |
 
 ## Events
 
-| Event | Delivery |
+| Member | Description |
 | --- | --- |
-| `ChildAdded` / `ChildRemoved` | On the parent after structural attachment/removal; arguments are publishing parent then affected child |
-| `ChildEnteredTree` / `ChildExitingTree` | On the direct parent when that child enters or begins exiting; arguments are publishing parent then affected child |
-| `ChildOrderChanged` | On the parent after add, remove, or reorder |
-| `Renamed` | On an active node after its own name changes |
-| `TreeEntered` | After this node's enter notification, before descendants enter |
-| `TreeExiting` | After descendants exit and this node receives exit notification, while `Tree` is still set |
-| `TreeExited` | After `Tree` is cleared |
-| `Ready` | After ready notification, once until `RequestReady()` |
-| `VisibilityChanged` | On this node and descendants after visibility propagation |
-| `LocalTransformChanged` | On every actual local matrix change |
-| `TransformChanged` | On every affected global transform; propagation stops at top-level descendants |
+| [`public event Action<Node, Node> ChildAdded`](#e-electron2d-node-childadded) | Occurs on the parent after a direct child is structurally attached and child order is reported. |
+| [`public event Action<Node, Node> ChildRemoved`](#e-electron2d-node-childremoved) | Occurs on the former parent after a direct child is detached and child order is reported. |
+| [`public event Action<Node, Node> ChildEnteredTree`](#e-electron2d-node-childenteredtree) | Occurs on the direct parent when a child enters the active tree. |
+| [`public event Action<Node, Node> ChildExitingTree`](#e-electron2d-node-childexitingtree) | Occurs on the direct parent while a child is exiting the active tree. |
+| [`public event Action<Node> ChildOrderChanged`](#e-electron2d-node-childorderchanged) | Occurs after the order or membership of direct children changes. |
+| [`public event Action<Node> Renamed`](#e-electron2d-node-renamed) | Occurs after an active node's own name changes and path notifications propagate. |
+| [`public event Action<Node> TreeEntered`](#e-electron2d-node-treeentered) | Occurs when this node enters an active scene tree. |
+| [`public event Action<Node> TreeExiting`](#e-electron2d-node-treeexiting) | Occurs while this node is exiting its active scene tree. |
+| [`public event Action<Node> TreeExited`](#e-electron2d-node-treeexited) | Occurs after this node has left its scene tree. |
+| [`public event Action<Node> Ready`](#e-electron2d-node-ready) | Occurs after child-first ready notification delivery. |
+| [`public event Action<Node> VisibilityChanged`](#e-electron2d-node-visibilitychanged) | Occurs after local or inherited logical visibility is propagated to this node. |
+| [`public event Action<Node> LocalTransformChanged`](#e-electron2d-node-localtransformchanged) | Occurs after this node's local transform actually changes. |
+| [`public event Action<Node> TransformChanged`](#e-electron2d-node-transformchanged) | Occurs when this node's global transform is affected by a local or ancestor change. |
 
-Events are synchronous typed C# events. An event carrying only its source passes that source as its sole argument; child events use sender-first two-argument signatures. Exceptions propagate to the initiating operation unless `SceneTree` explicitly aggregates a frame/flush phase. [`EventConnection`](EventConnection.md) adds owned, one-shot, and deferred subscriptions without changing event signatures.
+## Constants
 
-## Hierarchy, path, group, and lifetime methods
-
-| Member | Current behavior |
+| Member | Description |
 | --- | --- |
-| `AddChild(Node child)` | Appends a validated detached child and attaches its subtree if active |
-| `AddSibling(Node sibling)` | Inserts immediately after this node; detached/root callers are rejected |
-| `RemoveChild(Node child)` | Detaches a direct child and returns `true`, or returns `false` for a non-child |
-| `MoveChild(Node child, int index)` | Reorders a direct child; negative indices count from the end |
-| `MoveToFront()` | Moves this node to the last sibling position; detached/root nodes are unchanged |
-| `Reparent(Node newParent, bool keepGlobalTransform = true)` | Moves a non-root node, including between trees when both owner-thread contracts are satisfied; by default preserves the global transform and rejects singular new parents |
-| `GetChild(int index)` | Gets a direct child; negative indices count from the end |
-| `GetIndex()` | Returns the sibling index or `-1` without a parent |
-| `IsAncestorOf(Node node)` | Tests strict ancestry |
-| `FindChild(...)` / `FindChild<TNode>(...)` | Finds the first matching descendant in pre-order; `*` and `?` use case-insensitive wildcard matching |
-| `FindChildren(...)` / `FindChildren<TNode>(...)` | Returns all case-insensitive wildcard matches in pre-order as a read-only snapshot |
-| `FindParent(pattern)` | Finds the nearest case-insensitive wildcard-matching ancestor |
-| `GetPath()` | Returns an absolute slash-separated path from the hierarchy root, including for detached hierarchies |
-| `GetPathTo(Node node)` | Returns `.`, `..`, and names relative to another node sharing the same hierarchy root |
-| `GetNode(string path)` / `GetNode<TNode>(string path)` | Resolves relative/absolute paths, including in detached hierarchies; throws when missing or of the wrong requested type |
-| `GetNodeOrNull(string path)` | Nullable path resolution supporting `.`, `..`, and an optional root-name segment, including outside a `SceneTree` |
-| `AddToGroup(string group, bool persistent = false)`, `RemoveFromGroup`, `IsInGroup` | Mutate/query non-blank ordinal string group membership; only persistent memberships are packed |
-| `GetGroups()` | Returns a sorted read-only snapshot of group names |
-| `CanProcess()` | Resolves inherited mode against current tree pause state; detached nodes return `false` |
-| `RequestReady()` | Allows ready to be delivered on a later attachment; it does not emit ready immediately |
-| `CreateTween()` | Creates a [`Tween`](Tween.md) in the active tree and binds its pause/lifetime behavior to this node; detached nodes are rejected |
-| `QueueFree()` | Atomically requests deletion at a future tree safe point; detached requests queue on later attachment, detachment after an active request does not cancel deletion, transfer to another tree transfers request consumption, and active root requests are rejected |
-| `CancelFree()` | Atomically clears a request and reports whether one existed |
+| [`public const int NotificationEnterTree = 10`](#f-electron2d-node-notificationentertree) | Identifies the notification sent when a node enters an active [`SceneTree`](SceneTree.md). |
+| [`public const int NotificationExitTree = 11`](#f-electron2d-node-notificationexittree) | Identifies the notification sent after descendants exit and before this node leaves its tree. |
+| [`public const int NotificationReady = 13`](#f-electron2d-node-notificationready) | Identifies the child-first notification sent when a node becomes ready. |
+| [`public const int NotificationPaused = 14`](#f-electron2d-node-notificationpaused) | Identifies the notification sent when the owning tree becomes paused. |
+| [`public const int NotificationUnpaused = 15`](#f-electron2d-node-notificationunpaused) | Identifies the notification sent when the owning tree resumes from pause. |
+| [`public const int NotificationPhysicsProcess = 16`](#f-electron2d-node-notificationphysicsprocess) | Identifies a physics-process callback notification. |
+| [`public const int NotificationProcess = 17`](#f-electron2d-node-notificationprocess) | Identifies a process callback notification. |
+| [`public const int NotificationParented = 18`](#f-electron2d-node-notificationparented) | Identifies the notification sent after a parent reference is assigned. |
+| [`public const int NotificationUnparented = 19`](#f-electron2d-node-notificationunparented) | Identifies the notification sent after a parent reference is cleared. |
+| [`public const int NotificationSceneInstantiated = 20`](#f-electron2d-node-notificationsceneinstantiated) | Identifies the notification sent to the root after a packed scene is completely instantiated. |
+| [`public const int NotificationPathRenamed = 23`](#f-electron2d-node-notificationpathrenamed) | Identifies the notification propagated when this node's path changes. |
+| [`public const int NotificationChildOrderChanged = 24`](#f-electron2d-node-notificationchildorderchanged) | Identifies the notification sent after the direct child order changes. |
+| [`public const int NotificationInternalProcess = 25`](#f-electron2d-node-notificationinternalprocess) | Identifies an engine-internal process callback notification. |
+| [`public const int NotificationInternalPhysicsProcess = 26`](#f-electron2d-node-notificationinternalphysicsprocess) | Identifies an engine-internal physics-process callback notification. |
+| [`public const int NotificationPostEnterTree = 27`](#f-electron2d-node-notificationpostentertree) | Identifies the notification sent after this node and its descendants finish entering a tree. |
+| [`public const int NotificationDisabled = 28`](#f-electron2d-node-notificationdisabled) | Identifies the notification sent when the effective process mode becomes disabled. |
+| [`public const int NotificationEnabled = 29`](#f-electron2d-node-notificationenabled) | Identifies the notification sent when the effective process mode stops being disabled. |
+| [`public const int NotificationVisibilityChanged = 31`](#f-electron2d-node-notificationvisibilitychanged) | Identifies the notification propagated after local or inherited visibility changes. |
+| [`public const int NotificationLocalTransformChanged = 35`](#f-electron2d-node-notificationlocaltransformchanged) | Identifies a local-transform change notification when local notification delivery is enabled. |
+| [`public const int NotificationTransformChanged = 2000`](#f-electron2d-node-notificationtransformchanged) | Identifies a global-transform change notification when global notification delivery is enabled. |
+| [`public const int NotificationOsMemoryWarning = 2009`](#f-electron2d-node-notificationosmemorywarning) | Identifies an operating-system low-memory warning propagated by the active scene tree. |
+| [`public const int NotificationTranslationChanged = 2010`](#f-electron2d-node-notificationtranslationchanged) | Identifies a notification that translated messages may have changed. |
+| [`public const int NotificationWmAbout = 2011`](#f-electron2d-node-notificationwmabout) | Identifies an operating-system request to show application information. |
+| [`public const int NotificationCrash = 2012`](#f-electron2d-node-notificationcrash) | Identifies a notification delivered immediately before an unrecoverable crash. |
+| [`public const int NotificationOsImeUpdate = 2013`](#f-electron2d-node-notificationosimeupdate) | Identifies an input-method composition update supplied by the operating system. |
+| [`public const int NotificationApplicationResumed = 2014`](#f-electron2d-node-notificationapplicationresumed) | Identifies that the application resumed after suspension. |
+| [`public const int NotificationApplicationPaused = 2015`](#f-electron2d-node-notificationapplicationpaused) | Identifies that the application is about to be suspended. |
+| [`public const int NotificationApplicationFocusIn = 2016`](#f-electron2d-node-notificationapplicationfocusin) | Identifies that the application received keyboard focus. |
+| [`public const int NotificationApplicationFocusOut = 2017`](#f-electron2d-node-notificationapplicationfocusout) | Identifies that the application lost keyboard focus. |
+| [`public const int NotificationTextServerChanged = 2018`](#f-electron2d-node-notificationtextserverchanged) | Identifies that the active text service changed. |
+| [`public const int NotificationApplicationPipModeEntered = 2019`](#f-electron2d-node-notificationapplicationpipmodeentered) | Identifies that the application entered picture-in-picture mode. |
+| [`public const int NotificationApplicationPipModeExited = 2020`](#f-electron2d-node-notificationapplicationpipmodeexited) | Identifies that the application exited picture-in-picture mode. |
+| [`public const int MinimumZIndex = -4096`](#f-electron2d-node-minimumzindex) | Specifies the smallest supported local or effective Z index. |
+| [`public const int MaximumZIndex = 4095`](#f-electron2d-node-maximumzindex) | Specifies the largest supported local or effective Z index. |
 
-## Spatial and visibility methods
+## Constructor Descriptions
 
-| Member | Current behavior |
-| --- | --- |
-| `Show()` / `Hide()` | Set local visibility |
-| `ApplyScale(Vector2 ratio)` | Component-multiplies local scale |
-| `Rotate(float radians)` | Adds local rotation |
-| `Translate(Vector2 offset)` | Adds an offset rotated by the local rotation |
-| `GlobalTranslate(Vector2 offset)` | Adds a world-space offset |
-| `MoveLocalX/Y(float delta, bool scaled = false)` | Moves along a local basis axis; normalizes it unless `scaled` is `true` |
-| `GetAngleTo(Vector2 globalPoint)` | Signed normalized angle from local +X/world rotation to a world point; coincident points return `0` |
-| `LookAt(Vector2 globalPoint)` | Rotates local +X toward a distinct world point |
-| `ToGlobal(Vector2 localPoint)` | Applies the global transform |
-| `ToLocal(Vector2 globalPoint)` | Applies its inverse; rejects a singular global transform |
-| `GetRelativeTransformToParent(Node parent)` | Returns this global transform relative to a strict ancestor, identity for self, and rejects unrelated/singular ancestors |
+<a id="m-electron2d-node-ctor"></a>
+### `public Node()`
 
-Every transform input must be finite. `Transform` uses X/Y basis columns and composes `parent * local`, applying the local/right operand first. Decomposition is canonical: equivalent transforms with reflections or negative scale can yield an equivalent but not identical rotation/scale/skew tuple.
+Initializes a detached node with its runtime class name and an identity transform.
 
-## Protected API
+## Property Descriptions
 
-| Member | Current behavior |
-| --- | --- |
-| `OnEnterTree()` / `OnExitTree()` / `OnReady()` | Virtual lifecycle callbacks mapped from notifications 10, 11, and 13 |
-| `OnProcess(double delta)` | Virtual callback mapped from notification 17 after `ProcessDeltaTime` is stored |
-| `OnPhysicsProcess(double delta)` | Virtual callback mapped from notification 16 after `PhysicsProcessDeltaTime` is stored |
-| `OnInput(InputEvent event)` | First-stage typed input callback when `InputEnabled` and pause policy allow it |
-| `OnUnhandledKeyInput(InputEventKey event)` | Keyboard-only callback after first-stage input remains unhandled |
-| `OnUnhandledInput(InputEvent event)` | Final callback for any event still unhandled |
-| `CreateSceneInstanceFactory()` | Returns a static source-independent factory for a fresh exact-runtime-type default node; derived packable nodes must override it |
-| `EnsureMutable()` | Required guard for derived stored-property setters; rejects disposal, capture mutation, and off-owner-thread attached mutation |
-| `OnNotification(int what)` | Calls the base implementation and maps lifecycle/process IDs to the callbacks above |
-| `GetPropertyDescriptors()` | Appends all documented node tooling descriptors to inherited descriptors |
-| `ValidateDisposal()` | Rejects direct disposal of an active tree root and enforces owner-thread disposal while attached |
-| `Dispose(bool disposing)` | Cancels deletion, detaches, attempts every child disposal, clears groups/events, calls the base override, and then aggregates failures |
+<a id="p-electron2d-node-name"></a>
+### `public string Name { get; set; }`
+
+Gets or sets the node name used in sibling lookup and paths.
+
+**Value:** The nonblank name, initialized to [`ElectronObject.ClassName`](ElectronObject.md#p-electron2d-electronobject-classname).
+
+**Exceptions**
+
+- `ArgumentException`: The assigned name is invalid.
+- `InvalidOperationException`: A sibling already has the assigned name, or an attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+- `AggregateException`: One or more path, node-renamed, or tree-renamed callbacks fail after the name changes.
+
+**Remarks:** Names use ordinal equality among siblings and cannot be `.`, `..`, or contain `/`. Renaming an
+active node propagates [`Node.NotificationPathRenamed`](Node.md#f-electron2d-node-notificationpathrenamed) through its subtree and then raises
+[`Node.Renamed`](Node.md#e-electron2d-node-renamed) on this node.
+
+<a id="p-electron2d-node-parent"></a>
+### `public Node Parent { get; }`
+
+Gets the direct parent.
+
+**Value:** The owning parent, or `null` while detached.
+
+<a id="p-electron2d-node-scenefilepath"></a>
+### `public string SceneFilePath { get; }`
+
+Gets the external resource path from which this scene root was instantiated.
+
+**Value:** The packed-scene path for an instantiated external scene root; otherwise an empty string.
+
+**Remarks:** The value is assigned by packed-scene instantiation and is not inherited by descendants.
+
+<a id="p-electron2d-node-owner"></a>
+### `public Node Owner { get; set; }`
+
+Gets or sets the ancestor that owns this node for packed-scene storage.
+
+**Value:** An ancestor node, or `null` when this node is not stored by an ancestor scene root.
+
+**Exceptions**
+
+- `ArgumentException`: The assigned node is this node or is not an ancestor.
+- `InvalidOperationException`: An attached node is mutated off the tree owner thread or scene capture is active.
+- `ObjectDisposedException`: This node or the assigned owner is disposing or disposed.
+
+**Remarks:** A scene root does not own itself. Removing or reparenting a subtree automatically clears owner references that
+no longer point to an ancestor.
+
+<a id="p-electron2d-node-children"></a>
+### `public IReadOnlyList<Node> Children { get; }`
+
+Gets a live read-only view of the ordered direct children.
+
+**Value:** A view backed by this node's child list; later hierarchy changes are visible through it.
+
+<a id="p-electron2d-node-childcount"></a>
+### `public int ChildCount { get; }`
+
+Gets the number of direct children.
+
+**Value:** The current child count.
+
+**Exceptions**
+
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-node-tree"></a>
+### `public SceneTree Tree { get; }`
+
+Gets the active scene tree containing this node.
+
+**Value:** The owning tree, or `null` while detached.
+
+<a id="p-electron2d-node-isinsidetree"></a>
+### `public bool IsInsideTree { get; }`
+
+Gets whether this node currently belongs to a scene tree.
+
+**Value:** `true` when [`Node.Tree`](Node.md#p-electron2d-node-tree) is non-null.
+
+<a id="p-electron2d-node-isnodeready"></a>
+### `public bool IsNodeReady { get; }`
+
+Gets whether SceneTree-managed ready delivery has occurred since construction or the last ready reset.
+
+**Value:** The stored ready state. It remains true after detachment until [`Node.RequestReady`](Node.md#m-electron2d-node-requestready) is called.
+
+**Remarks:** Manual [`ElectronObject.Notify(Int32)`](ElectronObject.md#m-electron2d-electronobject-notify-system-int32) delivery of [`Node.NotificationReady`](Node.md#f-electron2d-node-notificationready) does not change this value.
+
+<a id="p-electron2d-node-isqueuedfordeletion"></a>
+### `public bool IsQueuedForDeletion { get; }`
+
+Gets whether deletion has been requested through [`Node.QueueFree`](Node.md#m-electron2d-node-queuefree).
+
+**Value:** An atomic snapshot of the deletion-request flag.
+
+<a id="p-electron2d-node-transform"></a>
+### `public Transform Transform { get; set; }`
+
+Gets or sets the affine transform relative to the parent.
+
+**Value:** A finite [`Transform`](Transform.md); the default is [`Transform.Identity`](Transform.md#p-electron2d-transform-identity).
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: An assigned transform component is NaN or infinite.
+- `InvalidOperationException`: An attached node is mutated from a thread other than the tree owner.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the transform changes.
+
+<a id="p-electron2d-node-globaltransform"></a>
+### `public Transform GlobalTransform { get; set; }`
+
+Gets or sets the affine transform in hierarchy-global coordinates.
+
+**Value:** The local transform composed with non-top-level ancestors.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: An assigned transform component is NaN or infinite.
+- `InvalidOperationException`: The parent transform is singular, or an attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node or an ancestor is disposing on another thread, or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the transform changes.
+
+<a id="p-electron2d-node-position"></a>
+### `public Vector2 Position { get; set; }`
+
+Gets or sets local translation in pixels or other host-defined 2D units.
+
+**Value:** The translation component of [`Node.Transform`](Node.md#p-electron2d-node-transform).
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: An assigned component is NaN or infinite.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the position changes.
+
+<a id="p-electron2d-node-globalposition"></a>
+### `public Vector2 GlobalPosition { get; set; }`
+
+Gets or sets translation in hierarchy-global coordinates.
+
+**Value:** The translation component of [`Node.GlobalTransform`](Node.md#p-electron2d-node-globaltransform).
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: An assigned component is NaN or infinite.
+- `InvalidOperationException`: The parent transform is singular, or an attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node or an ancestor is disposing on another thread, or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the position changes.
+
+<a id="p-electron2d-node-rotation"></a>
+### `public float Rotation { get; set; }`
+
+Gets or sets local rotation in radians.
+
+**Value:** The canonical rotation decomposed from [`Node.Transform`](Node.md#p-electron2d-node-transform).
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned angle is NaN or infinite.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the rotation changes.
+
+<a id="p-electron2d-node-rotationdegrees"></a>
+### `public float RotationDegrees { get; set; }`
+
+Gets or sets local rotation in degrees.
+
+**Value:** [`Node.Rotation`](Node.md#p-electron2d-node-rotation) converted between radians and degrees.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned angle is NaN or infinite.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the rotation changes.
+
+<a id="p-electron2d-node-globalrotation"></a>
+### `public float GlobalRotation { get; set; }`
+
+Gets or sets hierarchy-global rotation in radians.
+
+**Value:** The canonical rotation decomposed from [`Node.GlobalTransform`](Node.md#p-electron2d-node-globaltransform).
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned angle is NaN or infinite.
+- `InvalidOperationException`: The parent transform is singular, or an attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node or an ancestor is disposing on another thread, or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the rotation changes.
+
+<a id="p-electron2d-node-globalrotationdegrees"></a>
+### `public float GlobalRotationDegrees { get; set; }`
+
+Gets or sets hierarchy-global rotation in degrees.
+
+**Value:** [`Node.GlobalRotation`](Node.md#p-electron2d-node-globalrotation) converted between radians and degrees.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned angle is NaN or infinite.
+- `InvalidOperationException`: The parent transform is singular, or an attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node or an ancestor is disposing on another thread, or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the rotation changes.
+
+<a id="p-electron2d-node-scale"></a>
+### `public Vector2 Scale { get; set; }`
+
+Gets or sets local scale.
+
+**Value:** The canonical scale decomposed from [`Node.Transform`](Node.md#p-electron2d-node-transform).
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: An assigned component is NaN or infinite.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the scale changes.
+
+**Remarks:** Equivalent reflected matrices can decompose to a different but equivalent rotation, scale, and skew tuple.
+
+<a id="p-electron2d-node-globalscale"></a>
+### `public Vector2 GlobalScale { get; set; }`
+
+Gets or sets hierarchy-global scale.
+
+**Value:** The canonical scale decomposed from [`Node.GlobalTransform`](Node.md#p-electron2d-node-globaltransform).
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: An assigned component is NaN or infinite.
+- `InvalidOperationException`: The parent transform is singular, or an attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node or an ancestor is disposing on another thread, or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the scale changes.
+
+**Remarks:** Equivalent reflected matrices can decompose to a different but equivalent rotation, scale, and skew tuple.
+
+<a id="p-electron2d-node-skew"></a>
+### `public float Skew { get; set; }`
+
+Gets or sets the local skew angle in radians.
+
+**Value:** The canonical angle between the transformed basis axes relative to an unskewed basis.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned angle is NaN or infinite.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the skew changes.
+
+<a id="p-electron2d-node-globalskew"></a>
+### `public float GlobalSkew { get; set; }`
+
+Gets or sets the hierarchy-global skew angle in radians.
+
+**Value:** The canonical skew decomposed from [`Node.GlobalTransform`](Node.md#p-electron2d-node-globaltransform).
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned angle is NaN or infinite.
+- `InvalidOperationException`: The parent transform is singular, or an attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node or an ancestor is disposing on another thread, or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the skew changes.
+
+<a id="p-electron2d-node-toplevel"></a>
+### `public bool TopLevel { get; set; }`
+
+Gets or sets whether this node ignores its parent's transform.
+
+**Value:** `false` by default.
+
+**Exceptions**
+
+- `InvalidOperationException`: The parent transform is singular when disabling top-level mode, or mutation occurs off the owner thread.
+- `ObjectDisposedException`: This node or an ancestor is disposing on another thread, or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the mode changes.
+
+**Remarks:** The current global transform is preserved when the mode changes.
+
+<a id="p-electron2d-node-visible"></a>
+### `public bool Visible { get; set; }`
+
+Gets or sets this node's local logical visibility.
+
+**Value:** `true` by default.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+- `Exception`: A visibility notification or event handler throws after visibility changes.
+
+**Remarks:** An actual change synchronously propagates visibility notifications and events through all descendants.
+
+<a id="p-electron2d-node-isvisibleintree"></a>
+### `public bool IsVisibleInTree { get; }`
+
+Gets whether this node is active and locally visible through its complete ancestor chain.
+
+**Value:** `true` only inside a tree when this node and every ancestor are visible.
+
+**Exceptions**
+
+- `ObjectDisposedException`: This node or a queried ancestor is disposing on another thread, or has finished disposing.
+
+<a id="p-electron2d-node-zindex"></a>
+### `public int ZIndex { get; set; }`
+
+Gets or sets this node's local Z-order value.
+
+**Value:** An integer from [`Node.MinimumZIndex`](Node.md#f-electron2d-node-minimumzindex) through [`Node.MaximumZIndex`](Node.md#f-electron2d-node-maximumzindex); the default is zero.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned value is outside the supported range.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-node-zasrelative"></a>
+### `public bool ZAsRelative { get; set; }`
+
+Gets or sets whether effective Z order accumulates ancestor Z values.
+
+**Value:** `true` by default.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-node-effectivezindex"></a>
+### `public int EffectiveZIndex { get; }`
+
+Gets the Z order after optional ancestor accumulation.
+
+**Value:** The accumulated or absolute value, clamped to the supported Z range.
+
+**Exceptions**
+
+- `ObjectDisposedException`: This node or a queried ancestor is disposing on another thread, or has finished disposing.
+
+<a id="p-electron2d-node-notifylocaltransformchanges"></a>
+### `public bool NotifyLocalTransformChanges { get; set; }`
+
+Gets or sets whether local transform changes dispatch [`Node.NotificationLocalTransformChanged`](Node.md#f-electron2d-node-notificationlocaltransformchanged).
+
+**Value:** `false` by default. [`Node.LocalTransformChanged`](Node.md#e-electron2d-node-localtransformchanged) is raised regardless.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-node-notifytransformchanges"></a>
+### `public bool NotifyTransformChanges { get; set; }`
+
+Gets or sets whether global transform changes dispatch [`Node.NotificationTransformChanged`](Node.md#f-electron2d-node-notificationtransformchanged).
+
+**Value:** `false` by default. [`Node.TransformChanged`](Node.md#e-electron2d-node-transformchanged) is raised regardless.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-node-processmode"></a>
+### `public NodeProcessMode ProcessMode { get; set; }`
+
+Gets or sets the pause policy used by both process callback lanes.
+
+**Value:** [`NodeProcessMode.Inherit`](NodeProcessMode.md#f-electron2d-nodeprocessmode-inherit) by default.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned enum value is undefined.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+- `Exception`: An enabled or disabled notification callback throws after the mode changes.
+
+**Remarks:** Crossing the effective disabled boundary synchronously notifies this node and affected inheriting descendants.
+
+<a id="p-electron2d-node-processenabled"></a>
+### `public bool ProcessEnabled { get; set; }`
+
+Gets or sets whether this node participates in host-driven process frames.
+
+**Value:** `false` by default.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-node-physicsprocessenabled"></a>
+### `public bool PhysicsProcessEnabled { get; set; }`
+
+Gets or sets whether this node participates in host-driven physics-process frames.
+
+**Value:** `false` by default.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-node-inputenabled"></a>
+### `public bool InputEnabled { get; set; }`
+
+Gets or sets whether this node receives the first input-propagation stage.
+
+**Value:** `false` by default.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+
+**Remarks:** Eligible nodes are visited in reverse depth-first order before unhandled-input stages.
+
+<a id="p-electron2d-node-unhandledinputenabled"></a>
+### `public bool UnhandledInputEnabled { get; set; }`
+
+Gets or sets whether this node receives input left unhandled by earlier stages.
+
+**Value:** `false` by default.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+
+**Remarks:** This final stage runs for every event that remains unhandled.
+
+<a id="p-electron2d-node-unhandledkeyinputenabled"></a>
+### `public bool UnhandledKeyInputEnabled { get; set; }`
+
+Gets or sets whether this node receives unhandled keyboard events before general unhandled input.
+
+**Value:** `false` by default.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+
+**Remarks:** The stage is skipped for non-keyboard events and after [`SceneTree.SetInputAsHandled`](SceneTree.md#m-electron2d-scenetree-setinputashandled).
+
+<a id="p-electron2d-node-processpriority"></a>
+### `public int ProcessPriority { get; set; }`
+
+Gets or sets this node's ascending process-frame order key.
+
+**Value:** Any integer; the default is zero. Equal priorities retain captured tree order.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-node-physicsprocesspriority"></a>
+### `public int PhysicsProcessPriority { get; set; }`
+
+Gets or sets this node's ascending physics-process order key.
+
+**Value:** Any integer; the default is zero. Equal priorities retain captured tree order.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-node-processdeltatime"></a>
+### `public double ProcessDeltaTime { get; }`
+
+Gets the delta from the most recent SceneTree-managed process frame delivered to this node.
+
+**Value:** The last delivered process delta in seconds, or zero before the first managed delivery.
+
+**Remarks:** [`Engine`](Engine.md) applies [`Engine.TimeScale`](Engine.md#p-electron2d-engine-timescale) before an Engine-driven delivery.
+
+<a id="p-electron2d-node-physicsprocessdeltatime"></a>
+### `public double PhysicsProcessDeltaTime { get; }`
+
+Gets the delta from the most recent SceneTree-managed physics-process frame delivered to this node.
+
+**Value:** The last delivered physics-process delta in seconds, or zero before the first managed delivery.
+
+**Remarks:** [`Engine`](Engine.md) applies [`Engine.TimeScale`](Engine.md#p-electron2d-engine-timescale) before an Engine-driven delivery.
+
+## Method Descriptions
+
+<a id="m-electron2d-node-addchild-electron2d-node"></a>
+### `public void AddChild(Node child)`
+
+Appends a detached node as the last direct child.
+
+**Parameters**
+
+- `child`: The live node to adopt.
+
+**Exceptions**
+
+- `ArgumentNullException`: `child` is `null`.
+- `ArgumentException`: `child` is this node.
+- `InvalidOperationException`: The operation would create a cycle, the child already has a parent or tree, a sibling name conflicts, or mutation
+occurs off the owner thread.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing, or disposal of `child` has started.
+- `AggregateException`: One or more structural, lifecycle, notification, or event callbacks fail after insertion begins.
+
+**Remarks:** If this node is active, the child's subtree enters immediately and receives ready where eligible.
+
+<a id="m-electron2d-node-addsibling-electron2d-node"></a>
+### `public void AddSibling(Node sibling)`
+
+Inserts a detached node immediately after this node in its parent's child order.
+
+**Parameters**
+
+- `sibling`: The live node to insert.
+
+**Exceptions**
+
+- `ArgumentNullException`: `sibling` is `null`.
+- `ArgumentException`: `sibling` is the destination parent.
+- `InvalidOperationException`: This node has no parent, insertion would create a cycle, the sibling is already attached, a name conflicts, or
+mutation occurs off the owner thread.
+- `ObjectDisposedException`: This node or its parent is disposing on another thread or has finished disposing, or disposal of
+`sibling` has started.
+- `AggregateException`: One or more structural, lifecycle, notification, or event callbacks fail after insertion begins.
+
+<a id="m-electron2d-node-removechild-electron2d-node"></a>
+### `public bool RemoveChild(Node child)`
+
+Removes a direct child without disposing it.
+
+**Parameters**
+
+- `child`: The node to detach.
+
+**Returns:** `true` when the node was a direct child and was detached; otherwise `false`.
+
+**Exceptions**
+
+- `ArgumentNullException`: `child` is `null`.
+- `InvalidOperationException`: An attached node is mutated off the owner thread, this parent is exiting, or the child is in tree lifecycle delivery.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+- `AggregateException`: One or more lifecycle, notification, or event callbacks fail after removal begins.
+
+**Remarks:** An active subtree exits its tree child-first before the parent reference is cleared.
+
+<a id="m-electron2d-node-movechild-electron2d-node-system-int32"></a>
+### `public void MoveChild(Node child, int index)`
+
+Moves a direct child to another sibling index.
+
+**Parameters**
+
+- `child`: The direct child to reorder.
+- `index`: The destination index; negative values count from the end, with `-1` selecting the last position.
+
+**Exceptions**
+
+- `ArgumentNullException`: `child` is `null`.
+- `ArgumentException`: `child` is not a direct child.
+- `ArgumentOutOfRangeException`: `index` does not resolve to an existing child position.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+- `AggregateException`: One or more child-order or tree-change callbacks fail after the order changes.
+
+<a id="m-electron2d-node-movetofront"></a>
+### `public void MoveToFront()`
+
+Moves this node to the last position among its siblings.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached parent is mutated off the owner thread.
+- `ObjectDisposedException`: This node or its parent is disposing on another thread or has finished disposing.
+- `AggregateException`: One or more child-order or tree-change callbacks fail after the order changes.
+
+**Remarks:** A detached or hierarchy-root node is left unchanged.
+
+<a id="m-electron2d-node-reparent-electron2d-node-system-boolean"></a>
+### `public void Reparent(Node newParent, bool keepGlobalTransform = true)`
+
+Moves this non-root node under a new parent.
+
+**Parameters**
+
+- `newParent`: The live destination parent.
+- `keepGlobalTransform`: Whether to preserve the complete current global transform. The default is `true`.
+
+**Exceptions**
+
+- `ArgumentNullException`: `newParent` is `null`.
+- `ArgumentException`: The destination validation rejects this node as its own child.
+- `InvalidOperationException`: This node has no parent, the move creates a cycle, a destination child name conflicts, either attached hierarchy
+is accessed off its owner thread, this node or its current parent is in protected tree lifecycle delivery, or the destination parent transform is singular while
+`keepGlobalTransform` is true.
+- `ObjectDisposedException`: This node or `newParent` is disposing on another thread or has finished disposing.
+- `AggregateException`: One or more structural, lifecycle, notification, or event callbacks fail after reparenting begins.
+
+**Remarks:** The operation detaches first and then appends to `newParent`; callback failures are not rolled back.
+
+<a id="m-electron2d-node-getchild-system-int32"></a>
+### `public Node GetChild(int index)`
+
+Gets a direct child by index.
+
+**Parameters**
+
+- `index`: The child index; negative values count from the end.
+
+**Returns:** The selected direct child.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: This node has no children or `index` is outside the valid range.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-node-getindex"></a>
+### `public int GetIndex()`
+
+Gets this node's index in its parent's ordered child list.
+
+**Returns:** The zero-based sibling index, or `-1` when this node has no parent.
+
+**Exceptions**
+
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-node-isancestorof-electron2d-node"></a>
+### `public bool IsAncestorOf(Node node)`
+
+Determines whether this node is a strict ancestor of another node.
+
+**Parameters**
+
+- `node`: The node whose parent chain is inspected.
+
+**Returns:** `true` when this node appears in the parent chain; otherwise `false`.
+
+**Exceptions**
+
+- `ArgumentNullException`: `node` is `null`.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-node-findchild-system-string-system-boolean"></a>
+### `public Node FindChild(string pattern, bool recursive = true)`
+
+Finds the first descendant whose name matches a wildcard pattern.
+
+**Parameters**
+
+- `pattern`: A nonblank simple expression using `*` and `?`; matching is case-insensitive.
+- `recursive`: Whether descendants below direct children are searched.
+
+**Returns:** The first matching node in depth-first pre-order, or `null`.
+
+**Exceptions**
+
+- `ArgumentException`: `pattern` is empty or whitespace.
+- `ArgumentNullException`: `pattern` is `null`.
+- `ObjectDisposedException`: This node or a recursively searched node is disposing on another thread, or has finished disposing.
+
+<a id="m-electron2d-node-findchild-1-system-string-system-boolean"></a>
+### `public TNode FindChild<TNode>(string pattern = "*", bool recursive = true)`
+
+Finds the first descendant of a requested type whose name matches a wildcard pattern.
+
+**Type parameters**
+
+- `TNode`: The required node subtype.
+
+**Parameters**
+
+- `pattern`: A nonblank simple expression using `*` and `?`; matching is case-insensitive.
+- `recursive`: Whether descendants below direct children are searched.
+
+**Returns:** The first typed match in depth-first pre-order, or `null`.
+
+**Exceptions**
+
+- `ArgumentException`: `pattern` is empty or whitespace.
+- `ArgumentNullException`: `pattern` is `null`.
+- `ObjectDisposedException`: This node or a recursively searched node is disposing on another thread, or has finished disposing.
+
+<a id="m-electron2d-node-findchildren-system-string-system-boolean"></a>
+### `public IReadOnlyList<Node> FindChildren(string pattern, bool recursive = true)`
+
+Finds all descendants whose names match a wildcard pattern.
+
+**Parameters**
+
+- `pattern`: A nonblank simple expression using `*` and `?`; matching is case-insensitive.
+- `recursive`: Whether descendants below direct children are searched.
+
+**Returns:** A read-only snapshot in depth-first pre-order.
+
+**Exceptions**
+
+- `ArgumentException`: `pattern` is empty or whitespace.
+- `ArgumentNullException`: `pattern` is `null`.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-node-findchildren-1-system-string-system-boolean"></a>
+### `public IReadOnlyList<TNode> FindChildren<TNode>(string pattern = "*", bool recursive = true)`
+
+Finds all descendants of a requested type whose names match a wildcard pattern.
+
+**Type parameters**
+
+- `TNode`: The required node subtype.
+
+**Parameters**
+
+- `pattern`: A nonblank simple expression using `*` and `?`; matching is case-insensitive.
+- `recursive`: Whether descendants below direct children are searched.
+
+**Returns:** A read-only typed snapshot in depth-first pre-order.
+
+**Exceptions**
+
+- `ArgumentException`: `pattern` is empty or whitespace.
+- `ArgumentNullException`: `pattern` is `null`.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-node-findparent-system-string"></a>
+### `public Node FindParent(string pattern)`
+
+Finds the nearest ancestor whose name matches a wildcard pattern.
+
+**Parameters**
+
+- `pattern`: A nonblank simple expression using `*` and `?`; matching is case-insensitive.
+
+**Returns:** The nearest matching ancestor, or `null`.
+
+**Exceptions**
+
+- `ArgumentException`: `pattern` is empty or whitespace.
+- `ArgumentNullException`: `pattern` is `null`.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-node-getpath"></a>
+### `public string GetPath()`
+
+Builds this node's absolute path from the root of its current hierarchy.
+
+**Returns:** A slash-prefixed path that includes the hierarchy root name.
+
+**Exceptions**
+
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+**Remarks:** The path is available for both attached and detached hierarchies.
+
+<a id="m-electron2d-node-getpathto-electron2d-node"></a>
+### `public string GetPathTo(Node node)`
+
+Builds a relative path from this node to another node in the same hierarchy.
+
+**Parameters**
+
+- `node`: The destination node.
+
+**Returns:** `.` for this node, otherwise a slash-separated sequence of `..` and child names.
+
+**Exceptions**
+
+- `ArgumentNullException`: `node` is `null`.
+- `InvalidOperationException`: The nodes do not share a hierarchy root.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing, or disposal of `node` has started.
+
+<a id="m-electron2d-node-getnode-system-string"></a>
+### `public Node GetNode(string path)`
+
+Resolves a required relative or absolute node path.
+
+**Parameters**
+
+- `path`: A nonblank slash-separated path supporting `.`, `..`, and an optional absolute root-name segment.
+
+**Returns:** The resolved node.
+
+**Exceptions**
+
+- `ArgumentException`: `path` is empty or whitespace.
+- `ArgumentNullException`: `path` is `null`.
+- `Collections.Generic.KeyNotFoundException`: No node exists at the requested path.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+**Remarks:** Absolute paths are resolved from the hierarchy root even when the hierarchy is detached.
+
+<a id="m-electron2d-node-getnode-1-system-string"></a>
+### `public TNode GetNode<TNode>(string path)`
+
+Resolves a required relative or absolute path to a requested node type.
+
+**Type parameters**
+
+- `TNode`: The required node subtype.
+
+**Parameters**
+
+- `path`: A nonblank slash-separated node path.
+
+**Returns:** The resolved node cast to `TNode`.
+
+**Exceptions**
+
+- `ArgumentException`: `path` is empty or whitespace.
+- `ArgumentNullException`: `path` is `null`.
+- `InvalidCastException`: The resolved node is not a `TNode`.
+- `Collections.Generic.KeyNotFoundException`: No node exists at the requested path.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-node-getnodeornull-system-string"></a>
+### `public Node GetNodeOrNull(string path)`
+
+Attempts to resolve a relative or absolute node path.
+
+**Parameters**
+
+- `path`: A nonblank slash-separated path supporting `.`, `..`, and an optional absolute root-name segment.
+
+**Returns:** The resolved node, or `null` when traversal cannot continue.
+
+**Exceptions**
+
+- `ArgumentException`: `path` is empty or whitespace.
+- `ArgumentNullException`: `path` is `null`.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+**Remarks:** Absolute paths are resolved from the hierarchy root even when the hierarchy is detached.
+
+<a id="m-electron2d-node-addtogroup-system-string-system-boolean"></a>
+### `public void AddToGroup(string group, bool persistent = false)`
+
+Adds this node to a case-sensitive group.
+
+**Parameters**
+
+- `group`: The nonblank group name.
+- `persistent`: Whether packed scenes containing this node should retain the membership.
+
+**Exceptions**
+
+- `ArgumentException`: `group` is empty or whitespace.
+- `ArgumentNullException`: `group` is `null`.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+**Remarks:** Adding an existing membership keeps it persistent once persistence has been requested.
+
+<a id="m-electron2d-node-removefromgroup-system-string"></a>
+### `public bool RemoveFromGroup(string group)`
+
+Removes this node from a case-sensitive group.
+
+**Parameters**
+
+- `group`: The nonblank group name.
+
+**Returns:** `true` when membership existed and was removed; otherwise `false`.
+
+**Exceptions**
+
+- `ArgumentException`: `group` is empty or whitespace.
+- `ArgumentNullException`: `group` is `null`.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-node-isingroup-system-string"></a>
+### `public bool IsInGroup(string group)`
+
+Determines whether this node belongs to a case-sensitive group.
+
+**Parameters**
+
+- `group`: The nonblank group name.
+
+**Returns:** `true` when this node is a member; otherwise `false`.
+
+**Exceptions**
+
+- `ArgumentException`: `group` is empty or whitespace.
+- `ArgumentNullException`: `group` is `null`.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-node-getgroups"></a>
+### `public IReadOnlyList<string> GetGroups()`
+
+Returns this node's group memberships.
+
+**Returns:** A read-only snapshot sorted using ordinal string order.
+
+**Exceptions**
+
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-node-canprocess"></a>
+### `public bool CanProcess()`
+
+Determines whether the resolved process mode allows callbacks in the current tree pause state.
+
+**Returns:** `false` while detached or disabled; otherwise the result of the resolved pause policy.
+
+**Exceptions**
+
+- `InvalidOperationException`: An invalid inherited process mode cannot be resolved.
+- `ObjectDisposedException`: This node or its tree is disposing on another thread, or has finished disposing.
+
+<a id="m-electron2d-node-requestready"></a>
+### `public void RequestReady()`
+
+Requests ready delivery the next time SceneTree attachment reaches the ready phase.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+**Remarks:** The method only resets stored ready state; it never delivers ready immediately.
+
+<a id="m-electron2d-node-createtween"></a>
+### `public Tween CreateTween()`
+
+Creates a tween in this node's scene tree and binds it to this node.
+
+**Returns:** A running empty tween that halts while this node is detached and is killed when this node is disposed.
+
+**Exceptions**
+
+- `InvalidOperationException`: The node is detached or the call is made off the tree owner thread.
+- `ObjectDisposedException`: The node or its tree is disposing or disposed.
+
+**Remarks:** The caller must append at least one tweener before the next matching frame, including a zero-delta frame.
+
+<a id="m-electron2d-node-queuefree"></a>
+### `public void QueueFree()`
+
+Atomically requests this node's deferred disposal at a future scene-tree safe point.
+
+**Exceptions**
+
+- `InvalidOperationException`: This node is the active scene-tree root.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+**Remarks:** A request made while already detached is queued if the node later enters a tree. Removing the node before its
+current tree flushes does not cancel deletion: that tree disposes the detached node at its safe point. If the
+node has entered another tree first, the old entry leaves the request intact for the new tree. Repeated calls
+are idempotent. The method may be called from a non-owner thread.
+
+<a id="m-electron2d-node-cancelfree"></a>
+### `public bool CancelFree()`
+
+Atomically cancels a pending deletion request.
+
+**Returns:** `true` when a request was pending; otherwise `false`.
+
+**Exceptions**
+
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+
+**Remarks:** A stale queue entry may remain, but the tree ignores it when flushing.
+
+<a id="m-electron2d-node-show"></a>
+### `public void Show()`
+
+Sets [`Node.Visible`](Node.md#p-electron2d-node-visible) to `true`.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+- `Exception`: A visibility notification or event handler throws after visibility changes.
+
+<a id="m-electron2d-node-hide"></a>
+### `public void Hide()`
+
+Sets [`Node.Visible`](Node.md#p-electron2d-node-visible) to `false`.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+- `Exception`: A visibility notification or event handler throws after visibility changes.
+
+<a id="m-electron2d-node-applyscale-electron2d-vector2"></a>
+### `public void ApplyScale(Vector2 ratio)`
+
+Component-multiplies the local scale by a ratio.
+
+**Parameters**
+
+- `ratio`: The finite X and Y scale ratios.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: A ratio component is NaN or infinite.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the scale changes.
+
+<a id="m-electron2d-node-rotate-system-single"></a>
+### `public void Rotate(float radians)`
+
+Adds an angle to the local rotation.
+
+**Parameters**
+
+- `radians`: The finite angle in radians.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `radians` is NaN or infinite.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the rotation changes.
+
+<a id="m-electron2d-node-translate-electron2d-vector2"></a>
+### `public void Translate(Vector2 offset)`
+
+Moves this node by an offset rotated by its local rotation.
+
+**Parameters**
+
+- `offset`: The finite local-space offset.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: An offset component is NaN or infinite.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the position changes.
+
+**Remarks:** Scale and skew do not affect the offset.
+
+<a id="m-electron2d-node-globaltranslate-electron2d-vector2"></a>
+### `public void GlobalTranslate(Vector2 offset)`
+
+Moves this node by a hierarchy-global offset.
+
+**Parameters**
+
+- `offset`: The finite global-space offset.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: An offset component is NaN or infinite.
+- `InvalidOperationException`: The parent transform is singular, or mutation occurs off the owner thread.
+- `ObjectDisposedException`: This node or an ancestor is disposing on another thread, or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the position changes.
+
+<a id="m-electron2d-node-movelocalx-system-single-system-boolean"></a>
+### `public void MoveLocalX(float delta, bool scaled = false)`
+
+Moves this node along its local X basis axis.
+
+**Parameters**
+
+- `delta`: The finite signed distance.
+- `scaled`: Whether scale magnitude is retained. By default the axis is normalized.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `delta` is NaN or infinite.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the position changes.
+
+**Remarks:** A near-zero normalized axis causes no movement.
+
+<a id="m-electron2d-node-movelocaly-system-single-system-boolean"></a>
+### `public void MoveLocalY(float delta, bool scaled = false)`
+
+Moves this node along its local Y basis axis.
+
+**Parameters**
+
+- `delta`: The finite signed distance.
+- `scaled`: Whether scale magnitude is retained. By default the axis is normalized.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `delta` is NaN or infinite.
+- `InvalidOperationException`: An attached node is mutated off the owner thread.
+- `ObjectDisposedException`: This node is disposing on another thread or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the position changes.
+
+**Remarks:** A near-zero normalized axis causes no movement.
+
+<a id="m-electron2d-node-getangleto-electron2d-vector2"></a>
+### `public float GetAngleTo(Vector2 globalPoint)`
+
+Computes the signed angle from this node's global positive X direction to a global point.
+
+**Parameters**
+
+- `globalPoint`: The finite point in hierarchy-global coordinates.
+
+**Returns:** A normalized angle in radians, or zero when the point equals [`Node.GlobalPosition`](Node.md#p-electron2d-node-globalposition).
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: A point component is NaN or infinite.
+- `ObjectDisposedException`: This node or an ancestor is disposing on another thread, or has finished disposing.
+
+<a id="m-electron2d-node-lookat-electron2d-vector2"></a>
+### `public void LookAt(Vector2 globalPoint)`
+
+Rotates this node so its positive local X direction points at a global point.
+
+**Parameters**
+
+- `globalPoint`: The finite target point in hierarchy-global coordinates.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: A point component is NaN or infinite.
+- `InvalidOperationException`: The parent transform is singular, or mutation occurs off the owner thread.
+- `ObjectDisposedException`: This node or an ancestor is disposing on another thread, or has finished disposing.
+- `Exception`: A transform notification or event handler throws after the rotation changes.
+
+**Remarks:** A target equal to [`Node.GlobalPosition`](Node.md#p-electron2d-node-globalposition) leaves rotation unchanged.
+
+<a id="m-electron2d-node-toglobal-electron2d-vector2"></a>
+### `public Vector2 ToGlobal(Vector2 localPoint)`
+
+Transforms a point from this node's local coordinates to hierarchy-global coordinates.
+
+**Parameters**
+
+- `localPoint`: The finite local point.
+
+**Returns:** The point transformed by [`Node.GlobalTransform`](Node.md#p-electron2d-node-globaltransform).
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: A point component is NaN or infinite.
+- `ObjectDisposedException`: This node or an ancestor is disposing on another thread, or has finished disposing.
+
+<a id="m-electron2d-node-tolocal-electron2d-vector2"></a>
+### `public Vector2 ToLocal(Vector2 globalPoint)`
+
+Transforms a point from hierarchy-global coordinates to this node's local coordinates.
+
+**Parameters**
+
+- `globalPoint`: The finite global point.
+
+**Returns:** The point transformed by the inverse global transform.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: A point component is NaN or infinite.
+- `InvalidOperationException`: The global transform is singular.
+- `ObjectDisposedException`: This node or an ancestor is disposing on another thread, or has finished disposing.
+
+<a id="m-electron2d-node-getrelativetransformtoparent-electron2d-node"></a>
+### `public Transform GetRelativeTransformToParent(Node parent)`
+
+Returns this node's transform relative to an ancestor.
+
+**Parameters**
+
+- `parent`: This node itself or a strict ancestor.
+
+**Returns:** Identity for this node; otherwise the global transform expressed relative to `parent`.
+
+**Exceptions**
+
+- `ArgumentNullException`: `parent` is `null`.
+- `ArgumentException`: `parent` is not an ancestor of this node.
+- `InvalidOperationException`: The ancestor's global transform is singular.
+- `ObjectDisposedException`: This node, `parent`, or a queried ancestor is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-node-createsceneinstancefactory"></a>
+### `protected virtual Func<Node> CreateSceneInstanceFactory()`
+
+Creates a reusable factory for packed-scene instances of this exact runtime node type.
+
+**Returns:** A non-null factory that creates a fresh node of the exact same runtime type.
+
+**Exceptions**
+
+- `NotSupportedException`: A derived node has not explicitly supplied an instancing factory.
+
+**Remarks:** The base implementation supports only an exact [`Node`](Node.md). Derived node types that can be packed must
+return a static, non-capturing factory that remains valid after the source node is disposed and creates a live,
+detached, parentless, childless, unowned, and non-queued instance. Stored writable property descriptors restore
+the instance state.
+
+<a id="m-electron2d-node-onentertree"></a>
+### `protected virtual void OnEnterTree()`
+
+Called synchronously when this node enters an active scene tree.
+
+**Remarks:** [`Node.Tree`](Node.md#p-electron2d-node-tree) is already assigned. The callback runs parent-first, before [`Node.TreeEntered`](Node.md#e-electron2d-node-treeentered), before
+descendants enter, and on the tree owner thread during SceneTree-managed lifecycle.
+
+<a id="m-electron2d-node-onexittree"></a>
+### `protected virtual void OnExitTree()`
+
+Called synchronously when this node exits an active scene tree.
+
+**Remarks:** Descendants have already exited and [`Node.Tree`](Node.md#p-electron2d-node-tree) remains assigned. The callback precedes
+[`Node.TreeExiting`](Node.md#e-electron2d-node-treeexiting) and runs on the tree owner thread during SceneTree-managed lifecycle.
+
+<a id="m-electron2d-node-onready"></a>
+### `protected virtual void OnReady()`
+
+Called synchronously when this node receives SceneTree-managed ready delivery.
+
+**Remarks:** Children are ready first. The callback precedes [`Node.Ready`](Node.md#e-electron2d-node-ready), is one-shot until [`Node.RequestReady`](Node.md#m-electron2d-node-requestready),
+and runs on the owner thread during SceneTree-managed delivery. Manual notification runs on its caller's thread.
+
+<a id="m-electron2d-node-onprocess-system-double"></a>
+### `protected virtual void OnProcess(double delta)`
+
+Called during an eligible host-driven process frame.
+
+**Parameters**
+
+- `delta`: The finite non-negative frame delta in seconds.
+
+**Remarks:** The callback is not auto-enabled by overriding it; [`Node.ProcessEnabled`](Node.md#p-electron2d-node-processenabled) must be true. It executes on
+the tree owner thread after [`Node.ProcessDeltaTime`](Node.md#p-electron2d-node-processdeltatime) is updated.
+
+<a id="m-electron2d-node-onphysicsprocess-system-double"></a>
+### `protected virtual void OnPhysicsProcess(double delta)`
+
+Called during an eligible host-driven physics-process frame.
+
+**Parameters**
+
+- `delta`: The finite non-negative physics-step delta in seconds.
+
+**Remarks:** The callback is not auto-enabled by overriding it; [`Node.PhysicsProcessEnabled`](Node.md#p-electron2d-node-physicsprocessenabled) must be true. It executes
+on the tree owner thread after [`Node.PhysicsProcessDeltaTime`](Node.md#p-electron2d-node-physicsprocessdeltatime) is updated and does not perform simulation.
+
+<a id="m-electron2d-node-oninput-electron2d-inputevent"></a>
+### `protected virtual void OnInput(InputEvent event)`
+
+Receives an input event during the first scene-input propagation stage.
+
+**Parameters**
+
+- `event`: The live caller-owned event being dispatched.
+
+**Remarks:** The callback runs synchronously on the scene-tree owner thread when [`Node.InputEnabled`](Node.md#p-electron2d-node-inputenabled) is true and
+[`Node.CanProcess`](Node.md#m-electron2d-node-canprocess) allows the node. Call [`SceneTree.SetInputAsHandled`](SceneTree.md#m-electron2d-scenetree-setinputashandled) to stop later stages.
+
+<a id="m-electron2d-node-onunhandledkeyinput-electron2d-inputeventkey"></a>
+### `protected virtual void OnUnhandledKeyInput(InputEventKey event)`
+
+Receives a keyboard event that remains unhandled after the first input stage.
+
+**Parameters**
+
+- `event`: The live caller-owned keyboard event being dispatched.
+
+**Remarks:** The callback runs synchronously on the scene-tree owner thread when [`Node.UnhandledKeyInputEnabled`](Node.md#p-electron2d-node-unhandledkeyinputenabled) is
+true and [`Node.CanProcess`](Node.md#m-electron2d-node-canprocess) allows the node.
+
+<a id="m-electron2d-node-onunhandledinput-electron2d-inputevent"></a>
+### `protected virtual void OnUnhandledInput(InputEvent event)`
+
+Receives an event that remains unhandled after earlier scene-input stages.
+
+**Parameters**
+
+- `event`: The live caller-owned event being dispatched.
+
+**Remarks:** The callback runs synchronously on the scene-tree owner thread when [`Node.UnhandledInputEnabled`](Node.md#p-electron2d-node-unhandledinputenabled) is true
+and [`Node.CanProcess`](Node.md#m-electron2d-node-canprocess) allows the node.
+
+<a id="m-electron2d-node-onnotification-system-int32"></a>
+### `protected override void OnNotification(int what)`
+
+Handles an engine notification delivered to this object.
+
+**Parameters**
+
+- `what`: The notification identifier.
+
+**Remarks:** Derived overrides should call the base implementation unless they intentionally suppress inherited handling.
+
+Calls the base implementation, then maps enter, exit, ready, process, and physics-process notification IDs to
+the corresponding typed virtual callbacks. Manual [`ElectronObject.Notify(Int32)`](ElectronObject.md#m-electron2d-electronobject-notify-system-int32) calls invoke those
+callbacks but do not mutate tree membership, ready state, or delta values.
+
+<a id="m-electron2d-node-validatemutation"></a>
+### `protected override void ValidateMutation()`
+
+Validates that mutable base state may change at the current lifecycle point.
+
+**Exceptions**
+
+- `ObjectDisposedException`: Disposal has started.
+
+**Remarks:** Derived types may reject mutation while they are participating in an atomic operation.
+
+<a id="m-electron2d-node-getpropertydescriptors"></a>
+### `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
+
+Returns the typed properties exposed to tooling before validation.
+
+**Returns:** The descriptor sequence. The base sequence exposes identity, lifetime, and translation state.
+
+**Remarks:** Overrides append or replace descriptors; they must not yield null entries.
+
+Appends this class's typed hierarchy, spatial, visibility, and processing descriptors to the inherited descriptors.
+
+<a id="m-electron2d-node-validatedisposal"></a>
+### `protected override void ValidateDisposal()`
+
+Validates caller-specific disposal preconditions before this caller attempts the disposal transition.
+
+**Exceptions**
+
+- `InvalidOperationException`: This node is in lifecycle delivery, its parent is exiting, it is an active tree root, or disposal is attempted off the owner thread.
+
+**Remarks:** This method can run concurrently in multiple callers and can race with another caller starting disposal.
+Overrides must therefore be side-effect-free and tolerate repeated execution.
+
+Rejects disposal during tree lifecycle delivery or of an active tree root, and requires the owner thread for an attached node.
+
+<a id="m-electron2d-node-dispose-system-boolean"></a>
+### `protected override void Dispose(bool disposing)`
+
+Releases resources owned by a derived class.
+
+**Parameters**
+
+- `disposing`: `true` when called from [`ElectronObject.Dispose`](ElectronObject.md#m-electron2d-electronobject-dispose).
+
+**Remarks:** Overrides release managed resources when `disposing` is true and then call the base implementation.
+
+Cancels queued deletion, detaches this node, recursively disposes every owned child, clears groups and event
+subscribers, and then calls the base implementation. Every teardown stage is attempted before failures are
+reported together.
+
+<a id="m-electron2d-node-ensuremutable"></a>
+### `protected void EnsureMutable()`
+
+Validates that this node may be mutated at the current lifecycle point.
+
+**Exceptions**
+
+- `InvalidOperationException`: Scene capture is active or an attached node is accessed off the tree owner thread.
+- `ObjectDisposedException`: Disposal has started.
+
+**Remarks:** Derived node property setters should call this before changing state that can be stored in a packed scene.
+
+## Event Descriptions
+
+<a id="e-electron2d-node-childadded"></a>
+### `public event Action<Node, Node> ChildAdded`
+
+Occurs on the parent after a direct child is structurally attached and child order is reported.
+
+**Remarks:** The first argument is the publishing parent and the second is the child. Delivery is synchronous and precedes
+active-tree attachment of the child's subtree.
+
+<a id="e-electron2d-node-childremoved"></a>
+### `public event Action<Node, Node> ChildRemoved`
+
+Occurs on the former parent after a direct child is detached and child order is reported.
+
+**Remarks:** The first argument is the publishing former parent and the second is the removed child. Delivery is synchronous,
+and structural changes are not rolled back if a handler throws.
+
+<a id="e-electron2d-node-childenteredtree"></a>
+### `public event Action<Node, Node> ChildEnteredTree`
+
+Occurs on the direct parent when a child enters the active tree.
+
+**Remarks:** The first argument is the publishing parent and the second is the entering child. Delivery follows that child's
+enter notification and event.
+
+<a id="e-electron2d-node-childexitingtree"></a>
+### `public event Action<Node, Node> ChildExitingTree`
+
+Occurs on the direct parent while a child is exiting the active tree.
+
+**Remarks:** The first argument is the publishing parent and the second is the exiting child. Descendants have already exited,
+and the child's [`Node.Tree`](Node.md#p-electron2d-node-tree) is still set.
+
+<a id="e-electron2d-node-childorderchanged"></a>
+### `public event Action<Node> ChildOrderChanged`
+
+Occurs after the order or membership of direct children changes.
+
+**Remarks:** The argument is this parent node. Delivery is synchronous after [`Node.NotificationChildOrderChanged`](Node.md#f-electron2d-node-notificationchildorderchanged).
+
+<a id="e-electron2d-node-renamed"></a>
+### `public event Action<Node> Renamed`
+
+Occurs after an active node's own name changes and path notifications propagate.
+
+**Remarks:** The argument is this node. Detached-node renames do not raise the event.
+
+<a id="e-electron2d-node-treeentered"></a>
+### `public event Action<Node> TreeEntered`
+
+Occurs when this node enters an active scene tree.
+
+**Remarks:** Delivery follows [`Node.NotificationEnterTree`](Node.md#f-electron2d-node-notificationentertree) and precedes descendant entry.
+
+<a id="e-electron2d-node-treeexiting"></a>
+### `public event Action<Node> TreeExiting`
+
+Occurs while this node is exiting its active scene tree.
+
+**Remarks:** Descendants have exited, [`Node.NotificationExitTree`](Node.md#f-electron2d-node-notificationexittree) has run, and [`Node.Tree`](Node.md#p-electron2d-node-tree) remains available.
+
+<a id="e-electron2d-node-treeexited"></a>
+### `public event Action<Node> TreeExited`
+
+Occurs after this node has left its scene tree.
+
+**Remarks:** [`Node.Tree`](Node.md#p-electron2d-node-tree) is already `null` when handlers run.
+
+<a id="e-electron2d-node-ready"></a>
+### `public event Action<Node> Ready`
+
+Occurs after child-first ready notification delivery.
+
+**Remarks:** SceneTree-managed delivery occurs once until [`Node.RequestReady`](Node.md#m-electron2d-node-requestready) resets the ready state.
+
+<a id="e-electron2d-node-visibilitychanged"></a>
+### `public event Action<Node> VisibilityChanged`
+
+Occurs after local or inherited logical visibility is propagated to this node.
+
+**Remarks:** Delivery follows [`Node.NotificationVisibilityChanged`](Node.md#f-electron2d-node-notificationvisibilitychanged) and continues through descendants.
+
+<a id="e-electron2d-node-localtransformchanged"></a>
+### `public event Action<Node> LocalTransformChanged`
+
+Occurs after this node's local transform actually changes.
+
+**Remarks:** The event is always enabled; numeric local-transform notification delivery is separately configurable.
+
+<a id="e-electron2d-node-transformchanged"></a>
+### `public event Action<Node> TransformChanged`
+
+Occurs when this node's global transform is affected by a local or ancestor change.
+
+**Remarks:** Propagation stops at top-level descendants. The event is independent of numeric transform notifications.
+
+## Constant Descriptions
+
+<a id="f-electron2d-node-notificationentertree"></a>
+### `public const int NotificationEnterTree = 10`
+
+Identifies the notification sent when a node enters an active [`SceneTree`](SceneTree.md).
+
+<a id="f-electron2d-node-notificationexittree"></a>
+### `public const int NotificationExitTree = 11`
+
+Identifies the notification sent after descendants exit and before this node leaves its tree.
+
+<a id="f-electron2d-node-notificationready"></a>
+### `public const int NotificationReady = 13`
+
+Identifies the child-first notification sent when a node becomes ready.
+
+<a id="f-electron2d-node-notificationpaused"></a>
+### `public const int NotificationPaused = 14`
+
+Identifies the notification sent when the owning tree becomes paused.
+
+<a id="f-electron2d-node-notificationunpaused"></a>
+### `public const int NotificationUnpaused = 15`
+
+Identifies the notification sent when the owning tree resumes from pause.
+
+<a id="f-electron2d-node-notificationphysicsprocess"></a>
+### `public const int NotificationPhysicsProcess = 16`
+
+Identifies a physics-process callback notification.
+
+<a id="f-electron2d-node-notificationprocess"></a>
+### `public const int NotificationProcess = 17`
+
+Identifies a process callback notification.
+
+<a id="f-electron2d-node-notificationparented"></a>
+### `public const int NotificationParented = 18`
+
+Identifies the notification sent after a parent reference is assigned.
+
+<a id="f-electron2d-node-notificationunparented"></a>
+### `public const int NotificationUnparented = 19`
+
+Identifies the notification sent after a parent reference is cleared.
+
+<a id="f-electron2d-node-notificationsceneinstantiated"></a>
+### `public const int NotificationSceneInstantiated = 20`
+
+Identifies the notification sent to the root after a packed scene is completely instantiated.
+
+<a id="f-electron2d-node-notificationpathrenamed"></a>
+### `public const int NotificationPathRenamed = 23`
+
+Identifies the notification propagated when this node's path changes.
+
+<a id="f-electron2d-node-notificationchildorderchanged"></a>
+### `public const int NotificationChildOrderChanged = 24`
+
+Identifies the notification sent after the direct child order changes.
+
+<a id="f-electron2d-node-notificationinternalprocess"></a>
+### `public const int NotificationInternalProcess = 25`
+
+Identifies an engine-internal process callback notification.
+
+**Remarks:** Built-in node logic uses this lane independently of [`Node.ProcessEnabled`](Node.md#p-electron2d-node-processenabled).
+
+<a id="f-electron2d-node-notificationinternalphysicsprocess"></a>
+### `public const int NotificationInternalPhysicsProcess = 26`
+
+Identifies an engine-internal physics-process callback notification.
+
+**Remarks:** Built-in node logic uses this lane independently of [`Node.PhysicsProcessEnabled`](Node.md#p-electron2d-node-physicsprocessenabled).
+
+<a id="f-electron2d-node-notificationpostentertree"></a>
+### `public const int NotificationPostEnterTree = 27`
+
+Identifies the notification sent after this node and its descendants finish entering a tree.
+
+<a id="f-electron2d-node-notificationdisabled"></a>
+### `public const int NotificationDisabled = 28`
+
+Identifies the notification sent when the effective process mode becomes disabled.
+
+<a id="f-electron2d-node-notificationenabled"></a>
+### `public const int NotificationEnabled = 29`
+
+Identifies the notification sent when the effective process mode stops being disabled.
+
+<a id="f-electron2d-node-notificationvisibilitychanged"></a>
+### `public const int NotificationVisibilityChanged = 31`
+
+Identifies the notification propagated after local or inherited visibility changes.
+
+<a id="f-electron2d-node-notificationlocaltransformchanged"></a>
+### `public const int NotificationLocalTransformChanged = 35`
+
+Identifies a local-transform change notification when local notification delivery is enabled.
+
+<a id="f-electron2d-node-notificationtransformchanged"></a>
+### `public const int NotificationTransformChanged = 2000`
+
+Identifies a global-transform change notification when global notification delivery is enabled.
+
+<a id="f-electron2d-node-notificationosmemorywarning"></a>
+### `public const int NotificationOsMemoryWarning = 2009`
+
+Identifies an operating-system low-memory warning propagated by the active scene tree.
+
+<a id="f-electron2d-node-notificationtranslationchanged"></a>
+### `public const int NotificationTranslationChanged = 2010`
+
+Identifies a notification that translated messages may have changed.
+
+<a id="f-electron2d-node-notificationwmabout"></a>
+### `public const int NotificationWmAbout = 2011`
+
+Identifies an operating-system request to show application information.
+
+<a id="f-electron2d-node-notificationcrash"></a>
+### `public const int NotificationCrash = 2012`
+
+Identifies a notification delivered immediately before an unrecoverable crash.
+
+<a id="f-electron2d-node-notificationosimeupdate"></a>
+### `public const int NotificationOsImeUpdate = 2013`
+
+Identifies an input-method composition update supplied by the operating system.
+
+<a id="f-electron2d-node-notificationapplicationresumed"></a>
+### `public const int NotificationApplicationResumed = 2014`
+
+Identifies that the application resumed after suspension.
+
+<a id="f-electron2d-node-notificationapplicationpaused"></a>
+### `public const int NotificationApplicationPaused = 2015`
+
+Identifies that the application is about to be suspended.
+
+<a id="f-electron2d-node-notificationapplicationfocusin"></a>
+### `public const int NotificationApplicationFocusIn = 2016`
+
+Identifies that the application received keyboard focus.
+
+<a id="f-electron2d-node-notificationapplicationfocusout"></a>
+### `public const int NotificationApplicationFocusOut = 2017`
+
+Identifies that the application lost keyboard focus.
+
+<a id="f-electron2d-node-notificationtextserverchanged"></a>
+### `public const int NotificationTextServerChanged = 2018`
+
+Identifies that the active text service changed.
+
+<a id="f-electron2d-node-notificationapplicationpipmodeentered"></a>
+### `public const int NotificationApplicationPipModeEntered = 2019`
+
+Identifies that the application entered picture-in-picture mode.
+
+<a id="f-electron2d-node-notificationapplicationpipmodeexited"></a>
+### `public const int NotificationApplicationPipModeExited = 2020`
+
+Identifies that the application exited picture-in-picture mode.
+
+<a id="f-electron2d-node-minimumzindex"></a>
+### `public const int MinimumZIndex = -4096`
+
+Specifies the smallest supported local or effective Z index.
+
+<a id="f-electron2d-node-maximumzindex"></a>
+### `public const int MaximumZIndex = 4095`
+
+Specifies the largest supported local or effective Z index.
+
+## Inherited API
+
+Public and protected members inherited from [ElectronObject](ElectronObject.md). Their lifecycle and error contracts remain applicable unless this page states an override.
 
 ## Lifecycle and state transitions
 

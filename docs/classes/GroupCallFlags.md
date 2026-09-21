@@ -2,28 +2,65 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** —
 
-- Source: [`GroupCallFlags.cs`](../../src/Scene/Main/GroupCallFlags.cs)
-- Namespace: `Electron2D`
-- Declaration: `[Flags] public enum GroupCallFlags`
-- Domain: [Scene](../domains/scene.md)
-- Component: [Scene tree](../components/scene-tree.md)
+**Inherited By:** —
 
-## Responsibility
+- **Source:** [`src/Scene/Main/GroupCallFlags.cs`](../../src/Scene/Main/GroupCallFlags.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public enum GroupCallFlags`
+
+> Controls ordering and scheduling for typed scene-group operations.
+
+## Description
+
+Controls ordering and scheduling for typed scene-group operations.
 
 `GroupCallFlags` controls scheduling, hierarchy order, and coalescing for `SceneTree.CallGroup`, `SetGroup`, and `NotifyGroup`.
 
-## Complete public API
+Public group methods reject unknown bits and require [`GroupCallFlags.Unique`](GroupCallFlags.md#f-electron2d-groupcallflags-unique) to be combined with
+[`GroupCallFlags.Deferred`](GroupCallFlags.md#f-electron2d-groupcallflags-deferred). Unique identity is the operation kind, group, and delegate or notification identifier;
+later setter values and other supported flags do not replace the first accepted operation.
 
-| Value | Numeric value | Behavior |
-| --- | ---: | --- |
-| `Default` | `0` | Immediate hierarchy pre-order |
-| `Reverse` | `1` | Reverses the selected pre-order so descendants precede ancestors |
-| `Deferred` | `2` | Queues the operation for a future deferred flush |
-| `Unique` | `4` | Coalesces an equal deferred operation until its queued callback begins; requires `Deferred` |
+## Examples
 
-Unknown bits are rejected. For unique setters, differing captured values do not distinguish operations, so the first accepted value is retained.
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+var value = GroupCallFlags.Default;
+```
+
+## Constants
+
+| Member | Description |
+| --- | --- |
+| [`Default = 0`](#f-electron2d-groupcallflags-default) | Executes immediately in hierarchy order. |
+| [`Reverse = 1`](#f-electron2d-groupcallflags-reverse) | Visits descendants before their ancestors by reversing hierarchy order. |
+| [`Deferred = 2`](#f-electron2d-groupcallflags-deferred) | Queues the operation for a future deferred flush instead of executing it immediately. |
+| [`Unique = 4`](#f-electron2d-groupcallflags-unique) | Coalesces equal deferred operations until their queued callback starts. |
+
+## Constant Descriptions
+
+<a id="f-electron2d-groupcallflags-default"></a>
+### `Default = 0`
+
+Executes immediately in hierarchy order.
+
+<a id="f-electron2d-groupcallflags-reverse"></a>
+### `Reverse = 1`
+
+Visits descendants before their ancestors by reversing hierarchy order.
+
+<a id="f-electron2d-groupcallflags-deferred"></a>
+### `Deferred = 2`
+
+Queues the operation for a future deferred flush instead of executing it immediately.
+
+<a id="f-electron2d-groupcallflags-unique"></a>
+### `Unique = 4`
+
+Coalesces equal deferred operations until their queued callback starts. This value requires
+[`GroupCallFlags.Deferred`](GroupCallFlags.md#f-electron2d-groupcallflags-deferred); the first operation's captured arguments are retained.
 
 ## Lifecycle, invariants, and threading
 

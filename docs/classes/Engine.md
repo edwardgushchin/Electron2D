@@ -2,65 +2,388 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** [ElectronObject](ElectronObject.md)
 
-- Source: [`Engine.cs`](../../src/Core/Config/Engine.cs)
-- Namespace: `Electron2D`
-- Declaration: `public sealed class Engine : ElectronObject`
-- Domain: [Core](../domains/core.md)
-- Component: [Engine runtime](../components/engine-runtime.md)
-- Version type: [`EngineVersionInfo`](EngineVersionInfo.md)
+**Inherited By:** —
 
-## Responsibility and ownership
+- **Source:** [`src/Core/Config/Engine.cs`](../../src/Core/Config/Engine.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public sealed class Engine : ElectronObject`
+
+> Coordinates process-wide frame scheduling, runtime metrics, and named engine singletons.
+
+## Description
+
+Coordinates process-wide frame scheduling, runtime metrics, and named engine singletons.
 
 `Engine` is the non-disposable process-wide runtime coordinator. It reads/writes persisted timing configuration through [`ProjectSettings`](ProjectSettings.md), attaches one [`MainLoop`](MainLoop.md), converts host-supplied unscaled elapsed time into fixed and variable callbacks, publishes runtime metrics, and maintains a thread-safe registry of named non-owned `ElectronObject` instances. The registry is initialized with permanent `Engine`, `ProjectSettings`, [`Input`](Input.md), and [`InputMap`](InputMap.md) entries.
 
 The host still owns the elapsed-time source, native event pump, waiting/frame pacing, and final disposal of the loop. `Engine.Stop()` finalizes and detaches the loop but deliberately does not dispose it. The registry retains references but never acquires disposal ownership.
 
-## Complete public API
+[`Engine.Instance`](Engine.md#p-electron2d-engine-instance) is created once for the process and cannot be disposed. Runtime execution remains
+host-driven: a host attaches one [`Engine.MainLoop`](Engine.md#p-electron2d-engine-mainloop), supplies finite elapsed time to
+[`Engine.AdvanceFrame(Double)`](Engine.md#m-electron2d-engine-advanceframe-system-double), and finally calls [`Engine.Stop`](Engine.md#m-electron2d-engine-stop).
 
-### Singleton and configuration
+Runtime lifecycle and frame execution have owner-thread affinity. Configuration properties, metric reads, and
+named-singleton operations are safe from other threads. Timing properties use the process-wide
+[`ProjectSettings`](ProjectSettings.md) registry, including active feature overrides. A frame uses one configuration snapshot.
 
-| Member | Current behavior |
+## Examples
+
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+Engine engine = Engine.Instance;
+engine.Start(mainLoop);
+engine.AdvanceFrame(elapsedSeconds);
+engine.Stop();
+```
+
+## Properties
+
+| Member | Description |
 | --- | --- |
-| `static Engine Instance { get; }` | Returns the same process-lifetime instance; `Dispose()` is rejected |
-| `int PhysicsTicksPerSecond { get; set; }` | Positive fixed-step frequency; default `60`; a runtime change re-baselines fixed timing on the next frame |
-| `int MaxPhysicsStepsPerFrame { get; set; }` | Positive per-process-frame catch-up cap; default `8` |
-| `double PhysicsJitterFix { get; set; }` | Finite fixed-boundary smoothing tolerance; default `0.5`; negative input clamps to zero |
-| `double TimeScale { get; set; }` | Finite non-negative public callback-delta multiplier; default `1`; zero freezes scaled callbacks without stopping cadence or built-in timers configured to use original time |
+| [`public static Engine Instance { get; }`](#p-electron2d-engine-instance) | Gets the process-wide engine instance. |
+| [`public int PhysicsTicksPerSecond { get; set; }`](#p-electron2d-engine-physicstickspersecond) | Gets or sets the fixed-step callback frequency. |
+| [`public int MaxPhysicsStepsPerFrame { get; set; }`](#p-electron2d-engine-maxphysicsstepsperframe) | Gets or sets the maximum number of fixed-step callbacks run during one process frame. |
+| [`public double PhysicsJitterFix { get; set; }`](#p-electron2d-engine-physicsjitterfix) | Gets or sets the tolerance used to smooth fixed-step boundaries against variable frame timing. |
+| [`public double TimeScale { get; set; }`](#p-electron2d-engine-timescale) | Gets or sets the rate at which game time advances relative to unscaled host time. |
+| [`public ulong ProcessFrames { get; }`](#p-electron2d-engine-processframes) | Gets the number of process callbacks completed since the process-wide engine was created. |
+| [`public ulong PhysicsFrames { get; }`](#p-electron2d-engine-physicsframes) | Gets the number of fixed-step callbacks started since the process-wide engine was created. |
+| [`public double FramesPerSecond { get; }`](#p-electron2d-engine-framespersecond) | Gets the most recently measured process-frame rate. |
+| [`public double PhysicsInterpolationFraction { get; }`](#p-electron2d-engine-physicsinterpolationfraction) | Gets the fraction of the current fixed interval remaining after the latest scheduling decision. |
+| [`public bool IsInPhysicsFrame { get; }`](#p-electron2d-engine-isinphysicsframe) | Gets whether the current thread is executing a fixed-step callback. |
+| [`public MainLoop MainLoop { get; }`](#p-electron2d-engine-mainloop) | Gets the currently attached application loop. |
+| [`public string ArchitectureName { get; }`](#p-electron2d-engine-architecturename) | Gets the architecture targeted by the current Electron2D process. |
+| [`public EngineVersionInfo VersionInfo { get; }`](#p-electron2d-engine-versioninfo) | Gets immutable version information for the loaded Electron2D assembly. |
 
-Configuration reads and writes are atomic and may occur from any thread. The first three properties use active project-setting feature overrides; `TimeScale` remains transient runtime state. `AdvanceFrame()` samples all four values once. Changing tick frequency discards an old-frequency fractional interval instead of mixing two step sizes.
+## Methods
 
-### Runtime and metrics
-
-| Member | Current behavior |
+| Member | Description |
 | --- | --- |
-| `MainLoop? MainLoop { get; }` | Current loop during startup, running frames, and shutdown; otherwise `null` |
-| `void Start(MainLoop mainLoop)` | Atomically reserves the runtime, publishes the loop, initializes it if still created, resets the synchronizer/FPS window, and establishes the caller as owner thread |
-| `bool AdvanceFrame(double elapsedSeconds)` | Uses finite non-negative unscaled host time; runs zero or more fixed callbacks before exactly one process callback, updates metrics, flushes one pending project-settings event, and combines stop requests |
-| `void Stop()` | Finalizes then detaches the loop even when finalization throws; does not dispose it |
-| `ulong ProcessFrames { get; }` | Completed process callbacks since the process-wide Engine was created; a throwing callback is not counted |
-| `ulong PhysicsFrames { get; }` | Fixed callbacks started since the process-wide Engine was created; a throwing callback is counted |
-| `double FramesPerSecond { get; }` | Completed process callbacks per accumulated unscaled host second; zero until the first window completes |
-| `double PhysicsInterpolationFraction { get; }` | Bounded remaining fixed-interval fraction after the latest scheduling decision |
-| `bool IsInPhysicsFrame { get; }` | True only while the current owner thread is inside `MainLoop.PhysicsProcess()` |
-| `string ArchitectureName { get; }` | Current process architecture using stable lowercase names for the common x86 and ARM targets |
-| `EngineVersionInfo VersionInfo { get; }` | Immutable numeric and informational version read from `Electron2D.dll` |
+| [`public void Start(MainLoop mainLoop)`](#m-electron2d-engine-start-electron2d-mainloop) | Attaches and, when necessary, initializes one application loop. |
+| [`public bool AdvanceFrame(double elapsedSeconds)`](#m-electron2d-engine-advanceframe-system-double) | Advances fixed-step callbacks followed by one process callback. |
+| [`public void Stop()`](#m-electron2d-engine-stop) | Finalizes and detaches the current application loop. |
+| [`public void RegisterSingleton(string name, ElectronObject instance)`](#m-electron2d-engine-registersingleton-system-string-electron2d-electronobject) | Registers a named, non-owned engine singleton. |
+| [`public void UnregisterSingleton(string name)`](#m-electron2d-engine-unregistersingleton-system-string) | Unregisters a named engine singleton without disposing it. |
+| [`public ElectronObject GetSingleton(string name)`](#m-electron2d-engine-getsingleton-system-string) | Gets a named engine singleton. |
+| [`public T GetSingleton<T>(string name)`](#m-electron2d-engine-getsingleton-1-system-string) | Gets a named engine singleton and validates its type. |
+| [`public bool HasSingleton(string name)`](#m-electron2d-engine-hassingleton-system-string) | Reports whether a named engine singleton is registered. |
+| [`public IReadOnlyList<string> GetSingletonList()`](#m-electron2d-engine-getsingletonlist) | Gets the current engine-singleton names in registration order. |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-engine-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
+| [`protected override void ValidateDisposal()`](#m-electron2d-engine-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
 
-The inherited typed property list includes timing configuration, metrics, architecture, and version descriptors. Identity, notification, translation, and other inherited behavior follows [`ElectronObject`](ElectronObject.md), except deterministic disposal: the singleton's `ValidateDisposal()` always throws `InvalidOperationException`.
+## Property Descriptions
 
-### Named singleton registry
+<a id="p-electron2d-engine-instance"></a>
+### `public static Engine Instance { get; }`
 
-| Member | Current behavior |
-| --- | --- |
-| `void RegisterSingleton(string name, ElectronObject instance)` | Registers one live instance under a unique nonblank ordinal name without taking ownership; all four built-in service names are already occupied |
-| `void UnregisterSingleton(string name)` | Removes an existing user name without disposing the object; built-in entries cannot be removed |
-| `ElectronObject GetSingleton(string name)` | Returns the registered identity or throws `KeyNotFoundException` |
-| `T GetSingleton<T>(string name)` | Adds a checked typed cast and throws `InvalidCastException` on mismatch |
-| `bool HasSingleton(string name)` | Tests a validated name |
-| `IReadOnlyList<string> GetSingletonList()` | Returns an immutable registration-order snapshot |
+Gets the process-wide engine instance.
 
-Registry operations are serialized by one lock. A registered object can later be disposed because registration is non-owning; the registering component must unregister during teardown. The registration-order list begins `Engine`, `ProjectSettings`, `Input`, `InputMap`; those entries are permanent.
+**Value:** The same non-disposable instance for the lifetime of the process.
+
+<a id="p-electron2d-engine-physicstickspersecond"></a>
+### `public int PhysicsTicksPerSecond { get; set; }`
+
+Gets or sets the fixed-step callback frequency.
+
+**Value:** The number of physics callback opportunities per unscaled second. The default is `60`.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned value is less than or equal to zero.
+
+**Remarks:** Higher values improve fixed-step precision while increasing processor cost. The fixed callback delta is
+`TimeScale / PhysicsTicksPerSecond`. The value is sampled once at the start of each frame. Changing it
+writes [`ProjectSettings.PhysicsTicksPerSecond`](ProjectSettings.md#p-electron2d-projectsettings-physicstickspersecond), re-baselines fixed-step history on the next frame,
+and discards any fractional interval from the old frequency.
+
+<a id="p-electron2d-engine-maxphysicsstepsperframe"></a>
+### `public int MaxPhysicsStepsPerFrame { get; set; }`
+
+Gets or sets the maximum number of fixed-step callbacks run during one process frame.
+
+**Value:** A positive callback limit. The default is `8`.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned value is less than or equal to zero.
+
+**Remarks:** Limiting catch-up avoids an unbounded spiral after a long host stall. Excess whole fixed steps are discarded;
+the remaining fractional time is preserved for interpolation. Assignment writes
+[`ProjectSettings.MaxPhysicsStepsPerFrame`](ProjectSettings.md#p-electron2d-projectsettings-maxphysicsstepsperframe).
+
+<a id="p-electron2d-engine-physicsjitterfix"></a>
+### `public double PhysicsJitterFix { get; set; }`
+
+Gets or sets the tolerance used to smooth fixed-step boundaries against variable frame timing.
+
+**Value:** A finite non-negative multiple of one fixed step. The default is `0.5`.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned value is NaN or infinite.
+
+**Remarks:** A value of zero disables tolerance-based clock adjustment. Values above `2` are accepted but can make
+timing noticeably less responsive. Custom interpolation commonly uses zero. Assignment writes
+[`ProjectSettings.PhysicsJitterFix`](ProjectSettings.md#p-electron2d-projectsettings-physicsjitterfix); negative input is clamped to zero before storage.
+
+<a id="p-electron2d-engine-timescale"></a>
+### `public double TimeScale { get; set; }`
+
+Gets or sets the rate at which game time advances relative to unscaled host time.
+
+**Value:** A finite non-negative multiplier. The default is `1`; zero freezes callback deltas.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned value is negative, NaN, or infinite.
+
+**Remarks:** This multiplier changes the deltas supplied to process and fixed-step callbacks. It does not change how often
+those callbacks are scheduled. Extremely large values reduce temporal precision and should be avoided.
+
+<a id="p-electron2d-engine-processframes"></a>
+### `public ulong ProcessFrames { get; }`
+
+Gets the number of process callbacks completed since the process-wide engine was created.
+
+**Value:** A monotonically increasing process-lifetime count. A callback that throws is not counted.
+
+<a id="p-electron2d-engine-physicsframes"></a>
+### `public ulong PhysicsFrames { get; }`
+
+Gets the number of fixed-step callbacks started since the process-wide engine was created.
+
+**Value:** A monotonically increasing process-lifetime count, including a callback that throws.
+
+<a id="p-electron2d-engine-framespersecond"></a>
+### `public double FramesPerSecond { get; }`
+
+Gets the most recently measured process-frame rate.
+
+**Value:** Completed process frames per unscaled host second, updated after each accumulated second. The value is zero
+until the first measurement window completes and is reset by [`Engine.Start(MainLoop)`](Engine.md#m-electron2d-engine-start-electron2d-mainloop).
+
+<a id="p-electron2d-engine-physicsinterpolationfraction"></a>
+### `public double PhysicsInterpolationFraction { get; }`
+
+Gets the fraction of the current fixed interval remaining after the latest scheduling decision.
+
+**Value:** A value from `0` through `1`, where zero is exactly on a fixed-step boundary.
+
+**Remarks:** The value is intended for visual interpolation between the previous and current fixed states.
+
+<a id="p-electron2d-engine-isinphysicsframe"></a>
+### `public bool IsInPhysicsFrame { get; }`
+
+Gets whether the current thread is executing a fixed-step callback.
+
+**Value:** `true` only during a call to [`MainLoop.PhysicsProcess(Double)`](MainLoop.md#m-electron2d-mainloop-physicsprocess-system-double).
+
+<a id="p-electron2d-engine-mainloop"></a>
+### `public MainLoop MainLoop { get; }`
+
+Gets the currently attached application loop.
+
+**Value:** The loop visible during startup, frames, and shutdown; otherwise `null`.
+
+<a id="p-electron2d-engine-architecturename"></a>
+### `public string ArchitectureName { get; }`
+
+Gets the architecture targeted by the current Electron2D process.
+
+**Value:** A stable lowercase architecture name such as `x86_64`, `x86_32`, `arm64`, or `arm32`.
+
+<a id="p-electron2d-engine-versioninfo"></a>
+### `public EngineVersionInfo VersionInfo { get; }`
+
+Gets immutable version information for the loaded Electron2D assembly.
+
+**Value:** The process-wide version descriptor.
+
+## Method Descriptions
+
+<a id="m-electron2d-engine-start-electron2d-mainloop"></a>
+### `public void Start(MainLoop mainLoop)`
+
+Attaches and, when necessary, initializes one application loop.
+
+**Parameters**
+
+- `mainLoop`: The live loop to own until [`Engine.Stop`](Engine.md#m-electron2d-engine-stop) completes.
+
+**Exceptions**
+
+- `ArgumentNullException`: `mainLoop` is `null`.
+- `InvalidOperationException`: A runtime is already starting, running, iterating, or stopping; the loop is in an incompatible state; or the caller does not own the loop.
+- `ObjectDisposedException`: The loop is disposing or disposed.
+- `Exception`: Loop initialization throws. The engine returns to its idle state.
+
+**Remarks:** The calling thread becomes the runtime owner. An uninitialized loop is initialized; an already running loop,
+including a newly constructed [`SceneTree`](SceneTree.md), is attached without a second initialization. The loop
+is not disposed by the engine. During its initialization, [`Engine.MainLoop`](Engine.md#p-electron2d-engine-mainloop) already returns
+`mainLoop`.
+
+<a id="m-electron2d-engine-advanceframe-system-double"></a>
+### `public bool AdvanceFrame(double elapsedSeconds)`
+
+Advances fixed-step callbacks followed by one process callback.
+
+**Parameters**
+
+- `elapsedSeconds`: Finite non-negative unscaled host time elapsed since the previous call.
+
+**Returns:** `true` if either callback lane asks the host to stop; otherwise `false`.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `elapsedSeconds` is negative, NaN, or infinite.
+- `InvalidOperationException`: The runtime is not running, the caller is not its owner thread, frame execution is re-entered, or the current time scale would produce a non-finite callback delta.
+- `Exception`: A loop callback or project-settings event handler throws.
+
+**Remarks:** Fixed steps run before the process callback. If a fixed callback requests a stop, remaining fixed callbacks are
+skipped but the process callback still runs. A callback exception propagates, restores the engine to its running
+state, and does not implicitly finalize the loop. This method performs no waiting, rendering, input pumping,
+audio work, or collision simulation. After a successful process callback and metric update, the method flushes
+one pending [`ProjectSettings.SettingsChanged`](ProjectSettings.md#e-electron2d-projectsettings-settingschanged) event before returning.
+
+<a id="m-electron2d-engine-stop"></a>
+### `public void Stop()`
+
+Finalizes and detaches the current application loop.
+
+**Exceptions**
+
+- `InvalidOperationException`: The runtime is not running, the caller is not its owner thread, or the call occurs during a frame or lifecycle transition.
+- `Exception`: Loop finalization throws. Detachment still completes.
+
+**Remarks:** The loop becomes unavailable through [`Engine.MainLoop`](Engine.md#p-electron2d-engine-mainloop) after finalization returns or throws. The engine
+returns to its idle state and may start a different loop. The detached loop is not disposed.
+
+<a id="m-electron2d-engine-registersingleton-system-string-electron2d-electronobject"></a>
+### `public void RegisterSingleton(string name, ElectronObject instance)`
+
+Registers a named, non-owned engine singleton.
+
+**Parameters**
+
+- `name`: The nonblank case-sensitive name.
+- `instance`: The live object to expose.
+
+**Exceptions**
+
+- `ArgumentNullException`: `name` or `instance` is `null`.
+- `ArgumentException`: `name` is empty or consists only of whitespace.
+- `ObjectDisposedException`: `instance` is disposing or disposed.
+- `InvalidOperationException`: The name is already registered.
+
+**Remarks:** Registration retains a managed reference but does not transfer disposal ownership. Disposing an object does not
+remove its registration; the registering component must unregister it during teardown. The name `Engine``ProjectSettings`, `Input`, and `InputMap` are already occupied by built-in process singletons.
+
+<a id="m-electron2d-engine-unregistersingleton-system-string"></a>
+### `public void UnregisterSingleton(string name)`
+
+Unregisters a named engine singleton without disposing it.
+
+**Parameters**
+
+- `name`: The nonblank case-sensitive registered name.
+
+**Exceptions**
+
+- `ArgumentNullException`: `name` is `null`.
+- `ArgumentException`: `name` is empty or consists only of whitespace.
+- `Collections.Generic.KeyNotFoundException`: No singleton has the supplied name.
+- `InvalidOperationException`: `name` identifies a built-in singleton.
+
+<a id="m-electron2d-engine-getsingleton-system-string"></a>
+### `public ElectronObject GetSingleton(string name)`
+
+Gets a named engine singleton.
+
+**Parameters**
+
+- `name`: The nonblank case-sensitive registered name.
+
+**Returns:** The registered object. Ownership remains with the registering component.
+
+**Exceptions**
+
+- `ArgumentNullException`: `name` is `null`.
+- `ArgumentException`: `name` is empty or consists only of whitespace.
+- `Collections.Generic.KeyNotFoundException`: No singleton has the supplied name.
+
+<a id="m-electron2d-engine-getsingleton-1-system-string"></a>
+### `public T GetSingleton<T>(string name)`
+
+Gets a named engine singleton and validates its type.
+
+**Type parameters**
+
+- `T`: The required [`ElectronObject`](ElectronObject.md) type.
+
+**Parameters**
+
+- `name`: The nonblank case-sensitive registered name.
+
+**Returns:** The registered object cast to `T`.
+
+**Exceptions**
+
+- `ArgumentNullException`: `name` is `null`.
+- `ArgumentException`: `name` is empty or consists only of whitespace.
+- `Collections.Generic.KeyNotFoundException`: No singleton has the supplied name.
+- `InvalidCastException`: The registered object is not assignable to `T`.
+
+<a id="m-electron2d-engine-hassingleton-system-string"></a>
+### `public bool HasSingleton(string name)`
+
+Reports whether a named engine singleton is registered.
+
+**Parameters**
+
+- `name`: The nonblank case-sensitive name.
+
+**Returns:** `true` when the name is registered; otherwise `false`.
+
+**Exceptions**
+
+- `ArgumentNullException`: `name` is `null`.
+- `ArgumentException`: `name` is empty or consists only of whitespace.
+
+<a id="m-electron2d-engine-getsingletonlist"></a>
+### `public IReadOnlyList<string> GetSingletonList()`
+
+Gets the current engine-singleton names in registration order.
+
+**Returns:** An immutable snapshot using ordinal, case-sensitive names.
+
+<a id="m-electron2d-engine-getpropertydescriptors"></a>
+### `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
+
+Returns the typed properties exposed to tooling before validation.
+
+**Returns:** The descriptor sequence. The base sequence exposes identity, lifetime, and translation state.
+
+**Remarks:** Overrides append or replace descriptors; they must not yield null entries.
+
+<a id="m-electron2d-engine-validatedisposal"></a>
+### `protected override void ValidateDisposal()`
+
+Validates caller-specific disposal preconditions before this caller attempts the disposal transition.
+
+**Exceptions**
+
+- `InvalidOperationException`: Always thrown because the singleton has process lifetime.
+
+**Remarks:** This method can run concurrently in multiple callers and can race with another caller starting disposal.
+Overrides must therefore be side-effect-free and tolerate repeated execution.
+
+The process-wide engine instance cannot be disposed.
+
+## Inherited API
+
+Public and protected members inherited from [ElectronObject](ElectronObject.md). Their lifecycle and error contracts remain applicable unless this page states an override.
 
 ## Scheduling and ordering
 
@@ -96,29 +419,6 @@ Lifecycle/frame entry is atomic and non-reentrant. `MainLoop` is visible during 
 The thread that successfully calls `Start()` owns runtime lifecycle and frames until `Stop()` completes. Wrong-thread frame and stop calls fail before changing runtime state. Timing configuration, metrics, `MainLoop` reads, and registry operations are cross-thread safe. User callbacks, event subscription, registered object state, and the attached loop are not made thread-safe by `Engine`.
 
 No background thread, clock, sleep, synchronization context, or native pump is created. Real cadence depends on the host that measures elapsed time and calls `AdvanceFrame()`.
-
-## Official reference coverage inventory
-
-The stable reference API, current implementation header, timing synchronizer, main iteration, and complete `Object` inheritance chain were checked on 2026-09-21.
-
-| Reference area | Electron2D disposition |
-| --- | --- |
-| Global Engine singleton | Implemented as `Engine.Instance`; process lifetime is enforced by rejecting disposal |
-| `physics_ticks_per_second`, `max_physics_steps_per_frame`, `physics_jitter_fix`, `time_scale` | Implemented with typed properties, validation, fixed-step synchronization, catch-up cap, scaling, tests, and typed property descriptors; negative time scale is deliberately rejected because every Electron2D frame callback requires a non-negative delta |
-| Main loop lookup | Implemented as nullable `MainLoop`; typed `Start`/`AdvanceFrame`/`Stop` are the explicit host integration API |
-| Physics/process frame counters, FPS, interpolation fraction, in-physics query | Implemented as typed properties with documented failure/counting semantics |
-| Architecture and version information | Implemented from .NET runtime and loaded assembly metadata; the reference dictionary is adapted to [`EngineVersionInfo`](EngineVersionInfo.md) |
-| Register/unregister/has/get/list singleton | Implemented with four permanent process-service entries, `ElectronObject`, generic typed lookup, explicit errors, registration-order snapshots, and non-owning user lifetime |
-| `max_fps` | Deferred until the SDL host owns a monotonic clock and waiting/presentation policy; no inert setting is exposed |
-| `print_to_stdout`, `print_error_messages` | Deferred until a logging component provides actual output routes |
-| Frames drawn | Deferred until a renderer can report completed draws; returning a fabricated process-frame count is rejected |
-| Author, copyright, donor, license map, and license text | Deferred until the distributable has an accepted generated attribution/license manifest |
-| Script backtraces and script-language registration/query | Deferred until the scripting domain exists |
-| Movie-writer path | Deferred until renderer capture/movie writing exists |
-| Editor and embedded-editor queries | Deferred until an editor runtime exists |
-| Inherited dynamic call/property/meta/script/signal surface | Governed by the typed adaptations and exclusions in [`ElectronObject`](ElectronObject.md), ADR 0001, and ADR 0002 |
-
-No dependency-blocked item is represented by a stored-but-unused flag, constant-return compatibility method, or empty hook.
 
 ## Dependencies and interactions
 

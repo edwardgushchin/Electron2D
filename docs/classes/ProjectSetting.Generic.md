@@ -1,31 +1,96 @@
-# ProjectSetting<T>
+# ProjectSetting\<T\>
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** —
 
-- Source: [`ProjectSettings.cs`](../../src/Core/Config/ProjectSettings.cs)
-- Namespace: `Electron2D`
-- Declaration: `public sealed class ProjectSetting<T> where T : notnull`
-- Domain: [Core](../domains/core.md)
-- Component: [Project settings](../components/project-settings.md)
+**Inherited By:** —
 
-## Responsibility and ownership
+- **Source:** [`src/Core/Config/ProjectSettings.cs`](../../src/Core/Config/ProjectSettings.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public sealed class ProjectSetting<T>`
+
+> Identifies one strongly typed project-wide setting and its default value.
+
+## Description
+
+Identifies one strongly typed project-wide setting and its default value.
 
 `ProjectSetting<T>` is the immutable public identity of one project-wide value. It binds a full slash-separated, ordinal case-sensitive name to a compile-time value type, a serialized default snapshot, and an optional validator. The same instance is intentionally reusable across isolated [`ProjectSettings`](ProjectSettings.md) registries.
 
 The type owns no file, engine object, or disposable resource. It caches only the most recently decoded scalar/string value; reference-shaped values are decoded for every read so callers cannot mutate a stored default or registry value through an alias.
 
-## Complete public API
+Reuse one instance for each logical setting. Names are case-sensitive paths such as
+`application/config/name`. Values are serialized snapshots, so mutable values returned from
+[`ProjectSetting`1.DefaultValue`](ProjectSetting.Generic.md#p-electron2d-projectsetting-1-defaultvalue) do not mutate the stored default. A validator can run concurrently on caller threads;
+it must therefore be deterministic, thread-safe, and free of registry mutations.
 
-| Member | Current behavior |
+## Examples
+
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+var difficulty = new ProjectSetting<int>("game/difficulty", 1);
+int current = difficulty.DefaultValue;
+```
+
+## Constructors
+
+| Member | Description |
 | --- | --- |
-| `ProjectSetting(string name, T defaultValue, Func<T, bool>? validator = null)` | Validates the category path and value type, snapshots the non-null default through the configuration serializer, and requires the optional validator to accept it |
-| `string Name { get; }` | Full case-sensitive path; requires at least one `/`; forbids empty segments, whitespace, control characters, backslashes, and periods |
-| `Type ValueType { get; }` | Exact `typeof(T)` |
-| `T DefaultValue { get; }` | Fresh deserialized default for reference-shaped values; safe cached return for scalar/string values |
+| [`public ProjectSetting<T>(string name, T defaultValue, Func<T, bool> validator = null)`](#m-electron2d-projectsetting-1-ctor-system-string-0-system-func-0-system-boolean) | Initializes a strongly typed project setting. |
 
-Periods are reserved for persisted feature-override suffixes and therefore cannot occur in a base setting name. `object`, JSON DOM types, delegates, `ElectronObject` types, and containers recursively containing those types are rejected under the same boundary as [`ConfigKey<T>`](ConfigKey.Generic.md).
+## Properties
+
+| Member | Description |
+| --- | --- |
+| [`public string Name { get; }`](#p-electron2d-projectsetting-1-name) | Gets the full setting path. |
+| [`public Type ValueType { get; }`](#p-electron2d-projectsetting-1-valuetype) | Gets the declared value type. |
+| [`public T DefaultValue { get; }`](#p-electron2d-projectsetting-1-defaultvalue) | Gets an independent copy of the default value. |
+
+## Constructor Descriptions
+
+<a id="m-electron2d-projectsetting-1-ctor-system-string-0-system-func-0-system-boolean"></a>
+### `public ProjectSetting<T>(string name, T defaultValue, Func<T, bool> validator = null)`
+
+Initializes a strongly typed project setting.
+
+**Parameters**
+
+- `name`: The full case-sensitive category path.
+- `defaultValue`: The non-null value returned while no explicit value is stored.
+- `validator`: An optional predicate that must accept every stored value.
+
+**Exceptions**
+
+- `ArgumentNullException`: `name` or `defaultValue` is `null`.
+- `ArgumentException`: `name` is not a valid category path.
+- `ArgumentOutOfRangeException`: `validator` rejects `defaultValue`.
+- `NotSupportedException`: `T` is not a supported configuration value type.
+- `Text.Json.JsonException`: `defaultValue` cannot be serialized as `T`.
+
+## Property Descriptions
+
+<a id="p-electron2d-projectsetting-1-name"></a>
+### `public string Name { get; }`
+
+Gets the full setting path.
+
+**Value:** A case-sensitive category path containing at least one slash.
+
+<a id="p-electron2d-projectsetting-1-valuetype"></a>
+### `public Type ValueType { get; }`
+
+Gets the declared value type.
+
+**Value:** `T`.
+
+<a id="p-electron2d-projectsetting-1-defaultvalue"></a>
+### `public T DefaultValue { get; }`
+
+Gets an independent copy of the default value.
+
+**Value:** The value supplied during construction, deserialized as a new snapshot.
 
 ## Lifecycle, invariants, and errors
 

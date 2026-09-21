@@ -2,26 +2,48 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** —
 
-- Source: [`TimerProcessCallback.cs`](../../src/Scene/Main/TimerProcessCallback.cs)
-- Namespace: `Electron2D`
-- Declaration: `public enum TimerProcessCallback`
-- Domain: [Scene](../domains/scene.md)
-- Component: [Scene tree](../components/scene-tree.md)
+**Inherited By:** —
 
-## Responsibility and ownership
+- **Source:** [`src/Scene/Main/TimerProcessCallback.cs`](../../src/Scene/Main/TimerProcessCallback.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public enum TimerProcessCallback`
+
+> Specifies which scene-tree frame lane advances a [`Timer`](Timer.md).
+
+## Description
+
+Specifies which scene-tree frame lane advances a [`Timer`](Timer.md).
 
 `TimerProcessCallback` selects the `SceneTree` frame lane that advances a [`Timer`](Timer.md). It is an immutable value and owns no resources.
 
-## Complete public API
+## Examples
 
-| Value | Numeric identity | Current behavior |
-| --- | ---: | --- |
-| `Physics` | `0` | Advances during eligible fixed-step physics frames |
-| `Idle` | `1` | Advances during eligible variable-step process frames; the default |
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
-Undefined values are rejected by `Timer.ProcessCallback` and by its typed property descriptor. Changing a running timer's value atomically moves its internal scheduling lane without resetting remaining time.
+```csharp
+var value = TimerProcessCallback.Physics;
+```
+
+## Constants
+
+| Member | Description |
+| --- | --- |
+| [`Physics = 0`](#f-electron2d-timerprocesscallback-physics) | Advances the timer during fixed-step physics-process frames. |
+| [`Idle = 1`](#f-electron2d-timerprocesscallback-idle) | Advances the timer during variable-step process frames. |
+
+## Constant Descriptions
+
+<a id="f-electron2d-timerprocesscallback-physics"></a>
+### `Physics = 0`
+
+Advances the timer during fixed-step physics-process frames.
+
+<a id="f-electron2d-timerprocesscallback-idle"></a>
+### `Idle = 1`
+
+Advances the timer during variable-step process frames.
 
 ## Lifecycle, errors, and threading
 

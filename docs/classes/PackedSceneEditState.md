@@ -2,28 +2,63 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** —
 
-- Source: [`PackedSceneEditState.cs`](../../src/Scene/Resources/PackedSceneEditState.cs)
-- Namespace: `Electron2D`
-- Declaration: `public enum PackedSceneEditState`
-- Domain: [Scene](../domains/scene.md)
-- Component: [Packed scenes](../components/packed-scenes.md)
+**Inherited By:** —
 
-## Responsibility
+- **Source:** [`src/Scene/Resources/PackedSceneEditState.cs`](../../src/Scene/Resources/PackedSceneEditState.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public enum PackedSceneEditState`
+
+> Controls editor metadata applied while a packed scene is instantiated.
+
+## Description
+
+Controls editor metadata applied while a packed scene is instantiated.
 
 `PackedSceneEditState` is the stable typed policy accepted by [`PackedScene.Instantiate()`](PackedScene.md). The runtime implements only ordinary instantiation; the remaining numeric values reserve editor meanings and fail explicitly.
 
-## Values
+Runtime builds support only [`PackedSceneEditState.Disabled`](PackedSceneEditState.md#f-electron2d-packedsceneeditstate-disabled). The remaining values retain stable serialized identities for a
+future editor and are rejected explicitly until that domain exists.
 
-| Value | Number | Current behavior |
-| --- | ---: | --- |
-| `Disabled` | `0` | Supported; creates an ordinary detached runtime instance |
-| `Instance` | `1` | Reserved for local editable-instance metadata; throws `NotSupportedException` |
-| `Main` | `2` | Reserved for main-scene editor metadata; throws `NotSupportedException` |
-| `MainInherited` | `3` | Reserved for inherited-main-scene editor metadata; throws `NotSupportedException` |
+## Examples
 
-Undefined numeric values throw `ArgumentOutOfRangeException` before any node or resource is created.
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+var value = PackedSceneEditState.Disabled;
+```
+
+## Constants
+
+| Member | Description |
+| --- | --- |
+| [`Disabled = 0`](#f-electron2d-packedsceneeditstate-disabled) | Creates a runtime scene instance without editable-scene metadata. |
+| [`Instance = 1`](#f-electron2d-packedsceneeditstate-instance) | Requests local editable-instance metadata from an editor build. |
+| [`Main = 2`](#f-electron2d-packedsceneeditstate-main) | Requests main-scene editing metadata from an editor build. |
+| [`MainInherited = 3`](#f-electron2d-packedsceneeditstate-maininherited) | Requests inherited-main-scene editing metadata from an editor build. |
+
+## Constant Descriptions
+
+<a id="f-electron2d-packedsceneeditstate-disabled"></a>
+### `Disabled = 0`
+
+Creates a runtime scene instance without editable-scene metadata.
+
+<a id="f-electron2d-packedsceneeditstate-instance"></a>
+### `Instance = 1`
+
+Requests local editable-instance metadata from an editor build.
+
+<a id="f-electron2d-packedsceneeditstate-main"></a>
+### `Main = 2`
+
+Requests main-scene editing metadata from an editor build.
+
+<a id="f-electron2d-packedsceneeditstate-maininherited"></a>
+### `MainInherited = 3`
+
+Requests inherited-main-scene editing metadata from an editor build.
 
 ## Lifecycle, ownership, and threading
 

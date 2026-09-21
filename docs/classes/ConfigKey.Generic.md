@@ -1,29 +1,99 @@
-# ConfigKey<T>
+# ConfigKey\<T\>
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** —
 
-- Source: [`ConfigFile.cs`](../../src/Core/IO/ConfigFile.cs)
-- Namespace: `Electron2D`
-- Declaration: `public sealed class ConfigKey<T>`
-- Domain: [Core](../domains/core.md)
-- Component: [Configuration files](../components/config-files.md)
+**Inherited By:** —
 
-## Responsibility and ownership
+- **Source:** [`src/Core/IO/ConfigFile.cs`](../../src/Core/IO/ConfigFile.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public sealed class ConfigKey<T>`
+
+> Identifies one strongly typed value in a [`ConfigFile`](ConfigFile.md).
+
+## Description
+
+Identifies one strongly typed value in a [`ConfigFile`](ConfigFile.md).
 
 `ConfigKey<T>` is an immutable, reusable identity for one entry in a [`ConfigFile`](ConfigFile.md). It binds a case-sensitive section and entry name to the compile-time value type used for serialization and deserialization. The key owns no configuration value or native resource and does not require disposal.
 
 The empty section addresses entries before the first section header. Entry names must be non-null and nonempty. Section and entry names may otherwise contain arbitrary Unicode text; unsafe text-format characters are quoted by `ConfigFile`.
 
-## Complete public API
+Reuse one key instance for each logical setting. The empty section addresses entries before the first section header.
+Values are serialized with the declared type rather than a runtime-wide universal value container.
 
-| Member | Current behavior |
+## Examples
+
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+var fullscreen = new ConfigKey<bool>("display/fullscreen", false);
+using var config = new ConfigFile();
+config.SetValue(fullscreen, true);
+```
+
+## Constructors
+
+| Member | Description |
 | --- | --- |
-| `ConfigKey(string section, string name)` | Validates the identifier and value type, then stores the immutable section/name pair |
-| `string Section { get; }` | Returns the case-sensitive section name, including the empty section |
-| `string Name { get; }` | Returns the nonempty case-sensitive entry name |
-| `string ToString()` | Returns `section/name`, or only `name` for a sectionless key |
+| [`public ConfigKey<T>(string section, string name)`](#m-electron2d-configkey-1-ctor-system-string-system-string) | Initializes a typed configuration key. |
+
+## Properties
+
+| Member | Description |
+| --- | --- |
+| [`public string Section { get; }`](#p-electron2d-configkey-1-section) | Gets the case-sensitive section name. |
+| [`public string Name { get; }`](#p-electron2d-configkey-1-name) | Gets the case-sensitive entry name. |
+
+## Methods
+
+| Member | Description |
+| --- | --- |
+| [`public override string ToString()`](#m-electron2d-configkey-1-tostring) | Returns the section and entry name for diagnostics. |
+
+## Constructor Descriptions
+
+<a id="m-electron2d-configkey-1-ctor-system-string-system-string"></a>
+### `public ConfigKey<T>(string section, string name)`
+
+Initializes a typed configuration key.
+
+**Parameters**
+
+- `section`: The case-sensitive section name, or an empty string for a sectionless entry.
+- `name`: The nonempty case-sensitive entry name.
+
+**Exceptions**
+
+- `ArgumentNullException`: `section` or `name` is `null`.
+- `ArgumentException`: `name` is empty.
+- `NotSupportedException`: `T` is an untyped JSON DOM value, `Object`, a delegate, or an engine object.
+
+## Property Descriptions
+
+<a id="p-electron2d-configkey-1-section"></a>
+### `public string Section { get; }`
+
+Gets the case-sensitive section name.
+
+**Value:** The section name, or an empty string for a sectionless entry.
+
+<a id="p-electron2d-configkey-1-name"></a>
+### `public string Name { get; }`
+
+Gets the case-sensitive entry name.
+
+**Value:** The nonempty entry name.
+
+## Method Descriptions
+
+<a id="m-electron2d-configkey-1-tostring"></a>
+### `public override string ToString()`
+
+Returns the section and entry name for diagnostics.
+
+**Returns:** `section/name`, or only the entry name for a sectionless key.
 
 ## Type contract
 

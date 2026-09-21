@@ -2,28 +2,143 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** [ElectronObject](ElectronObject.md)
 
-- Source: [`SceneTreeTimer.cs`](../../src/Scene/Main/SceneTreeTimer.cs)
-- Namespace: `Electron2D`
-- Declaration: `public sealed class SceneTreeTimer : ElectronObject`
-- Domain: [Scene](../domains/scene.md)
-- Component: [Scene tree](../components/scene-tree.md)
+**Inherited By:** —
 
-## Responsibility and ownership
+- **Source:** [`src/Scene/Main/SceneTreeTimer.cs`](../../src/Scene/Main/SceneTreeTimer.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public sealed class SceneTreeTimer : ElectronObject`
+
+> Provides a lightweight one-shot timer processed by a [`SceneTree`](SceneTree.md).
+
+## Description
+
+Provides a lightweight one-shot timer processed by a [`SceneTree`](SceneTree.md).
 
 `SceneTreeTimer` is a lightweight one-shot delay owned by the `SceneTree` that creates it. It advances after node callbacks in either the process or physics lane, raises one typed timeout event, and disposes itself. Tree disposal also disposes every still-active timer.
 
-## Complete public API
+The owning tree updates the timer after node callbacks in the selected frame lane. The timer is automatically
+disposed after timeout delivery. Keeping a managed reference does not extend its lifetime. Time advances only from
+delivered frame deltas; [`Engine`](Engine.md) scales those deltas when it drives the tree. The timer has no internal
+clock or independent time-scale bypass.
 
-| Member | Current behavior |
+## Examples
+
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+SceneTreeTimer timer = tree.CreateTimer(0.5);
+timer.Timeout += _ => Console.WriteLine("Elapsed");
+```
+
+## Properties
+
+| Member | Description |
 | --- | --- |
-| `double TimeLeft { get; set; }` | Finite non-negative seconds remaining; owner-thread mutation while attached |
-| `bool ProcessAlways { get; }` | Whether tree pause is ignored |
-| `bool ProcessInPhysics { get; }` | Whether the physics lane advances the timer |
-| `event Action<SceneTreeTimer> Timeout` | Synchronous one-shot delivery at zero, before automatic disposal |
+| [`public double TimeLeft { get; set; }`](#p-electron2d-scenetreetimer-timeleft) | Gets or sets the remaining delay in seconds. |
+| [`public bool ProcessAlways { get; }`](#p-electron2d-scenetreetimer-processalways) | Gets whether this timer continues while its tree is paused. |
+| [`public bool ProcessInPhysics { get; }`](#p-electron2d-scenetreetimer-processinphysics) | Gets whether this timer advances in physics frames instead of process frames. |
 
-Construction is internal through `SceneTree.CreateTimer`. Inherited identity, notification, property, translation, and deterministic lifetime behavior comes from [`ElectronObject`](ElectronObject.md).
+## Methods
+
+| Member | Description |
+| --- | --- |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-scenetreetimer-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
+| [`protected override void ValidateDisposal()`](#m-electron2d-scenetreetimer-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
+| [`protected override void Dispose(bool disposing)`](#m-electron2d-scenetreetimer-dispose-system-boolean) | Releases resources owned by a derived class. |
+
+## Events
+
+| Member | Description |
+| --- | --- |
+| [`public event Action<SceneTreeTimer> Timeout`](#e-electron2d-scenetreetimer-timeout) | Occurs once when the remaining delay reaches zero. |
+
+## Property Descriptions
+
+<a id="p-electron2d-scenetreetimer-timeleft"></a>
+### `public double TimeLeft { get; set; }`
+
+Gets or sets the remaining delay in seconds.
+
+**Value:** A finite non-negative duration. It reaches zero before [`SceneTreeTimer.Timeout`](SceneTreeTimer.md#e-electron2d-scenetreetimer-timeout) is raised.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned value is negative, NaN, or infinite.
+- `InvalidOperationException`: An attached timer is mutated off its tree's owner thread.
+- `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
+
+**Remarks:** Changing the value does not change the timer's selected frame lane or pause policy. Zero expires on the next matching frame.
+
+<a id="p-electron2d-scenetreetimer-processalways"></a>
+### `public bool ProcessAlways { get; }`
+
+Gets whether this timer continues while its tree is paused.
+
+**Value:** `true` to ignore tree pause; otherwise `false`.
+
+<a id="p-electron2d-scenetreetimer-processinphysics"></a>
+### `public bool ProcessInPhysics { get; }`
+
+Gets whether this timer advances in physics frames instead of process frames.
+
+**Value:** `true` for physics frames; `false` for process frames.
+
+## Method Descriptions
+
+<a id="m-electron2d-scenetreetimer-getpropertydescriptors"></a>
+### `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
+
+Returns the typed properties exposed to tooling before validation.
+
+**Returns:** The descriptor sequence. The base sequence exposes identity, lifetime, and translation state.
+
+**Remarks:** Overrides append or replace descriptors; they must not yield null entries.
+
+Appends this class's remaining-time and processing-policy descriptors.
+
+<a id="m-electron2d-scenetreetimer-validatedisposal"></a>
+### `protected override void ValidateDisposal()`
+
+Validates caller-specific disposal preconditions before this caller attempts the disposal transition.
+
+**Exceptions**
+
+- `InvalidOperationException`: The caller is not the owner thread.
+
+**Remarks:** This method can run concurrently in multiple callers and can race with another caller starting disposal.
+Overrides must therefore be side-effect-free and tolerate repeated execution.
+
+Requires the owner thread while this timer remains owned by a scene tree.
+
+<a id="m-electron2d-scenetreetimer-dispose-system-boolean"></a>
+### `protected override void Dispose(bool disposing)`
+
+Releases resources owned by a derived class.
+
+**Parameters**
+
+- `disposing`: `true` when called from [`ElectronObject.Dispose`](ElectronObject.md#m-electron2d-electronobject-dispose).
+
+**Remarks:** Overrides release managed resources when `disposing` is true and then call the base implementation.
+
+Removes the timer from its tree, clears timeout subscribers, and calls the base implementation.
+
+## Event Descriptions
+
+<a id="e-electron2d-scenetreetimer-timeout"></a>
+### `public event Action<SceneTreeTimer> Timeout`
+
+Occurs once when the remaining delay reaches zero.
+
+**Remarks:** Delivery is synchronous on the tree owner thread after node callbacks and before deferred work. The timer is
+disposed after the event invocation returns or throws. A handler failure propagates through the owning frame as part of an
+`AggregateException`.
+
+## Inherited API
+
+Public and protected members inherited from [ElectronObject](ElectronObject.md). Their lifecycle and error contracts remain applicable unless this page states an override.
 
 ## Complete protected API
 

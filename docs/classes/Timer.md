@@ -2,39 +2,307 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** [Node](Node.md)
 
-- Source: [`Timer.cs`](../../src/Scene/Main/Timer.cs)
-- Namespace: `Electron2D`
-- Declaration: `public class Timer : Node`
-- Domain: [Scene](../domains/scene.md)
-- Component: [Scene tree](../components/scene-tree.md)
+**Inherited By:** —
 
-## Responsibility and ownership
+- **Source:** [`src/Scene/Main/Timer.cs`](../../src/Scene/Main/Timer.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public class Timer : Node`
+
+> Provides a reusable scene-node countdown timer.
+
+## Description
+
+Provides a reusable scene-node countdown timer.
 
 `Timer` is a reusable Node-based countdown. It advances in one selected `SceneTree` frame lane, emits a typed timeout event when its remaining time reaches zero, and either stops or reloads. The parent Node or active tree owns it through ordinary hierarchy lifetime; the timer owns no thread, clock, task, or native handle.
 
 Use [`SceneTreeTimer`](SceneTreeTimer.md) instead for a lightweight tree-owned one-shot delay that is not part of the Node hierarchy.
 
-## Complete public API
+The timer advances at most once in its selected frame lane, emits [`Timer.Timeout`](Timer.md#e-electron2d-timer-timeout) when its remaining time
+reaches zero, and either stops or reloads according to [`Timer.OneShot`](Timer.md#p-electron2d-timer-oneshot). It has no clock or background thread.
 
-| Member | Current behavior |
+## Examples
+
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+using var timer = new Timer { WaitTime = 1.0, OneShot = true };
+timer.Timeout += _ => Console.WriteLine("Finished");
+timer.Start();
+```
+
+## Constructors
+
+| Member | Description |
 | --- | --- |
-| `Timer()` | Creates a stopped process-lane timer with a one-second wait |
-| `TimerProcessCallback ProcessCallback { get; set; }` | Selects physics or process frames; changing it while running preserves the countdown and moves internal scheduling |
-| `double WaitTime { get; set; }` | Finite positive duration in seconds, default `1`; changing it does not reset the active countdown |
-| `bool OneShot { get; set; }` | Stops before the next timeout when `true`; otherwise reloads before delivery; default `false` |
-| `bool Autostart { get; set; }` | Starts during the next ready delivery and then resets to `false`; default `false` |
-| `bool Paused { get; set; }` | Pauses only this countdown while preserving remaining time; default `false` |
-| `bool IgnoreTimeScale { get; set; }` | Uses Engine's original elapsed delta instead of the scaled callback delta; default `false` |
-| `double TimeLeft { get; }` | Non-negative seconds remaining; zero while stopped and after a repeating frame overshoots by at least one full residual period |
-| `event Action<Timer> Timeout` | Synchronous owner-thread delivery with the timer as sender |
-| `bool IsStopped()` | Reports whether no positive remaining time is observable |
-| `void Start()` | Starts or resets from `WaitTime`; requires active tree membership and does not unpause |
-| `void Start(double timeSeconds)` | Validates, stores, and starts from a finite positive duration; this typed overload avoids a sentinel argument |
-| `void Stop()` | Stops without timeout, sets `TimeLeft` to zero, and clears `Autostart`; valid while detached |
+| [`public Timer()`](#m-electron2d-timer-ctor) | Initializes a stopped timer with a one-second wait in the process-frame lane. |
 
-Inherited hierarchy, lifecycle, transform, visibility, process policy, group, path, notification, property, translation, and disposal behavior comes from [`Node`](Node.md). Stored property descriptors include `ProcessCallback`, `WaitTime`, `OneShot`, `Autostart`, and `IgnoreTimeScale`. `Paused` and `TimeLeft` are runtime-only; `TimeLeft` is read-only.
+## Properties
+
+| Member | Description |
+| --- | --- |
+| [`public TimerProcessCallback ProcessCallback { get; set; }`](#p-electron2d-timer-processcallback) | Gets or sets the frame lane that advances this timer. |
+| [`public double WaitTime { get; set; }`](#p-electron2d-timer-waittime) | Gets or sets the countdown duration in seconds. |
+| [`public bool OneShot { get; set; }`](#p-electron2d-timer-oneshot) | Gets or sets whether the timer stops after its next timeout. |
+| [`public bool Autostart { get; set; }`](#p-electron2d-timer-autostart) | Gets or sets whether ready delivery starts the timer automatically. |
+| [`public bool Paused { get; set; }`](#p-electron2d-timer-paused) | Gets or sets whether this timer's own countdown is paused. |
+| [`public bool IgnoreTimeScale { get; set; }`](#p-electron2d-timer-ignoretimescale) | Gets or sets whether the countdown ignores [`Engine.TimeScale`](Engine.md#p-electron2d-engine-timescale). |
+| [`public double TimeLeft { get; }`](#p-electron2d-timer-timeleft) | Gets the remaining countdown time in seconds. |
+
+## Methods
+
+| Member | Description |
+| --- | --- |
+| [`public bool IsStopped()`](#m-electron2d-timer-isstopped) | Gets whether the timer is stopped or has not started. |
+| [`public void Start()`](#m-electron2d-timer-start) | Starts the timer using [`Timer.WaitTime`](Timer.md#p-electron2d-timer-waittime), or resets an already running countdown. |
+| [`public void Start(double timeSeconds)`](#m-electron2d-timer-start-system-double) | Sets a new wait duration and starts or resets the timer. |
+| [`public void Stop()`](#m-electron2d-timer-stop) | Stops the timer without emitting [`Timer.Timeout`](Timer.md#e-electron2d-timer-timeout). |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-timer-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
+| [`protected override Func<Node> CreateSceneInstanceFactory()`](#m-electron2d-timer-createsceneinstancefactory) | Creates a reusable factory for packed-scene instances of this exact runtime node type. |
+| [`protected override void OnNotification(int what)`](#m-electron2d-timer-onnotification-system-int32) | Handles an engine notification delivered to this object. |
+| [`protected override void Dispose(bool disposing)`](#m-electron2d-timer-dispose-system-boolean) | Releases resources owned by a derived class. |
+
+## Events
+
+| Member | Description |
+| --- | --- |
+| [`public event Action<Timer> Timeout`](#e-electron2d-timer-timeout) | Occurs when the countdown reaches zero. |
+
+## Constructor Descriptions
+
+<a id="m-electron2d-timer-ctor"></a>
+### `public Timer()`
+
+Initializes a stopped timer with a one-second wait in the process-frame lane.
+
+## Property Descriptions
+
+<a id="p-electron2d-timer-processcallback"></a>
+### `public TimerProcessCallback ProcessCallback { get; set; }`
+
+Gets or sets the frame lane that advances this timer.
+
+**Value:** [`TimerProcessCallback.Idle`](TimerProcessCallback.md#f-electron2d-timerprocesscallback-idle) by default.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned value is undefined.
+- `InvalidOperationException`: An attached timer is mutated off its tree's owner thread.
+- `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
+
+**Remarks:** Changing the lane while running moves internal processing without resetting [`Timer.TimeLeft`](Timer.md#p-electron2d-timer-timeleft).
+
+<a id="p-electron2d-timer-waittime"></a>
+### `public double WaitTime { get; set; }`
+
+Gets or sets the countdown duration in seconds.
+
+**Value:** A finite value greater than zero; the default is one second.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: The assigned value is zero, negative, NaN, or infinite.
+- `InvalidOperationException`: An attached timer is mutated off its tree's owner thread.
+- `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
+
+**Remarks:** Changing the value does not alter the current countdown until the timer restarts or repeats.
+
+<a id="p-electron2d-timer-oneshot"></a>
+### `public bool OneShot { get; set; }`
+
+Gets or sets whether the timer stops after its next timeout.
+
+**Value:** `false` by default, causing automatic restart after each timeout.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached timer is mutated off its tree's owner thread.
+- `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-timer-autostart"></a>
+### `public bool Autostart { get; set; }`
+
+Gets or sets whether ready delivery starts the timer automatically.
+
+**Value:** `false` by default.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached timer is mutated off its tree's owner thread.
+- `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
+
+**Remarks:** A successful automatic start resets this property to `false`. Setting it after ready delivery
+does not start immediately; call [`Timer.Start`](Timer.md#m-electron2d-timer-start) or request another ready cycle before reattachment.
+
+<a id="p-electron2d-timer-paused"></a>
+### `public bool Paused { get; set; }`
+
+Gets or sets whether this timer's own countdown is paused.
+
+**Value:** `false` by default.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached timer is mutated off its tree's owner thread.
+- `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
+
+**Remarks:** Pausing preserves the remaining time. Starting a paused timer resets its countdown but does not resume it.
+Scene-tree pause policy remains independently controlled by [`Node.ProcessMode`](Node.md#p-electron2d-node-processmode).
+
+<a id="p-electron2d-timer-ignoretimescale"></a>
+### `public bool IgnoreTimeScale { get; set; }`
+
+Gets or sets whether the countdown ignores [`Engine.TimeScale`](Engine.md#p-electron2d-engine-timescale).
+
+**Value:** `false` by default.
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached timer is mutated off its tree's owner thread.
+- `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
+
+**Remarks:** Engine-driven frames use their original finite elapsed delta when enabled. Direct [`SceneTree`](SceneTree.md) frame
+calls have no separate scale and therefore use their supplied delta in either mode.
+
+<a id="p-electron2d-timer-timeleft"></a>
+### `public double TimeLeft { get; }`
+
+Gets the remaining countdown time in seconds.
+
+**Value:** The non-negative remaining time, or zero while stopped or after an overshooting repeat frame.
+
+**Exceptions**
+
+- `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
+
+**Remarks:** The value is read-only. Use [`Timer.Start(Double)`](Timer.md#m-electron2d-timer-start-system-double) to change the duration and restart.
+
+## Method Descriptions
+
+<a id="m-electron2d-timer-isstopped"></a>
+### `public bool IsStopped()`
+
+Gets whether the timer is stopped or has not started.
+
+**Returns:** `true` when no positive remaining time is observable; otherwise `false`.
+
+**Exceptions**
+
+- `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-timer-start"></a>
+### `public void Start()`
+
+Starts the timer using [`Timer.WaitTime`](Timer.md#p-electron2d-timer-waittime), or resets an already running countdown.
+
+**Exceptions**
+
+- `InvalidOperationException`: The timer is detached or called off its tree's owner thread.
+- `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
+
+**Remarks:** Calling this method does not clear [`Timer.Paused`](Timer.md#p-electron2d-timer-paused).
+
+<a id="m-electron2d-timer-start-system-double"></a>
+### `public void Start(double timeSeconds)`
+
+Sets a new wait duration and starts or resets the timer.
+
+**Parameters**
+
+- `timeSeconds`: The finite positive countdown duration in seconds.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `timeSeconds` is zero, negative, NaN, or infinite.
+- `InvalidOperationException`: The timer is detached or called off its tree's owner thread.
+- `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
+
+**Remarks:** This typed overload replaces sentinel duration values. Calling it does not clear [`Timer.Paused`](Timer.md#p-electron2d-timer-paused).
+
+<a id="m-electron2d-timer-stop"></a>
+### `public void Stop()`
+
+Stops the timer without emitting [`Timer.Timeout`](Timer.md#e-electron2d-timer-timeout).
+
+**Exceptions**
+
+- `InvalidOperationException`: An attached timer is mutated off its tree's owner thread.
+- `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
+
+**Remarks:** The method is valid while detached and also clears [`Timer.Autostart`](Timer.md#p-electron2d-timer-autostart).
+
+<a id="m-electron2d-timer-getpropertydescriptors"></a>
+### `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
+
+Returns the typed properties exposed to tooling before validation.
+
+**Returns:** The descriptor sequence. The base sequence exposes identity, lifetime, and translation state.
+
+**Remarks:** Overrides append or replace descriptors; they must not yield null entries.
+
+Appends countdown configuration, runtime pause, remaining-time, and frame-lane descriptors. Runtime pause and
+remaining time are not stored by packed scenes.
+
+<a id="m-electron2d-timer-createsceneinstancefactory"></a>
+### `protected override Func<Node> CreateSceneInstanceFactory()`
+
+Creates a reusable factory for packed-scene instances of this exact runtime node type.
+
+**Returns:** A non-null factory that creates a fresh node of the exact same runtime type.
+
+**Exceptions**
+
+- `NotSupportedException`: A derived node has not explicitly supplied an instancing factory.
+
+**Remarks:** The base implementation supports only an exact [`Node`](Node.md). Derived node types that can be packed must
+return a static, non-capturing factory that remains valid after the source node is disposed and creates a live,
+detached, parentless, childless, unowned, and non-queued instance. Stored writable property descriptors restore
+the instance state.
+
+Returns a static factory for exact [`Timer`](Timer.md) instances.
+
+<a id="m-electron2d-timer-onnotification-system-int32"></a>
+### `protected override void OnNotification(int what)`
+
+Handles an engine notification delivered to this object.
+
+**Parameters**
+
+- `what`: The notification identifier.
+
+**Remarks:** Derived overrides should call the base implementation unless they intentionally suppress inherited handling.
+
+Runs autostart after inherited ready handling and consumes internal process notifications.
+
+<a id="m-electron2d-timer-dispose-system-boolean"></a>
+### `protected override void Dispose(bool disposing)`
+
+Releases resources owned by a derived class.
+
+**Parameters**
+
+- `disposing`: `true` when called from [`ElectronObject.Dispose`](ElectronObject.md#m-electron2d-electronobject-dispose).
+
+**Remarks:** Overrides release managed resources when `disposing` is true and then call the base implementation.
+
+Clears timeout subscribers before releasing inherited node state.
+
+## Event Descriptions
+
+<a id="e-electron2d-timer-timeout"></a>
+### `public event Action<Timer> Timeout`
+
+Occurs when the countdown reaches zero.
+
+**Remarks:** Delivery is synchronous on the scene-tree owner thread. One-shot timers stop before delivery; repeating timers
+reload first. At most one timeout is emitted per matching frame. Handler exceptions propagate through the frame
+after the remaining callback phases are attempted.
+
+## Inherited API
+
+Public and protected members inherited from [Node](Node.md). Their lifecycle and error contracts remain applicable unless this page states an override.
 
 ## Complete protected API
 
@@ -68,21 +336,6 @@ Internal timer processing precedes the same node's public `OnProcess`/`OnPhysics
 ## Threading guarantees and non-guarantees
 
 Attached mutation, start/stop, ready handling, countdown advance, timeout delivery, and disposal use the owning `SceneTree` thread. Detached configuration has the same unsynchronized caller-owned semantics as `Node`. Event subscription and reads do not become thread-safe. No worker, task, synchronization context, sleep, or native timer exists.
-
-## Official reference coverage inventory
-
-The stable reference API, implementation source, and complete `Node`/`Object` inheritance chain were checked on 2026-09-21.
-
-| Reference area | Electron2D disposition |
-| --- | --- |
-| `process_callback`, `wait_time`, `one_shot`, `autostart`, `paused`, `ignore_time_scale`, `time_left` | Implemented as typed properties with matching defaults, runtime/storage roles, validation, lane changes, pause behavior, and original-delta support |
-| `start`, `stop`, `is_stopped` | Implemented; the optional negative sentinel is deliberately replaced by `Start()` and `Start(double)` overloads |
-| `timeout` signal | Implemented as `event Action<Timer>` with sender-first typed delivery |
-| Ready-time autostart and reset | Implemented; runtime ready starts and clears the flag |
-| Physics/process selection, tree pause, local pause, and time scale | Implemented through Node internal lanes, inherited process policy, and Engine dual-delta delivery; unscaled physics uses the original fixed step rather than a variable process step, preserving documented real-time behavior at any configured physics rate |
-| One event per frame and short-duration frame quantization | Implemented and documented; no catch-up loop or wall-clock promise is added |
-| Editor configuration warning for very short waits and editor-only autostart suppression | Deferred until an editor runtime and tooling-warning contract exist; no inert warning API is exposed |
-| Inherited dynamic calls/properties/scripts/metadata and untyped signal APIs | Permanently replaced or excluded by Electron2D's typed object, property, and C# event decisions |
 
 ## Dependencies and interactions
 

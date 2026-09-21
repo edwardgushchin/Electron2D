@@ -2,26 +2,60 @@
 
 Last updated: 2026-09-21
 
-## Source and declaration
+**Inherits:** —
 
-- Source: [`src/Core/IO/FileAccessMode.cs`](../../src/Core/IO/FileAccessMode.cs)
-- Declaration: `[Flags] public enum FileAccessMode`
-- Assembly and namespace: `Electron2D.dll`, `Electron2D`
+**Inherited By:** —
 
-## Responsibility
+- **Source:** [`src/Core/IO/FileAccessMode.cs`](../../src/Core/IO/FileAccessMode.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public enum FileAccessMode`
+
+> Specifies the operations permitted by an opened [`FileAccess`](FileAccess.md).
+
+## Description
+
+Specifies the operations permitted by an opened [`FileAccess`](FileAccess.md).
 
 `FileAccessMode` defines creation, truncation, read, and write behavior for one `FileAccess` instance.
 
-## Values
+## Examples
 
-| Value | Number | Behavior |
-| --- | ---: | --- |
-| `Read` | 1 | Existing file, read-only, cursor at zero |
-| `Write` | 2 | Create or truncate, write-only, cursor at zero |
-| `ReadWrite` | 3 | Existing file, read/write, no truncation, cursor at zero |
-| `WriteRead` | 7 | Create or truncate, read/write, cursor at zero |
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
-Although the enum is flagged to retain the reference numeric values, only these four exact constants are valid. Other bit combinations throw `ArgumentOutOfRangeException`.
+```csharp
+var value = FileAccessMode.Read;
+```
+
+## Constants
+
+| Member | Description |
+| --- | --- |
+| [`Read = 1`](#f-electron2d-fileaccessmode-read) | Opens an existing file for reading from its beginning. |
+| [`Write = 2`](#f-electron2d-fileaccessmode-write) | Creates or truncates a file and opens it for writing from its beginning. |
+| [`ReadWrite = 3`](#f-electron2d-fileaccessmode-readwrite) | Opens an existing file for reading and writing without truncating it. |
+| [`WriteRead = 7`](#f-electron2d-fileaccessmode-writeread) | Creates or truncates a file and opens it for reading and writing. |
+
+## Constant Descriptions
+
+<a id="f-electron2d-fileaccessmode-read"></a>
+### `Read = 1`
+
+Opens an existing file for reading from its beginning.
+
+<a id="f-electron2d-fileaccessmode-write"></a>
+### `Write = 2`
+
+Creates or truncates a file and opens it for writing from its beginning.
+
+<a id="f-electron2d-fileaccessmode-readwrite"></a>
+### `ReadWrite = 3`
+
+Opens an existing file for reading and writing without truncating it.
+
+<a id="f-electron2d-fileaccessmode-writeread"></a>
+### `WriteRead = 7`
+
+Creates or truncates a file and opens it for reading and writing.
 
 ## Lifecycle, invariants, and threading
 

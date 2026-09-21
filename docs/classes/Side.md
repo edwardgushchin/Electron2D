@@ -2,26 +2,60 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** —
 
-- Source: [`Side.cs`](../../src/Core/Math/Side.cs)
-- Namespace: `Electron2D`
-- Declaration: `public enum Side`
-- Domain: [Core](../domains/core.md)
-- Component: [Geometry values](../components/geometry-values.md)
+**Inherited By:** —
 
-## Responsibility and ownership
+- **Source:** [`src/Core/Math/Side.cs`](../../src/Core/Math/Side.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public enum Side`
+
+> Identifies one side of an axis-aligned rectangle.
+
+## Description
+
+Identifies one side of an axis-aligned rectangle.
 
 `Side` is the stable typed identity of one edge of an axis-aligned rectangle. It is a value enum with no owned state or lifecycle.
 
-## Complete public API
+## Examples
 
-| Value | Numeric value | Meaning |
-| --- | ---: | --- |
-| `Left` | `0` | Left edge |
-| `Top` | `1` | Top edge |
-| `Right` | `2` | Right edge |
-| `Bottom` | `3` | Bottom edge |
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+var value = Side.Left;
+```
+
+## Constants
+
+| Member | Description |
+| --- | --- |
+| [`Left = 0`](#f-electron2d-side-left) | The left side. |
+| [`Top = 1`](#f-electron2d-side-top) | The top side. |
+| [`Right = 2`](#f-electron2d-side-right) | The right side. |
+| [`Bottom = 3`](#f-electron2d-side-bottom) | The bottom side. |
+
+## Constant Descriptions
+
+<a id="f-electron2d-side-left"></a>
+### `Left = 0`
+
+The left side.
+
+<a id="f-electron2d-side-top"></a>
+### `Top = 1`
+
+The top side.
+
+<a id="f-electron2d-side-right"></a>
+### `Right = 2`
+
+The right side.
+
+<a id="f-electron2d-side-bottom"></a>
+### `Bottom = 3`
+
+The bottom side.
 
 ## Invariants and error behavior
 

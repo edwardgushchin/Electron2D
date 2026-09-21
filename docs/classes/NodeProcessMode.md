@@ -2,29 +2,69 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** —
 
-- Source: [`NodeProcessMode.cs`](../../src/Scene/Main/NodeProcessMode.cs)
-- Namespace: `Electron2D`
-- Declaration: `public enum NodeProcessMode`
-- Domain: [Scene](../domains/scene.md)
-- Component: [Unified 2D node](../components/unified-node.md)
+**Inherited By:** —
 
-## Responsibility and ownership
+- **Source:** [`src/Scene/Main/NodeProcessMode.cs`](../../src/Scene/Main/NodeProcessMode.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public enum NodeProcessMode`
+
+> Controls when a node receives process and physics-process callbacks.
+
+## Description
+
+Controls when a node receives process and physics-process callbacks.
 
 `NodeProcessMode` is the typed pause policy stored by each [`Node`](Node.md). It owns no resources and has no lifecycle. [`SceneTree`](SceneTree.md) resolves it before each process, physics-process, or scene-input callback.
 
-## Public API
+The values affect Electron2D's explicitly enabled host-driven process, physics-process, and scene-input callback
+lanes. They do not control rendering, audio, or a physics server.
 
-| Value | Numeric value | Behavior |
-| --- | ---: | --- |
-| `Inherit` | `0` | Uses the nearest ancestor's resolved mode; a root resolves to `Pausable` |
-| `Pausable` | `1` | Runs only while `SceneTree.Paused` is `false` |
-| `WhenPaused` | `2` | Runs only while `SceneTree.Paused` is `true` |
-| `Always` | `3` | Runs in either pause state |
-| `Disabled` | `4` | Never runs and makes inheriting descendants disabled |
+## Examples
 
-There is no protected API.
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+var value = NodeProcessMode.Inherit;
+```
+
+## Constants
+
+| Member | Description |
+| --- | --- |
+| [`Inherit = 0`](#f-electron2d-nodeprocessmode-inherit) | Uses the nearest ancestor's resolved mode; hierarchy roots resolve to [`NodeProcessMode.Pausable`](NodeProcessMode.md#f-electron2d-nodeprocessmode-pausable). |
+| [`Pausable = 1`](#f-electron2d-nodeprocessmode-pausable) | Runs only while the scene tree is not paused. |
+| [`WhenPaused = 2`](#f-electron2d-nodeprocessmode-whenpaused) | Runs only while the scene tree is paused. |
+| [`Always = 3`](#f-electron2d-nodeprocessmode-always) | Runs regardless of the scene tree pause state. |
+| [`Disabled = 4`](#f-electron2d-nodeprocessmode-disabled) | Never runs and disables descendants that inherit this mode. |
+
+## Constant Descriptions
+
+<a id="f-electron2d-nodeprocessmode-inherit"></a>
+### `Inherit = 0`
+
+Uses the nearest ancestor's resolved mode; hierarchy roots resolve to [`NodeProcessMode.Pausable`](NodeProcessMode.md#f-electron2d-nodeprocessmode-pausable).
+
+<a id="f-electron2d-nodeprocessmode-pausable"></a>
+### `Pausable = 1`
+
+Runs only while the scene tree is not paused.
+
+<a id="f-electron2d-nodeprocessmode-whenpaused"></a>
+### `WhenPaused = 2`
+
+Runs only while the scene tree is paused.
+
+<a id="f-electron2d-nodeprocessmode-always"></a>
+### `Always = 3`
+
+Runs regardless of the scene tree pause state.
+
+<a id="f-electron2d-nodeprocessmode-disabled"></a>
+### `Disabled = 4`
+
+Never runs and disables descendants that inherit this mode.
 
 ## Invariants and errors
 

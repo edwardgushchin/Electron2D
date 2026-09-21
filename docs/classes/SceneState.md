@@ -2,43 +2,326 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** [ElectronObject](ElectronObject.md)
 
-- Source: [`SceneState.cs`](../../src/Scene/Resources/SceneState.cs)
-- Namespace: `Electron2D`
-- Declaration: `public sealed class SceneState : ElectronObject`
-- Domain: [Scene](../domains/scene.md)
-- Component: [Packed scenes](../components/packed-scenes.md)
+**Inherited By:** —
 
-## Responsibility and ownership
+- **Source:** [`src/Scene/Resources/SceneState.cs`](../../src/Scene/Resources/SceneState.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public sealed class SceneState : ElectronObject`
+
+> Provides read-only typed metadata for the current contents of a [`PackedScene`](PackedScene.md).
+
+## Description
+
+Provides read-only typed metadata for the current contents of a [`PackedScene`](PackedScene.md).
 
 `SceneState` is the read-only typed metadata view returned by [`PackedScene.GetState()`](PackedScene.md). It exposes node, property, group, path, owner, placeholder, nested-instance, and connection metadata without a dynamic value container or string-based mutation.
 
 Callers cannot construct a state directly. The object owns no nodes or resources and cannot instantiate or mutate a scene. It retains the immutable packed-data reference currently published to it; resource-valued properties are borrowed references governed by normal [`Resource`](Resource.md) ownership.
 
-## Public API
+Instances are created by [`PackedScene.GetState`](PackedScene.md#m-electron2d-packedscene-getstate). A live state object tracks every content and path
+transition of its source resource, while retaining its final snapshot if that resource is later disposed.
 
-| Member | Current behavior |
+## Examples
+
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+using var scene = new PackedScene();
+scene.Pack(root);
+SceneState state = scene.GetState();
+int nodeCount = state.NodeCount;
+```
+
+## Methods
+
+| Member | Description |
 | --- | --- |
-| `SceneState? GetBaseSceneState()` | Always `null`; scene inheritance is absent |
-| `int GetConnectionCount()` | Always `0`; persistent event endpoints are absent |
-| `int GetNodeCount()` | Returns the captured node count, or `0` for an empty state |
-| `IReadOnlyList<string> GetNodeGroups(int nodeIndex)` | Returns the immutable ordinal-sorted persistent-group snapshot |
-| `int GetNodeIndex(int nodeIndex)` | Returns `-1`; instanced-subscene sibling override metadata is absent |
-| `PackedScene? GetNodeInstance(int nodeIndex)` | Returns `null`; nested packed-scene metadata is absent |
-| `string GetNodeInstancePlaceholder(int nodeIndex)` | Returns an empty string; placeholders are absent |
-| `string GetNodeName(int nodeIndex)` | Returns the captured node name |
-| `string GetNodeOwnerPath(int nodeIndex)` | Returns `.` for root-owned nodes and empty for no stored owner |
-| `string GetNodePath(int nodeIndex, bool forParent = false)` | Returns the relative node path, or the stored parent path when requested; root is `.` |
-| `int GetNodePropertyCount(int nodeIndex)` | Returns the stored-property count |
-| `string GetNodePropertyName(int nodeIndex, int propertyIndex)` | Returns the typed descriptor name captured for that property |
-| `Type GetNodePropertyType(int nodeIndex, int propertyIndex)` | Returns the exact declared value type |
-| `TValue GetNodePropertyValue<TValue>(int nodeIndex, int propertyIndex)` | Returns the captured value when compatible with the requested type; no untyped getter exists |
-| `string GetNodeType(int nodeIndex)` | Returns the unqualified captured runtime type name |
-| `string GetPath()` | Returns the current source `PackedScene.ResourcePath`, or the last value observed before source disposal |
-| `bool IsNodeInstancePlaceholder(int nodeIndex)` | Always `false` for runtime-authored nodes |
+| [`public SceneState GetBaseSceneState()`](#m-electron2d-scenestate-getbasescenestate) | Gets the inherited base scene state. |
+| [`public int GetConnectionCount()`](#m-electron2d-scenestate-getconnectioncount) | Gets the number of persistent connections stored in this state. |
+| [`public int GetNodeCount()`](#m-electron2d-scenestate-getnodecount) | Gets the number of stored nodes. |
+| [`public IReadOnlyList<string> GetNodeGroups(int nodeIndex)`](#m-electron2d-scenestate-getnodegroups-system-int32) | Gets the persistent groups stored for a node. |
+| [`public int GetNodeIndex(int nodeIndex)`](#m-electron2d-scenestate-getnodeindex-system-int32) | Gets the stored sibling index used by an instanced subscene override. |
+| [`public PackedScene GetNodeInstance(int nodeIndex)`](#m-electron2d-scenestate-getnodeinstance-system-int32) | Gets the nested packed scene associated with a node. |
+| [`public string GetNodeInstancePlaceholder(int nodeIndex)`](#m-electron2d-scenestate-getnodeinstanceplaceholder-system-int32) | Gets the resource path represented by a node placeholder. |
+| [`public string GetNodeName(int nodeIndex)`](#m-electron2d-scenestate-getnodename-system-int32) | Gets a stored node's name. |
+| [`public string GetNodeOwnerPath(int nodeIndex)`](#m-electron2d-scenestate-getnodeownerpath-system-int32) | Gets the path of a stored node's owner. |
+| [`public string GetNodePath(int nodeIndex, bool forParent = false)`](#m-electron2d-scenestate-getnodepath-system-int32-system-boolean) | Gets a stored node path or its parent's path. |
+| [`public int GetNodePropertyCount(int nodeIndex)`](#m-electron2d-scenestate-getnodepropertycount-system-int32) | Gets the number of stored properties for a node. |
+| [`public string GetNodePropertyName(int nodeIndex, int propertyIndex)`](#m-electron2d-scenestate-getnodepropertyname-system-int32-system-int32) | Gets the name of a stored node property. |
+| [`public Type GetNodePropertyType(int nodeIndex, int propertyIndex)`](#m-electron2d-scenestate-getnodepropertytype-system-int32-system-int32) | Gets the declared type of a stored node property. |
+| [`public TValue GetNodePropertyValue<TValue>(int nodeIndex, int propertyIndex)`](#m-electron2d-scenestate-getnodepropertyvalue-1-system-int32-system-int32) | Gets a stored node property through a requested compatible type. |
+| [`public string GetNodeType(int nodeIndex)`](#m-electron2d-scenestate-getnodetype-system-int32) | Gets a stored node's runtime type name. |
+| [`public string GetPath()`](#m-electron2d-scenestate-getpath) | Gets the resource path associated with this state. |
+| [`public bool IsNodeInstancePlaceholder(int nodeIndex)`](#m-electron2d-scenestate-isnodeinstanceplaceholder-system-int32) | Gets whether a stored node is an instance placeholder. |
 
-All access after this state is disposed throws `ObjectDisposedException`. Node and property index errors throw `ArgumentOutOfRangeException`; an incompatible generic property request throws `InvalidCastException`.
+## Method Descriptions
+
+<a id="m-electron2d-scenestate-getbasescenestate"></a>
+### `public SceneState GetBaseSceneState()`
+
+Gets the inherited base scene state.
+
+**Returns:** Always `null` until scene inheritance is available.
+
+**Exceptions**
+
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getconnectioncount"></a>
+### `public int GetConnectionCount()`
+
+Gets the number of persistent connections stored in this state.
+
+**Returns:** Zero because typed persistent connection endpoints are not yet part of the runtime contract.
+
+**Exceptions**
+
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getnodecount"></a>
+### `public int GetNodeCount()`
+
+Gets the number of stored nodes.
+
+**Returns:** Zero for an empty state; otherwise the captured node count.
+
+**Exceptions**
+
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getnodegroups-system-int32"></a>
+### `public IReadOnlyList<string> GetNodeGroups(int nodeIndex)`
+
+Gets the persistent groups stored for a node.
+
+**Parameters**
+
+- `nodeIndex`: The zero-based node index.
+
+**Returns:** An immutable group-name snapshot in ordinal order.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `nodeIndex` is outside the state.
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getnodeindex-system-int32"></a>
+### `public int GetNodeIndex(int nodeIndex)`
+
+Gets the stored sibling index used by an instanced subscene override.
+
+**Parameters**
+
+- `nodeIndex`: The zero-based node index.
+
+**Returns:** `-1` for ordinary locally captured nodes.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `nodeIndex` is outside the state.
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getnodeinstance-system-int32"></a>
+### `public PackedScene GetNodeInstance(int nodeIndex)`
+
+Gets the nested packed scene associated with a node.
+
+**Parameters**
+
+- `nodeIndex`: The zero-based node index.
+
+**Returns:** The nested scene, or `null` for a locally captured node.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `nodeIndex` is outside the state.
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getnodeinstanceplaceholder-system-int32"></a>
+### `public string GetNodeInstancePlaceholder(int nodeIndex)`
+
+Gets the resource path represented by a node placeholder.
+
+**Parameters**
+
+- `nodeIndex`: The zero-based node index.
+
+**Returns:** An empty string because runtime-authored placeholders are not supported.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `nodeIndex` is outside the state.
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getnodename-system-int32"></a>
+### `public string GetNodeName(int nodeIndex)`
+
+Gets a stored node's name.
+
+**Parameters**
+
+- `nodeIndex`: The zero-based node index.
+
+**Returns:** The captured name.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `nodeIndex` is outside the state.
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getnodeownerpath-system-int32"></a>
+### `public string GetNodeOwnerPath(int nodeIndex)`
+
+Gets the path of a stored node's owner.
+
+**Parameters**
+
+- `nodeIndex`: The zero-based node index.
+
+**Returns:** `.` for nodes owned by the root, or an empty string when no owner is stored.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `nodeIndex` is outside the state.
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getnodepath-system-int32-system-boolean"></a>
+### `public string GetNodePath(int nodeIndex, bool forParent = false)`
+
+Gets a stored node path or its parent's path.
+
+**Parameters**
+
+- `nodeIndex`: The zero-based node index.
+- `forParent`: `true` to return the stored parent path.
+
+**Returns:** A relative scene path; the root is represented by `.`.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `nodeIndex` is outside the state.
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getnodepropertycount-system-int32"></a>
+### `public int GetNodePropertyCount(int nodeIndex)`
+
+Gets the number of stored properties for a node.
+
+**Parameters**
+
+- `nodeIndex`: The zero-based node index.
+
+**Returns:** The property count.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `nodeIndex` is outside the state.
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getnodepropertyname-system-int32-system-int32"></a>
+### `public string GetNodePropertyName(int nodeIndex, int propertyIndex)`
+
+Gets the name of a stored node property.
+
+**Parameters**
+
+- `nodeIndex`: The zero-based node index.
+- `propertyIndex`: The zero-based property index.
+
+**Returns:** The property name.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: Either index is outside the state.
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getnodepropertytype-system-int32-system-int32"></a>
+### `public Type GetNodePropertyType(int nodeIndex, int propertyIndex)`
+
+Gets the declared type of a stored node property.
+
+**Parameters**
+
+- `nodeIndex`: The zero-based node index.
+- `propertyIndex`: The zero-based property index.
+
+**Returns:** The exact declared property type.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: Either index is outside the state.
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getnodepropertyvalue-1-system-int32-system-int32"></a>
+### `public TValue GetNodePropertyValue<TValue>(int nodeIndex, int propertyIndex)`
+
+Gets a stored node property through a requested compatible type.
+
+**Type parameters**
+
+- `TValue`: The requested result type.
+
+**Parameters**
+
+- `nodeIndex`: The zero-based node index.
+- `propertyIndex`: The zero-based property index.
+
+**Returns:** The captured property value.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: Either index is outside the state.
+- `InvalidCastException`: The captured value is not compatible with `TValue`.
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getnodetype-system-int32"></a>
+### `public string GetNodeType(int nodeIndex)`
+
+Gets a stored node's runtime type name.
+
+**Parameters**
+
+- `nodeIndex`: The zero-based node index.
+
+**Returns:** The unqualified runtime type name captured by the scene.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `nodeIndex` is outside the state.
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-getpath"></a>
+### `public string GetPath()`
+
+Gets the resource path associated with this state.
+
+**Returns:** The current path of its live packed scene, or the last path observed before that resource was disposed.
+
+**Exceptions**
+
+- `ObjectDisposedException`: This state has been disposed.
+
+<a id="m-electron2d-scenestate-isnodeinstanceplaceholder-system-int32"></a>
+### `public bool IsNodeInstancePlaceholder(int nodeIndex)`
+
+Gets whether a stored node is an instance placeholder.
+
+**Parameters**
+
+- `nodeIndex`: The zero-based node index.
+
+**Returns:** `false` for every runtime-authored node.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `nodeIndex` is outside the state.
+- `ObjectDisposedException`: This state has been disposed.
+
+## Inherited API
+
+Public and protected members inherited from [ElectronObject](ElectronObject.md). Their lifecycle and error contracts remain applicable unless this page states an override.
 
 ## Lifecycle and state transitions
 

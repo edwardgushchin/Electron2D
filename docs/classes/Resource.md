@@ -2,72 +2,443 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** [ElectronObject](ElectronObject.md)
 
-- Source: [`Resource.cs`](../../src/Core/IO/Resource.cs)
-- Namespace: `Electron2D`
-- Declaration: `public class Resource : ElectronObject`
-- Domain: [Resources](../domains/resources.md)
-- Component: [Resource base](../components/resources.md)
+**Inherited By:** [InputEvent](InputEvent.md), [PackedScene](PackedScene.md)
 
-## Responsibility and ownership
+- **Source:** [`src/Core/IO/Resource.cs`](../../src/Core/IO/Resource.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public class Resource : ElectronObject`
+
+> Provides reusable data, change notification, path identity, and typed duplication for engine assets.
+
+## Description
+
+Provides reusable data, change notification, path identity, and typed duplication for engine assets.
 
 `Resource` is the managed base for reusable engine data. It owns resource naming, optional process-wide path identity, scene-instancing configuration, scene serialization identity, synchronous change notification, reset/setup hooks, and typed graph-preserving duplication.
 
 The managed runtime owns object memory. Deterministic logical cleanup remains available through inherited `IDisposable`; no public reference counter is exposed. A future asset manager may track active leases internally to retain and release native-backed asset payloads, but that counter will not control managed object collection. A resource does not own nested resources returned by a derived class and does not dispose them during its own cleanup.
 
-## Public properties and association query
+Resource lifetime uses the managed runtime together with [`ElectronObject.Dispose`](ElectronObject.md#m-electron2d-electronobject-dispose); no public reference
+counter is exposed. Base state is safe for concurrent reads and serialized writes, but derived resource state and
+callbacks have no implicit synchronization or thread affinity.
 
-| Member | Current behavior |
+## Examples
+
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+using var resource = new Resource { ResourceName = "PlayerData" };
+resource.Changed += _ => Console.WriteLine("Changed");
+```
+
+## Constructors
+
+| Member | Description |
 | --- | --- |
-| `bool ResourceLocalToScene { get; set; }` | Defaults to `false`; requests per-instance duplication when reached through a packed scene; assignment does not emit `Changed` |
-| `string ResourceName { get; set; }` | Non-null display name, empty by default; every successful assignment synchronously emits `Changed`, including an equal value |
-| `string ResourcePath { get; set; }` | Non-null ordinal path; a nonempty registered path has exactly one live owner process-wide |
-| `string ResourceSceneUniqueId { get; set; }` | Empty or an ASCII identifier containing letters, digits, and underscores; assignment does not emit `Changed` |
-| `bool IsBuiltIn { get; }` | `true` for an empty path, a path containing `::`, or a path starting with `local://`; otherwise `false` |
-| `Node? GetLocalScene()` | Returns the instantiated scene root assigned to a scene-local duplicate before setup, or `null` otherwise |
+| [`public Resource()`](#m-electron2d-resource-ctor) | Initializes a new Resource instance. |
 
-All four mutable properties appear in the inherited typed property list. A rejected assignment is non-mutating. An invalid scene ID throws instead of silently replacing caller data with a generated value.
+## Properties
+
+| Member | Description |
+| --- | --- |
+| [`public bool ResourceLocalToScene { get; set; }`](#p-electron2d-resource-resourcelocaltoscene) | Gets or sets whether a scene-instancing component should make this resource unique to each scene instance. |
+| [`public string ResourceName { get; set; }`](#p-electron2d-resource-resourcename) | Gets or sets the optional display name of this resource. |
+| [`public string ResourcePath { get; set; }`](#p-electron2d-resource-resourcepath) | Gets or sets the unique cache path associated with this resource. |
+| [`public string ResourceSceneUniqueId { get; set; }`](#p-electron2d-resource-resourcesceneuniqueid) | Gets or sets the identifier used when this resource is embedded in a serialized scene. |
+| [`public bool IsBuiltIn { get; }`](#p-electron2d-resource-isbuiltin) | Gets whether this resource is embedded rather than represented by a standalone external path. |
+
+## Methods
+
+| Member | Description |
+| --- | --- |
+| [`public Node GetLocalScene()`](#m-electron2d-resource-getlocalscene) | Gets the root node whose scene instance owns this scene-local resource. |
+| [`public void CopyFromResource(Resource source)`](#m-electron2d-resource-copyfromresource-electron2d-resource) | Copies stored data from another resource of the exact same runtime type while preserving this resource's path and scene ID. |
+| [`public Resource Duplicate(bool deep = false)`](#m-electron2d-resource-duplicate-system-boolean) | Creates a shallow or internally deep duplicate of this resource. |
+| [`public Resource DuplicateDeep(DeepDuplicateMode subresourceMode = DeepDuplicateMode.Internal)`](#m-electron2d-resource-duplicatedeep-electron2d-deepduplicatemode) | Creates a deep duplicate with explicit nested-resource policy. |
+| [`public void EmitChanged()`](#m-electron2d-resource-emitchanged) | Synchronously reports that this resource's meaningful content changed. |
+| [`public static string GenerateSceneUniqueId()`](#m-electron2d-resource-generatesceneuniqueid) | Generates a compact scene-relative resource identifier. |
+| [`public void ResetState()`](#m-electron2d-resource-resetstate) | Clears non-stored state through [`Resource.OnResetState`](Resource.md#m-electron2d-resource-onresetstate). |
+| [`public void SetPathCache(string path)`](#m-electron2d-resource-setpathcache-system-string) | Sets the path value without registering it in the process-wide resource cache. |
+| [`public void SetupLocalToScene()`](#m-electron2d-resource-setuplocaltoscene) | Invokes scene-local setup callbacks for a resource duplicated by a scene-instancing component. |
+| [`public void TakeOverPath(string path)`](#m-electron2d-resource-takeoverpath-system-string) | Transfers ownership of a process-wide resource path to this resource. |
+| [`protected virtual Resource CreateDuplicateInstance()`](#m-electron2d-resource-createduplicateinstance) | Creates a fresh default instance used as the target of duplication. |
+| [`protected virtual void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource, Resource> duplicateSubresource, Func<Resource, Resource> forceDuplicateSubresource)`](#m-electron2d-resource-copycustomstateto-electron2d-resource-system-boolean-electron2d-deepduplicatemode-system-func-electron2d-resource-electron2d-resource-system-func-electron2d-resource-electron2d-resource) | Copies derived stored state into a duplicate or copy target. |
+| [`protected virtual void OnResetState()`](#m-electron2d-resource-onresetstate) | Clears non-stored state when [`Resource.ResetState`](Resource.md#m-electron2d-resource-resetstate) or [`Resource.CopyFromResource(Resource)`](Resource.md#m-electron2d-resource-copyfromresource-electron2d-resource) requests it. |
+| [`protected virtual void OnPathCacheSet(string path)`](#m-electron2d-resource-onpathcacheset-system-string) | Handles a raw path-cache assignment after the new path has been committed. |
+| [`protected virtual void OnResourcePathChanged(string path)`](#m-electron2d-resource-onresourcepathchanged-system-string) | Handles any committed change to this resource's visible path. |
+| [`protected virtual void OnSetupLocalToScene()`](#m-electron2d-resource-onsetuplocaltoscene) | Customizes a newly duplicated scene-local resource. |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-resource-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
+| [`protected override void Dispose(bool disposing)`](#m-electron2d-resource-dispose-system-boolean) | Releases resources owned by a derived class. |
+| [`public override string ToString()`](#m-electron2d-resource-tostring) | Returns a diagnostic string containing the optional resource name, path, runtime class, and instance identifier. |
 
 ## Events
 
-| Event | Current behavior |
+| Member | Description |
 | --- | --- |
-| `Changed` | Synchronous sender-only event published by `EmitChanged`, every `ResourceName` assignment, and one coalesced completion of `CopyFromResource` |
-| `SetupLocalToSceneRequested` | Obsolete compatibility event raised immediately before `OnSetupLocalToScene` for a scene-local duplicate |
+| [`public event Action<Resource> Changed`](#e-electron2d-resource-changed) | Occurs when this resource reports a meaningful content change. |
+| [`public event Action<Resource> SetupLocalToSceneRequested`](#e-electron2d-resource-setuplocaltoscenerequested) | Occurs immediately before [`Resource.OnSetupLocalToScene`](Resource.md#m-electron2d-resource-onsetuplocaltoscene) is invoked. |
 
-A throwing `Changed` handler stops later handlers and propagates after the triggering state mutation is committed. `SetupLocalToScene` attempts both the compatibility event and virtual hook; if both fail, it throws an `AggregateException` containing both errors.
+## Constructor Descriptions
 
-## Public methods
+<a id="m-electron2d-resource-ctor"></a>
+### `public Resource()`
 
-| Member | Current behavior |
-| --- | --- |
-| `CopyFromResource(Resource source)` | Requires the exact same runtime type, resets target non-stored state, shallow-copies base/custom stored state, preserves the target path and scene ID, and coalesces changes into one event; self-copy is a no-op |
-| `Duplicate(bool deep = false)` | Creates a new exact-type instance; shallow mode shares containers/resources, deep mode clones typed containers and duplicates built-in nested resources |
-| `DuplicateDeep(DeepDuplicateMode mode = Internal)` | Creates a deep duplicate under an explicit nested-resource policy |
-| `EmitChanged()` | Publishes `Changed` synchronously or marks one pending publication inside an internal copy batch |
-| `static GenerateSceneUniqueId()` | Uses a cryptographic process-safe generator to return five characters from `a`-`y` and `0`-`8`; collision detection remains a serializer responsibility |
-| `ResetState()` | Invokes `OnResetState` without changing stored base properties or publishing `Changed` by itself |
-| `SetPathCache(string path)` | Removes this resource's registered path, commits a raw unregistered path value, then invokes `OnPathCacheSet`; duplicate visible paths are allowed |
-| `SetupLocalToScene()` | Obsolete manual infrastructure entry point that raises its compatibility event and then invokes `OnSetupLocalToScene`; packed scenes invoke the same sequence automatically |
-| `TakeOverPath(string path)` | Atomically transfers a registered path to this resource and clears a displaced live owner |
-| `ToString()` | Returns optional name, current path, runtime class, and instance ID for diagnostics |
+Initializes a new Resource instance.
 
-`CopyFromResource` is deliberately non-transactional for derived state. If reset or custom copying fails, it still publishes one final change notification because state may be partially changed. If that notification also fails, both errors are aggregated.
+## Property Descriptions
 
-## Protected extension API
+<a id="p-electron2d-resource-resourcelocaltoscene"></a>
+### `public bool ResourceLocalToScene { get; set; }`
 
-| Member | Contract |
-| --- | --- |
-| `CreateDuplicateInstance()` | Must return a fresh, live, exact-runtime-type default instance with empty path and scene ID |
-| `CopyCustomStateTo(...)` | Must copy every stored derived field; clones typed containers when `deep` is true; uses the policy delegate for ordinary nested resources, the force delegate for always-duplicate properties, and direct assignment for never-duplicate properties |
-| `OnResetState()` | Clears derived non-stored state |
-| `OnPathCacheSet(string path)` | Observes a committed raw cache path |
-| `OnSetupLocalToScene()` | Customizes a newly duplicated scene-local resource; `GetLocalScene()` is already available |
-| `GetPropertyDescriptors()` | Appends the four resource descriptors to inherited descriptors |
-| `Dispose(bool disposing)` | Unregisters the path and clears resource subscribers before inherited cleanup |
+Gets or sets whether a scene-instancing component should make this resource unique to each scene instance.
 
-The base duplication hooks support an exact `Resource`. Every derived type must override both duplication hooks explicitly, even if it adds no fields. This prevents a new derived field from being silently omitted. Invalid factory results and every partially created graph member are disposed on failure; cleanup failures are aggregated with the original error.
+**Value:** `false` by default; `true` requests per-instance duplication.
+
+**Exceptions**
+
+- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+
+**Remarks:** Changing this value does not retroactively affect existing instances. [`PackedScene.Instantiate(PackedSceneEditState)`](PackedScene.md#m-electron2d-packedscene-instantiate-electron2d-packedsceneeditstate)
+duplicates a marked resource once per instance while preserving aliases in its duplicated resource graph.
+
+<a id="p-electron2d-resource-resourcename"></a>
+### `public string ResourceName { get; set; }`
+
+Gets or sets the optional display name of this resource.
+
+**Value:** An arbitrary non-null string; the default is empty.
+
+**Exceptions**
+
+- `ArgumentNullException`: The assigned value is `null`.
+- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+- `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value has been assigned.
+
+**Remarks:** Every successful assignment synchronously raises [`Resource.Changed`](Resource.md#e-electron2d-resource-changed), even when the value is unchanged.
+
+<a id="p-electron2d-resource-resourcepath"></a>
+### `public string ResourcePath { get; set; }`
+
+Gets or sets the unique cache path associated with this resource.
+
+**Value:** An opaque, case-sensitive path, or an empty string when the resource has no registered path.
+
+**Exceptions**
+
+- `ArgumentNullException`: The assigned value is `null`.
+- `InvalidOperationException`: Another live resource owns the assigned nonempty path.
+- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+
+**Remarks:** Nonempty paths are process-wide and unique among live resources. Assigning an occupied path throws without
+changing either resource. Use [`Resource.TakeOverPath(String)`](Resource.md#m-electron2d-resource-takeoverpath-system-string) to transfer ownership deliberately.
+
+<a id="p-electron2d-resource-resourcesceneuniqueid"></a>
+### `public string ResourceSceneUniqueId { get; set; }`
+
+Gets or sets the identifier used when this resource is embedded in a serialized scene.
+
+**Value:** An empty string, or an identifier containing only ASCII letters, digits, and underscores.
+
+**Exceptions**
+
+- `ArgumentException`: The assigned value contains a character outside ASCII letters, digits, and underscores.
+- `ArgumentNullException`: The assigned value is `null`.
+- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+
+**Remarks:** Assignments do not raise [`Resource.Changed`](Resource.md#e-electron2d-resource-changed). Scene saving and collision resolution are not implemented yet.
+
+<a id="p-electron2d-resource-isbuiltin"></a>
+### `public bool IsBuiltIn { get; }`
+
+Gets whether this resource is embedded rather than represented by a standalone external path.
+
+**Value:** `true` when the path is empty, contains an embedded-resource separator, or starts with the
+local-resource prefix; otherwise `false`.
+
+**Exceptions**
+
+- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+
+## Method Descriptions
+
+<a id="m-electron2d-resource-getlocalscene"></a>
+### `public Node GetLocalScene()`
+
+Gets the root node whose scene instance owns this scene-local resource.
+
+**Returns:** The owning scene root after scene instantiation, or `null` for other resources.
+
+**Exceptions**
+
+- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+
+**Remarks:** The association is assigned before [`Resource.OnSetupLocalToScene`](Resource.md#m-electron2d-resource-onsetuplocaltoscene) runs and remains until disposal.
+
+<a id="m-electron2d-resource-copyfromresource-electron2d-resource"></a>
+### `public void CopyFromResource(Resource source)`
+
+Copies stored data from another resource of the exact same runtime type while preserving this resource's path and scene ID.
+
+**Parameters**
+
+- `source`: The live resource whose stored data is copied.
+
+**Exceptions**
+
+- `ArgumentException`: `source` has a different runtime type.
+- `ArgumentNullException`: `source` is `null`.
+- `ObjectDisposedException`: Either resource is disposing or disposed.
+- `Exception`: A reset, copy, setter, or final change handler fails.
+
+**Remarks:** Copying is shallow: nested resources and collection instances remain shared unless a derived override explicitly
+defines other behavior. [`Resource.ResetState`](Resource.md#m-electron2d-resource-resetstate) runs first. Change notifications raised while copying are
+coalesced into one final [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) event. Batches targeting the same resource are serialized, but
+derived state still requires caller coordination. The operation is not transactional if a derived callback fails.
+
+<a id="m-electron2d-resource-duplicate-system-boolean"></a>
+### `public Resource Duplicate(bool deep = false)`
+
+Creates a shallow or internally deep duplicate of this resource.
+
+**Parameters**
+
+- `deep`: `false` to share collection containers and nested resources; `true` to let
+derived resources clone containers and duplicate built-in nested resources.
+
+**Returns:** A new live resource of the exact same runtime type with an empty path and scene ID.
+
+**Exceptions**
+
+- `InvalidOperationException`: A derived duplication factory returns an invalid instance.
+- `NotSupportedException`: A derived resource does not explicitly implement the duplication hooks.
+- `ObjectDisposedException`: This resource is disposing or disposed.
+- `Exception`: Construction, copying, or cleanup of a failed duplicate throws.
+
+<a id="m-electron2d-resource-duplicatedeep-electron2d-deepduplicatemode"></a>
+### `public Resource DuplicateDeep(DeepDuplicateMode subresourceMode = DeepDuplicateMode.Internal)`
+
+Creates a deep duplicate with explicit nested-resource policy.
+
+**Parameters**
+
+- `subresourceMode`: Controls which nested resources are duplicated.
+
+**Returns:** A new live resource of the exact same runtime type with an empty path and scene ID.
+
+**Exceptions**
+
+- `ArgumentOutOfRangeException`: `subresourceMode` is not defined.
+- `InvalidOperationException`: A derived duplication factory returns an invalid instance.
+- `NotSupportedException`: A derived resource does not explicitly implement the duplication hooks.
+- `ObjectDisposedException`: This resource is disposing or disposed.
+- `Exception`: Construction, copying, or cleanup of a failed duplicate throws.
+
+**Remarks:** Repeated and cyclic resource references preserve graph identity. Derived resources remain responsible for
+cloning their typed collection containers and passing nested resources to the appropriate supplied duplication delegate.
+
+<a id="m-electron2d-resource-emitchanged"></a>
+### `public void EmitChanged()`
+
+Synchronously reports that this resource's meaningful content changed.
+
+**Exceptions**
+
+- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+- `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws.
+
+**Remarks:** Calls made inside a copy batch are coalesced into one event when the outermost batch ends.
+
+<a id="m-electron2d-resource-generatesceneuniqueid"></a>
+### `public static string GenerateSceneUniqueId()`
+
+Generates a compact scene-relative resource identifier.
+
+**Returns:** A five-character string composed of lowercase letters `a` through `y` and digits `0` through `8`.
+
+**Remarks:** The result is probabilistically unique; a future scene saver must still detect and resolve collisions.
+
+<a id="m-electron2d-resource-resetstate"></a>
+### `public void ResetState()`
+
+Clears non-stored state through [`Resource.OnResetState`](Resource.md#m-electron2d-resource-onresetstate).
+
+**Exceptions**
+
+- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+- `Exception`: [`Resource.OnResetState`](Resource.md#m-electron2d-resource-onresetstate) throws.
+
+**Remarks:** The base implementation does not change stored properties and does not raise [`Resource.Changed`](Resource.md#e-electron2d-resource-changed).
+
+<a id="m-electron2d-resource-setpathcache-system-string"></a>
+### `public void SetPathCache(string path)`
+
+Sets the path value without registering it in the process-wide resource cache.
+
+**Parameters**
+
+- `path`: The non-null opaque path, or an empty string.
+
+**Exceptions**
+
+- `ArgumentNullException`: `path` is `null`.
+- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+- `Exception`: [`Resource.OnPathCacheSet(String)`](Resource.md#m-electron2d-resource-onpathcacheset-system-string) throws after the path has been committed.
+
+**Remarks:** This loader-oriented operation may produce the same visible path on multiple resources. It first removes this
+resource's previously registered path, then invokes [`Resource.OnPathCacheSet(String)`](Resource.md#m-electron2d-resource-onpathcacheset-system-string) after committing the value.
+
+<a id="m-electron2d-resource-setuplocaltoscene"></a>
+### `public void SetupLocalToScene()`
+
+Invokes scene-local setup callbacks for a resource duplicated by a scene-instancing component.
+
+**Exceptions**
+
+- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+- `AggregateException`: Both the compatibility event and virtual callback fail.
+- `Exception`: The compatibility event or virtual callback fails.
+
+**Remarks:** Packed-scene instantiation invokes this automatically for each duplicated scene-local resource.
+
+<a id="m-electron2d-resource-takeoverpath-system-string"></a>
+### `public void TakeOverPath(string path)`
+
+Transfers ownership of a process-wide resource path to this resource.
+
+**Parameters**
+
+- `path`: The non-null opaque path. An empty path simply clears this resource's current path.
+
+**Exceptions**
+
+- `ArgumentNullException`: `path` is `null`.
+- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
+
+**Remarks:** A displaced live resource atomically receives an empty path.
+
+<a id="m-electron2d-resource-createduplicateinstance"></a>
+### `protected virtual Resource CreateDuplicateInstance()`
+
+Creates a fresh default instance used as the target of duplication.
+
+**Returns:** A live resource of the exact same runtime type with empty path and scene ID.
+
+**Exceptions**
+
+- `NotSupportedException`: The runtime type derives from [`Resource`](Resource.md) and has not overridden this method.
+
+**Remarks:** The base implementation supports only an exact [`Resource`](Resource.md) instance. Every derived class must
+override this method, even when it adds no state, so duplication support is explicit.
+
+<a id="m-electron2d-resource-copycustomstateto-electron2d-resource-system-boolean-electron2d-deepduplicatemode-system-func-electron2d-resource-electron2d-resource-system-func-electron2d-resource-electron2d-resource"></a>
+### `protected virtual void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource, Resource> duplicateSubresource, Func<Resource, Resource> forceDuplicateSubresource)`
+
+Copies derived stored state into a duplicate or copy target.
+
+**Parameters**
+
+- `target`: A live resource with the exact same runtime type.
+- `deep`: Whether typed collection containers should be cloned recursively.
+- `subresourceMode`: The nested-resource policy for this copy.
+- `duplicateSubresource`: A graph-preserving function that returns the correct shared or duplicated instance for a nested resource.
+Pass every nested resource through this function when `deep` is `true`.
+- `forceDuplicateSubresource`: A graph-preserving function that duplicates a nested resource even when the current policy would share it.
+Use it for typed properties whose contract requires duplication; assign the original reference directly for
+properties whose contract forbids duplication.
+
+**Exceptions**
+
+- `NotSupportedException`: A derived resource has not explicitly implemented custom-state copying.
+
+**Remarks:** The base implementation supports only an exact [`Resource`](Resource.md) instance. Derived implementations must
+copy all stored custom state and call the base implementation only when they intentionally want its validation.
+Assigning the original nested-resource reference directly expresses a never-duplicate property.
+
+<a id="m-electron2d-resource-onresetstate"></a>
+### `protected virtual void OnResetState()`
+
+Clears non-stored state when [`Resource.ResetState`](Resource.md#m-electron2d-resource-resetstate) or [`Resource.CopyFromResource(Resource)`](Resource.md#m-electron2d-resource-copyfromresource-electron2d-resource) requests it.
+
+<a id="m-electron2d-resource-onpathcacheset-system-string"></a>
+### `protected virtual void OnPathCacheSet(string path)`
+
+Handles a raw path-cache assignment after the new path has been committed.
+
+**Parameters**
+
+- `path`: The newly committed path.
+
+<a id="m-electron2d-resource-onresourcepathchanged-system-string"></a>
+### `protected virtual void OnResourcePathChanged(string path)`
+
+Handles any committed change to this resource's visible path.
+
+**Parameters**
+
+- `path`: The newly committed path, or an empty string after displacement.
+
+**Remarks:** The path has already changed when this callback runs.
+
+<a id="m-electron2d-resource-onsetuplocaltoscene"></a>
+### `protected virtual void OnSetupLocalToScene()`
+
+Customizes a newly duplicated scene-local resource.
+
+**Remarks:** The owning scene is available through [`Resource.GetLocalScene`](Resource.md#m-electron2d-resource-getlocalscene) while this callback runs.
+
+<a id="m-electron2d-resource-getpropertydescriptors"></a>
+### `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
+
+Returns the typed properties exposed to tooling before validation.
+
+**Returns:** The descriptor sequence. The base sequence exposes identity, lifetime, and translation state.
+
+**Remarks:** Overrides append or replace descriptors; they must not yield null entries.
+
+Appends resource identity and scene-instancing configuration descriptors.
+
+<a id="m-electron2d-resource-dispose-system-boolean"></a>
+### `protected override void Dispose(bool disposing)`
+
+Releases resources owned by a derived class.
+
+**Parameters**
+
+- `disposing`: `true` when called from [`ElectronObject.Dispose`](ElectronObject.md#m-electron2d-electronobject-dispose).
+
+**Remarks:** Overrides release managed resources when `disposing` is true and then call the base implementation.
+
+Unregisters the cache path and clears resource event subscribers before base cleanup.
+
+<a id="m-electron2d-resource-tostring"></a>
+### `public override string ToString()`
+
+Returns a diagnostic string containing the optional resource name, path, runtime class, and instance identifier.
+
+**Returns:** A stable diagnostic representation of this resource's current base state.
+
+## Event Descriptions
+
+<a id="e-electron2d-resource-changed"></a>
+### `public event Action<Resource> Changed`
+
+Occurs when this resource reports a meaningful content change.
+
+**Remarks:** Delivery is synchronous on the calling thread. Custom resource setters should call [`Resource.EmitChanged`](Resource.md#m-electron2d-resource-emitchanged)
+after committing a meaningful change. A throwing handler stops later handlers and propagates to the caller.
+
+<a id="e-electron2d-resource-setuplocaltoscenerequested"></a>
+### `public event Action<Resource> SetupLocalToSceneRequested`
+
+Occurs immediately before [`Resource.OnSetupLocalToScene`](Resource.md#m-electron2d-resource-onsetuplocaltoscene) is invoked.
+
+**Remarks:** Packed-scene instantiation raises this after assigning the local scene; overrides are preferred.
+
+## Inherited API
+
+Public and protected members inherited from [ElectronObject](ElectronObject.md). Their lifecycle and error contracts remain applicable unless this page states an override.
 
 ## Duplication invariants
 

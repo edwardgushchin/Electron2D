@@ -2,13 +2,19 @@
 
 Last updated: 2026-09-21
 
-## Source and declaration
+**Inherits:** —
 
-- Source: [`src/Core/IO/FileCompressionMode.cs`](../../src/Core/IO/FileCompressionMode.cs)
-- Declaration: `public enum FileCompressionMode`
-- Assembly and namespace: `Electron2D.dll`, `Electron2D`
+**Inherited By:** —
 
-## Responsibility and values
+- **Source:** [`src/Core/IO/FileCompressionMode.cs`](../../src/Core/IO/FileCompressionMode.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public enum FileCompressionMode`
+
+> Identifies the codec used by a compressed [`FileAccess`](FileAccess.md) container.
+
+## Description
+
+Identifies the codec used by a compressed [`FileAccess`](FileAccess.md) container.
 
 The enum identifies the codec recorded in a whole-file compressed `FileAccess` container.
 
@@ -23,6 +29,51 @@ The enum identifies the codec recorded in a whole-file compressed `FileAccess` c
 Unknown numeric values throw `ArgumentOutOfRangeException`; unavailable known codecs throw `NotSupportedException` before a file is created or read.
 
 Brotli write support is a deliberate BCL-backed Electron2D extension; the reference contract promises this mode only for decompression.
+
+## Examples
+
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+
+```csharp
+var value = FileCompressionMode.FastLz;
+```
+
+## Constants
+
+| Member | Description |
+| --- | --- |
+| [`FastLz = 0`](#f-electron2d-filecompressionmode-fastlz) | Uses the FastLZ codec. |
+| [`Deflate = 1`](#f-electron2d-filecompressionmode-deflate) | Uses the DEFLATE codec. |
+| [`Zstandard = 2`](#f-electron2d-filecompressionmode-zstandard) | Uses the Zstandard codec. |
+| [`Gzip = 3`](#f-electron2d-filecompressionmode-gzip) | Uses the GZip container and DEFLATE codec. |
+| [`Brotli = 4`](#f-electron2d-filecompressionmode-brotli) | Uses the Brotli codec. |
+
+## Constant Descriptions
+
+<a id="f-electron2d-filecompressionmode-fastlz"></a>
+### `FastLz = 0`
+
+Uses the FastLZ codec. The current runtime has no FastLZ provider.
+
+<a id="f-electron2d-filecompressionmode-deflate"></a>
+### `Deflate = 1`
+
+Uses the DEFLATE codec.
+
+<a id="f-electron2d-filecompressionmode-zstandard"></a>
+### `Zstandard = 2`
+
+Uses the Zstandard codec. The current runtime has no Zstandard provider.
+
+<a id="f-electron2d-filecompressionmode-gzip"></a>
+### `Gzip = 3`
+
+Uses the GZip container and DEFLATE codec.
+
+<a id="f-electron2d-filecompressionmode-brotli"></a>
+### `Brotli = 4`
+
+Uses the Brotli codec.
 
 ## Lifecycle, ownership, and threading
 

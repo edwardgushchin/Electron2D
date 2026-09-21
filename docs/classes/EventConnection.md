@@ -2,40 +2,166 @@
 
 Last updated: 2026-09-21
 
-## Declaration
+**Inherits:** —
 
-- Source: [`EventConnection.cs`](../../src/Core/Object/EventConnection.cs)
-- Namespace: `Electron2D`
-- Declaration: `public sealed class EventConnection : IDisposable`
-- Domain: [Core](../domains/core.md)
-- Component: [Typed event connections](../components/event-connections.md)
+**Inherited By:** —
 
-## Responsibility and ownership
+- **Source:** [`src/Core/Object/EventConnection.cs`](../../src/Core/Object/EventConnection.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public sealed class EventConnection`
+
+> Owns a typed event subscription that can be disconnected, delivered once, or scheduled for later delivery.
+
+## Description
+
+Owns a typed event subscription that can be disconnected, delivered once, or scheduled for later delivery.
 
 `EventConnection` owns one wrapper attached to an ordinary typed C# event. It provides deterministic disconnection, optional one-shot consumption, and optional deferred delivery without string event names, untyped argument containers, reflection, or a second signal registry.
 
 The caller owns the returned token and must dispose it no later than the subscriber. The token holds the supplied add/remove closures, wrapper delegate, handler, and optional scheduler until it becomes terminal. A publisher can still retain an inert wrapper if a custom removal accessor throws.
 
-## Complete public API
+This type wraps ordinary C# event accessors without introducing string-addressed signals or untyped arguments.
+Disposing the connection removes its wrapper and cancels deferred callbacks that have not started. A callback that
+has already started can finish concurrently with disposal.
 
-| Member | Current behavior |
-| --- | --- |
-| `bool IsConnected { get; }` | Thread-safe logical-state snapshot; `true` only while this token accepts emissions, but not proof that a publisher has retained the wrapper |
-| `Subscribe(Action<Action> subscribe, Action<Action> unsubscribe, Action handler, bool oneShot = false, Action<Action>? defer = null)` | Connects an event without arguments |
-| `Subscribe<T>(Action<Action<T>> subscribe, Action<Action<T>> unsubscribe, Action<T> handler, bool oneShot = false, Action<Action>? defer = null)` | Connects an event with one typed argument |
-| `Subscribe<T1, T2>(Action<Action<T1, T2>> subscribe, Action<Action<T1, T2>> unsubscribe, Action<T1, T2> handler, bool oneShot = false, Action<Action>? defer = null)` | Connects a sender-first event with one additional typed argument, or any other two-argument event |
-| `Dispose()` | Idempotently makes the token terminal, removes an active wrapper, and cancels deferred callbacks that have not started |
+## Examples
 
-The add and remove delegates must attach and detach the exact wrapper they receive. Passing `SceneTree.Defer` as `defer` schedules accepted callbacks on that tree's next available deferred batch; passing `null` invokes synchronously.
+The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-using var connection = EventConnection.Subscribe<ElectronObject>(
-    callback => source.ScriptChanged += callback,
-    callback => source.ScriptChanged -= callback,
-    HandleScriptChanged,
-    oneShot: true,
-    defer: tree.Defer);
+using var source = new Resource();
+using EventConnection connection = EventConnection.Subscribe<Resource>(
+    handler => source.Changed += handler,
+    handler => source.Changed -= handler,
+    _ => Refresh());
 ```
+
+## Properties
+
+| Member | Description |
+| --- | --- |
+| [`public bool IsConnected { get; }`](#p-electron2d-eventconnection-isconnected) | Gets whether this connection still accepts event emissions. |
+
+## Methods
+
+| Member | Description |
+| --- | --- |
+| [`public static EventConnection Subscribe(Action<Action> subscribe, Action<Action> unsubscribe, Action handler, bool oneShot = false, Action<Action> defer = null)`](#m-electron2d-eventconnection-subscribe-system-action-system-action-system-action-system-action-system-action-system-boolean-system-action-system-action) | Creates a managed subscription to an event with no arguments. |
+| [`public static EventConnection Subscribe<T>(Action<Action<T>> subscribe, Action<Action<T>> unsubscribe, Action<T> handler, bool oneShot = false, Action<Action> defer = null)`](#m-electron2d-eventconnection-subscribe-1-system-action-system-action-0-system-action-system-action-0-system-action-0-system-boolean-system-action-system-action) | Creates a managed subscription to an event with one typed argument. |
+| [`public static EventConnection Subscribe<T1, T2>(Action<Action<T1, T2>> subscribe, Action<Action<T1, T2>> unsubscribe, Action<T1, T2> handler, bool oneShot = false, Action<Action> defer = null)`](#m-electron2d-eventconnection-subscribe-2-system-action-system-action-0-1-system-action-system-action-0-1-system-action-0-1-system-boolean-system-action-system-action) | Creates a managed subscription to an event with two typed arguments. |
+| [`public void Dispose()`](#m-electron2d-eventconnection-dispose) | Disconnects the wrapper and cancels deferred callbacks that have not started. |
+
+## Property Descriptions
+
+<a id="p-electron2d-eventconnection-isconnected"></a>
+### `public bool IsConnected { get; }`
+
+Gets whether this connection still accepts event emissions.
+
+**Value:** `true` until disposal or, for a one-shot connection, until the first emission is accepted.
+A deferred one-shot callback can still be pending when this property is `false`.
+
+**Remarks:** This reports the token's logical state. It cannot detect a publisher that independently clears or replaces its
+event invocation list.
+
+## Method Descriptions
+
+<a id="m-electron2d-eventconnection-subscribe-system-action-system-action-system-action-system-action-system-action-system-boolean-system-action-system-action"></a>
+### `public static EventConnection Subscribe(Action<Action> subscribe, Action<Action> unsubscribe, Action handler, bool oneShot = false, Action<Action> defer = null)`
+
+Creates a managed subscription to an event with no arguments.
+
+**Parameters**
+
+- `subscribe`: Adds the supplied wrapper to the event.
+- `unsubscribe`: Removes the same wrapper from the event.
+- `handler`: Receives accepted event emissions.
+- `oneShot`: Whether only the first accepted emission can invoke the handler.
+- `defer`: An optional scheduler that accepts work for later execution. Pass [`SceneTree.Defer(Action)`](SceneTree.md#m-electron2d-scenetree-defer-system-action) for scene-tree
+deferred delivery; pass `null` for synchronous delivery.
+
+**Returns:** An idempotently disposable connection token.
+
+**Exceptions**
+
+- `ArgumentNullException`: A required delegate is `null`.
+- `Exception`: A supplied event accessor or scheduler throws. If subscription fails after partially attaching the wrapper,
+rollback is attempted; failures from both operations are reported as an `AggregateException`.
+
+**Remarks:** For one-shot delivery, the wrapper is disconnected before the handler runs, which prevents re-entrant duplicate
+delivery. Disposing a deferred connection cancels callbacks that have not started. Handler exceptions propagate
+on the invoking thread for synchronous delivery or through the selected scheduler for deferred delivery.
+
+<a id="m-electron2d-eventconnection-subscribe-1-system-action-system-action-0-system-action-system-action-0-system-action-0-system-boolean-system-action-system-action"></a>
+### `public static EventConnection Subscribe<T>(Action<Action<T>> subscribe, Action<Action<T>> unsubscribe, Action<T> handler, bool oneShot = false, Action<Action> defer = null)`
+
+Creates a managed subscription to an event with one typed argument.
+
+**Type parameters**
+
+- `T`: The event argument type.
+
+**Parameters**
+
+- `subscribe`: Adds the supplied wrapper to the event.
+- `unsubscribe`: Removes the same wrapper from the event.
+- `handler`: Receives accepted event emissions.
+- `oneShot`: Whether only the first accepted emission can invoke the handler.
+- `defer`: An optional scheduler that accepts work for later execution. Pass [`SceneTree.Defer(Action)`](SceneTree.md#m-electron2d-scenetree-defer-system-action) for scene-tree
+deferred delivery; pass `null` for synchronous delivery.
+
+**Returns:** An idempotently disposable connection token.
+
+**Exceptions**
+
+- `ArgumentNullException`: A required delegate is `null`.
+- `Exception`: A supplied event accessor or scheduler throws. If subscription fails after partially attaching the wrapper,
+rollback is attempted; failures from both operations are reported as an `AggregateException`.
+
+**Remarks:** Event arguments are captured at emission time. For one-shot delivery, the wrapper is disconnected before the
+handler runs or is scheduled. Disposing a deferred connection cancels callbacks that have not started.
+
+<a id="m-electron2d-eventconnection-subscribe-2-system-action-system-action-0-1-system-action-system-action-0-1-system-action-0-1-system-boolean-system-action-system-action"></a>
+### `public static EventConnection Subscribe<T1, T2>(Action<Action<T1, T2>> subscribe, Action<Action<T1, T2>> unsubscribe, Action<T1, T2> handler, bool oneShot = false, Action<Action> defer = null)`
+
+Creates a managed subscription to an event with two typed arguments.
+
+**Type parameters**
+
+- `T1`: The first event argument type.
+- `T2`: The second event argument type.
+
+**Parameters**
+
+- `subscribe`: Adds the supplied wrapper to the event.
+- `unsubscribe`: Removes the same wrapper from the event.
+- `handler`: Receives accepted event emissions.
+- `oneShot`: Whether only the first accepted emission can invoke the handler.
+- `defer`: An optional scheduler that accepts work for later execution. Pass [`SceneTree.Defer(Action)`](SceneTree.md#m-electron2d-scenetree-defer-system-action) for scene-tree
+deferred delivery; pass `null` for synchronous delivery.
+
+**Returns:** An idempotently disposable connection token.
+
+**Exceptions**
+
+- `ArgumentNullException`: A required delegate is `null`.
+- `Exception`: A supplied event accessor or scheduler throws. If subscription fails after partially attaching the wrapper,
+rollback is attempted; failures from both operations are reported as an `AggregateException`.
+
+**Remarks:** Event arguments are captured at emission time. For one-shot delivery, the wrapper is disconnected before the
+handler runs or is scheduled. Disposing a deferred connection cancels callbacks that have not started.
+
+<a id="m-electron2d-eventconnection-dispose"></a>
+### `public void Dispose()`
+
+Disconnects the wrapper and cancels deferred callbacks that have not started.
+
+**Exceptions**
+
+- `Exception`: The supplied event removal accessor throws.
+
+**Remarks:** The operation is idempotent and safe to race with event delivery. It does not wait for a handler that has already
+started. The connection remains terminal even if the supplied removal accessor throws.
 
 ## State transitions
 
