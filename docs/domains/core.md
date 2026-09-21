@@ -99,7 +99,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - No global object registry or lookup by `InstanceId`.
 - No untyped metadata store.
 - No reflection-based property or method invocation.
-- No integer rectangle production type.
+- No integer rectangle production type yet. `RectI` is an accepted required sibling of `Rect`, not an optional consumer-gated idea; its implementation and conversions remain a tracked gap under ADR 0035.
 - No `Vector3`, `Vector3I`, 3D rectangle, transform, node, renderer, or physics type. Four-component vectors are numeric tuples rather than spatial 4D types.
 - No script attachment, script runtime, editor application, or general file serialization. Only the typed `ScriptChanged` notification contract exists for the confirmed future scripting component.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers, and persistence requires a typed stable endpoint identity/binding schema.
@@ -139,3 +139,4 @@ The same harness verifies project-setting registration, value snapshots, validat
 - [0032: Engine-owned unsuffixed 2D math vocabulary](../decisions/core-math.md#adr-0032)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
+- [0035: Foreseeable public type-family completeness](../decisions/core-math.md#adr-0035)

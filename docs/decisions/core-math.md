@@ -72,7 +72,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted for rectangle semantics. The old `Rect2` name and external vector dependency are superseded by [ADR 0032](core-math.md#adr-0032) and [ADR 0033](core-math.md#adr-0033); the production type is now `Rect` over `Vector2`. ADR 0034 supersedes the historical `0.00001` approximate-comparison tolerance.
+Accepted for rectangle semantics. The old `Rect2` name and external vector dependency are superseded by [ADR 0032](core-math.md#adr-0032) and [ADR 0033](core-math.md#adr-0033); the production type is now `Rect` over `Vector2`. ADR 0034 supersedes the historical `0.00001` approximate-comparison tolerance. ADR 0035 supersedes only the consumer-gated deferral of the integer rectangle and requires the complete `RectI` sibling.
 
 ### Context
 
@@ -129,6 +129,7 @@ Verification is currently Linux/.NET 8. Native structure equivalence, renderer/p
 
 - [0026: Separate Transform2D type](core-math.md#adr-0026)
 - [0029: Typed Transform2D value and affine semantics](core-math.md#adr-0029)
+- [0035: Foreseeable public type-family completeness](core-math.md#adr-0035)
 
 <a id="adr-0026"></a>
 ## ADR 0026: Separate Transform2D foundational type
@@ -432,4 +433,46 @@ Verification is Linux/.NET 8 only. It does not establish bit-identical transcend
 - [0024: Typed color values and portable quantization](core-math.md#adr-0024)
 - [0025: Typed axis-aligned rectangle geometry](core-math.md#adr-0025)
 - [0029: Typed affine semantics](core-math.md#adr-0029)
+- [0033: Dimensioned engine-owned vector family](core-math.md#adr-0033)
+
+<a id="adr-0035"></a>
+## ADR 0035: Foreseeable public type-family completeness
+
+Last updated: 2026-09-21
+
+### Status
+
+Accepted. This decision supersedes only ADR 0025's rule that the integer rectangle waits for a current consumer. It does not claim that `RectI` is implemented.
+
+### Context
+
+Some paired value types have distinct storage and behavior but form one predictable public vocabulary. Requiring an existing caller before implementing the sibling leaves a known hole that later domains must retrofit. Conversely, implementing every imaginable symmetric type would create speculative API. Electron2D therefore needs a narrower criterion based on an accepted future engine role.
+
+`RectI` has foreseeable 2D uses in pixel rectangles, texture and atlas regions, image buffers, tile/grid bounds, and integer viewport or UI regions. Those domains are not implemented yet, but they are within the accepted product direction. Absence of a current caller is therefore not a valid reason to omit `RectI` when completing the rectangle family.
+
+### Decision
+
+- A production-type implementation audits its corresponding 2D sibling family, not only immediate call sites.
+- A sibling is included in the same production-ready vertical slice when its future role is concrete and belongs to an accepted Electron2D domain, even if no current consumer exists.
+- The sibling receives its full own API, XML/living documentation, persistence and integration where supported, positive/negative/boundary tests, and post-implementation audit. Empty shells and compatibility aliases remain forbidden.
+- Pure symmetry is insufficient: speculative types, 3D families, and concepts outside the accepted architecture remain excluded.
+- `RectI` is the required integer sibling of `Rect`. Its complete implementation must include the audited integer-rectangle contract and typed conversions in both rectangle types.
+- Because `Rect` predates this rule, `RectI` is recorded as a known unimplemented obligation. This documentation-only decision does not present it as shipped; the next rectangle-family implementation must close the gap before that family can be declared complete.
+
+### Consequences
+
+- Future `реализуй X` scopes can include a foreseeable sibling even without a current consumer.
+- Rectangle-family work grows to include `RectI`, but later image, atlas, grid, renderer, and UI work receives a stable integer geometry primitive instead of inventing one locally.
+- Current inventory and class/component/domain documents must continue to mark `RectI` absent until its complete implementation is committed.
+
+### Rejected alternatives
+
+- **Require an existing consumer:** rejected because it knowingly leaves predictable foundational holes.
+- **Implement every matching name:** rejected because symmetry alone does not establish product need.
+- **Reserve only the name or add a stub:** rejected because it creates misleading public surface.
+
+### Related decisions
+
+- [0004: 2D scene-oriented API](product.md#adr-0004)
+- [0025: Typed axis-aligned rectangle geometry](core-math.md#adr-0025)
 - [0033: Dimensioned engine-owned vector family](core-math.md#adr-0033)

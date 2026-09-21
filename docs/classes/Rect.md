@@ -72,13 +72,13 @@ Construction, geometry, comparison, and hashing are value-only and allocate no m
 
 The public type depends on canonical scalar [`Mathf`](Mathf.md), [`Vector2`](Vector2.md), [`Transform`](Transform.md), [`Side`](Side.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores only finite rectangles using the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect` directly as a reference-free value.
 
-There is no dependency on Scene, rendering, SDL, input, audio, physics, resources, scripting, or an editor. Integer-rectangle conversion remains absent until an integer rectangle type is justified and implemented. Language-specific boolean truth conversion is permanently excluded from the typed C# surface.
+There is no dependency on Scene, rendering, SDL, input, audio, physics, resources, scripting, or an editor. The accepted family-completeness decision requires a future complete `RectI` sibling and typed conversions because pixel, atlas, image-region, and grid bounds are foreseeable; neither the type nor conversions are implemented yet. Language-specific boolean truth conversion is permanently excluded from the typed C# surface.
 
 ## Verification and known limitations
 
 `tests/Electron2D.Tests/Program.cs` verifies layout and defaults, all four constructors, mutable properties, signed area, normalization, enclosure, expansion, center/support mapping, every growth mode and undefined side, half-open containment, overlap/border/separation behavior, intersection and merge, exact/approximate/NaN/infinity behavior, hashing, invariant formatting and failure, strict configuration serialization and malformed-input rollback, packed-scene storage, and zero warmed numeric allocation.
 
-Execution is currently verified on Linux/.NET 8. Native backend interop and the full five-platform matrix remain unverified. Integer-rectangle conversion remains absent rather than represented by a stub.
+Execution is currently verified on Linux/.NET 8. Native backend interop and the full five-platform matrix remain unverified. Required `RectI` and integer-rectangle conversion remain absent rather than represented by a stub.
 
 ## Decisions
 
@@ -90,3 +90,4 @@ Execution is currently verified on Linux/.NET 8. Native backend interop and the 
 - [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
+- [0035: Foreseeable public type-family completeness](../decisions/core-math.md#adr-0035)

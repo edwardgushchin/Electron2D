@@ -56,7 +56,7 @@ Implemented and verified. `Rect`, `Transform`, and `Node` use the engine-owned `
 - Universal-value truth conversion is permanently excluded by the typed C# architecture.
 - Four-component projection operations are excluded because the engine has no 3D projection type.
 - `Vector3`, `Vector3I`, 3D rectangles, and 3D transforms are outside the 2D product boundary.
-- Integer rectangle conversion is absent until an integer rectangle type is justified and implemented.
+- `RectI` and typed `Rect` conversions are required by the foreseeable-family policy but are not implemented yet; absence of a current consumer is no longer a deferral reason.
 - No public external-numerics adapter exists. Future native/package adapters must remain localized at integration boundaries.
 - No renderer, shader-uniform binding, physics, UI layout, atlas, or native ABI integration is claimed by these pure values.
 
@@ -76,3 +76,4 @@ Execution is verified on Linux/.NET 8 only. Native ABI and the Linux/Windows/mac
 - [0032: Engine-owned math vocabulary](../decisions/core-math.md#adr-0032)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
+- [0035: Foreseeable public type-family completeness](../decisions/core-math.md#adr-0035)
