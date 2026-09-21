@@ -1,0 +1,50 @@
+# Main loop component
+
+Last updated: 2026-09-21
+
+## Scope
+
+This Core component defines the host-facing application lifecycle, variable-step and fixed-step callback lanes, stable system-notification identifiers, and typed operating-system permission-result delivery. It does not implement a host, clock, native event translation, rendering, input, or physics simulation.
+
+## Owned types
+
+| Type | Role |
+| --- | --- |
+| [`MainLoop`](../classes/MainLoop.md) | Abstract owner-thread lifecycle and frame contract |
+
+[`SceneTree`](../classes/SceneTree.md) is the concrete Scene-domain implementation.
+
+## Runtime flow
+
+A direct host can call `Initialize()`, drive `Process(delta)` and `PhysicsProcess(delta)` in its chosen cadence, and then call `FinalizeLoop()` or `Dispose()`. The implemented [`Engine runtime`](engine-runtime.md) is the normal coordinator: `Engine.Start()` initializes a created loop or attaches an already running one, `AdvanceFrame()` schedules fixed callbacks before process, and `Stop()` finalizes without disposing. Hooks are synchronous and non-reentrant. A frame exception returns the loop to running state; initialization and finalization failures are terminal.
+
+The host may deliver system notifications through inherited `Notify(int)` and publishes a permission result through a protected typed endpoint supplied to platform integrations. `SceneTree` forwards system notifications to active nodes.
+
+## Dependencies
+
+The component depends only on the Core object-lifecycle component and the .NET Base Class Library. The Engine runtime depends on this component, future SDL application hosting depends on both, and `SceneTree` depends on it from the Scene domain.
+
+## Invariants
+
+- The constructing thread owns lifecycle, frames, permission-result publication, and disposal.
+- Exactly one successful initialization is paired with at most one finalization callback.
+- Frame callbacks execute only while running and never re-enter.
+- Deltas are finite and non-negative.
+- Finalization reaches a terminal state even when user cleanup throws.
+- Disposal does not retry failed initialization or failed finalization.
+- The component creates no hidden thread, time source, event pump, or physics work.
+
+## Current implementation status and exclusions
+
+The managed lifecycle, event, callbacks, stop result, constants, `Engine` attachment, error states, and `SceneTree` integration are implemented and verified. Native system-event generation, permission requests, real clock ownership, frame pacing/waiting, window/application ownership, exit codes, crash integration, and focus-to-input synchronization are blocked on the SDL host and future Input domain. They are absent rather than stubbed.
+
+## Verification
+
+Executable checks cover success, invalid order, delta boundaries, wrong-thread calls, frame and lifecycle callback failures, re-entry, deterministic disposal pairing, permission delivery, numeric constants, SceneTree propagation/finalization, and warmed idle-frame allocations. They do not exercise an SDL host or real operating-system events.
+
+## Decisions
+
+- [0015: Main-loop lifecycle and host boundary](../decisions/0015-main-loop-contract.md)
+- [0016: Process-wide Engine runtime and host-driven scheduling](../decisions/0016-engine-runtime.md)
+- [0002: C# events for signals](../decisions/0002-csharp-events-for-signals.md)
+- [0014: Managed Resource lifetime and realtime allocation](../decisions/0014-managed-resource-lifetime.md)

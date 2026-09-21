@@ -1,0 +1,6 @@
+.dev-diary/
+.dev_diary/
+bin/
+obj/
+**/bin/
+**/obj/

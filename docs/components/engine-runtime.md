@@ -1,0 +1,53 @@
+# Engine runtime component
+
+Last updated: 2026-09-21
+
+## Scope
+
+This Core component coordinates one process-wide engine runtime: project-backed timing settings, fixed-step synchronization, time scaling, `MainLoop` attachment/finalization, frame metrics, architecture/version reporting, and a typed named-singleton registry. It consumes host-supplied elapsed time and does not own a clock, thread, native event pump, or frame wait.
+
+## Owned types
+
+| Type | Role |
+| --- | --- |
+| [`Engine`](../classes/Engine.md) | Process-wide coordinator, scheduler, metrics owner, and registry |
+| [`EngineVersionInfo`](../classes/EngineVersionInfo.md) | Immutable typed assembly-version descriptor |
+
+[`MainLoop`](../classes/MainLoop.md) is owned by the separate [Main loop](main-loop.md) component and attached non-destructively by this component.
+
+## Runtime flow
+
+The host calls `Engine.Start(loop)`. The loop is published before initialization, initialized only if still created, and the successful caller becomes the runtime owner. Each `AdvanceFrame(elapsed)` samples active project-setting overrides, bounds catch-up, synchronizes fixed-step distribution, publishes interpolation, invokes fixed callbacks before process, updates process-lifetime counters/current-run FPS, and flushes one pending project-settings event. A stop request is returned to the host. The host calls `Stop()`, which finalizes and detaches the loop without disposing it.
+
+Callback exceptions restore Engine's running state. Initialization/finalization failures return Engine to idle while preserving the loop's terminal lifecycle decision. Re-entry and concurrent lifecycle/frame transitions are rejected atomically.
+
+## Dependencies
+
+The component depends on Core object lifecycle, MainLoop, and ProjectSettings plus ordinary .NET synchronization, runtime architecture reporting, and assembly metadata. `SceneTree` requires no reverse dependency: it is accepted through `MainLoop`. Future SDL hosting will depend on Engine for timing policy and lifecycle but Engine does not depend on SDL.
+
+## Invariants
+
+- Exactly one `Engine` instance exists and cannot be disposed.
+- At most one loop lifecycle is active.
+- One owner thread runs startup, frames, and shutdown.
+- Fixed callbacks precede process; stop and exception paths always clear the in-physics flag.
+- Catch-up work is bounded by a positive configured maximum.
+- Timing settings and effective callback deltas are finite; callback deltas are non-negative.
+- Process/physics counters are process-lifetime totals; the synchronizer, interpolation, and FPS window reset only after successful loop preparation.
+- Registry names are unique ordinal strings; built-in `Engine` and `ProjectSettings` entries are permanent, and user registry ownership never implies object disposal.
+- Warmed empty frame scheduling has no steady-state managed allocation.
+
+## Current implementation status and exclusions
+
+Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. SDL clock/event/window integration, actual maximum-FPS waiting, rendering/draw counts, logging flags, generated attribution/license data, script debugging/languages, movie writing, and editor hints remain absent. Their exact reference-API disposition is in the [`Engine` class inventory](../classes/Engine.md#official-reference-coverage-inventory).
+
+## Verification
+
+Executable checks cover success, invalid values/order, wrong threads, lifecycle and frame re-entry, stop requests, long stalls, callback and lifecycle failures, `SceneTree` attachment, registry concurrency, metadata, counters/FPS/interpolation, and warmed idle allocation. They do not verify platform cadence, rendering, or hard real-time behavior.
+
+## Decisions
+
+- [0016: Process-wide Engine runtime and host-driven scheduling](../decisions/0016-engine-runtime.md)
+- [0015: Main-loop lifecycle and host boundary](../decisions/0015-main-loop-contract.md)
+- [0014: Managed Resource lifetime and realtime allocation](../decisions/0014-managed-resource-lifetime.md)
+- [0019: Typed project settings and directory-backed virtual paths](../decisions/0019-typed-project-settings.md)
