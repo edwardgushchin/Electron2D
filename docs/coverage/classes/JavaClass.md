@@ -1,0 +1,17 @@
+# JavaClass API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [doc/classes/JavaClass.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/JavaClass.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: [RefCounted](RefCounted.md). Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class JavaClass`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/JavaClass.xml) | — | Blocked | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). |
+| [`method get_java_class_name() -> String`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/JavaClass.xml) | — | Blocked | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). |
+| [`method get_java_method_list() -> Dictionary[]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/JavaClass.xml) | — | Blocked | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). |
+| [`method get_java_parent_class() -> JavaClass`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/JavaClass.xml) | — | Blocked | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). |
+| [`method has_java_method(StringName method) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/JavaClass.xml) | — | Blocked | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). |

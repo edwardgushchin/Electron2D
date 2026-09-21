@@ -1,0 +1,45 @@
+# PhysicalBone3D API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [doc/classes/PhysicalBone3D.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: [PhysicsBody3D](PhysicsBody3D.md). Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class PhysicalBone3D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum DampMode`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum JointType`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value DAMP_MODE_COMBINE [DampMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value DAMP_MODE_REPLACE [DampMode] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value JOINT_TYPE_6DOF [JointType] = 5`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value JOINT_TYPE_CONE [JointType] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value JOINT_TYPE_HINGE [JointType] = 3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value JOINT_TYPE_NONE [JointType] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value JOINT_TYPE_PIN [JointType] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value JOINT_TYPE_SLIDER [JointType] = 4`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`method _integrate_forces(PhysicsDirectBodyState3D state) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method apply_central_impulse(Vector3 impulse) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method apply_impulse(Vector3 impulse, Vector3 position = Vector3(0, 0, 0)) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method get_bone_id() -> int`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`method get_simulate_physics() -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`method is_simulating_physics() -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property float angular_damp = 0.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property int angular_damp_mode [PhysicalBone3D.DampMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property Vector3 angular_velocity = Vector3(0, 0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property Transform3D body_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property float bounce = 0.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property bool can_sleep = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property bool custom_integrator = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property float friction = 1.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property float gravity_scale = 1.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property Transform3D joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property Vector3 joint_rotation = Vector3(0, 0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property int joint_type [PhysicalBone3D.JointType] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property float linear_damp = 0.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property int linear_damp_mode [PhysicalBone3D.DampMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property Vector3 linear_velocity = Vector3(0, 0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property float mass = 1.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicalBone3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |

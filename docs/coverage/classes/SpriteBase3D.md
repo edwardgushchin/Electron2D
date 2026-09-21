@@ -1,0 +1,49 @@
+# SpriteBase3D API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [doc/classes/SpriteBase3D.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: [GeometryInstance3D](GeometryInstance3D.md). Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class SpriteBase3D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum AlphaCutMode`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum DrawFlags`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value ALPHA_CUT_DISABLED [AlphaCutMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value ALPHA_CUT_DISCARD [AlphaCutMode] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value ALPHA_CUT_HASH [AlphaCutMode] = 3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value ALPHA_CUT_OPAQUE_PREPASS [AlphaCutMode] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value FLAG_DISABLE_DEPTH_TEST [DrawFlags] = 3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value FLAG_DOUBLE_SIDED [DrawFlags] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value FLAG_FIXED_SIZE [DrawFlags] = 4`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value FLAG_MAX [DrawFlags] = 5`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value FLAG_SHADED [DrawFlags] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value FLAG_TRANSPARENT [DrawFlags] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`method generate_triangle_mesh() -> TriangleMesh`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`method get_draw_flag(int flag [SpriteBase3D.DrawFlags]) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method get_item_rect() -> Rect2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`method set_draw_flag(int flag [SpriteBase3D.DrawFlags], bool enabled) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property float alpha_antialiasing_edge = 0.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property int alpha_antialiasing_mode [BaseMaterial3D.AlphaAntiAliasing] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property int alpha_cut [SpriteBase3D.AlphaCutMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property float alpha_hash_scale = 1.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property float alpha_scissor_threshold = 0.5`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property int axis [Vector3.Axis] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property int billboard [BaseMaterial3D.BillboardMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property bool centered = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property bool double_sided = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property bool fixed_size = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property bool flip_h = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property bool flip_v = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property Color modulate = Color(1, 1, 1, 1)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property bool no_depth_test = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property Vector2 offset = Vector2(0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property float pixel_size = 0.01`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property int render_priority = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
+| [`property bool shaded = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property int texture_filter [BaseMaterial3D.TextureFilter] = 3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property bool transparent = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SpriteBase3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |

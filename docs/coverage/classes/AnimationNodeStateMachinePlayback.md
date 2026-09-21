@@ -1,0 +1,30 @@
+# AnimationNodeStateMachinePlayback API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [doc/classes/AnimationNodeStateMachinePlayback.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: [Resource](Resource.md). Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class AnimationNodeStateMachinePlayback`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_current_length() -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_current_node() -> StringName`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_current_play_position() -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_fading_from_length() -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_fading_from_node() -> StringName`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_fading_from_play_position() -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_fading_length() -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_fading_position() -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method get_travel_path() -> StringName[]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method is_playing() -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method next() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method start(StringName node, bool reset = true) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method stop() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`method travel(StringName to_node, bool reset_on_teleport = true) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`property bool resource_local_to_scene = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`signal state_finished(StringName state) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |
+| [`signal state_started(StringName state) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeStateMachinePlayback.xml) | — | Blocked | Animation: trigger is the first scene animation slice. |

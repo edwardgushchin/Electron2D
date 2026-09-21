@@ -1,0 +1,1481 @@
+{
+  "mappings": [
+    {
+      "electron2d": "constant:Electron2D.Mathf.Inf()",
+      "godot": "@GDScript::constant:INF",
+      "reason": "Same scalar constant under typed C# Mathf; precision is adapted (ADR 0034)."
+    },
+    {
+      "electron2d": "constant:Electron2D.Mathf.NaN()",
+      "godot": "@GDScript::constant:NAN",
+      "reason": "Same scalar constant under typed C# Mathf; precision is adapted (ADR 0034)."
+    },
+    {
+      "electron2d": "constant:Electron2D.Mathf.Pi()",
+      "godot": "@GDScript::constant:PI",
+      "reason": "Same scalar constant under typed C# Mathf; precision is adapted (ADR 0034)."
+    },
+    {
+      "electron2d": "constant:Electron2D.Mathf.Tau()",
+      "godot": "@GDScript::constant:TAU",
+      "reason": "Same scalar constant under typed C# Mathf; precision is adapted (ADR 0034)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Color..ctor(Electron2D.Color,System.Single)",
+      "godot": "Color::constructor:Color(Color:,float:)",
+      "reason": "Typed C# constructor for the same Color input/conversion (ADR 0024)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Color..ctor(System.Single,System.Single,System.Single,System.Single)",
+      "godot": "Color::constructor:Color(float:,float:,float:)",
+      "reason": "The fourth C# alpha parameter defaults to 1f, so three-argument construction is available."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Color..ctor(System.String)",
+      "godot": "Color::constructor:Color(String:)",
+      "reason": "Typed C# constructor for the same Color input/conversion (ADR 0024)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Color..ctor(System.String,System.Single)",
+      "godot": "Color::constructor:Color(String:,float:)",
+      "reason": "Typed C# constructor for the same Color input/conversion (ADR 0024)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Color..ctor(System.UInt32)",
+      "godot": "Color::method:hex(int:)",
+      "reason": "Typed C# constructor for the same Color input/conversion (ADR 0024)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Color..ctor(System.UInt64)",
+      "godot": "Color::method:hex64(int:)",
+      "reason": "Typed C# constructor for the same Color input/conversion (ADR 0024)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Vector2..ctor(Electron2D.Vector2I)",
+      "godot": "Vector2::constructor:Vector2(Vector2i:)",
+      "reason": "Cross-precision vector constructor; parameter type corresponds exactly to the upstream integer/float vector constructor."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Vector2I..ctor(Electron2D.Vector2)",
+      "godot": "Vector2i::constructor:Vector2i(Vector2:)",
+      "reason": "Cross-precision vector constructor; parameter type corresponds exactly to the upstream integer/float vector constructor."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Vector4..ctor(Electron2D.Vector4I)",
+      "godot": "Vector4::constructor:Vector4(Vector4i:)",
+      "reason": "Cross-precision vector constructor; parameter type corresponds exactly to the upstream integer/float vector constructor."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Vector4I..ctor(Electron2D.Vector4)",
+      "godot": "Vector4i::constructor:Vector4i(Vector4:)",
+      "reason": "Cross-precision vector constructor; parameter type corresponds exactly to the upstream integer/float vector constructor."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Image.AstcFormat.Format4X4()",
+      "godot": "Image::enum_value:ASTCFormat.ASTC_FORMAT_4x4",
+      "reason": "ASTC format enum name adaptation; numeric identity verified."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Image.AstcFormat.Format8X8()",
+      "godot": "Image::enum_value:ASTCFormat.ASTC_FORMAT_8x8",
+      "reason": "ASTC format enum name adaptation; numeric identity verified."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Image.UsedChannels.Luminance()",
+      "godot": "Image::enum_value:UsedChannels.USED_CHANNELS_L",
+      "reason": "Used-channel enum name adaptation; numeric identity verified."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Image.UsedChannels.LuminanceAlpha()",
+      "godot": "Image::enum_value:UsedChannels.USED_CHANNELS_LA",
+      "reason": "Used-channel enum name adaptation; numeric identity verified."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Image.UsedChannels.Red()",
+      "godot": "Image::enum_value:UsedChannels.USED_CHANNELS_R",
+      "reason": "Used-channel enum name adaptation; numeric identity verified."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Image.UsedChannels.RedGreen()",
+      "godot": "Image::enum_value:UsedChannels.USED_CHANNELS_RG",
+      "reason": "Used-channel enum name adaptation; numeric identity verified."
+    },
+    {
+      "electron2d": "indexer:Electron2D.Color.Item(System.Int32)",
+      "godot": "Color::operator:operator [](int:)",
+      "reason": "C# indexer corresponds to Color component indexing (ADR 0024)."
+    },
+    {
+      "electron2d": "indexer:Electron2D.Transform.Item(System.Int32)",
+      "godot": "Transform2D::operator:operator [](int:)",
+      "reason": "C# column indexer for the upstream affine column operator (ADR 0029)."
+    },
+    {
+      "electron2d": "indexer:Electron2D.Vector2.Item(System.Int32)",
+      "godot": "Vector2::operator:operator [](int:)",
+      "reason": "C# component indexer for the upstream Vector2 operator (ADR 0033)."
+    },
+    {
+      "electron2d": "indexer:Electron2D.Vector2I.Item(System.Int32)",
+      "godot": "Vector2i::operator:operator [](int:)",
+      "reason": "C# indexer is the upstream component-index operator."
+    },
+    {
+      "electron2d": "indexer:Electron2D.Vector4.Item(System.Int32)",
+      "godot": "Vector4::operator:operator [](int:)",
+      "reason": "C# indexer is the upstream component-index operator."
+    },
+    {
+      "electron2d": "indexer:Electron2D.Vector4I.Item(System.Int32)",
+      "godot": "Vector4i::operator:operator [](int:)",
+      "reason": "C# indexer is the upstream component-index operator."
+    },
+    {
+      "electron2d": "method:Electron2D.Color.Color8(System.Byte,System.Byte,System.Byte,System.Byte)",
+      "godot": "Color::method:from_rgba8(int:,int:,int:,int:)",
+      "reason": "Byte-typed RGBA8 factory (ADR 0024)."
+    },
+    {
+      "electron2d": "method:Electron2D.Color.FromHtml(System.ReadOnlySpan<System.Char>)",
+      "godot": "Color::method:html(String:)",
+      "reason": "Span-based HTML parser counterpart; empty input is an accepted C# edge adaptation (ADR 0024)."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.GetData()",
+      "godot": "Image::method:get_data()",
+      "reason": "C# spelling or typed vector/byte-array form of the Image operation (ADR 0039)."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.GetPixel(Electron2D.Vector2I)",
+      "godot": "Image::method:get_pixelv(Vector2i:)",
+      "reason": "C# spelling or typed vector/byte-array form of the Image operation (ADR 0039)."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.GetUsedRect()",
+      "godot": "Image::method:get_used_rect()",
+      "reason": "C# spelling or typed vector/byte-array form of the Image operation (ADR 0039)."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.ResizeToPowerOfTwo(System.Boolean,Electron2D.Image.Interpolation)",
+      "godot": "Image::method:resize_to_po2(bool:,int:Image.Interpolation)",
+      "reason": "C# spelling or typed vector/byte-array form of the Image operation (ADR 0039)."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.SetPixel(Electron2D.Vector2I,Electron2D.Color)",
+      "godot": "Image::method:set_pixelv(Vector2i:,Color:)",
+      "reason": "C# spelling or typed vector/byte-array form of the Image operation (ADR 0039)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Acos(System.Double)",
+      "godot": "@GlobalScope::method:acos(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Acos(System.Single)",
+      "godot": "@GlobalScope::method:acos(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Acosh(System.Double)",
+      "godot": "@GlobalScope::method:acosh(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Acosh(System.Single)",
+      "godot": "@GlobalScope::method:acosh(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.AngleDifference(System.Double,System.Double)",
+      "godot": "@GlobalScope::method:angle_difference(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.AngleDifference(System.Single,System.Single)",
+      "godot": "@GlobalScope::method:angle_difference(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Asin(System.Double)",
+      "godot": "@GlobalScope::method:asin(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Asin(System.Single)",
+      "godot": "@GlobalScope::method:asin(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Asinh(System.Double)",
+      "godot": "@GlobalScope::method:asinh(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Asinh(System.Single)",
+      "godot": "@GlobalScope::method:asinh(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Atan(System.Double)",
+      "godot": "@GlobalScope::method:atan(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Atan(System.Single)",
+      "godot": "@GlobalScope::method:atan(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Atan2(System.Double,System.Double)",
+      "godot": "@GlobalScope::method:atan2(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Atan2(System.Single,System.Single)",
+      "godot": "@GlobalScope::method:atan2(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Atanh(System.Double)",
+      "godot": "@GlobalScope::method:atanh(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Atanh(System.Single)",
+      "godot": "@GlobalScope::method:atanh(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.BezierDerivative(System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:bezier_derivative(float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.BezierDerivative(System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:bezier_derivative(float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.BezierInterpolate(System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:bezier_interpolate(float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.BezierInterpolate(System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:bezier_interpolate(float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.CeilToInt(System.Double)",
+      "godot": "@GlobalScope::method:ceili(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.CeilToInt(System.Single)",
+      "godot": "@GlobalScope::method:ceili(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Cos(System.Double)",
+      "godot": "@GlobalScope::method:cos(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Cos(System.Single)",
+      "godot": "@GlobalScope::method:cos(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Cosh(System.Double)",
+      "godot": "@GlobalScope::method:cosh(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Cosh(System.Single)",
+      "godot": "@GlobalScope::method:cosh(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolate(System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:cubic_interpolate(float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolate(System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:cubic_interpolate(float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolateAngle(System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:cubic_interpolate_angle(float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolateAngle(System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:cubic_interpolate_angle(float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolateAngleInTime(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:cubic_interpolate_angle_in_time(float:,float:,float:,float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolateAngleInTime(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:cubic_interpolate_angle_in_time(float:,float:,float:,float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolateInTime(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:cubic_interpolate_in_time(float:,float:,float:,float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolateInTime(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:cubic_interpolate_in_time(float:,float:,float:,float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.DbToLinear(System.Double)",
+      "godot": "@GlobalScope::method:db_to_linear(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.DbToLinear(System.Single)",
+      "godot": "@GlobalScope::method:db_to_linear(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.DecimalCount(System.Decimal)",
+      "godot": "@GlobalScope::method:step_decimals(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.DecimalCount(System.Double)",
+      "godot": "@GlobalScope::method:step_decimals(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.DegToRad(System.Double)",
+      "godot": "@GlobalScope::method:deg_to_rad(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.DegToRad(System.Single)",
+      "godot": "@GlobalScope::method:deg_to_rad(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Ease(System.Double,System.Double)",
+      "godot": "@GlobalScope::method:ease(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Ease(System.Single,System.Single)",
+      "godot": "@GlobalScope::method:ease(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Exp(System.Double)",
+      "godot": "@GlobalScope::method:exp(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Exp(System.Single)",
+      "godot": "@GlobalScope::method:exp(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.FloorToInt(System.Double)",
+      "godot": "@GlobalScope::method:floori(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.FloorToInt(System.Single)",
+      "godot": "@GlobalScope::method:floori(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.InverseLerp(System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:inverse_lerp(float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.InverseLerp(System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:inverse_lerp(float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.IsEqualApprox(System.Double,System.Double)",
+      "godot": "@GlobalScope::method:is_equal_approx(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.IsEqualApprox(System.Single,System.Single)",
+      "godot": "@GlobalScope::method:is_equal_approx(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.IsFinite(System.Double)",
+      "godot": "@GlobalScope::method:is_finite(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.IsFinite(System.Single)",
+      "godot": "@GlobalScope::method:is_finite(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.IsInf(System.Double)",
+      "godot": "@GlobalScope::method:is_inf(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.IsInf(System.Single)",
+      "godot": "@GlobalScope::method:is_inf(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.IsNaN(System.Double)",
+      "godot": "@GlobalScope::method:is_nan(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.IsNaN(System.Single)",
+      "godot": "@GlobalScope::method:is_nan(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.IsZeroApprox(System.Double)",
+      "godot": "@GlobalScope::method:is_zero_approx(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.IsZeroApprox(System.Single)",
+      "godot": "@GlobalScope::method:is_zero_approx(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.LerpAngle(System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:lerp_angle(float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.LerpAngle(System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:lerp_angle(float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.LinearToDb(System.Double)",
+      "godot": "@GlobalScope::method:linear_to_db(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.LinearToDb(System.Single)",
+      "godot": "@GlobalScope::method:linear_to_db(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Log(System.Double)",
+      "godot": "@GlobalScope::method:log(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Log(System.Single)",
+      "godot": "@GlobalScope::method:log(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Max(System.Double,System.Double)",
+      "godot": "@GlobalScope::method:maxf(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Max(System.Int32,System.Int32)",
+      "godot": "@GlobalScope::method:maxi(int:,int:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Max(System.Single,System.Single)",
+      "godot": "@GlobalScope::method:maxf(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Min(System.Double,System.Double)",
+      "godot": "@GlobalScope::method:minf(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Min(System.Int32,System.Int32)",
+      "godot": "@GlobalScope::method:mini(int:,int:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Min(System.Single,System.Single)",
+      "godot": "@GlobalScope::method:minf(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.MoveToward(System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:move_toward(float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.MoveToward(System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:move_toward(float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.PingPong(System.Double,System.Double)",
+      "godot": "@GlobalScope::method:pingpong(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.PingPong(System.Single,System.Single)",
+      "godot": "@GlobalScope::method:pingpong(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.PosMod(System.Double,System.Double)",
+      "godot": "@GlobalScope::method:fposmod(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.PosMod(System.Int32,System.Int32)",
+      "godot": "@GlobalScope::method:posmod(int:,int:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.PosMod(System.Single,System.Single)",
+      "godot": "@GlobalScope::method:fposmod(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Pow(System.Double,System.Double)",
+      "godot": "@GlobalScope::method:pow(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Pow(System.Single,System.Single)",
+      "godot": "@GlobalScope::method:pow(float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.RadToDeg(System.Double)",
+      "godot": "@GlobalScope::method:rad_to_deg(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.RadToDeg(System.Single)",
+      "godot": "@GlobalScope::method:rad_to_deg(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Remap(System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:remap(float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Remap(System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:remap(float:,float:,float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.RotateToward(System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:rotate_toward(float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.RotateToward(System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:rotate_toward(float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.RoundToInt(System.Double)",
+      "godot": "@GlobalScope::method:roundi(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.RoundToInt(System.Single)",
+      "godot": "@GlobalScope::method:roundi(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Sin(System.Double)",
+      "godot": "@GlobalScope::method:sin(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Sin(System.Single)",
+      "godot": "@GlobalScope::method:sin(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Sinh(System.Double)",
+      "godot": "@GlobalScope::method:sinh(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Sinh(System.Single)",
+      "godot": "@GlobalScope::method:sinh(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.SmoothStep(System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:smoothstep(float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.SmoothStep(System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:smoothstep(float:,float:,float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Sqrt(System.Double)",
+      "godot": "@GlobalScope::method:sqrt(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Sqrt(System.Single)",
+      "godot": "@GlobalScope::method:sqrt(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.StepDecimals(System.Double)",
+      "godot": "@GlobalScope::method:step_decimals(float:)",
+      "reason": "Double-precision C# form of global step_decimals; compare rounding behavior separately."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Tan(System.Double)",
+      "godot": "@GlobalScope::method:tan(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Tan(System.Single)",
+      "godot": "@GlobalScope::method:tan(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Tanh(System.Double)",
+      "godot": "@GlobalScope::method:tanh(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Tanh(System.Single)",
+      "godot": "@GlobalScope::method:tanh(float:)",
+      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+    },
+    {
+      "electron2d": "method:Electron2D.Rect.GetCenter()",
+      "godot": "Rect2::method:get_center()",
+      "reason": "PascalCase C# spelling of the rectangle center query (ADRs 0025/0035)."
+    },
+    {
+      "electron2d": "method:Electron2D.RectI.GetCenter()",
+      "godot": "Rect2i::method:get_center()",
+      "reason": "PascalCase C# spelling of the rectangle center query (ADRs 0025/0035)."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.Clamp(Electron2D.Vector2,Electron2D.Vector2)",
+      "godot": "Vector2::method:clamp(Vector2:,Vector2:)",
+      "reason": "Typed C# vector/scalar overload of the same Vector2 operation (ADR 0033)."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.Clamp(System.Single,System.Single)",
+      "godot": "Vector2::method:clampf(float:,float:)",
+      "reason": "Typed C# vector/scalar overload of the same Vector2 operation (ADR 0033)."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.Max(Electron2D.Vector2)",
+      "godot": "Vector2::method:max(Vector2:)",
+      "reason": "Typed C# vector/scalar overload of the same Vector2 operation (ADR 0033)."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.Max(System.Single)",
+      "godot": "Vector2::method:maxf(float:)",
+      "reason": "Typed C# vector/scalar overload of the same Vector2 operation (ADR 0033)."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.Min(Electron2D.Vector2)",
+      "godot": "Vector2::method:min(Vector2:)",
+      "reason": "Typed C# vector/scalar overload of the same Vector2 operation (ADR 0033)."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.Min(System.Single)",
+      "godot": "Vector2::method:minf(float:)",
+      "reason": "Typed C# vector/scalar overload of the same Vector2 operation (ADR 0033)."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.PosMod(Electron2D.Vector2)",
+      "godot": "Vector2::method:posmodv(Vector2:)",
+      "reason": "Typed C# vector/scalar overload of the same Vector2 operation (ADR 0033)."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.PosMod(System.Single)",
+      "godot": "Vector2::method:posmod(float:)",
+      "reason": "Typed C# vector/scalar overload of the same Vector2 operation (ADR 0033)."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.Snapped(Electron2D.Vector2)",
+      "godot": "Vector2::method:snapped(Vector2:)",
+      "reason": "Typed C# vector/scalar overload of the same Vector2 operation (ADR 0033)."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.Snapped(System.Single)",
+      "godot": "Vector2::method:snappedf(float:)",
+      "reason": "Typed C# vector/scalar overload of the same Vector2 operation (ADR 0033)."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2I.Clamp(System.Int32,System.Int32)",
+      "godot": "Vector2i::method:clampi(int:,int:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2I.Max(System.Int32)",
+      "godot": "Vector2i::method:maxi(int:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2I.Min(System.Int32)",
+      "godot": "Vector2i::method:mini(int:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2I.Snapped(System.Int32)",
+      "godot": "Vector2i::method:snappedi(int:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4.Clamp(System.Single,System.Single)",
+      "godot": "Vector4::method:clampf(float:,float:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4.Max(System.Single)",
+      "godot": "Vector4::method:maxf(float:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4.Min(System.Single)",
+      "godot": "Vector4::method:minf(float:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4.PosMod(Electron2D.Vector4)",
+      "godot": "Vector4::method:posmodv(Vector4:)",
+      "reason": "Vector-valued positive modulo counterpart."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4.Snapped(System.Single)",
+      "godot": "Vector4::method:snappedf(float:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4I.Clamp(System.Int32,System.Int32)",
+      "godot": "Vector4i::method:clampi(int:,int:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4I.Max(System.Int32)",
+      "godot": "Vector4i::method:maxi(int:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4I.Min(System.Int32)",
+      "godot": "Vector4i::method:mini(int:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4I.Snapped(System.Int32)",
+      "godot": "Vector4i::method:snappedi(int:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "operator:Electron2D.Color.op_Division(Electron2D.Color,Electron2D.Color)",
+      "godot": "Color::operator:operator /(Color:)",
+      "reason": "Typed C# spelling of the same Color operator (ADR 0024)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Color.op_Division(Electron2D.Color,System.Single)",
+      "godot": "Color::operator:operator /(float:)",
+      "reason": "Typed C# spelling of the same Color operator (ADR 0024)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Color.op_Multiply(Electron2D.Color,Electron2D.Color)",
+      "godot": "Color::operator:operator *(Color:)",
+      "reason": "Typed C# spelling of the same Color operator (ADR 0024)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Color.op_Multiply(Electron2D.Color,System.Single)",
+      "godot": "Color::operator:operator *(float:)",
+      "reason": "Typed C# spelling of the same Color operator (ADR 0024)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Color.op_Multiply(System.Single,Electron2D.Color)",
+      "godot": "Color::operator:operator *(float:)",
+      "reason": "Typed C# spelling of the same Color operator (ADR 0024)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Color.op_UnaryPlus(Electron2D.Color)",
+      "godot": "Color::operator:operator unary+()",
+      "reason": "Typed C# spelling of the same Color operator (ADR 0024)."
+    },
+    {
+      "electron2d": "operator:Electron2D.RectI.op_Explicit(Electron2D.Rect)",
+      "godot": "Rect2i::constructor:Rect2i(Rect2:)",
+      "reason": "C# conversion operator for the upstream rectangle conversion constructor (ADR 0035)."
+    },
+    {
+      "electron2d": "operator:Electron2D.RectI.op_Implicit(Electron2D.RectI)",
+      "godot": "Rect2::constructor:Rect2(Rect2i:)",
+      "reason": "C# conversion operator for the upstream rectangle conversion constructor (ADR 0035)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Rect,Electron2D.Transform)",
+      "godot": "Rect2::operator:operator *(Transform2D:)",
+      "reason": "Operand-directed typed C# affine multiplication (ADR 0029)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Transform,Electron2D.Rect)",
+      "godot": "Transform2D::operator:operator *(Rect2:)",
+      "reason": "Operand-directed typed C# affine multiplication (ADR 0029)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Transform,Electron2D.Transform)",
+      "godot": "Transform2D::operator:operator *(Transform2D:)",
+      "reason": "Operand-directed typed C# affine multiplication (ADR 0029)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Transform,Electron2D.Vector2)",
+      "godot": "Transform2D::operator:operator *(Vector2:)",
+      "reason": "Operand-directed typed C# affine multiplication (ADR 0029)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Transform,Electron2D.Vector2[])",
+      "godot": "Transform2D::operator:operator *(PackedVector2Array:)",
+      "reason": "C# Vector2[] counterpart of transform multiplication over PackedVector2Array; compare array semantics separately."
+    },
+    {
+      "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Transform,System.Single)",
+      "godot": "Transform2D::operator:operator *(float:)",
+      "reason": "Operand-directed typed C# affine multiplication (ADR 0029)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Vector2,Electron2D.Transform)",
+      "godot": "Vector2::operator:operator *(Transform2D:)",
+      "reason": "Operand-directed typed C# affine multiplication (ADR 0029)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Vector2[],Electron2D.Transform)",
+      "godot": "PackedVector2Array::operator:operator *(Transform2D:)",
+      "reason": "C# Vector2[] counterpart of reverse transform multiplication over PackedVector2Array; compare array semantics separately."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2.op_Multiply(Electron2D.Vector2,Electron2D.Vector2)",
+      "godot": "Vector2::operator:operator *(Vector2:)",
+      "reason": "Componentwise vector multiplication counterpart."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2.op_Multiply(Electron2D.Vector2,System.Single)",
+      "godot": "Vector2::operator:operator *(float:)",
+      "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2.op_Multiply(System.Single,Electron2D.Vector2)",
+      "godot": "Vector2::operator:operator *(float:)",
+      "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2.op_UnaryPlus(Electron2D.Vector2)",
+      "godot": "Vector2::operator:operator unary+()",
+      "reason": "Unary plus counterpart."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2I.op_Explicit(Electron2D.Vector2)",
+      "godot": "Vector2i::constructor:Vector2i(Vector2:)",
+      "reason": "C# cast form of upstream float-to-integer vector conversion."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2I.op_Implicit(Electron2D.Vector2I)",
+      "godot": "Vector2::constructor:Vector2(Vector2i:)",
+      "reason": "C# implicit cast form of upstream integer-to-float vector conversion."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2I.op_Multiply(Electron2D.Vector2I,Electron2D.Vector2I)",
+      "godot": "Vector2i::operator:operator *(Vector2i:)",
+      "reason": "Componentwise vector multiplication counterpart."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2I.op_Multiply(Electron2D.Vector2I,System.Int32)",
+      "godot": "Vector2i::operator:operator *(int:)",
+      "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2I.op_Multiply(Electron2D.Vector2I,System.Single)",
+      "godot": "Vector2i::operator:operator *(float:)",
+      "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2I.op_Multiply(System.Int32,Electron2D.Vector2I)",
+      "godot": "Vector2i::operator:operator *(int:)",
+      "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2I.op_Multiply(System.Single,Electron2D.Vector2I)",
+      "godot": "Vector2i::operator:operator *(float:)",
+      "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2I.op_UnaryPlus(Electron2D.Vector2I)",
+      "godot": "Vector2i::operator:operator unary+()",
+      "reason": "Unary plus counterpart."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4.op_Multiply(Electron2D.Vector4,Electron2D.Vector4)",
+      "godot": "Vector4::operator:operator *(Vector4:)",
+      "reason": "Componentwise vector multiplication counterpart."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4.op_Multiply(Electron2D.Vector4,System.Single)",
+      "godot": "Vector4::operator:operator *(float:)",
+      "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4.op_Multiply(System.Single,Electron2D.Vector4)",
+      "godot": "Vector4::operator:operator *(float:)",
+      "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4.op_UnaryPlus(Electron2D.Vector4)",
+      "godot": "Vector4::operator:operator unary+()",
+      "reason": "Unary plus counterpart."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4I.op_Explicit(Electron2D.Vector4)",
+      "godot": "Vector4i::constructor:Vector4i(Vector4:)",
+      "reason": "C# cast form of upstream float-to-integer vector conversion."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4I.op_Implicit(Electron2D.Vector4I)",
+      "godot": "Vector4::constructor:Vector4(Vector4i:)",
+      "reason": "C# implicit cast form of upstream integer-to-float vector conversion."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4I.op_Multiply(Electron2D.Vector4I,Electron2D.Vector4I)",
+      "godot": "Vector4i::operator:operator *(Vector4i:)",
+      "reason": "Componentwise vector multiplication counterpart."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4I.op_Multiply(Electron2D.Vector4I,System.Int32)",
+      "godot": "Vector4i::operator:operator *(int:)",
+      "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4I.op_Multiply(Electron2D.Vector4I,System.Single)",
+      "godot": "Vector4i::operator:operator *(float:)",
+      "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4I.op_Multiply(System.Int32,Electron2D.Vector4I)",
+      "godot": "Vector4i::operator:operator *(int:)",
+      "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4I.op_Multiply(System.Single,Electron2D.Vector4I)",
+      "godot": "Vector4i::operator:operator *(float:)",
+      "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4I.op_UnaryPlus(Electron2D.Vector4I)",
+      "godot": "Vector4i::operator:operator unary+()",
+      "reason": "Unary plus counterpart."
+    },
+    {
+      "electron2d": "property:Electron2D.Image.HasMipmaps()",
+      "godot": "Image::method:has_mipmaps()",
+      "reason": "Read-only C# property for the Image state query (ADR 0039)."
+    },
+    {
+      "electron2d": "property:Electron2D.Image.IsCompressed()",
+      "godot": "Image::method:is_compressed()",
+      "reason": "Read-only C# property for the Image state query (ADR 0039)."
+    },
+    {
+      "electron2d": "property:Electron2D.Image.IsEmpty()",
+      "godot": "Image::method:is_empty()",
+      "reason": "Read-only C# property for the Image state query (ADR 0039)."
+    },
+    {
+      "electron2d": "property:Electron2D.Image.IsInvisible()",
+      "godot": "Image::method:is_invisible()",
+      "reason": "Read-only C# property for the Image state query (ADR 0039)."
+    },
+    {
+      "electron2d": "property:Electron2D.Image.PixelFormat()",
+      "godot": "Image::method:get_format()",
+      "reason": "Read-only C# property for the Image state query (ADR 0039)."
+    },
+    {
+      "electron2d": "property:Electron2D.Vector2I.MaxValue()",
+      "godot": "Vector2i::constant:MAX",
+      "reason": "All components equal int.MaxValue, matching upstream MAX."
+    },
+    {
+      "electron2d": "property:Electron2D.Vector2I.MinValue()",
+      "godot": "Vector2i::constant:MIN",
+      "reason": "All components equal int.MinValue, matching upstream MIN."
+    },
+    {
+      "electron2d": "property:Electron2D.Vector4I.MaxValue()",
+      "godot": "Vector4i::constant:MAX",
+      "reason": "All components equal int.MaxValue, matching upstream MAX."
+    },
+    {
+      "electron2d": "property:Electron2D.Vector4I.MinValue()",
+      "godot": "Vector4i::constant:MIN",
+      "reason": "All components equal int.MinValue, matching upstream MIN."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.Colors",
+      "reason": "C# container for Color named values; the XML declares those constants on Color itself.",
+      "adr": "core-math.md#adr-0024"
+    },
+    {
+      "electron2d": "T:Electron2D.ImageMetrics",
+      "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "T:Electron2D.Mathf",
+      "reason": "Typed C# home for global scalar functions and constants.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
+      "electron2d": "constant:Electron2D.Mathf.E()",
+      "reason": "Typed C# scalar constant absent from the XML class reference.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
+      "electron2d": "constant:Electron2D.Mathf.Epsilon()",
+      "reason": "Typed C# scalar constant absent from the XML class reference.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
+      "electron2d": "constant:Electron2D.Mathf.Sqrt2()",
+      "reason": "Typed C# scalar constant absent from the XML class reference.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Image..ctor()",
+      "reason": "C# Resource construction or protected lifecycle hook with no Image XML declaration.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ImageMetrics..ctor(System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Rect..ctor(Electron2D.Vector2,System.Single,System.Single)",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Rect..ctor(System.Single,System.Single,Electron2D.Vector2)",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RectI..ctor(Electron2D.Vector2I,System.Int32,System.Int32)",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RectI..ctor(System.Int32,System.Int32,Electron2D.Vector2I)",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Transform..ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "reason": "Typed C# affine convenience, array overload, or standard value/format member without one exact XML row.",
+      "adr": "core-math.md#adr-0029"
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Image.CompressSource.Max()",
+      "reason": "C# sentinel equal to 3; upstream CompressSource has only Generic, Srgb and Normal (0, 1, 2). It is not an upstream enum value.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "indexer:Electron2D.Transform.Item(System.Int32,System.Int32)",
+      "reason": "Typed C# affine convenience, array overload, or standard value/format member without one exact XML row.",
+      "adr": "core-math.md#adr-0029"
+    },
+    {
+      "electron2d": "method:Electron2D.Color.Equals(Electron2D.Color)",
+      "reason": "C# value, ordering, HSV output, or formatting member with no separate Color XML declaration.",
+      "adr": "core-math.md#adr-0024"
+    },
+    {
+      "electron2d": "method:Electron2D.Color.Equals(System.Object)",
+      "reason": "C# value, ordering, HSV output, or formatting member with no separate Color XML declaration.",
+      "adr": "core-math.md#adr-0024"
+    },
+    {
+      "electron2d": "method:Electron2D.Color.GetHashCode()",
+      "reason": "C# value, ordering, HSV output, or formatting member with no separate Color XML declaration.",
+      "adr": "core-math.md#adr-0024"
+    },
+    {
+      "electron2d": "method:Electron2D.Color.ToHsv(ref System.Single,ref System.Single,ref System.Single)",
+      "reason": "C# value, ordering, HSV output, or formatting member with no separate Color XML declaration.",
+      "adr": "core-math.md#adr-0024"
+    },
+    {
+      "electron2d": "method:Electron2D.Color.ToString()",
+      "reason": "C# value, ordering, HSV output, or formatting member with no separate Color XML declaration.",
+      "adr": "core-math.md#adr-0024"
+    },
+    {
+      "electron2d": "method:Electron2D.Color.ToString(System.String)",
+      "reason": "C# value, ordering, HSV output, or formatting member with no separate Color XML declaration.",
+      "adr": "core-math.md#adr-0024"
+    },
+    {
+      "electron2d": "method:Electron2D.Image.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "C# Resource construction or protected lifecycle hook with no Image XML declaration.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "method:Electron2D.Image.CreateDuplicateInstance()",
+      "reason": "C# Resource construction or protected lifecycle hook with no Image XML declaration.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "method:Electron2D.Image.Dispose(System.Boolean)",
+      "reason": "C# Resource construction or protected lifecycle hook with no Image XML declaration.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "method:Electron2D.Image.GetPropertyDescriptors()",
+      "reason": "C# Resource construction or protected lifecycle hook with no Image XML declaration.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageMetrics.Equals(Electron2D.ImageMetrics)",
+      "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageMetrics.Equals(System.Object)",
+      "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageMetrics.GetHashCode()",
+      "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageMetrics.ToString()",
+      "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.IsEqualApprox(System.Double,System.Double,System.Double)",
+      "reason": "Managed C# convenience overload without the same XML signature.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.IsEqualApprox(System.Single,System.Single,System.Single)",
+      "reason": "Managed C# convenience overload without the same XML signature.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.SinCos(System.Double)",
+      "reason": "Managed C# convenience overload without the same XML signature.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.SinCos(System.Single)",
+      "reason": "Managed C# convenience overload without the same XML signature.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
+      "electron2d": "method:Electron2D.Rect.Equals(Electron2D.Rect)",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "method:Electron2D.Rect.Equals(System.Object)",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "method:Electron2D.Rect.GetHashCode()",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "method:Electron2D.Rect.ToString()",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "method:Electron2D.Rect.ToString(System.String)",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "method:Electron2D.RectI.Equals(Electron2D.RectI)",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "method:Electron2D.RectI.Equals(System.Object)",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "method:Electron2D.RectI.GetHashCode()",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "method:Electron2D.RectI.ToString()",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "method:Electron2D.RectI.ToString(System.String)",
+      "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
+      "adr": "core-math.md#adr-0035"
+    },
+    {
+      "electron2d": "method:Electron2D.Transform.Equals(Electron2D.Transform)",
+      "reason": "Typed C# affine convenience, array overload, or standard value/format member without one exact XML row.",
+      "adr": "core-math.md#adr-0029"
+    },
+    {
+      "electron2d": "method:Electron2D.Transform.Equals(System.Object)",
+      "reason": "Typed C# affine convenience, array overload, or standard value/format member without one exact XML row.",
+      "adr": "core-math.md#adr-0029"
+    },
+    {
+      "electron2d": "method:Electron2D.Transform.GetHashCode()",
+      "reason": "Typed C# affine convenience, array overload, or standard value/format member without one exact XML row.",
+      "adr": "core-math.md#adr-0029"
+    },
+    {
+      "electron2d": "method:Electron2D.Transform.ToString()",
+      "reason": "Typed C# affine convenience, array overload, or standard value/format member without one exact XML row.",
+      "adr": "core-math.md#adr-0029"
+    },
+    {
+      "electron2d": "method:Electron2D.Transform.ToString(System.String)",
+      "reason": "Typed C# affine convenience, array overload, or standard value/format member without one exact XML row.",
+      "adr": "core-math.md#adr-0029"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.Deconstruct(ref System.Single,ref System.Single)",
+      "reason": "Typed C# value, inverse, deconstruction, or formatting member without one XML row.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.Equals(Electron2D.Vector2)",
+      "reason": "Typed C# value, inverse, deconstruction, or formatting member without one XML row.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.Equals(System.Object)",
+      "reason": "Typed C# value, inverse, deconstruction, or formatting member without one XML row.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.GetHashCode()",
+      "reason": "Typed C# value, inverse, deconstruction, or formatting member without one XML row.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.Inverse()",
+      "reason": "Typed C# value, inverse, deconstruction, or formatting member without one XML row.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.ToString()",
+      "reason": "Typed C# value, inverse, deconstruction, or formatting member without one XML row.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2.ToString(System.String)",
+      "reason": "Typed C# value, inverse, deconstruction, or formatting member without one XML row.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2I.Deconstruct(ref System.Int32,ref System.Int32)",
+      "reason": "C# tuple deconstruction convenience for the vector components.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2I.Equals(Electron2D.Vector2I)",
+      "reason": "C# value equality implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2I.Equals(System.Object)",
+      "reason": "C# value equality implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2I.GetHashCode()",
+      "reason": "C# value hashing implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2I.ToString()",
+      "reason": "C# formatting method with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector2I.ToString(System.String)",
+      "reason": "C# formatting method with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4.Deconstruct(ref System.Single,ref System.Single,ref System.Single,ref System.Single)",
+      "reason": "C# tuple deconstruction convenience for the vector components.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4.Equals(Electron2D.Vector4)",
+      "reason": "C# value equality implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4.Equals(System.Object)",
+      "reason": "C# value equality implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4.GetHashCode()",
+      "reason": "C# value hashing implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4.ToString()",
+      "reason": "C# formatting method with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4.ToString(System.String)",
+      "reason": "C# formatting method with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4I.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32,ref System.Int32)",
+      "reason": "C# tuple deconstruction convenience for the vector components.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4I.Equals(Electron2D.Vector4I)",
+      "reason": "C# value equality implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4I.Equals(System.Object)",
+      "reason": "C# value equality implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4I.GetHashCode()",
+      "reason": "C# value hashing implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4I.ToString()",
+      "reason": "C# formatting method with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector4I.ToString(System.String)",
+      "reason": "C# formatting method with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "operator:Electron2D.Color.op_GreaterThan(Electron2D.Color,Electron2D.Color)",
+      "reason": "C# value, ordering, HSV output, or formatting member with no separate Color XML declaration.",
+      "adr": "core-math.md#adr-0024"
+    },
+    {
+      "electron2d": "operator:Electron2D.Color.op_GreaterThanOrEqual(Electron2D.Color,Electron2D.Color)",
+      "reason": "C# value, ordering, HSV output, or formatting member with no separate Color XML declaration.",
+      "adr": "core-math.md#adr-0024"
+    },
+    {
+      "electron2d": "operator:Electron2D.Color.op_LessThan(Electron2D.Color,Electron2D.Color)",
+      "reason": "C# value, ordering, HSV output, or formatting member with no separate Color XML declaration.",
+      "adr": "core-math.md#adr-0024"
+    },
+    {
+      "electron2d": "operator:Electron2D.Color.op_LessThanOrEqual(Electron2D.Color,Electron2D.Color)",
+      "reason": "C# value, ordering, HSV output, or formatting member with no separate Color XML declaration.",
+      "adr": "core-math.md#adr-0024"
+    },
+    {
+      "electron2d": "operator:Electron2D.ImageMetrics.op_Equality(Electron2D.ImageMetrics,Electron2D.ImageMetrics)",
+      "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "operator:Electron2D.ImageMetrics.op_Inequality(Electron2D.ImageMetrics,Electron2D.ImageMetrics)",
+      "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2.op_Modulus(Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "C# remainder operator uses signed remainder semantics; upstream exposes positive modulo methods, so this is not their counterpart.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector2.op_Modulus(Electron2D.Vector2,System.Single)",
+      "reason": "C# remainder operator uses signed remainder semantics; upstream exposes positive modulo methods, so this is not their counterpart.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4.op_Modulus(Electron2D.Vector4,Electron2D.Vector4)",
+      "reason": "C# remainder operator uses signed remainder semantics; upstream exposes positive modulo methods, so this is not their counterpart.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4.op_Modulus(Electron2D.Vector4,System.Single)",
+      "reason": "C# remainder operator uses signed remainder semantics; upstream exposes positive modulo methods, so this is not their counterpart.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "property:Electron2D.ImageMetrics.Maximum()",
+      "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "property:Electron2D.ImageMetrics.Mean()",
+      "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "property:Electron2D.ImageMetrics.MeanSquared()",
+      "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "property:Electron2D.ImageMetrics.PeakSignalToNoiseRatio()",
+      "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
+      "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "property:Electron2D.ImageMetrics.RootMeanSquared()",
+      "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
+      "adr": "resources.md#adr-0039"
+    }
+  ]
+}

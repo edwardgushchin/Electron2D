@@ -1,0 +1,17 @@
+# ImageFormatLoader API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [doc/classes/ImageFormatLoader.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ImageFormatLoader.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: [RefCounted](RefCounted.md). Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class ImageFormatLoader`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ImageFormatLoader.xml) | — | Blocked | Assets: trigger is the first concrete loader and native-backed asset slice (ADR 0013/0023). |
+| [`enum LoaderFlags`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ImageFormatLoader.xml) | — | Blocked | Assets: trigger is the first concrete loader and native-backed asset slice (ADR 0013/0023). |
+| [`enum_value FLAG_CONVERT_COLORS [LoaderFlags] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ImageFormatLoader.xml) | — | Blocked | Assets: trigger is the first concrete loader and native-backed asset slice (ADR 0013/0023). |
+| [`enum_value FLAG_FORCE_LINEAR [LoaderFlags] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ImageFormatLoader.xml) | — | Blocked | Assets: trigger is the first concrete loader and native-backed asset slice (ADR 0013/0023). |
+| [`enum_value FLAG_NONE [LoaderFlags] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ImageFormatLoader.xml) | — | Blocked | Assets: trigger is the first concrete loader and native-backed asset slice (ADR 0013/0023). |

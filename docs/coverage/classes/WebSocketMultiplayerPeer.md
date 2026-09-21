@@ -1,0 +1,24 @@
+# WebSocketMultiplayerPeer API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: [MultiplayerPeer](MultiplayerPeer.md). Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class WebSocketMultiplayerPeer`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`method create_client(String url, TLSOptions tls_client_options = null) -> int [Error]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`method create_server(int port, String bind_address = "*", TLSOptions tls_server_options = null) -> int [Error]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`method get_peer(int peer_id) -> WebSocketPeer`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`method get_peer_address(int id) -> String`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`method get_peer_port(int id) -> int`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`property PackedStringArray handshake_headers = PackedStringArray()`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`property float handshake_timeout = 3.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`property int inbound_buffer_size = 65535`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`property int max_queued_packets = 4096`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`property int outbound_buffer_size = 65535`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`property PackedStringArray supported_protocols = PackedStringArray()`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketMultiplayerPeer.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |

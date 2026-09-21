@@ -1,0 +1,33 @@
+# EditorScenePostImportPlugin API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [doc/classes/EditorScenePostImportPlugin.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: [RefCounted](RefCounted.md). Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class EditorScenePostImportPlugin`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`enum InternalImportCategory`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`enum_value INTERNAL_IMPORT_CATEGORY_ANIMATION [InternalImportCategory] = 4`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`enum_value INTERNAL_IMPORT_CATEGORY_ANIMATION_NODE [InternalImportCategory] = 5`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`enum_value INTERNAL_IMPORT_CATEGORY_MATERIAL [InternalImportCategory] = 3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`enum_value INTERNAL_IMPORT_CATEGORY_MAX [InternalImportCategory] = 7`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`enum_value INTERNAL_IMPORT_CATEGORY_MESH [InternalImportCategory] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`enum_value INTERNAL_IMPORT_CATEGORY_MESH_3D_NODE [InternalImportCategory] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`enum_value INTERNAL_IMPORT_CATEGORY_NODE [InternalImportCategory] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`enum_value INTERNAL_IMPORT_CATEGORY_SKELETON_3D_NODE [InternalImportCategory] = 6`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`method _get_import_options(String path) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`method _get_internal_import_options(int category) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`method _get_internal_option_update_view_required(int category, String option) -> Variant`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`method _get_internal_option_visibility(int category, bool for_animation, String option) -> Variant`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`method _get_option_visibility(String path, bool for_animation, String option) -> Variant`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`method _internal_process(int category, Node base_node, Node node, Resource resource) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`method _post_process(Node scene) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`method _pre_process(Node scene) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`method add_import_option(String name, Variant value) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`method add_import_option_advanced(int type [Variant.Type], String name, Variant default_value, int hint [PropertyHint] = 0, String hint_string = "", int usage_flags = 6) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`method get_option_value(StringName name) -> Variant`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorScenePostImportPlugin.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |

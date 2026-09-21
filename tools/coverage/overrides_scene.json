@@ -1,0 +1,1661 @@
+{
+  "mappings": [
+    {
+      "electron2d": "constant:Electron2D.Node.MaximumZIndex()",
+      "godot": "RenderingServer::constant:CANVAS_ITEM_Z_MAX",
+      "state": "Partial",
+      "reason": "Numeric mismatch: Electron2D MaximumZIndex is 4095 while Godot CANVAS_ITEM_Z_MAX is 4096. Trigger: correct the Node maximum to 4096, update XML and living documents, and add boundary tests under ADR 0008."
+    },
+    {
+      "electron2d": "constant:Electron2D.Node.MinimumZIndex()",
+      "godot": "RenderingServer::constant:CANVAS_ITEM_Z_MIN",
+      "state": "Partial",
+      "reason": "Equivalent lower bound (-4096) but exposed on unified Node rather than RenderingServer; complete scene/rendering behavior awaits the first rendering vertical slice under ADR 0008 and ADR 0028."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.FileCompressionMode.Zstandard()",
+      "godot": "FileAccess::enum_value:CompressionMode.COMPRESSION_ZSTD",
+      "state": "Partial",
+      "reason": "Numeric mode value 2 matches upstream Zstandard; actual Zstandard codec integration is absent and must be added in the FileAccess compression vertical slice under ADR 0020."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.AsciiCircumflex()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_ASCIICIRCUM",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Control()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_CTRL",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Exclamation()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_EXCLAM",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Key0()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_0",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Key1()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_1",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Key2()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_2",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Key3()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_3",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Key4()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_4",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Key5()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_5",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Key6()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_6",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Key7()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_7",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Key8()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_8",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Key9()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_9",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Keypad0()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_0",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Keypad1()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_1",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Keypad2()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_2",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Keypad3()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_3",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Keypad4()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_4",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Keypad5()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_5",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Keypad6()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_6",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Keypad7()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_7",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Keypad8()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_8",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.Keypad9()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_9",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.KeypadAdd()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_ADD",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.KeypadDivide()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_DIVIDE",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.KeypadEnter()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_ENTER",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.KeypadMultiply()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_MULTIPLY",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.KeypadPeriod()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_PERIOD",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.KeypadSubtract()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_KP_SUBTRACT",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.ParenthesisLeft()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_PARENLEFT",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.ParenthesisRight()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_PARENRIGHT",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.QuoteDouble()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_QUOTEDBL",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Key.SystemRequest()",
+      "godot": "@GlobalScope::enum_value:Key.KEY_SYSREQ",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.KeyModifierMask.CommandOrControl()",
+      "godot": "@GlobalScope::enum_value:KeyModifierMask.KEY_MASK_CMD_OR_CTRL",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.KeyModifierMask.Control()",
+      "godot": "@GlobalScope::enum_value:KeyModifierMask.KEY_MASK_CTRL",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.KeyModifierMask.Keypad()",
+      "godot": "@GlobalScope::enum_value:KeyModifierMask.KEY_MASK_KPAD",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.KeyModifierMask.ModifierMask()",
+      "godot": "@GlobalScope::enum_value:KeyModifierMask.KEY_MODIFIER_MASK",
+      "state": "Implemented",
+      "reason": "Same key or modifier identity and exact numeric value; C# enum naming adaptation under ADR 0038."
+    },
+    {
+      "electron2d": "event:Electron2D.MainLoop.OnRequestPermissionsResult()",
+      "godot": "MainLoop::signal:on_request_permissions_result(String:,bool:)",
+      "state": "Partial",
+      "reason": "Typed C# event for the permission-result signal; native host permission-request integration remains absent under ADR 0015 and ADR 0021."
+    },
+    {
+      "electron2d": "event:Electron2D.SceneTree.PhysicsFrameStarted()",
+      "godot": "SceneTree::signal:physics_frame()",
+      "state": "Partial",
+      "reason": "Typed frame-start event; exact signal ordering requires audit under ADR 0002."
+    },
+    {
+      "electron2d": "event:Electron2D.SceneTree.ProcessFrameStarted()",
+      "godot": "SceneTree::signal:process_frame()",
+      "state": "Partial",
+      "reason": "Typed frame-start event; exact signal ordering requires audit under ADR 0002."
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.GetSingleton(System.String)",
+      "godot": "Engine::method:get_singleton(StringName:)",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.GetSingletonList()",
+      "godot": "Engine::method:get_singleton_list()",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.GetSingleton`1(System.String)",
+      "godot": "Engine::method:get_singleton(StringName:)",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.Input.GetActionRawStrength(System.String,System.Boolean)",
+      "godot": "Input::method:get_action_raw_strength(StringName:,bool:)",
+      "state": "Partial",
+      "reason": "Typed action-name/exact-match query; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.Accumulate(Electron2D.InputEvent)",
+      "godot": "InputEvent::method:accumulate(InputEvent:)",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.AsText()",
+      "godot": "InputEvent::method:as_text()",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.IsAction(System.String,System.Boolean)",
+      "godot": "InputEvent::method:is_action(StringName:,bool:)",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.IsEcho()",
+      "godot": "InputEvent::method:is_echo()",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.IsMatch(Electron2D.InputEvent,System.Boolean)",
+      "godot": "InputEvent::method:is_match(InputEvent:,bool:)",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.XformedBy(Electron2D.Transform,Electron2D.Vector2)",
+      "godot": "InputEvent::method:xformed_by(Transform2D:,Vector2:)",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventAction.AsText()",
+      "godot": "InputEvent::method:as_text()",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventAction.IsAction(System.String,System.Boolean)",
+      "godot": "InputEvent::method:is_action(StringName:,bool:)",
+      "state": "Partial",
+      "reason": "Typed derived input-event query/override; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventAction.IsMatch(Electron2D.InputEvent,System.Boolean)",
+      "godot": "InputEvent::method:is_match(InputEvent:,bool:)",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventJoypadButton.AsText()",
+      "godot": "InputEvent::method:as_text()",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventJoypadButton.IsMatch(Electron2D.InputEvent,System.Boolean)",
+      "godot": "InputEvent::method:is_match(InputEvent:,bool:)",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventJoypadMotion.AsText()",
+      "godot": "InputEvent::method:as_text()",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventJoypadMotion.IsMatch(Electron2D.InputEvent,System.Boolean)",
+      "godot": "InputEvent::method:is_match(InputEvent:,bool:)",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventKey.AsText()",
+      "godot": "InputEvent::method:as_text()",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventKey.GetKeyLabelWithModifiers()",
+      "godot": "InputEventKey::method:get_key_label_with_modifiers()",
+      "state": "Partial",
+      "reason": "Typed derived input-event query/override; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventKey.GetKeycodeWithModifiers()",
+      "godot": "InputEventKey::method:get_keycode_with_modifiers()",
+      "state": "Partial",
+      "reason": "Typed derived input-event query/override; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventKey.GetPhysicalKeycodeWithModifiers()",
+      "godot": "InputEventKey::method:get_physical_keycode_with_modifiers()",
+      "state": "Partial",
+      "reason": "Typed derived input-event query/override; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventKey.IsEcho()",
+      "godot": "InputEvent::method:is_echo()",
+      "state": "Partial",
+      "reason": "Typed derived input-event query/override; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventKey.IsMatch(Electron2D.InputEvent,System.Boolean)",
+      "godot": "InputEvent::method:is_match(InputEvent:,bool:)",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMagnifyGesture.AsText()",
+      "godot": "InputEvent::method:as_text()",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMagnifyGesture.XformedBy(Electron2D.Transform,Electron2D.Vector2)",
+      "godot": "InputEvent::method:xformed_by(Transform2D:,Vector2:)",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouseButton.AsText()",
+      "godot": "InputEvent::method:as_text()",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouseButton.IsMatch(Electron2D.InputEvent,System.Boolean)",
+      "godot": "InputEvent::method:is_match(InputEvent:,bool:)",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouseButton.XformedBy(Electron2D.Transform,Electron2D.Vector2)",
+      "godot": "InputEvent::method:xformed_by(Transform2D:,Vector2:)",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouseMotion.Accumulate(Electron2D.InputEvent)",
+      "godot": "InputEvent::method:accumulate(InputEvent:)",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouseMotion.AsText()",
+      "godot": "InputEvent::method:as_text()",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouseMotion.XformedBy(Electron2D.Transform,Electron2D.Vector2)",
+      "godot": "InputEvent::method:xformed_by(Transform2D:,Vector2:)",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventPanGesture.AsText()",
+      "godot": "InputEvent::method:as_text()",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventPanGesture.XformedBy(Electron2D.Transform,Electron2D.Vector2)",
+      "godot": "InputEvent::method:xformed_by(Transform2D:,Vector2:)",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventScreenDrag.Accumulate(Electron2D.InputEvent)",
+      "godot": "InputEvent::method:accumulate(InputEvent:)",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventScreenDrag.AsText()",
+      "godot": "InputEvent::method:as_text()",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventScreenDrag.XformedBy(Electron2D.Transform,Electron2D.Vector2)",
+      "godot": "InputEvent::method:xformed_by(Transform2D:,Vector2:)",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventScreenTouch.AsText()",
+      "godot": "InputEvent::method:as_text()",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventScreenTouch.XformedBy(Electron2D.Transform,Electron2D.Vector2)",
+      "godot": "InputEvent::method:xformed_by(Transform2D:,Vector2:)",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventWithModifiers.AsText()",
+      "godot": "InputEvent::method:as_text()",
+      "state": "Partial",
+      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventWithModifiers.GetModifiersMask()",
+      "godot": "InputEventWithModifiers::method:get_modifiers_mask()",
+      "state": "Partial",
+      "reason": "Typed derived input-event query/override; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.InputMap.GetActions()",
+      "godot": "InputMap::method:get_actions()",
+      "state": "Partial",
+      "reason": "Typed read-only action-name collection; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.MainLoop.NotifyRequestPermissionsResult(System.String,System.Boolean)",
+      "godot": "MainLoop::signal:on_request_permissions_result(String:,bool:)",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.MainLoop.OnFinalize()",
+      "godot": "MainLoop::method:_finalize()",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.MainLoop.OnInitialize()",
+      "godot": "MainLoop::method:_initialize()",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.MainLoop.OnPhysicsProcess(System.Double)",
+      "godot": "MainLoop::method:_physics_process(float:)",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.MainLoop.OnProcess(System.Double)",
+      "godot": "MainLoop::method:_process(float:)",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.AddChild(Electron2D.Node)",
+      "godot": "Node::method:add_child(Node:,bool:,int:Node.InternalMode)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.AddSibling(Electron2D.Node)",
+      "godot": "Node::method:add_sibling(Node:,bool:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.CancelFree()",
+      "godot": "Object::method:cancel_free()",
+      "state": "Partial",
+      "reason": "Deletion cancellation under ADR 0006; verify atomicity."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.FindChild(System.String,System.Boolean)",
+      "godot": "Node::method:find_child(String:,bool:,bool:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.FindChild`1(System.String,System.Boolean)",
+      "godot": "Node::method:find_child(String:,bool:,bool:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.FindChildren(System.String,System.Boolean)",
+      "godot": "Node::method:find_children(String:,String:,bool:,bool:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.FindChildren`1(System.String,System.Boolean)",
+      "godot": "Node::method:find_children(String:,String:,bool:,bool:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.GetChild(System.Int32)",
+      "godot": "Node::method:get_child(int:,bool:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.GetGroups()",
+      "godot": "Node::method:get_groups()",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.GetIndex()",
+      "godot": "Node::method:get_index(bool:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.GetNode(System.String)",
+      "godot": "Node::method:get_node(NodePath:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.GetNode`1(System.String)",
+      "godot": "Node::method:get_node(NodePath:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.GetPath()",
+      "godot": "Node::method:get_path()",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.GetPathTo(Electron2D.Node)",
+      "godot": "Node::method:get_path_to(Node:,bool:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.OnEnterTree()",
+      "godot": "Node::method:_enter_tree()",
+      "state": "Partial",
+      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.OnExitTree()",
+      "godot": "Node::method:_exit_tree()",
+      "state": "Partial",
+      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.OnInput(Electron2D.InputEvent)",
+      "godot": "Node::method:_input(InputEvent:)",
+      "state": "Partial",
+      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.OnNotification(System.Int32)",
+      "godot": "Object::method:_notification(int:)",
+      "state": "Partial",
+      "reason": "Numeric notification callback under ADR 0005."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.OnPhysicsProcess(System.Double)",
+      "godot": "Node::method:_physics_process(float:)",
+      "state": "Partial",
+      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.OnProcess(System.Double)",
+      "godot": "Node::method:_process(float:)",
+      "state": "Partial",
+      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.OnReady()",
+      "godot": "Node::method:_ready()",
+      "state": "Partial",
+      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.OnUnhandledInput(Electron2D.InputEvent)",
+      "godot": "Node::method:_unhandled_input(InputEvent:)",
+      "state": "Partial",
+      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.OnUnhandledKeyInput(Electron2D.InputEventKey)",
+      "godot": "Node::method:_unhandled_key_input(InputEvent:)",
+      "state": "Partial",
+      "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.PackedScene.GetState()",
+      "godot": "PackedScene::method:get_state()",
+      "state": "Partial",
+      "reason": "Typed live SceneState for in-memory scenes; ADR 0023."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneState.GetBaseSceneState()",
+      "godot": "SceneState::method:get_base_scene_state()",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneState.GetConnectionCount()",
+      "godot": "SceneState::method:get_connection_count()",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneState.GetNodeCount()",
+      "godot": "SceneState::method:get_node_count()",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneState.GetPath()",
+      "godot": "SceneState::method:get_path()",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.CallGroup(System.String,System.Action<Electron2D.Node>,Electron2D.GroupCallFlags)",
+      "godot": "SceneTree::method:call_group(StringName:,StringName:)",
+      "state": "Partial",
+      "reason": "Typed delegate replaces string method dispatch; ADRs 0001/0006."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.CreateTimer(System.Double,System.Boolean,System.Boolean)",
+      "godot": "SceneTree::method:create_timer(float:,bool:,bool:,bool:)",
+      "state": "Partial",
+      "reason": "C# overload omits upstream ignore_time_scale parameter; ADR 0036."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.Defer(System.Action)",
+      "godot": "Object::method:call_deferred(StringName:)",
+      "state": "Partial",
+      "reason": "Typed Action scheduling replaces dynamic deferred call; ADRs 0001/0006."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.GetProcessedTweens()",
+      "godot": "SceneTree::method:get_processed_tweens()",
+      "state": "Partial",
+      "reason": "Typed tween collection; ADR 0037."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.IsInputHandled()",
+      "godot": "Viewport::method:is_input_handled()",
+      "state": "Partial",
+      "reason": "SceneTree owns handled state until Viewport routing exists; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.NotifyGroup(System.String,System.Int32,Electron2D.GroupCallFlags)",
+      "godot": "SceneTree::method:notify_group(StringName:,int:)",
+      "state": "Partial",
+      "reason": "Typed group notification with flags; ADR 0006."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.OnFinalize()",
+      "godot": "MainLoop::method:_finalize()",
+      "state": "Partial",
+      "reason": "Host-driven MainLoop override; ADRs 0015/0016."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.OnNotification(System.Int32)",
+      "godot": "Object::method:_notification(int:)",
+      "state": "Partial",
+      "reason": "Numeric notification callback under ADR 0005."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.OnPhysicsProcess(System.Double)",
+      "godot": "MainLoop::method:_physics_process(float:)",
+      "state": "Partial",
+      "reason": "Host-driven MainLoop override; ADRs 0015/0016."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.OnProcess(System.Double)",
+      "godot": "MainLoop::method:_process(float:)",
+      "state": "Partial",
+      "reason": "Host-driven MainLoop override; ADRs 0015/0016."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.SetDeferred`1(Action<T>,T)",
+      "godot": "Object::method:set_deferred(StringName:,Variant:)",
+      "state": "Partial",
+      "reason": "Typed setter delegate replaces StringName/Variant target; ADRs 0001/0006."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.SetGroup`1(System.String,Action<Electron2D.Node, T>,T,Electron2D.GroupCallFlags)",
+      "godot": "SceneTree::method:set_group(StringName:,String:,Variant:)",
+      "state": "Partial",
+      "reason": "Typed setter delegate replaces Variant/string path; ADRs 0001/0006."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.SetInputAsHandled()",
+      "godot": "Viewport::method:set_input_as_handled()",
+      "state": "Partial",
+      "reason": "SceneTree owns handled state until Viewport routing exists; ADR 0038."
+    },
+    {
+      "electron2d": "method:Electron2D.Timer.OnNotification(System.Int32)",
+      "godot": "Object::method:_notification(int:)",
+      "state": "Partial",
+      "reason": "Numeric notification callback under ADR 0005."
+    },
+    {
+      "electron2d": "method:Electron2D.Timer.Start()",
+      "godot": "Timer::method:start(float:)",
+      "state": "Partial",
+      "reason": "Timer lifecycle; Start() replaces negative sentinel with typed overload under ADR 0036."
+    },
+    {
+      "electron2d": "method:Electron2D.Timer.Start(System.Double)",
+      "godot": "Timer::method:start(float:)",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "method:Electron2D.Timer.Stop()",
+      "godot": "Timer::method:stop()",
+      "state": "Partial",
+      "reason": "Timer lifecycle; Start() replaces negative sentinel with typed overload under ADR 0036."
+    },
+    {
+      "electron2d": "method:Electron2D.Tween.GetLoopsLeft()",
+      "godot": "Tween::method:get_loops_left()",
+      "state": "Partial",
+      "reason": "Tween control/query role with double timing and managed lifecycle; ADR 0037."
+    },
+    {
+      "electron2d": "method:Electron2D.Tween.GetTotalElapsedTime()",
+      "godot": "Tween::method:get_total_elapsed_time()",
+      "state": "Partial",
+      "reason": "Tween control/query role with double timing and managed lifecycle; ADR 0037."
+    },
+    {
+      "electron2d": "method:Electron2D.Tween.Stop()",
+      "godot": "Tween::method:stop()",
+      "state": "Partial",
+      "reason": "Tween control/query role with double timing and managed lifecycle; ADR 0037."
+    },
+    {
+      "electron2d": "method:Electron2D.Tween.TweenAwait(Electron2D.ElectronObject,System.Action<System.Action>,System.Action<System.Action>)",
+      "godot": "Tween::method:tween_await(Signal:)",
+      "state": "Partial",
+      "reason": "Typed delegates/events and generic values replace Signal/Callable/Variant; ADRs 0001/0002/0037."
+    },
+    {
+      "electron2d": "method:Electron2D.Tween.TweenAwait`1(Electron2D.ElectronObject,Action<Action<T>>,Action<Action<T>>)",
+      "godot": "Tween::method:tween_await(Signal:)",
+      "state": "Partial",
+      "reason": "Typed delegates/events and generic values replace Signal/Callable/Variant; ADRs 0001/0002/0037."
+    },
+    {
+      "electron2d": "method:Electron2D.Tween.TweenAwait`2(Electron2D.ElectronObject,Action<Action<T1, T2>>,Action<Action<T1, T2>>)",
+      "godot": "Tween::method:tween_await(Signal:)",
+      "state": "Partial",
+      "reason": "Typed delegates/events and generic values replace Signal/Callable/Variant; ADRs 0001/0002/0037."
+    },
+    {
+      "electron2d": "method:Electron2D.Tween.TweenMethod`1(Action<TValue>,TValue,TValue,System.Double,Func<TValue, TValue, System.Double, TValue>)",
+      "godot": "Tween::method:tween_method(Callable:,Variant:,Variant:,float:)",
+      "state": "Partial",
+      "reason": "Typed delegates/events and generic values replace Signal/Callable/Variant; ADRs 0001/0002/0037."
+    },
+    {
+      "electron2d": "method:Electron2D.Tween.TweenProperty`2(TTarget,Func<TTarget, TValue>,Action<TTarget, TValue>,TValue,System.Double,Func<TValue, TValue, System.Double, TValue>)",
+      "godot": "Tween::method:tween_property(Object:,NodePath:,Variant:,float:)",
+      "state": "Partial",
+      "reason": "Typed delegates/events and generic values replace Signal/Callable/Variant; ADRs 0001/0002/0037."
+    },
+    {
+      "electron2d": "property:Electron2D.Engine.IsInPhysicsFrame()",
+      "godot": "Engine::method:is_in_physics_frame()",
+      "state": "Partial",
+      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+    },
+    {
+      "electron2d": "property:Electron2D.InputEventWithModifiers.ControlPressed()",
+      "godot": "InputEventWithModifiers::property:ctrl_pressed",
+      "state": "Partial",
+      "reason": "Spelled-out C# control modifier corresponds to ctrl_pressed; ADR 0038."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.ChildCount()",
+      "godot": "Node::method:get_child_count(bool:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.Children()",
+      "godot": "Node::method:get_children(bool:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.InputEnabled()",
+      "godot": "Node::method:is_processing_input()",
+      "state": "Partial",
+      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.InputEnabled()",
+      "godot": "Node::method:set_process_input(bool:)",
+      "state": "Partial",
+      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.IsInsideTree()",
+      "godot": "Node::method:is_inside_tree()",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.IsNodeReady()",
+      "godot": "Node::method:is_node_ready()",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.IsQueuedForDeletion()",
+      "godot": "Object::method:is_queued_for_deletion()",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.IsVisibleInTree()",
+      "godot": "CanvasItem::method:is_visible_in_tree()",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.NotifyLocalTransformChanges()",
+      "godot": "CanvasItem::method:is_local_transform_notification_enabled()",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.NotifyLocalTransformChanges()",
+      "godot": "CanvasItem::method:set_notify_local_transform(bool:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.NotifyTransformChanges()",
+      "godot": "CanvasItem::method:is_transform_notification_enabled()",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.NotifyTransformChanges()",
+      "godot": "CanvasItem::method:set_notify_transform(bool:)",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.PhysicsProcessEnabled()",
+      "godot": "Node::method:is_physics_processing()",
+      "state": "Partial",
+      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.PhysicsProcessEnabled()",
+      "godot": "Node::method:set_physics_process(bool:)",
+      "state": "Partial",
+      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.PhysicsProcessPriority()",
+      "godot": "Node::property:process_physics_priority",
+      "state": "Partial",
+      "reason": "Unified 2D Node combines Node/CanvasItem/Node2D; typed C# form under ADR 0008. Audit defaults, lifecycle and ordering."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.ProcessEnabled()",
+      "godot": "Node::method:is_processing()",
+      "state": "Partial",
+      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.ProcessEnabled()",
+      "godot": "Node::method:set_process(bool:)",
+      "state": "Partial",
+      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.UnhandledInputEnabled()",
+      "godot": "Node::method:is_processing_unhandled_input()",
+      "state": "Partial",
+      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.UnhandledInputEnabled()",
+      "godot": "Node::method:set_process_unhandled_input(bool:)",
+      "state": "Partial",
+      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.UnhandledKeyInputEnabled()",
+      "godot": "Node::method:is_processing_unhandled_key_input()",
+      "state": "Partial",
+      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+    },
+    {
+      "electron2d": "property:Electron2D.Node.UnhandledKeyInputEnabled()",
+      "godot": "Node::method:set_process_unhandled_key_input(bool:)",
+      "state": "Partial",
+      "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constant:Electron2D.Input.MaxEventsPerAction()",
+      "reason": "Bounded per-action source capacity for deterministic input processing.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "constant:Electron2D.InputMap.AllDevices()",
+      "reason": "Wildcard controller-binding device ID in typed action map.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "constant:Electron2D.InputMap.DefaultDeadzone()",
+      "reason": "Named C# value for upstream add_action default argument of 0.2.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEvent..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventAction..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventFromWindow..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventGesture..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventJoypadButton..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventJoypadMotion..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventKey..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventMagnifyGesture..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventMouse..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventMouseButton..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventMouseMotion..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventPanGesture..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventScreenDrag..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventScreenTouch..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.InputEventWithModifiers..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.MainLoop..ctor()",
+      "reason": "Protected C# construction hook for owner-thread MainLoop subclasses; upstream class XML has no constructor row.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0015"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Node..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PackedScene..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.SceneTree..ctor(Electron2D.Node)",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Timer..ctor()",
+      "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
+      "adr": "docs/decisions/product.md#adr-0001"
+    },
+    {
+      "electron2d": "enumValue:Electron2D.MouseButtonMask.None()",
+      "reason": "Explicit zero-valued C# flags member; upstream MouseButtonMask has no NONE value.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "enumValue:Electron2D.UnixPermissionFlags.None()",
+      "reason": "Explicit zero-valued C# flags member; upstream UnixPermissionFlags has no NONE value.",
+      "adr": "docs/decisions/core-data-io.md#adr-0020"
+    },
+    {
+      "electron2d": "event:Electron2D.Node.ChildAdded()",
+      "reason": "Local child-mutation event differs in timing from child_entered_tree.",
+      "adr": "docs/decisions/product.md#adr-0002"
+    },
+    {
+      "electron2d": "event:Electron2D.Node.ChildRemoved()",
+      "reason": "Local child-mutation event differs in timing from child_exiting_tree.",
+      "adr": "docs/decisions/product.md#adr-0002"
+    },
+    {
+      "electron2d": "event:Electron2D.Node.LocalTransformChanged()",
+      "reason": "Typed local-transform notification; CanvasItem uses notification IDs.",
+      "adr": "docs/decisions/scene.md#adr-0008"
+    },
+    {
+      "electron2d": "event:Electron2D.Node.TransformChanged()",
+      "reason": "Typed global-transform notification; CanvasItem uses notification IDs.",
+      "adr": "docs/decisions/scene.md#adr-0008"
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.AdvanceFrame(System.Double)",
+      "reason": "Host-supplied elapsed-time entry point for bounded fixed-step and process scheduling.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0015"
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.Start(Electron2D.MainLoop)",
+      "reason": "Explicit host lifecycle attach for the process-wide Engine.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0015"
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.Stop()",
+      "reason": "Explicit host lifecycle detach for the process-wide Engine.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0015"
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.ValidateDisposal()",
+      "reason": "Managed disposal guard for the process-wide lifecycle owner.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0009"
+    },
+    {
+      "electron2d": "method:Electron2D.Input.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.Input.ReleasePressedEvents()",
+      "reason": "Typed pressed-state reset for focus/lifecycle transitions.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "method:Electron2D.Input.ValidateDisposal()",
+      "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.CreateDuplicateInstance()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.CreateEventInstance()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.Dispose(System.Boolean)",
+      "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.EmitInputChanged(System.Boolean)",
+      "reason": "Protected input-state change hook for map consistency.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.GetActionRawStrength(System.String,System.Boolean)",
+      "reason": "Typed raw-strength convenience query; upstream InputEvent only has get_action_strength.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.ToString()",
+      "reason": "C# object-string formatting override alongside upstream as_text().",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.ValidateFinite(Electron2D.Transform,System.String)",
+      "reason": "Protected finite-coordinate validation at typed input boundary.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEvent.ValidateFinite(Electron2D.Vector2,System.String)",
+      "reason": "Protected finite-coordinate validation at typed input boundary.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventAction.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventAction.CreateEventInstance()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventAction.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventFromWindow.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventFromWindow.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventGesture.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventGesture.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventJoypadButton.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventJoypadButton.CreateEventInstance()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventJoypadButton.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventJoypadMotion.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventJoypadMotion.CreateEventInstance()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventJoypadMotion.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventKey.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventKey.CreateEventInstance()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventKey.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMagnifyGesture.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMagnifyGesture.CreateEventInstance()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMagnifyGesture.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouse.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouse.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouseButton.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouseButton.CreateEventInstance()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouseButton.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouseMotion.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouseMotion.CreateEventInstance()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMouseMotion.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventPanGesture.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventPanGesture.CreateEventInstance()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventPanGesture.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventScreenDrag.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventScreenDrag.CreateEventInstance()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventScreenDrag.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventScreenTouch.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventScreenTouch.CreateEventInstance()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventScreenTouch.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventWithModifiers.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventWithModifiers.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventWithModifiers.SetModifiersFromEvent(Electron2D.InputEventWithModifiers)",
+      "reason": "Typed modifier-copy helper for event subclasses.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "method:Electron2D.InputMap.ValidateDisposal()",
+      "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.MainLoop.Dispose(System.Boolean)",
+      "reason": "Managed logical disposal coordinates loop finalization.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.MainLoop.FinalizeLoop()",
+      "reason": "Public host entry point invokes the upstream-style protected finalization callback.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0015"
+    },
+    {
+      "electron2d": "method:Electron2D.MainLoop.Initialize()",
+      "reason": "Public host entry point invokes the upstream-style protected initialization callback.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0015"
+    },
+    {
+      "electron2d": "method:Electron2D.MainLoop.PhysicsProcess(System.Double)",
+      "reason": "Public host entry point invokes the protected physics callback after Engine fixed-step scheduling.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0015"
+    },
+    {
+      "electron2d": "method:Electron2D.MainLoop.Process(System.Double)",
+      "reason": "Public host entry point invokes the protected process callback after Engine frame scheduling.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0015"
+    },
+    {
+      "electron2d": "method:Electron2D.MainLoop.ValidateDisposal()",
+      "reason": "Protected managed-disposal guard extension point.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0009"
+    },
+    {
+      "electron2d": "method:Electron2D.MainLoop.ValidateFinalization()",
+      "reason": "Protected validation before host-driven loop finalization.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0015"
+    },
+    {
+      "electron2d": "method:Electron2D.Node.CreateSceneInstanceFactory()",
+      "reason": "Source-independent factory hook for detached scene instancing.",
+      "adr": "docs/decisions/scene.md#adr-0023"
+    },
+    {
+      "electron2d": "method:Electron2D.Node.Dispose(System.Boolean)",
+      "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.Node.EnsureMutable()",
+      "reason": "Managed scene-mutation guard for lifecycle/reentrancy safety.",
+      "adr": "docs/decisions/scene.md#adr-0011"
+    },
+    {
+      "electron2d": "method:Electron2D.Node.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.Node.ValidateDisposal()",
+      "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.Node.ValidateMutation()",
+      "reason": "Protected owner-thread/lifecycle validation hook for managed scene loop.",
+      "adr": "docs/decisions/scene.md#adr-0011"
+    },
+    {
+      "electron2d": "method:Electron2D.PackedScene.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.PackedScene.CreateDuplicateInstance()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.PackedScene.OnResetState()",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.PackedScene.OnResourcePathChanged(System.String)",
+      "reason": "Typed resource/event duplication or path-state extension hook.",
+      "adr": "docs/decisions/resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.SceneState.GetNodePropertyType(System.Int32,System.Int32)",
+      "reason": "Typed C# metadata for packed-scene property values; upstream exposes Variant values without a type-query row.",
+      "adr": "docs/decisions/scene.md#adr-0023"
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.FlushDeferred()",
+      "reason": "Explicit owner-thread deferred-batch drain for host-driven loop.",
+      "adr": "docs/decisions/scene.md#adr-0006"
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.PhysicsFrame(System.Double)",
+      "reason": "Direct host fixed-frame entry point, distinct from physics_frame signal.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0016"
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.ProcessFrame(System.Double)",
+      "reason": "Direct host frame entry point, distinct from process_frame signal.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0016"
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.ValidateDisposal()",
+      "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.ValidateFinalization()",
+      "reason": "Protected owner-thread/lifecycle validation hook for managed scene loop.",
+      "adr": "docs/decisions/scene.md#adr-0011"
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTreeTimer.Dispose(System.Boolean)",
+      "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTreeTimer.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTreeTimer.ValidateDisposal()",
+      "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.Timer.CreateSceneInstanceFactory()",
+      "reason": "Source-independent factory hook for detached scene instancing.",
+      "adr": "docs/decisions/scene.md#adr-0023"
+    },
+    {
+      "electron2d": "method:Electron2D.Timer.Dispose(System.Boolean)",
+      "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.Timer.GetPropertyDescriptors()",
+      "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0005"
+    },
+    {
+      "electron2d": "method:Electron2D.Tween.Dispose(System.Boolean)",
+      "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.Tween.ValidateDisposal()",
+      "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.Tweener.Dispose(System.Boolean)",
+      "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "method:Electron2D.Tweener.ValidateDisposal()",
+      "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "property:Electron2D.Engine.Instance()",
+      "reason": "C# static singleton access to the process-wide Engine.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0015"
+    },
+    {
+      "electron2d": "property:Electron2D.Input.Instance()",
+      "reason": "C# process-wide singleton accessor.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputEvent.CanceledState()",
+      "reason": "Protected typed backing state for is_canceled().",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputEvent.PressedState()",
+      "reason": "Protected typed backing state for is_pressed().",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.InputMap.Instance()",
+      "reason": "C# process-wide singleton accessor.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.Node.EffectiveZIndex()",
+      "reason": "Computed absolute Z order on unified Node; upstream exposes relative z_index/z_as_relative fields instead.",
+      "adr": "docs/decisions/scene.md#adr-0008"
+    },
+    {
+      "electron2d": "property:Electron2D.SceneTree.HasDeferredWork()",
+      "reason": "Typed observation of pending deferred work for host integration.",
+      "adr": "docs/decisions/scene.md#adr-0006"
+    },
+    {
+      "electron2d": "property:Electron2D.SceneTree.PhysicsFrameCount()",
+      "reason": "Dedicated fixed-frame counter; upstream SceneTree has only get_frame().",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0016"
+    },
+    {
+      "electron2d": "property:Electron2D.SceneTree.ProcessFrameCount()",
+      "reason": "Dedicated process-frame counter; upstream SceneTree has only get_frame().",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0016"
+    },
+    {
+      "electron2d": "property:Electron2D.SceneTreeTimer.ProcessAlways()",
+      "reason": "Exposes captured process_always timer-creation mode.",
+      "adr": "docs/decisions/scene.md#adr-0006"
+    },
+    {
+      "electron2d": "property:Electron2D.SceneTreeTimer.ProcessInPhysics()",
+      "reason": "Exposes captured process_in_physics timer-creation mode.",
+      "adr": "docs/decisions/scene.md#adr-0006"
+    }
+  ]
+}

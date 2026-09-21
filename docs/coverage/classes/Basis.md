@@ -1,0 +1,55 @@
+# Basis API coverage
+
+Last updated: 2026-09-22
+
+Godot source: [doc/classes/Basis.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
+
+Godot base: —. Electron2D type: —.
+
+Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
+
+| Godot API | Electron2D API | State | Reason / implementation trigger |
+| --- | --- | --- | --- |
+| [`class Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`constant FLIP_X = Basis(-1, 0, 0, 0, 1, 0, 0, 0, 1)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`constant FLIP_Y = Basis(1, 0, 0, 0, -1, 0, 0, 0, 1)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`constant FLIP_Z = Basis(1, 0, 0, 0, 1, 0, 0, 0, -1)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`constant IDENTITY = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`constructor Basis() -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`constructor Basis(Basis from) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`constructor Basis(Quaternion from) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`constructor Basis(Vector3 x_axis, Vector3 y_axis, Vector3 z_axis) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`constructor Basis(Vector3 axis, float angle) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method determinant() -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`method from_euler(Vector3 euler, int order = 2) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method from_scale(Vector3 scale) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method get_euler(int order = 2) -> Vector3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method get_rotation_quaternion() -> Quaternion`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method get_scale() -> Vector3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method inverse() -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method is_conformal() -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`method is_equal_approx(Basis b) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method is_finite() -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`method is_orthonormal() -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`method looking_at(Vector3 target, Vector3 up = Vector3(0, 1, 0), bool use_model_front = false) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method orthonormalized() -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method rotated(Vector3 axis, float angle) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method scaled(Vector3 scale) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method scaled_local(Vector3 scale) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method slerp(Basis to, float weight) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method tdotx(Vector3 with) -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method tdoty(Vector3 with) -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method tdotz(Vector3 with) -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method transposed() -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`operator operator !=(Basis right) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`operator operator *(Basis right) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`operator operator *(Vector3 right) -> Vector3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`operator operator *(float right) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`operator operator *(int right) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`operator operator /(float right) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`operator operator /(int right) -> Basis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`operator operator ==(Basis right) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`operator operator [](int index) -> Vector3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property Vector3 x = Vector3(1, 0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property Vector3 y = Vector3(0, 1, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property Vector3 z = Vector3(0, 0, 1)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Basis.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
