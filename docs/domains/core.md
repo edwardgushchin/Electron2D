@@ -64,6 +64,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - Color math depends only on .NET primitives and the bundled MIT-licensed managed OKHSL formulas; it has no native or rendering dependency. `ConfigFile` provides its strict finite JSON schema, while typed scene property storage consumes the reference-free value without a dependency back from Core Math to Scene.
 - Rectangle geometry depends only on `System.Numerics.Vector2` and .NET primitives. `ConfigFile` provides its strict finite `Position`/`Size` schema, while typed scene property storage consumes the reference-free value without a dependency back from Core Math to Scene.
 - Transform math depends only on `System.Numerics.Vector2` and .NET primitives. `ConfigFile` provides its strict finite `X`/`Y`/`Origin` schema, while typed scene property storage consumes the reference-free value without a dependency back from Core Math to Scene.
+- ADR 0032 requires the final public and engine-owned math state to use `Electron2D.Vector`, `Rect`, and `Transform`. The current `System.Numerics.Vector2`, `Rect2`, `Transform2D`, and Node `Matrix3x2` surfaces remain implemented legacy state until that complete migration is delivered; no future domain may extend them as the permanent API.
 - Future engine domains may depend on Core.
 - Core must not acquire dependencies on scene, rendering, input, or other higher-level domains.
 - Core must not introduce 3D concepts or require a second production assembly.
@@ -92,7 +93,8 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - No global object registry or lookup by `InstanceId`.
 - No untyped metadata store.
 - No reflection-based property or method invocation.
-- No `Rect2I` production type. `Transform2D` exists, but migration of the current `Node` `Matrix3x2` surface and `Rect2` transform multiplication remains an explicit separate slice under ADR 0026 and ADR 0029.
+- No integer `RectI` production type. `Transform2D` exists in the last verified implementation, but migration of the current `Node` `Matrix3x2` surface and rectangle transform multiplication remains an explicit separate slice under ADR 0026, ADR 0029, and ADR 0032.
+- No `Vector` production type exists yet. ADR 0032 requires it and the repository-wide migration to `Vector`, `Rect`, and `Transform`; this accepted direction must not be reported as implemented before its complete vertical slice and audit pass.
 - No script attachment, script runtime, editor application, or general file serialization. Only the typed `ScriptChanged` notification contract exists for the confirmed future scripting component.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers, and persistence requires a typed stable endpoint identity/binding schema.
 - No SDL application host, native system-event translation, permission request API, clock/wait-based maximum-FPS pacing, or exit-code service. `Engine` and `MainLoop` expose implemented integration endpoints without simulating those domains.
@@ -128,3 +130,4 @@ The same harness verifies project-setting registration, value snapshots, validat
 - [0025: Typed axis-aligned rectangle geometry](../decisions/core-math.md#adr-0025)
 - [0026: Separate Transform2D foundational type](../decisions/core-math.md#adr-0026)
 - [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
+- [0032: Engine-owned unsuffixed 2D math vocabulary](../decisions/core-math.md#adr-0032)

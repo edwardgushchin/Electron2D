@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 ## Scope
 
-This Core component provides backend-independent, allocation-free floating-point rectangle and affine-transform geometry. It supplies spatial primitives needed by future rendering, UI, collision, and culling systems without creating any of those higher-level domains.
+This Core component currently provides backend-independent, allocation-free floating-point rectangle and affine-transform geometry. ADR 0032 requires an engine-owned `Vector` and the final `Vector`/`Rect`/`Transform` vocabulary across every domain; that migration is accepted but not yet implemented.
 
 ## Owned types
 
@@ -49,7 +49,8 @@ Implemented and verified. The delivered surface covers complete rectangle behavi
 
 ## Exclusions and deferred integration
 
-- A constructor from an integer rectangle is deferred until `Rect2I` exists.
+- The engine-owned `Vector` required by ADR 0032 is not implemented. Current production geometry still uses `System.Numerics.Vector2`; future engine components must not treat that temporary surface as the permanent contract.
+- A constructor from an integer rectangle is deferred until a complete `RectI` exists under the final unsuffixed vocabulary.
 - Rectangle transform operators and migration of `Node` from `Matrix3x2` are deferred to the explicit integration slice under ADR 0026 and ADR 0029; the standalone transform type is complete without claiming either migration.
 - Boolean truth conversion is permanently excluded because it is not an appropriate typed C# contract.
 - No renderer clip/scissor conversion, UI layout, viewport, image region, atlas, broad-phase, collision shape, or native structure conversion exists yet. Those integrations belong to their owning future domains and are not represented by placeholders.
@@ -67,3 +68,4 @@ The executable harness covers every current rectangle and transform member famil
 - [0025: Typed axis-aligned rectangle geometry](../decisions/core-math.md#adr-0025)
 - [0026: Separate Transform2D type](../decisions/core-math.md#adr-0026)
 - [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
+- [0032: Engine-owned unsuffixed 2D math vocabulary](../decisions/core-math.md#adr-0032)

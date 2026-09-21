@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 This bounded log owns the complete architectural records for core math. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
-Decisions in this log: [0024](#adr-0024), [0025](#adr-0025), [0026](#adr-0026), [0029](#adr-0029).
+Decisions in this log: [0024](#adr-0024), [0025](#adr-0025), [0026](#adr-0026), [0029](#adr-0029), [0032](#adr-0032).
 
 <a id="adr-0024"></a>
 ## ADR 0024: Typed color values and portable quantization
@@ -72,7 +72,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted.
+Accepted for rectangle semantics. The `Rect2` name and `System.Numerics.Vector2` dependency are superseded by [ADR 0032](core-math.md#adr-0032); their production migration is not yet complete.
 
 ### Context
 
@@ -113,7 +113,7 @@ No renderer, UI, physics, or platform abstraction is created by this decision.
 ### Rejected alternatives
 
 - **Wait for a renderer or physics backend:** rejected because rectangle math and typed persistence are independently useful foundational behavior.
-- **Create a custom `Vector2`:** rejected because `System.Numerics.Vector2` already supplies the required portable value contract and is established throughout the repository.
+- **Create a custom `Vector2`:** rejected at the time because `System.Numerics.Vector2` supplied the immediate portable value contract and was established throughout the repository. ADR 0032 supersedes this rejection and requires an engine-owned `Vector` throughout the runtime.
 - **Use `System.Drawing.RectangleF`:** rejected because its API/semantics differ and the dependency is inappropriate for the runtime target matrix.
 - **Normalize on every construction:** rejected because it destroys intentional negative-size values and diverges from the audited contract.
 - **Add placeholder `Rect2I` or `Transform2D` types:** rejected because empty compatibility shells would violate the repository definition of done. ADR 0026 required a real standalone `Transform2D` vertical slice, now fulfilled by ADR 0029.
@@ -137,7 +137,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted and fulfilled for the standalone value by ADR 0029. This decision partially supersedes ADR 0008 only where that ADR rejected a separate `Transform2D` type. Migration of `Node` and `Rect2` remains pending; the unified `Node` hierarchy and all other ADR 0008 decisions remain accepted.
+Accepted and fulfilled for the standalone affine semantics by ADR 0029. This decision partially supersedes ADR 0008 only where that ADR rejected a separate engine-owned transform type. ADR 0032 supersedes the `Transform2D` name with `Transform`, requires the engine-owned `Vector`, and retains the pending `Node`/rectangle migration; the unified `Node` hierarchy and all other ADR 0008 decisions remain accepted.
 
 ### Context
 
@@ -192,7 +192,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted. This decision fulfills ADR 0026's requirement for a standalone `Transform2D` value. The separate migration of `Node` and `Rect2` remains pending.
+Accepted for affine semantics. This decision fulfills ADR 0026's standalone value requirement. ADR 0032 supersedes the `Transform2D` name and `System.Numerics.Vector2` dependency; the complete `Vector`/`Rect`/`Transform`/`Node` migration remains pending.
 
 ### Context
 
@@ -259,3 +259,59 @@ Verification is Linux/.NET 8 only. No renderer, native backend, visual output, f
 - [0023: Typed in-memory packed scenes](scene.md#adr-0023)
 - [0025: Typed axis-aligned rectangle geometry](core-math.md#adr-0025)
 - [0026: Separate Transform2D foundational type](core-math.md#adr-0026)
+
+<a id="adr-0032"></a>
+## ADR 0032: Own the complete unsuffixed 2D math vocabulary
+
+Last updated: 2026-09-21
+
+### Status
+
+Accepted; implementation pending. This decision supersedes ADR 0025's rejection of a custom vector, the public `Rect2` and `Transform2D` names recorded by ADRs 0025, 0026, and 0029, and their permanent reliance on `System.Numerics.Vector2`. Their verified mathematical semantics remain accepted.
+
+### Context
+
+Electron2D is exclusively two-dimensional. The existing public geometry surface nevertheless mixes engine-owned `Rect2` and `Transform2D` values with `System.Numerics.Vector2`, while `Node` additionally exposes `Matrix3x2`. That makes an external numerics library part of the engine contract, prevents Electron2D from defining one complete vector API and its exact numeric semantics, and leaves dimensions encoded redundantly in names even though no three-dimensional family exists.
+
+The engine needs one coherent math vocabulary shared by scene state, rendering, input, physics, UI, resources, serialization, editor tooling, and games. Introducing only a renamed rectangle or transform while retaining `Vector2` would preserve the largest external public dependency and force another source-breaking migration later.
+
+### Decision
+
+Electron2D will own three canonical single-precision 2D value types named `Vector`, `Rect`, and `Transform`.
+
+- `Vector` will be a complete production type rather than a naming wrapper. Its implementation must audit the applicable reference vector contract, define sequential two-float storage, arithmetic and geometric operations, exact and approximate comparison, normalization and zero-length behavior, finite checks, formatting, persistence, packed-scene storage, XML documentation, and allocation-free hot paths.
+- Every Electron2D domain must use `Vector` for engine-owned 2D coordinates, sizes, directions, velocities, axes, offsets, input values, render geometry, physics values, and public/protected parameters, properties, fields, and return values.
+- `Rect` and `Transform` must use `Vector` for all stored components and API. `Node` transform and spatial members must use `Transform` and `Vector`.
+- `System.Numerics.Vector2` and `Matrix3x2` may exist only inside narrow internal adapters at an external package, native API, or host boundary. They must not become engine-owned state or cross a public/protected Electron2D API boundary.
+- Old `Vector2`, `Rect2`, and `Transform2D` compatibility aliases, duplicate wrappers, and implicit dual APIs will not be shipped. The project is pre-release, so the migration favors one canonical contract over compatibility debt.
+- No three-dimensional vector, rectangle, transform, overload, adapter, or reserved abstraction is introduced.
+
+The migration is one production vertical slice: implement `Vector`; migrate existing rectangle, affine-transform, node, configuration, packed-scene, property, test, example, and documentation usage; preserve the already accepted rectangle and affine mathematics; then run a repository-wide public-surface audit. Until that slice is complete, current documents must identify `Vector` and the dependent names as accepted but not implemented.
+
+### Consequences
+
+- Engine consumers receive one self-contained, consistently named 2D math API instead of a mixture of Electron2D and BCL contracts.
+- Later rendering, input, physics, UI, editor, and asset domains start directly on the permanent vector type and do not need their own conversion conventions.
+- Integration adapters pay explicit value conversions at their boundary. They remain allocation-free struct conversions and are measured before any unsafe ABI shortcut is considered.
+- The migration is intentionally source-breaking. Configuration field names such as `X`, `Y`, `Position`, `Size`, and `Origin` may remain stable, but CLR type identity changes require explicit regression tests.
+- The unqualified `Vector` name can conflict with another imported library's type; ordinary C# namespace qualification or aliases resolve that consumer-side ambiguity without duplicating Electron2D's API.
+
+### Rejected alternatives
+
+- **Keep `System.Numerics.Vector2` permanently:** rejected because it leaks an external contract through every spatial subsystem and cannot supply the complete engine-owned vector behavior.
+- **Expose both vector types:** rejected because every API would need conversion policy and consumers could create mixed-type graphs.
+- **Use `Vector2` as the new engine-owned name:** rejected because Electron2D has no 3D type family and the accepted public vocabulary deliberately removes redundant dimensional suffixes.
+- **Add implicit public conversions to numerics types:** rejected because they would preserve the external type as a de facto second public math API and can hide conversions at hot-path call sites.
+- **Migrate future domains only:** rejected because existing Core and Scene APIs would permanently divide the engine into incompatible math generations.
+
+### Verification boundary
+
+This ADR records the required architecture only. It does not make `Vector` a production type, does not complete the pending `Rect`/`Transform`/`Node` migration, and does not verify performance or any target platform. Those claims require the full implementation, XML and living documentation, positive/negative/boundary/allocation tests, post-implementation audit, full repository checks, and an atomic implementation commit.
+
+### Related decisions
+
+- [0004: 2D scene-oriented API in one Electron2D-owned assembly](product.md#adr-0004)
+- [0014: Managed Resource lifetime and realtime allocation](resources.md#adr-0014)
+- [0025: Typed axis-aligned rectangle geometry](core-math.md#adr-0025)
+- [0026: Separate Transform2D foundational type](core-math.md#adr-0026)
+- [0029: Typed Transform2D value and affine semantics](core-math.md#adr-0029)
