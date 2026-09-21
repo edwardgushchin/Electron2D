@@ -34,6 +34,8 @@ A future editor or development tool may intentionally support fewer host platfor
 
 The current project targets `net8.0` and its executable verification has run on Linux. Some file-system code contains macOS and Windows backends, but they have not been exercised on native hosts. There is no SDL application host, mobile target project, Android package, iOS application bundle, signing pipeline, or five-platform CI matrix. Therefore this ADR establishes the required product target, not a claim that distributable applications for all five platforms already exist.
 
+ADR 0028 selects a capability-driven GPU-primary and SDL_Renderer-fallback architecture for future rendering. It does not establish that either backend initializes, renders, or supports shaders on any target yet; those claims require backend-specific native-host verification.
+
 ## Consequences
 
 - Every runtime domain and component must preserve the five-platform contract as it evolves.
@@ -58,3 +60,4 @@ The current project targets `net8.0` and its executable verification has run on 
 - [0016: Process-wide Engine runtime and host-driven scheduling](0016-engine-runtime.md)
 - [0017: Source-tree module layout](0017-source-tree-layout.md)
 - [0020: Typed file access and transformed-file containers](0020-file-access.md)
+- [0028: GPU-first 2D rendering, shaders, and SDL_Renderer fallback](0028-gpu-primary-renderer-fallback.md)

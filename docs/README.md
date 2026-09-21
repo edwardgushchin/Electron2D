@@ -20,6 +20,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Native SDL packaging: not designed or verified yet.
 - Platform delivery status: the current `net8.0` project and executable harness are verified on Linux. There is no five-platform CI matrix, SDL application host, Android package, iOS bundle, signing workflow, or native-device verification for all targets yet.
 - 2D physics backend: `Box2D.NET` is selected as a future external managed dependency, but neither its package nor a physics domain is integrated yet.
+- Rendering architecture: the SDL3 GPU API is selected as the primary future backend with 2D shader support; SDL_Renderer is the reduced-capability fallback for baseline 2D drawing. The public API will expose backend capabilities and reject unsupported shader use explicitly. No rendering or shader code is implemented yet.
 - Managed memory remains runtime-owned; `IDisposable` controls deterministic logical/native cleanup. Public manual reference counting is excluded, while internal asset leases are reserved for a future resource manager with concrete native-backed assets.
 - Floating-point RGBA values, HSV and perceptual OKHSL conversion, straight-alpha blend, arithmetic/comparison, packed/HTML formats, strict finite configuration serialization, packed-scene value storage, and all 146 standard named colors: implemented without a renderer dependency.
 - Floating-point axis-aligned rectangles with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge/support operations, strict finite configuration serialization, packed-scene storage, and stable side identities: implemented without renderer, UI, or physics dependencies.
@@ -111,5 +112,6 @@ This directory describes the engine as it exists now. Planned features are liste
   - [0025: Typed axis-aligned rectangle geometry](decisions/0025-typed-rectangle-geometry.md)
   - [0026: Separate Transform2D foundational type](decisions/0026-separate-transform2d-type.md)
   - [0027: Self-hosted editor and game project boundary](decisions/0027-self-hosted-editor-and-games.md)
+  - [0028: GPU-first 2D rendering, shaders, and SDL_Renderer fallback](decisions/0028-gpu-primary-renderer-fallback.md)
 
 The maintenance rules for this documentation are mandatory and live in the repository root [AGENTS.md](../AGENTS.md).

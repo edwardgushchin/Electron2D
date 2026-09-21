@@ -57,3 +57,9 @@ No editor project, executable, domain, component, or production type is implemen
 ## Verification boundary
 
 The repository boundary is verified by directory placement and current project compile includes. Existing runtime checks prove only that reserving `editor/Electron2D.Editor/` does not alter `Electron2D.dll`. Self-hosting, editor startup, UI, rendering, packaging, and desktop-platform behavior remain unimplemented and unverified.
+
+## Related decisions
+
+- [0004: 2D API in one Electron2D-owned assembly](0004-2d-api-single-assembly.md)
+- [0021: Cross-platform runtime target matrix](0021-cross-platform-runtime-targets.md)
+- [0028: GPU-first 2D rendering, shaders, and SDL_Renderer fallback](0028-gpu-primary-renderer-fallback.md)

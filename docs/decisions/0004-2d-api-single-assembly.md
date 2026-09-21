@@ -2,7 +2,7 @@
 
 Last updated: 2026-09-21
 
-- Status: Accepted; external-dependency packaging amended by [0012](0012-external-runtime-dependencies.md), runtime target matrix defined by [0021](0021-cross-platform-runtime-targets.md), editor/game product boundary amended by [0027](0027-self-hosted-editor-and-games.md)
+- Status: Accepted; external-dependency packaging amended by [0012](0012-external-runtime-dependencies.md), runtime target matrix defined by [0021](0021-cross-platform-runtime-targets.md), editor/game product boundary amended by [0027](0027-self-hosted-editor-and-games.md), and rendering backend strategy defined by [0028](0028-gpu-primary-renderer-fallback.md)
 - Scope: Entire product architecture and packaging
 
 The one-assembly rule remains fully effective for every production runtime-engine type and domain owned by Electron2D. ADR 0012 changes the treatment of explicitly approved third-party runtime dependencies: they may ship as separate assemblies instead of being internalized into `Electron2D.dll`. ADR 0027 clarifies that separately shipped editor and game executable assemblies are runtime consumers rather than engine-domain assemblies.
@@ -19,7 +19,7 @@ Electron2D is intended to provide a familiar high-level API modeled on Godot's 2
 - All production runtime-engine domains and components compile into `Electron2D.csproj` with assembly name `Electron2D`, producing one managed engine assembly: `Electron2D.dll`.
 - Tests, examples, benchmarks, analyzers, and development tools may use separate projects because they are not shipped as parts of the engine.
 - The first-party editor is a separately shipped self-hosted application and games are separate executables; both consume the public runtime under ADR 0027 and are not runtime-domain assemblies.
-- SDL3-CS is the intended low-level backend but is not integrated yet.
+- SDL3-CS is the intended low-level backend but is not integrated yet. ADR 0028 selects its GPU API as the primary future 2D renderer and SDL_Renderer as a reduced-capability fallback without claiming either as implemented.
 
 ## Packaging boundary
 

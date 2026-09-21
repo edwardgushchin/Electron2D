@@ -1,6 +1,6 @@
 # 0012: Permit external runtime dependencies and select Box2D.NET
 
-Last updated: 2026-09-20
+Last updated: 2026-09-21
 
 - Status: Accepted
 - Scope: Product boundary, deployment packaging, and future 2D physics
@@ -24,7 +24,7 @@ The engine remains exclusively 2D and should continue exposing one coherent publ
 - Electron2D's public API must not expose dependency-owned types. Physics nodes, resources, queries, contacts, and errors will use Electron2D types, with dependency translation kept behind the physics-domain boundary.
 - Dependency upgrades are explicit changes requiring license review, release-note review, compatibility tests, regression tests, and physics benchmarks appropriate to the affected behavior.
 - The package must not be added before executable physics behavior uses it. Selection is an accepted design decision, not an implemented physics feature.
-- SDL3-CS and native SDL deployment remain unresolved and require their own implemented packaging decision.
+- ADR 0028 selects the future SDL GPU and SDL_Renderer roles, but SDL3-CS integration and native SDL deployment remain unresolved and require an implemented packaging decision.
 
 ## Consequences
 
