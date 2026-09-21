@@ -24,7 +24,7 @@ The [Packed scenes](packed-scenes.md) component freezes a source hierarchy durin
 ## Dependencies
 
 - Core's [`ElectronObject`](../classes/ElectronObject.md), [`MainLoop`](../classes/MainLoop.md) notification identifiers, and typed property descriptors.
-- `System.Numerics.Vector2` and `Matrix3x2` as the current implemented transform surface. ADR 0026 requires a future standalone `Transform2D`; migration has not occurred and no placeholder exists.
+- `System.Numerics.Vector2` and `Matrix3x2` as the current implemented Node transform surface. The standalone Core [`Transform2D`](../classes/Transform2D.md) exists, but migration has not occurred and no compatibility shim is present.
 - `System.IO.Enumeration.FileSystemName` for `*`/`?` hierarchy-name matching.
 - [`SceneTree`](../classes/SceneTree.md) for active lifecycle, frame delivery, pause state, group operations, tree events, and deferred deletion.
 - [`PackedScene`](../classes/PackedScene.md) and the Resource base for capture factories, owner selection, stored state, and per-instance resource ownership.
@@ -55,7 +55,7 @@ Implemented: ordered hierarchy and reparenting, lifecycle and typed events, rela
 - No drawing API, canvas/render-server handle, material, texture filter/repeat, clipping, light mask, Y sorting, or viewport behavior. Current visibility and Z values are logical state for the future renderer.
 - No collision/rigid-body physics. `PhysicsFrame` is only a fixed-step callback lane; Engine can schedule it from host-supplied elapsed time.
 - `Matrix3x2` decomposition returns a canonical representation; equivalent matrices involving negative scale may not reproduce the exact originally assigned scalar tuple.
-- The required standalone `Transform2D` and migration of current Node transform members are not implemented. `Matrix3x2` remains current executable behavior, not the permanent API decision.
+- Migration of current Node transform members to the implemented standalone `Transform2D` is not complete. `Matrix3x2` remains current executable behavior, not the permanent API decision.
 
 ## Verification
 
@@ -66,3 +66,4 @@ Implemented: ordered hierarchy and reparenting, lifecycle and typed events, rela
 - [0008: Unified Node combines Node and Node2D](../decisions/0008-unified-2d-node.md)
 - [0023: Typed in-memory packed scenes](../decisions/0023-typed-packed-scenes.md)
 - [0026: Separate Transform2D foundational type](../decisions/0026-separate-transform2d-type.md)
+- [0029: Typed Transform2D value and affine semantics](../decisions/0029-typed-transform2d-value.md)

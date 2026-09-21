@@ -66,7 +66,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - Packed scenes are in-memory only. Nested/inherited scene authoring, placeholders, editable instances, persistent event endpoint storage, node-reference remapping, UID/import integration, and every editor edit mode remain absent.
 - Paths are typed as `string`, not a separate `NodePath`; groups are strings; wildcard search covers names with `*` and `?`.
 - A detached node may remember `QueueFree`, but deletion occurs only after attachment to a tree and a flush/frame boundary.
-- A standalone `Transform2D` is required by ADR 0026 but not implemented. Current Node transform members remain `Matrix3x2` until a complete type and migration are delivered.
+- The standalone Core `Transform2D` value is implemented under ADR 0029. Current Node transform members remain `Matrix3x2` until their explicit source-breaking migration is delivered.
 - There is no five-platform host/package/test matrix; current executable verification is Linux-only.
 
 ## Verification
@@ -89,3 +89,4 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - [0021: Cross-platform runtime target matrix](../decisions/0021-cross-platform-runtime-targets.md)
 - [0023: Typed in-memory packed scenes](../decisions/0023-typed-packed-scenes.md)
 - [0026: Separate Transform2D foundational type](../decisions/0026-separate-transform2d-type.md)
+- [0029: Typed Transform2D value and affine semantics](../decisions/0029-typed-transform2d-value.md)

@@ -14,6 +14,7 @@ VerifyEventConnections();
 VerifyTranslations();
 VerifyColors();
 VerifyRectangles();
+VerifyTransforms();
 VerifyConfigFiles();
 VerifyFileAccess();
 VerifyDirAccess();
@@ -484,6 +485,262 @@ static Rect2 ExerciseRect2HotPath(int iterations)
 
     return value;
 }
+
+static void VerifyTransforms()
+{
+    Require(Marshal.SizeOf<Transform2D>() == 24 &&
+            typeof(Transform2D).IsDefined(typeof(SerializableAttribute), inherit: false) &&
+            typeof(Transform2D).StructLayoutAttribute?.Value == LayoutKind.Sequential,
+        "Transform2D must be a serializable sequential six-float value type.");
+    Require(default(Transform2D) == new Transform2D(Vector2.Zero, Vector2.Zero, Vector2.Zero) &&
+            default(Transform2D) != Transform2D.Identity &&
+            Transform2D.Identity == new Transform2D(1f, 0f, 0f, 1f, 0f, 0f) &&
+            Transform2D.FlipX == new Transform2D(-1f, 0f, 0f, 1f, 0f, 0f) &&
+            Transform2D.FlipY == new Transform2D(1f, 0f, 0f, -1f, 0f, 0f),
+        "Zero initialization and the three standard transforms must remain distinct and stable.");
+
+    var indexed = new Transform2D(Vector2.UnitX, Vector2.UnitY, new Vector2(2f, 3f));
+    indexed[0] = new Vector2(4f, 5f);
+    indexed[1, 0] = 6f;
+    indexed[2, 1] = 7f;
+    Require(indexed.X == new Vector2(4f, 5f) && indexed.Y == new Vector2(6f, 1f) &&
+            indexed.Origin == new Vector2(2f, 7f) && indexed[0, 1] == 5f,
+        "Column and component indexers must read and mutate the same sequential storage.");
+    Expect<ArgumentOutOfRangeException>(() => _ = indexed[-1],
+        "The column indexer must reject negative indices.");
+    Expect<ArgumentOutOfRangeException>(() => indexed[3] = Vector2.Zero,
+        "The column indexer must reject indices after Origin.");
+    Expect<ArgumentOutOfRangeException>(() => _ = indexed[0, 2],
+        "The component indexer must reject rows after Y.");
+    Expect<ArgumentOutOfRangeException>(() => indexed[3, 0] = 1f,
+        "The component indexer must reject invalid columns before mutation.");
+
+    var quarterTurn = new Transform2D(MathF.PI * 0.5f, new Vector2(3f, 4f));
+    Require(VectorNearlyEqual(quarterTurn.X, Vector2.UnitY) &&
+            VectorNearlyEqual(quarterTurn.Y, -Vector2.UnitX) &&
+            VectorNearlyEqual(quarterTurn * new Vector2(2f, 1f), new Vector2(2f, 6f)) &&
+            NearlyEqual(quarterTurn.Rotation, MathF.PI * 0.5f),
+        "Rotation construction and point transformation must use clockwise screen-space columns.");
+
+    var decomposed = new Transform2D(0.4f, new Vector2(2f, -3f), 0.2f, new Vector2(5f, 6f));
+    Require(NearlyEqual(decomposed.Rotation, 0.4f) &&
+            VectorNearlyEqual(decomposed.Scale, new Vector2(2f, -3f)) &&
+            NearlyEqual(decomposed.Skew, 0.2f) && decomposed.Origin == new Vector2(5f, 6f) &&
+            NearlyEqual(Transform2D.FlipX.Determinant(), -1f) &&
+            default(Transform2D).Scale == Vector2.Zero && NearlyEqual(default(Transform2D).Skew, 0f),
+        "Rotation, signed scale, skew, origin, and reflection determinant must decompose consistently.");
+
+    var basis = new Transform2D(new Vector2(2f, 1f), new Vector2(-1f, 3f), new Vector2(100f, 200f));
+    Require(basis.BasisXform(new Vector2(4f, 5f)) == new Vector2(3f, 19f) &&
+            VectorNearlyEqual(quarterTurn.BasisXformInv(quarterTurn.BasisXform(new Vector2(4f, 5f))), new Vector2(4f, 5f)),
+        "Basis transforms must ignore Origin and the inverse shortcut must invert orthonormal bases.");
+
+    var affine = new Transform2D(0.35f, new Vector2(2f, 3f), 0.25f, new Vector2(4f, -2f));
+    var affineInverse = affine.AffineInverse();
+    var point = new Vector2(8f, -5f);
+    Require(TransformNearlyEqual(affine * affineInverse, Transform2D.Identity) &&
+            TransformNearlyEqual(affineInverse * affine, Transform2D.Identity) &&
+            VectorNearlyEqual(affineInverse * (affine * point), point),
+        "AffineInverse must invert rotation, non-uniform scale, skew, and translation.");
+    Expect<InvalidOperationException>(
+        () => new Transform2D(Vector2.UnitX, Vector2.UnitX, Vector2.Zero).AffineInverse(),
+        "AffineInverse must reject an exactly singular basis.");
+
+    var orthonormalInverse = quarterTurn.Inverse();
+    Require(VectorNearlyEqual(orthonormalInverse * (quarterTurn * point), point) &&
+            VectorNearlyEqual((quarterTurn * point) * quarterTurn, point),
+        "Inverse and reverse point multiplication must invert an orthonormal transform.");
+
+    var parent = new Transform2D(0.6f, new Vector2(4f, 5f));
+    var child = new Transform2D(-0.2f, new Vector2(2f, 3f));
+    Require(VectorNearlyEqual((parent * child) * point, parent * (child * point)),
+        "Transform multiplication must compose parent and child in application order.");
+
+    var localFrame = new Transform2D(new Vector2(2f, 0f), new Vector2(0f, 3f), new Vector2(1f, 2f));
+    var rotatedGlobal = localFrame.Rotated(MathF.PI * 0.5f);
+    var rotatedLocal = localFrame.RotatedLocal(MathF.PI * 0.5f);
+    Require(VectorNearlyEqual(rotatedGlobal.X, new Vector2(0f, 2f)) &&
+            VectorNearlyEqual(rotatedGlobal.Y, new Vector2(-3f, 0f)) &&
+            VectorNearlyEqual(rotatedGlobal.Origin, new Vector2(-2f, 1f)) &&
+            VectorNearlyEqual(rotatedLocal.X, new Vector2(0f, 3f)) &&
+            VectorNearlyEqual(rotatedLocal.Y, new Vector2(-2f, 0f)) &&
+            rotatedLocal.Origin == localFrame.Origin,
+        "Global and local rotation must multiply on opposite sides.");
+
+    var rotatedFrame = new Transform2D(MathF.PI * 0.5f, new Vector2(10f, 20f));
+    Require(rotatedFrame.Translated(Vector2.UnitX).Origin == new Vector2(11f, 20f) &&
+            VectorNearlyEqual(rotatedFrame.TranslatedLocal(Vector2.UnitX).Origin, new Vector2(10f, 21f)),
+        "Global and local translation must distinguish world offsets from basis-relative offsets.");
+    var scaledGlobal = rotatedFrame.Scaled(new Vector2(2f, 3f));
+    var scaledLocal = rotatedFrame.ScaledLocal(new Vector2(2f, 3f));
+    Require(VectorNearlyEqual(scaledGlobal.X, new Vector2(0f, 3f)) &&
+            VectorNearlyEqual(scaledGlobal.Y, new Vector2(-2f, 0f)) &&
+            scaledGlobal.Origin == new Vector2(20f, 60f) &&
+            VectorNearlyEqual(scaledLocal.X, new Vector2(0f, 2f)) &&
+            VectorNearlyEqual(scaledLocal.Y, new Vector2(-3f, 0f)) &&
+            scaledLocal.Origin == rotatedFrame.Origin,
+        "Global scale must scale rows and origin while local scale must scale basis columns only.");
+
+    var start = new Transform2D(170f * MathF.PI / 180f, new Vector2(1f, -1f), 0f, Vector2.Zero);
+    var finish = new Transform2D(-170f * MathF.PI / 180f, new Vector2(3f, -3f), 0.2f, new Vector2(10f, 20f));
+    var midpoint = start.InterpolateWith(finish, 0.5f);
+    var extrapolated = start.InterpolateWith(finish, 2f);
+    Require(VectorNearlyEqual(midpoint.X, new Vector2(-2f, 0f), 0.001f) &&
+            VectorNearlyEqual(midpoint.Scale, new Vector2(2f, -2f), 0.001f) &&
+            midpoint.Origin == new Vector2(5f, 10f) &&
+            extrapolated.Origin == new Vector2(20f, 40f) &&
+            start.InterpolateWith(finish, 0f).IsEqualApprox(start) &&
+            start.InterpolateWith(finish, 1f).IsEqualApprox(finish),
+        "Interpolation must use the shortest angular path, preserve reflected scale, and allow extrapolation.");
+
+    Require(Transform2D.Identity.IsConformal() &&
+            new Transform2D(Vector2.One * 2f, new Vector2(-2f, 2f), Vector2.Zero).IsConformal() &&
+            Transform2D.FlipX.IsConformal() &&
+            !new Transform2D(new Vector2(2f, 0f), Vector2.UnitY, Vector2.Zero).IsConformal() &&
+            !new Transform2D(Vector2.UnitX, new Vector2(1f, 1f), Vector2.Zero).IsConformal(),
+        "Conformal checks must accept uniform rotation/reflection and reject non-uniform scale or skew.");
+    Require(Transform2D.Identity.IsFinite() &&
+            !new Transform2D(new Vector2(float.NaN, 0f), Vector2.UnitY, Vector2.Zero).IsFinite() &&
+            !new Transform2D(Vector2.UnitX, Vector2.UnitY, new Vector2(float.PositiveInfinity, 0f)).IsFinite(),
+        "IsFinite must inspect every basis and origin component.");
+
+    var orthonormalized = basis.Orthonormalized();
+    var zeroOrthonormalized = default(Transform2D).Orthonormalized();
+    Require(VectorNearlyEqual(orthonormalized.X, new Vector2(0.8944272f, 0.4472136f)) &&
+            NearlyEqual(Vector2.Dot(orthonormalized.X, orthonormalized.Y), 0f) &&
+            NearlyEqual(orthonormalized.X.Length(), 1f) && NearlyEqual(orthonormalized.Y.Length(), 1f) &&
+            orthonormalized.Origin == basis.Origin && zeroOrthonormalized == default,
+        "Orthonormalized must preserve Origin and keep degenerate zero axes finite.");
+
+    var lookingDown = Transform2D.Identity.LookingAt(Vector2.UnitY);
+    var lookingScaled = affine.LookingAt(new Vector2(9f, 3f));
+    Require(NearlyEqual(lookingDown.Rotation, MathF.PI * 0.5f) && lookingDown.Origin == Vector2.Zero &&
+            VectorNearlyEqual(lookingDown.Scale, Vector2.One) &&
+            lookingScaled.Origin == affine.Origin && VectorNearlyEqual(lookingScaled.Scale, Vector2.One) &&
+            NearlyEqual(lookingScaled.Skew, 0f) && NearlyEqual(lookingScaled.Rotation, 0.7553597f),
+        "LookingAt must use affine-local scale compensation while preserving Origin and removing scale and skew.");
+    Expect<InvalidOperationException>(() => default(Transform2D).LookingAt(Vector2.One),
+        "LookingAt must surface a singular source basis.");
+
+    var sourcePoints = new[] { Vector2.Zero, Vector2.UnitX, new Vector2(2f, -3f) };
+    var transformedPoints = quarterTurn * sourcePoints;
+    var restoredPoints = transformedPoints * quarterTurn;
+    Require(transformedPoints.Length == sourcePoints.Length && restoredPoints.Length == sourcePoints.Length &&
+            sourcePoints.Where((source, index) => !VectorNearlyEqual(source, restoredPoints[index])).Count() == 0 &&
+            (Transform2D.Identity * Array.Empty<Vector2>()).Length == 0,
+        "Array operators must return complete transformed copies in source order.");
+    Vector2[] nullPoints = null!;
+    Expect<ArgumentNullException>(() => _ = Transform2D.Identity * nullPoints,
+        "Forward array transformation must reject null explicitly.");
+    Expect<ArgumentNullException>(() => _ = nullPoints * Transform2D.Identity,
+        "Inverse array transformation must reject null explicitly.");
+
+    var scalar = new Transform2D(1f, 2f, 3f, 4f, 5f, 6f);
+    Require((scalar * 2f) / 2f == scalar && !(scalar / 0f).IsFinite(),
+        "Scalar arithmetic must affect every component and retain IEEE division behavior.");
+    var approximate = new Transform2D(1.000001f, 0f, 0f, 1f, 0f, 0f);
+    var nanTransform = new Transform2D(new Vector2(float.NaN, 0f), Vector2.UnitY, Vector2.Zero);
+    var signedZeroTransform = new Transform2D(-0f, 0f, 0f, -0f, 0f, -0f);
+    Require(Transform2D.Identity == new Transform2D(1f, 0f, 0f, 1f, 0f, 0f) &&
+            Transform2D.Identity != approximate && Transform2D.Identity.IsEqualApprox(approximate) &&
+            new Transform2D(new Vector2(float.PositiveInfinity, 0f), Vector2.UnitY, Vector2.Zero).IsEqualApprox(
+                new Transform2D(new Vector2(float.PositiveInfinity, 0f), Vector2.UnitY, Vector2.Zero)) &&
+            nanTransform != new Transform2D(new Vector2(float.NaN, 0f), Vector2.UnitY, Vector2.Zero) &&
+            !nanTransform.IsEqualApprox(new Transform2D(new Vector2(float.NaN, 0f), Vector2.UnitY, Vector2.Zero)) &&
+            signedZeroTransform == default && signedZeroTransform.GetHashCode() == default(Transform2D).GetHashCode() &&
+            scalar.Equals((object)new Transform2D(1f, 2f, 3f, 4f, 5f, 6f)) &&
+            scalar.GetHashCode() == new Transform2D(1f, 2f, 3f, 4f, 5f, 6f).GetHashCode(),
+        "Exact and approximate equality must define finite, infinity, and NaN behavior.");
+
+    var previousCulture = CultureInfo.CurrentCulture;
+    try
+    {
+        CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("fr-FR");
+        Require(new Transform2D(1.5f, 2.5f, 3.5f, 4.5f, 5.5f, 6.5f).ToString("F1") ==
+                "[X: <1.5, 2.5>, Y: <3.5, 4.5>, O: <5.5, 6.5>]",
+            "Transform2D formatting must use invariant culture.");
+        Expect<FormatException>(() => _ = scalar.ToString("Q"),
+            "Transform2D formatting must surface invalid numeric formats.");
+    }
+    finally
+    {
+        CultureInfo.CurrentCulture = previousCulture;
+    }
+
+    var transformKey = new ConfigKey<Transform2D>("geometry", "transform");
+    using (var config = new ConfigFile())
+    {
+        config.SetValue(transformKey, scalar);
+        Require(config.EncodeToText() ==
+                "[geometry]\n\ntransform={\"X\":{\"X\":1,\"Y\":2},\"Y\":{\"X\":3,\"Y\":4},\"Origin\":{\"X\":5,\"Y\":6}}\n" &&
+                config.GetValue(transformKey) == scalar,
+            "ConfigFile must use the stable finite X/Y/Origin transform schema.");
+        Expect<JsonException>(() => config.SetValue(
+                transformKey,
+                new Transform2D(new Vector2(float.NaN, 0f), Vector2.UnitY, Vector2.Zero)),
+            "ConfigFile must reject non-finite transform components before mutation.");
+        Require(config.GetValue(transformKey) == scalar,
+            "Failed transform serialization must preserve the prior configuration token.");
+
+        config.Parse("[geometry]\ntransform={\"X\":{\"X\":1,\"Y\":2},\"Y\":{\"X\":3,\"Y\":4}}\n");
+        Expect<InvalidDataException>(() => config.GetValue(transformKey),
+            "ConfigFile must reject a transform with a missing field.");
+        config.Parse("[geometry]\ntransform={\"X\":{\"X\":1,\"Y\":2},\"Y\":{\"X\":3,\"Y\":4},\"Origin\":{\"X\":5,\"Y\":6},\"Extra\":0}\n");
+        Expect<InvalidDataException>(() => config.GetValue(transformKey),
+            "ConfigFile must reject unknown transform fields.");
+        config.Parse("[geometry]\ntransform={\"X\":{\"X\":1,\"X\":2,\"Y\":2},\"Y\":{\"X\":3,\"Y\":4},\"Origin\":{\"X\":5,\"Y\":6}}\n");
+        Expect<InvalidDataException>(() => config.GetValue(transformKey),
+            "ConfigFile must reject duplicate transform vector components.");
+        config.Parse("[geometry]\ntransform={\"X\":{\"X\":1,\"Y\":2},\"X\":{\"X\":1,\"Y\":2},\"Y\":{\"X\":3,\"Y\":4},\"Origin\":{\"X\":5,\"Y\":6}}\n");
+        Expect<InvalidDataException>(() => config.GetValue(transformKey),
+            "ConfigFile must reject duplicate transform fields.");
+        config.Parse("[geometry]\ntransform={\"X\":{\"X\":1},\"Y\":{\"X\":3,\"Y\":4},\"Origin\":{\"X\":5,\"Y\":6}}\n");
+        Expect<InvalidDataException>(() => config.GetValue(transformKey),
+            "ConfigFile must reject incomplete transform vectors.");
+        config.Parse("[geometry]\ntransform={\"X\":{\"X\":\"right\",\"Y\":2},\"Y\":{\"X\":3,\"Y\":4},\"Origin\":{\"X\":5,\"Y\":6}}\n");
+        Expect<InvalidDataException>(() => config.GetValue(transformKey),
+            "ConfigFile must reject nonnumeric transform vector components.");
+        config.Parse("[geometry]\ntransform={\"X\":{\"X\":1,\"Y\":2,\"Z\":3},\"Y\":{\"X\":3,\"Y\":4},\"Origin\":{\"X\":5,\"Y\":6}}\n");
+        Expect<InvalidDataException>(() => config.GetValue(transformKey),
+            "ConfigFile must reject unknown transform vector components.");
+        config.Parse("[geometry]\ntransform={\"X\":{\"X\":1e100,\"Y\":2},\"Y\":{\"X\":3,\"Y\":4},\"Origin\":{\"X\":5,\"Y\":6}}\n");
+        Expect<InvalidDataException>(() => config.GetValue(transformKey),
+            "ConfigFile must reject transform numbers outside the finite single-precision range.");
+    }
+
+    using (var scene = new PackedScene())
+    {
+        var source = new ColorPackedNode { Name = "TransformRoot", PackedTransform = affine };
+        scene.Pack(source);
+        source.Dispose();
+        using var instance = (ColorPackedNode)scene.Instantiate();
+        Require(instance.PackedTransform == affine,
+            "PackedScene must preserve stored Transform2D properties.");
+    }
+
+    _ = ExerciseTransformHotPath(32);
+    var beforeAllocations = GC.GetAllocatedBytesForCurrentThread();
+    var hotResult = ExerciseTransformHotPath(10_000);
+    var allocated = GC.GetAllocatedBytesForCurrentThread() - beforeAllocations;
+    Require(allocated == 0 && hotResult.IsFinite(),
+        "Warmed transform math operations must not allocate managed memory.");
+}
+
+static Transform2D ExerciseTransformHotPath(int iterations)
+{
+    var value = new Transform2D(0.1f, new Vector2(1.2f, 0.8f), 0.05f, new Vector2(2f, 3f));
+    for (var index = 0; index < iterations; index++)
+    {
+        value = value.RotatedLocal(0.00001f).TranslatedLocal(new Vector2(0.00001f, -0.00001f));
+        value = value.AffineInverse().AffineInverse();
+    }
+
+    return value;
+}
+
+static bool TransformNearlyEqual(Transform2D left, Transform2D right, float epsilon = 0.0001f) =>
+    VectorNearlyEqual(left.X, right.X, epsilon) && VectorNearlyEqual(left.Y, right.Y, epsilon) &&
+    VectorNearlyEqual(left.Origin, right.Origin, epsilon);
 
 static void VerifyConfigFiles()
 {
@@ -4017,9 +4274,16 @@ sealed class ColorPackedNode : Node
         (node, value) => node.Bounds = value,
         _ => default,
         stored: true);
+    private static readonly PropertyDescriptor<ColorPackedNode, Transform2D> TransformProperty = new(
+        nameof(PackedTransform),
+        node => node.PackedTransform,
+        (node, value) => node.PackedTransform = value,
+        _ => Transform2D.Identity,
+        stored: true);
 
     private Color _tint = Colors.White;
     private Rect2 _bounds;
+    private Transform2D _transform = Transform2D.Identity;
 
     public Color Tint
     {
@@ -4041,10 +4305,20 @@ sealed class ColorPackedNode : Node
         }
     }
 
+    public Transform2D PackedTransform
+    {
+        get => _transform;
+        set
+        {
+            EnsureMutable();
+            _transform = value;
+        }
+    }
+
     protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
 
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
-        base.GetPropertyDescriptors().Append(TintProperty).Append(BoundsProperty);
+        base.GetPropertyDescriptors().Append(TintProperty).Append(BoundsProperty).Append(TransformProperty);
 
     private static Node CreateNode() => new ColorPackedNode();
 }

@@ -50,7 +50,7 @@ For each included node, capture stores:
 - every writable [`PropertyDescriptor`](PropertyDescriptor.md) whose `IsStored` flag is `true`, except `Name`, which has its dedicated field;
 - runtime-only empty metadata for nested-scene instances and placeholders, which are not authored by the current implementation.
 
-Supported stored values are strings, `Resource` subtypes, and value types that contain no managed references. This includes [`Color`](Color.md) and [`Rect2`](Rect2.md), whose ordinary/HDR or negative components are copied exactly. Reference-shaped values such as arbitrary objects, collections, delegates, and node references are rejected with `NotSupportedException`; no reflection-driven discovery or invocation, dynamic value container, or string-addressed property call is used.
+Supported stored values are strings, `Resource` subtypes, and value types that contain no managed references. This includes [`Color`](Color.md), [`Rect2`](Rect2.md), and [`Transform2D`](Transform2D.md), whose ordinary/HDR, negative, or affine components are copied exactly. Reference-shaped values such as arbitrary objects, collections, delegates, and node references are rejected with `NotSupportedException`; no reflection-driven discovery or invocation, dynamic value container, or string-addressed property call is used.
 
 `Pack(null)` fails before capture and preserves the previous state. Once a non-null capture begins, the published state is cleared first. Any later factory/property/schema/capture failure leaves the packed scene empty. Both the empty transition and a successful replacement are visible to a live `SceneState`. `Changed` is emitted after the attempt; a throwing handler does not roll back the already committed result.
 
@@ -98,7 +98,7 @@ No hard real-time or allocation-free guarantee is made for packing or instantiat
 
 ## Verification and limitations
 
-`tests/Electron2D.Tests/Program.cs` covers empty state, runtime and invalid edit modes, owned-branch pruning, paths/owners/groups, typed state queries including HDR `Color` and `Rect2` restoration, source disposal independence, scene-local aliasing and setup, repeated independent instances, packed-scene duplication, live-state replacement and disposal races, concurrent path updates, failed capture clearing, capture mutation rejection, capturing/source-returning/wrong-type/reused factories, detached-parent and active-tree escape rollback, setup failure cleanup, and state survival after packed-scene disposal.
+`tests/Electron2D.Tests/Program.cs` covers empty state, runtime and invalid edit modes, owned-branch pruning, paths/owners/groups, typed state queries including HDR `Color`, `Rect2`, and `Transform2D` restoration, source disposal independence, scene-local aliasing and setup, repeated independent instances, packed-scene duplication, live-state replacement and disposal races, concurrent path updates, failed capture clearing, capture mutation rejection, capturing/source-returning/wrong-type/reused factories, detached-parent and active-tree escape rollback, setup failure cleanup, and state survival after packed-scene disposal.
 
 The current contract is runtime-only and in-memory. It has no `.tscn`/binary loader or saver, resource UID/import remapping, inherited-scene authoring, nested packed-scene overrides, editable instances, placeholders, missing-resource recovery, script state, persistent event endpoint schema, or editor mode implementation. `SceneState` exposes honest empty/null answers for those absent metadata categories.
 
@@ -107,3 +107,4 @@ The current contract is runtime-only and in-memory. It has no `.tscn`/binary loa
 - [0023: Typed in-memory packed scenes](../decisions/0023-typed-packed-scenes.md)
 - [0024: Typed color values and portable quantization](../decisions/0024-typed-color-values.md)
 - [0025: Typed axis-aligned rectangle geometry](../decisions/0025-typed-rectangle-geometry.md)
+- [0029: Typed Transform2D value and affine semantics](../decisions/0029-typed-transform2d-value.md)

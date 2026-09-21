@@ -13,7 +13,7 @@ Godot separates non-spatial hierarchy/lifecycle behavior (`Node`) from 2D spatia
 
 - Electron2D exposes one public game-object class named `Node`; it does not expose `Node2D`.
 - `Node` combines hierarchy, lifecycle, paths, groups, processing, deletion, 2D local/global transforms, visibility, and Z ordering.
-- The implemented transform vocabulary uses `System.Numerics.Vector2` and `Matrix3x2` directly. The original decision not to introduce `Transform2D` is preserved here as history but superseded for the future public API by ADR 0026.
+- The current Node transform vocabulary uses `System.Numerics.Vector2` and `Matrix3x2` directly. The original decision not to introduce `Transform2D` is preserved here as history but superseded by ADR 0026; ADR 0029 implements the standalone value while leaving Node migration pending.
 - Godot-like concepts keep recognizable names where they remain useful, but the API stays typed C#: strings represent paths/groups/names, delegates and virtual methods represent callbacks, and C# events represent signals.
 - Renderer-independent canvas state (`Visible`, `ZIndex`, `ZAsRelative`) belongs on `Node` now. Renderer-bound drawing, materials, canvas handles, lights, clipping, input picking, and viewport behavior wait for their actual domains.
 - `SceneTree` is the host-driven frame boundary. It delivers explicitly enabled process and physics-process callbacks in priority/tree order and flushes deferred work afterward; it does not create a hidden thread or clock.
@@ -30,5 +30,5 @@ Godot separates non-spatial hierarchy/lifecycle behavior (`Node`) from 2D spatia
 
 - Keep separate `Node` and `Node2D`: rejected because the user-facing engine is 2D-only and requires spatial behavior on its single node type.
 - Put transforms in a detachable component: rejected because it makes the primary 2D object more indirect without a demonstrated non-spatial use case.
-- Create Electron2D-specific vector/matrix wrappers in this initial Node slice: rejected at the time because the .NET standard-library types covered the implemented behavior. ADR 0026 later established a complete standalone `Transform2D` as required future work.
+- Create Electron2D-specific vector/matrix wrappers in this initial Node slice: rejected at the time because the .NET standard-library types covered the implemented behavior. ADR 0026 later required a complete standalone `Transform2D`, and ADR 0029 delivered it without silently changing Node's existing surface.
 - Copy all `CanvasItem` API before a renderer exists: rejected because those members would be non-functional promises rather than a completed runtime contract.

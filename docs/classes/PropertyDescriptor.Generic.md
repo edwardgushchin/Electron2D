@@ -60,4 +60,4 @@ Descriptor metadata is immutable. Delegates execute synchronously on the caller'
 
 ## Verification and limitations
 
-The executable test covers typed get/set, validation rejection, revert-value retrieval, revert availability, restoration, storage metadata, packed capture/restore including reference-free HDR [`Color`](Color.md) and [`Rect2`](Rect2.md) values, resource remapping, and unsupported stored-shape rejection. Property-value change events, undo/redo, attributes, node-reference remapping, arbitrary collection storage, and automatic reflection discovery are not implemented.
+The executable test covers typed get/set, validation rejection, revert-value retrieval, revert availability, restoration, storage metadata, packed capture/restore including reference-free HDR [`Color`](Color.md), [`Rect2`](Rect2.md), and [`Transform2D`](Transform2D.md) values, resource remapping, and unsupported stored-shape rejection. Property-value change events, undo/redo, attributes, node-reference remapping, arbitrary collection storage, and automatic reflection discovery are not implemented.

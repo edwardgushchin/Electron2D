@@ -14,7 +14,7 @@ Last updated: 2026-09-21
 
 `Node` is Electron2D's single hierarchical and spatial game-object base. It intentionally combines Godot-like `Node` and `Node2D` responsibilities: ordered ownership, lifecycle, paths, groups, pause-aware processing, deletion, local/global 2D transforms, visibility, and Z state. There is no separate `Node2D`.
 
-A parent owns its children. An active [`SceneTree`](SceneTree.md) owns its root and therefore the whole hierarchy. A node owns no renderer or native SDL handle. Its current transform surface is `Matrix3x2`; ADR 0026 requires a future standalone `Transform2D` and an explicit migration, but no such type or behavior is implemented yet.
+A parent owns its children. An active [`SceneTree`](SceneTree.md) owns its root and therefore the whole hierarchy. A node owns no renderer or native SDL handle. Its current transform surface is `Matrix3x2`; the standalone [`Transform2D`](Transform2D.md) now exists, but migration of this public surface remains a separate source-breaking slice under ADR 0026 and ADR 0029.
 
 ## Constants
 
@@ -156,7 +156,7 @@ Events are synchronous typed C# events. An event carrying only its source passes
 
 Every transform input must be finite. `Matrix3x2` follows the `System.Numerics` row-vector composition convention. Decomposition is canonical: equivalent matrices with reflections/negative scale can yield an equivalent but not identical rotation/scale/skew tuple.
 
-`Matrix3x2` describes current executable behavior rather than the final transform-type decision. The planned `Transform2D` migration is dependency-blocked and must not be inferred from this class's present API.
+`Matrix3x2` describes current executable behavior rather than the final transform-type decision. The standalone `Transform2D` value is implemented, but its planned Node migration has not occurred and must not be inferred from this class's present API.
 
 ## Protected API
 
@@ -206,9 +206,10 @@ Every node created by `PackedScene.Instantiate()` is also marked unfinished unti
 
 `tests/Electron2D.Tests/Program.cs` verifies lifecycle order, activation/ready rollback, stale snapshot rejection, lifecycle re-entry guards, failure-continuing exit and recursive disposal, disposing-parent mutation rejection, hierarchy validation, reparenting, owner cleanup, paths/search/persistent groups, packed capture and instantiation guards/factories/escape rollback/resource ownership, node/tree event order, child order and sender-first child event arguments, transform behavior, visibility and Z state, spatial helpers, pause modes/priorities/deltas, inherited disable/enable notifications, MainLoop system aliases and tree propagation, owner-thread rejection, direct disposal, detached/cross-tree queued deletion, and queued recursive disposal.
 
-There is no renderer-backed canvas behavior, native system-event creation, focus-to-input state synchronization, ordinary input propagation, collision/rigid-body physics, scene file loader/saver, inherited/nested scene authoring, editable-instance metadata, persistent event endpoint schema, RPC/multiplayer, internal processing lane, process auto-enable by override detection, unique-name shorthand, or separate `Node2D`. Visibility and Z are currently logical state only. The required standalone `Transform2D` and migration from the current `Matrix3x2` members remain explicit future work.
+There is no renderer-backed canvas behavior, native system-event creation, focus-to-input state synchronization, ordinary input propagation, collision/rigid-body physics, scene file loader/saver, inherited/nested scene authoring, editable-instance metadata, persistent event endpoint schema, RPC/multiplayer, internal processing lane, process auto-enable by override detection, unique-name shorthand, or separate `Node2D`. Visibility and Z are currently logical state only. `Transform2D` exists independently, while migration from the current `Matrix3x2` members remains explicit future work.
 
 ## Relevant decisions
 
 - [0008: Unified Node combines Node and Node2D](../decisions/0008-unified-2d-node.md)
 - [0026: Separate Transform2D foundational type](../decisions/0026-separate-transform2d-type.md)
+- [0029: Typed Transform2D value and affine semantics](../decisions/0029-typed-transform2d-value.md)

@@ -40,7 +40,7 @@ The component has no SDL3-CS, renderer, input, audio, physics, native handle, lo
 - Packed data contains no live source node, instance-bound factory, arbitrary object graph, `SceneTree`, or event delegate.
 - Factories must be static and source-independent and must create a fresh default node of the exact captured type. Their execution context cannot construct a new `SceneTree` or enter an existing one; source and previously issued identities are rejected.
 - Only root-owned descendant branches are present. Parent order, sibling order, owner paths, persistent groups, and typed stored values are deterministic.
-- Reference-free values such as [`Color`](../classes/Color.md) and [`Rect2`](../classes/Rect2.md) are captured and restored directly, including HDR or negative components, without conversion to strings or a universal container.
+- Reference-free values such as [`Color`](../classes/Color.md), [`Rect2`](../classes/Rect2.md), and [`Transform2D`](../classes/Transform2D.md) are captured and restored directly, including HDR, negative, or affine components, without conversion to strings or a universal container.
 - Capture blocks node mutation/disposal/deletion for the complete source hierarchy. Derived stored-property setters must call `Node.EnsureMutable()`.
 - Instance reconstruction starts and ends detached. An unfinished node cannot be disposed or enter a `SceneTree`, either as its root or as a child of an active node. Linear-time topology validation detects attachment to an unrelated detached hierarchy, and rollback removes the escaped node.
 - Scene-local duplication preserves graph identity. External non-local resources remain shared; created duplicates are owned and disposed by the returned root.
@@ -67,10 +67,11 @@ Implemented and covered locally: in-memory owned-branch capture, storage-enabled
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` exercises positive capture/metadata/instantiation, pruned branches, stored state and groups including HDR `Color` and `Rect2` values, source disposal, repeated local resource graphs, live-state/path races, copy/reset/failure state, invalid edit states, capturing/source-returning/wrong-type/reused factories, capture mutation, setup cleanup, detached-parent and active-tree escape rollback, and final-state survival. Full verification also includes format, Release build, generated XML, link/inventory checks, and the repository-wide executable harness.
+`tests/Electron2D.Tests/Program.cs` exercises positive capture/metadata/instantiation, pruned branches, stored state and groups including HDR `Color`, `Rect2`, and `Transform2D` values, source disposal, repeated local resource graphs, live-state/path races, copy/reset/failure state, invalid edit states, capturing/source-returning/wrong-type/reused factories, capture mutation, setup cleanup, detached-parent and active-tree escape rollback, and final-state survival. Full verification also includes format, Release build, generated XML, link/inventory checks, and the repository-wide executable harness.
 
 ## Decision
 
 - [0023: Typed in-memory packed scenes](../decisions/0023-typed-packed-scenes.md)
 - [0024: Typed color values and portable quantization](../decisions/0024-typed-color-values.md)
 - [0025: Typed axis-aligned rectangle geometry](../decisions/0025-typed-rectangle-geometry.md)
+- [0029: Typed Transform2D value and affine semantics](../decisions/0029-typed-transform2d-value.md)

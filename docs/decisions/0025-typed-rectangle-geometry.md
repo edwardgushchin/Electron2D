@@ -28,7 +28,7 @@ The following contracts are fixed:
 - numeric formatting is invariant-culture;
 - `ConfigFile` accepts only finite rectangles and persists exactly nested `Position.X/Y` and `Size.X/Y` fields, rejecting missing, duplicate, unknown, nonnumeric, or non-finite input;
 - typed property descriptors and packed scenes store/copy `Rect2` directly because it contains no managed references;
-- a `Rect2I` constructor and transform multiplication are deferred until those complete engine types exist;
+- a `Rect2I` constructor is deferred until that complete engine type exists; transform multiplication remains deferred to the explicit Node/Rect2 migration recorded by ADR 0026 and ADR 0029;
 - language-specific boolean truth conversion is permanently excluded.
 
 No renderer, UI, physics, or platform abstraction is created by this decision.
@@ -39,7 +39,7 @@ No renderer, UI, physics, or platform abstraction is created by this decision.
 - Existing `Vector2` transforms and positions interoperate directly with rectangle positions, sizes, centers, support points, and query points.
 - Negative sizes remain representable and observable; callers must decide when normalization is appropriate.
 - Configuration persistence rejects non-finite values even though ordinary runtime geometry retains them.
-- Future `Rect2I` and standalone `Transform2D` implementations must add and verify the deferred members rather than retrofitting unrelated .NET types.
+- A future `Rect2I` implementation and the pending migration to the now-implemented standalone `Transform2D` must add and verify the deferred rectangle members rather than retrofitting unrelated .NET types.
 - Sequential layout is useful for predictable managed storage but does not promise native backend ABI equivalence.
 
 ## Rejected alternatives
@@ -48,7 +48,7 @@ No renderer, UI, physics, or platform abstraction is created by this decision.
 - **Create a custom `Vector2`:** rejected because `System.Numerics.Vector2` already supplies the required portable value contract and is established throughout the repository.
 - **Use `System.Drawing.RectangleF`:** rejected because its API/semantics differ and the dependency is inappropriate for the runtime target matrix.
 - **Normalize on every construction:** rejected because it destroys intentional negative-size values and diverges from the audited contract.
-- **Add placeholder `Rect2I` or `Transform2D` types:** rejected because empty compatibility shells would violate the repository definition of done. ADR 0026 requires a real standalone `Transform2D` vertical slice.
+- **Add placeholder `Rect2I` or `Transform2D` types:** rejected because empty compatibility shells would violate the repository definition of done. ADR 0026 required a real standalone `Transform2D` vertical slice, now fulfilled by ADR 0029.
 - **Serialize every public property automatically:** rejected because computed `End` and `Area` would create a redundant, unstable, ambiguous schema.
 
 ## Verification
@@ -60,3 +60,4 @@ Verification is currently Linux/.NET 8. Native structure equivalence, renderer/p
 ## Related decision
 
 - [0026: Separate Transform2D type](0026-separate-transform2d-type.md)
+- [0029: Typed Transform2D value and affine semantics](0029-typed-transform2d-value.md)

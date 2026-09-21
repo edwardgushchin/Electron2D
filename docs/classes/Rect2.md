@@ -70,7 +70,7 @@ Construction, geometry, comparison, and hashing are value-only and allocate no m
 
 The public type depends on `System.Numerics.Vector2`, [`Side`](Side.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores only finite rectangles using the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect2` directly as a reference-free value.
 
-There is no dependency on Scene, rendering, SDL, input, audio, physics, resources, scripting, or an editor. A constructor from `Rect2I` and transform multiplication are dependency-blocked until complete `Rect2I` and [`Transform2D`](../decisions/0026-separate-transform2d-type.md) types exist; neither is represented by an unrelated framework type or compatibility stub. Language-specific boolean truth conversion is permanently excluded from the typed C# surface.
+There is no dependency on Scene, rendering, SDL, input, audio, physics, resources, scripting, or an editor. A constructor from `Rect2I` is dependency-blocked until that complete type exists. Multiplication by the implemented [`Transform2D`](Transform2D.md) remains deliberately deferred to the explicit Node/Rect2 migration slice under ADR 0026 and ADR 0029 rather than being introduced as an isolated compatibility operator. Language-specific boolean truth conversion is permanently excluded from the typed C# surface.
 
 ## Verification and known limitations
 
@@ -85,3 +85,4 @@ Execution is currently verified on Linux/.NET 8. Native backend interop and the 
 - [0017: Source-tree module layout](../decisions/0017-source-tree-layout.md)
 - [0025: Typed axis-aligned rectangle geometry](../decisions/0025-typed-rectangle-geometry.md)
 - [0026: Separate Transform2D type](../decisions/0026-separate-transform2d-type.md)
+- [0029: Typed Transform2D value and affine semantics](../decisions/0029-typed-transform2d-value.md)

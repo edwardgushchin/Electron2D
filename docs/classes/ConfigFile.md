@@ -12,7 +12,7 @@ Last updated: 2026-09-21
 
 ## Responsibility and ownership
 
-`ConfigFile` owns one in-memory, insertion-ordered, case-sensitive configuration document. Values are addressed only through [`ConfigKey<T>`](ConfigKey.Generic.md) and are stored immediately as independent compact JSON snapshots. It owns no live object references and exposes no universal value container. [`Color`](Color.md) uses a stable exact `R/G/B/A` schema, and [`Rect2`](Rect2.md) uses stable nested `Position.X/Y` and `Size.X/Y`, rather than incidental public-member serialization.
+`ConfigFile` owns one in-memory, insertion-ordered, case-sensitive configuration document. Values are addressed only through [`ConfigKey<T>`](ConfigKey.Generic.md) and are stored immediately as independent compact JSON snapshots. It owns no live object references and exposes no universal value container. [`Color`](Color.md) uses a stable exact `R/G/B/A` schema, [`Rect2`](Rect2.md) uses stable nested `Position.X/Y` and `Size.X/Y`, and [`Transform2D`](Transform2D.md) uses stable nested `X`, `Y`, and `Origin` vectors rather than incidental public-member serialization.
 
 The text format is section-oriented. Sectionless assignments precede named sections, named headers use `[section]`, assignments use `key=json`, and unsafe identifiers are JSON-quoted. Blank lines and full comment lines beginning with `;` are accepted. Comments are not retained when encoding.
 
@@ -78,6 +78,7 @@ Disposal clears all sections and entries, then completes inherited deterministic
 - Serializer failures during `SetValue` occur before mutation.
 - Color serialization accepts only finite components and always writes `R`, `G`, `B`, and `A` in that order. Typed decoding rejects missing, duplicate, unknown, nonnumeric, or non-finite fields as `InvalidDataException` without changing the stored token.
 - Rectangle serialization accepts only finite position and size components and writes `Position` then `Size`, each with `X` then `Y`. Typed decoding rejects missing, duplicate, unknown, nonnumeric, or non-finite fields as `InvalidDataException`; computed `End` and `Area` are excluded.
+- Transform serialization accepts only finite basis and origin components and writes `X`, `Y`, then `Origin`, each with coordinate fields `X` then `Y`. Typed decoding rejects missing, duplicate, unknown, nonnumeric, or non-finite fields as `InvalidDataException`.
 - File/path/permission errors use standard `System.IO` exceptions.
 - The class does not translate failures into a separate numeric error enum.
 
@@ -91,7 +92,7 @@ The class depends on `ElectronObject`, `System.Text.Json`, UTF-8/file primitives
 
 ## Verification and known limitations
 
-`tests/Electron2D.Tests/Program.cs` verifies defaults, parameter/type rejection, scalar/vector/collection/color round trips, the exact finite color schema and malformed-field failures, copy isolation, missing/default/try-get behavior, insertion order, null deletion, section cleanup, incompatible types, failed serialization rollback, comments/BOM/quoted identifiers, stable encoding, transactional parse failure, concurrent writes and disposal, strict UTF-8, merge behavior, atomic overwrite, temporary cleanup, raw-key and password encryption, random salt/nonce behavior, wrong keys/passwords/modes, tampering, malformed envelopes, and access after disposal.
+`tests/Electron2D.Tests/Program.cs` verifies defaults, parameter/type rejection, scalar/vector/collection/color/rectangle/transform round trips, exact finite schemas and malformed-field failures, copy isolation, missing/default/try-get behavior, insertion order, null deletion, section cleanup, incompatible types, failed serialization rollback, comments/BOM/quoted identifiers, stable encoding, transactional parse failure, concurrent writes and disposal, strict UTF-8, merge behavior, atomic overwrite, temporary cleanup, raw-key and password encryption, random salt/nonce behavior, wrong keys/passwords/modes, tampering, malformed envelopes, and access after disposal.
 
 There is no comment preservation, direct virtual path resolution, asynchronous or streaming I/O, external binary-envelope compatibility, or custom public serializer registry. Feature overrides and virtual paths belong to `ProjectSettings`. JSON models must be supported by the built-in serializer and should be stable data contracts rather than live engine types.
 
@@ -100,3 +101,4 @@ There is no comment preservation, direct virtual path resolution, asynchronous o
 - [0018: Typed configuration files](../decisions/0018-typed-config-files.md)
 - [0024: Typed color values and portable quantization](../decisions/0024-typed-color-values.md)
 - [0025: Typed axis-aligned rectangle geometry](../decisions/0025-typed-rectangle-geometry.md)
+- [0029: Typed Transform2D value and affine semantics](../decisions/0029-typed-transform2d-value.md)

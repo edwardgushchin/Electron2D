@@ -15,7 +15,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Target framework: .NET 8 (`net8.0`).
 - Implemented domains: Core, Scene, Localization, and Resources.
 - Implemented components: Object lifecycle, typed event connections, typed editor properties, color values, geometry values, configuration files, file and directory access, project settings, main loop, engine runtime, unified 2D node, scene tree, packed scenes, translation, and the resource base.
-- Implemented production types: `ElectronObject`, `EventConnection`, `PropertyDescriptor`, `PropertyDescriptor<TOwner, TValue>`, `Color`, `Colors`, `Rect2`, `Side`, `ConfigKey<T>`, `ConfigFile`, `FileAccess`, `DirAccess`, `FileAccessMode`, `FileCompressionMode`, `UnixPermissionFlags`, `ProjectSetting<T>`, `ProjectSettings`, `MainLoop`, `Engine`, `EngineVersionInfo`, `Node`, `NodeProcessMode`, `SceneTree`, `SceneTreeTimer`, `GroupCallFlags`, `PackedScene`, `SceneState`, `PackedSceneEditState`, `TranslationServer`, `Resource`, and `DeepDuplicateMode`.
+- Implemented production types: `ElectronObject`, `EventConnection`, `PropertyDescriptor`, `PropertyDescriptor<TOwner, TValue>`, `Color`, `Colors`, `Rect2`, `Transform2D`, `Side`, `ConfigKey<T>`, `ConfigFile`, `FileAccess`, `DirAccess`, `FileAccessMode`, `FileCompressionMode`, `UnixPermissionFlags`, `ProjectSetting<T>`, `ProjectSettings`, `MainLoop`, `Engine`, `EngineVersionInfo`, `Node`, `NodeProcessMode`, `SceneTree`, `SceneTreeTimer`, `GroupCallFlags`, `PackedScene`, `SceneState`, `PackedSceneEditState`, `TranslationServer`, `Resource`, and `DeepDuplicateMode`.
 - SDL3-CS integration: not implemented.
 - Native SDL packaging: not designed or verified yet.
 - Platform delivery status: the current `net8.0` project and executable harness are verified on Linux. There is no five-platform CI matrix, SDL application host, Android package, iOS bundle, signing workflow, or native-device verification for all targets yet.
@@ -24,7 +24,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Managed memory remains runtime-owned; `IDisposable` controls deterministic logical/native cleanup. Public manual reference counting is excluded, while internal asset leases are reserved for a future resource manager with concrete native-backed assets.
 - Floating-point RGBA values, HSV and perceptual OKHSL conversion, straight-alpha blend, arithmetic/comparison, packed/HTML formats, strict finite configuration serialization, packed-scene value storage, and all 146 standard named colors: implemented without a renderer dependency.
 - Floating-point axis-aligned rectangles with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge/support operations, strict finite configuration serialization, packed-scene storage, and stable side identities: implemented without renderer, UI, or physics dependencies.
-- A separate engine-owned `Transform2D` foundational type is required by ADR 0026 but is not implemented. `Node` truthfully retains its current `Matrix3x2` API until a complete transform slice and migration are delivered; `Rect2` transform operators are deferred to that dependency.
+- The engine-owned `Transform2D` foundational type is implemented with complete independent affine math, strict finite configuration persistence, direct packed-scene storage, and allocation-free numeric hot paths. `Node` truthfully retains its current `Matrix3x2` API and `Rect2` transform operators remain absent until their explicit migration slice.
 - Process-wide typed project settings, feature overrides, directory-backed `res://`/`user://`, blocking typed file access with metadata/hashes/temporary files/cross-platform extended attributes/compression/authenticated encryption, scoped directory navigation/listing/mutations/links/temporary ownership/filesystem identity, host-driven bounded fixed-step scheduling, time scaling, frame metrics, named engine singletons, typed sectioned configuration files with atomic persistence and authenticated encryption, unified 2D nodes, local/global transforms, hierarchy paths and groups, visibility and Z state, pause-aware process/physics callbacks, exception-safe scene-tree lifecycle, typed group operations, one-shot frame timers, queued deletion, typed deferred work and event connections, in-memory typed packed scenes with per-instance local resources, translations, notifications including the future-facing `ScriptChanged` hook, typed editor-property descriptors, and the typed resource base with graph duplication: implemented.
 - Rendering, SDL integration, input, audio, collision/rigid-body physics, concrete assets, asset loading/saving, scene file serialization, and an editor application: not implemented.
 - The editor source root is reserved in this repository, but no editor project or source exists yet. Its future assembly is a consumer of `Electron2D.dll` and is not part of the one-runtime-DLL boundary.
@@ -60,6 +60,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Struct: [Color](classes/Color.md)
 - Static class: [Colors](classes/Colors.md)
 - Struct: [Rect2](classes/Rect2.md)
+- Struct: [Transform2D](classes/Transform2D.md)
 - Enum: [Side](classes/Side.md)
 - Class: [ConfigKey&lt;T&gt;](classes/ConfigKey.Generic.md)
 - Class: [ConfigFile](classes/ConfigFile.md)
@@ -113,5 +114,6 @@ This directory describes the engine as it exists now. Planned features are liste
   - [0026: Separate Transform2D foundational type](decisions/0026-separate-transform2d-type.md)
   - [0027: Self-hosted editor and game project boundary](decisions/0027-self-hosted-editor-and-games.md)
   - [0028: GPU-first 2D rendering, shaders, and SDL_Renderer fallback](decisions/0028-gpu-primary-renderer-fallback.md)
+  - [0029: Typed Transform2D value and affine semantics](decisions/0029-typed-transform2d-value.md)
 
 The maintenance rules for this documentation are mandatory and live in the repository root [AGENTS.md](../AGENTS.md).

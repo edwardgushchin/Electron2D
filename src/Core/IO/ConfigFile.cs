@@ -74,7 +74,7 @@ public sealed class ConfigFile : ElectronObject
         IncludeFields = true,
         PropertyNameCaseInsensitive = false,
         WriteIndented = false,
-        Converters = { new ColorJsonConverter(), new Rect2JsonConverter() }
+        Converters = { new ColorJsonConverter(), new Rect2JsonConverter(), new Transform2DJsonConverter() }
     };
 
     private static ReadOnlySpan<byte> EncryptionMagic => "E2DCFG"u8;
@@ -1138,9 +1138,9 @@ internal sealed class Rect2JsonConverter : JsonConverter<Rect2>
 
             fields |= field;
             if (field == Position)
-                position = ReadVector(ref reader, propertyName!);
+                position = Vector2JsonFields.Read(ref reader, "Rectangle", propertyName!);
             else
-                size = ReadVector(ref reader, propertyName!);
+                size = Vector2JsonFields.Read(ref reader, "Rectangle", propertyName!);
         }
 
         if (reader.TokenType != JsonTokenType.EndObject)
@@ -1157,15 +1157,80 @@ internal sealed class Rect2JsonConverter : JsonConverter<Rect2>
             throw new JsonException("Configuration rectangles require finite components.");
 
         writer.WriteStartObject();
-        WriteVector(writer, nameof(Rect2.Position), value.Position);
-        WriteVector(writer, nameof(Rect2.Size), value.Size);
+        Vector2JsonFields.Write(writer, nameof(Rect2.Position), value.Position);
+        Vector2JsonFields.Write(writer, nameof(Rect2.Size), value.Size);
         writer.WriteEndObject();
     }
+}
 
-    private static Vector2 ReadVector(ref Utf8JsonReader reader, string fieldName)
+internal sealed class Transform2DJsonConverter : JsonConverter<Transform2D>
+{
+    private const int XAxis = 1;
+    private const int YAxis = 2;
+    private const int Origin = 4;
+    private const int Complete = XAxis | YAxis | Origin;
+
+    public override Transform2D Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
-            throw new JsonException($"Rectangle field '{fieldName}' must be a vector object.");
+            throw new JsonException("A transform must be a JSON object.");
+
+        var transform = default(Transform2D);
+        var fields = 0;
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
+        {
+            if (reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException("A transform contains an invalid JSON token.");
+
+            var propertyName = reader.GetString();
+            var field = propertyName switch
+            {
+                nameof(Transform2D.X) => XAxis,
+                nameof(Transform2D.Y) => YAxis,
+                nameof(Transform2D.Origin) => Origin,
+                _ => throw new JsonException($"A transform contains unknown field '{propertyName}'."),
+            };
+            if ((fields & field) != 0)
+                throw new JsonException($"A transform contains duplicate field '{propertyName}'.");
+            if (!reader.Read())
+                throw new JsonException($"Transform field '{propertyName}' is incomplete.");
+
+            fields |= field;
+            transform[field switch
+            {
+                XAxis => 0,
+                YAxis => 1,
+                _ => 2,
+            }] = Vector2JsonFields.Read(ref reader, "Transform", propertyName!);
+        }
+
+        if (reader.TokenType != JsonTokenType.EndObject)
+            throw new JsonException("A transform JSON object is incomplete.");
+        if (fields != Complete)
+            throw new JsonException("A transform must contain exactly X, Y, and Origin fields.");
+
+        return transform;
+    }
+
+    public override void Write(Utf8JsonWriter writer, Transform2D value, JsonSerializerOptions options)
+    {
+        if (!value.IsFinite())
+            throw new JsonException("Configuration transforms require finite components.");
+
+        writer.WriteStartObject();
+        Vector2JsonFields.Write(writer, nameof(Transform2D.X), value.X);
+        Vector2JsonFields.Write(writer, nameof(Transform2D.Y), value.Y);
+        Vector2JsonFields.Write(writer, nameof(Transform2D.Origin), value.Origin);
+        writer.WriteEndObject();
+    }
+}
+
+internal static class Vector2JsonFields
+{
+    internal static Vector2 Read(ref Utf8JsonReader reader, string valueName, string fieldName)
+    {
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException($"{valueName} field '{fieldName}' must be a vector object.");
 
         const int xField = 1;
         const int yField = 2;
@@ -1174,19 +1239,19 @@ internal sealed class Rect2JsonConverter : JsonConverter<Rect2>
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
         {
             if (reader.TokenType != JsonTokenType.PropertyName)
-                throw new JsonException($"Rectangle field '{fieldName}' contains an invalid JSON token.");
+                throw new JsonException($"{valueName} field '{fieldName}' contains an invalid JSON token.");
 
             var componentName = reader.GetString();
             var component = componentName switch
             {
                 nameof(Vector2.X) => xField,
                 nameof(Vector2.Y) => yField,
-                _ => throw new JsonException($"Rectangle field '{fieldName}' contains unknown component '{componentName}'."),
+                _ => throw new JsonException($"{valueName} field '{fieldName}' contains unknown component '{componentName}'."),
             };
             if ((fields & component) != 0)
-                throw new JsonException($"Rectangle field '{fieldName}' contains duplicate component '{componentName}'.");
+                throw new JsonException($"{valueName} field '{fieldName}' contains duplicate component '{componentName}'.");
             if (!reader.Read() || reader.TokenType != JsonTokenType.Number || !reader.TryGetSingle(out var number) || !float.IsFinite(number))
-                throw new JsonException($"Rectangle component '{fieldName}.{componentName}' must be a finite number.");
+                throw new JsonException($"{valueName} component '{fieldName}.{componentName}' must be a finite number.");
 
             fields |= component;
             if (component == xField)
@@ -1196,14 +1261,14 @@ internal sealed class Rect2JsonConverter : JsonConverter<Rect2>
         }
 
         if (reader.TokenType != JsonTokenType.EndObject)
-            throw new JsonException($"Rectangle field '{fieldName}' is incomplete.");
+            throw new JsonException($"{valueName} field '{fieldName}' is incomplete.");
         if (fields != (xField | yField))
-            throw new JsonException($"Rectangle field '{fieldName}' must contain exactly X and Y components.");
+            throw new JsonException($"{valueName} field '{fieldName}' must contain exactly X and Y components.");
 
         return value;
     }
 
-    private static void WriteVector(Utf8JsonWriter writer, string propertyName, Vector2 value)
+    internal static void Write(Utf8JsonWriter writer, string propertyName, Vector2 value)
     {
         writer.WriteStartObject(propertyName);
         writer.WriteNumber(nameof(Vector2.X), value.X);
