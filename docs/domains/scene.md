@@ -1,10 +1,10 @@
 # Scene domain
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Responsibility
 
-Scene owns Electron2D's primary Node-based game-object model, reusable typed in-memory scenes, and the active [`MainLoop`](../classes/MainLoop.md) implementation that delivers lifecycle, frame, pause, deferred-work, and deletion phases. A game object, composed subsystem, or complete world is represented by a Node hierarchy; the same hierarchy can be packed and instantiated for reuse. It is a 2D-only runtime domain for Linux, Windows, macOS, Android, and iOS and compiles into the single `Electron2D.dll` assembly.
+Scene owns Electron2D's primary Node-based game-object model, reusable typed in-memory scenes, and the active [`MainLoop`](../classes/MainLoop.md) implementation that delivers lifecycle, frame, pause, deferred-work, and deletion phases. A game object, composed subsystem, or complete world is represented by a Node hierarchy; the same hierarchy can be packed and instantiated for reuse. It is a 2D-only runtime domain for Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web and compiles into the single `Electron2D.dll` assembly.
 
 Its production sources live under `src/Scene/Main/`, `src/Scene/Animation/`, and `src/Scene/Resources/`, matching their engine-module ownership without changing the flat public `Electron2D` namespace.
 
@@ -74,7 +74,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - Packed scenes are in-memory only. Nested/inherited scene authoring, placeholders, editable instances, persistent event endpoint storage, node-reference remapping, UID/import integration, and every editor edit mode remain absent.
 - Paths are typed as `string`, not a separate `NodePath`; groups are strings; wildcard search covers names with `*` and `?`.
 - A detached node may remember `QueueFree`, but deletion occurs only after attachment to a tree and a flush/frame boundary.
-- There is no five-platform host/package/test matrix; current executable verification is Linux-only.
+- There is no six-target host/package/test matrix; current executable verification is Linux-only.
 
 ## Verification
 
@@ -93,7 +93,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - [0015: Main-loop lifecycle and host boundary](../decisions/core-object-runtime.md#adr-0015)
 - [0016: Process-wide Engine runtime and host-driven scheduling](../decisions/core-object-runtime.md#adr-0016)
 - [0017: Source-tree module layout](../decisions/product.md#adr-0017)
-- [0021: Cross-platform runtime target matrix](../decisions/product.md#adr-0021)
+- [0021: Runtime and editor target platforms](../decisions/product.md#adr-0021)
 - [0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
 - [0026: Separate Transform foundational type](../decisions/core-math.md#adr-0026)
 - [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)

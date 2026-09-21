@@ -1,6 +1,6 @@
 # Geometry values component
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Scope
 
@@ -64,7 +64,7 @@ Implemented and verified. `Rect`, `Transform`, and `Node` use the engine-owned `
 
 The executable harness covers every method/operator family, layouts and constants, index failures, interpolation, strict `Mathf.Epsilon` migration boundaries, NaN/infinity/signed-zero behavior, integer wrap/overflow/zero division, conversion boundaries, axis ties, floating-point and integer rectangle boundaries, affine order/inversion/decomposition, Node integration, strict malformed persistence, packed-scene value copying, invariant formatting, and warmed allocation behavior.
 
-Execution is verified on Linux/.NET 8 only. Native ABI and the Linux/Windows/macOS/Android/iOS build and host matrix remain unverified.
+Execution is verified on Linux/.NET 8 only. Native ABI and the Windows/macOS/Linux (X11/Wayland)/Android/iOS/Web build and host matrix remain unverified.
 
 ## Decisions
 

@@ -1,10 +1,10 @@
 # Electron2D architectural decision index
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
-This file routes architecture work to bounded domain decision logs. Do not load every log by default: read this index, the affected log, and only cross-domain logs explicitly referenced by relevant ADRs. Current-state class, component, and domain documents remain authoritative for implemented behavior.
+This file routes architecture work to bounded domain decision documents. Read this index, the affected document, and only cross-domain documents explicitly referenced by relevant ADRs. Class, component, and domain documents remain authoritative for implemented behavior.
 
-| Decision domain | Canonical log | ADRs |
+| Decision domain | Canonical document | ADRs |
 | --- | --- | --- |
 | Product architecture | [product.md](product.md) | 0001, 0002, 0004, 0012, 0017, 0021, 0027, 0030 |
 | Core object and runtime | [core-object-runtime.md](core-object-runtime.md) | 0003, 0005, 0009, 0010, 0015, 0016 |
@@ -16,4 +16,4 @@ This file routes architecture work to bounded domain decision logs. Do not load 
 | Rendering | [rendering.md](rendering.md) | 0028 |
 | Input | [input.md](input.md) | 0038 |
 
-ADR numbers and anchors are permanent. Add a new record to the narrowest owning log, update this table, and split a log by cohesive subdomain before it exceeds 500 lines. See [ADR 0030](product.md#adr-0030).
+These documents contain current decisions, not an append-only history. Revise an active ADR in place, remove obsolete records, keep the anchors of retained ADRs stable, and update this table. Add a new record only for a distinct decision; split a document by cohesive subdomain before it exceeds 500 lines. See [ADR 0030](product.md#adr-0030).

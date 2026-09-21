@@ -1,10 +1,10 @@
 # Localization domain
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Responsibility
 
-Localization owns process-wide translation catalogs, UI culture selection, domain/context lookup, parent-culture fallback, and caller-supplied plural selection for the Linux, Windows, macOS, Android, and iOS runtime targets.
+Localization owns process-wide translation catalogs, UI culture selection, domain/context lookup, parent-culture fallback, and caller-supplied plural selection for the Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web runtime targets.
 
 Its production source lives under `src/Core/String/`, matching its low-level engine module while the living architecture retains Localization as a separate logical domain. The public namespace remains `Electron2D`.
 
@@ -41,7 +41,7 @@ The production type is [`TranslationServer`](../classes/TranslationServer.md). `
 - No `.po`, `.mo`, `.resx`, JSON, or binary catalog loader.
 - No locale discovery, pseudo-localization, formatting, interpolation, or bidirectional-text handling.
 - No built-in CLDR plural-rule database; registration supplies the selector.
-- No native locale-discovery or five-platform localization verification exists yet.
+- No native locale-discovery or six-target localization verification exists yet.
 
 ## Verification
 
@@ -52,4 +52,4 @@ The production type is [`TranslationServer`](../classes/TranslationServer.md). `
 - [0001: Typed C# without Variant](../decisions/product.md#adr-0001)
 - [0007: Typed localization](../decisions/localization.md#adr-0007)
 - [0017: Source-tree module layout](../decisions/product.md#adr-0017)
-- [0021: Cross-platform runtime target matrix](../decisions/product.md#adr-0021)
+- [0021: Runtime and editor target platforms](../decisions/product.md#adr-0021)

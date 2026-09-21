@@ -1,25 +1,25 @@
 # Electron2D documentation
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 This directory describes the engine as it exists now. Planned features are listed only as explicit limitations or next boundaries; they are never presented as implemented.
 
 ## Current snapshot
 
 - Product boundary: exclusively 2D; 3D is out of scope.
-- Runtime target matrix: Linux, Windows, macOS, Android, and iOS. This is the required product boundary, not a claim of completed native delivery on every target.
+- Game runtime target matrix: Windows, macOS, Linux on X11 and Wayland, Android, iOS, and Web. Editor target matrix: Windows, macOS, and Linux on X11 and Wayland. These are product boundaries, not claims of completed delivery.
 - Game-object model: Node-based and scene-oriented. `Node` is the primary public game object, `SceneTree` owns the active hierarchy, and `PackedScene` packages any reusable Node hierarchy—from one composed object to a complete level—for independent instantiation. The current packing implementation is typed and in-memory; disk and editor workflows are not implemented.
 - Public engine assembly: one managed `Electron2D.dll` class library. Accepted runtime dependencies may ship as separate assemblies; the current build has none.
 - Product source boundary: runtime engine code lives in `src/`; the future self-hosted editor belongs to a separate executable project under `editor/Electron2D.Editor/`; first-party example games and templates belong under `examples/<Game>/`. Editor and games depend on the public runtime API, never the reverse.
 - Production source root: `src/`, organized by engine module while retaining the flat public `Electron2D` namespace.
-- Architecture context: `decisions/index.md` routes to bounded domain logs; read only the affected logs and explicit cross-domain dependencies. No decision log may exceed 500 lines.
+- Architecture context: `decisions/index.md` routes to bounded domain decision documents; read only the affected documents and explicit cross-domain dependencies. No decision document may exceed 500 lines.
 - Target framework: .NET 8 (`net8.0`).
 - Implemented domains: Core, Input, Scene, Localization, and Resources.
 - Implemented components: Object lifecycle, typed event connections, typed editor properties, scalar math, color values, geometry values, configuration files, file and directory access, project settings, main loop, engine runtime, input runtime, unified 2D node, scene tree, tweening, packed scenes, translation, the resource base, and managed images.
 - Implemented production types: `ElectronObject`, `EventConnection`, `PropertyDescriptor`, `PropertyDescriptor<TOwner, TValue>`, `Mathf`, `Color`, `Colors`, `Vector2`, `Vector2I`, `Vector4`, `Vector4I`, `Rect`, `RectI`, `Transform`, `Side`, `ClockDirection`, `ConfigKey<T>`, `ConfigFile`, `FileAccess`, `DirAccess`, `FileAccessMode`, `FileCompressionMode`, `UnixPermissionFlags`, `ProjectSetting<T>`, `ProjectSettings`, `MainLoop`, `Engine`, `EngineVersionInfo`, `Input`, `InputMap`, the typed `InputEvent` hierarchy, `Key`, `KeyModifierMask`, `KeyLocation`, `MouseButton`, `MouseButtonMask`, `JoyAxis`, `JoyButton`, `Node`, `NodeProcessMode`, `SceneTree`, `Timer`, `TimerProcessCallback`, `SceneTreeTimer`, `GroupCallFlags`, `Tween`, `Tween.TweenProcessMode`, `Tween.TweenPauseMode`, `Tween.TransitionType`, `Tween.EaseType`, `Tweener`, `PropertyTweener<TValue>`, `MethodTweener<TValue>`, `CallbackTweener`, `IntervalTweener`, `SubtweenTweener`, `AwaitTweener`, `PackedScene`, `SceneState`, `PackedSceneEditState`, `TranslationServer`, `Resource`, `DeepDuplicateMode`, `Image`, `Image.Format`, `Image.Interpolation`, `Image.AlphaMode`, `Image.UsedChannels`, `Image.CompressSource`, `Image.CompressMode`, `Image.AstcFormat`, and `ImageMetrics`.
 - SDL3-CS integration: not implemented.
 - Native SDL packaging: not designed or verified yet.
-- Platform delivery status: the current `net8.0` project and executable harness are verified on Linux. There is no five-platform CI matrix, SDL application host, Android package, iOS bundle, signing workflow, or native-device verification for all targets yet.
+- Platform delivery status: the current `net8.0` project and executable harness are verified on Linux only, without separate X11/Wayland acceptance. There is no six-target CI matrix, Web browser host/build, complete SDL application host, Android package, iOS bundle, editor executable, signing workflow, or native/browser verification for all targets yet.
 - 2D physics backend: `Box2D.NET` is selected as a future external managed dependency, but neither its package nor a physics domain is integrated yet.
 - Rendering architecture: the SDL3 GPU API is selected as the primary future backend with 2D shader support; SDL_Renderer is the reduced-capability fallback for baseline 2D drawing. The public API will expose backend capabilities and reject unsupported shader use explicitly. No rendering or shader code is implemented yet.
 - Managed memory remains runtime-owned; `IDisposable` controls deterministic logical/native cleanup. Public manual reference counting is excluded, while internal asset leases are reserved for a future resource manager with concrete native-backed assets.

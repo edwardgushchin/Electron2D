@@ -1,6 +1,6 @@
 # Electron2D core configuration, data, and i/o decisions
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 This bounded log owns the complete architectural records for core configuration, data, and i/o. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -221,7 +221,7 @@ The executable harness verifies the implemented API on Linux, including native x
 <a id="adr-0022"></a>
 ## ADR 0022: Typed directory access and scoped filesystem mutation
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ### Status
 
@@ -282,4 +282,4 @@ The executable harness verifies ordinary and virtual scope behavior, listing sta
 - [0014: Managed Resource lifetime and realtime allocation](resources.md#adr-0014)
 - [0019: Typed project settings and directory-backed virtual paths](core-data-io.md#adr-0019)
 - [0020: Typed file access and transformed-file containers](core-data-io.md#adr-0020)
-- [0021: Cross-platform runtime target matrix](product.md#adr-0021)
+- [0021: Runtime and editor target platforms](product.md#adr-0021)

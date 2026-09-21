@@ -1,6 +1,6 @@
 # Images component
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Scope
 
@@ -60,14 +60,14 @@ File/buffer codecs, saving, GPU compression/decompression, texture upload, impor
 
 `tests/Electron2D.Tests/Program.cs` covers format and block sizes, mip offsets, copy isolation, invalid dimensions/data, every processing family and interpolation mode, clipping/masking, normal/HDR helpers, typed metrics, observer failures, duplication, descriptors, and disposal. Release build and generated XML checks are part of the full gate.
 
-Current execution is Linux/.NET 8 only. No codec, GPU, visual-quality, memory-pressure, AOT, or five-platform claim follows from these checks.
+Current execution is Linux/.NET 8 only. No codec, GPU, visual-quality, memory-pressure, AOT, or six-target claim follows from these checks.
 
 ## Decisions
 
 - [0001: Typed C# without Variant](../decisions/product.md#adr-0001)
 - [0013: Managed typed Resource contract](../decisions/resources.md#adr-0013)
 - [0014: Managed Resource lifetime and realtime allocation](../decisions/resources.md#adr-0014)
-- [0021: Cross-platform runtime target matrix](../decisions/product.md#adr-0021)
+- [0021: Runtime and editor target platforms](../decisions/product.md#adr-0021)
 - [0024: Typed color values](../decisions/core-math.md#adr-0024)
 - [0035: Foreseeable type-family completeness](../decisions/core-math.md#adr-0035)
 - [0039: Managed image buffers and codec boundaries](../decisions/resources.md#adr-0039)

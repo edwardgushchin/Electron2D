@@ -1,12 +1,12 @@
 # Core domain
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Responsibility
 
 Core owns behavior shared by engine objects independently of scene, rendering, audio, physics, asset, or platform backends, plus the MainLoop/Engine integration points used by the separate typed Input domain.
 
-The domain is part of the 2D-only runtime for Linux, Windows, macOS, Android, and iOS and is compiled into the single production assembly `Electron2D.dll`.
+The domain is part of the 2D-only runtime for Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web and is compiled into the single production assembly `Electron2D.dll`.
 
 Its production sources are grouped by upstream module under `src/Core/`: `Config`, `IO`, `Math`, `Object`, `OS`, and `String`. These directories do not alter the flat public `Electron2D` namespace.
 
@@ -72,7 +72,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - Future engine domains may depend on Core.
 - Core must not acquire dependencies on scene, rendering, or other higher-level domains. The accepted MainLoop/Engine-to-Input integration is the narrow exception recorded by ADR 0038; native backends still depend inward rather than reversing ownership.
 - Core must not introduce 3D concepts or require a second production assembly.
-- Core public semantics must remain portable across Linux, Windows, macOS, Android, and iOS; platform-specific work stays behind explicit backend or host boundaries.
+- Core public semantics must remain portable across Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web; platform-specific work stays behind explicit backend or host boundaries.
 
 ## Domain invariants
 
@@ -103,7 +103,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - No script attachment, script runtime, editor application, or general file serialization. Only the typed `ScriptChanged` notification contract exists for the confirmed future scripting component.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers, and persistence requires a typed stable endpoint identity/binding schema.
 - No SDL application host, native system-event translation, permission request API, clock/wait-based maximum-FPS pacing, or exit-code service. `Engine` and `MainLoop` expose implemented integration endpoints without simulating those domains.
-- No five-platform build/package/test matrix, Android host/package, iOS host/bundle, signing pipeline, or complete native-host verification exists yet. Current executable verification is Linux-only.
+- No six-target build/package/test matrix, Android host/package, iOS host/bundle, Web browser host/build/storage integration, signing pipeline, or complete native/browser verification exists yet. Current executable verification is Linux-only and does not separately establish X11 and Wayland behavior.
 - No resource-pack mount, exported/archive-backed virtual filesystem, resource-UID resolver, or platform-pipe backend exists. `FileAccess`, `DirAccess`, and `ProjectSettings` resolve only configured `res://`/`user://` directories; `uid://` and `pipe://` fail explicitly, and `ConfigFile` still accepts only ordinary operating-system paths. FastLZ and Zstandard are not implemented. The macOS and Windows extended-attribute/directory backends are implemented but not verified on native hosts. Android/iOS directory links and drive enumeration await host/storage integration.
 - No renderer draw count, logging-output controls, generated author/license manifest, script backtrace/language registry, movie writer, or editor hints; the Engine coverage inventory records each dependency boundary.
 
@@ -129,7 +129,7 @@ The same harness verifies project-setting registration, value snapshots, validat
 - [0018: Typed configuration files](../decisions/core-data-io.md#adr-0018)
 - [0019: Typed project settings and directory-backed virtual paths](../decisions/core-data-io.md#adr-0019)
 - [0020: Typed file access and transformed-file containers](../decisions/core-data-io.md#adr-0020)
-- [0021: Cross-platform runtime target matrix](../decisions/product.md#adr-0021)
+- [0021: Runtime and editor target platforms](../decisions/product.md#adr-0021)
 - [0022: Typed directory access](../decisions/core-data-io.md#adr-0022)
 - [0024: Typed color values and portable quantization](../decisions/core-math.md#adr-0024)
 - [0025: Typed axis-aligned rectangle geometry](../decisions/core-math.md#adr-0025)

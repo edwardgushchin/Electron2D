@@ -1,6 +1,6 @@
 # FileAccess
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1294,7 +1294,7 @@ All instance state/stream operations are serialized by one private lock. One cal
 
 `tests/Electron2D.Tests/Program.cs` covers invalid paths/modes, all four access modes, truncation/preservation, little/big-endian primitives, half/float/double/real, buffers, strict UTF-8, CR/LF/null lines, CSV/Pascal strings, EOF and seek transitions, resize, cursor preservation on decode failure, close/dispose, static metadata/hashes and missing-file errors, explicit unsupported Linux hidden/read-only attributes, Unix permissions, Linux xattrs, temporary ownership including prefix/extension/read-only mode, three codecs, malformed/mismatched compression, raw/password encryption, wrong keys/passwords/mode confusion, tampering, virtual project paths, concurrent static hashing and compound Pascal writes, and commit failure cleanup.
 
-The checks ran on Linux with its active filesystem. They do not prove the implemented macOS xattr or Windows alternate-stream backends, and no Android/iOS extended-attribute backend or native-host verification is currently claimed. They also do not prove every filesystem's crash durability, very-large-file memory behavior for transformed whole-file access, hostile TOCTOU races, or protection after process compromise. FastLZ, Zstandard, and packed archives remain explicitly unimplemented.
+The checks ran on Linux with its active filesystem. They do not prove the implemented macOS xattr or Windows alternate-stream backends, and no Android/iOS extended-attribute backend or native-host verification is currently claimed. Web browser storage behavior is unimplemented and unverified; its capability boundary belongs to the first Web host slice. These checks also do not prove every filesystem's crash durability, very-large-file memory behavior for transformed whole-file access, hostile TOCTOU races, or protection after process compromise. FastLZ, Zstandard, and packed archives remain explicitly unimplemented.
 
 ## Decisions
 

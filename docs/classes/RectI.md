@@ -1,6 +1,6 @@
 # RectI
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** —
 
@@ -443,7 +443,7 @@ There is no dependency on Scene geometry, rendering, SDL, input, audio, physics,
 
 `tests/Electron2D.Tests/Program.cs` verifies layout and defaults, all four constructors, mutable properties, signed area and overflow, normalization and its minimum-integer failure, enclosure, expansion, center rounding, every growth mode and undefined side, half-open containment, overlap/border/separation behavior, intersection and merge, equality/hashing, both conversions and conversion failures, invariant formatting and failure, strict configuration serialization and malformed fields, packed-scene storage, and zero warmed numeric allocation.
 
-Execution is currently verified on Linux/.NET 8. Native backend interop and the full Linux/Windows/macOS/Android/iOS host matrix remain unverified. Image, atlas, renderer, grid, tile, and UI consumers do not exist yet; the value itself is complete and does not stub those domains.
+Execution is currently verified on Linux/.NET 8. Native backend interop and the full Windows/macOS/Linux (X11/Wayland)/Android/iOS/Web host matrix remain unverified. Image, atlas, renderer, grid, tile, and UI consumers do not exist yet; the value itself is complete and does not stub those domains.
 
 ## Decisions
 

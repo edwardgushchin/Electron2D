@@ -1,6 +1,6 @@
 # Color values component
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Scope
 
@@ -53,7 +53,7 @@ Implemented and verified. The delivered public surface contains the complete typ
 
 ## Verification
 
-The executable harness covers construction, mutation, conversions, primary/interior/saturated-boundary OKHSL fixtures, arithmetic, strict `Mathf.Epsilon` comparison boundaries, exhaustive byte and packing/HTML boundary cases, the complete named-property count and lookup mapping, concurrency, strict JSON persistence, packed-scene value copying, and warmed allocation behavior. Verification is Linux/.NET 8 only; native rendering and five-platform runtime output are not yet testable.
+The executable harness covers construction, mutation, conversions, primary/interior/saturated-boundary OKHSL fixtures, arithmetic, strict `Mathf.Epsilon` comparison boundaries, exhaustive byte and packing/HTML boundary cases, the complete named-property count and lookup mapping, concurrency, strict JSON persistence, packed-scene value copying, and warmed allocation behavior. Verification is Linux/.NET 8 only; native rendering and six-target runtime output are not yet testable.
 
 ## Decisions
 

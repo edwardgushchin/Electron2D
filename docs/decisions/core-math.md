@@ -1,6 +1,6 @@
 # Electron2D core math decisions
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 This bounded log owns the complete architectural records for core math. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -68,7 +68,7 @@ Verification is currently Linux/.NET 8. Renderer/native pixel equivalence and th
 <a id="adr-0025"></a>
 ## ADR 0025: Typed axis-aligned rectangle geometry
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ### Status
 
@@ -123,7 +123,7 @@ No renderer, UI, physics, or platform abstraction is created by this decision.
 
 `tests/Electron2D.Tests/Program.cs` covers layout/defaults, every implemented constructor/member/operator, negative/zero size boundaries, all side values and undefined input, half-open containment, overlap and border behavior, IEEE values, invariant formatting, strict configuration shape and failure rollback, packed-scene copying, and zero allocations in a warmed geometry loop.
 
-Verification is currently Linux/.NET 8. ADR 0029 has since delivered transform multiplication, and ADR 0035 has delivered the integer rectangle and typed conversions. Native structure equivalence, renderer/physics use, and the full five-platform matrix remain unavailable.
+Verification is currently Linux/.NET 8. ADR 0029 has since delivered transform multiplication, and ADR 0035 has delivered the integer rectangle and typed conversions. Native structure equivalence, renderer/physics use, and the full six-target matrix remain unavailable.
 
 ### Related decision
 
@@ -189,7 +189,7 @@ ADR 0029 fulfills and verifies the standalone value requirement. Current tests v
 <a id="adr-0029"></a>
 ## ADR 0029: Typed Transform2D value and affine semantics
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ### Status
 
@@ -249,7 +249,7 @@ No implicit or explicit `Matrix3x2` conversion is added. The two types use compa
 
 The executable harness covers every implemented member family, matrix/composition order, reflection/skew decomposition, singular and malformed failures, config and packed-scene integration, IEEE boundaries, and warmed allocation behavior. Release compilation also emits XML documentation with warnings treated as errors.
 
-Verification is Linux/.NET 8 only. No renderer, native backend, visual output, five-platform build, `Node` migration, `Rect2` transformation, or user acceptance is established by these checks.
+Verification is Linux/.NET 8 only. No renderer, native backend, visual output, six-target build, `Node` migration, `Rect2` transformation, or user acceptance is established by these checks.
 
 ### Related decisions
 
@@ -320,7 +320,7 @@ This ADR records the required architecture only. It does not make `Vector` a pro
 <a id="adr-0033"></a>
 ## ADR 0033: Dimensioned engine-owned vector family
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ### Status
 
@@ -365,7 +365,7 @@ Electron2D owns four canonical vector values: `Vector2`, `Vector2I`, `Vector4`, 
 
 The executable harness covers all four layouts, constants, index failures, methods and operators, float/integer conversions, interpolation, IEEE values, NaN ordering, integer wrap/overflow/division failures, invariant formatting, strict configuration schemas, direct packed-scene storage, and warmed allocation-free numeric loops. Existing rectangle, transform, and node tests exercise the completed `Vector2` migration.
 
-The post-implementation checks also audit production/test sources for old vector, rectangle, transform, and external-numerics names. Passing local checks do not establish native ABI, rendering/shader integration, visual behavior, mobile/desktop packaging, or five-platform acceptance.
+The post-implementation checks also audit production/test sources for old vector, rectangle, transform, and external-numerics names. Passing local checks do not establish native ABI, rendering/shader integration, visual behavior, mobile/desktop packaging, or six-target acceptance.
 
 ### Related decisions
 

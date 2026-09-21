@@ -1,6 +1,6 @@
 # Scalar math component
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Scope
 
@@ -43,7 +43,7 @@ Implemented and verified. The complete audited 4.7.2 stable typed scalar surface
 - No random-number generator, noise, generic numeric abstraction, vector overload, configurable global epsilon, approximate fast-trigonometry mode, or public SIMD contract exists.
 - Cube root remains a direct internal BCL operation where required because it is not part of the audited public surface.
 - Transcendental bit-for-bit equivalence across every supported OS/architecture is not claimed; only contract-level behavior is fixed.
-- Verification currently executes on Linux/.NET 8. The Windows, macOS, Android, and iOS runtime matrix remains unexecuted.
+- Verification currently executes on Linux/.NET 8. Windows, macOS, Android, iOS, and Web remain unverified; this scalar component has no X11/Wayland-specific behavior.
 
 ## Verification
 

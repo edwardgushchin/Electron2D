@@ -1,10 +1,10 @@
 # Resources domain
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Responsibility
 
-The Resources domain defines reusable typed data and portable CPU image buffers used by future textures, atlases, importers, and other assets across Linux, Windows, macOS, Android, and iOS. It contains the common resource contract plus a concrete managed `Image`; no file codec, texture, renderer, or importer is claimed.
+The Resources domain defines reusable typed data and portable CPU image buffers used by future textures, atlases, importers, and other assets across Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web. It contains the common resource contract plus a concrete managed `Image`; no file codec, texture, renderer, or importer is claimed.
 
 Its production sources live under `src/Core/IO/`, matching their low-level engine module while the living architecture retains Resources as a separate logical domain. The public namespace remains `Electron2D`.
 
@@ -52,7 +52,7 @@ Resources depends on Core and, narrowly, Scene's `Node` type for `Resource.GetLo
 - [ADR 0013: Managed typed Resource contract](../decisions/resources.md#adr-0013)
 - [ADR 0014: Managed Resource lifetime and realtime allocation](../decisions/resources.md#adr-0014)
 - [ADR 0017: Source-tree module layout](../decisions/product.md#adr-0017)
-- [ADR 0021: Cross-platform runtime target matrix](../decisions/product.md#adr-0021)
+- [ADR 0021: Runtime and editor target platforms](../decisions/product.md#adr-0021)
 - [ADR 0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
 - [ADR 0039: Managed image buffers and codec boundaries](../decisions/resources.md#adr-0039)
 

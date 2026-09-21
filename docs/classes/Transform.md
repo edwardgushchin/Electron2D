@@ -1,6 +1,6 @@
 # Transform
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** —
 
@@ -677,7 +677,7 @@ The public type depends on canonical scalar [`Mathf`](Mathf.md), [`Vector2`](Vec
 
 `tests/Electron2D.Tests/Program.cs` verifies 24-byte layout, zero/identity/reflection values, constructors, both indexers and failures, matrix order, decomposition including negative scale/skew, point/basis/array/rectangle transforms, negative-size rectangle normalization, general and orthonormal inverse behavior, singular failures, global/local operation differences, shortest-angle interpolation and extrapolation, conformal/finite/exact/approximate behavior including NaN/infinity, degenerate orthonormalization, `LookingAt`, scalar arithmetic, culture-invariant formatting, strict configuration persistence and malformed input, packed-scene storage, and zero warmed allocation for numeric math.
 
-Execution is currently verified only on Linux/.NET 8. The type has not been exercised through a renderer, native SDL backend, or five-platform test matrix.
+Execution is currently verified only on Linux/.NET 8. The type has not been exercised through a renderer, native SDL backend, or six-target test matrix.
 
 ## Decisions
 

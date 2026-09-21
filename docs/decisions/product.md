@@ -1,8 +1,8 @@
 # Electron2D product architecture decisions
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
-This bounded log owns the complete architectural records for product architecture. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
+This bounded document owns the current product architecture decisions. Use [the decision index](index.md) to route other work; read only the affected documents and explicitly linked dependencies.
 
 Decisions in this log: [0001](#adr-0001), [0002](#adr-0002), [0004](#adr-0004), [0012](#adr-0012), [0017](#adr-0017), [0021](#adr-0021), [0027](#adr-0027), [0030](#adr-0030).
 
@@ -77,7 +77,7 @@ A shorter-lived subscriber must unsubscribe from a longer-lived publisher as par
 <a id="adr-0004"></a>
 ## ADR 0004: Build a 2D-only scene-oriented engine in one assembly
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 - Status: Accepted; external-dependency packaging amended by [0012](product.md#adr-0012), runtime target matrix defined by [0021](product.md#adr-0021), editor/game product boundary amended by [0027](product.md#adr-0027), and rendering backend strategy defined by [0028](rendering.md#adr-0028)
 - Scope: Entire product architecture and packaging
@@ -214,9 +214,9 @@ The Release build and executable test project verify that all moved sources stil
 - [Scene-tree module](https://github.com/godotengine/godot/blob/master/scene/main/scene_tree.h)
 
 <a id="adr-0021"></a>
-## ADR 0021: Cross-platform runtime target matrix
+## ADR 0021: Runtime and editor target platforms
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ### Status
 
@@ -224,48 +224,53 @@ Accepted.
 
 ### Context
 
-The product is a 2D engine whose runtime must be usable on desktop and mobile systems. Earlier decisions fixed the 2D-only scope, the single Electron2D-owned assembly, and the future SDL3-CS host boundary, but did not define the complete supported target matrix. Without an explicit matrix, platform-specific code could accidentally turn a development host into the product boundary or make unverified portability claims.
+The product is a 2D engine whose games must run on desktop and mobile systems and in browsers. Its separately shipped editor has a desktop host boundary. An explicit matrix prevents platform-specific code from turning a development host into the product boundary or making unverified portability claims.
 
 ### Decision
 
-The Electron2D runtime targets exactly these operating-system families:
+| Product | Target platforms |
+| --- | --- |
+| Game runtime | Windows, macOS, Linux on X11 and Wayland, Android, iOS, Web |
+| Editor | Windows, macOS, Linux on X11 and Wayland |
 
-- Linux;
-- Windows;
-- macOS;
-- Android;
-- iOS.
+Web is a browser game target rather than an operating system. The editor has no Android, iOS, or Web target. Its desktop-only dependencies must stay outside `Electron2D.dll`.
 
-One public runtime API and one set of documented semantics applies across all five targets. Platform-specific implementation belongs behind internal backends or host integration boundaries and must not create divergent public type sets. Portable .NET facilities and the selected low-level backend are preferred; direct native calls are used only for capabilities they cannot provide.
+One public runtime API and one set of documented semantics applies across all six targets. Platform-specific implementation belongs behind internal backends or host integration boundaries and must not create divergent public type sets. Host, display, storage, input, audio, graphics, lifecycle, and packaging differences must be handled explicitly. Neither Linux display protocol may be treated as covered solely because the other works.
 
 An unavailable platform capability must fail explicitly with the documented exception or capability result. Empty implementations, silent no-ops, and success results without performed work are prohibited.
 
-Target intent, implemented code, successful compilation, application packaging, automated tests, and native-device verification are separate states. Documentation must state each state accurately. A feature may be described as cross-platform verified only after it has run on every applicable target.
+Target intent, implemented code, successful compilation, host integration, application packaging, automated tests, and native or browser verification are separate states. Documentation must state each state accurately. A feature may be described as cross-platform verified only after it has run on every applicable target, including X11 and Wayland when Linux display behavior applies.
 
 The one-assembly rule continues to cover Electron2D-owned runtime code. Native libraries, approved external managed dependencies, platform application hosts, signing, and store packaging remain deployment concerns and are not implied to be contained in `Electron2D.dll`.
 
-A future editor or development tool may intentionally support fewer host platforms when its document and ADR state that narrower boundary. That exception cannot leak a desktop-only requirement into the game runtime or its public data model.
+The editor targets the three desktop operating systems and both Linux display protocols. This narrower boundary cannot leak a desktop-only requirement into the game runtime or its public data model. Its source and dependency direction follow ADR 0027.
 
 ### Current implementation boundary
 
-The current project targets `net8.0` and its executable verification has run on Linux. Some file-system code contains macOS and Windows backends, but they have not been exercised on native hosts. There is no SDL application host, mobile target project, Android package, iOS application bundle, signing pipeline, or five-platform CI matrix. Therefore this ADR establishes the required product target, not a claim that distributable applications for all five platforms already exist.
+The current project targets `net8.0` and its executable verification has run on Linux, without separate X11/Wayland acceptance. Some file-system code contains macOS and Windows backends, but they have not been exercised on native hosts. There is no complete SDL application host, Web browser host/build/package/test pipeline, mobile target project, Android package, iOS application bundle, editor executable, signing pipeline, or six-target CI matrix. Therefore this ADR establishes the required product targets, not a claim that distributable applications already exist on every target.
 
-ADR 0028 selects a capability-driven GPU-primary and SDL_Renderer-fallback architecture for future rendering. It does not establish that either backend initializes, renders, or supports shaders on any target yet; those claims require backend-specific native-host verification.
+The first Web runtime vertical slice must choose and verify a browser-compatible host and dependency model, then integrate the required rendering, input, storage, lifecycle, and packaging capabilities. No placeholder API or unverified browser package is authorized by this target decision.
+
+ADR 0028 selects a capability-driven GPU-primary and SDL_Renderer-fallback architecture for future rendering. It does not establish that either backend initializes, renders, or supports shaders on any target yet; those claims require backend-specific native or browser verification.
 
 ### Consequences
 
-- Every runtime domain and component must preserve the five-platform contract as it evolves.
+- Every runtime domain and component must preserve the six-target contract as it evolves.
+- Editor work must cover the three desktop operating systems and both Linux display protocols.
 - Platform-specific dependencies require an accepted packaging and lifecycle decision before integration.
-- Platform support reports must distinguish compilation from native execution and packaging.
+- Platform support reports must distinguish compilation from native or browser execution and packaging.
 - Mobile lifecycle, permissions, storage, input, suspension, and graphics integration remain work for their owning future domains rather than placeholders in Core.
+- Browser lifecycle, storage, input, and graphics integration remain work for the first Web host and its owning runtime domains.
 - A platform-specific optimization is acceptable only when a portable behaviorally equivalent path or an explicit documented capability boundary remains.
 
 ### Rejected alternatives
 
 - Treat desktop support as the product and add mobile later: rejected because Android and iOS are first-class runtime targets.
+- Keep Web outside the runtime matrix: rejected because browser games are a product target.
 - Maintain separate public APIs per operating system: rejected because game code needs one portable engine contract.
-- Claim support from successful compilation alone: rejected because native dependencies, lifecycle, packaging, and device behavior remain unverified.
-- Require the future editor to run on mobile: rejected because editor-host support is separate from runtime portability.
+- Claim support from successful compilation alone: rejected because native/browser dependencies, lifecycle, packaging, and device behavior remain unverified.
+- Require the editor to run on mobile or Web: rejected because its product target is desktop.
+- Count one Linux display protocol as verification of the other: rejected because their host paths differ.
 
 ### Related decisions
 
@@ -277,15 +282,16 @@ ADR 0028 selects a capability-driven GPU-primary and SDL_Renderer-fallback archi
 - [0017: Source-tree module layout](product.md#adr-0017)
 - [0020: Typed file access and transformed-file containers](core-data-io.md#adr-0020)
 - [0028: GPU-first 2D rendering, shaders, and SDL_Renderer fallback](rendering.md#adr-0028)
+- [0027: Self-hosted editor and game project boundary](product.md#adr-0027)
 
 <a id="adr-0027"></a>
 ## ADR 0027: Self-hosted editor and game project boundary
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ### Status
 
-Accepted. This decision amends ADR 0004 by limiting its one-assembly rule to the Electron2D runtime engine, and amends ADR 0017 by placing editor application source outside the runtime `src/` tree.
+Accepted. This decision amends ADR 0004 by limiting its one-assembly rule to the Electron2D runtime engine, and amends ADR 0017 by placing editor application source outside the runtime `src/` tree. The platform matrix is set by [ADR 0021](#adr-0021).
 
 ### Context
 
@@ -313,14 +319,14 @@ Game/example executable ─────┘
 
 `Electron2D.dll` must never reference the editor or any game/example assembly. The editor must not receive blanket friend-assembly access, use reflection to bypass runtime encapsulation, or link runtime source directly. When editor work exposes a missing reusable capability, that capability must be designed and implemented in its owning runtime domain through the normal production-ready process. Truly editor-only behavior remains in the editor project.
 
-The editor is a separately shipped first-party product assembly and therefore does not violate the one-runtime-DLL rule. Its packaging may contain its executable assembly, `Electron2D.dll`, approved managed/native dependencies, and content. Runtime portability remains Linux, Windows, macOS, Android, and iOS; the editor may support a narrower documented desktop host matrix without changing runtime semantics.
+The editor is a separately shipped first-party product assembly and therefore does not violate the one-runtime-DLL rule. Its packaging may contain its executable assembly, `Electron2D.dll`, approved managed/native dependencies, and content. The game runtime targets Windows, macOS, Linux on X11 and Wayland, Android, iOS, and Web; the editor targets Windows, macOS, and Linux on X11 and Wayland under ADR 0021. The editor's desktop-only dependencies cannot change runtime semantics.
 
 No editor project, executable, domain, component, or production type is implemented by this ADR. The tracked directory is only a repository boundary. The first editor implementation must add its real project, tests, XML documentation, living class/component/domain documents, inventory rows, build verification, and packaging status atomically.
 
 ### Consequences
 
 - Games and the editor continuously dogfood the public runtime contract.
-- Editor-only code and dependencies cannot leak into `Electron2D.dll` or mobile game deployments.
+- Editor-only code and dependencies cannot leak into `Electron2D.dll` or mobile/Web game deployments.
 - Runtime and editor can have different entry points, target frameworks, host matrices, and packaging while sharing the same engine API revision.
 - The repository may contain more than one first-party project/assembly even though engine runtime code still produces exactly one Electron2D-owned DLL.
 - A future editor feature cannot justify a private shortcut around normal runtime API ownership and verification.
@@ -342,13 +348,13 @@ The repository boundary is verified by directory placement and current project c
 ### Related decisions
 
 - [0004: 2D API in one Electron2D-owned assembly](product.md#adr-0004)
-- [0021: Cross-platform runtime target matrix](product.md#adr-0021)
+- [0021: Runtime and editor target platforms](product.md#adr-0021)
 - [0028: GPU-first 2D rendering, shaders, and SDL_Renderer fallback](rendering.md#adr-0028)
 
 <a id="adr-0030"></a>
-## ADR 0030: Use bounded domain decision logs
+## ADR 0030: Use bounded domain decision documents
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ### Status
 
@@ -362,7 +368,7 @@ Core is substantially larger than the other domains, so one file for all Core de
 
 ### Decision
 
-`docs/decisions/index.md` is the lightweight routing entry point. Complete ADR records are grouped into bounded logs:
+`docs/decisions/index.md` is the lightweight routing entry point. Current ADRs are grouped into bounded documents:
 
 - `product.md`;
 - `core-object-runtime.md`;
@@ -373,13 +379,13 @@ Core is substantially larger than the other domains, so one file for all Core de
 - `localization.md`;
 - `rendering.md`.
 
-A maintainer reads the index, the affected log, and only the other logs explicitly referenced by relevant decisions. ADR numbers and `adr-NNNN` anchors remain permanent. New decisions are appended to the narrowest owning log and added to the index. When a log would exceed 500 lines, it is split along a cohesive subdomain boundary before adding the decision.
+A maintainer reads the index, the affected document, and only the other documents explicitly referenced by relevant ADRs. These documents describe decisions currently in force, not an append-only history. Revise an existing ADR in place when its decision changes, remove obsolete ADRs and links, and keep the number and anchor of each retained ADR stable. Add a numbered ADR only for a distinct new decision. Git history retains earlier versions. When a document would exceed 500 lines, split it along a cohesive subdomain boundary.
 
-Class, component, domain, and repository instruction documents may link directly to stable anchors, but they are not additional decision logs. Reversals append a new ADR and mark the old record superseded rather than rewriting history.
+Class, component, domain, and repository instruction documents may link directly to stable anchors, but they are not additional decision documents. Update those links when an ADR is removed or moved.
 
 ### Consequences
 
-- Architecture work loads relevant context instead of all historical decisions.
+- Architecture work loads relevant current decisions instead of obsolete records.
 - The routing index remains small enough to read on every architectural task.
 - Core decisions stay grouped by meaningful subdomain rather than one oversized bucket.
 - Git history preserves the provenance of former one-file-per-ADR paths.
@@ -390,7 +396,7 @@ Class, component, domain, and repository instruction documents may link directly
 - **Keep one file per ADR:** rejected because discovery and chained reads were excessive.
 - **Use one repository-wide decision file:** rejected because the file alone would consume too much context.
 - **Use one file for all Core decisions:** rejected because Core already contains several independent subdomains.
-- **Keep summaries instead of full records:** rejected because rationale, alternatives, verification boundaries, and supersession history are required.
+- **Keep summaries instead of full records:** rejected because rationale, alternatives, and verification boundaries are required.
 - **Retain redirect files:** rejected because duplicate files recreate discovery noise and can drift.
 
 ### Verification boundary

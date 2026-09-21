@@ -1,6 +1,6 @@
 # Electron2D rendering decisions
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 This bounded log owns the complete architectural records for rendering. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0028](#adr-0028).
 <a id="adr-0028"></a>
 ## ADR 0028: GPU-first 2D rendering, shaders, and SDL_Renderer fallback
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ### Status
 
@@ -17,7 +17,7 @@ Accepted.
 
 ### Context
 
-Electron2D needs one portable 2D rendering contract for Linux, Windows, macOS, Android, and iOS. That contract must support user-authored shaders without making simple 2D output depend on every target successfully creating a programmable graphics pipeline.
+Electron2D needs one portable 2D rendering contract for Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web. That contract must support user-authored shaders without making simple 2D output depend on every target successfully creating a programmable graphics pipeline.
 
 SDL exposes two relevant layers. The [SDL GPU API](https://wiki.libsdl.org/SDL3/CategoryGPU) provides cross-platform graphics devices, shaders, pipelines, command buffers, and render passes. The [SDL Render API](https://wiki.libsdl.org/SDL3/CategoryRender) accelerates a smaller set of simple 2D operations but does not expose arbitrary user shader pipelines. Treating both as equivalent would either remove shader support from the engine or make the fallback claim behavior it cannot provide.
 
@@ -56,6 +56,8 @@ SDL3-CS, native SDL packaging, an application host, and the Electron2D rendering
 
 This ADR selects a future architecture only. The repository currently contains no rendering domain, backend, graphics device, window host, texture, material, shader, pipeline, canvas, draw command, or render test. Existing visibility, Z-order, color, geometry, timing, and node state do not produce pixels. No cross-platform graphics behavior or shader support is claimed as implemented or verified.
 
+The Web target has no browser graphics host or verified mapping to these SDL backends. Its first rendering/host slice must establish that mapping and explicit capability behavior before claiming browser output.
+
 ### Related decisions
 
 - [0004: 2D API in one Electron2D-owned assembly](product.md#adr-0004)
@@ -63,5 +65,5 @@ This ADR selects a future architecture only. The repository currently contains n
 - [0014: Managed Resource lifetime and realtime allocation](resources.md#adr-0014)
 - [0015: Main-loop lifecycle and host boundary](core-object-runtime.md#adr-0015)
 - [0016: Process-wide Engine runtime and host-driven scheduling](core-object-runtime.md#adr-0016)
-- [0021: Cross-platform runtime target matrix](product.md#adr-0021)
+- [0021: Runtime and editor target platforms](product.md#adr-0021)
 - [0027: Self-hosted editor and game project boundary](product.md#adr-0027)

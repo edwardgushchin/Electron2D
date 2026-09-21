@@ -1,6 +1,6 @@
 # DirAccess
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -871,7 +871,7 @@ Filesystem state remains external and can change between validation and mutation
 
 `tests/Electron2D.Tests/Program.cs` covers null/empty/missing/relative/unknown paths, ordinary and virtual scopes, lexical traversal, current-directory changes, hidden/navigational filters, unspecified streaming versus sorted snapshots, concurrent listing consumption, single/recursive creation, copy overwrite, pre-mutation permission validation and self-copy rejection, instance/static file and directory rename with failed-move destination restoration, nonrecursive removal, relative and dangling symlink targets, hard-link and symlink equivalence on Linux, native case metadata, drive/capacity/filesystem queries, absolute helpers, temporary keep/delete ownership, current-directory changes before temporary disposal, and disposed access.
 
-The executable evidence is Linux-only. Windows/macOS link, file-identity, drive, filesystem-type, rename, case, permission, and path-root behavior are compiled but not native-host verified. Android/iOS identity code is compiled but not device-verified; their link and drive-enumeration APIs intentionally throw until platform host/storage integration is implemented. Packed/exported resources remain absent.
+The executable evidence is Linux-only. Windows/macOS link, file-identity, drive, filesystem-type, rename, case, permission, and path-root behavior are compiled but not native-host verified. Android/iOS identity code is compiled but not device-verified; their link and drive-enumeration APIs intentionally throw until platform host/storage integration is implemented. Web browser directory/storage behavior is unimplemented and unverified; its capability boundary belongs to the first Web host slice. Packed/exported resources remain absent.
 
 ## Decisions
 
@@ -880,5 +880,5 @@ The executable evidence is Linux-only. Windows/macOS link, file-identity, drive,
 - [0014: Managed lifetime and realtime allocation](../decisions/resources.md#adr-0014)
 - [0019: Typed project settings and directory-backed virtual paths](../decisions/core-data-io.md#adr-0019)
 - [0020: Typed file access and transformed-file containers](../decisions/core-data-io.md#adr-0020)
-- [0021: Cross-platform runtime target matrix](../decisions/product.md#adr-0021)
+- [0021: Runtime and editor target platforms](../decisions/product.md#adr-0021)
 - [0022: Typed directory access](../decisions/core-data-io.md#adr-0022)

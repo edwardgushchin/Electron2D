@@ -1,6 +1,6 @@
 # Electron2D resources decisions
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 This bounded log owns the complete architectural records for resources. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0013](#adr-0013), [0014](#adr-0014), [0039](#adr-0039).
 <a id="adr-0013"></a>
 ## ADR 0013: Managed typed Resource contract
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ### Status
 
@@ -124,7 +124,7 @@ This ADR changes architecture and documentation only; no runtime behavior is add
 <a id="adr-0039"></a>
 ## ADR 0039: Managed image buffers and codec boundaries
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ### Status
 
@@ -168,7 +168,7 @@ Electron2D already owns `Color`, `Vector2I`, `RectI`, `Resource`, typed duplicat
 
 | Deferred official counterpart | Missing prerequisite and exact trigger | Required slice |
 | --- | --- | --- |
-| `load`, `load_from_file`, buffer loaders, and PNG/JPEG/WebP/EXR/DDS save methods | An accepted ADR must select a portable codec implementation and packaging model that works on Linux, Windows, macOS, Android, and iOS without violating the runtime dependency boundary. Work starts only when the user approves that dependency/ownership decision. | The first image-codec vertical slice must add capability discovery, bounded/untrusted-input validation, all selected codec buffer and `FileAccess` paths, malformed/cancellation/failure tests, and native/AOT verification for each claimed target. Unsupported formats remain absent, not success stubs. |
+| `load`, `load_from_file`, buffer loaders, and PNG/JPEG/WebP/EXR/DDS save methods | An accepted ADR must select a portable codec implementation and packaging model that works on Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web without violating the runtime dependency boundary. Work starts only when the user approves that dependency/ownership decision. | The first image-codec vertical slice must add capability discovery, bounded/untrusted-input validation, all selected codec buffer and `FileAccess` paths, malformed/cancellation/failure tests, and native/AOT verification for each claimed target. Unsupported formats remain absent, not success stubs. |
 | `compress` and `compress_from_channels` | The editor executable plus the primary SDL3 GPU renderer must expose a concrete offline texture-compression toolchain and selected BC/ETC/BPTC/ASTC encoders. | The first approved texture-compression/import slice; not the initial renderer draw slice unless that slice explicitly includes authoring/import compression. |
 | `decompress` for BC/ETC/BPTC/ASTC | A selected, portable CPU decompressor or renderer readback/conversion backend must exist with format-capability reporting. | The first vertical slice that consumes compressed image pixels on CPU. Raw upload-only texture work does not trigger CPU decompression. |
 | `ImageTexture` conversion and renderer upload | The backend-neutral texture API and first SDL3 GPU renderer vertical slice must exist. | That renderer slice must define copy/ownership, format capability, mip upload, device loss, and fallback behavior. |
@@ -193,7 +193,7 @@ Electron2D already owns `Color`, `Vector2I`, `RectI`, `Resource`, typed duplicat
 
 The executable harness verifies empty/invalid states, all 25 uncompressed byte sizes and all 22 compressed identities, block/mipmap sizing, copy isolation, every processing family, clipping, interpolation, alpha/channel detection, typed metrics, Resource duplication, post-commit observer failure, and disposed-state rejection. Release XML generation and the repository identity scan remain part of the full gate.
 
-Verification is Linux/.NET 8 only. It does not establish codec, renderer, GPU upload, native ABI, AOT, memory-pressure, visual-quality, or five-platform behavior.
+Verification is Linux/.NET 8 only. It does not establish codec, renderer, GPU upload, native ABI, AOT, memory-pressure, visual-quality, or six-target behavior.
 
 ### Related decisions
 
@@ -202,6 +202,6 @@ Verification is Linux/.NET 8 only. It does not establish codec, renderer, GPU up
 - [0013: Managed typed Resource contract](resources.md#adr-0013)
 - [0014: Managed Resource lifetime and realtime allocation](resources.md#adr-0014)
 - [0020: Typed file access](core-data-io.md#adr-0020)
-- [0021: Cross-platform runtime target matrix](product.md#adr-0021)
+- [0021: Runtime and editor target platforms](product.md#adr-0021)
 - [0024: Typed color values and portable quantization](core-math.md#adr-0024)
 - [0035: Foreseeable public type-family completeness](core-math.md#adr-0035)

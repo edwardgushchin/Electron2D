@@ -1,6 +1,6 @@
 # File and directory access component
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Scope
 
@@ -50,7 +50,7 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 
 ## Current status and exclusions
 
-Implemented for raw access, scoped directory navigation/enumeration/mutation, directory-backed `res://`/`user://`, typed binary/text methods, metadata/hashes, temporary files/directories, links, filesystem identity/case/capacity/type queries, Unix permissions, Linux/macOS/Windows extended attributes, DEFLATE/GZip/Brotli, and raw-key/password AES-GCM containers. The executable test host verifies the Linux platform backend; macOS and Windows backends compile but require native-host verification. Android and iOS are product runtime targets, but link and drive enumeration deliberately reject them until host/storage integration exists; neither mobile target has native verification or a claimed extended-attribute backend.
+Implemented for raw access, scoped directory navigation/enumeration/mutation, directory-backed `res://`/`user://`, typed binary/text methods, metadata/hashes, temporary files/directories, links, filesystem identity/case/capacity/type queries, Unix permissions, Linux/macOS/Windows extended attributes, DEFLATE/GZip/Brotli, and raw-key/password AES-GCM containers. The executable test host verifies the Linux platform backend; macOS and Windows backends compile but require native-host verification. Android and iOS are product runtime targets, but link and drive enumeration deliberately reject them until host/storage integration exists; neither mobile target has native verification or a claimed extended-attribute backend. Web is also a runtime target, but no browser host or storage integration exists; the first Web host slice must define and verify its filesystem capability boundary.
 
 FastLZ and Zstandard require codec providers that are not integrated. Packed/exported archive filesystems, import remapping, `uid://` identities, and `pipe://` streams require absent pack, resource-loader, resource-UID, and platform-pipe domains. Exact Android storage-volume discovery requires its future host integration. Universal-value storage and shared numeric/thread-local error slots are permanent typed-C# exclusions. No empty compatibility methods exist for these gaps.
 
@@ -65,5 +65,5 @@ The single executable harness covers file and directory success, invalid input, 
 - [0014: Managed lifetime and realtime allocation](../decisions/resources.md#adr-0014)
 - [0019: Typed project settings and directory-backed virtual paths](../decisions/core-data-io.md#adr-0019)
 - [0020: Typed file access and transformed-file containers](../decisions/core-data-io.md#adr-0020)
-- [0021: Cross-platform runtime target matrix](../decisions/product.md#adr-0021)
+- [0021: Runtime and editor target platforms](../decisions/product.md#adr-0021)
 - [0022: Typed directory access](../decisions/core-data-io.md#adr-0022)
