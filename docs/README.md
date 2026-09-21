@@ -10,6 +10,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Runtime target matrix: Linux, Windows, macOS, Android, and iOS. This is the required product boundary, not a claim of completed native delivery on every target.
 - API direction: familiar scene-oriented 2D concepts expressed as typed C#.
 - Public engine assembly: one managed `Electron2D.dll` class library. Accepted runtime dependencies may ship as separate assemblies; the current build has none.
+- Product source boundary: runtime engine code lives in `src/`; the future self-hosted editor belongs to a separate executable project under `editor/Electron2D.Editor/`; first-party example games and templates belong under `examples/<Game>/`. Editor and games depend on the public runtime API, never the reverse.
 - Production source root: `src/`, organized by engine module while retaining the flat public `Electron2D` namespace.
 - Target framework: .NET 8 (`net8.0`).
 - Implemented domains: Core, Scene, Localization, and Resources.
@@ -25,6 +26,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - A separate engine-owned `Transform2D` foundational type is required by ADR 0026 but is not implemented. `Node` truthfully retains its current `Matrix3x2` API until a complete transform slice and migration are delivered; `Rect2` transform operators are deferred to that dependency.
 - Process-wide typed project settings, feature overrides, directory-backed `res://`/`user://`, blocking typed file access with metadata/hashes/temporary files/cross-platform extended attributes/compression/authenticated encryption, scoped directory navigation/listing/mutations/links/temporary ownership/filesystem identity, host-driven bounded fixed-step scheduling, time scaling, frame metrics, named engine singletons, typed sectioned configuration files with atomic persistence and authenticated encryption, unified 2D nodes, local/global transforms, hierarchy paths and groups, visibility and Z state, pause-aware process/physics callbacks, exception-safe scene-tree lifecycle, typed group operations, one-shot frame timers, queued deletion, typed deferred work and event connections, in-memory typed packed scenes with per-instance local resources, translations, notifications including the future-facing `ScriptChanged` hook, typed editor-property descriptors, and the typed resource base with graph duplication: implemented.
 - Rendering, SDL integration, input, audio, collision/rigid-body physics, concrete assets, asset loading/saving, scene file serialization, and an editor application: not implemented.
+- The editor source root is reserved in this repository, but no editor project or source exists yet. Its future assembly is a consumer of `Electron2D.dll` and is not part of the one-runtime-DLL boundary.
 - Persistent event connections: deferred until a typed stable endpoint schema exists.
 - Packed/exported resource filesystems, import remapping, `uid://`, and `pipe://` are not implemented; current `res://`/`user://` resolution is directory-backed and lexically confined. FastLZ and Zstandard are explicit file-access gaps. Extended attributes and directory links are implemented for Linux, macOS, and Windows, with native-host verification currently limited to Linux. Android/iOS link and drive-enumeration integration is explicitly absent.
 
@@ -108,5 +110,6 @@ This directory describes the engine as it exists now. Planned features are liste
   - [0024: Typed color values and portable quantization](decisions/0024-typed-color-values.md)
   - [0025: Typed axis-aligned rectangle geometry](decisions/0025-typed-rectangle-geometry.md)
   - [0026: Separate Transform2D foundational type](decisions/0026-separate-transform2d-type.md)
+  - [0027: Self-hosted editor and game project boundary](decisions/0027-self-hosted-editor-and-games.md)
 
 The maintenance rules for this documentation are mandatory and live in the repository root [AGENTS.md](../AGENTS.md).

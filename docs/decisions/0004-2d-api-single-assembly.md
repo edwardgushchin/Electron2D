@@ -1,11 +1,11 @@
 # 0004: Build a 2D-only scene-oriented engine in one assembly
 
-Last updated: 2026-09-20
+Last updated: 2026-09-21
 
-- Status: Accepted; external-dependency packaging amended by [0012](0012-external-runtime-dependencies.md), runtime target matrix defined by [0021](0021-cross-platform-runtime-targets.md)
+- Status: Accepted; external-dependency packaging amended by [0012](0012-external-runtime-dependencies.md), runtime target matrix defined by [0021](0021-cross-platform-runtime-targets.md), editor/game product boundary amended by [0027](0027-self-hosted-editor-and-games.md)
 - Scope: Entire product architecture and packaging
 
-The one-assembly rule remains fully effective for every production type and domain owned by Electron2D. ADR 0012 changes only the treatment of explicitly approved third-party runtime dependencies: they may ship as separate assemblies instead of being internalized into `Electron2D.dll`.
+The one-assembly rule remains fully effective for every production runtime-engine type and domain owned by Electron2D. ADR 0012 changes the treatment of explicitly approved third-party runtime dependencies: they may ship as separate assemblies instead of being internalized into `Electron2D.dll`. ADR 0027 clarifies that separately shipped editor and game executable assemblies are runtime consumers rather than engine-domain assemblies.
 
 ## Context
 
@@ -16,8 +16,9 @@ Electron2D is intended to provide a familiar high-level API modeled on Godot's 2
 - Electron2D supports only two-dimensional games.
 - Three-dimensional rendering, physics, transforms, cameras, assets, nodes, compatibility aliases, and speculative shared 2D/3D abstractions are outside scope.
 - The high-level API follows Godot's 2D concepts, lifecycle, composition model, and recognizable naming where they remain compatible with the typed C# decisions in ADR 0001 and ADR 0002.
-- All production engine domains and components compile into `Electron2D.csproj` with assembly name `Electron2D`, producing one managed engine assembly: `Electron2D.dll`.
+- All production runtime-engine domains and components compile into `Electron2D.csproj` with assembly name `Electron2D`, producing one managed engine assembly: `Electron2D.dll`.
 - Tests, examples, benchmarks, analyzers, and development tools may use separate projects because they are not shipped as parts of the engine.
+- The first-party editor is a separately shipped self-hosted application and games are separate executables; both consume the public runtime under ADR 0027 and are not runtime-domain assemblies.
 - SDL3-CS is the intended low-level backend but is not integrated yet.
 
 ## Packaging boundary

@@ -4,27 +4,27 @@ Last updated: 2026-09-21
 
 ## Status
 
-Accepted.
+Accepted for runtime source. The earlier planned `src/Editor` placement is superseded by [ADR 0027](0027-self-hosted-editor-and-games.md), which places the editor application in a separate project root.
 
 ## Context
 
-Production C# files previously lived at the repository root. That made the growing engine surface difficult to navigate and did not expose the architectural ownership already recorded by the domain and component documents.
+Runtime production C# files previously lived at the repository root. That made the growing engine surface difficult to navigate and did not expose the architectural ownership already recorded by the domain and component documents.
 
 The reference engine does not divide runtime source into only `Core` and `Editor`: the current object, main-loop, engine, resource, localization, node, and scene-tree types belong to `core/object`, `core/os`, `core/config`, `core/io`, `core/string`, and `scene/main`. Electron2D currently has no editor production code.
 
 ## Decision
 
-All Electron2D-owned production C# files live under `src/`. When a type corresponds to a reference-engine type, its directory mirrors that source module with C# casing: `src/Core/Object`, `src/Core/OS`, `src/Core/Config`, `src/Core/IO`, `src/Core/String`, or `src/Scene/Main`.
+All Electron2D-owned runtime production C# files live under `src/`. When a type corresponds to a reference-engine type, its directory mirrors that source module with C# casing: `src/Core/Object`, `src/Core/OS`, `src/Core/Config`, `src/Core/IO`, `src/Core/String`, or `src/Scene/Main`.
 
 Physical directories express source ownership only. All current public types retain the flat `Electron2D` namespace, so this refactor does not break consumers or create nested API namespaces. `Electron2D.csproj` disables default compile discovery and includes only `src/**/*.cs`; tests remain under `tests/` and documentation under `docs/`.
 
-No empty `src/Editor` directory is created. It will be introduced with the first implemented editor production type and its required component, domain, inventory, tests, and documentation.
+No `src/Editor` application directory is created. ADR 0027 supersedes that earlier future placement: editor-only production source belongs to the separate executable project root `editor/Electron2D.Editor/`, while reusable runtime capabilities remain in their owning `src/` modules.
 
 ## Consequences
 
 - Production source has an explicit root and cannot accidentally include test or repository-support C# files.
 - File placement exposes Core-versus-Scene ownership while the public API remains source-compatible.
-- A future editor can use `src/Editor`, but the repository does not imply that an editor exists today.
+- The reserved editor root makes application ownership explicit without implying that an editor project or implementation exists today.
 - Moving a production type between modules requires updating its class page, component/domain ownership, inventory, and this decision chain when architectural ownership changes.
 
 ## Rejected alternatives
