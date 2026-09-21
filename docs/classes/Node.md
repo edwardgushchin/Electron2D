@@ -90,12 +90,15 @@ Any self-contained root and its owned descendants can be captured by [`PackedSce
 | `NodeProcessMode ProcessMode { get; set; }` | Pause policy, default `Inherit`; undefined enum values are rejected |
 | `bool ProcessEnabled { get; set; }` | Explicit opt-in for `OnProcess`, default `false` |
 | `bool PhysicsProcessEnabled { get; set; }` | Explicit opt-in for `OnPhysicsProcess`, default `false` |
+| `bool InputEnabled { get; set; }` | Explicit opt-in for first-stage `OnInput`, default `false` |
+| `bool UnhandledKeyInputEnabled { get; set; }` | Explicit opt-in for keyboard-only unhandled delivery, default `false` |
+| `bool UnhandledInputEnabled { get; set; }` | Explicit opt-in for final unhandled delivery, default `false` |
 | `int ProcessPriority { get; set; }` | Ascending process order key, default `0` |
 | `int PhysicsProcessPriority { get; set; }` | Independent ascending physics-process order key, default `0` |
 | `double ProcessDeltaTime { get; }` | Most recent SceneTree-managed process delta, initially `0`; Engine applies its time scale before Engine-driven delivery, and manual notification does not update it |
 | `double PhysicsProcessDeltaTime { get; }` | Most recent SceneTree-managed physics-process delta, initially `0`; Engine applies its time scale before Engine-driven delivery, and manual notification does not update it |
 
-`Name`, `Transform`'s scalar projections `Position`/`RotationDegrees`/`Scale`/`Skew`, `Visible`, `ZIndex`, `ZAsRelative`, `TopLevel`, `ProcessMode`, both process-enable flags, and both priorities are included in the typed property list and marked for packed-scene storage. Inherited `CanTranslateMessages` and `TranslationDomain` are stored as well. `Transform` itself and computed/global state are not descriptors. All inherited identity, notification, property, translation, and disposal API follows [`ElectronObject`](ElectronObject.md).
+`Name`, `Transform`'s scalar projections `Position`/`RotationDegrees`/`Scale`/`Skew`, `Visible`, `ZIndex`, `ZAsRelative`, `TopLevel`, `ProcessMode`, both frame-enable flags, all three input-enable flags, and both priorities are included in the typed property list and marked for packed-scene storage. Inherited `CanTranslateMessages` and `TranslationDomain` are stored as well. `Transform` itself and computed/global state are not descriptors. All inherited identity, notification, property, translation, and disposal API follows [`ElectronObject`](ElectronObject.md).
 
 ## Events
 
@@ -168,6 +171,9 @@ Every transform input must be finite. `Transform` uses X/Y basis columns and com
 | `OnEnterTree()` / `OnExitTree()` / `OnReady()` | Virtual lifecycle callbacks mapped from notifications 10, 11, and 13 |
 | `OnProcess(double delta)` | Virtual callback mapped from notification 17 after `ProcessDeltaTime` is stored |
 | `OnPhysicsProcess(double delta)` | Virtual callback mapped from notification 16 after `PhysicsProcessDeltaTime` is stored |
+| `OnInput(InputEvent event)` | First-stage typed input callback when `InputEnabled` and pause policy allow it |
+| `OnUnhandledKeyInput(InputEventKey event)` | Keyboard-only callback after first-stage input remains unhandled |
+| `OnUnhandledInput(InputEvent event)` | Final callback for any event still unhandled |
 | `CreateSceneInstanceFactory()` | Returns a static source-independent factory for a fresh exact-runtime-type default node; derived packable nodes must override it |
 | `EnsureMutable()` | Required guard for derived stored-property setters; rejects disposal, capture mutation, and off-owner-thread attached mutation |
 | `OnNotification(int what)` | Calls the base implementation and maps lifecycle/process IDs to the callbacks above |
@@ -180,6 +186,8 @@ Every transform input must be finite. `Transform` uses X/Y basis columns and com
 For SceneTree-managed attachment, enter is parent-first, post-enter follows descendant entry, and ready is child-first. Ready is one-shot unless `RequestReady()` is called before a later attachment. Exit is child-first. Lifecycle phases attempt all applicable node and tree events before aggregating failures; exit always clears membership. Constructor activation rollback additionally restores ready flags newly consumed by that attempt. Manual inherited `Notify(int)` calls the mapped callback on the caller's thread but does not change membership/readiness or raise the corresponding tree event.
 
 Toggling `SceneTree.Paused` sends paused/unpaused notifications. A process-mode change that crosses effective `Disabled` sends disabled/enabled notification to the node and affected inheriting descendants. `ProcessFrame` and `PhysicsFrame` invoke nodes whose public or engine-internal lane is enabled and that remain live, attached, and eligible when their captured turn arrives. Internal notification `25` or `26` runs before the same node's public notification `17` or `16`; failures are collected while both phases are attempted. A public lane must have been enabled at capture and remain enabled after the internal phase; newly enabling it does not inject work, while disabling it, detaching, or disposing skips delivery. MainLoop system notifications `2009..2020` are propagated by the owning tree through a depth-first snapshot with lifetime and membership revalidation.
+
+Parsed input uses a separate synchronous snapshot. Eligible nodes run child-first/reverse depth-first through `OnInput`, then keyboard-only `OnUnhandledKeyInput`, then `OnUnhandledInput`. Calling `SceneTree.SetInputAsHandled()` stops the current traversal and skips later stages. Membership, disposal, enable flags, and `CanProcess()` are rechecked immediately before each callback; failures are aggregated without undoing committed input state.
 
 Direct disposal and queued deletion both detach an active node and attempt to dispose every member of its complete owned subtree. An instantiated packed-scene root additionally owns every resource duplicate created for that instance and disposes them after child-node cleanup. Cleanup failures are aggregated after structural state, child/resource lifetimes, groups, and subscribers reach their final state. The disposal thread may inspect node state from pre-delete and exit callbacks; other threads observe disposal as started and are rejected.
 
@@ -204,13 +212,13 @@ Every node created by `PackedScene.Instantiate()` is also marked unfinished unti
 
 ## Dependencies and interactions
 
-`Node` depends on `ElectronObject`, `MainLoop` notification identifiers, `PropertyDescriptor`, `NodeProcessMode`, `SceneTree`, [`Tween`](Tween.md), the Resource base for owned scene duplicates, [`Mathf`](Mathf.md), `Vector2`, `Transform`, LINQ, `FileSystemName`, and atomic operations. Degree/radian conversion and scalar transform math use the canonical `Mathf` contract. It does not depend on SDL3-CS, a renderer, input, audio, collision physics, scene file serialization, or a scripting runtime.
+`Node` depends on `ElectronObject`, `MainLoop` notification identifiers, `PropertyDescriptor`, `NodeProcessMode`, `SceneTree`, typed `InputEvent` values, [`Tween`](Tween.md), the Resource base for owned scene duplicates, [`Mathf`](Mathf.md), `Vector2`, `Transform`, LINQ, `FileSystemName`, and atomic operations. Degree/radian conversion and scalar transform math use the canonical `Mathf` contract. It does not depend on SDL3-CS, a native input backend, renderer, audio, collision physics, scene file serialization, or a scripting runtime.
 
 ## Verification and known limitations
 
-`tests/Electron2D.Tests/Program.cs` verifies lifecycle order, activation/ready rollback, stale snapshot rejection, lifecycle re-entry guards, failure-continuing exit and recursive disposal, disposing-parent mutation rejection, hierarchy validation, reparenting, owner cleanup, paths/search/persistent groups, packed capture and instantiation guards/factories/escape rollback/resource ownership, node/tree event order, child order and sender-first child event arguments, transform behavior, visibility and Z state, spatial helpers, pause modes/priorities/scaled and original deltas, internal-before-public processing and failure continuation, attached/detached tween creation and bound lifetime, inherited disable/enable notifications, MainLoop system aliases and tree propagation, owner-thread rejection, direct disposal, detached/cross-tree queued deletion, and queued recursive disposal.
+`tests/Electron2D.Tests/Program.cs` verifies lifecycle order, activation/ready rollback, stale snapshot rejection, lifecycle re-entry guards, failure-continuing exit and recursive disposal, disposing-parent mutation rejection, hierarchy validation, reparenting, owner cleanup, paths/search/persistent groups, packed capture and instantiation guards/factories/escape rollback/resource ownership, node/tree event order, child order and sender-first child event arguments, transform behavior, visibility and Z state, spatial helpers, pause modes/priorities/scaled and original deltas, internal-before-public processing and failure continuation, three-stage reverse input ordering/handled state/re-entry/failure continuation/state-before-callback, attached/detached tween creation and bound lifetime, inherited disable/enable notifications, MainLoop system aliases and tree propagation, owner-thread rejection, direct disposal, detached/cross-tree queued deletion, and queued recursive disposal.
 
-There is no renderer-backed canvas behavior, native system-event creation, focus-to-input state synchronization, ordinary input propagation, collision/rigid-body physics, scene file loader/saver, inherited/nested scene authoring, editable-instance metadata, persistent event endpoint schema, RPC/multiplayer, public control of internal processing, process auto-enable by override detection, unique-name shorthand, or separate spatial-node subclass. Visibility and Z are currently logical state only.
+There is no renderer-backed canvas behavior, native system-event creation, GUI/viewport consumption, focus synchronization, collision/rigid-body physics, scene file loader/saver, inherited/nested scene authoring, editable-instance metadata, persistent event endpoint schema, RPC/multiplayer, public control of internal processing, process/input auto-enable by override detection, unique-name shorthand, or separate spatial-node subclass. Visibility and Z are currently logical state only. Hardware/input-routing gaps use ADR 0038's exact triggers.
 
 ## Relevant decisions
 
@@ -221,3 +229,4 @@ There is no renderer-backed canvas behavior, native system-event creation, focus
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0037: Typed SceneTree tween scheduling](../decisions/scene.md#adr-0037)
+- [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)

@@ -13,7 +13,7 @@ Last updated: 2026-09-21
 
 ## Responsibility and ownership
 
-`MainLoop` is the owner-thread lifecycle boundary between an application host or [`Engine`](Engine.md) and Electron2D. It pairs one successful initialization with variable-step and fixed-step callbacks and one finalization. Engine-driven callbacks also carry their original pre-time-scale delta as internal frame context for built-in scene behavior; public callbacks continue to receive only the effective delta. It owns no thread, clock, window, event pump, renderer, input state, or physics world.
+`MainLoop` is the owner-thread lifecycle boundary between an application host or [`Engine`](Engine.md) and Electron2D. It pairs one successful initialization with variable-step and fixed-step callbacks and one finalization. Engine-driven callbacks also carry their original pre-time-scale delta as internal frame context for built-in scene behavior; public callbacks continue to receive only the effective delta. Each lane also scopes and clears [`Input`](Input.md) just-transition state, and the internal event-dispatch boundary validates owner thread and idle-running state before Input mutates state. It owns no thread, clock, window, event pump, renderer, raw input state, or physics world.
 
 The creating thread owns lifecycle and frame execution. A custom loop owns whatever resources its protected callbacks acquire and must release successfully initialized state from `OnFinalize()`.
 
@@ -73,7 +73,7 @@ Running --FinalizeLoop/Dispose--> Finalizing --return/throw--> Finalized
 Created/InitializationFailed --Dispose--> Finalized
 ```
 
-Initialization, frames, and finalization are non-reentrant. During one Engine-driven frame, the effective and original deltas are finite and non-negative; the original value exists only as internal callback context and is cleared in `finally`. Direct `Process`/`PhysicsProcess` calls use their supplied delta as both values. A frame callback failure restores `Running`, so a later frame remains valid. Initialization failure is terminal and is not retried. A derived `OnInitialize()` that throws must undo its partial acquisition because `OnFinalize()` is not called without successful initialization. Finalization failure is also terminal and is not retried by later disposal.
+Initialization, frames, and finalization are non-reentrant. During one Engine-driven frame, the effective and original deltas are finite and non-negative; the original value exists only as internal callback context and is cleared in `finally`. Direct `Process`/`PhysicsProcess` calls use their supplied delta as both values. The matching Input transition lane is cleared in the same `finally`, including after callback failure. A frame callback failure restores `Running`, so a later frame remains valid. Initialization failure is terminal and is not retried. A derived `OnInitialize()` that throws must undo its partial acquisition because `OnFinalize()` is not called without successful initialization. Finalization failure is also terminal and is not retried by later disposal.
 
 `Dispose()` automatically pairs a running loop with finalization. Disposal before initialization or after failed initialization does not call `OnFinalize()`. Finalization does not itself mark the `ElectronObject` disposed; an explicitly finalized loop still requires `Dispose()` for base-object teardown.
 
@@ -108,14 +108,15 @@ No dependency-blocked platform delivery is represented by an inert method. The f
 
 ## Dependencies and interactions
 
-`MainLoop` depends only on `ElectronObject` and the .NET Base Class Library. [`Engine`](Engine.md) attaches it through the internal state-validated boundary. `SceneTree` derives from it, maps its frame hooks and original delta context to scene processing including built-in [`Timer`](Timer.md) behavior, propagates system notifications through the hierarchy, and tears down its owned scene state from `OnFinalize()`.
+`MainLoop` depends on `ElectronObject`, the process-wide `Input` transition service, and the .NET Base Class Library. [`Engine`](Engine.md) attaches it through the internal state-validated boundary. `SceneTree` derives from it, maps its frame hooks and original delta context to scene processing including built-in [`Timer`](Timer.md) behavior, consumes the internal typed input dispatch hook, propagates system notifications through the hierarchy, and tears down its owned scene state from `OnFinalize()`.
 
 ## Verification and known limitations
 
-`tests/Electron2D.Tests/Program.cs` verifies one-shot initialization/finalization, both callback lanes and stop results, delta validation, re-entry rejection, callback failure recovery, initialization/finalization failure states, automatic disposal finalization, disposal before/after failed initialization, owner-thread enforcement, typed permission delivery and validation, notification IDs and dispatch, `Node` aliases, `SceneTree` inheritance/propagation/explicit finalization, original-delta delivery at zero time scale, and zero steady-state allocation for warmed `SceneTree` frame paths.
+`tests/Electron2D.Tests/Program.cs` verifies one-shot initialization/finalization, both callback lanes and stop results, delta validation, re-entry rejection, callback failure recovery, initialization/finalization failure states, automatic disposal finalization, disposal before/after failed initialization, owner-thread enforcement, pre-mutation wrong-thread/nested-frame input rejection, typed permission delivery and validation, notification IDs and dispatch, `Node` aliases, `SceneTree` inheritance/propagation/input delivery/explicit finalization, original-delta delivery at zero time scale, independent Input transition clearing, and zero steady-state allocation for warmed `SceneTree` frame paths.
 
 The class itself has no timing source or scheduler. [`Engine`](Engine.md) now provides host-driven fixed-step scheduling and time scaling, but there is still no SDL event pump, native permission request API, automatic clock, frame pacing/waiting, exit-code owner, crash handler, input-focus state update, renderer, or collision-physics integration. MainLoop does not claim real-time or platform behavior by itself.
 
 ## Related decision
 
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)

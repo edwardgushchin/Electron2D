@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 ## Scope
 
-This Scene component provides the concrete [Main loop](main-loop.md), owns one active hierarchy, propagates system notifications, delivers lifecycle and pause changes, accepts direct or [Engine](engine-runtime.md)-scheduled process/physics frame boundaries, frame counters and events, tree-change events, reusable Node timers, lightweight one-shot timers, frame-driven [tweening](tweening.md), typed group operations, deferred work, and queued deletion. Per-node hierarchy and 2D state belong to the [Unified 2D node component](unified-node.md).
+This Scene component provides the concrete [Main loop](main-loop.md), owns one active hierarchy, propagates typed input and system notifications, delivers lifecycle and pause changes, accepts direct or [Engine](engine-runtime.md)-scheduled process/physics frame boundaries, frame counters and events, tree-change events, reusable Node timers, lightweight one-shot timers, frame-driven [tweening](tweening.md), typed group operations, deferred work, and queued deletion. Per-node hierarchy and 2D state belong to the [Unified 2D node component](unified-node.md).
 
 ## Owned types
 
@@ -26,13 +26,15 @@ An inherited or wrapper frame increments its lane counter, raises its start even
 
 System notifications are snapshotted and propagated depth-first to every still-live attached node. Explicit inherited finalization and disposal both close work acceptance, release the hierarchy/timers, and invalidate active tweens; explicit finalization leaves only the tree object undisposed and terminal.
 
+Parsed input uses a reusable reverse depth-first snapshot. Regular input runs first, keyboard-only unhandled input second, and general unhandled input last. Handled state stops immediately; current membership, pause eligibility, lifetime, and per-stage enablement are revalidated before every callback. Callback failures are aggregated after eligible delivery continues.
+
 Immediate typed group operations snapshot members in hierarchy or reverse order on the owner thread. Deferred operations resolve membership when their queued wrapper starts. `Unique` coalesces equal queued operations and retains the first setter value. String-based method/property dispatch is absent.
 
 Queue acceptance uses one lock shared with finalization closure. A successful cross-thread enqueue is either executed by a later safe point or deliberately discarded by later finalization; an enqueue that reaches the closed tree is rejected. Finalization closes the queues, exits and recursively disposes the hierarchy, disposes timers, invalidates tweens, and clears subscribers while aggregating every failure.
 
 ## Dependencies
 
-The component depends on Core's `MainLoop` and `EventConnection`, the unified `Node` including its internal lanes and packed-scene construction barriers, `Timer`, the [Tweening component](tweening.md), reusable lists, concurrent queues, and ordinary .NET synchronization. Core `Engine` may drive it through `MainLoop` and supplies scaled/original deltas without a Scene-to-Engine dependency. It has no SDL3-CS, clock, renderer, input, audio, collision-physics, asset loader/serializer, networking, or editor dependency.
+The component depends on Core's `MainLoop` and `EventConnection`, typed Input events, the unified `Node` including its input/internal lanes and packed-scene construction barriers, `Timer`, the [Tweening component](tweening.md), reusable lists, concurrent queues, and ordinary .NET synchronization. Core `Engine` may drive it through `MainLoop` and supplies scaled/original deltas. It has no SDL3-CS, clock, native input backend, renderer, audio, collision-physics, asset loader/serializer, networking, or editor dependency.
 
 ## Invariants
 
@@ -52,15 +54,16 @@ The component depends on Core's `MainLoop` and `EventConnection`, the unified `N
 - Tree events reflect completed lifecycle/structural stages; callback failures do not roll completed state back.
 - MainLoop initialization is complete when construction returns; explicit finalization or disposal releases every owned scene object exactly once.
 - System notifications use depth-first snapshots and revalidate each candidate before delivery.
+- Input uses reverse depth-first snapshots, three ordered stages, owner-thread dispatch, handled short-circuiting, pause/membership revalidation, and failure aggregation after Input state is committed.
 - Warmed idle, active-Timer, and active-Tween frame lanes do not allocate managed memory in the covered small-hierarchy paths.
 
 ## Current implementation status and exclusions
 
-Implemented and covered by executable checks. Core Engine supplies host-driven time scaling, original delta delivery for `Timer.IgnoreTimeScale` and `Tween.SetIgnoreTimeScale`, fixed-step scheduling, and interpolation metrics when used, but there is no application/game-loop thread, automatic SDL clock, frame waiting, native system-event creation, permission request implementation, focus-to-input synchronization, automatic current-scene switching/loading, renderer synchronization, input propagation, multiplayer polling, accessibility backend, editor behavior, or physics simulation. Callers may explicitly install a detached root returned by the separate [Packed scenes](packed-scenes.md) component. Blocked reference APIs and their missing domains are enumerated in the [`SceneTree`](../classes/SceneTree.md#official-reference-coverage-inventory), [`Timer`](../classes/Timer.md#official-reference-coverage-inventory), and [`Tween`](../classes/Tween.md#official-reference-coverage-inventory) class documents; no placeholder surface is exposed for them.
+Implemented and covered by executable checks. Core Engine supplies host-driven time scaling, original delta delivery for `Timer.IgnoreTimeScale` and `Tween.SetIgnoreTimeScale`, fixed-step scheduling, and interpolation metrics when used, but there is no application/game-loop thread, automatic SDL clock, frame waiting, native system-event creation, permission request implementation, focus synchronization, automatic current-scene switching/loading, renderer synchronization, GUI/viewport input consumption, multiplayer polling, accessibility backend, editor behavior, or physics simulation. Callers may explicitly install a detached root returned by the separate [Packed scenes](packed-scenes.md) component. Blocked reference APIs and their missing domains are enumerated in the [`SceneTree`](../classes/SceneTree.md#official-reference-coverage-inventory), [`Timer`](../classes/Timer.md#official-reference-coverage-inventory), [`Tween`](../classes/Tween.md#official-reference-coverage-inventory), and [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers); no placeholder surface is exposed for them.
 
 ## Verification
 
-Tests cover valid and failing activation, packed-factory/unfinished-node activation rejection, inherited loop initialization/frames/explicit finalization, Engine attachment/finalization, system-notification propagation, escaped failed-tree references, ready/timer/tween rollback, stale lifecycle snapshots, lifecycle and tree-event order, pause re-entry/reparent/removal behavior, frame ordering/counters/events, lifecycle execution barriers, typed group order/setting/notification/uniqueness, reusable/lightweight timer behavior, typed tween behavior, deferred batching, generic/node/cross-tree deletion, owner-thread enforcement, failure-continuing teardown, re-entrant disposal mutation rejection, teardown mutation rejection, concurrent enqueue/disposal stress, and warmed idle/active-Timer/active-Tween allocation. They establish local managed semantics, not real-time cadence, rendering, loaded-scene performance, or platform behavior.
+Tests cover valid and failing activation, packed-factory/unfinished-node activation rejection, inherited loop initialization/frames/explicit finalization, Engine attachment/finalization, typed input stage order/handled state/re-entry/failure continuation/allocation, system-notification propagation, escaped failed-tree references, ready/timer/tween rollback, stale lifecycle snapshots, lifecycle and tree-event order, pause re-entry/reparent/removal behavior, frame ordering/counters/events, lifecycle execution barriers, typed group order/setting/notification/uniqueness, reusable/lightweight timer behavior, typed tween behavior, deferred batching, generic/node/cross-tree deletion, owner-thread enforcement, failure-continuing teardown, re-entrant disposal mutation rejection, teardown mutation rejection, concurrent enqueue/disposal stress, and warmed idle/active-Timer/active-Tween/input allocation. They establish local managed semantics, not real-time cadence, native input, rendering, loaded-scene performance, or platform behavior.
 
 ## Decisions
 
@@ -70,3 +73,4 @@ Tests cover valid and failing activation, packed-factory/unfinished-node activat
 - [0016: Process-wide Engine runtime and host-driven scheduling](../decisions/core-object-runtime.md#adr-0016)
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0037: Typed SceneTree tween scheduling](../decisions/scene.md#adr-0037)
+- [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)

@@ -84,6 +84,10 @@ public sealed class Engine : ElectronObject
         _singletonNames.Add(nameof(Engine));
         _singletons.Add(nameof(ProjectSettings), ProjectSettings.Instance);
         _singletonNames.Add(nameof(ProjectSettings));
+        _singletons.Add(nameof(Input), Input.Instance);
+        _singletonNames.Add(nameof(Input));
+        _singletons.Add(nameof(InputMap), InputMap.Instance);
+        _singletonNames.Add(nameof(InputMap));
     }
 
     /// <summary>Gets the process-wide engine instance.</summary>
@@ -359,7 +363,7 @@ public sealed class Engine : ElectronObject
     /// <remarks>
     /// Registration retains a managed reference but does not transfer disposal ownership. Disposing an object does not
     /// remove its registration; the registering component must unregister it during teardown. The name <c>Engine</c>
-    /// and <c>ProjectSettings</c> are already occupied by built-in process singletons.
+    /// <c>ProjectSettings</c>, <c>Input</c>, and <c>InputMap</c> are already occupied by built-in process singletons.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> or <paramref name="instance"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="name"/> is empty or consists only of whitespace.</exception>
@@ -391,7 +395,9 @@ public sealed class Engine : ElectronObject
         ValidateSingletonName(name);
 
         if (string.Equals(name, nameof(Engine), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(ProjectSettings), StringComparison.Ordinal))
+            string.Equals(name, nameof(ProjectSettings), StringComparison.Ordinal) ||
+            string.Equals(name, nameof(Input), StringComparison.Ordinal) ||
+            string.Equals(name, nameof(InputMap), StringComparison.Ordinal))
         {
             throw new InvalidOperationException($"The built-in {name} singleton cannot be unregistered.");
         }

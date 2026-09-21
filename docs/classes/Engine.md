@@ -13,7 +13,7 @@ Last updated: 2026-09-21
 
 ## Responsibility and ownership
 
-`Engine` is the non-disposable process-wide runtime coordinator. It reads/writes persisted timing configuration through [`ProjectSettings`](ProjectSettings.md), attaches one [`MainLoop`](MainLoop.md), converts host-supplied unscaled elapsed time into fixed and variable callbacks, publishes runtime metrics, and maintains a thread-safe registry of named non-owned `ElectronObject` instances. The registry is initialized with permanent `Engine` and `ProjectSettings` entries.
+`Engine` is the non-disposable process-wide runtime coordinator. It reads/writes persisted timing configuration through [`ProjectSettings`](ProjectSettings.md), attaches one [`MainLoop`](MainLoop.md), converts host-supplied unscaled elapsed time into fixed and variable callbacks, publishes runtime metrics, and maintains a thread-safe registry of named non-owned `ElectronObject` instances. The registry is initialized with permanent `Engine`, `ProjectSettings`, [`Input`](Input.md), and [`InputMap`](InputMap.md) entries.
 
 The host still owns the elapsed-time source, native event pump, waiting/frame pacing, and final disposal of the loop. `Engine.Stop()` finalizes and detaches the loop but deliberately does not dispose it. The registry retains references but never acquires disposal ownership.
 
@@ -53,14 +53,14 @@ The inherited typed property list includes timing configuration, metrics, archit
 
 | Member | Current behavior |
 | --- | --- |
-| `void RegisterSingleton(string name, ElectronObject instance)` | Registers one live instance under a unique nonblank ordinal name without taking ownership; `Engine` and `ProjectSettings` are already occupied |
+| `void RegisterSingleton(string name, ElectronObject instance)` | Registers one live instance under a unique nonblank ordinal name without taking ownership; all four built-in service names are already occupied |
 | `void UnregisterSingleton(string name)` | Removes an existing user name without disposing the object; built-in entries cannot be removed |
 | `ElectronObject GetSingleton(string name)` | Returns the registered identity or throws `KeyNotFoundException` |
 | `T GetSingleton<T>(string name)` | Adds a checked typed cast and throws `InvalidCastException` on mismatch |
 | `bool HasSingleton(string name)` | Tests a validated name |
 | `IReadOnlyList<string> GetSingletonList()` | Returns an immutable registration-order snapshot |
 
-Registry operations are serialized by one lock. A registered object can later be disposed because registration is non-owning; the registering component must unregister during teardown. `HasSingleton("Engine")` and `HasSingleton("ProjectSettings")` are always true, and the registration-order list begins with those entries.
+Registry operations are serialized by one lock. A registered object can later be disposed because registration is non-owning; the registering component must unregister during teardown. The registration-order list begins `Engine`, `ProjectSettings`, `Input`, `InputMap`; those entries are permanent.
 
 ## Scheduling and ordering
 
@@ -89,7 +89,7 @@ Lifecycle/frame entry is atomic and non-reentrant. `MainLoop` is visible during 
 - The active loop is never implicitly disposed.
 - `Start`, `AdvanceFrame`, and `Stop` cannot overlap or re-enter.
 - Names are nonblank, ordinal, and unique; missing removal/lookup is an error.
-- The process-wide `Engine` and `ProjectSettings` registry entries cannot be removed or disposed through Engine.
+- The process-wide `Engine`, `ProjectSettings`, `Input`, and `InputMap` registry entries cannot be removed through Engine.
 
 ## Threading guarantees and non-guarantees
 
@@ -108,7 +108,7 @@ The stable reference API, current implementation header, timing synchronizer, ma
 | Main loop lookup | Implemented as nullable `MainLoop`; typed `Start`/`AdvanceFrame`/`Stop` are the explicit host integration API |
 | Physics/process frame counters, FPS, interpolation fraction, in-physics query | Implemented as typed properties with documented failure/counting semantics |
 | Architecture and version information | Implemented from .NET runtime and loaded assembly metadata; the reference dictionary is adapted to [`EngineVersionInfo`](EngineVersionInfo.md) |
-| Register/unregister/has/get/list singleton | Implemented with permanent Engine/ProjectSettings entries, `ElectronObject`, generic typed lookup, explicit errors, registration-order snapshots, and non-owning user lifetime |
+| Register/unregister/has/get/list singleton | Implemented with four permanent process-service entries, `ElectronObject`, generic typed lookup, explicit errors, registration-order snapshots, and non-owning user lifetime |
 | `max_fps` | Deferred until the SDL host owns a monotonic clock and waiting/presentation policy; no inert setting is exposed |
 | `print_to_stdout`, `print_error_messages` | Deferred until a logging component provides actual output routes |
 | Frames drawn | Deferred until a renderer can report completed draws; returning a fabricated process-frame count is rejected |
@@ -122,14 +122,15 @@ No dependency-blocked item is represented by a stored-but-unused flag, constant-
 
 ## Dependencies and interactions
 
-The class depends on `ElectronObject`, `MainLoop`, `EngineVersionInfo`, `ProjectSettings`, the .NET Base Class Library, and reflection over its own assembly metadata. `SceneTree` can be attached because it is already initialized after successful construction. There is no SDL3-CS, renderer, input, audio, logger, scripting, movie writer, editor, collision-physics, or asset dependency.
+The class depends on `ElectronObject`, `MainLoop`, `EngineVersionInfo`, `ProjectSettings`, `Input`, `InputMap`, the .NET Base Class Library, and reflection over its own assembly metadata. `SceneTree` can be attached because it is already initialized after successful construction. There is no SDL3-CS, renderer, native input backend, audio, logger, scripting, movie writer, editor, collision-physics, or asset dependency.
 
 ## Verification and known limitations
 
-`tests/Electron2D.Tests/Program.cs` verifies singleton lifetime, project-setting defaults/feature overrides/event flushing, invalid configuration, typed property discovery, architecture/version data, registry validation/type/ownership/order/concurrency, loop publication during initialization/finalization, automatic initialization, existing `SceneTree` attachment, owner-thread enforcement, re-entry rejection, fixed-before-process order, scaling, original-delta Timer delivery at zero scale in both lanes, jitter/interpolation boundaries, catch-up cap, stop combination, process and physics callback failures, failed initialization/finalization cleanup, counters, FPS, and zero steady-state allocation across a warmed empty frame path.
+`tests/Electron2D.Tests/Program.cs` verifies singleton lifetime, all four permanent service registrations, project-setting defaults/feature overrides/event flushing, invalid configuration, typed property discovery, architecture/version data, registry validation/type/ownership/order/concurrency, loop publication during initialization/finalization, automatic initialization, existing `SceneTree` attachment, owner-thread enforcement, re-entry rejection, fixed-before-process order, scaling, original-delta Timer delivery at zero scale in both lanes, input transition-lane completion, jitter/interpolation boundaries, catch-up cap, stop combination, process and physics callback failures, failed initialization/finalization cleanup, counters, FPS, and zero steady-state allocation across a warmed empty frame path.
 
 The checks use deterministic supplied deltas, not a real SDL clock, display, renderer, operating-system event pump, or loaded game benchmark. They establish managed scheduling behavior, not hard real-time guarantees or visual acceptance.
 
 ## Related scene decision
 
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)

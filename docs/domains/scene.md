@@ -12,8 +12,8 @@ Its production sources live under `src/Scene/Main/`, `src/Scene/Animation/`, and
 
 | Component | Responsibility | State |
 | --- | --- | --- |
-| [Unified 2D node](../components/unified-node.md) | Hierarchy, 2D transforms, paths, groups, visibility/Z state, process policy, lifecycle endpoints, and deletion requests | Implemented and verified |
-| [Scene tree](../components/scene-tree.md) | Active-root ownership, exception-safe lifecycle, pause state, frame dispatch/events/counts, reusable Node timers, lightweight one-shot timers, typed group operations, deferred work, and deletion execution | Implemented and verified |
+| [Unified 2D node](../components/unified-node.md) | Hierarchy, 2D transforms, paths, groups, visibility/Z state, process/input policy, lifecycle endpoints, and deletion requests | Implemented and verified |
+| [Scene tree](../components/scene-tree.md) | Active-root ownership, exception-safe lifecycle, pause state, frame/input dispatch, events/counts, reusable Node timers, lightweight one-shot timers, typed group operations, deferred work, and deletion execution | Implemented and verified |
 | [Tweening](../components/tweening.md) | Typed property/method interpolation, sequencing, callbacks, waits, nested timelines, loops, and frame policies | Implemented and verified |
 | [Packed scenes](../components/packed-scenes.md) | Typed in-memory owned-hierarchy capture, live metadata, detached reconstruction, and per-instance local resources | Implemented and verified |
 
@@ -21,9 +21,9 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 
 ## Public surface
 
-- `Node`: the primary public game-object base and one combined Godot-style `Node` + `Node2D` abstraction with ordered hierarchy, lifecycle, local/global `Transform` transforms, `Vector2` spatial helpers, logical canvas state, paths/search/groups, processing configuration, and queued deletion.
+- `Node`: the primary public game-object base and one combined Godot-style `Node` + `Node2D` abstraction with ordered hierarchy, lifecycle, local/global `Transform` transforms, `Vector2` spatial helpers, logical canvas state, paths/search/groups, processing/input configuration, and queued deletion.
 - `NodeProcessMode`: inherited, pausable, paused-only, always, and disabled process policies.
-- `SceneTree`: concrete main loop and active hierarchy owner with failure-safe lifecycle/finalization, system-notification propagation, pause state, caller-driven process/physics frames, frame/tree events and counters, typed group work, timers, deferred actions, and deletion flushing.
+- `SceneTree`: concrete main loop and active hierarchy owner with failure-safe lifecycle/finalization, typed input/system-notification propagation, pause state, caller-driven process/physics frames, frame/tree events and counters, typed group work, timers, deferred actions, and deletion flushing.
 - `Timer`: reusable hierarchy-owned countdown with selected frame lane, one-shot/repeat, autostart, local/tree pause, optional time-scale bypass, and typed timeout event.
 - `TimerProcessCallback`: stable physics/process lane selection for `Timer`.
 - `SceneTreeTimer`: lightweight one-shot delay advanced by one selected frame lane and automatically disposed after timeout.
@@ -37,8 +37,9 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 
 - Scene depends on Core's `Mathf`/`Vector2`/`Transform` math, Resources including `Resource`, and .NET collections and filesystem-name matching.
 - Resources has a narrow reciprocal dependency on `Node` for `Resource.GetLocalScene()` under ADR 0023. This is an intentional in-assembly type cycle, not another managed assembly.
-- Scene does not depend on SDL3-CS, rendering, input, audio, collision physics, asset loading/saving, file serialization, scripting, networking, or Localization.
-- Future gameplay, rendering, input, and 2D physics types may depend on Scene.
+- Scene depends on the Input domain's typed event values and process-wide service boundary for propagation.
+- Scene does not depend on SDL3-CS, a native input backend, rendering, audio, collision physics, asset loading/saving, file serialization, scripting, networking, or Localization.
+- Future gameplay, rendering, GUI input, and 2D physics types may depend on Scene.
 - Scene must not introduce 3D types or a separate `Node2D` hierarchy.
 - Scene lifecycle and game-state semantics must not vary by target platform; native event generation remains a host boundary.
 
@@ -52,6 +53,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - Attached state mutation, lifecycle delivery, frame execution, flushing, and disposal use the tree's creating thread. Deferred and deletion requests may be enqueued from other threads.
 - A non-top-level global transform is the ancestor global transform composed with the local transform. Transform inputs must be finite; operations needing an inverse reject singular transforms.
 - Public and engine-internal process/physics callbacks are opt-in, synchronous, pause-aware, and ordered by their independent priority then captured tree order. Internal built-in work precedes the same node's public callback and receives both scaled and original Engine deltas.
+- Input callbacks are opt-in, synchronous, pause-aware, reverse depth-first, ordered regular/key-unhandled/general-unhandled, membership-revalidated, failure-aggregating, and stoppable through current-dispatch handled state.
 - Queue acceptance is atomic with tree-disposal closure. Deferred work queued during a flush waits for the next flush. Captured queued deletion runs after deferred actions, survives detachment, transfers safely between trees, and disposes the complete subtree despite detach callback failures.
 - Frame and flush execution cannot be re-entered or started during lifecycle delivery. Reusable Timer nodes advance during internal node processing; lightweight tree timers advance after node callbacks and before deferred work. Pause delivery visits each eligible node at most once and rejects opposite re-entry.
 - Tweens use one captured process/physics batch after lightweight timers. They are owner-thread mutable, become invalid after completion/killing/failure, attempt every parallel sibling on failure, and never create a second scheduler or background clock.
@@ -61,14 +63,14 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - Packed-scene instances are reconstructed detached. Node factories and unfinished instances cannot activate a `SceneTree`; scene-local resource graphs preserve aliases/cycles, know their new root before setup, and are disposed with that root.
 - Capture blocks source hierarchy mutation. Failed reconstruction attempts cleanup of every returned node and resource duplicate it acquired, reports cleanup failures, and never returns a partial result.
 - `SceneTree` is initialized when construction succeeds, returns no quit request from its two inherited frame lanes, and releases all owned scene state from explicit finalization or disposal.
-- System notifications are propagated depth-first to live attached nodes; native generation and platform-specific input effects belong to absent host/Input domains.
+- System notifications are propagated depth-first to live attached nodes; native generation and platform-specific input effects belong to the absent SDL host/backend covered by ADR 0038.
 - The warmed idle process and physics frame paths reuse scheduler/timer storage and do not allocate managed memory.
 
 ## Current limitations
 
 - A caller may supply deltas directly through inherited `Process`/`PhysicsProcess` or wrappers. Core `Engine` can instead apply time scaling and fixed-step accumulation from host-supplied elapsed time. There is still no automatic SDL pump/clock, frame-wait policy, or background scene thread.
 - Visibility and Z ordering are logical state only until a renderer consumes them.
-- There is no drawing, viewport, render server, input propagation, collision/rigid-body physics, automatic scene switching, scene file loader/saver, RPC/multiplayer, accessibility backend, or scripting. Tweening is runtime-only and has no editor/serialization surface.
+- There is no drawing, viewport, render server, native/GUI input routing, collision/rigid-body physics, automatic scene switching, scene file loader/saver, RPC/multiplayer, accessibility backend, or scripting. Typed root-tree input propagation is implemented; Tweening is runtime-only and has no editor/serialization surface.
 - Packed scenes are in-memory only. Nested/inherited scene authoring, placeholders, editable instances, persistent event endpoint storage, node-reference remapping, UID/import integration, and every editor edit mode remain absent.
 - Paths are typed as `string`, not a separate `NodePath`; groups are strings; wildcard search covers names with `*` and `?`.
 - A detached node may remember `QueueFree`, but deletion occurs only after attachment to a tree and a flush/frame boundary.
@@ -76,7 +78,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` verifies transform and hierarchy behavior, lifecycle order and failure rollback, cleanup continuation, inherited loop driving/finalization, system-notification propagation, tree/frame events and counters, typed group operations, both timer models, typed tween sequencing/lifetime/failure behavior, paths/search/groups, visibility/Z, pause-aware internal/public process ordering, owner-thread enforcement, deferred batch isolation, concurrent enqueue/disposal stress, queued deletion, direct deterministic disposal, zero warmed idle/active-Timer/active-Tween allocations, packed owned-branch capture/state/instantiation, local resources, factory/capture rejection, and packed rollback. It does not prove renderer, SDL, visual behavior, real-time cadence, disk scene compatibility, editor behavior, or large-scene performance.
+`tests/Electron2D.Tests/Program.cs` verifies transform and hierarchy behavior, lifecycle order and failure rollback, cleanup continuation, inherited loop driving/finalization, typed input ordering/handled state/failures/re-entry/allocation, system-notification propagation, tree/frame events and counters, typed group operations, both timer models, typed tween sequencing/lifetime/failure behavior, paths/search/groups, visibility/Z, pause-aware internal/public process ordering, owner-thread enforcement, deferred batch isolation, concurrent enqueue/disposal stress, queued deletion, direct deterministic disposal, zero warmed idle/active-Timer/active-Tween/input allocations, packed owned-branch capture/state/instantiation, local resources, factory/capture rejection, and packed rollback. It does not prove renderer, SDL/native input, visual behavior, real-time cadence, disk scene compatibility, editor behavior, or large-scene performance.
 
 ## Relevant decisions
 
@@ -100,3 +102,4 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0037: Typed SceneTree tween scheduling](../decisions/scene.md#adr-0037)
+- [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)

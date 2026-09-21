@@ -115,6 +115,18 @@ public abstract class MainLoop : ElectronObject
     internal bool PhysicsProcessForEngine(double delta, double unscaledDelta) =>
         RunFrame(delta, unscaledDelta, physics: true);
 
+    internal virtual void ValidateInputEventDispatch()
+    {
+        ThrowIfDisposed();
+        EnsureOwnerThread();
+        if (_state != LoopState.Running)
+            throw new InvalidOperationException("Input can only be dispatched while the MainLoop is running outside another lifecycle or frame callback.");
+    }
+
+    internal virtual void DispatchInputEvent(InputEvent @event)
+    {
+    }
+
     /// <summary>Finalizes a successfully initialized loop and invokes <see cref="OnFinalize"/> exactly once.</summary>
     /// <remarks>
     /// The loop becomes terminal even if the callback throws. Calling <see cref="ElectronObject.Dispose()"/> on a running loop performs
@@ -284,6 +296,7 @@ public abstract class MainLoop : ElectronObject
 
         _state = LoopState.Processing;
         CurrentUnscaledFrameDelta = unscaledDelta;
+        Input.Instance.BeginFrame(physics);
 
         try
         {
@@ -291,6 +304,7 @@ public abstract class MainLoop : ElectronObject
         }
         finally
         {
+            Input.Instance.CompleteFrame(physics);
             CurrentUnscaledFrameDelta = 0d;
             _state = LoopState.Running;
         }

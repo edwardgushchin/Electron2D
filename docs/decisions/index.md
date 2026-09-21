@@ -14,5 +14,6 @@ This file routes architecture work to bounded domain decision logs. Do not load 
 | Resources | [resources.md](resources.md) | 0013, 0014 |
 | Localization | [localization.md](localization.md) | 0007 |
 | Rendering | [rendering.md](rendering.md) | 0028 |
+| Input | [input.md](input.md) | 0038 |
 
 ADR numbers and anchors are permanent. Add a new record to the narrowest owning log, update this table, and split a log by cohesive subdomain before it exceeds 500 lines. See [ADR 0030](product.md#adr-0030).

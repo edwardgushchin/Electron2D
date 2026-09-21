@@ -50,7 +50,7 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 
 Last updated: 2026-09-21
 
-- Status: Accepted; the original external-numerics transform choice is superseded by [ADR 0026](core-math.md#adr-0026), [ADR 0032](core-math.md#adr-0032), and [ADR 0033](core-math.md#adr-0033)
+- Status: Accepted; the original external-numerics transform choice is superseded by [ADR 0026](core-math.md#adr-0026), [ADR 0032](core-math.md#adr-0032), and [ADR 0033](core-math.md#adr-0033), and Node input callbacks are extended by [ADR 0038](input.md#adr-0038)
 - Scope: Scene-domain public object model
 
 ### Context
@@ -60,7 +60,7 @@ Godot separates non-spatial hierarchy/lifecycle behavior (`Node`) from 2D spatia
 ### Decision
 
 - Electron2D exposes one public game-object class named `Node`; it does not expose `Node2D`.
-- `Node` combines hierarchy, lifecycle, paths, groups, processing, deletion, 2D local/global transforms, visibility, and Z ordering.
+- `Node` combines hierarchy, lifecycle, paths, groups, processing, typed input callbacks, deletion, 2D local/global transforms, visibility, and Z ordering.
 - Historical note: the initial Node transform vocabulary used external numerics directly. ADR 0026 introduced the engine-owned affine value, ADR 0029 completed its math, and ADRs 0032/0033 completed Node migration to `Electron2D.Transform` and `Vector2`.
 - Godot-like concepts keep recognizable names where they remain useful, but the API stays typed C#: strings represent paths/groups/names, delegates and virtual methods represent callbacks, and C# events represent signals.
 - Renderer-independent canvas state (`Visible`, `ZIndex`, `ZAsRelative`) belongs on `Node` now. Renderer-bound drawing, materials, canvas handles, lights, clipping, input picking, and viewport behavior wait for their actual domains.
@@ -72,7 +72,7 @@ Godot separates non-spatial hierarchy/lifecycle behavior (`Node`) from 2D spatia
 - Scene and transform lifetime share one parent tree, making global transforms, inherited visibility, Z state, paths, groups, and processing coherent.
 - The public API is intentionally similar rather than source-compatible with Godot: there is no Variant, NodePath, StringName, CanvasItem, or automatic method-name dispatch.
 - The original external-numerics dependency was later removed; the current engine-owned `Transform` preserves the documented parent/right-first composition contract.
-- Future renderer and input work extends `Node` or adds purpose-specific derived types; it must not recreate a parallel `Node2D` hierarchy.
+- ADR 0038 later added backend-neutral typed input callbacks directly to `Node`; future renderer, GUI picking, and native input work extends this model or adds purpose-specific derived types without recreating a parallel `Node2D` hierarchy.
 
 ### Rejected alternatives
 
@@ -86,7 +86,7 @@ Godot separates non-spatial hierarchy/lifecycle behavior (`Node`) from 2D spatia
 
 Last updated: 2026-09-21
 
-- Status: Accepted; timer scheduling extended by [0036](scene.md#adr-0036) and the original tween absence superseded by [0037](scene.md#adr-0037)
+- Status: Accepted; timer scheduling extended by [0036](scene.md#adr-0036), the original tween absence superseded by [0037](scene.md#adr-0037), and input execution barriers extended by [0038](input.md#adr-0038)
 - Scope: `SceneTree`, `SceneTreeTimer`, `GroupCallFlags`, and their `Node` lifecycle integration
 - Refines: [0006](scene.md#adr-0006)
 
@@ -102,7 +102,7 @@ Electron2D must keep typed C# calls, deterministic ownership, Electron2D-owned c
 - Constructor activation completes each lifecycle phase as far as possible. Any failure closes acceptance, terminally marks the failed tree, exits attached nodes, restores ready flags, disposes activation-created timers, clears queued work, and returns hierarchy ownership to the caller.
 - Node enter, ready, exit, structural removal, node disposal, and tree disposal attempt all cleanup stages and aggregate callback failures after state reaches a coherent endpoint.
 - Lifecycle snapshots revalidate membership; enter/ready/exit re-entry and child escape from an exiting or disposing parent's lifecycle, pre-delete, or cleanup callbacks are rejected.
-- Frame and flush execution are non-reentrant and cannot begin during entry/exit delivery. Tree disposal from frame, flush, or lifecycle callbacks is rejected before the disposal transition.
+- Frame, flush, and typed input execution are non-reentrant and cannot begin during entry/exit delivery. Tree disposal from frame, flush, input, or lifecycle callbacks is rejected before the disposal transition.
 - Cancellable node deletion continues through disposal after detach failures or detachment, while a stale request in an old tree cannot consume deletion now owned by a new tree.
 - Pause traversal visits each still-attached node at most once; opposite re-entrant and teardown-time pause transitions are rejected.
 - Node/tree/frame signals are typed C# events. Group calls and setters accept delegates; group ordering, deferral, and uniqueness use `GroupCallFlags`.

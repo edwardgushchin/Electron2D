@@ -23,7 +23,7 @@ Callback exceptions restore Engine's running state. Initialization/finalization 
 
 ## Dependencies
 
-The component depends on Core object lifecycle, MainLoop, and ProjectSettings plus ordinary .NET synchronization, runtime architecture reporting, and assembly metadata. `SceneTree` requires no reverse dependency: it is accepted through `MainLoop`. Future SDL hosting will depend on Engine for timing policy and lifecycle but Engine does not depend on SDL.
+The component depends on Core object lifecycle, MainLoop, ProjectSettings, and the permanent Input/InputMap service registrations plus ordinary .NET synchronization, runtime architecture reporting, and assembly metadata. `SceneTree` is accepted through `MainLoop`. Future SDL hosting will depend on Engine for timing policy and lifecycle but Engine does not depend on SDL.
 
 ## Invariants
 
@@ -35,7 +35,7 @@ The component depends on Core object lifecycle, MainLoop, and ProjectSettings pl
 - Timing settings and effective callback deltas are finite; callback deltas are non-negative.
 - Original frame deltas remain finite/non-negative, are scoped to one callback, and are never reconstructed by dividing through `TimeScale`.
 - Process/physics counters are process-lifetime totals; the synchronizer, interpolation, and FPS window reset only after successful loop preparation.
-- Registry names are unique ordinal strings; built-in `Engine` and `ProjectSettings` entries are permanent, and user registry ownership never implies object disposal.
+- Registry names are unique ordinal strings; built-in `Engine`, `ProjectSettings`, `Input`, and `InputMap` entries are permanent, and user registry ownership never implies object disposal.
 - Warmed empty frame scheduling has no steady-state managed allocation.
 
 ## Current implementation status and exclusions
@@ -44,7 +44,7 @@ Managed scheduling, lifecycle integration, timing properties, metrics, architect
 
 ## Verification
 
-Executable checks cover success, invalid values/order, wrong threads, lifecycle and frame re-entry, stop requests, long stalls, callback and lifecycle failures, `SceneTree` attachment, original-delta Timer behavior at zero scale, registry concurrency, metadata, counters/FPS/interpolation, and warmed idle allocation. They do not verify platform cadence, rendering, or hard real-time behavior.
+Executable checks cover success, invalid values/order, wrong threads, lifecycle and frame re-entry, stop requests, long stalls, callback and lifecycle failures, `SceneTree` attachment, original-delta Timer behavior at zero scale, permanent Input service registration, registry concurrency, metadata, counters/FPS/interpolation, and warmed idle allocation. They do not verify platform cadence, native input, rendering, or hard real-time behavior.
 
 ## Decisions
 
@@ -53,3 +53,4 @@ Executable checks cover success, invalid values/order, wrong threads, lifecycle 
 - [0014: Managed Resource lifetime and realtime allocation](../decisions/resources.md#adr-0014)
 - [0019: Typed project settings and directory-backed virtual paths](../decisions/core-data-io.md#adr-0019)
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)

@@ -3,11 +3,11 @@ using System.Threading;
 
 namespace Electron2D;
 
-/// <summary>Provides Electron2D's unified hierarchical game object and 2D transform type.</summary>
+/// <summary>Provides Electron2D's unified hierarchical, input-aware game object and 2D transform type.</summary>
 /// <remarks>
-/// The type combines ordered child ownership, tree lifecycle, paths, groups, processing, queued deletion, visibility,
-/// Z ordering, and 2D spatial state. Logical visibility and Z state do not render anything until a renderer domain is
-/// added.
+/// The type combines ordered child ownership, tree lifecycle, paths, groups, processing, typed input callbacks, queued
+/// deletion, visibility, Z ordering, and 2D spatial state. Logical visibility and Z state do not render anything until
+/// a renderer domain is added.
 /// </remarks>
 public class Node : ElectronObject
 {
@@ -175,6 +175,9 @@ public class Node : ElectronObject
             stored: true),
         new PropertyDescriptor<Node, bool>(nameof(ProcessEnabled), node => node.ProcessEnabled, (node, value) => node.ProcessEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<Node, bool>(nameof(PhysicsProcessEnabled), node => node.PhysicsProcessEnabled, (node, value) => node.PhysicsProcessEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<Node, bool>(nameof(InputEnabled), node => node.InputEnabled, (node, value) => node.InputEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<Node, bool>(nameof(UnhandledInputEnabled), node => node.UnhandledInputEnabled, (node, value) => node.UnhandledInputEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<Node, bool>(nameof(UnhandledKeyInputEnabled), node => node.UnhandledKeyInputEnabled, (node, value) => node.UnhandledKeyInputEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<Node, int>(nameof(ProcessPriority), node => node.ProcessPriority, (node, value) => node.ProcessPriority = value, _ => 0, stored: true),
         new PropertyDescriptor<Node, int>(nameof(PhysicsProcessPriority), node => node.PhysicsProcessPriority, (node, value) => node.PhysicsProcessPriority = value, _ => 0, stored: true)
     ]);
@@ -205,6 +208,9 @@ public class Node : ElectronObject
     private NodeProcessMode _processMode;
     private bool _processEnabled;
     private bool _physicsProcessEnabled;
+    private bool _inputEnabled;
+    private bool _unhandledInputEnabled;
+    private bool _unhandledKeyInputEnabled;
     private bool _internalProcessEnabled;
     private bool _internalPhysicsProcessEnabled;
     private double _unscaledProcessDeltaTime;
@@ -804,6 +810,63 @@ public class Node : ElectronObject
         {
             EnsureMutable();
             _physicsProcessEnabled = value;
+        }
+    }
+
+    /// <summary>Gets or sets whether this node receives the first input-propagation stage.</summary>
+    /// <value><see langword="false"/> by default.</value>
+    /// <remarks>Eligible nodes are visited in reverse depth-first order before unhandled-input stages.</remarks>
+    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
+    public bool InputEnabled
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return _inputEnabled;
+        }
+        set
+        {
+            EnsureMutable();
+            _inputEnabled = value;
+        }
+    }
+
+    /// <summary>Gets or sets whether this node receives input left unhandled by earlier stages.</summary>
+    /// <value><see langword="false"/> by default.</value>
+    /// <remarks>This final stage runs for every event that remains unhandled.</remarks>
+    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
+    public bool UnhandledInputEnabled
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return _unhandledInputEnabled;
+        }
+        set
+        {
+            EnsureMutable();
+            _unhandledInputEnabled = value;
+        }
+    }
+
+    /// <summary>Gets or sets whether this node receives unhandled keyboard events before general unhandled input.</summary>
+    /// <value><see langword="false"/> by default.</value>
+    /// <remarks>The stage is skipped for non-keyboard events and after <see cref="SceneTree.SetInputAsHandled"/>.</remarks>
+    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
+    public bool UnhandledKeyInputEnabled
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return _unhandledKeyInputEnabled;
+        }
+        set
+        {
+            EnsureMutable();
+            _unhandledKeyInputEnabled = value;
         }
     }
 
@@ -1688,6 +1751,36 @@ public class Node : ElectronObject
     {
     }
 
+    /// <summary>Receives an input event during the first scene-input propagation stage.</summary>
+    /// <param name="event">The live caller-owned event being dispatched.</param>
+    /// <remarks>
+    /// The callback runs synchronously on the scene-tree owner thread when <see cref="InputEnabled"/> is true and
+    /// <see cref="CanProcess"/> allows the node. Call <see cref="SceneTree.SetInputAsHandled"/> to stop later stages.
+    /// </remarks>
+    protected virtual void OnInput(InputEvent @event)
+    {
+    }
+
+    /// <summary>Receives a keyboard event that remains unhandled after the first input stage.</summary>
+    /// <param name="event">The live caller-owned keyboard event being dispatched.</param>
+    /// <remarks>
+    /// The callback runs synchronously on the scene-tree owner thread when <see cref="UnhandledKeyInputEnabled"/> is
+    /// true and <see cref="CanProcess"/> allows the node.
+    /// </remarks>
+    protected virtual void OnUnhandledKeyInput(InputEventKey @event)
+    {
+    }
+
+    /// <summary>Receives an event that remains unhandled after earlier scene-input stages.</summary>
+    /// <param name="event">The live caller-owned event being dispatched.</param>
+    /// <remarks>
+    /// The callback runs synchronously on the scene-tree owner thread when <see cref="UnhandledInputEnabled"/> is true
+    /// and <see cref="CanProcess"/> allows the node.
+    /// </remarks>
+    protected virtual void OnUnhandledInput(InputEvent @event)
+    {
+    }
+
     /// <inheritdoc />
     /// <remarks>
     /// Calls the base implementation, then maps enter, exit, ready, process, and physics-process notification IDs to
@@ -2306,6 +2399,12 @@ public class Node : ElectronObject
     }
 
     internal void ResetReadyAfterFailedActivation() => _readyCalled = false;
+
+    internal void DispatchInput(InputEvent @event) => OnInput(@event);
+
+    internal void DispatchUnhandledKeyInput(InputEventKey @event) => OnUnhandledKeyInput(@event);
+
+    internal void DispatchUnhandledInput(InputEvent @event) => OnUnhandledInput(@event);
 
     private static bool IsValidNodeName(string? value) =>
         !string.IsNullOrWhiteSpace(value) && value is not "." and not ".." && !value.Contains('/');

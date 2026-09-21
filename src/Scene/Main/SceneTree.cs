@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 
 namespace Electron2D;
 
-/// <summary>Owns one active node hierarchy and coordinates its lifecycle, frames, groups, timers, tweens, and deferred work.</summary>
+/// <summary>Owns one active node hierarchy and coordinates its lifecycle, input, frames, groups, timers, tweens, and deferred work.</summary>
 /// <remarks>
 /// The creating thread becomes the owner thread for scene mutation, frame execution, flushing, and disposal.
 /// Electron2D does not create a frame-pump thread. A host can drive the loop through <see cref="Engine.AdvanceFrame"/>,
@@ -27,6 +27,7 @@ public sealed class SceneTree : MainLoop
     private readonly int _ownerThreadId = Environment.CurrentManagedThreadId;
     private readonly HashSet<GroupOperationKey> _uniqueGroupOperations = [];
     private readonly List<Node> _scheduleTraversal = [];
+    private readonly List<Node> _inputTraversal = [];
     private readonly List<ScheduledNode> _scheduledNodes = [];
     private readonly List<SceneTreeTimer> _timerSnapshot = [];
     private readonly List<SceneTreeTimer> _timers = [];
@@ -38,6 +39,8 @@ public sealed class SceneTree : MainLoop
     private bool _acceptingWork = true;
     private bool _constructionComplete;
     private bool _isChangingPause;
+    private bool _isDispatchingInput;
+    private bool _inputHandled;
     private bool _paused;
     private int _activeExecution;
     private int _lifecycleExecutionDepth;
@@ -396,6 +399,35 @@ public sealed class SceneTree : MainLoop
     /// <exception cref="AggregateException">One or more frame events, node callbacks, timers, tweens, or deferred operations fail.</exception>
     public void PhysicsFrame(double delta) => _ = PhysicsProcess(delta);
 
+    /// <summary>Marks the input event currently being dispatched as handled.</summary>
+    /// <remarks>
+    /// Handling stops the current stage immediately and skips every later input stage. The flag belongs only to the
+    /// active synchronous dispatch and is reset before the next event.
+    /// </remarks>
+    /// <exception cref="InvalidOperationException">No input event is currently being dispatched or the caller is not the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
+    public void SetInputAsHandled()
+    {
+        ThrowIfDisposed();
+        EnsureOwnerThread();
+        if (!_isDispatchingInput)
+            throw new InvalidOperationException("Input can only be marked handled during scene input dispatch.");
+        _inputHandled = true;
+    }
+
+    /// <summary>Gets whether the input event currently being dispatched has been handled.</summary>
+    /// <returns><see langword="true"/> only after <see cref="SetInputAsHandled"/> during active dispatch.</returns>
+    /// <exception cref="InvalidOperationException">No input event is currently being dispatched or the caller is not the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
+    public bool IsInputHandled()
+    {
+        ThrowIfDisposed();
+        EnsureOwnerThread();
+        if (!_isDispatchingInput)
+            throw new InvalidOperationException("Input handled state exists only during scene input dispatch.");
+        return _inputHandled;
+    }
+
     /// <summary>Returns every current node in a group in depth-first pre-order.</summary>
     /// <param name="group">The nonblank, case-sensitive group name.</param>
     /// <returns>A read-only snapshot of matching nodes.</returns>
@@ -605,6 +637,47 @@ public sealed class SceneTree : MainLoop
         return false;
     }
 
+    internal override void ValidateInputEventDispatch()
+    {
+        base.ValidateInputEventDispatch();
+        EnsureAcceptingWork();
+        EnsureExecutionAvailable();
+    }
+
+    internal override void DispatchInputEvent(InputEvent @event)
+    {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(@event);
+        @event.EnsureUsable();
+        EnsureOwnerThread();
+        EnsureAcceptingWork();
+        BeginExecution();
+        _isDispatchingInput = true;
+        _inputHandled = false;
+        List<Exception>? errors = null;
+
+        try
+        {
+            CaptureInputNodes();
+            DispatchInputStage(@event, InputStage.Input, ref errors);
+
+            if (!_inputHandled && @event is InputEventKey key)
+                DispatchInputStage(key, InputStage.UnhandledKey, ref errors);
+
+            if (!_inputHandled)
+                DispatchInputStage(@event, InputStage.Unhandled, ref errors);
+        }
+        finally
+        {
+            _inputTraversal.Clear();
+            _inputHandled = false;
+            _isDispatchingInput = false;
+            EndExecution();
+        }
+
+        ThrowCollected("One or more scene input callbacks failed.", errors);
+    }
+
     /// <inheritdoc />
     /// <remarks>
     /// System lifecycle notifications are propagated through a depth-first snapshot of the live hierarchy after
@@ -639,7 +712,7 @@ public sealed class SceneTree : MainLoop
     }
 
     /// <inheritdoc />
-    /// <remarks>Rejects finalization during construction, a frame, a flush, lifecycle delivery, or pause delivery.</remarks>
+    /// <remarks>Rejects finalization during construction, a frame, input dispatch, a flush, lifecycle delivery, or pause delivery.</remarks>
     /// <exception cref="InvalidOperationException">Construction is incomplete or execution is active.</exception>
     protected override void ValidateFinalization()
     {
@@ -647,20 +720,20 @@ public sealed class SceneTree : MainLoop
             throw new InvalidOperationException("A SceneTree cannot be finalized before construction completes.");
 
         if (_activeExecution != 0 || _lifecycleExecutionDepth != 0 || _isChangingPause)
-            throw new InvalidOperationException("A SceneTree cannot be finalized from one of its frame, flush, lifecycle, or pause callbacks.");
+            throw new InvalidOperationException("A SceneTree cannot be finalized from one of its frame, input, flush, lifecycle, or pause callbacks.");
 
         base.ValidateFinalization();
     }
 
     /// <inheritdoc />
-    /// <remarks>Requires the owner thread and rejects disposal re-entered from a frame, flush, lifecycle, or pause callback.</remarks>
+    /// <remarks>Requires the owner thread and rejects disposal re-entered from a frame, input, flush, lifecycle, or pause callback.</remarks>
     /// <exception cref="InvalidOperationException">The caller is not the owner thread or execution is active.</exception>
     protected override void ValidateDisposal()
     {
         EnsureOwnerThread();
 
         if (_activeExecution != 0 || _lifecycleExecutionDepth != 0 || _isChangingPause)
-            throw new InvalidOperationException("A SceneTree cannot be disposed from one of its frame, flush, lifecycle, or pause callbacks.");
+            throw new InvalidOperationException("A SceneTree cannot be disposed from one of its frame, input, flush, lifecycle, or pause callbacks.");
 
         base.ValidateDisposal();
     }
@@ -1025,6 +1098,68 @@ public sealed class SceneTree : MainLoop
         }
     }
 
+    private void CaptureInputNodes()
+    {
+        _inputTraversal.Clear();
+        _scheduleTraversal.Clear();
+        _scheduleTraversal.Add(Root);
+
+        while (_scheduleTraversal.Count != 0)
+        {
+            var last = _scheduleTraversal.Count - 1;
+            var node = _scheduleTraversal[last];
+            _scheduleTraversal.RemoveAt(last);
+            _inputTraversal.Add(node);
+
+            var children = node.Children;
+            for (var index = children.Count - 1; index >= 0; index--)
+                _scheduleTraversal.Add(children[index]);
+        }
+
+        _scheduleTraversal.Clear();
+    }
+
+    private void DispatchInputStage(InputEvent @event, InputStage stage, ref List<Exception>? errors)
+    {
+        for (var index = _inputTraversal.Count - 1; index >= 0 && !_inputHandled; index--)
+        {
+            var node = _inputTraversal[index];
+            if (node.IsDisposed || !ReferenceEquals(node.Tree, this) || !node.CanProcess())
+                continue;
+
+            var enabled = stage switch
+            {
+                InputStage.Input => node.InputEnabled,
+                InputStage.UnhandledKey => node.UnhandledKeyInputEnabled,
+                InputStage.Unhandled => node.UnhandledInputEnabled,
+                _ => false,
+            };
+
+            if (!enabled)
+                continue;
+
+            try
+            {
+                switch (stage)
+                {
+                    case InputStage.Input:
+                        node.DispatchInput(@event);
+                        break;
+                    case InputStage.UnhandledKey:
+                        node.DispatchUnhandledKeyInput((InputEventKey)@event);
+                        break;
+                    case InputStage.Unhandled:
+                        node.DispatchUnhandledInput(@event);
+                        break;
+                }
+            }
+            catch (Exception error)
+            {
+                CollectException(ref errors, error);
+            }
+        }
+    }
+
     private void FlushDeferredCore(ref List<Exception>? errors)
     {
         ConcurrentQueue<Action>? actions = null;
@@ -1222,10 +1357,14 @@ public sealed class SceneTree : MainLoop
 
     private void BeginExecution()
     {
-        if (_activeExecution != 0 || _lifecycleExecutionDepth != 0 || _isChangingPause)
-            throw new InvalidOperationException("SceneTree frame and flush execution cannot run re-entrantly or during lifecycle or pause delivery.");
-
+        EnsureExecutionAvailable();
         _activeExecution = 1;
+    }
+
+    private void EnsureExecutionAvailable()
+    {
+        if (_activeExecution != 0 || _lifecycleExecutionDepth != 0 || _isChangingPause)
+            throw new InvalidOperationException("SceneTree frame, input, and flush execution cannot run re-entrantly or during lifecycle or pause delivery.");
     }
 
     private void EndExecution() => _activeExecution = 0;
@@ -1311,6 +1450,13 @@ public sealed class SceneTree : MainLoop
     }
 
     private readonly record struct DeletionRequest(ElectronObject Instance, bool RequiresNodeRequest);
+
+    private enum InputStage
+    {
+        Input,
+        UnhandledKey,
+        Unhandled,
+    }
 
     private readonly record struct GroupOperationKey(GroupOperationKind Kind, string Group, object Identity);
 

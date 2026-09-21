@@ -2,8 +2,8 @@ namespace Electron2D;
 
 /// <summary>Controls when a node receives process and physics-process callbacks.</summary>
 /// <remarks>
-/// The values affect only Electron2D's explicitly enabled host-driven process and physics-process callback lanes. They
-/// do not control rendering, input, audio, or a physics server.
+/// The values affect Electron2D's explicitly enabled host-driven process, physics-process, and scene-input callback
+/// lanes. They do not control rendering, audio, or a physics server.
 /// </remarks>
 public enum NodeProcessMode
 {

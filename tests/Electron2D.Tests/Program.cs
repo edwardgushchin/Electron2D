@@ -27,6 +27,7 @@ VerifyDirAccess();
 VerifyProjectSettings();
 VerifyResources();
 VerifyPackedScenes();
+VerifyInput();
 VerifyEngine();
 VerifyMainLoop();
 VerifyNodeHierarchyAndTransforms();
@@ -2826,6 +2827,511 @@ static void VerifyProjectSettings()
     }
 }
 
+static void VerifyInput()
+{
+    const string jump = "tests.input.jump";
+    const string left = "tests.input.left";
+    const string right = "tests.input.right";
+    const string up = "tests.input.up";
+    const string down = "tests.input.down";
+    const string full = "tests.input.full";
+    var map = InputMap.Instance;
+    var input = Input.Instance;
+    var actionNames = new[] { jump, left, right, up, down, full };
+    var bindings = new List<InputEvent>();
+
+    input.ReleasePressedEvents();
+    foreach (var action in actionNames)
+    {
+        if (map.HasAction(action))
+            map.EraseAction(action);
+    }
+
+    try
+    {
+        Require(ReferenceEquals(input, Input.Instance) && ReferenceEquals(map, InputMap.Instance),
+            "Input and InputMap must be process-wide singletons.");
+        Expect<InvalidOperationException>(input.Dispose, "The process-wide Input service must reject disposal.");
+        Expect<InvalidOperationException>(map.Dispose, "The process-wide InputMap service must reject disposal.");
+        Expect<ArgumentException>(() => map.AddAction(" "), "Input action names must reject whitespace.");
+        Expect<ArgumentOutOfRangeException>(() => map.AddAction("tests.invalid", float.NaN),
+            "Action deadzones must reject NaN.");
+        var disposedEvent = new InputEventKey();
+        disposedEvent.Dispose();
+        Expect<ObjectDisposedException>(() => input.ParseInputEvent(disposedEvent),
+            "Input parsing must reject a disposed event before changing state.");
+        Expect<ObjectDisposedException>(() => _ = disposedEvent.Keycode,
+            "Concrete input-event properties must reject access after disposal.");
+
+        var propertyCases = new (InputEvent Event, string[] Names)[]
+        {
+            (new InputEventAction(), [nameof(InputEvent.Device), nameof(InputEventAction.Action), nameof(InputEventAction.EventIndex), nameof(InputEventAction.Pressed), nameof(InputEventAction.Strength)]),
+            (new InputEventKey(), [nameof(InputEvent.Device), nameof(InputEventFromWindow.WindowId), nameof(InputEventWithModifiers.AltPressed), nameof(InputEventWithModifiers.ShiftPressed), nameof(InputEventWithModifiers.ControlPressed), nameof(InputEventWithModifiers.MetaPressed), nameof(InputEventWithModifiers.CommandOrControlAutoremap), nameof(InputEventKey.Pressed), nameof(InputEventKey.Echo), nameof(InputEventKey.Keycode), nameof(InputEventKey.PhysicalKeycode), nameof(InputEventKey.KeyLabel), nameof(InputEventKey.Unicode), nameof(InputEventKey.Location)]),
+            (new InputEventMouseButton(), [nameof(InputEventMouse.ButtonMask), nameof(InputEventMouse.Position), nameof(InputEventMouse.GlobalPosition), nameof(InputEventMouseButton.ButtonIndex), nameof(InputEventMouseButton.Pressed), nameof(InputEventMouseButton.Canceled), nameof(InputEventMouseButton.DoubleClick), nameof(InputEventMouseButton.Factor)]),
+            (new InputEventMouseMotion(), [nameof(InputEventMouseMotion.PenInverted), nameof(InputEventMouseMotion.Pressure), nameof(InputEventMouseMotion.Relative), nameof(InputEventMouseMotion.ScreenRelative), nameof(InputEventMouseMotion.Velocity), nameof(InputEventMouseMotion.ScreenVelocity), nameof(InputEventMouseMotion.Tilt)]),
+            (new InputEventJoypadButton(), [nameof(InputEventJoypadButton.ButtonIndex), nameof(InputEventJoypadButton.Pressed), nameof(InputEventJoypadButton.Pressure)]),
+            (new InputEventJoypadMotion(), [nameof(InputEventJoypadMotion.Axis), nameof(InputEventJoypadMotion.AxisValue)]),
+            (new InputEventScreenTouch(), [nameof(InputEventScreenTouch.Index), nameof(InputEventScreenTouch.Position), nameof(InputEventScreenTouch.Pressed), nameof(InputEventScreenTouch.Canceled), nameof(InputEventScreenTouch.DoubleTap)]),
+            (new InputEventScreenDrag(), [nameof(InputEventScreenDrag.Index), nameof(InputEventScreenDrag.PenInverted), nameof(InputEventScreenDrag.Position), nameof(InputEventScreenDrag.Pressure), nameof(InputEventScreenDrag.Relative), nameof(InputEventScreenDrag.ScreenRelative), nameof(InputEventScreenDrag.Velocity), nameof(InputEventScreenDrag.ScreenVelocity), nameof(InputEventScreenDrag.Tilt)]),
+            (new InputEventMagnifyGesture(), [nameof(InputEventGesture.Position), nameof(InputEventMagnifyGesture.Factor)]),
+            (new InputEventPanGesture(), [nameof(InputEventGesture.Position), nameof(InputEventPanGesture.Delta)]),
+        };
+        try
+        {
+            foreach (var (inputEvent, names) in propertyCases)
+            {
+                var descriptors = inputEvent.GetPropertyList();
+                Require(names.All(name => descriptors.Single(property => property.Name == name).IsStored),
+                    $"{inputEvent.GetType().Name} must expose every event value through stored typed property descriptors.");
+                Require(!inputEvent.PropertyCanRevert(descriptors.Single(property => property.Name == nameof(InputEvent.Device))),
+                    $"{inputEvent.GetType().Name} must report its constructor device as the descriptor default.");
+            }
+
+            var describedKey = (InputEventKey)propertyCases[1].Event;
+            var keycodeProperty = describedKey.GetPropertyList()
+                .OfType<PropertyDescriptor<InputEventKey, Key>>()
+                .Single(property => property.Name == nameof(InputEventKey.Keycode));
+            keycodeProperty.SetValue(describedKey, Key.Enter);
+            Require(describedKey.Keycode == Key.Enter,
+                "An input-event property descriptor must update the validated public property.");
+            using var duplicatedKey = (InputEventKey)describedKey.Duplicate();
+            Require(duplicatedKey.Keycode == Key.Enter && duplicatedKey.Device == InputEvent.DeviceIdKeyboard,
+                "Input-event duplication must preserve concrete stored state and exact runtime type.");
+            Require(describedKey.IsActionType() && !propertyCases[3].Event.IsActionType(),
+                "Only the sealed key, button, axis, and direct-action event families may be action bindings.");
+        }
+        finally
+        {
+            foreach (var (inputEvent, _) in propertyCases)
+                inputEvent.Dispose();
+        }
+
+        using (var invalidAction = new InputEventAction())
+        using (var invalidKey = new InputEventKey())
+        using (var invalidMotion = new InputEventMouseMotion())
+        using (var invalidTouch = new InputEventScreenTouch())
+        using (var invalidMagnify = new InputEventMagnifyGesture())
+        {
+            Expect<ArgumentOutOfRangeException>(() => invalidAction.EventIndex = Input.MaxEventsPerAction,
+                "Direct action indexes must enforce the source ceiling.");
+            Expect<ArgumentOutOfRangeException>(() => invalidAction.Strength = float.NaN,
+                "Direct action strength must reject NaN.");
+            Expect<ArgumentOutOfRangeException>(() => invalidKey.Unicode = 0xD800,
+                "Keyboard Unicode values must reject surrogate code points.");
+            invalidKey.CommandOrControlAutoremap = true;
+            Expect<InvalidOperationException>(() => invalidKey.ControlPressed = true,
+                "Portable command-or-control mode must reject direct control mutation.");
+            Expect<ArgumentOutOfRangeException>(() => invalidMotion.Pressure = 1.01f,
+                "Pointer pressure must remain in its unit interval.");
+            Expect<ArgumentOutOfRangeException>(() => invalidMotion.Tilt = new Vector2(0f, float.PositiveInfinity),
+                "Pointer tilt must reject non-finite components.");
+            Expect<ArgumentOutOfRangeException>(() => invalidTouch.Index = -1,
+                "Touch contact indexes must be non-negative.");
+            Expect<ArgumentOutOfRangeException>(() => invalidMagnify.Factor = 0f,
+                "Magnification factors must be positive.");
+        }
+
+        map.AddAction(jump, 0.25f);
+        map.AddAction(left);
+        map.AddAction(right);
+        map.AddAction(up);
+        map.AddAction(down);
+        map.AddAction(full);
+
+        for (var index = 0; index < Input.MaxEventsPerAction; index++)
+        {
+            var binding = new InputEventKey { Keycode = (Key)('A' + index) };
+            bindings.Add(binding);
+            map.ActionAddEvent(full, binding);
+        }
+        using (var overflowAction = new InputEventAction { Action = full, Pressed = true })
+        {
+            Expect<InvalidOperationException>(() => input.ParseInputEvent(overflowAction),
+                "An unindexed direct action event must not exceed the 32-source action limit.");
+            Require(!input.IsActionPressed(full),
+                "A rejected direct action event must not mutate action state.");
+        }
+
+        var syntheticBinding = new InputEventAction { Action = up };
+        bindings.Add(syntheticBinding);
+        map.ActionAddEvent(up, syntheticBinding);
+        Require(map.GetActionDescription(up) == "Action has no bound inputs" && syntheticBinding.AsText() == up,
+            "Action descriptions must omit synthetic indirection while a synthetic event falls back to its name.");
+
+        var jumpBinding = new InputEventKey { Keycode = Key.Space };
+        bindings.Add(jumpBinding);
+        map.ActionAddEvent(jump, jumpBinding);
+        map.ActionAddEvent(jump, jumpBinding);
+        Require(map.ActionGetEvents(jump).Count == 1 && map.ActionHasEvent(jump, jumpBinding) &&
+                map.EventIsAction(new InputEventKey { Keycode = Key.Space, Pressed = true }, jump),
+            "InputMap must ignore duplicate bindings and match a configured key.");
+
+        var allDeviceBinding = new InputEventJoypadButton
+        {
+            Device = InputMap.AllDevices,
+            ButtonIndex = JoyButton.B,
+        };
+        bindings.Add(allDeviceBinding);
+        map.ActionAddEvent(up, allDeviceBinding);
+        using (var deviceBinding = new InputEventJoypadButton { Device = 7, ButtonIndex = JoyButton.B })
+        {
+            Require(map.ActionHasEvent(up, deviceBinding),
+                "An all-device binding must match exact binding queries from a concrete controller.");
+            map.ActionAddEvent(up, deviceBinding);
+            Require(map.ActionGetEvents(up).Count == 2,
+                "A concrete-device binding already covered by an earlier all-device binding must be deduplicated.");
+            Require(map.GetActionDescription(up) == allDeviceBinding.AsText(),
+                "An action description must list each concrete binding once and omit synthetic indirection.");
+        }
+
+        var throwingBinding = new InputEventKey { Keycode = Key.L };
+        throwingBinding.Changed += _ => throw new InvalidOperationException("expected binding observer failure");
+        bindings.Add(throwingBinding);
+        map.ActionAddEvent(left, throwingBinding);
+        using (var throwingBindingPress = new InputEventKey { Keycode = Key.L, Pressed = true })
+        {
+            input.ParseInputEvent(throwingBindingPress);
+            Require(input.IsActionPressed(left), "The failure-injection binding must first contribute to its action.");
+            Expect<InvalidOperationException>(() => throwingBinding.Keycode = Key.M,
+                "A throwing public binding observer must propagate after the binding changes.");
+            Require(!input.IsActionPressed(left) && throwingBinding.Keycode == Key.M,
+                "Internal action invalidation must precede fallible public binding observers.");
+        }
+
+        var disposableBinding = new InputEventKey { Keycode = Key.D };
+        bindings.Add(disposableBinding);
+        map.ActionAddEvent(down, disposableBinding);
+        using (var disposableBindingPress = new InputEventKey { Keycode = Key.D, Pressed = true })
+        {
+            input.ParseInputEvent(disposableBindingPress);
+            Require(input.IsActionPressed(down), "The disposable binding must first contribute to its action.");
+            disposableBinding.Dispose();
+            Require(!input.IsActionPressed(down) && map.ActionGetEvents(down).Count == 0,
+                "Disposing a registered binding must remove it and clear its cached contribution.");
+        }
+
+        var modifiedBinding = new InputEventKey { Keycode = Key.J, ControlPressed = true };
+        bindings.Add(modifiedBinding);
+        map.ActionAddEvent(jump, modifiedBinding);
+        using (var extraModifier = new InputEventKey
+        {
+            Keycode = Key.J,
+            ControlPressed = true,
+            ShiftPressed = true,
+            Pressed = true,
+        })
+        {
+            Require(extraModifier.IsAction(jump) && !extraModifier.IsAction(jump, exactMatch: true),
+                "Non-exact action matching must allow extra modifiers while exact matching rejects them.");
+        }
+
+        var log = new List<string>();
+        var root = new InputProbeNode("root", log)
+        {
+            InputEnabled = true,
+            UnhandledKeyInputEnabled = true,
+            UnhandledInputEnabled = true,
+            PhysicsProcessEnabled = true,
+            ObservedAction = jump,
+        };
+        var child = new InputProbeNode("child", log)
+        {
+            InputEnabled = true,
+            UnhandledKeyInputEnabled = true,
+            UnhandledInputEnabled = true,
+            PhysicsProcessEnabled = true,
+            ObservedAction = jump,
+        };
+        root.AddChild(child);
+
+        using (var tree = new SceneTree(root))
+        using (var press = new InputEventKey { Keycode = Key.Space, Pressed = true })
+        {
+            Engine.Instance.Start(tree);
+            var wrongThreadError = Task.Run(() => Capture(() => input.ParseInputEvent(press))).Result;
+            Require(wrongThreadError is InvalidOperationException && !input.IsKeyPressed(Key.Space) &&
+                    !input.IsActionPressed(jump),
+                "Off-owner input delivery must fail before raw or mapped state changes.");
+            input.ParseInputEvent(press);
+            Require(log.SequenceEqual([
+                    "child:input", "root:input",
+                    "child:key", "root:key",
+                    "child:unhandled", "root:unhandled",
+                ]) && child.SawPressedState && root.SawPressedState,
+                "Scene input must run child-first by stage after committing state.");
+            Require(input.IsKeyPressed(Key.Space) && input.IsActionPressed(jump) &&
+                    input.IsActionJustPressed(jump) && input.IsActionJustPressedByEvent(jump, press) &&
+                    input.GetActionStrength(jump) == 1f && input.GetActionRawStrength(jump) == 1f,
+                "A key press must update raw, mapped, transition, and strength state.");
+
+            tree.ProcessFrame(0d);
+            Require(!input.IsActionJustPressed(jump),
+                "The process transition must clear after the first process frame.");
+            using (var frameRelease = new InputEventKey { Keycode = Key.Space, Pressed = false })
+            {
+                root.PhysicsInputAttempt = frameRelease;
+                tree.PhysicsFrame(0d);
+                root.PhysicsInputAttempt = null;
+                Require(root.PhysicsSawJustPressed && child.PhysicsSawJustPressed &&
+                        root.FrameInputError is InvalidOperationException && input.IsActionPressed(jump) &&
+                        !input.IsActionJustPressed(jump),
+                    "The physics lane must observe its transition while nested input fails before changing state.");
+            }
+
+            log.Clear();
+            child.HandleInput = true;
+            using var release = new InputEventKey { Keycode = Key.Space, Pressed = false };
+            input.ParseInputEvent(release);
+            Require(log.SequenceEqual(["child:input"]) && !input.IsKeyPressed(Key.Space) &&
+                    !input.IsActionPressed(jump) && input.IsActionJustReleased(jump) &&
+                    input.IsActionJustReleasedByEvent(jump, release),
+                "Handled input must stop the current and later stages while preserving the committed release.");
+            Expect<InvalidOperationException>(tree.SetInputAsHandled,
+                "Input handled state must not escape synchronous dispatch.");
+
+            child.HandleInput = false;
+            child.ReenterInput = true;
+            log.Clear();
+            input.ParseInputEvent(press);
+            Require(child.ReentryError is InvalidOperationException,
+                "Input parsing must reject callback re-entry without corrupting outer delivery.");
+
+            child.ReenterInput = false;
+            child.ThrowOnInput = true;
+            log.Clear();
+            Expect<AggregateException>(() => input.ParseInputEvent(release),
+                "A throwing node input callback must be reported after the remaining eligible nodes run.");
+            Require(log.Contains("root:input") && !input.IsActionPressed(jump),
+                "Input callback failures must not roll back state or skip unrelated nodes.");
+            child.ThrowOnInput = false;
+
+            tree.Paused = true;
+            log.Clear();
+            press.Pressed = true;
+            input.ParseInputEvent(press);
+            Require(log.Count == 0 && input.IsActionPressed(jump),
+                "Paused-ineligible nodes must skip input callbacks after state is committed.");
+            tree.Paused = false;
+
+            root.InputEnabled = false;
+            root.UnhandledKeyInputEnabled = false;
+            root.UnhandledInputEnabled = false;
+            child.InputEnabled = false;
+            child.UnhandledKeyInputEnabled = false;
+            child.UnhandledInputEnabled = false;
+            for (var index = 0; index < 16; index++)
+            {
+                press.Pressed = true;
+                input.ParseInputEvent(press);
+                press.Pressed = false;
+                input.ParseInputEvent(press);
+            }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            var allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
+            for (var index = 0; index < 256; index++)
+            {
+                press.Pressed = true;
+                input.ParseInputEvent(press);
+                press.Pressed = false;
+                input.ParseInputEvent(press);
+            }
+            Require(GC.GetAllocatedBytesForCurrentThread() == allocatedBefore,
+                "Warmed mapped input parsing and scene traversal must not allocate managed memory.");
+
+            Engine.Instance.Stop();
+        }
+
+        using (var remapPress = new InputEventKey { Keycode = Key.Space, Pressed = true })
+        {
+            input.ParseInputEvent(remapPress);
+            Require(input.IsActionPressed(jump), "A mapped source must be active before a live binding edit.");
+            jumpBinding.Keycode = Key.Enter;
+            Require(!input.IsActionPressed(jump),
+                "Mutating a registered live binding must invalidate cached contributions for that action.");
+            jumpBinding.Keycode = Key.Space;
+        }
+
+        input.ActionPress(right, 0.75f);
+        input.ActionPress(down, 1f);
+        Require(input.IsActionPressed(right) && input.GetActionStrength(right) == 0.75f &&
+                VectorNearlyEqual(input.GetVector(left, right, up, down, 0f), new Vector2(0.6f, 0.8f)),
+            "Synthetic action state and vector composition must preserve analog magnitude and clamp diagonals.");
+        input.ActionRelease(right);
+        input.ActionRelease(down);
+        Expect<ArgumentOutOfRangeException>(() => input.GetVector(left, right, up, down, float.NaN),
+            "Vector deadzones must reject NaN.");
+        Expect<KeyNotFoundException>(() => input.ActionPress("tests.input.missing"),
+            "Synthetic action changes must reject unregistered names.");
+
+        using (var direct = new InputEventAction { Action = jump, Pressed = true, Strength = 0.4f })
+        {
+            input.ParseInputEvent(direct);
+            Require(input.IsActionPressed(jump) && input.GetActionStrength(jump) == 0.4f,
+                "A direct action event must update its registered action without a hardware binding.");
+            direct.Pressed = false;
+            input.ParseInputEvent(direct);
+            Require(!input.IsActionPressed(jump), "A direct action release must remove its synthetic event source.");
+        }
+
+        using (var motion = new InputEventMouseMotion
+        {
+            ButtonMask = MouseButtonMask.Left,
+            Position = new Vector2(5f, 6f),
+            Velocity = new Vector2(20f, 30f),
+            ScreenVelocity = new Vector2(40f, 50f),
+        })
+        {
+            input.ParseInputEvent(motion);
+            Require(input.MouseButtonMask == MouseButtonMask.Left &&
+                    input.IsMouseButtonPressed(MouseButton.Left) &&
+                    !input.IsMouseButtonPressed(MouseButton.WheelUp) &&
+                    input.LastMouseVelocity == new Vector2(20f, 30f) &&
+                    input.LastMouseScreenVelocity == new Vector2(40f, 50f),
+                "Mouse motion must publish held buttons and both velocity coordinate spaces.");
+            Expect<ArgumentOutOfRangeException>(() => input.IsMouseButtonPressed((MouseButton)99),
+                "Mouse-button queries must reject unknown identifiers.");
+        }
+
+        using (var button = new InputEventJoypadButton { Device = 2, ButtonIndex = JoyButton.A, Pressed = true })
+        using (var axis = new InputEventJoypadMotion { Device = 2, Axis = JoyAxis.LeftX, AxisValue = -0.7f })
+        {
+            input.ParseInputEvent(button);
+            input.ParseInputEvent(axis);
+            Require(input.IsJoyButtonPressed(JoyButton.A, 2) && NearlyEqual(input.GetJoyAxis(JoyAxis.LeftX, 2), -0.7f),
+                "Controller events must retain per-device button and axis state.");
+            Expect<ArgumentOutOfRangeException>(() => input.GetJoyAxis(JoyAxis.Invalid, 2),
+                "Controller queries must reject invalid axes.");
+        }
+
+        var vectorBinding = new InputEventJoypadMotion { Axis = JoyAxis.RightX, AxisValue = 1f };
+        bindings.Add(vectorBinding);
+        map.ActionSetDeadzone(right, 0.5f);
+        map.ActionAddEvent(right, vectorBinding);
+        using (var vectorAxis = new InputEventJoypadMotion { Axis = JoyAxis.RightX, AxisValue = 0.75f })
+        {
+            input.ParseInputEvent(vectorAxis);
+            Require(!vectorAxis.IsPressed() &&
+                    NearlyEqual(input.GetActionStrength(right), 0.5f) &&
+                    NearlyEqual(input.GetActionRawStrength(right), 0.75f) &&
+                    VectorNearlyEqual(input.GetVector(left, right, up, down, 0f), new Vector2(0.75f, 0f)),
+                "Axis events must derive action presses from each action's deadzone, and vectors must use raw strengths.");
+        }
+
+        using (var firstMotion = new InputEventMouseMotion
+        {
+            Position = new Vector2(1f, 1f),
+            Relative = new Vector2(1f, 2f),
+            Velocity = new Vector2(3f, 4f),
+        })
+        using (var secondMotion = new InputEventMouseMotion
+        {
+            Position = new Vector2(2f, 3f),
+            Relative = new Vector2(4f, 5f),
+            Velocity = new Vector2(6f, 7f),
+        })
+        {
+            var accumulatedChanges = 0;
+            firstMotion.Changed += _ => accumulatedChanges++;
+            Require(firstMotion.Accumulate(secondMotion) && firstMotion.Position == secondMotion.Position &&
+                    firstMotion.Relative == new Vector2(5f, 7f) && firstMotion.Velocity == secondMotion.Velocity &&
+                    accumulatedChanges == 1,
+                "Compatible mouse motion must accumulate displacement and keep the newest position and velocity.");
+            using var transformed = firstMotion.XformedBy(new Transform(0f, new Vector2(10f, 20f)));
+            Require(transformed is InputEventMouseMotion transformedMotion &&
+                    transformedMotion.Position == new Vector2(12f, 23f) &&
+                    transformedMotion.Relative == new Vector2(5f, 7f),
+                "Positional events must produce transformed copies without mutating the source.");
+            var nonFiniteTransform = Transform.Identity;
+            nonFiniteTransform.X.X = float.NaN;
+            Expect<ArgumentOutOfRangeException>(() => firstMotion.XformedBy(nonFiniteTransform),
+                "Positional input transforms must reject non-finite matrices before duplication.");
+
+            firstMotion.Changed += _ => throw new InvalidOperationException("expected accumulated change failure");
+            using var thirdMotion = new InputEventMouseMotion
+            {
+                Position = new Vector2(8f, 9f),
+                Relative = new Vector2(1f, 1f),
+                Velocity = new Vector2(10f, 11f),
+            };
+            Expect<InvalidOperationException>(() => firstMotion.Accumulate(thirdMotion),
+                "A throwing motion observer must propagate after one atomic accumulation commit.");
+            Require(firstMotion.Position == thirdMotion.Position && firstMotion.Relative == new Vector2(6f, 8f) &&
+                    firstMotion.Velocity == thirdMotion.Velocity,
+                "A failed accumulation notification must not expose partially committed motion state.");
+        }
+
+
+        using (var firstDrag = new InputEventScreenDrag
+        {
+            Index = 3,
+            Position = new Vector2(1f, 2f),
+            Relative = new Vector2(2f, 3f),
+            ScreenRelative = new Vector2(4f, 5f),
+        })
+        using (var secondDrag = new InputEventScreenDrag
+        {
+            Index = 3,
+            Position = new Vector2(6f, 7f),
+            Relative = new Vector2(8f, 9f),
+            ScreenRelative = new Vector2(10f, 11f),
+        })
+        {
+            Require(firstDrag.Accumulate(secondDrag) && firstDrag.Position == secondDrag.Position &&
+                    firstDrag.Relative == new Vector2(10f, 12f) &&
+                    firstDrag.ScreenRelative == new Vector2(14f, 16f),
+                "Equal touch contacts must atomically accumulate local and screen deltas.");
+            using var transformedDrag = firstDrag.XformedBy(new Transform(
+                new Vector2(2f, 0f),
+                new Vector2(0f, 3f),
+                Vector2.Zero));
+            Require(transformedDrag is InputEventScreenDrag transformedScreenDrag &&
+                    transformedScreenDrag.Position == new Vector2(12f, 21f) &&
+                    transformedScreenDrag.Relative == new Vector2(20f, 36f) &&
+                    transformedScreenDrag.ScreenRelative == firstDrag.ScreenRelative,
+                "Touch-drag transforms must change local values and preserve screen-space deltas.");
+            using var differentDrag = new InputEventScreenDrag { Index = 4 };
+            Require(!firstDrag.Accumulate(differentDrag),
+                "Different touch contacts must not accumulate.");
+        }
+
+        using (var pan = new InputEventPanGesture
+        {
+            Position = new Vector2(1f, 2f),
+            Delta = new Vector2(3f, 4f),
+        })
+        using (var transformedPan = pan.XformedBy(new Transform(
+            new Vector2(2f, 0f),
+            new Vector2(0f, 3f),
+            Vector2.Zero)))
+        {
+            Require(transformedPan is InputEventPanGesture transformedGesture &&
+                    transformedGesture.Position == new Vector2(2f, 6f) &&
+                    transformedGesture.Delta == pan.Delta,
+                "Pan transforms must move the gesture position without rescaling its platform-reported delta.");
+        }
+
+        input.ReleasePressedEvents();
+        Require(!input.IsAnythingPressed() && input.MouseButtonMask == MouseButtonMask.None,
+            "ReleasePressedEvents must clear all raw input families and action sources.");
+    }
+    finally
+    {
+        if (Engine.Instance.MainLoop is not null)
+            Engine.Instance.Stop();
+        input.ReleasePressedEvents();
+        foreach (var action in actionNames)
+        {
+            if (map.HasAction(action))
+                map.EraseAction(action);
+        }
+        foreach (var binding in bindings)
+            binding.Dispose();
+    }
+}
+
 static void VerifyEngine()
 {
     var engine = Engine.Instance;
@@ -2834,12 +3340,18 @@ static void VerifyEngine()
     Require(engine.HasSingleton(nameof(Engine)) && ReferenceEquals(engine.GetSingleton<Engine>(nameof(Engine)), engine) &&
             engine.HasSingleton(nameof(ProjectSettings)) &&
             ReferenceEquals(engine.GetSingleton<ProjectSettings>(nameof(ProjectSettings)), ProjectSettings.Instance) &&
-            engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings)]),
-        "The built-in Engine and ProjectSettings instances must be present in the global singleton registry.");
+            ReferenceEquals(engine.GetSingleton<Input>(nameof(Input)), Input.Instance) &&
+            ReferenceEquals(engine.GetSingleton<InputMap>(nameof(InputMap)), InputMap.Instance) &&
+            engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap)]),
+        "All built-in process services must be present in the global singleton registry.");
     Expect<InvalidOperationException>(() => engine.UnregisterSingleton(nameof(Engine)),
         "The built-in Engine registry entry must not be removable.");
     Expect<InvalidOperationException>(() => engine.UnregisterSingleton(nameof(ProjectSettings)),
         "The built-in ProjectSettings registry entry must not be removable.");
+    Expect<InvalidOperationException>(() => engine.UnregisterSingleton(nameof(Input)),
+        "The built-in Input registry entry must not be removable.");
+    Expect<InvalidOperationException>(() => engine.UnregisterSingleton(nameof(InputMap)),
+        "The built-in InputMap registry entry must not be removable.");
     Expect<InvalidOperationException>(engine.Dispose, "The process-wide Engine must reject disposal.");
     Require(engine.PhysicsTicksPerSecond == 60 && engine.MaxPhysicsStepsPerFrame == 8 &&
             DoubleNearlyEqual(engine.PhysicsJitterFix, 0.5d) && DoubleNearlyEqual(engine.TimeScale, 1d),
@@ -2882,7 +3394,7 @@ static void VerifyEngine()
         Require(engine.HasSingleton("tests.primary") &&
                 ReferenceEquals(engine.GetSingleton("tests.primary"), registered) &&
                 ReferenceEquals(engine.GetSingleton<TestObject>("tests.primary"), registered) &&
-                engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), "tests.primary"]),
+                engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), "tests.primary"]),
             "Engine singleton lookup must preserve identity, type, and registration order.");
         Expect<InvalidOperationException>(() => engine.RegisterSingleton("tests.primary", registered),
             "Engine singleton names must be unique.");
@@ -2905,7 +3417,7 @@ static void VerifyEngine()
         "Engine singleton registration must reject disposed objects.");
 
     Parallel.For(0, 32, index => engine.RegisterSingleton($"tests.concurrent.{index}", new TestObject()));
-    Require(engine.GetSingletonList().Count == 34, "Concurrent singleton registration must not lose entries.");
+    Require(engine.GetSingletonList().Count == 36, "Concurrent singleton registration must not lose entries.");
     Parallel.For(0, 32, index =>
     {
         var name = $"tests.concurrent.{index}";
@@ -2913,7 +3425,7 @@ static void VerifyEngine()
         engine.UnregisterSingleton(name);
         instance.Dispose();
     });
-    Require(engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings)]),
+    Require(engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap)]),
         "Concurrent singleton removal must preserve only the built-in registry entries.");
 
     engine.PhysicsTicksPerSecond = 10;
@@ -7015,6 +7527,75 @@ sealed class PauseBarrierNode : Node
         catch (Exception error)
         {
             return error;
+        }
+    }
+}
+
+sealed class InputProbeNode(string id, List<string> log) : Node
+{
+    public string ObservedAction { get; set; } = string.Empty;
+
+    public bool HandleInput { get; set; }
+
+    public bool ReenterInput { get; set; }
+
+    public bool ThrowOnInput { get; set; }
+
+    public bool SawPressedState { get; private set; }
+
+    public bool PhysicsSawJustPressed { get; private set; }
+
+    public Exception? ReentryError { get; private set; }
+
+    public InputEvent? PhysicsInputAttempt { get; set; }
+
+    public Exception? FrameInputError { get; private set; }
+
+    protected override void OnInput(InputEvent @event)
+    {
+        log.Add($"{id}:input");
+        if (ObservedAction.Length != 0)
+            SawPressedState |= Input.Instance.IsActionPressed(ObservedAction);
+
+        if (ReenterInput)
+        {
+            using var nested = new InputEventMouseMotion();
+            try
+            {
+                Input.Instance.ParseInputEvent(nested);
+            }
+            catch (Exception error)
+            {
+                ReentryError = error;
+            }
+        }
+
+        if (HandleInput)
+            Tree!.SetInputAsHandled();
+
+        if (ThrowOnInput)
+            throw new InvalidOperationException("expected input failure");
+    }
+
+    protected override void OnUnhandledKeyInput(InputEventKey @event) => log.Add($"{id}:key");
+
+    protected override void OnUnhandledInput(InputEvent @event) => log.Add($"{id}:unhandled");
+
+    protected override void OnPhysicsProcess(double delta)
+    {
+        if (ObservedAction.Length != 0)
+            PhysicsSawJustPressed |= Input.Instance.IsActionJustPressed(ObservedAction);
+
+        if (PhysicsInputAttempt is not null)
+        {
+            try
+            {
+                Input.Instance.ParseInputEvent(PhysicsInputAttempt);
+            }
+            catch (Exception error)
+            {
+                FrameInputError = error;
+            }
         }
     }
 }

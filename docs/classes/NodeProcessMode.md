@@ -12,7 +12,7 @@ Last updated: 2026-09-21
 
 ## Responsibility and ownership
 
-`NodeProcessMode` is the typed pause policy stored by each [`Node`](Node.md). It owns no resources and has no lifecycle. [`SceneTree`](SceneTree.md) resolves it before each process or physics-process callback.
+`NodeProcessMode` is the typed pause policy stored by each [`Node`](Node.md). It owns no resources and has no lifecycle. [`SceneTree`](SceneTree.md) resolves it before each process, physics-process, or scene-input callback.
 
 ## Public API
 
@@ -36,4 +36,4 @@ Changing the mode of an attached node is an owner-thread mutation. Detached node
 
 ## Verification and limitations
 
-The executable check verifies `Pausable`, `WhenPaused`, `Always`, inherited `Disabled`, and the corresponding transition notifications. The mode controls only Electron2D's two explicit callback lanes; it does not imply rendering, input, or physics-engine activity.
+The executable check verifies `Pausable`, `WhenPaused`, `Always`, inherited `Disabled`, the corresponding transition notifications, and paused input suppression. The mode controls the three explicit process, physics-process, and scene-input callback families; it does not imply rendering, audio, or physics-engine activity.

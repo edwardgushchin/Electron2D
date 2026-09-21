@@ -162,7 +162,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted. Extended by [ADR 0016](core-object-runtime.md#adr-0016), which now supplies the explicitly requested process-wide scheduler without changing MainLoop's own lifecycle contract.
+Accepted. Extended by [ADR 0016](core-object-runtime.md#adr-0016), which supplies the process-wide scheduler, and [ADR 0038](input.md#adr-0038), which adds internal typed input dispatch and per-lane transition completion without changing MainLoop's public lifecycle contract.
 
 ### Context
 
@@ -178,7 +178,7 @@ The lifecycle is a single owner-thread state machine. Initialization and finaliz
 
 The permission signal is a synchronous typed C# event with a protected publisher. The twelve system notification identifiers retain their reference values. Native event generation and permission requests are not implemented until the SDL application host exists.
 
-`SceneTree` derives from `MainLoop`, completes base initialization as part of successful construction, maps the two loop hooks to its established frame lanes, and returns `false` because application-quit policy remains a host concern. Explicit finalization and disposal both close work acceptance, exit and dispose the hierarchy, dispose timers, and clear subscribers. System notifications are propagated depth-first to live attached nodes; platform-specific input-state effects remain deferred to the future Input domain.
+`SceneTree` derives from `MainLoop`, completes base initialization as part of successful construction, maps the two loop hooks to its established frame lanes, and returns `false` because application-quit policy remains a host concern. Explicit finalization and disposal both close work acceptance, exit and dispose the hierarchy, dispose timers, and clear subscribers. System notifications are propagated depth-first to live attached nodes. ADR 0038 later adds typed scene input propagation and exact SDL-host triggers for platform focus effects.
 
 The `SceneTree` frame scheduler and timer phase reuse owned lists after warm-up, and empty deferred queues are not swapped, eliminating the observed idle-frame allocations required by ADR 0014.
 

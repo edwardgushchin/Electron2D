@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 ## Responsibility
 
-Core owns behavior shared by engine objects independently of scene, rendering, input, audio, physics, asset, or platform backends.
+Core owns behavior shared by engine objects independently of scene, rendering, audio, physics, asset, or platform backends, plus the MainLoop/Engine integration points used by the separate typed Input domain.
 
 The domain is part of the 2D-only runtime for Linux, Windows, macOS, Android, and iOS and is compiled into the single production assembly `Electron2D.dll`.
 
@@ -43,8 +43,8 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `FileAccessMode`, `FileCompressionMode`, and `UnixPermissionFlags`: exact typed mode, codec, and Unix mode-bit identities.
 - `ProjectSetting<T>`: immutable typed setting identity, default snapshot, and optional validator.
 - `ProjectSettings`: process and isolated registries, feature overrides, metadata, dirty/event state, project persistence/discovery, and directory-backed virtual paths.
-- `MainLoop`: explicit initialization, variable/fixed frame callbacks, host-stop results, finalization, system notification IDs, typed permission results, and internal original-delta context for built-in scene behavior.
-- `Engine`: singleton runtime configuration, bounded host-driven scheduling, scaled/original delta delivery, callback metrics, architecture/version data, and typed named-singleton lookup.
+- `MainLoop`: explicit initialization, variable/fixed frame callbacks, host-stop results, finalization, system notification IDs, typed permission results, internal original-delta context, and Input transition/dispatch integration.
+- `Engine`: singleton runtime configuration, bounded host-driven scheduling, scaled/original delta delivery, callback metrics, architecture/version data, and typed named-singleton lookup including permanent Input/InputMap services.
 - `EngineVersionInfo`: immutable typed assembly version metadata.
 - `Mathf`: seven scalar constants and 127 integer/float/double/decimal operations covering transcendental math, angles, interpolation, approximation, rounding, periodic values, and audio conversion.
 - `Color`: sequential floating-point RGBA value with color-space conversion, math, composition, packing, text, and comparison behavior.
@@ -62,7 +62,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - File access uses `ProjectSettings` path resolution/root snapshots, .NET file/directory/drive/compression/hash/cryptography primitives, native filesystem identity/case/capacity and volume metadata, native Linux/macOS xattrs, and Windows alternate data streams. It shares the internal atomic replacement helper with `ConfigFile` and does not depend on a pack/resource loader.
 - Project settings build on `ConfigFile`, typed properties, runtime platform/architecture detection, and ordinary directory paths. Engine reads its fixed-step settings from the process registry and flushes its coalesced event.
 - `EventConnection` accepts a scheduler delegate rather than depending on Scene; callers may supply `SceneTree.Defer`.
-- `MainLoop` does not depend on Scene or SDL; `Engine` depends on it as the runtime coordinator, `SceneTree` derives from it, and a future SDL host will supply time/events to Engine.
+- `MainLoop` does not depend on Scene or SDL; it has a narrow in-assembly dependency on Input for transition completion/event forwarding. `Engine` depends on both as the runtime coordinator, `SceneTree` derives from MainLoop, and a future SDL host will supply time/events to Engine/Input.
 - `TranslationServer` has no dependency back on Core, so this direction does not form a cycle.
 - Core does not depend on SDL3-CS.
 - Scalar math depends only on .NET numeric primitives and has no mutable state, native backend, or higher-domain dependency.
@@ -70,7 +70,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - Vector, rectangle, and transform math depends on `Mathf` plus .NET layout/formatting primitives. `ConfigFile` provides strict vector, `Position`/`Size`, and `X`/`Y`/`Origin` schemas, while typed scene storage consumes reference-free values without a dependency back from Core Math to Scene.
 - `Rect`, `Transform`, and Scene's `Node` use `Electron2D.Vector2`; public external numerics types and old compatibility names are absent.
 - Future engine domains may depend on Core.
-- Core must not acquire dependencies on scene, rendering, input, or other higher-level domains.
+- Core must not acquire dependencies on scene, rendering, or other higher-level domains. The accepted MainLoop/Engine-to-Input integration is the narrow exception recorded by ADR 0038; native backends still depend inward rather than reversing ownership.
 - Core must not introduce 3D concepts or require a second production assembly.
 - Core public semantics must remain portable across Linux, Windows, macOS, Android, and iOS; platform-specific work stays behind explicit backend or host boundaries.
 
@@ -83,7 +83,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - Starting disposal makes the object unavailable to other threads immediately; the winning disposal thread may inspect guarded state while running teardown callbacks.
 - Dynamic Godot facilities are not recreated with `dynamic` or broad `object` containers.
 - Main-loop lifecycle and frames are one-shot/non-reentrant owner-thread operations; effective/original deltas are finite, non-negative, and frame-scoped; no hidden thread or clock exists.
-- Engine is process-wide and non-disposable; it schedules only from host-supplied elapsed time, bounds catch-up, carries original time independently of scaling, and never takes disposal ownership of the active loop or registered singletons.
+- Engine is process-wide and non-disposable; it schedules only from host-supplied elapsed time, bounds catch-up, carries original time independently of scaling, permanently registers Input/InputMap, and never takes disposal ownership of the active loop or user-registered singletons.
 - Configuration keys reject universal-value and engine-object types. Parsing is transactional, mutation is lock-serialized, and saves replace through flushed same-directory temporary files. Encrypted files are authenticated before parsing.
 - Project settings require exact typed definition identities, validate a complete candidate before load replacement, preserve unknown persisted entries, and lexically confine directory-backed virtual paths.
 - File access enforces exact modes, complete scalar reads, strict UTF-8, authenticated-before-exposure encrypted reads, and lock-serialized instance calls. It is blocking/allocating and excluded from real-time hot paths.
@@ -109,7 +109,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` verifies concurrent identity allocation, notifications, the `ElectronObject` lifetime contract, typed property discovery/access/validation/revert, property-list/script-change events, event-connection lifecycle/concurrency, the exact `Mathf` constant/overload surface and numeric boundaries, complete color behavior, all four vector surfaces and numeric boundaries, floating-point and integer rectangle layout/geometry/conversions/boundaries, transform decomposition/composition/inversion/interpolation/rectangle operations, Node vector/transform integration, strict persistence, packed-scene storage, allocation behavior, configuration parsing/encoding/persistence/encryption/concurrency, file and directory access, MainLoop state/error/thread behavior, and Engine scaled/original scheduling integration. It does not verify SDL or rendering behavior because those domains do not exist yet.
+`tests/Electron2D.Tests/Program.cs` verifies concurrent identity allocation, notifications, the `ElectronObject` lifetime contract, typed property discovery/access/validation/revert, property-list/script-change events, event-connection lifecycle/concurrency, the exact `Mathf` constant/overload surface and numeric boundaries, complete color behavior, all four vector surfaces and numeric boundaries, floating-point and integer rectangle layout/geometry/conversions/boundaries, transform decomposition/composition/inversion/interpolation/rectangle operations, Node vector/transform integration, strict persistence, packed-scene storage, allocation behavior, configuration parsing/encoding/persistence/encryption/concurrency, file and directory access, MainLoop state/error/thread/Input-transition behavior, and Engine scaled/original scheduling/service-registry integration. It does not verify SDL or rendering behavior because those domains do not exist yet.
 
 The same harness verifies project-setting registration, value snapshots, validators, metadata, overrides, changes/events, persistence, virtual paths, transaction rollback, concurrency, disposal, and Engine integration.
 
@@ -140,3 +140,4 @@ The same harness verifies project-setting registration, value snapshots, validat
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
 - [0035: Foreseeable public type-family completeness](../decisions/core-math.md#adr-0035)
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)

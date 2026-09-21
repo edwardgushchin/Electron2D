@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 ## Scope
 
-This Core component defines the host-facing application lifecycle, variable-step and fixed-step callback lanes, stable system-notification identifiers, and typed operating-system permission-result delivery. It does not implement a host, clock, native event translation, rendering, input, or physics simulation.
+This Core component defines the host-facing application lifecycle, variable-step and fixed-step callback lanes, stable system-notification identifiers, typed operating-system permission-result delivery, and internal boundaries for Input transition completion and event forwarding. It does not implement a host, clock, native event translation, rendering, raw input ownership, or physics simulation.
 
 ## Owned types
 
@@ -22,25 +22,25 @@ The host may deliver system notifications through inherited `Notify(int)` and pu
 
 ## Dependencies
 
-The component depends only on the Core object-lifecycle component and the .NET Base Class Library. The Engine runtime depends on this component, future SDL application hosting depends on both, and `SceneTree` depends on it from the Scene domain.
+The component depends on Core object lifecycle, the process-wide Input transition service, and the .NET Base Class Library. The Engine runtime depends on this component, future SDL application hosting depends on both, and `SceneTree` depends on it from the Scene domain.
 
 ## Invariants
 
 - The constructing thread owns lifecycle, frames, permission-result publication, and disposal.
 - Exactly one successful initialization is paired with at most one finalization callback.
 - Frame callbacks execute only while running and never re-enter.
-- Effective and original deltas are finite and non-negative and exist only during the current frame callback.
+- Effective/original deltas and the selected Input transition lane exist only during the current frame callback and clear in `finally`.
 - Finalization reaches a terminal state even when user cleanup throws.
 - Disposal does not retry failed initialization or failed finalization.
 - The component creates no hidden thread, time source, event pump, or physics work.
 
 ## Current implementation status and exclusions
 
-The managed lifecycle, event, callbacks, stop result, constants, `Engine` attachment, error states, and `SceneTree` integration are implemented and verified. Native system-event generation, permission requests, real clock ownership, frame pacing/waiting, window/application ownership, exit codes, crash integration, and focus-to-input synchronization are blocked on the SDL host and future Input domain. They are absent rather than stubbed.
+The managed lifecycle, event, callbacks, stop result, constants, `Engine` attachment, Input transition integration, error states, and `SceneTree` integration are implemented and verified. Native system-event generation, permission requests, real clock ownership, frame pacing/waiting, window/application ownership, exit codes, crash integration, and focus synchronization are blocked on the SDL host under ADR 0038. They are absent rather than stubbed.
 
 ## Verification
 
-Executable checks cover success, invalid order, delta boundaries, wrong-thread calls, frame and lifecycle callback failures, re-entry, deterministic disposal pairing, permission delivery, numeric constants, SceneTree propagation/finalization, and warmed idle-frame allocations. They do not exercise an SDL host or real operating-system events.
+Executable checks cover success, invalid order, delta boundaries, wrong-thread calls, frame and lifecycle callback failures, re-entry, deterministic disposal pairing, permission delivery, numeric constants, SceneTree input/system propagation and finalization, independent Input transition lanes, and warmed idle-frame allocations. They do not exercise an SDL host or real operating-system events.
 
 ## Decisions
 
@@ -49,3 +49,4 @@ Executable checks cover success, invalid order, delta boundaries, wrong-thread c
 - [0002: C# events for signals](../decisions/product.md#adr-0002)
 - [0014: Managed Resource lifetime and realtime allocation](../decisions/resources.md#adr-0014)
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
