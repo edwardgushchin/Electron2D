@@ -139,6 +139,7 @@ Events are synchronous typed C# events. An event carrying only its source passes
 | `GetGroups()` | Returns a sorted read-only snapshot of group names |
 | `CanProcess()` | Resolves inherited mode against current tree pause state; detached nodes return `false` |
 | `RequestReady()` | Allows ready to be delivered on a later attachment; it does not emit ready immediately |
+| `CreateTween()` | Creates a [`Tween`](Tween.md) in the active tree and binds its pause/lifetime behavior to this node; detached nodes are rejected |
 | `QueueFree()` | Atomically requests deletion at a future tree safe point; detached requests queue on later attachment, detachment after an active request does not cancel deletion, transfer to another tree transfers request consumption, and active root requests are rejected |
 | `CancelFree()` | Atomically clears a request and reports whether one existed |
 
@@ -203,11 +204,11 @@ Every node created by `PackedScene.Instantiate()` is also marked unfinished unti
 
 ## Dependencies and interactions
 
-`Node` depends on `ElectronObject`, `MainLoop` notification identifiers, `PropertyDescriptor`, `NodeProcessMode`, `SceneTree`, the Resource base for owned scene duplicates, [`Mathf`](Mathf.md), `Vector2`, `Transform`, LINQ, `FileSystemName`, and atomic operations. Degree/radian conversion and scalar transform math use the canonical `Mathf` contract. It does not depend on SDL3-CS, a renderer, input, audio, collision physics, scene file serialization, or a scripting runtime.
+`Node` depends on `ElectronObject`, `MainLoop` notification identifiers, `PropertyDescriptor`, `NodeProcessMode`, `SceneTree`, [`Tween`](Tween.md), the Resource base for owned scene duplicates, [`Mathf`](Mathf.md), `Vector2`, `Transform`, LINQ, `FileSystemName`, and atomic operations. Degree/radian conversion and scalar transform math use the canonical `Mathf` contract. It does not depend on SDL3-CS, a renderer, input, audio, collision physics, scene file serialization, or a scripting runtime.
 
 ## Verification and known limitations
 
-`tests/Electron2D.Tests/Program.cs` verifies lifecycle order, activation/ready rollback, stale snapshot rejection, lifecycle re-entry guards, failure-continuing exit and recursive disposal, disposing-parent mutation rejection, hierarchy validation, reparenting, owner cleanup, paths/search/persistent groups, packed capture and instantiation guards/factories/escape rollback/resource ownership, node/tree event order, child order and sender-first child event arguments, transform behavior, visibility and Z state, spatial helpers, pause modes/priorities/scaled and original deltas, internal-before-public processing and failure continuation, inherited disable/enable notifications, MainLoop system aliases and tree propagation, owner-thread rejection, direct disposal, detached/cross-tree queued deletion, and queued recursive disposal.
+`tests/Electron2D.Tests/Program.cs` verifies lifecycle order, activation/ready rollback, stale snapshot rejection, lifecycle re-entry guards, failure-continuing exit and recursive disposal, disposing-parent mutation rejection, hierarchy validation, reparenting, owner cleanup, paths/search/persistent groups, packed capture and instantiation guards/factories/escape rollback/resource ownership, node/tree event order, child order and sender-first child event arguments, transform behavior, visibility and Z state, spatial helpers, pause modes/priorities/scaled and original deltas, internal-before-public processing and failure continuation, attached/detached tween creation and bound lifetime, inherited disable/enable notifications, MainLoop system aliases and tree propagation, owner-thread rejection, direct disposal, detached/cross-tree queued deletion, and queued recursive disposal.
 
 There is no renderer-backed canvas behavior, native system-event creation, focus-to-input state synchronization, ordinary input propagation, collision/rigid-body physics, scene file loader/saver, inherited/nested scene authoring, editable-instance metadata, persistent event endpoint schema, RPC/multiplayer, public control of internal processing, process auto-enable by override detection, unique-name shorthand, or separate spatial-node subclass. Visibility and Z are currently logical state only.
 
@@ -219,3 +220,4 @@ There is no renderer-backed canvas behavior, native system-event creation, focus
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0037: Typed SceneTree tween scheduling](../decisions/scene.md#adr-0037)

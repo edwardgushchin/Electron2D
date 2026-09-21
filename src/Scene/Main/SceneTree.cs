@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 
 namespace Electron2D;
 
-/// <summary>Owns one active node hierarchy and coordinates its lifecycle, frames, groups, timers, and deferred work.</summary>
+/// <summary>Owns one active node hierarchy and coordinates its lifecycle, frames, groups, timers, tweens, and deferred work.</summary>
 /// <remarks>
 /// The creating thread becomes the owner thread for scene mutation, frame execution, flushing, and disposal.
 /// Electron2D does not create a frame-pump thread. A host can drive the loop through <see cref="Engine.AdvanceFrame"/>,
@@ -30,6 +30,8 @@ public sealed class SceneTree : MainLoop
     private readonly List<ScheduledNode> _scheduledNodes = [];
     private readonly List<SceneTreeTimer> _timerSnapshot = [];
     private readonly List<SceneTreeTimer> _timers = [];
+    private readonly List<Tween> _tweenSnapshot = [];
+    private readonly List<Tween> _tweens = [];
     private ConcurrentQueue<Action> _deferred = new();
     private ConcurrentQueue<DeletionRequest> _deletions = new();
     private List<Node>? _activationReadied;
@@ -48,8 +50,9 @@ public sealed class SceneTree : MainLoop
     /// Construction enters the hierarchy parent-first, dispatches post-enter notifications after each node's
     /// descendants, and then delivers ready child-first. Lifecycle callbacks and event handlers run synchronously.
     /// If activation fails, the tree first stops accepting work, every attached node is exited, ready state consumed
-    /// by this attempt is restored, created timers are disposed, queued work is discarded, and the supplied hierarchy
-    /// remains owned by the caller. A reference captured from an activation callback observes a terminal disposed tree.
+    /// by this attempt is restored, created timers are disposed, created tweens are invalidated, queued work is discarded,
+    /// and the supplied hierarchy remains owned by the caller. A reference captured from an activation callback observes
+    /// a terminal disposed tree.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="root"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="root"/> has a parent, belongs to a tree, or is queued for deletion.</exception>
@@ -122,6 +125,18 @@ public sealed class SceneTree : MainLoop
             }
 
             _timers.Clear();
+            foreach (var tween in _tweens.ToArray())
+            {
+                try
+                {
+                    tween.InvalidateFromTree();
+                }
+                catch (Exception tweenError)
+                {
+                    CollectException(errors, tweenError);
+                }
+            }
+            _tweens.Clear();
             ClearPendingWork();
             ClearEventSubscribers();
             throw new AggregateException("SceneTree activation failed and was rolled back.", errors);
@@ -268,11 +283,11 @@ public sealed class SceneTree : MainLoop
     public event Action<SceneTree, Node>? NodeRenamed;
 
     /// <summary>Occurs immediately before eligible node process callbacks are captured and invoked.</summary>
-    /// <remarks>A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, and the deferred safe point are still attempted.</remarks>
+    /// <remarks>A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.</remarks>
     public event Action<SceneTree>? ProcessFrameStarted;
 
     /// <summary>Occurs immediately before eligible node physics-process callbacks are captured and invoked.</summary>
-    /// <remarks>A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, and the deferred safe point are still attempted.</remarks>
+    /// <remarks>A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.</remarks>
     public event Action<SceneTree>? PhysicsFrameStarted;
 
     /// <summary>Occurs after the active hierarchy is structurally changed or an active node is renamed.</summary>
@@ -335,21 +350,50 @@ public sealed class SceneTree : MainLoop
         return timer;
     }
 
-    /// <summary>Runs one host-driven process frame, process timers, and one deferred safe point.</summary>
+    /// <summary>Creates a valid tween processed by this tree.</summary>
+    /// <returns>A running empty tween that starts on the next matching frame after tweeners are appended.</returns>
+    /// <remarks>
+    /// The tween is not bound to a node. It is advanced after node callbacks and lightweight timers and before deferred
+    /// work. A tween created during another tween's callback waits for the next matching frame.
+    /// </remarks>
+    /// <exception cref="InvalidOperationException">The method is called from a thread other than the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
+    public Tween CreateTween()
+    {
+        ThrowIfDisposed();
+        EnsureOwnerThread();
+        EnsureAcceptingWork();
+        var tween = new Tween(this);
+        _tweens.Add(tween);
+        return tween;
+    }
+
+    /// <summary>Returns the valid tweens currently registered for processing.</summary>
+    /// <returns>A read-only snapshot in creation order, including paused and stopped tweens.</returns>
+    /// <exception cref="InvalidOperationException">The method is called from a thread other than the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
+    public IReadOnlyList<Tween> GetProcessedTweens()
+    {
+        ThrowIfDisposed();
+        EnsureOwnerThread();
+        return Array.AsReadOnly(_tweens.Where(tween => !tween.IsDisposed && tween.IsValid()).ToArray());
+    }
+
+    /// <summary>Runs one host-driven process frame, process timers, process tweens, and one deferred safe point.</summary>
     /// <param name="delta">Elapsed process time in seconds; it must be finite and non-negative.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="delta"/> is negative, NaN, or infinite.</exception>
     /// <exception cref="InvalidOperationException">The method is called off the owner thread, re-entered, called before initialization or after finalization, or called during node lifecycle or pause delivery.</exception>
     /// <exception cref="ObjectDisposedException">Tree disposal has started or finished.</exception>
-    /// <exception cref="AggregateException">One or more frame events, node callbacks, timers, or deferred operations fail.</exception>
+    /// <exception cref="AggregateException">One or more frame events, node callbacks, timers, tweens, or deferred operations fail.</exception>
     public void ProcessFrame(double delta) => _ = Process(delta);
 
-    /// <summary>Runs one host-driven physics-process frame, physics timers, and one deferred safe point.</summary>
+    /// <summary>Runs one host-driven physics-process frame, physics timers, physics tweens, and one deferred safe point.</summary>
     /// <param name="delta">Elapsed physics-step time in seconds; it must be finite and non-negative.</param>
     /// <remarks>This callback lane does not perform collision or rigid-body simulation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="delta"/> is negative, NaN, or infinite.</exception>
     /// <exception cref="InvalidOperationException">The method is called off the owner thread, re-entered, called before initialization or after finalization, or called during node lifecycle or pause delivery.</exception>
     /// <exception cref="ObjectDisposedException">Tree disposal has started or finished.</exception>
-    /// <exception cref="AggregateException">One or more frame events, node callbacks, timers, or deferred operations fail.</exception>
+    /// <exception cref="AggregateException">One or more frame events, node callbacks, timers, tweens, or deferred operations fail.</exception>
     public void PhysicsFrame(double delta) => _ = PhysicsProcess(delta);
 
     /// <summary>Returns every current node in a group in depth-first pre-order.</summary>
@@ -623,8 +667,8 @@ public sealed class SceneTree : MainLoop
 
     /// <inheritdoc />
     /// <remarks>
-    /// Atomically closes the work queues, exits and recursively disposes the root, disposes active timers, clears event
-    /// subscribers, and attempts every teardown stage before reporting collected failures.
+    /// Atomically closes the work queues, exits and recursively disposes the root, disposes active timers, invalidates
+    /// active tweens, clears event subscribers, and attempts every teardown stage before reporting collected failures.
     /// </remarks>
     protected override void OnFinalize()
     {
@@ -676,9 +720,23 @@ public sealed class SceneTree : MainLoop
         }
 
         _timers.Clear();
+        foreach (var tween in _tweens.ToArray())
+        {
+            try
+            {
+                tween.InvalidateFromTree();
+            }
+            catch (Exception error)
+            {
+                CollectException(ref errors, error);
+            }
+        }
+
+        _tweens.Clear();
         _scheduleTraversal.Clear();
         _scheduledNodes.Clear();
         _timerSnapshot.Clear();
+        _tweenSnapshot.Clear();
 
         lock (_workGate)
             ClearPendingWorkUnderLock();
@@ -753,6 +811,26 @@ public sealed class SceneTree : MainLoop
     {
         EnsureOwnerThread();
         _timers.Remove(timer);
+    }
+
+    internal void RemoveTween(Tween tween)
+    {
+        EnsureOwnerThread();
+        _tweens.Remove(tween);
+    }
+
+    internal void DetachTween(Tween tween)
+    {
+        EnsureOwnerThread();
+        if (!_tweens.Remove(tween))
+            throw new InvalidOperationException("Only a tween processed by this SceneTree can be nested.");
+    }
+
+    internal void CompleteTween(Tween tween)
+    {
+        EnsureOwnerThread();
+        _tweens.Remove(tween);
+        tween.InvalidateFromTree();
     }
 
     internal void NotifyNodeAdded(Node node) => NodeAdded?.Invoke(this, node);
@@ -841,6 +919,7 @@ public sealed class SceneTree : MainLoop
             }
 
             ProcessTimers(delta, physics, ref errors);
+            ProcessTweens(delta, unscaledDelta, physics, ref errors);
             FlushDeferredCore(ref errors);
         }
         finally
@@ -848,6 +927,7 @@ public sealed class SceneTree : MainLoop
             _scheduledNodes.Clear();
             _scheduleTraversal.Clear();
             _timerSnapshot.Clear();
+            _tweenSnapshot.Clear();
             EndExecution();
         }
 
@@ -876,6 +956,45 @@ public sealed class SceneTree : MainLoop
             try
             {
                 timer.Expire();
+            }
+            catch (Exception error)
+            {
+                CollectException(ref errors, error);
+            }
+        }
+    }
+
+    private void ProcessTweens(double delta, double unscaledDelta, bool physics, ref List<Exception>? errors)
+    {
+        _tweenSnapshot.Clear();
+        var expectedMode = physics ? Tween.TweenProcessMode.Physics : Tween.TweenProcessMode.Idle;
+
+        foreach (var tween in _tweens)
+        {
+            if (!tween.IsDisposed && tween.ProcessMode == expectedMode)
+                _tweenSnapshot.Add(tween);
+        }
+
+        foreach (var tween in _tweenSnapshot)
+        {
+            if (tween.IsDisposed || tween.IsNested || !tween.IsValid() || tween.ProcessMode != expectedMode ||
+                !tween.CanProcess(_paused))
+                continue;
+
+            try
+            {
+                if (tween.Advance(tween.IgnoreTimeScale ? unscaledDelta : delta))
+                    continue;
+            }
+            catch (Exception error)
+            {
+                CollectException(ref errors, error);
+            }
+
+            _tweens.Remove(tween);
+            try
+            {
+                tween.InvalidateFromTree();
             }
             catch (Exception error)
             {

@@ -1397,6 +1397,18 @@ public class Node : ElectronObject
         _readyCalled = false;
     }
 
+    /// <summary>Creates a tween in this node's scene tree and binds it to this node.</summary>
+    /// <returns>A running empty tween that halts while this node is detached and is killed when this node is disposed.</returns>
+    /// <remarks>The caller must append at least one tweener before the next matching frame, including a zero-delta frame.</remarks>
+    /// <exception cref="InvalidOperationException">The node is detached or the call is made off the tree owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The node or its tree is disposing or disposed.</exception>
+    public Tween CreateTween()
+    {
+        ThrowIfDisposed();
+        var tree = Tree ?? throw new InvalidOperationException("A detached node cannot create a scene-tree tween.");
+        return tree.CreateTween().BindNode(this);
+    }
+
     /// <summary>Atomically requests this node's deferred disposal at a future scene-tree safe point.</summary>
     /// <remarks>
     /// A request made while already detached is queued if the node later enters a tree. Removing the node before its

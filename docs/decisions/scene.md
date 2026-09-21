@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 This bounded log owns the complete architectural records for scene. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
-Decisions in this log: [0006](#adr-0006), [0008](#adr-0008), [0011](#adr-0011), [0023](#adr-0023), [0031](#adr-0031), [0036](#adr-0036).
+Decisions in this log: [0006](#adr-0006), [0008](#adr-0008), [0011](#adr-0011), [0023](#adr-0023), [0031](#adr-0031), [0036](#adr-0036), [0037](#adr-0037).
 
 <a id="adr-0006"></a>
 ## ADR 0006: Own hierarchy, deferred work, and queued deletion in SceneTree
@@ -86,7 +86,7 @@ Godot separates non-spatial hierarchy/lifecycle behavior (`Node`) from 2D spatia
 
 Last updated: 2026-09-21
 
-- Status: Accepted
+- Status: Accepted; timer scheduling extended by [0036](scene.md#adr-0036) and the original tween absence superseded by [0037](scene.md#adr-0037)
 - Scope: `SceneTree`, `SceneTreeTimer`, `GroupCallFlags`, and their `Node` lifecycle integration
 - Refines: [0006](scene.md#adr-0006)
 
@@ -115,8 +115,9 @@ Electron2D must keep typed C# calls, deterministic ownership, Electron2D-owned c
 - Lifecycle callback failures remain visible but no longer leave partial tree ownership, an operational escaped failed tree, or prevent later owned resources from being released.
 - Cross-thread scheduling has a precise linearization point at the queue lock. The lock is intentionally small and never held while user code runs.
 - Typed group operations require explicit delegates and therefore remain compile-time checked.
-- Timers use delivered frame delta. ADR 0016 later adds Engine time scaling before delivery without adding a wall clock; timers still have no independent real-time or ignore-time-scale bypass.
-- Scene switching, application quit, tween, interpolation, multiplayer, accessibility, editor signals, and platform notifications remain absent and explicitly dependency-blocked.
+- Timers use delivered frame delta. ADR 0016 later added Engine time scaling, and ADR 0036 added reusable Node timers with original-delta time-scale bypass; lightweight `SceneTreeTimer` still has no independent bypass.
+- Historical implementation note: scene switching, application quit, tweening, multiplayer, accessibility, editor signals, and platform notifications were absent when this ADR was adopted. ADR 0037 later implemented typed tweening; the other listed domains remain absent.
+- Historical implementation note: ADR 0037 extended activation rollback and finalization to invalidate SceneTree-owned tweens while retaining this ADR's failure-continuing cleanup rule.
 
 ### Rejected alternatives
 
@@ -311,3 +312,51 @@ The engine is typed C#, uses direct frame traversal for hot paths, and forbids i
 The executable harness covers defaults and stable identities, descriptors and packed storage, invalid rollback, detached start/stop, both frame lanes and live lane migration, exact-zero and overshoot behavior, one-shot/repeating state observed by subscribers, local and tree pause, autostart, owner-thread mutation, callback failure continuation, detachment during timeout, zero time scale, and zero warmed allocations.
 
 It does not establish real host cadence, wall-clock precision, platform scheduling, editor warnings, or loaded-scene performance.
+
+<a id="adr-0037"></a>
+## ADR 0037: Typed SceneTree tween scheduling
+
+Last updated: 2026-09-21
+
+- Status: Accepted
+- Scope: Frame-driven interpolation sequences, typed tween tasks, and SceneTree scheduling
+- Builds on: [0002](product.md#adr-0002), [0006](scene.md#adr-0006), [0008](scene.md#adr-0008), [0010](core-object-runtime.md#adr-0010), [0014](resources.md#adr-0014), and [0016](core-object-runtime.md#adr-0016)
+
+### Context
+
+Games need deterministic property animation, interpolated callbacks, delays, event waits, nested timelines, and sequencing before a renderer or editor exists. The current stable [`Tween`](https://docs.godotengine.org/en/stable/classes/class_tween.html) and tweener APIs, their complete inheritance chains, and the 4.7.2 stable [`tween.h`](https://github.com/godotengine/godot/blob/4.7.2-stable/scene/animation/tween.h), [`tween.cpp`](https://github.com/godotengine/godot/blob/4.7.2-stable/scene/animation/tween.cpp), and [`easing_equations.h`](https://github.com/godotengine/godot/blob/4.7.2-stable/scene/animation/easing_equations.h) were audited. Their dynamic values, callables, signal handles, string property paths, and reference-counted lifetime conflict with Electron2D's accepted typed C# and managed-lifetime contracts.
+
+SceneTree already owns owner-thread frame ordering, scaled/original deltas, pause-aware Node policy, reusable scheduler buffers, deferred work, and typed event connections. A separate animation clock, task scheduler, reflection layer, or dynamic container would duplicate those facilities and weaken deterministic ordering.
+
+### Decision
+
+- Add `Tween : ElectronObject`, its four nested policy/curve enums, abstract `Tweener`, and concrete property, method, callback, interval, subtween, and event-wait tweeners under `src/Scene/Animation/` in `Electron2D.dll`.
+- Tweens are created only through `SceneTree.CreateTween()` or `Node.CreateTween()`. SceneTree owns valid top-level registration; Node creation also binds pause policy and lifetime. A tween may bind to a detached node but never to a node owned by another tree.
+- SceneTree captures and advances matching tweens after node callbacks and lightweight timers and before deferred/deletion work. Creation during an earlier phase may enter that frame; creation during tween processing waits for the next captured batch. Captured entries revalidate their lane and top-level ownership before execution. Process and physics lanes use the existing scaled/original delta pair, so time-scale bypass requires no second clock.
+- Property animation uses explicit typed getter/setter delegates and generic values. Method and callback tasks use typed delegates. Event waits use `EventConnection` accessors for zero-, one-, or two-argument events. This permanently replaces dynamic values, reflection callables, signal objects, and string property paths in the implemented surface.
+- Built-in interpolation covers booleans, scalar numeric values, and current engine-owned math values. Unsupported values, including strings and collections, require a caller-supplied typed interpolator. Relative mode requires a built-in addition contract; booleans use replacement and affine transforms compose the captured start with the configured relative transform.
+- Sequential and parallel steps preserve overshoot. Exact exhaustion defers a following zero-duration step until later positive time. Finite loops count total sequence executions; zero selects an infinite loop, and an infinite sequence that consumes no time is invalidated instead of hanging a frame.
+- Pause, stop/play, speed, default and per-task easing, manual stepping, Node binding, nested tween ownership, and synchronous completion events are explicit owner-thread state. Typed event receipt may only set an atomic flag from another thread; continuation stays on the owner thread.
+- A processing failure attempts every parallel sibling, invalidates the whole sequence, cancels waits and nested work, then participates in SceneTree phase aggregation. A failed manual step also unregisters the invalid tween. Tree activation rollback and finalization invalidate every created or active tween while attempting all other cleanup.
+- Top-level tween processing reuses SceneTree snapshot storage and must allocate no managed memory after warmup in the covered steady-state path. Tween objects retain normal managed lifetime and deterministic `IDisposable`; no public reference-count protocol is added.
+
+### Consequences
+
+- Gameplay can build deterministic runtime animation before rendering, assets, scripting, or editor timelines exist.
+- The animation surface remains compile-time typed and uses existing lifecycle, scheduling, pause, and event infrastructure.
+- Live tween state is runtime-only. Packed scenes do not serialize sequences, property delegates, callbacks, event accessors, or elapsed state.
+- Events with more than two payload values need a matching future typed `EventConnection` overload before `TweenAwait` can expose them.
+- Method/callback target-disposal detection is available when the delegate directly targets an `ElectronObject`; arbitrary closure captures remain ordinary caller-owned C# state.
+
+### Rejected alternatives
+
+- Dynamic values, string paths, and reflection invocation: rejected by the typed C# contract and because failures would move from compile time into frames.
+- A background timer, task-per-tween, or second SceneTree scheduler: rejected because it would break owner-thread ordering, pause semantics, deterministic tests, and allocation policy.
+- Public construction or subclassing of tween tasks: rejected because task ownership and reset semantics belong to one Tween timeline and no external extension case currently requires another hierarchy.
+- Serialization placeholders for live tween state: rejected because no stable delegate/event endpoint schema or editor animation domain exists.
+
+### Verification
+
+The executable harness covers every enum identity and curve endpoint, built-in and custom typed interpolation, property start/relative/delay controls, sequential/parallel ordering, exact boundaries, stop/restart, finite and guarded infinite loops, process/physics and pause policies, scaled/original Engine time, Node/cross-tree lifetime, manual-step cleanup, pre-start reset and active event waits, timeout and cancellation failure, nested ownership, lane/nesting snapshot isolation, callback and completion-event failures, activation rollback, finalization, owner-thread enforcement, validation, and zero warmed active-frame allocation.
+
+It does not establish visual motion quality, editor authoring, serialized animation compatibility, real host cadence, all-target native execution, or large-scale performance.

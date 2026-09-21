@@ -15,8 +15,8 @@ This directory describes the engine as it exists now. Planned features are liste
 - Architecture context: `decisions/index.md` routes to bounded domain logs; read only the affected logs and explicit cross-domain dependencies. No decision log may exceed 500 lines.
 - Target framework: .NET 8 (`net8.0`).
 - Implemented domains: Core, Scene, Localization, and Resources.
-- Implemented components: Object lifecycle, typed event connections, typed editor properties, scalar math, color values, geometry values, configuration files, file and directory access, project settings, main loop, engine runtime, unified 2D node, scene tree, packed scenes, translation, and the resource base.
-- Implemented production types: `ElectronObject`, `EventConnection`, `PropertyDescriptor`, `PropertyDescriptor<TOwner, TValue>`, `Mathf`, `Color`, `Colors`, `Vector2`, `Vector2I`, `Vector4`, `Vector4I`, `Rect`, `RectI`, `Transform`, `Side`, `ConfigKey<T>`, `ConfigFile`, `FileAccess`, `DirAccess`, `FileAccessMode`, `FileCompressionMode`, `UnixPermissionFlags`, `ProjectSetting<T>`, `ProjectSettings`, `MainLoop`, `Engine`, `EngineVersionInfo`, `Node`, `NodeProcessMode`, `SceneTree`, `Timer`, `TimerProcessCallback`, `SceneTreeTimer`, `GroupCallFlags`, `PackedScene`, `SceneState`, `PackedSceneEditState`, `TranslationServer`, `Resource`, and `DeepDuplicateMode`.
+- Implemented components: Object lifecycle, typed event connections, typed editor properties, scalar math, color values, geometry values, configuration files, file and directory access, project settings, main loop, engine runtime, unified 2D node, scene tree, tweening, packed scenes, translation, and the resource base.
+- Implemented production types: `ElectronObject`, `EventConnection`, `PropertyDescriptor`, `PropertyDescriptor<TOwner, TValue>`, `Mathf`, `Color`, `Colors`, `Vector2`, `Vector2I`, `Vector4`, `Vector4I`, `Rect`, `RectI`, `Transform`, `Side`, `ConfigKey<T>`, `ConfigFile`, `FileAccess`, `DirAccess`, `FileAccessMode`, `FileCompressionMode`, `UnixPermissionFlags`, `ProjectSetting<T>`, `ProjectSettings`, `MainLoop`, `Engine`, `EngineVersionInfo`, `Node`, `NodeProcessMode`, `SceneTree`, `Timer`, `TimerProcessCallback`, `SceneTreeTimer`, `GroupCallFlags`, `Tween`, `Tween.TweenProcessMode`, `Tween.TweenPauseMode`, `Tween.TransitionType`, `Tween.EaseType`, `Tweener`, `PropertyTweener<TValue>`, `MethodTweener<TValue>`, `CallbackTweener`, `IntervalTweener`, `SubtweenTweener`, `AwaitTweener`, `PackedScene`, `SceneState`, `PackedSceneEditState`, `TranslationServer`, `Resource`, and `DeepDuplicateMode`.
 - SDL3-CS integration: not implemented.
 - Native SDL packaging: not designed or verified yet.
 - Platform delivery status: the current `net8.0` project and executable harness are verified on Linux. There is no five-platform CI matrix, SDL application host, Android package, iOS bundle, signing workflow, or native-device verification for all targets yet.
@@ -29,7 +29,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Floating-point `Rect` geometry with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge/support and transform-bound operations, strict finite configuration serialization, packed-scene storage, and stable side identities: implemented without renderer, UI, or physics dependencies.
 - Integer `RectI` geometry with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge, typed `Rect` conversions, strict configuration serialization, and packed-scene storage: implemented for foreseeable pixel, atlas, image-region, and grid bounds without depending on those future consumers.
 - Engine-owned `Transform` is implemented with complete affine math, rectangle operators, strict finite configuration persistence, direct packed-scene storage, allocation-free numeric hot paths, and direct `Node` local/global integration through `Vector2`.
-- Process-wide typed project settings, feature overrides, directory-backed `res://`/`user://`, blocking typed file access with metadata/hashes/temporary files/cross-platform extended attributes/compression/authenticated encryption, scoped directory navigation/listing/mutations/links/temporary ownership/filesystem identity, host-driven bounded fixed-step scheduling, scaled/original frame deltas, time scaling, frame metrics, named engine singletons, typed sectioned configuration files with atomic persistence and authenticated encryption, unified 2D nodes, local/global transforms, hierarchy paths and groups, visibility and Z state, pause-aware public/internal process lanes, reusable Node timers, lightweight one-shot frame timers, exception-safe scene-tree lifecycle, typed group operations, queued deletion, typed deferred work and event connections, in-memory typed packed scenes with per-instance local resources, translations, notifications including the future-facing `ScriptChanged` hook, typed editor-property descriptors, and the typed resource base with graph duplication: implemented.
+- Process-wide typed project settings, feature overrides, directory-backed `res://`/`user://`, blocking typed file access with metadata/hashes/temporary files/cross-platform extended attributes/compression/authenticated encryption, scoped directory navigation/listing/mutations/links/temporary ownership/filesystem identity, host-driven bounded fixed-step scheduling, scaled/original frame deltas, time scaling, frame metrics, named engine singletons, typed sectioned configuration files with atomic persistence and authenticated encryption, unified 2D nodes, local/global transforms, hierarchy paths and groups, visibility and Z state, pause-aware public/internal process lanes, reusable Node timers, lightweight one-shot frame timers, typed Tween sequences and interpolation, exception-safe scene-tree lifecycle, typed group operations, queued deletion, typed deferred work and event connections, in-memory typed packed scenes with per-instance local resources, translations, notifications including the future-facing `ScriptChanged` hook, typed editor-property descriptors, and the typed resource base with graph duplication: implemented.
 - Rendering, SDL integration, input, audio, collision/rigid-body physics, concrete assets, asset loading/saving, scene file serialization, and an editor application: not implemented.
 - The editor source root is reserved in this repository, but no editor project or source exists yet. Its future assembly is a consumer of `Electron2D.dll` and is not part of the one-runtime-DLL boundary.
 - Persistent event connections: deferred until a typed stable endpoint schema exists.
@@ -55,6 +55,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Component: [Engine runtime](components/engine-runtime.md)
 - Component: [Unified 2D node](components/unified-node.md)
 - Component: [Scene tree](components/scene-tree.md)
+- Component: [Tweening](components/tweening.md)
 - Component: [Packed scenes](components/packed-scenes.md)
 - Component: [Translation](components/localization.md)
 - Component: [Resource base](components/resources.md)
@@ -92,6 +93,18 @@ This directory describes the engine as it exists now. Planned features are liste
 - Enum: [TimerProcessCallback](classes/TimerProcessCallback.md)
 - Class: [SceneTreeTimer](classes/SceneTreeTimer.md)
 - Enum: [GroupCallFlags](classes/GroupCallFlags.md)
+- Class: [Tween](classes/Tween.md)
+- Enum: [Tween.TweenProcessMode](classes/Tween.TweenProcessMode.md)
+- Enum: [Tween.TweenPauseMode](classes/Tween.TweenPauseMode.md)
+- Enum: [Tween.TransitionType](classes/Tween.TransitionType.md)
+- Enum: [Tween.EaseType](classes/Tween.EaseType.md)
+- Class: [Tweener](classes/Tweener.md)
+- Class: [PropertyTweener&lt;TValue&gt;](classes/PropertyTweener.Generic.md)
+- Class: [MethodTweener&lt;TValue&gt;](classes/MethodTweener.Generic.md)
+- Class: [CallbackTweener](classes/CallbackTweener.md)
+- Class: [IntervalTweener](classes/IntervalTweener.md)
+- Class: [SubtweenTweener](classes/SubtweenTweener.md)
+- Class: [AwaitTweener](classes/AwaitTweener.md)
 - Class: [PackedScene](classes/PackedScene.md)
 - Class: [SceneState](classes/SceneState.md)
 - Enum: [PackedSceneEditState](classes/PackedSceneEditState.md)
