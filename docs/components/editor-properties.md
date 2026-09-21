@@ -30,7 +30,7 @@ The component depends on Core's `ElectronObject` and `Resource` plus .NET delega
 3. `GetPropertyList()` verifies owner compatibility and unique ordinal names.
 4. Tooling uses the generic descriptor for typed reads and writes.
 5. Revert behavior is supplied by a typed factory and invoked through either the descriptor or `ElectronObject.RevertProperty()`.
-6. A writable descriptor explicitly constructed with `stored: true` may capture/restore a node property for `PackedScene`; storage accepts strings, resources, and reference-free value types such as [`Color`](../classes/Color.md), [`Rect2`](../classes/Rect2.md), and [`Transform2D`](../classes/Transform2D.md).
+6. A writable descriptor explicitly constructed with `stored: true` may capture/restore a node property for `PackedScene`; storage accepts strings, resources, and reference-free value types such as [`Color`](../classes/Color.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), and [`Transform`](../classes/Transform.md).
 
 The base object exposes `InstanceId`, `ClassName`, `IsDisposed`, `CanTranslateMessages`, and `TranslationDomain`. The two translation properties are stored. `Node` additionally exposes `Name`, `Position`, `RotationDegrees`, `Scale`, `Skew`, `Visible`, `ZIndex`, `ZAsRelative`, `TopLevel`, `ProcessMode`, `ProcessEnabled`, `PhysicsProcessEnabled`, `ProcessPriority`, and `PhysicsProcessPriority`; those node entries are stored, while identity/lifetime entries are not. Global/derived state and notification switches are deliberately runtime API rather than tooling properties.
 
@@ -50,4 +50,4 @@ No editor UI, reflection scanner, attributes, file-serialization schema, categor
 
 ## Verification
 
-The executable test verifies discovery, storage metadata, typed reads and writes, validation, typed revert-value retrieval, object-level revert, property-list change notification, packed capture/restore including HDR `Color`, `Rect2`, and `Transform2D` values, resource remapping, and unsupported stored-shape rejection.
+The executable test verifies discovery, storage metadata, typed reads and writes, validation, typed revert-value retrieval, object-level revert, property-list change notification, packed capture/restore including `Color`, all four vector values, `Rect`, and `Transform`, resource remapping, and unsupported stored-shape rejection.

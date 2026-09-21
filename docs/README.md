@@ -16,7 +16,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Target framework: .NET 8 (`net8.0`).
 - Implemented domains: Core, Scene, Localization, and Resources.
 - Implemented components: Object lifecycle, typed event connections, typed editor properties, color values, geometry values, configuration files, file and directory access, project settings, main loop, engine runtime, unified 2D node, scene tree, packed scenes, translation, and the resource base.
-- Implemented production types: `ElectronObject`, `EventConnection`, `PropertyDescriptor`, `PropertyDescriptor<TOwner, TValue>`, `Color`, `Colors`, `Rect2`, `Transform2D`, `Side`, `ConfigKey<T>`, `ConfigFile`, `FileAccess`, `DirAccess`, `FileAccessMode`, `FileCompressionMode`, `UnixPermissionFlags`, `ProjectSetting<T>`, `ProjectSettings`, `MainLoop`, `Engine`, `EngineVersionInfo`, `Node`, `NodeProcessMode`, `SceneTree`, `SceneTreeTimer`, `GroupCallFlags`, `PackedScene`, `SceneState`, `PackedSceneEditState`, `TranslationServer`, `Resource`, and `DeepDuplicateMode`.
+- Implemented production types: `ElectronObject`, `EventConnection`, `PropertyDescriptor`, `PropertyDescriptor<TOwner, TValue>`, `Color`, `Colors`, `Vector2`, `Vector2I`, `Vector4`, `Vector4I`, `Rect`, `Transform`, `Side`, `ConfigKey<T>`, `ConfigFile`, `FileAccess`, `DirAccess`, `FileAccessMode`, `FileCompressionMode`, `UnixPermissionFlags`, `ProjectSetting<T>`, `ProjectSettings`, `MainLoop`, `Engine`, `EngineVersionInfo`, `Node`, `NodeProcessMode`, `SceneTree`, `SceneTreeTimer`, `GroupCallFlags`, `PackedScene`, `SceneState`, `PackedSceneEditState`, `TranslationServer`, `Resource`, and `DeepDuplicateMode`.
 - SDL3-CS integration: not implemented.
 - Native SDL packaging: not designed or verified yet.
 - Platform delivery status: the current `net8.0` project and executable harness are verified on Linux. There is no five-platform CI matrix, SDL application host, Android package, iOS bundle, signing workflow, or native-device verification for all targets yet.
@@ -24,8 +24,9 @@ This directory describes the engine as it exists now. Planned features are liste
 - Rendering architecture: the SDL3 GPU API is selected as the primary future backend with 2D shader support; SDL_Renderer is the reduced-capability fallback for baseline 2D drawing. The public API will expose backend capabilities and reject unsupported shader use explicitly. No rendering or shader code is implemented yet.
 - Managed memory remains runtime-owned; `IDisposable` controls deterministic logical/native cleanup. Public manual reference counting is excluded, while internal asset leases are reserved for a future resource manager with concrete native-backed assets.
 - Floating-point RGBA values, HSV and perceptual OKHSL conversion, straight-alpha blend, arithmetic/comparison, packed/HTML formats, strict finite configuration serialization, packed-scene value storage, and all 146 standard named colors: implemented without a renderer dependency.
-- Floating-point axis-aligned rectangles with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge/support operations, strict finite configuration serialization, packed-scene storage, and stable side identities: implemented without renderer, UI, or physics dependencies.
-- The engine-owned `Transform2D` foundational type is implemented with complete independent affine math, strict finite configuration persistence, direct packed-scene storage, and allocation-free numeric hot paths. `Node` truthfully retains its current `Matrix3x2` API and `Rect2` transform operators remain absent until their explicit migration slice.
+- Engine-owned `Vector2`/`Vector2I` and `Vector4`/`Vector4I` families with complete float/integer value math, strict typed configuration schemas, packed-scene storage, documented IEEE/overflow behavior, and allocation-free warmed numeric paths: implemented. The four-component values are numeric tuples and do not introduce 3D/4D scene geometry.
+- Floating-point `Rect` geometry with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge/support and transform-bound operations, strict finite configuration serialization, packed-scene storage, and stable side identities: implemented without renderer, UI, or physics dependencies.
+- Engine-owned `Transform` is implemented with complete affine math, rectangle operators, strict finite configuration persistence, direct packed-scene storage, allocation-free numeric hot paths, and direct `Node` local/global integration through `Vector2`.
 - Process-wide typed project settings, feature overrides, directory-backed `res://`/`user://`, blocking typed file access with metadata/hashes/temporary files/cross-platform extended attributes/compression/authenticated encryption, scoped directory navigation/listing/mutations/links/temporary ownership/filesystem identity, host-driven bounded fixed-step scheduling, time scaling, frame metrics, named engine singletons, typed sectioned configuration files with atomic persistence and authenticated encryption, unified 2D nodes, local/global transforms, hierarchy paths and groups, visibility and Z state, pause-aware process/physics callbacks, exception-safe scene-tree lifecycle, typed group operations, one-shot frame timers, queued deletion, typed deferred work and event connections, in-memory typed packed scenes with per-instance local resources, translations, notifications including the future-facing `ScriptChanged` hook, typed editor-property descriptors, and the typed resource base with graph duplication: implemented.
 - Rendering, SDL integration, input, audio, collision/rigid-body physics, concrete assets, asset loading/saving, scene file serialization, and an editor application: not implemented.
 - The editor source root is reserved in this repository, but no editor project or source exists yet. Its future assembly is a consumer of `Electron2D.dll` and is not part of the one-runtime-DLL boundary.
@@ -60,8 +61,12 @@ This directory describes the engine as it exists now. Planned features are liste
 - Class: [PropertyDescriptor&lt;TOwner, TValue&gt;](classes/PropertyDescriptor.Generic.md)
 - Struct: [Color](classes/Color.md)
 - Static class: [Colors](classes/Colors.md)
-- Struct: [Rect2](classes/Rect2.md)
-- Struct: [Transform2D](classes/Transform2D.md)
+- Struct: [Vector2](classes/Vector2.md)
+- Struct: [Vector2I](classes/Vector2I.md)
+- Struct: [Vector4](classes/Vector4.md)
+- Struct: [Vector4I](classes/Vector4I.md)
+- Struct: [Rect](classes/Rect.md)
+- Struct: [Transform](classes/Transform.md)
 - Enum: [Side](classes/Side.md)
 - Class: [ConfigKey&lt;T&gt;](classes/ConfigKey.Generic.md)
 - Class: [ConfigFile](classes/ConfigFile.md)

@@ -1,18 +1,18 @@
-# Rect2
+# Rect
 
 Last updated: 2026-09-21
 
 ## Declaration
 
-- Source: [`Rect2.cs`](../../src/Core/Math/Rect2.cs)
+- Source: [`Rect.cs`](../../src/Core/Math/Rect.cs)
 - Namespace: `Electron2D`
-- Declaration: `[Serializable] [StructLayout(LayoutKind.Sequential)] public struct Rect2 : IEquatable<Rect2>`
+- Declaration: `[Serializable] [StructLayout(LayoutKind.Sequential)] public struct Rect : IEquatable<Rect>`
 - Domain: [Core](../domains/core.md)
 - Component: [Geometry values](../components/geometry-values.md)
 
 ## Responsibility and ownership
 
-`Rect2` is a mutable 16-byte axis-aligned floating-point rectangle composed of two sequential `System.Numerics.Vector2` values: `Position` and `Size`. It provides backend-independent containment, overlap, intersection, enclosure, expansion, growth, merge, support mapping, finite-value checks, and exact or approximate comparison.
+`Rect` is a mutable 16-byte axis-aligned floating-point rectangle composed of two sequential `Electron2D.Vector2` values: `Position` and `Size`. It provides backend-independent containment, overlap, intersection, enclosure, expansion, growth, merge, support mapping, finite-value checks, and exact or approximate comparison.
 
 The value owns no resources, identity, handles, callbacks, or managed references and does not derive from `ElectronObject`. Zero initialization is the empty rectangle at the origin. Ordinary construction and mutation retain negative, zero, NaN, and infinite components; callers normalize negative sizes explicitly with `Abs()` when an operation requires non-negative size.
 
@@ -24,12 +24,12 @@ The value owns no resources, identity, handles, callbacks, or managed references
 | `Size` | Mutable width and height; most spatial operations require non-negative components |
 | `End` | Gets `Position + Size`; assignment preserves `Position` and derives `Size` |
 | `Area` | Signed `Size.X * Size.Y`; it can be positive when both components are negative |
-| `Rect2(Vector2, Vector2)` | Stores position and size unchanged |
-| `Rect2(Vector2, float, float)` | Stores a position with explicit width and height |
-| `Rect2(float, float, Vector2)` | Stores explicit position coordinates and a size |
-| `Rect2(float, float, float, float)` | Stores four explicit components |
+| `Rect(Vector2, Vector2)` | Stores position and size unchanged |
+| `Rect(Vector2, float, float)` | Stores a position with explicit width and height |
+| `Rect(float, float, Vector2)` | Stores explicit position coordinates and a size |
+| `Rect(float, float, float, float)` | Stores four explicit components |
 | `Abs()` | Moves the origin componentwise when required and returns non-negative size |
-| `Encloses(Rect2)` | Tests inclusive containment of both other edges |
+| `Encloses(Rect)` | Tests inclusive containment of both other edges |
 | `Expand(Vector2)` | Returns the smallest extension of the current edges that includes the point |
 | `GetCenter()` | Returns `Position + Size / 2` |
 | `GetSupport(Vector2)` | Selects the farthest corner; a zero direction component selects the position edge |
@@ -38,11 +38,13 @@ The value owns no resources, identity, handles, callbacks, or managed references
 | `GrowSide(Side, float)` | Extends one side; an undefined enum value leaves the rectangle unchanged |
 | `HasArea()` | Requires both size components to be strictly positive |
 | `HasPoint(Vector2)` | Uses half-open containment: left/top included, right/bottom excluded |
-| `Intersection(Rect2)` | Returns overlap or `default` for separation or border-only contact; a contained zero-size rectangle retains its position |
-| `Intersects(Rect2, bool = false)` | Tests overlap, optionally counting border-only contact |
-| `IsEqualApprox(Rect2)` | Per-component relative epsilon `0.00001`, with exact equality first |
+| `Intersection(Rect)` | Returns overlap or `default` for separation or border-only contact; a contained zero-size rectangle retains its position |
+| `Intersects(Rect, bool = false)` | Tests overlap, optionally counting border-only contact |
+| `IsEqualApprox(Rect)` | Per-component relative epsilon `0.00001`, with exact equality first |
 | `IsFinite()` | Requires all four components to be neither NaN nor infinity |
-| `Merge(Rect2)` | Returns the smallest axis-aligned rectangle containing both inputs |
+| `Merge(Rect)` | Returns the smallest axis-aligned rectangle containing both inputs |
+| `Transform * Rect` | Transforms all four corners and returns their axis-aligned bounds |
+| `Rect * Transform` | Applies the inverse orthonormal transform to all four corners and returns their axis-aligned bounds |
 | `==`, `!=`, `Equals` | Exact position and size equality; NaN is unequal |
 | `GetHashCode()` | Hashes position and size |
 | `ToString()`, `ToString(string?)` | Invariant-culture `Position, Size` formatting |
@@ -68,15 +70,15 @@ Construction, geometry, comparison, and hashing are value-only and allocate no m
 
 ## Dependencies and integration
 
-The public type depends on `System.Numerics.Vector2`, [`Side`](Side.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores only finite rectangles using the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect2` directly as a reference-free value.
+The public type depends on [`Vector2`](Vector2.md), [`Transform`](Transform.md), [`Side`](Side.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores only finite rectangles using the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect` directly as a reference-free value.
 
-There is no dependency on Scene, rendering, SDL, input, audio, physics, resources, scripting, or an editor. A constructor from `Rect2I` is dependency-blocked until that complete type exists. Multiplication by the implemented [`Transform2D`](Transform2D.md) remains deliberately deferred to the explicit Node/Rect2 migration slice under ADR 0026 and ADR 0029 rather than being introduced as an isolated compatibility operator. Language-specific boolean truth conversion is permanently excluded from the typed C# surface.
+There is no dependency on Scene, rendering, SDL, input, audio, physics, resources, scripting, or an editor. Integer-rectangle conversion remains absent until an integer rectangle type is justified and implemented. Language-specific boolean truth conversion is permanently excluded from the typed C# surface.
 
 ## Verification and known limitations
 
 `tests/Electron2D.Tests/Program.cs` verifies layout and defaults, all four constructors, mutable properties, signed area, normalization, enclosure, expansion, center/support mapping, every growth mode and undefined side, half-open containment, overlap/border/separation behavior, intersection and merge, exact/approximate/NaN/infinity behavior, hashing, invariant formatting and failure, strict configuration serialization and malformed-input rollback, packed-scene storage, and zero warmed numeric allocation.
 
-Execution is currently verified on Linux/.NET 8. Native backend interop and the full five-platform matrix remain unverified. Integer-rectangle conversion and transform multiplication remain explicitly deferred to their missing value types rather than partially implemented here.
+Execution is currently verified on Linux/.NET 8. Native backend interop and the full five-platform matrix remain unverified. Integer-rectangle conversion remains absent rather than represented by a stub.
 
 ## Decisions
 
@@ -84,5 +86,6 @@ Execution is currently verified on Linux/.NET 8. Native backend interop and the 
 - [0014: Managed lifetime and realtime allocation](../decisions/resources.md#adr-0014)
 - [0017: Source-tree module layout](../decisions/product.md#adr-0017)
 - [0025: Typed axis-aligned rectangle geometry](../decisions/core-math.md#adr-0025)
-- [0026: Separate Transform2D type](../decisions/core-math.md#adr-0026)
-- [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
+- [0026: Separate Transform type](../decisions/core-math.md#adr-0026)
+- [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)
+- [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)

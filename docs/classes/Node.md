@@ -14,7 +14,7 @@ Last updated: 2026-09-21
 
 `Node` is Electron2D's primary and single public hierarchical and spatial game-object base. Individual game objects, composed subsystems, and complete worlds use the same ordered Node hierarchy. Specialized gameplay objects derive from `Node` and can compose child Nodes and typed resources. It intentionally combines Godot-like `Node` and `Node2D` responsibilities: ordered ownership, lifecycle, paths, groups, pause-aware processing, deletion, local/global 2D transforms, visibility, and Z state. There is no separate `Node2D`, `GameObject`, or public entity hierarchy.
 
-A parent owns its children. An active [`SceneTree`](SceneTree.md) owns its root and therefore the whole hierarchy. A node owns no renderer or native SDL handle. Its current transform surface is `Matrix3x2`; the standalone [`Transform2D`](Transform2D.md) now exists, but migration of this public surface remains a separate source-breaking slice under ADR 0026 and ADR 0029.
+A parent owns its children. An active [`SceneTree`](SceneTree.md) owns its root and therefore the whole hierarchy. A node owns no renderer or native SDL handle. Its complete spatial surface uses engine-owned [`Vector2`](Vector2.md) and [`Transform`](Transform.md) values.
 
 Any self-contained root and its owned descendants can be captured by [`PackedScene`](PackedScene.md) as a reusable scene. Instantiation returns an independent detached hierarchy; lifecycle begins only after explicit attachment to a `SceneTree`.
 
@@ -38,7 +38,7 @@ Any self-contained root and its owned descendants can be captured by [`PackedSce
 | `NotificationDisabled` | `28` | Effective process mode became `Disabled` |
 | `NotificationEnabled` | `29` | Effective process mode stopped being `Disabled` |
 | `NotificationVisibilityChanged` | `31` | Local/ancestor visibility propagation occurred |
-| `NotificationLocalTransformChanged` | `35` | Local matrix changed and local notifications are enabled |
+| `NotificationLocalTransformChanged` | `35` | Local transform changed and local notifications are enabled |
 | `NotificationTransformChanged` | `2000` | Global transform changed and global notifications are enabled |
 | `NotificationOsMemoryWarning` | `2009` | Propagated operating-system memory warning |
 | `NotificationTranslationChanged` | `2010` | Translated messages may have changed |
@@ -70,8 +70,8 @@ Any self-contained root and its owned descendants can be captured by [`PackedSce
 | `bool IsInsideTree { get; }` | Whether `Tree` is non-null |
 | `bool IsNodeReady { get; }` | Whether SceneTree-managed ready has been consumed since construction or the last `RequestReady()`; the stored flag remains `true` after detachment |
 | `bool IsQueuedForDeletion { get; }` | Atomic deletion-request state |
-| `Matrix3x2 Transform { get; set; }` | Local 2D affine transform |
-| `Matrix3x2 GlobalTransform { get; set; }` | World transform; setting it solves a local transform unless top-level |
+| `Transform Transform { get; set; }` | Local 2D affine transform |
+| `Transform GlobalTransform { get; set; }` | World transform; setting it solves a local transform unless top-level |
 | `Vector2 Position/GlobalPosition { get; set; }` | Local/global translation |
 | `float Rotation/GlobalRotation { get; set; }` | Local/global rotation in radians |
 | `float RotationDegrees/GlobalRotationDegrees { get; set; }` | Degree projections of local/global rotation |
@@ -122,7 +122,7 @@ Events are synchronous typed C# events. An event carrying only its source passes
 | `RemoveChild(Node child)` | Detaches a direct child and returns `true`, or returns `false` for a non-child |
 | `MoveChild(Node child, int index)` | Reorders a direct child; negative indices count from the end |
 | `MoveToFront()` | Moves this node to the last sibling position; detached/root nodes are unchanged |
-| `Reparent(Node newParent, bool keepGlobalTransform = true)` | Moves a non-root node, including between trees when both owner-thread contracts are satisfied; by default preserves the global matrix and rejects singular new parents |
+| `Reparent(Node newParent, bool keepGlobalTransform = true)` | Moves a non-root node, including between trees when both owner-thread contracts are satisfied; by default preserves the global transform and rejects singular new parents |
 | `GetChild(int index)` | Gets a direct child; negative indices count from the end |
 | `GetIndex()` | Returns the sibling index or `-1` without a parent |
 | `IsAncestorOf(Node node)` | Tests strict ancestry |
@@ -152,13 +152,11 @@ Events are synchronous typed C# events. An event carrying only its source passes
 | `MoveLocalX/Y(float delta, bool scaled = false)` | Moves along a local basis axis; normalizes it unless `scaled` is `true` |
 | `GetAngleTo(Vector2 globalPoint)` | Signed normalized angle from local +X/world rotation to a world point; coincident points return `0` |
 | `LookAt(Vector2 globalPoint)` | Rotates local +X toward a distinct world point |
-| `ToGlobal(Vector2 localPoint)` | Applies the global matrix |
+| `ToGlobal(Vector2 localPoint)` | Applies the global transform |
 | `ToLocal(Vector2 globalPoint)` | Applies its inverse; rejects a singular global transform |
-| `GetRelativeTransformToParent(Node parent)` | Returns this global matrix relative to a strict ancestor, identity for self, and rejects unrelated/singular ancestors |
+| `GetRelativeTransformToParent(Node parent)` | Returns this global transform relative to a strict ancestor, identity for self, and rejects unrelated/singular ancestors |
 
-Every transform input must be finite. `Matrix3x2` follows the `System.Numerics` row-vector composition convention. Decomposition is canonical: equivalent matrices with reflections/negative scale can yield an equivalent but not identical rotation/scale/skew tuple.
-
-`Matrix3x2` describes current executable behavior rather than the final transform-type decision. The standalone `Transform2D` value is implemented, but its planned Node migration has not occurred and must not be inferred from this class's present API.
+Every transform input must be finite. `Transform` uses X/Y basis columns and composes `parent * local`, applying the local/right operand first. Decomposition is canonical: equivalent transforms with reflections or negative scale can yield an equivalent but not identical rotation/scale/skew tuple.
 
 ## Protected API
 
@@ -202,16 +200,17 @@ Every node created by `PackedScene.Instantiate()` is also marked unfinished unti
 
 ## Dependencies and interactions
 
-`Node` depends on `ElectronObject`, `MainLoop` notification identifiers, `PropertyDescriptor`, `NodeProcessMode`, `SceneTree`, the Resource base for owned scene duplicates, `System.Numerics`, LINQ, `FileSystemName`, and atomic operations. It does not depend on SDL3-CS, a renderer, input, audio, collision physics, scene file serialization, or a scripting runtime.
+`Node` depends on `ElectronObject`, `MainLoop` notification identifiers, `PropertyDescriptor`, `NodeProcessMode`, `SceneTree`, the Resource base for owned scene duplicates, `Vector2`, `Transform`, LINQ, `FileSystemName`, and atomic operations. It does not depend on SDL3-CS, a renderer, input, audio, collision physics, scene file serialization, or a scripting runtime.
 
 ## Verification and known limitations
 
 `tests/Electron2D.Tests/Program.cs` verifies lifecycle order, activation/ready rollback, stale snapshot rejection, lifecycle re-entry guards, failure-continuing exit and recursive disposal, disposing-parent mutation rejection, hierarchy validation, reparenting, owner cleanup, paths/search/persistent groups, packed capture and instantiation guards/factories/escape rollback/resource ownership, node/tree event order, child order and sender-first child event arguments, transform behavior, visibility and Z state, spatial helpers, pause modes/priorities/deltas, inherited disable/enable notifications, MainLoop system aliases and tree propagation, owner-thread rejection, direct disposal, detached/cross-tree queued deletion, and queued recursive disposal.
 
-There is no renderer-backed canvas behavior, native system-event creation, focus-to-input state synchronization, ordinary input propagation, collision/rigid-body physics, scene file loader/saver, inherited/nested scene authoring, editable-instance metadata, persistent event endpoint schema, RPC/multiplayer, internal processing lane, process auto-enable by override detection, unique-name shorthand, or separate `Node2D`. Visibility and Z are currently logical state only. `Transform2D` exists independently, while migration from the current `Matrix3x2` members remains explicit future work.
+There is no renderer-backed canvas behavior, native system-event creation, focus-to-input state synchronization, ordinary input propagation, collision/rigid-body physics, scene file loader/saver, inherited/nested scene authoring, editable-instance metadata, persistent event endpoint schema, RPC/multiplayer, internal processing lane, process auto-enable by override detection, unique-name shorthand, or separate spatial-node subclass. Visibility and Z are currently logical state only.
 
 ## Relevant decisions
 
 - [0008: Unified Node combines Node and Node2D](../decisions/scene.md#adr-0008)
-- [0026: Separate Transform2D foundational type](../decisions/core-math.md#adr-0026)
-- [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
+- [0026: Separate Transform foundational type](../decisions/core-math.md#adr-0026)
+- [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)
+- [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)

@@ -20,7 +20,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 
 ## Public surface
 
-- `Node`: the primary public game-object base and one combined Godot-style `Node` + `Node2D` abstraction with ordered hierarchy, lifecycle, local/global `Matrix3x2` transforms, `Vector2` spatial helpers, logical canvas state, paths/search/groups, processing configuration, and queued deletion.
+- `Node`: the primary public game-object base and one combined Godot-style `Node` + `Node2D` abstraction with ordered hierarchy, lifecycle, local/global `Transform` transforms, `Vector2` spatial helpers, logical canvas state, paths/search/groups, processing configuration, and queued deletion.
 - `NodeProcessMode`: inherited, pausable, paused-only, always, and disabled process policies.
 - `SceneTree`: concrete main loop and active hierarchy owner with failure-safe lifecycle/finalization, system-notification propagation, pause state, caller-driven process/physics frames, frame/tree events and counters, typed group work, timers, deferred actions, and deletion flushing.
 - `SceneTreeTimer`: lightweight one-shot delay advanced by one selected frame lane and automatically disposed after timeout.
@@ -31,7 +31,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 
 ## Dependency direction
 
-- Scene depends on Core, Resources, including `Resource`, and the .NET Base Class Library, including `System.Numerics` and concurrent collections.
+- Scene depends on Core's `Vector2`/`Transform` math, Resources including `Resource`, and .NET collections and filesystem-name matching.
 - Resources has a narrow reciprocal dependency on `Node` for `Resource.GetLocalScene()` under ADR 0023. This is an intentional in-assembly type cycle, not another managed assembly.
 - Scene does not depend on SDL3-CS, rendering, input, audio, collision physics, asset loading/saving, file serialization, tweening, scripting, networking, or Localization.
 - Future gameplay, rendering, input, and 2D physics types may depend on Scene.
@@ -46,7 +46,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - Sibling names are ordinal-unique, and path separators/reserved path tokens cannot be names.
 - SceneTree-managed enter runs parent-first, ready runs child-first and once unless explicitly reset, and exit runs child-first. Lifecycle snapshots revalidate membership and lifecycle re-entry is rejected. Constructor failure terminally closes the failed tree, rolls membership and newly consumed ready state back, and disposes activation-created timers; later lifecycle failures complete their state transition and are aggregated. Manual `Notify(int)` dispatch is outside that state machine.
 - Attached state mutation, lifecycle delivery, frame execution, flushing, and disposal use the tree's creating thread. Deferred and deletion requests may be enqueued from other threads.
-- A non-top-level global transform is the local transform composed with ancestor transforms. Transform inputs must be finite; operations needing an inverse reject singular matrices.
+- A non-top-level global transform is the ancestor global transform composed with the local transform. Transform inputs must be finite; operations needing an inverse reject singular transforms.
 - Process/physics callbacks are opt-in, synchronous, pause-aware, and ordered by their independent priority then captured tree order.
 - Queue acceptance is atomic with tree-disposal closure. Deferred work queued during a flush waits for the next flush. Captured queued deletion runs after deferred actions, survives detachment, transfers safely between trees, and disposes the complete subtree despite detach callback failures.
 - Frame and flush execution cannot be re-entered or started during lifecycle delivery. Timers advance after node callbacks and before deferred work in their selected lane. Pause delivery visits each eligible node at most once and rejects opposite re-entry.
@@ -67,7 +67,6 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - Packed scenes are in-memory only. Nested/inherited scene authoring, placeholders, editable instances, persistent event endpoint storage, node-reference remapping, UID/import integration, and every editor edit mode remain absent.
 - Paths are typed as `string`, not a separate `NodePath`; groups are strings; wildcard search covers names with `*` and `?`.
 - A detached node may remember `QueueFree`, but deletion occurs only after attachment to a tree and a flush/frame boundary.
-- The standalone Core `Transform2D` value is implemented under ADR 0029. Current Node transform members remain `Matrix3x2` until their explicit source-breaking migration is delivered.
 - There is no five-platform host/package/test matrix; current executable verification is Linux-only.
 
 ## Verification
@@ -89,6 +88,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - [0017: Source-tree module layout](../decisions/product.md#adr-0017)
 - [0021: Cross-platform runtime target matrix](../decisions/product.md#adr-0021)
 - [0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
-- [0026: Separate Transform2D foundational type](../decisions/core-math.md#adr-0026)
-- [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
+- [0026: Separate Transform foundational type](../decisions/core-math.md#adr-0026)
+- [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0031: Node trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)
+- [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)

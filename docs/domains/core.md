@@ -25,9 +25,9 @@ The domain currently contains ten implemented components:
 | [Main loop](../components/main-loop.md) | Owner-thread application lifecycle, frame hooks, stop requests, and platform-notification endpoints | Implemented and verified |
 | [Engine runtime](../components/engine-runtime.md) | Process-wide loop coordination, fixed-step scheduling, time scaling, metrics, build information, and named singletons | Implemented and verified |
 | [Color values](../components/color-values.md) | Floating-point RGBA math, HSV/OKHSL conversion, packing/parsing, and the standard named catalog | Implemented and verified |
-| [Geometry values](../components/geometry-values.md) | Floating-point rectangles, affine transforms, side identities, spatial composition, inversion, containment, intersection, growth, and merge | Implemented and verified |
+| [Geometry values](../components/geometry-values.md) | Engine-owned two/four-component vectors, rectangles, affine transforms, side identities, numeric and spatial operations | Implemented and verified |
 
-Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`FileAccessMode`](../classes/FileAccessMode.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Rect2`](../classes/Rect2.md), [`Transform2D`](../classes/Transform2D.md), and [`Side`](../classes/Side.md).
+Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`FileAccessMode`](../classes/FileAccessMode.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`Transform`](../classes/Transform.md), and [`Side`](../classes/Side.md).
 
 ## Public surface
 
@@ -47,8 +47,10 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `EngineVersionInfo`: immutable typed assembly version metadata.
 - `Color`: sequential floating-point RGBA value with color-space conversion, math, composition, packing, text, and comparison behavior.
 - `Colors`: immutable 146-entry named color surface and lookup catalog.
-- `Rect2`: sequential floating-point axis-aligned rectangle with complete backend-independent geometry behavior.
-- `Transform2D`: sequential affine 2D value with basis/origin decomposition, composition, inversion, interpolation, local/global operations, and typed point/vector transforms.
+- `Vector2` and `Vector2I`: complete two-component floating-point/integer values for 2D spatial, grid, and numeric behavior.
+- `Vector4` and `Vector4I`: complete four-component floating-point/integer numeric tuples without 3D scene semantics.
+- `Rect`: sequential floating-point axis-aligned rectangle with complete backend-independent geometry behavior and transform bounds operators.
+- `Transform`: sequential affine 2D value with basis/origin decomposition, composition, inversion, interpolation, local/global operations, and typed point/vector/rectangle transforms.
 - `Side`: stable identity of the four rectangle edges.
 
 ## Dependency direction
@@ -62,9 +64,8 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `TranslationServer` has no dependency back on Core, so this direction does not form a cycle.
 - Core does not depend on SDL3-CS.
 - Color math depends only on .NET primitives and the bundled MIT-licensed managed OKHSL formulas; it has no native or rendering dependency. `ConfigFile` provides its strict finite JSON schema, while typed scene property storage consumes the reference-free value without a dependency back from Core Math to Scene.
-- Rectangle geometry depends only on `System.Numerics.Vector2` and .NET primitives. `ConfigFile` provides its strict finite `Position`/`Size` schema, while typed scene property storage consumes the reference-free value without a dependency back from Core Math to Scene.
-- Transform math depends only on `System.Numerics.Vector2` and .NET primitives. `ConfigFile` provides its strict finite `X`/`Y`/`Origin` schema, while typed scene property storage consumes the reference-free value without a dependency back from Core Math to Scene.
-- ADR 0032 requires the final public and engine-owned math state to use `Electron2D.Vector`, `Rect`, and `Transform`. The current `System.Numerics.Vector2`, `Rect2`, `Transform2D`, and Node `Matrix3x2` surfaces remain implemented legacy state until that complete migration is delivered; no future domain may extend them as the permanent API.
+- Vector, rectangle, and transform math depends only on .NET scalar/layout primitives. `ConfigFile` provides strict vector, `Position`/`Size`, and `X`/`Y`/`Origin` schemas, while typed scene storage consumes reference-free values without a dependency back from Core Math to Scene.
+- `Rect`, `Transform`, and Scene's `Node` use `Electron2D.Vector2`; public external numerics types and old compatibility names are absent.
 - Future engine domains may depend on Core.
 - Core must not acquire dependencies on scene, rendering, input, or other higher-level domains.
 - Core must not introduce 3D concepts or require a second production assembly.
@@ -85,6 +86,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - File access enforces exact modes, complete scalar reads, strict UTF-8, authenticated-before-exposure encrypted reads, and lock-serialized instance calls. It is blocking/allocating and excluded from real-time hot paths.
 - Directory access captures one immutable path scope, serializes instance state, never recursively deletes caller-selected content, and distinguishes unsorted listing snapshots from ordinally sorted content snapshots.
 - Colors are sequential four-float values. Ordinary arithmetic retains HDR and IEEE 754 values; packed and HTML output are clamped/deterministic, and named lookup is immutable and thread-safe.
+- Vectors are sequential two- or four-component float/int values. Floating math retains IEEE behavior; integer arithmetic wraps except for documented managed failures; numeric hot paths allocate no managed memory after warmup.
 - Rectangles are sequential four-float values. Ordinary storage retains negative and IEEE 754 components, normalization is explicit, point containment is half-open, and numeric geometry is allocation-free after warmup.
 - Transforms are sequential six-float column values. Ordinary math retains IEEE 754 components, left/right composition order is explicit, general and orthonormal inverse contracts are distinct, and numeric math is allocation-free after warmup.
 
@@ -93,8 +95,8 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - No global object registry or lookup by `InstanceId`.
 - No untyped metadata store.
 - No reflection-based property or method invocation.
-- No integer `RectI` production type. `Transform2D` exists in the last verified implementation, but migration of the current `Node` `Matrix3x2` surface and rectangle transform multiplication remains an explicit separate slice under ADR 0026, ADR 0029, and ADR 0032.
-- No `Vector` production type exists yet. ADR 0032 requires it and the repository-wide migration to `Vector`, `Rect`, and `Transform`; this accepted direction must not be reported as implemented before its complete vertical slice and audit pass.
+- No integer rectangle production type.
+- No `Vector3`, `Vector3I`, 3D rectangle, transform, node, renderer, or physics type. Four-component vectors are numeric tuples rather than spatial 4D types.
 - No script attachment, script runtime, editor application, or general file serialization. Only the typed `ScriptChanged` notification contract exists for the confirmed future scripting component.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers, and persistence requires a typed stable endpoint identity/binding schema.
 - No SDL application host, native system-event translation, permission request API, clock/wait-based maximum-FPS pacing, or exit-code service. `Engine` and `MainLoop` expose implemented integration endpoints without simulating those domains.
@@ -104,7 +106,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` verifies concurrent identity allocation, notifications, the `ElectronObject` lifetime contract, typed property discovery/access/validation/revert, property-list/script-change events, event-connection lifecycle/concurrency, complete color construction/math/conversion/parsing/named catalog/persistence/scene storage/allocation behavior, complete rectangle layout/geometry/boundaries/persistence/scene storage/allocation behavior, transform layout/construction/decomposition/composition/inversion/interpolation/persistence/scene storage/allocation behavior, configuration parsing/encoding/persistence/encryption/concurrency, file modes and typed data, directory scopes/listing/mutations/links/identity/case/temporary ownership, metadata/hashes, Linux xattrs/permissions and explicit unsupported attribute behavior, compression, encryption/tamper failures, virtual paths and commit cleanup, MainLoop state/error/thread behavior, and Engine configuration, scheduling, metrics, registry, failure safety, allocation, and SceneTree integration. It does not verify SDL or rendering behavior because those domains do not exist yet.
+`tests/Electron2D.Tests/Program.cs` verifies concurrent identity allocation, notifications, the `ElectronObject` lifetime contract, typed property discovery/access/validation/revert, property-list/script-change events, event-connection lifecycle/concurrency, complete color behavior, all four vector surfaces and numeric boundaries, rectangle layout/geometry/boundaries, transform decomposition/composition/inversion/interpolation/rectangle operations, Node vector/transform integration, strict persistence, packed-scene storage, allocation behavior, configuration parsing/encoding/persistence/encryption/concurrency, file and directory access, MainLoop state/error/thread behavior, and Engine scheduling/integration. It does not verify SDL or rendering behavior because those domains do not exist yet.
 
 The same harness verifies project-setting registration, value snapshots, validators, metadata, overrides, changes/events, persistence, virtual paths, transaction rollback, concurrency, disposal, and Engine integration.
 
@@ -131,3 +133,4 @@ The same harness verifies project-setting registration, value snapshots, validat
 - [0026: Separate Transform2D foundational type](../decisions/core-math.md#adr-0026)
 - [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0032: Engine-owned unsuffixed 2D math vocabulary](../decisions/core-math.md#adr-0032)
+- [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)

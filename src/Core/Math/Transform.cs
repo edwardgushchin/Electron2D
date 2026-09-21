@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace Electron2D;
@@ -13,13 +12,13 @@ namespace Electron2D;
 /// </remarks>
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
-public struct Transform2D : IEquatable<Transform2D>
+public struct Transform : IEquatable<Transform>
 {
     private const float ComparisonEpsilon = 0.00001f;
 
-    private static readonly Transform2D IdentityValue = new(1f, 0f, 0f, 1f, 0f, 0f);
-    private static readonly Transform2D FlipXValue = new(-1f, 0f, 0f, 1f, 0f, 0f);
-    private static readonly Transform2D FlipYValue = new(1f, 0f, 0f, -1f, 0f, 0f);
+    private static readonly Transform IdentityValue = new(1f, 0f, 0f, 1f, 0f, 0f);
+    private static readonly Transform FlipXValue = new(-1f, 0f, 0f, 1f, 0f, 0f);
+    private static readonly Transform FlipYValue = new(1f, 0f, 0f, -1f, 0f, 0f);
 
     /// <summary>Gets or sets the basis X axis, which is matrix column zero.</summary>
     /// <remarks>Its length contributes the horizontal scale and its direction defines the transform rotation.</remarks>
@@ -34,15 +33,15 @@ public struct Transform2D : IEquatable<Transform2D>
 
     /// <summary>Gets the identity transform.</summary>
     /// <value>A transform with unit basis axes and zero origin.</value>
-    public static Transform2D Identity => IdentityValue;
+    public static Transform Identity => IdentityValue;
 
     /// <summary>Gets a transform that reflects across the vertical axis by negating horizontal coordinates.</summary>
     /// <value>A transform with basis axes <c>(-1, 0)</c> and <c>(0, 1)</c>.</value>
-    public static Transform2D FlipX => FlipXValue;
+    public static Transform FlipX => FlipXValue;
 
     /// <summary>Gets a transform that reflects across the horizontal axis by negating vertical coordinates.</summary>
     /// <value>A transform with basis axes <c>(1, 0)</c> and <c>(0, -1)</c>.</value>
-    public static Transform2D FlipY => FlipYValue;
+    public static Transform FlipY => FlipYValue;
 
     /// <summary>Gets the clockwise screen-space rotation in radians.</summary>
     /// <value>The angle of <see cref="X"/>, measured from positive X toward positive Y.</value>
@@ -58,7 +57,7 @@ public struct Transform2D : IEquatable<Transform2D>
     /// <summary>Gets the angular skew between the basis axes in radians.</summary>
     /// <value>Zero for an orthogonal basis, with reflection accounted for by the determinant sign.</value>
     public readonly float Skew =>
-        MathF.Acos(Vector2.Dot(NormalizedOrZero(X), Sign(Determinant()) * NormalizedOrZero(Y))) - (MathF.PI * 0.5f);
+        MathF.Acos(NormalizedOrZero(X).Dot(Sign(Determinant()) * NormalizedOrZero(Y))) - (MathF.PI * 0.5f);
 
     /// <summary>Gets or sets a complete matrix column.</summary>
     /// <param name="column">Zero for <see cref="X"/>, one for <see cref="Y"/>, or two for <see cref="Origin"/>.</param>
@@ -134,7 +133,7 @@ public struct Transform2D : IEquatable<Transform2D>
     /// <param name="xAxis">The basis X axis.</param>
     /// <param name="yAxis">The basis Y axis.</param>
     /// <param name="origin">The translation offset.</param>
-    public Transform2D(Vector2 xAxis, Vector2 yAxis, Vector2 origin)
+    public Transform(Vector2 xAxis, Vector2 yAxis, Vector2 origin)
     {
         X = xAxis;
         Y = yAxis;
@@ -148,7 +147,7 @@ public struct Transform2D : IEquatable<Transform2D>
     /// <param name="yy">The Y component of <see cref="Y"/>.</param>
     /// <param name="ox">The X component of <see cref="Origin"/>.</param>
     /// <param name="oy">The Y component of <see cref="Origin"/>.</param>
-    public Transform2D(float xx, float xy, float yx, float yy, float ox, float oy)
+    public Transform(float xx, float xy, float yx, float yy, float ox, float oy)
         : this(new Vector2(xx, xy), new Vector2(yx, yy), new Vector2(ox, oy))
     {
     }
@@ -156,7 +155,7 @@ public struct Transform2D : IEquatable<Transform2D>
     /// <summary>Initializes a rotation and translation transform.</summary>
     /// <param name="rotation">The clockwise screen-space angle in radians.</param>
     /// <param name="origin">The translation offset.</param>
-    public Transform2D(float rotation, Vector2 origin)
+    public Transform(float rotation, Vector2 origin)
     {
         var (sine, cosine) = MathF.SinCos(rotation);
         X = new Vector2(cosine, sine);
@@ -169,7 +168,7 @@ public struct Transform2D : IEquatable<Transform2D>
     /// <param name="scale">The horizontal and vertical scale factors.</param>
     /// <param name="skew">The angular skew in radians.</param>
     /// <param name="origin">The translation offset.</param>
-    public Transform2D(float rotation, Vector2 scale, float skew, Vector2 origin)
+    public Transform(float rotation, Vector2 scale, float skew, Vector2 origin)
     {
         var (rotationSine, rotationCosine) = MathF.SinCos(rotation);
         var (skewedSine, skewedCosine) = MathF.SinCos(rotation + skew);
@@ -181,14 +180,14 @@ public struct Transform2D : IEquatable<Transform2D>
     /// <summary>Returns the general affine inverse.</summary>
     /// <returns>A transform that composes with this transform to produce the identity, within floating-point precision.</returns>
     /// <exception cref="InvalidOperationException">The basis determinant is exactly zero.</exception>
-    public readonly Transform2D AffineInverse()
+    public readonly Transform AffineInverse()
     {
         var determinant = Determinant();
         if (determinant == 0f)
             throw new InvalidOperationException("A transform with a zero determinant cannot be inverted.");
 
         var inverseDeterminant = 1f / determinant;
-        var inverse = new Transform2D(
+        var inverse = new Transform(
             Y.Y * inverseDeterminant,
             -X.Y * inverseDeterminant,
             -Y.X * inverseDeterminant,
@@ -211,7 +210,7 @@ public struct Transform2D : IEquatable<Transform2D>
     /// This is the inverse basis transform only when the basis is orthonormal. For scaled or skewed transforms, use
     /// <c>transform.AffineInverse().BasisXform(vector)</c>.
     /// </remarks>
-    public readonly Vector2 BasisXformInv(Vector2 vector) => new(Vector2.Dot(X, vector), Vector2.Dot(Y, vector));
+    public readonly Vector2 BasisXformInv(Vector2 vector) => new(X.Dot(vector), Y.Dot(vector));
 
     /// <summary>Returns the determinant of the two-by-two basis.</summary>
     /// <returns>Zero for a singular basis, a negative value for a reflected basis, or a positive value otherwise.</returns>
@@ -221,11 +220,11 @@ public struct Transform2D : IEquatable<Transform2D>
     /// <param name="other">The destination transform.</param>
     /// <param name="weight">The interpolation weight; values outside zero through one extrapolate.</param>
     /// <returns>A transform built from shortest-path angle interpolation, linear scale, skew, and origin interpolation.</returns>
-    public readonly Transform2D InterpolateWith(Transform2D other, float weight) => new(
+    public readonly Transform InterpolateWith(Transform other, float weight) => new(
         LerpAngle(Rotation, other.Rotation, weight),
-        Vector2.Lerp(Scale, other.Scale, weight),
+        Scale.Lerp(other.Scale, weight),
         LerpAngle(Skew, other.Skew, weight),
-        Vector2.Lerp(Origin, other.Origin, weight));
+        Origin.Lerp(other.Origin, weight));
 
     /// <summary>Returns the fast inverse for an orthonormal basis.</summary>
     /// <returns>The transposed basis and corresponding inverse translation.</returns>
@@ -233,7 +232,7 @@ public struct Transform2D : IEquatable<Transform2D>
     /// This method assumes rotation or reflection without scale or skew and does not validate that precondition. Use
     /// <see cref="AffineInverse"/> for a general invertible affine transform.
     /// </remarks>
-    public readonly Transform2D Inverse()
+    public readonly Transform Inverse()
     {
         var inverse = this;
         (inverse.X.Y, inverse.Y.X) = (inverse.Y.X, inverse.X.Y);
@@ -250,7 +249,7 @@ public struct Transform2D : IEquatable<Transform2D>
     /// <summary>Tests all three columns for scale-aware approximate equality.</summary>
     /// <param name="other">The transform to compare.</param>
     /// <returns><see langword="true"/> when every corresponding component is approximately equal.</returns>
-    public readonly bool IsEqualApprox(Transform2D other) =>
+    public readonly bool IsEqualApprox(Transform other) =>
         IsVectorEqualApprox(X, other.X) &&
         IsVectorEqualApprox(Y, other.Y) &&
         IsVectorEqualApprox(Origin, other.Origin);
@@ -267,58 +266,58 @@ public struct Transform2D : IEquatable<Transform2D>
     /// The target is inverse-transformed and compensated by the signed basis scale before its angle is added to the
     /// current rotation. For a skewed source this differs from using the raw global angle from the origin.
     /// </remarks>
-    public readonly Transform2D LookingAt(Vector2 target)
+    public readonly Transform LookingAt(Vector2 target)
     {
         var localTarget = AffineInverse() * target;
         var scaledTarget = localTarget * Scale;
-        return new Transform2D(Rotation + MathF.Atan2(scaledTarget.Y, scaledTarget.X), Origin);
+        return new Transform(Rotation + MathF.Atan2(scaledTarget.Y, scaledTarget.X), Origin);
     }
 
     /// <summary>Returns a transform with a Gram-Schmidt orthonormalized basis.</summary>
     /// <returns>A copy with unit perpendicular axes and the original origin.</returns>
     /// <remarks>A zero or linearly dependent axis normalizes to zero instead of producing non-finite components.</remarks>
-    public readonly Transform2D Orthonormalized()
+    public readonly Transform Orthonormalized()
     {
         var xAxis = NormalizedOrZero(X);
-        var yAxis = NormalizedOrZero(Y - (xAxis * Vector2.Dot(xAxis, Y)));
-        return new Transform2D(xAxis, yAxis, Origin);
+        var yAxis = NormalizedOrZero(Y - (xAxis * xAxis.Dot(Y)));
+        return new Transform(xAxis, yAxis, Origin);
     }
 
     /// <summary>Applies a rotation in the global or parent coordinate frame.</summary>
     /// <param name="angle">The clockwise screen-space angle in radians.</param>
     /// <returns>The rotation transform multiplied on the left of this transform.</returns>
-    public readonly Transform2D Rotated(float angle) => new Transform2D(angle, Vector2.Zero) * this;
+    public readonly Transform Rotated(float angle) => new Transform(angle, Vector2.Zero) * this;
 
     /// <summary>Applies a rotation in the local coordinate frame.</summary>
     /// <param name="angle">The clockwise screen-space angle in radians.</param>
     /// <returns>The rotation transform multiplied on the right of this transform.</returns>
-    public readonly Transform2D RotatedLocal(float angle) => this * new Transform2D(angle, Vector2.Zero);
+    public readonly Transform RotatedLocal(float angle) => this * new Transform(angle, Vector2.Zero);
 
     /// <summary>Applies componentwise scale in the global or parent coordinate frame.</summary>
     /// <param name="scale">The scale along global X and Y.</param>
     /// <returns>A copy whose basis rows and origin are scaled componentwise.</returns>
-    public readonly Transform2D Scaled(Vector2 scale) => new(X * scale, Y * scale, Origin * scale);
+    public readonly Transform Scaled(Vector2 scale) => new(X * scale, Y * scale, Origin * scale);
 
     /// <summary>Applies scale in the local coordinate frame.</summary>
     /// <param name="scale">The scale along the local basis axes.</param>
     /// <returns>A copy whose X and Y columns are multiplied by their corresponding factors.</returns>
-    public readonly Transform2D ScaledLocal(Vector2 scale) => new(X * scale.X, Y * scale.Y, Origin);
+    public readonly Transform ScaledLocal(Vector2 scale) => new(X * scale.X, Y * scale.Y, Origin);
 
     /// <summary>Applies translation in the global or parent coordinate frame.</summary>
     /// <param name="offset">The global offset.</param>
     /// <returns>A copy with the offset added directly to its origin.</returns>
-    public readonly Transform2D Translated(Vector2 offset) => new(X, Y, Origin + offset);
+    public readonly Transform Translated(Vector2 offset) => new(X, Y, Origin + offset);
 
     /// <summary>Applies translation in the local coordinate frame.</summary>
     /// <param name="offset">The offset expressed in the current basis.</param>
     /// <returns>A copy with the basis-transformed offset added to its origin.</returns>
-    public readonly Transform2D TranslatedLocal(Vector2 offset) => new(X, Y, Origin + BasisXform(offset));
+    public readonly Transform TranslatedLocal(Vector2 offset) => new(X, Y, Origin + BasisXform(offset));
 
     /// <summary>Composes a parent transform with a child transform.</summary>
     /// <param name="left">The parent transform applied second.</param>
     /// <param name="right">The child transform applied first.</param>
     /// <returns>The composed transform.</returns>
-    public static Transform2D operator *(Transform2D left, Transform2D right) => new(
+    public static Transform operator *(Transform left, Transform right) => new(
         left.BasisXform(right.X),
         left.BasisXform(right.Y),
         left * right.Origin);
@@ -327,21 +326,50 @@ public struct Transform2D : IEquatable<Transform2D>
     /// <param name="transform">The transform to apply.</param>
     /// <param name="point">The point in local coordinates.</param>
     /// <returns>The transformed point.</returns>
-    public static Vector2 operator *(Transform2D transform, Vector2 point) => transform.BasisXform(point) + transform.Origin;
+    public static Vector2 operator *(Transform transform, Vector2 point) => transform.BasisXform(point) + transform.Origin;
+
+    /// <summary>Transforms a rectangle and returns the axis-aligned bounds of its four transformed corners.</summary>
+    /// <param name="transform">The affine transform to apply.</param>
+    /// <param name="rectangle">The rectangle to transform.</param>
+    /// <returns>The smallest axis-aligned rectangle enclosing all four transformed corners.</returns>
+    /// <remarks>
+    /// Rotation, reflection, non-uniform scale, skew, zero size, and negative size are supported. The result is
+    /// normalized even when <paramref name="rectangle"/> has a negative size.
+    /// </remarks>
+    public static Rect operator *(Transform transform, Rect rectangle)
+    {
+        var origin = transform * rectangle.Position;
+        var xEdge = transform.X * rectangle.Size.X;
+        var yEdge = transform.Y * rectangle.Size.Y;
+        var opposite = origin + xEdge + yEdge;
+        var minimum = origin.Min(origin + xEdge).Min((origin + yEdge).Min(opposite));
+        var maximum = origin.Max(origin + xEdge).Max((origin + yEdge).Max(opposite));
+        return new Rect(minimum, maximum - minimum);
+    }
 
     /// <summary>Applies the inverse orthonormal transform to a point.</summary>
     /// <param name="point">The point in transformed coordinates.</param>
     /// <param name="transform">The orthonormal transform to invert.</param>
     /// <returns>The point expressed in the transform's local coordinates.</returns>
     /// <remarks>For scale or skew, multiply the point by <see cref="AffineInverse"/> instead.</remarks>
-    public static Vector2 operator *(Vector2 point, Transform2D transform) => transform.BasisXformInv(point - transform.Origin);
+    public static Vector2 operator *(Vector2 point, Transform transform) => transform.BasisXformInv(point - transform.Origin);
+
+    /// <summary>Inverse-transforms a rectangle under an orthonormal-basis precondition.</summary>
+    /// <param name="rectangle">The rectangle in transformed coordinates.</param>
+    /// <param name="transform">The orthonormal transform to invert.</param>
+    /// <returns>The axis-aligned bounds of the inverse-transformed rectangle corners.</returns>
+    /// <remarks>
+    /// This operator is equivalent to <c>transform.Inverse() * rectangle</c>. For scale or skew, use
+    /// <c>transform.AffineInverse() * rectangle</c> instead.
+    /// </remarks>
+    public static Rect operator *(Rect rectangle, Transform transform) => transform.Inverse() * rectangle;
 
     /// <summary>Transforms every point into a newly allocated array.</summary>
     /// <param name="transform">The transform to apply.</param>
     /// <param name="points">The source points.</param>
     /// <returns>A new array containing transformed points in the original order.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="points"/> is <see langword="null"/>.</exception>
-    public static Vector2[] operator *(Transform2D transform, Vector2[] points)
+    public static Vector2[] operator *(Transform transform, Vector2[] points)
     {
         ArgumentNullException.ThrowIfNull(points);
         var result = new Vector2[points.Length];
@@ -356,7 +384,7 @@ public struct Transform2D : IEquatable<Transform2D>
     /// <returns>A new array containing inverse-transformed points in the original order.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="points"/> is <see langword="null"/>.</exception>
     /// <remarks>For scale or skew, multiply the points by <see cref="AffineInverse"/> instead.</remarks>
-    public static Vector2[] operator *(Vector2[] points, Transform2D transform)
+    public static Vector2[] operator *(Vector2[] points, Transform transform)
     {
         ArgumentNullException.ThrowIfNull(points);
         var result = new Vector2[points.Length];
@@ -369,37 +397,37 @@ public struct Transform2D : IEquatable<Transform2D>
     /// <param name="transform">The transform to scale.</param>
     /// <param name="scalar">The scalar multiplier.</param>
     /// <returns>The componentwise product.</returns>
-    public static Transform2D operator *(Transform2D transform, float scalar) =>
+    public static Transform operator *(Transform transform, float scalar) =>
         new(transform.X * scalar, transform.Y * scalar, transform.Origin * scalar);
 
     /// <summary>Divides every matrix component, including translation, by a scalar.</summary>
     /// <param name="transform">The transform to divide.</param>
     /// <param name="scalar">The scalar divisor.</param>
     /// <returns>The IEEE 754 componentwise quotient.</returns>
-    public static Transform2D operator /(Transform2D transform, float scalar) =>
+    public static Transform operator /(Transform transform, float scalar) =>
         new(transform.X / scalar, transform.Y / scalar, transform.Origin / scalar);
 
     /// <summary>Tests all matrix components for exact equality.</summary>
     /// <param name="left">The first transform.</param>
     /// <param name="right">The second transform.</param>
     /// <returns><see langword="true"/> when every corresponding component is exactly equal.</returns>
-    public static bool operator ==(Transform2D left, Transform2D right) => left.Equals(right);
+    public static bool operator ==(Transform left, Transform right) => left.Equals(right);
 
     /// <summary>Tests whether any matrix component differs under exact equality.</summary>
     /// <param name="left">The first transform.</param>
     /// <param name="right">The second transform.</param>
     /// <returns><see langword="true"/> when at least one corresponding component differs.</returns>
-    public static bool operator !=(Transform2D left, Transform2D right) => !left.Equals(right);
+    public static bool operator !=(Transform left, Transform right) => !left.Equals(right);
 
     /// <summary>Tests whether another object is an exactly equal transform.</summary>
     /// <param name="obj">The object to compare.</param>
     /// <returns><see langword="true"/> when <paramref name="obj"/> is a transform with equal components.</returns>
-    public override readonly bool Equals([NotNullWhen(true)] object? obj) => obj is Transform2D other && Equals(other);
+    public override readonly bool Equals([NotNullWhen(true)] object? obj) => obj is Transform other && Equals(other);
 
     /// <summary>Tests all matrix components for exact equality.</summary>
     /// <param name="other">The transform to compare.</param>
     /// <returns><see langword="true"/> when every corresponding component is exactly equal.</returns>
-    public readonly bool Equals(Transform2D other) => X == other.X && Y == other.Y && Origin == other.Origin;
+    public readonly bool Equals(Transform other) => X == other.X && Y == other.Y && Origin == other.Origin;
 
     /// <summary>Returns a hash code based on all three columns.</summary>
     /// <returns>The component hash code.</returns>
@@ -414,7 +442,7 @@ public struct Transform2D : IEquatable<Transform2D>
     /// <returns>A string containing the X axis, Y axis, and origin.</returns>
     /// <exception cref="FormatException"><paramref name="format"/> is invalid.</exception>
     public readonly string ToString(string? format) =>
-        $"[X: {X.ToString(format, CultureInfo.InvariantCulture)}, Y: {Y.ToString(format, CultureInfo.InvariantCulture)}, O: {Origin.ToString(format, CultureInfo.InvariantCulture)}]";
+        $"[X: {X.ToString(format)}, Y: {Y.ToString(format)}, O: {Origin.ToString(format)}]";
 
     private readonly float TDotX(Vector2 vector) => (X.X * vector.X) + (Y.X * vector.Y);
 

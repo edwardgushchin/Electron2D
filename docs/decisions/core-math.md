@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 This bounded log owns the complete architectural records for core math. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
-Decisions in this log: [0024](#adr-0024), [0025](#adr-0025), [0026](#adr-0026), [0029](#adr-0029), [0032](#adr-0032).
+Decisions in this log: [0024](#adr-0024), [0025](#adr-0025), [0026](#adr-0026), [0029](#adr-0029), [0032](#adr-0032), [0033](#adr-0033).
 
 <a id="adr-0024"></a>
 ## ADR 0024: Typed color values and portable quantization
@@ -72,7 +72,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted for rectangle semantics. The `Rect2` name and `System.Numerics.Vector2` dependency are superseded by [ADR 0032](core-math.md#adr-0032); their production migration is not yet complete.
+Accepted for rectangle semantics. The old `Rect2` name and external vector dependency are superseded by [ADR 0032](core-math.md#adr-0032) and [ADR 0033](core-math.md#adr-0033); the production type is now `Rect` over `Vector2`.
 
 ### Context
 
@@ -137,7 +137,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted and fulfilled for the standalone affine semantics by ADR 0029. This decision partially supersedes ADR 0008 only where that ADR rejected a separate engine-owned transform type. ADR 0032 supersedes the `Transform2D` name with `Transform`, requires the engine-owned `Vector`, and retains the pending `Node`/rectangle migration; the unified `Node` hierarchy and all other ADR 0008 decisions remain accepted.
+Accepted and fulfilled for affine semantics by ADR 0029. This decision partially supersedes ADR 0008 only where that ADR rejected a separate engine-owned transform type. ADRs 0032 and 0033 complete the rename to `Transform`, its `Vector2` storage, and the `Node`/rectangle migration; the unified `Node` hierarchy and all other ADR 0008 decisions remain accepted.
 
 ### Context
 
@@ -192,7 +192,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted for affine semantics. This decision fulfills ADR 0026's standalone value requirement. ADR 0032 supersedes the `Transform2D` name and `System.Numerics.Vector2` dependency; the complete `Vector`/`Rect`/`Transform`/`Node` migration remains pending.
+Accepted for affine semantics. This decision fulfills ADR 0026's standalone value requirement. ADRs 0032 and 0033 supersede the old type name and external vector dependency; the complete `Vector2`/`Rect`/`Transform`/`Node` migration is now implemented.
 
 ### Context
 
@@ -267,7 +267,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted; implementation pending. This decision supersedes ADR 0025's rejection of a custom vector, the public `Rect2` and `Transform2D` names recorded by ADRs 0025, 0026, and 0029, and their permanent reliance on `System.Numerics.Vector2`. Their verified mathematical semantics remain accepted.
+Partially superseded by [ADR 0033](core-math.md#adr-0033). Engine ownership, the `Rect`/`Transform` names, removal of external public numerics, prohibition of dual APIs, and the completed dependent migration remain accepted. The unsuffixed `Vector` name is superseded by the dimensioned vector family.
 
 ### Context
 
@@ -315,3 +315,63 @@ This ADR records the required architecture only. It does not make `Vector` a pro
 - [0025: Typed axis-aligned rectangle geometry](core-math.md#adr-0025)
 - [0026: Separate Transform2D foundational type](core-math.md#adr-0026)
 - [0029: Typed Transform2D value and affine semantics](core-math.md#adr-0029)
+
+<a id="adr-0033"></a>
+## ADR 0033: Dimensioned engine-owned vector family
+
+Last updated: 2026-09-21
+
+### Status
+
+Accepted and fulfilled. This decision supersedes ADR 0032 only for vector naming and family scope. It retains ADR 0032's engine ownership, one-canonical-API rule, `Rect` and `Transform` names, dependent migration, and prohibition on public external-numerics leakage.
+
+### Context
+
+ADR 0032 chose the unsuffixed `Vector` name because the engine has no 3D spatial family. The shader architecture and general numeric APIs also need four-component floating-point and integer values. Once both two- and four-component values coexist, an unsuffixed `Vector` becomes ambiguous and makes the family inconsistent.
+
+The existing rectangle and affine-transform names do not have this ambiguity: Electron2D has only 2D rectangles and transforms. Their dimensionality is inherent in the 2D-only engine contract, while vectors are also generic numeric tuples whose component count changes their storage and operations.
+
+### Decision
+
+Electron2D owns four canonical vector values: `Vector2`, `Vector2I`, `Vector4`, and `Vector4I`.
+
+- `Vector2` is the engine's single-precision 2D spatial and numeric pair. `Vector2I` is its 32-bit integer counterpart for pixels, grids, tiles, dimensions, and integer pairs.
+- `Vector4` and `Vector4I` are four-component numeric tuples. Their existence does not create 3D or 4D scene geometry, transforms, cameras, physics, rendering paths, or assets.
+- `Rect`, `Transform`, and `Node` use `Electron2D.Vector2` throughout their public/protected API and engine-owned state.
+- The previously accepted `Vector` name and the temporary `VectorI` name do not ship. No aliases, forwarding wrappers, duplicate overloads, or compatibility conversions are provided.
+- `Vector3` and `Vector3I` are absent because the engine has no three-dimensional spatial domain and no implemented subsystem currently requires three generic components.
+- External numerics types may appear only inside future localized integration adapters. They do not cross a public/protected Electron2D boundary.
+- Every vector is a sequential mutable value with explicit float/integer arithmetic, edge behavior, invariant formatting, strict typed configuration persistence, packed-scene storage, and allocation-free warmed numeric operations.
+- Universal-value truth conversion is permanently excluded by ADR 0001. Four-component projection operators are excluded because Electron2D has no 3D projection type.
+
+### Consequences
+
+- The vector family states component count explicitly and remains coherent when two- and four-component values coexist.
+- The completed migration is source-breaking from both the former external numerics surface and ADR 0032's unimplemented `Vector` spelling. The repository is pre-release and retains only the final contract.
+- `Vector4` and `Vector4I` can later cross a typed GPU boundary without requiring placeholder shader or renderer APIs now.
+- `Vector2I` and `Vector4I` use explicit managed integer behavior: ordinary arithmetic wraps, invalid division throws, squared values can wrap, and float-to-integer conversion rejects non-finite or out-of-range components.
+- The current executable verification is Linux/.NET 8 only. Sequential managed layout is verified, but native ABI and the full five-target matrix are not.
+
+### Rejected alternatives
+
+- **Keep `Vector` beside `Vector4`:** rejected because one name hides component count while the other exposes it.
+- **Add only floating-point four-component data:** rejected after the integer counterpart was explicitly required and provides a symmetric typed parameter family.
+- **Add `Vector3` for family completeness:** rejected because no current 2D subsystem needs it and a speculative type would blur the 2D-only boundary.
+- **Retain `Vector`/`VectorI` aliases:** rejected because aliases create a second public vocabulary and compatibility debt before release.
+- **Reuse external numerics vectors:** rejected by ADR 0032's retained engine-ownership decision.
+
+### Verification
+
+The executable harness covers all four layouts, constants, index failures, methods and operators, float/integer conversions, interpolation, IEEE values, NaN ordering, integer wrap/overflow/division failures, invariant formatting, strict configuration schemas, direct packed-scene storage, and warmed allocation-free numeric loops. Existing rectangle, transform, and node tests exercise the completed `Vector2` migration.
+
+The post-implementation checks also audit production/test sources for old vector, rectangle, transform, and external-numerics names. Passing local checks do not establish native ABI, rendering/shader integration, visual behavior, mobile/desktop packaging, or five-platform acceptance.
+
+### Related decisions
+
+- [0001: Typed C# without Variant](product.md#adr-0001)
+- [0004: 2D scene-oriented API](product.md#adr-0004)
+- [0014: Managed lifetime and realtime allocation](resources.md#adr-0014)
+- [0025: Typed axis-aligned rectangle geometry](core-math.md#adr-0025)
+- [0026: Separate affine-transform foundation](core-math.md#adr-0026)
+- [0029: Typed affine semantics](core-math.md#adr-0029)
+- [0032: Own the complete unsuffixed 2D math vocabulary](core-math.md#adr-0032)

@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace Electron2D;
@@ -13,7 +12,7 @@ namespace Electron2D;
 /// </remarks>
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
-public struct Rect2 : IEquatable<Rect2>
+public struct Rect : IEquatable<Rect>
 {
     private const float ComparisonEpsilon = 0.00001f;
 
@@ -54,7 +53,7 @@ public struct Rect2 : IEquatable<Rect2>
     /// <summary>Initializes a rectangle from a position and size.</summary>
     /// <param name="position">The beginning corner.</param>
     /// <param name="size">The width and height.</param>
-    public Rect2(Vector2 position, Vector2 size)
+    public Rect(Vector2 position, Vector2 size)
     {
         _position = position;
         _size = size;
@@ -64,7 +63,7 @@ public struct Rect2 : IEquatable<Rect2>
     /// <param name="position">The beginning corner.</param>
     /// <param name="width">The width.</param>
     /// <param name="height">The height.</param>
-    public Rect2(Vector2 position, float width, float height)
+    public Rect(Vector2 position, float width, float height)
         : this(position, new Vector2(width, height))
     {
     }
@@ -73,7 +72,7 @@ public struct Rect2 : IEquatable<Rect2>
     /// <param name="x">The horizontal position.</param>
     /// <param name="y">The vertical position.</param>
     /// <param name="size">The width and height.</param>
-    public Rect2(float x, float y, Vector2 size)
+    public Rect(float x, float y, Vector2 size)
         : this(new Vector2(x, y), size)
     {
     }
@@ -83,20 +82,20 @@ public struct Rect2 : IEquatable<Rect2>
     /// <param name="y">The vertical position.</param>
     /// <param name="width">The width.</param>
     /// <param name="height">The height.</param>
-    public Rect2(float x, float y, float width, float height)
+    public Rect(float x, float y, float width, float height)
         : this(new Vector2(x, y), new Vector2(width, height))
     {
     }
 
     /// <summary>Returns an equivalent rectangle with a non-negative size and top-left position.</summary>
     /// <returns>The normalized rectangle.</returns>
-    public readonly Rect2 Abs() => new(Vector2.Min(End, _position), Vector2.Abs(_size));
+    public readonly Rect Abs() => new(End.Min(_position), _size.Abs());
 
     /// <summary>Tests whether this rectangle completely encloses another rectangle.</summary>
     /// <param name="other">The candidate enclosed rectangle.</param>
     /// <returns><see langword="true"/> when both edges of <paramref name="other"/> lie within or on this rectangle.</returns>
     /// <remarks>Negative size components are unsupported; normalize either rectangle with <see cref="Abs"/> first.</remarks>
-    public readonly bool Encloses(Rect2 other) =>
+    public readonly bool Encloses(Rect other) =>
         other._position.X >= _position.X &&
         other._position.Y >= _position.Y &&
         other.End.X <= End.X &&
@@ -106,7 +105,7 @@ public struct Rect2 : IEquatable<Rect2>
     /// <param name="point">The point to include.</param>
     /// <returns>The expanded rectangle.</returns>
     /// <remarks>A point exactly on an existing edge does not change the rectangle.</remarks>
-    public readonly Rect2 Expand(Vector2 point)
+    public readonly Rect Expand(Vector2 point)
     {
         var begin = _position;
         var end = End;
@@ -118,7 +117,7 @@ public struct Rect2 : IEquatable<Rect2>
             end.X = point.X;
         if (point.Y > end.Y)
             end.Y = point.Y;
-        return new Rect2(begin, end - begin);
+        return new Rect(begin, end - begin);
     }
 
     /// <summary>Gets the center point.</summary>
@@ -136,7 +135,7 @@ public struct Rect2 : IEquatable<Rect2>
     /// <summary>Returns a copy extended equally on every side.</summary>
     /// <param name="amount">The amount added outward on each side; negative values shrink the rectangle.</param>
     /// <returns>The grown or shrunk rectangle.</returns>
-    public readonly Rect2 Grow(float amount) => GrowIndividual(amount, amount, amount, amount);
+    public readonly Rect Grow(float amount) => GrowIndividual(amount, amount, amount, amount);
 
     /// <summary>Returns a copy extended independently on each side.</summary>
     /// <param name="left">The amount added outward on the left.</param>
@@ -144,7 +143,7 @@ public struct Rect2 : IEquatable<Rect2>
     /// <param name="right">The amount added outward on the right.</param>
     /// <param name="bottom">The amount added outward on the bottom.</param>
     /// <returns>The grown or shrunk rectangle.</returns>
-    public readonly Rect2 GrowIndividual(float left, float top, float right, float bottom) => new(
+    public readonly Rect GrowIndividual(float left, float top, float right, float bottom) => new(
         _position.X - left,
         _position.Y - top,
         _size.X + left + right,
@@ -154,7 +153,7 @@ public struct Rect2 : IEquatable<Rect2>
     /// <param name="side">The side to extend.</param>
     /// <param name="amount">The amount added outward; a negative value shrinks that side.</param>
     /// <returns>The grown or shrunk rectangle. An undefined <paramref name="side"/> leaves the rectangle unchanged.</returns>
-    public readonly Rect2 GrowSide(Side side, float amount) => GrowIndividual(
+    public readonly Rect GrowSide(Side side, float amount) => GrowIndividual(
         side == Side.Left ? amount : 0f,
         side == Side.Top ? amount : 0f,
         side == Side.Right ? amount : 0f,
@@ -184,13 +183,13 @@ public struct Rect2 : IEquatable<Rect2>
     /// rectangle is considered intersecting and produces a zero-size result at its own position. Negative size
     /// components are unsupported.
     /// </remarks>
-    public readonly Rect2 Intersection(Rect2 other)
+    public readonly Rect Intersection(Rect other)
     {
         if (!Intersects(other))
             return default;
 
-        var position = Vector2.Max(_position, other._position);
-        return new Rect2(position, Vector2.Min(End, other.End) - position);
+        var position = _position.Max(other._position);
+        return new Rect(position, End.Min(other.End) - position);
     }
 
     /// <summary>Tests whether this rectangle overlaps another rectangle.</summary>
@@ -198,7 +197,7 @@ public struct Rect2 : IEquatable<Rect2>
     /// <param name="includeBorders">Whether touching borders count as an intersection.</param>
     /// <returns><see langword="true"/> when the rectangles overlap under the selected border rule.</returns>
     /// <remarks>Negative size components are unsupported; normalize either rectangle with <see cref="Abs"/> first.</remarks>
-    public readonly bool Intersects(Rect2 other, bool includeBorders = false)
+    public readonly bool Intersects(Rect other, bool includeBorders = false)
     {
         if (includeBorders)
         {
@@ -221,7 +220,7 @@ public struct Rect2 : IEquatable<Rect2>
     /// <summary>Tests position and size for scale-aware approximate equality.</summary>
     /// <param name="other">The other rectangle.</param>
     /// <returns><see langword="true"/> when every component is approximately equal.</returns>
-    public readonly bool IsEqualApprox(Rect2 other) =>
+    public readonly bool IsEqualApprox(Rect other) =>
         IsComponentEqualApprox(_position.X, other._position.X) &&
         IsComponentEqualApprox(_position.Y, other._position.Y) &&
         IsComponentEqualApprox(_size.X, other._size.X) &&
@@ -231,33 +230,33 @@ public struct Rect2 : IEquatable<Rect2>
     /// <param name="other">The other rectangle.</param>
     /// <returns>The merged rectangle.</returns>
     /// <remarks>Negative size components are unsupported; normalize either rectangle with <see cref="Abs"/> first.</remarks>
-    public readonly Rect2 Merge(Rect2 other)
+    public readonly Rect Merge(Rect other)
     {
-        var position = Vector2.Min(_position, other._position);
-        return new Rect2(position, Vector2.Max(End, other.End) - position);
+        var position = _position.Min(other._position);
+        return new Rect(position, End.Max(other.End) - position);
     }
 
     /// <summary>Tests both position and size for exact component equality.</summary>
     /// <param name="left">The first rectangle.</param>
     /// <param name="right">The second rectangle.</param>
     /// <returns><see langword="true"/> when all four components are exactly equal.</returns>
-    public static bool operator ==(Rect2 left, Rect2 right) => left.Equals(right);
+    public static bool operator ==(Rect left, Rect right) => left.Equals(right);
 
     /// <summary>Tests whether either position or size differs under exact component equality.</summary>
     /// <param name="left">The first rectangle.</param>
     /// <param name="right">The second rectangle.</param>
     /// <returns><see langword="true"/> when at least one component differs.</returns>
-    public static bool operator !=(Rect2 left, Rect2 right) => !left.Equals(right);
+    public static bool operator !=(Rect left, Rect right) => !left.Equals(right);
 
     /// <summary>Tests whether another object is an exactly equal rectangle.</summary>
     /// <param name="obj">The object to compare.</param>
     /// <returns><see langword="true"/> when <paramref name="obj"/> is a rectangle with exactly equal components.</returns>
-    public override readonly bool Equals([NotNullWhen(true)] object? obj) => obj is Rect2 other && Equals(other);
+    public override readonly bool Equals([NotNullWhen(true)] object? obj) => obj is Rect other && Equals(other);
 
     /// <summary>Tests position and size for exact component equality.</summary>
     /// <param name="other">The other rectangle.</param>
     /// <returns><see langword="true"/> when all four components are exactly equal.</returns>
-    public readonly bool Equals(Rect2 other) => _position == other._position && _size == other._size;
+    public readonly bool Equals(Rect other) => _position == other._position && _size == other._size;
 
     /// <summary>Returns a hash code based on position and size.</summary>
     /// <returns>The component hash code.</returns>
@@ -271,8 +270,7 @@ public struct Rect2 : IEquatable<Rect2>
     /// <param name="format">A standard or custom numeric format, or <see langword="null"/> for the default format.</param>
     /// <returns>A string containing the position followed by the size.</returns>
     /// <exception cref="FormatException"><paramref name="format"/> is invalid.</exception>
-    public readonly string ToString(string? format) =>
-        $"{_position.ToString(format, CultureInfo.InvariantCulture)}, {_size.ToString(format, CultureInfo.InvariantCulture)}";
+    public readonly string ToString(string? format) => $"{_position.ToString(format)}, {_size.ToString(format)}";
 
     private static bool IsComponentEqualApprox(float left, float right)
     {

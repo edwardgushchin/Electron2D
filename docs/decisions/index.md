@@ -9,7 +9,7 @@ This file routes architecture work to bounded domain decision logs. Do not load 
 | Product architecture | [product.md](product.md) | 0001, 0002, 0004, 0012, 0017, 0021, 0027, 0030 |
 | Core object and runtime | [core-object-runtime.md](core-object-runtime.md) | 0003, 0005, 0009, 0010, 0015, 0016 |
 | Core configuration, data, and I/O | [core-data-io.md](core-data-io.md) | 0018, 0019, 0020, 0022 |
-| Core math | [core-math.md](core-math.md) | 0024, 0025, 0026, 0029, 0032 |
+| Core math | [core-math.md](core-math.md) | 0024, 0025, 0026, 0029, 0032, 0033 |
 | Scene | [scene.md](scene.md) | 0006, 0008, 0011, 0023, 0031 |
 | Resources | [resources.md](resources.md) | 0013, 0014 |
 | Localization | [localization.md](localization.md) | 0007 |

@@ -25,15 +25,15 @@ Last updated: 2026-09-21
 
 ## Invariants and error behavior
 
-The four numeric values are stable public API. The enum is not marked as flags. C# permits casting other integers to the type; [`Rect2.GrowSide`](Rect2.md) treats such an undefined value as a no-op. No standalone enum operation throws.
+The four numeric values are stable public API. The enum is not marked as flags. C# permits casting other integers to the type; [`Rect.GrowSide`](Rect.md) treats such an undefined value as a no-op. No standalone enum operation throws.
 
 ## Threading, dependencies, and integration
 
-Enum values are immutable, allocation-free, and safe to copy or read on any thread. `Side` has no dependency beyond the runtime enum representation and is currently consumed by `Rect2`.
+Enum values are immutable, allocation-free, and safe to copy or read on any thread. `Side` has no dependency beyond the runtime enum representation and is currently consumed by `Rect`.
 
 ## Verification and limitations
 
-`tests/Electron2D.Tests/Program.cs` verifies all numeric identities, all four `Rect2.GrowSide` branches, and undefined-value behavior. No directional aliases or 3D faces are provided.
+`tests/Electron2D.Tests/Program.cs` verifies all numeric identities, all four `Rect.GrowSide` branches, and undefined-value behavior. No directional aliases or 3D faces are provided.
 
 ## Decision
 

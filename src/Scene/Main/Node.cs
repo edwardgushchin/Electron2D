@@ -1,5 +1,4 @@
 using System.IO.Enumeration;
-using System.Numerics;
 using System.Threading;
 
 namespace Electron2D;
@@ -175,7 +174,7 @@ public class Node : ElectronObject
     private readonly List<Node> _children = [];
     private readonly IReadOnlyList<Node> _childrenView;
     private readonly Dictionary<string, bool> _groups = new(StringComparer.Ordinal);
-    private Matrix3x2 _transform = Matrix3x2.Identity;
+    private Transform _transform = Transform.Identity;
     private string _name;
     private string _sceneFilePath = string.Empty;
     private Node? _owner;
@@ -360,12 +359,12 @@ public class Node : ElectronObject
     public bool IsQueuedForDeletion => Volatile.Read(ref _queuedForDeletion) != 0;
 
     /// <summary>Gets or sets the affine transform relative to the parent.</summary>
-    /// <value>A finite row-vector <see cref="Matrix3x2"/>; the default is <see cref="Matrix3x2.Identity"/>.</value>
-    /// <exception cref="ArgumentOutOfRangeException">An assigned matrix component is NaN or infinite.</exception>
+    /// <value>A finite <see cref="Electron2D.Transform"/>; the default is <see cref="Electron2D.Transform.Identity"/>.</value>
+    /// <exception cref="ArgumentOutOfRangeException">An assigned transform component is NaN or infinite.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated from a thread other than the tree owner.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the matrix changes.</exception>
-    public Matrix3x2 Transform
+    /// <exception cref="Exception">A transform notification or event handler throws after the transform changes.</exception>
+    public Transform Transform
     {
         get
         {
@@ -381,16 +380,16 @@ public class Node : ElectronObject
 
     /// <summary>Gets or sets the affine transform in hierarchy-global coordinates.</summary>
     /// <value>The local transform composed with non-top-level ancestors.</value>
-    /// <exception cref="ArgumentOutOfRangeException">An assigned matrix component is NaN or infinite.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">An assigned transform component is NaN or infinite.</exception>
     /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the matrix changes.</exception>
-    public Matrix3x2 GlobalTransform
+    /// <exception cref="Exception">A transform notification or event handler throws after the transform changes.</exception>
+    public Transform GlobalTransform
     {
         get
         {
             ThrowIfDisposed();
-            return Parent is null || TopLevel ? _transform : _transform * Parent.GlobalTransform;
+            return Parent is null || TopLevel ? _transform : Parent.GlobalTransform * _transform;
         }
         set
         {
@@ -411,7 +410,7 @@ public class Node : ElectronObject
         get
         {
             ThrowIfDisposed();
-            return _transform.Translation;
+            return _transform.Origin;
         }
         set
         {
@@ -419,7 +418,7 @@ public class Node : ElectronObject
             EnsureFinite(value, nameof(value));
 
             var transform = _transform;
-            transform.Translation = value;
+            transform.Origin = value;
             SetTransform(transform);
         }
     }
@@ -432,14 +431,14 @@ public class Node : ElectronObject
     /// <exception cref="Exception">A transform notification or event handler throws after the position changes.</exception>
     public Vector2 GlobalPosition
     {
-        get => GlobalTransform.Translation;
+        get => GlobalTransform.Origin;
         set
         {
             EnsureMutable();
             EnsureFinite(value, nameof(value));
 
             var transform = GlobalTransform;
-            transform.Translation = value;
+            transform.Origin = value;
             GlobalTransform = transform;
         }
     }
@@ -452,13 +451,12 @@ public class Node : ElectronObject
     /// <exception cref="Exception">A transform notification or event handler throws after the rotation changes.</exception>
     public float Rotation
     {
-        get => Decompose(Transform).Rotation;
+        get => Transform.Rotation;
         set
         {
             EnsureMutable();
             EnsureFinite(value, nameof(value));
-            var parts = Decompose(_transform);
-            SetTransform(Compose(parts.Position, value, parts.Scale, parts.Skew));
+            SetTransform(new Transform(value, _transform.Scale, _transform.Skew, _transform.Origin));
         }
     }
 
@@ -482,13 +480,13 @@ public class Node : ElectronObject
     /// <exception cref="Exception">A transform notification or event handler throws after the rotation changes.</exception>
     public float GlobalRotation
     {
-        get => Decompose(GlobalTransform).Rotation;
+        get => GlobalTransform.Rotation;
         set
         {
             EnsureMutable();
             EnsureFinite(value, nameof(value));
-            var parts = Decompose(GlobalTransform);
-            GlobalTransform = Compose(parts.Position, value, parts.Scale, parts.Skew);
+            var transform = GlobalTransform;
+            GlobalTransform = new Transform(value, transform.Scale, transform.Skew, transform.Origin);
         }
     }
 
@@ -513,13 +511,12 @@ public class Node : ElectronObject
     /// <exception cref="Exception">A transform notification or event handler throws after the scale changes.</exception>
     public Vector2 Scale
     {
-        get => Decompose(Transform).Scale;
+        get => Transform.Scale;
         set
         {
             EnsureMutable();
             EnsureFinite(value, nameof(value));
-            var parts = Decompose(_transform);
-            SetTransform(Compose(parts.Position, parts.Rotation, value, parts.Skew));
+            SetTransform(new Transform(_transform.Rotation, value, _transform.Skew, _transform.Origin));
         }
     }
 
@@ -532,13 +529,13 @@ public class Node : ElectronObject
     /// <exception cref="Exception">A transform notification or event handler throws after the scale changes.</exception>
     public Vector2 GlobalScale
     {
-        get => Decompose(GlobalTransform).Scale;
+        get => GlobalTransform.Scale;
         set
         {
             EnsureMutable();
             EnsureFinite(value, nameof(value));
-            var parts = Decompose(GlobalTransform);
-            GlobalTransform = Compose(parts.Position, parts.Rotation, value, parts.Skew);
+            var transform = GlobalTransform;
+            GlobalTransform = new Transform(transform.Rotation, value, transform.Skew, transform.Origin);
         }
     }
 
@@ -550,13 +547,12 @@ public class Node : ElectronObject
     /// <exception cref="Exception">A transform notification or event handler throws after the skew changes.</exception>
     public float Skew
     {
-        get => Decompose(Transform).Skew;
+        get => Transform.Skew;
         set
         {
             EnsureMutable();
             EnsureFinite(value, nameof(value));
-            var parts = Decompose(_transform);
-            SetTransform(Compose(parts.Position, parts.Rotation, parts.Scale, value));
+            SetTransform(new Transform(_transform.Rotation, _transform.Scale, value, _transform.Origin));
         }
     }
 
@@ -568,13 +564,13 @@ public class Node : ElectronObject
     /// <exception cref="Exception">A transform notification or event handler throws after the skew changes.</exception>
     public float GlobalSkew
     {
-        get => Decompose(GlobalTransform).Skew;
+        get => GlobalTransform.Skew;
         set
         {
             EnsureMutable();
             EnsureFinite(value, nameof(value));
-            var parts = Decompose(GlobalTransform);
-            GlobalTransform = Compose(parts.Position, parts.Rotation, parts.Scale, value);
+            var transform = GlobalTransform;
+            GlobalTransform = new Transform(transform.Rotation, transform.Scale, value, transform.Origin);
         }
     }
 
@@ -683,7 +679,7 @@ public class Node : ElectronObject
         ? Math.Clamp(Parent.EffectiveZIndex + ZIndex, MinimumZIndex, MaximumZIndex)
         : ZIndex;
 
-    /// <summary>Gets or sets whether local matrix changes dispatch <see cref="NotificationLocalTransformChanged"/>.</summary>
+    /// <summary>Gets or sets whether local transform changes dispatch <see cref="NotificationLocalTransformChanged"/>.</summary>
     /// <value><see langword="false"/> by default. <see cref="LocalTransformChanged"/> is raised regardless.</value>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
@@ -701,7 +697,7 @@ public class Node : ElectronObject
         }
     }
 
-    /// <summary>Gets or sets whether global matrix changes dispatch <see cref="NotificationTransformChanged"/>.</summary>
+    /// <summary>Gets or sets whether global transform changes dispatch <see cref="NotificationTransformChanged"/>.</summary>
     /// <value><see langword="false"/> by default. <see cref="TransformChanged"/> is raised regardless.</value>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
@@ -895,7 +891,7 @@ public class Node : ElectronObject
     /// <remarks>Delivery follows <see cref="NotificationVisibilityChanged"/> and continues through descendants.</remarks>
     public event Action<Node>? VisibilityChanged;
 
-    /// <summary>Occurs after this node's local transform matrix actually changes.</summary>
+    /// <summary>Occurs after this node's local transform actually changes.</summary>
     /// <remarks>The event is always enabled; numeric local-transform notification delivery is separately configurable.</remarks>
     public event Action<Node>? LocalTransformChanged;
 
@@ -1016,7 +1012,7 @@ public class Node : ElectronObject
 
     /// <summary>Moves this non-root node under a new parent.</summary>
     /// <param name="newParent">The live destination parent.</param>
-    /// <param name="keepGlobalTransform">Whether to preserve the complete current global matrix. The default is <see langword="true"/>.</param>
+    /// <param name="keepGlobalTransform">Whether to preserve the complete current global transform. The default is <see langword="true"/>.</param>
     /// <remarks>The operation detaches first and then appends to <paramref name="newParent"/>; callback failures are not rolled back.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="newParent"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The destination validation rejects this node as its own child.</exception>
@@ -1488,8 +1484,7 @@ public class Node : ElectronObject
     public void Translate(Vector2 offset)
     {
         EnsureFinite(offset, nameof(offset));
-        var rotation = Matrix3x2.CreateRotation(Rotation);
-        Position += Vector2.TransformNormal(offset, rotation);
+        Position += new Transform(Rotation, Vector2.Zero).BasisXform(offset);
     }
 
     /// <summary>Moves this node by a hierarchy-global offset.</summary>
@@ -1559,7 +1554,7 @@ public class Node : ElectronObject
     public Vector2 ToGlobal(Vector2 localPoint)
     {
         EnsureFinite(localPoint, nameof(localPoint));
-        return Vector2.Transform(localPoint, GlobalTransform);
+        return GlobalTransform * localPoint;
     }
 
     /// <summary>Transforms a point from hierarchy-global coordinates to this node's local coordinates.</summary>
@@ -1571,11 +1566,7 @@ public class Node : ElectronObject
     public Vector2 ToLocal(Vector2 globalPoint)
     {
         EnsureFinite(globalPoint, nameof(globalPoint));
-
-        if (!Matrix3x2.Invert(GlobalTransform, out var inverse))
-            throw new InvalidOperationException("The global transform is singular and cannot convert points to local space.");
-
-        return Vector2.Transform(globalPoint, inverse);
+        return GlobalTransform.AffineInverse() * globalPoint;
     }
 
     /// <summary>Returns this node's transform relative to an ancestor.</summary>
@@ -1587,21 +1578,18 @@ public class Node : ElectronObject
     /// <exception cref="ObjectDisposedException">
     /// This node, <paramref name="parent"/>, or a queried ancestor is disposing on another thread or has finished disposing.
     /// </exception>
-    public Matrix3x2 GetRelativeTransformToParent(Node parent)
+    public Transform GetRelativeTransformToParent(Node parent)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parent);
 
         if (ReferenceEquals(parent, this))
-            return Matrix3x2.Identity;
+            return Transform.Identity;
 
         if (!parent.IsAncestorOf(this))
             throw new ArgumentException("The supplied node is not an ancestor of this node.", nameof(parent));
 
-        if (!Matrix3x2.Invert(parent.GlobalTransform, out var inverse))
-            throw new InvalidOperationException("The ancestor transform is singular.");
-
-        return GlobalTransform * inverse;
+        return parent.GlobalTransform.AffineInverse() * GlobalTransform;
     }
 
     /// <summary>Creates a reusable factory for packed-scene instances of this exact runtime node type.</summary>
@@ -2248,11 +2236,6 @@ public class Node : ElectronObject
 
     private static bool IsFinite(Vector2 value) => float.IsFinite(value.X) && float.IsFinite(value.Y);
 
-    private static bool IsFinite(Matrix3x2 value) =>
-        float.IsFinite(value.M11) && float.IsFinite(value.M12) &&
-        float.IsFinite(value.M21) && float.IsFinite(value.M22) &&
-        float.IsFinite(value.M31) && float.IsFinite(value.M32);
-
     private static void EnsureFinite(float value, string parameterName)
     {
         if (!float.IsFinite(value))
@@ -2265,9 +2248,9 @@ public class Node : ElectronObject
             throw new ArgumentOutOfRangeException(parameterName, value, "Both vector components must be finite.");
     }
 
-    private static void EnsureFinite(Matrix3x2 value, string parameterName)
+    private static void EnsureFinite(Transform value, string parameterName)
     {
-        if (!IsFinite(value))
+        if (!value.IsFinite())
             throw new ArgumentOutOfRangeException(parameterName, value, "Every transform component must be finite.");
     }
 
@@ -2295,53 +2278,12 @@ public class Node : ElectronObject
 
     private static float NormalizeAngle(float angle) => MathF.IEEERemainder(angle, MathF.Tau);
 
-    private static Matrix3x2 Compose(Vector2 position, float rotation, Vector2 scale, float skew)
-    {
-        var x = new Vector2(MathF.Cos(rotation), MathF.Sin(rotation)) * scale.X;
-        var yAngle = rotation + skew;
-        var y = new Vector2(-MathF.Sin(yAngle), MathF.Cos(yAngle)) * scale.Y;
-        return new Matrix3x2(x.X, x.Y, y.X, y.Y, position.X, position.Y);
-    }
-
-    private static TransformParts Decompose(Matrix3x2 transform)
-    {
-        var position = transform.Translation;
-        var x = new Vector2(transform.M11, transform.M12);
-        var y = new Vector2(transform.M21, transform.M22);
-        var scaleX = x.Length();
-        var scaleY = y.Length();
-
-        if (scaleX <= TransformEpsilon)
-        {
-            if (scaleY <= TransformEpsilon)
-                return new TransformParts(position, 0f, Vector2.Zero, 0f);
-
-            var rotationFromY = MathF.Atan2(y.Y, y.X) - (MathF.PI / 2f);
-            return new TransformParts(position, NormalizeAngle(rotationFromY), new Vector2(0f, scaleY), 0f);
-        }
-
-        var rotation = MathF.Atan2(x.Y, x.X);
-        var determinant = (x.X * y.Y) - (x.Y * y.X);
-        if (determinant < 0f)
-            scaleY = -scaleY;
-
-        var yAngle = MathF.Atan2(y.Y, y.X) - (MathF.PI / 2f);
-        if (scaleY < 0f)
-            yAngle -= MathF.PI;
-
-        var skew = NormalizeAngle(yAngle - rotation);
-        return new TransformParts(position, NormalizeAngle(rotation), new Vector2(scaleX, scaleY), skew);
-    }
-
-    private static Matrix3x2 ToLocalTransform(Matrix3x2 global, Node? parent, bool topLevel)
+    private static Transform ToLocalTransform(Transform global, Node? parent, bool topLevel)
     {
         if (parent is null || topLevel)
             return global;
 
-        if (!Matrix3x2.Invert(parent.GlobalTransform, out var inverse))
-            throw new InvalidOperationException("The parent global transform is singular.");
-
-        return global * inverse;
+        return parent.GlobalTransform.AffineInverse() * global;
     }
 
     /// <summary>Validates that this node may be mutated at the current lifecycle point.</summary>
@@ -2368,7 +2310,7 @@ public class Node : ElectronObject
             throw new InvalidOperationException("A node cannot be mutated while a packed-scene capture is active.");
     }
 
-    private void SetTransform(Matrix3x2 transform)
+    private void SetTransform(Transform transform)
     {
         EnsureFinite(transform, nameof(transform));
 
@@ -2659,16 +2601,14 @@ public class Node : ElectronObject
         EnsureFinite(delta, nameof(delta));
         EnsureMutable();
 
-        var axis = useXAxis
-            ? new Vector2(_transform.M11, _transform.M12)
-            : new Vector2(_transform.M21, _transform.M22);
+        var axis = useXAxis ? _transform.X : _transform.Y;
 
         if (!scaled)
         {
             if (axis.LengthSquared() <= TransformEpsilon * TransformEpsilon)
                 return;
 
-            axis = Vector2.Normalize(axis);
+            axis = axis.Normalized();
         }
 
         Position += axis * delta;
@@ -2690,5 +2630,4 @@ public class Node : ElectronObject
             throw new AggregateException(message, errors);
     }
 
-    private readonly record struct TransformParts(Vector2 Position, float Rotation, Vector2 Scale, float Skew);
 }

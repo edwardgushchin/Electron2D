@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -74,7 +73,16 @@ public sealed class ConfigFile : ElectronObject
         IncludeFields = true,
         PropertyNameCaseInsensitive = false,
         WriteIndented = false,
-        Converters = { new ColorJsonConverter(), new Rect2JsonConverter(), new Transform2DJsonConverter() }
+        Converters =
+        {
+            new ColorJsonConverter(),
+            new Vector2JsonConverter(),
+            new Vector2IJsonConverter(),
+            new Vector4JsonConverter(),
+            new Vector4IJsonConverter(),
+            new RectJsonConverter(),
+            new TransformJsonConverter(),
+        }
     };
 
     private static ReadOnlySpan<byte> EncryptionMagic => "E2DCFG"u8;
@@ -1105,13 +1113,214 @@ internal sealed class ColorJsonConverter : JsonConverter<Color>
     }
 }
 
-internal sealed class Rect2JsonConverter : JsonConverter<Rect2>
+internal sealed class Vector2JsonConverter : JsonConverter<Vector2>
+{
+    public override Vector2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+        Vector2JsonFields.Read(ref reader, "Vector2", "value");
+
+    public override void Write(Utf8JsonWriter writer, Vector2 value, JsonSerializerOptions options)
+    {
+        if (!value.IsFinite())
+            throw new JsonException("Configuration vectors require finite components.");
+
+        writer.WriteStartObject();
+        writer.WriteNumber(nameof(Vector2.X), value.X);
+        writer.WriteNumber(nameof(Vector2.Y), value.Y);
+        writer.WriteEndObject();
+    }
+}
+
+internal sealed class Vector2IJsonConverter : JsonConverter<Vector2I>
+{
+    private const int XField = 1;
+    private const int YField = 2;
+
+    public override Vector2I Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException("An integer vector must be a JSON object.");
+
+        var fields = 0;
+        var value = default(Vector2I);
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
+        {
+            if (reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException("An integer vector contains an invalid JSON token.");
+
+            var propertyName = reader.GetString();
+            var field = propertyName switch
+            {
+                nameof(Vector2I.X) => XField,
+                nameof(Vector2I.Y) => YField,
+                _ => throw new JsonException($"An integer vector contains unknown field '{propertyName}'."),
+            };
+            if ((fields & field) != 0)
+                throw new JsonException($"An integer vector contains duplicate field '{propertyName}'.");
+            if (!reader.Read() || reader.TokenType != JsonTokenType.Number || !reader.TryGetInt32(out var component))
+                throw new JsonException($"Integer vector field '{propertyName}' must be a 32-bit integer.");
+
+            fields |= field;
+            if (field == XField)
+                value.X = component;
+            else
+                value.Y = component;
+        }
+
+        if (reader.TokenType != JsonTokenType.EndObject)
+            throw new JsonException("An integer vector JSON object is incomplete.");
+        if (fields != (XField | YField))
+            throw new JsonException("An integer vector must contain exactly X and Y fields.");
+
+        return value;
+    }
+
+    public override void Write(Utf8JsonWriter writer, Vector2I value, JsonSerializerOptions options)
+    {
+        writer.WriteStartObject();
+        writer.WriteNumber(nameof(Vector2I.X), value.X);
+        writer.WriteNumber(nameof(Vector2I.Y), value.Y);
+        writer.WriteEndObject();
+    }
+}
+
+internal sealed class Vector4JsonConverter : JsonConverter<Vector4>
+{
+    public override Vector4 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException("A four-component vector must be a JSON object.");
+
+        var fields = 0;
+        var value = default(Vector4);
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
+        {
+            if (reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException("A four-component vector contains an invalid JSON token.");
+
+            var propertyName = reader.GetString();
+            var field = propertyName switch
+            {
+                nameof(Vector4.X) => 1,
+                nameof(Vector4.Y) => 2,
+                nameof(Vector4.Z) => 4,
+                nameof(Vector4.W) => 8,
+                _ => throw new JsonException($"A four-component vector contains unknown field '{propertyName}'."),
+            };
+            if ((fields & field) != 0)
+                throw new JsonException($"A four-component vector contains duplicate field '{propertyName}'.");
+            if (!reader.Read() || reader.TokenType != JsonTokenType.Number || !reader.TryGetSingle(out var component) || !float.IsFinite(component))
+                throw new JsonException($"Four-component vector field '{propertyName}' must be a finite number.");
+
+            fields |= field;
+            switch (field)
+            {
+                case 1:
+                    value.X = component;
+                    break;
+                case 2:
+                    value.Y = component;
+                    break;
+                case 4:
+                    value.Z = component;
+                    break;
+                case 8:
+                    value.W = component;
+                    break;
+            }
+        }
+
+        if (reader.TokenType != JsonTokenType.EndObject)
+            throw new JsonException("A four-component vector JSON object is incomplete.");
+        if (fields != 15)
+            throw new JsonException("A four-component vector must contain exactly X, Y, Z, and W fields.");
+        return value;
+    }
+
+    public override void Write(Utf8JsonWriter writer, Vector4 value, JsonSerializerOptions options)
+    {
+        if (!value.IsFinite())
+            throw new JsonException("Configuration vectors require finite components.");
+
+        writer.WriteStartObject();
+        writer.WriteNumber(nameof(Vector4.X), value.X);
+        writer.WriteNumber(nameof(Vector4.Y), value.Y);
+        writer.WriteNumber(nameof(Vector4.Z), value.Z);
+        writer.WriteNumber(nameof(Vector4.W), value.W);
+        writer.WriteEndObject();
+    }
+}
+
+internal sealed class Vector4IJsonConverter : JsonConverter<Vector4I>
+{
+    public override Vector4I Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException("A four-component integer vector must be a JSON object.");
+
+        var fields = 0;
+        var value = default(Vector4I);
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
+        {
+            if (reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException("A four-component integer vector contains an invalid JSON token.");
+
+            var propertyName = reader.GetString();
+            var field = propertyName switch
+            {
+                nameof(Vector4I.X) => 1,
+                nameof(Vector4I.Y) => 2,
+                nameof(Vector4I.Z) => 4,
+                nameof(Vector4I.W) => 8,
+                _ => throw new JsonException($"A four-component integer vector contains unknown field '{propertyName}'."),
+            };
+            if ((fields & field) != 0)
+                throw new JsonException($"A four-component integer vector contains duplicate field '{propertyName}'.");
+            if (!reader.Read() || reader.TokenType != JsonTokenType.Number || !reader.TryGetInt32(out var component))
+                throw new JsonException($"Four-component integer vector field '{propertyName}' must be a 32-bit integer.");
+
+            fields |= field;
+            switch (field)
+            {
+                case 1:
+                    value.X = component;
+                    break;
+                case 2:
+                    value.Y = component;
+                    break;
+                case 4:
+                    value.Z = component;
+                    break;
+                case 8:
+                    value.W = component;
+                    break;
+            }
+        }
+
+        if (reader.TokenType != JsonTokenType.EndObject)
+            throw new JsonException("A four-component integer vector JSON object is incomplete.");
+        if (fields != 15)
+            throw new JsonException("A four-component integer vector must contain exactly X, Y, Z, and W fields.");
+        return value;
+    }
+
+    public override void Write(Utf8JsonWriter writer, Vector4I value, JsonSerializerOptions options)
+    {
+        writer.WriteStartObject();
+        writer.WriteNumber(nameof(Vector4I.X), value.X);
+        writer.WriteNumber(nameof(Vector4I.Y), value.Y);
+        writer.WriteNumber(nameof(Vector4I.Z), value.Z);
+        writer.WriteNumber(nameof(Vector4I.W), value.W);
+        writer.WriteEndObject();
+    }
+}
+
+internal sealed class RectJsonConverter : JsonConverter<Rect>
 {
     private const int Position = 1;
     private const int Size = 2;
     private const int Complete = Position | Size;
 
-    public override Rect2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override Rect Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("A rectangle must be a JSON object.");
@@ -1127,8 +1336,8 @@ internal sealed class Rect2JsonConverter : JsonConverter<Rect2>
             var propertyName = reader.GetString();
             var field = propertyName switch
             {
-                nameof(Rect2.Position) => Position,
-                nameof(Rect2.Size) => Size,
+                nameof(Rect.Position) => Position,
+                nameof(Rect.Size) => Size,
                 _ => throw new JsonException($"A rectangle contains unknown field '{propertyName}'."),
             };
             if ((fields & field) != 0)
@@ -1148,34 +1357,34 @@ internal sealed class Rect2JsonConverter : JsonConverter<Rect2>
         if (fields != Complete)
             throw new JsonException("A rectangle must contain exactly Position and Size fields.");
 
-        return new Rect2(position, size);
+        return new Rect(position, size);
     }
 
-    public override void Write(Utf8JsonWriter writer, Rect2 value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, Rect value, JsonSerializerOptions options)
     {
         if (!value.IsFinite())
             throw new JsonException("Configuration rectangles require finite components.");
 
         writer.WriteStartObject();
-        Vector2JsonFields.Write(writer, nameof(Rect2.Position), value.Position);
-        Vector2JsonFields.Write(writer, nameof(Rect2.Size), value.Size);
+        Vector2JsonFields.Write(writer, nameof(Rect.Position), value.Position);
+        Vector2JsonFields.Write(writer, nameof(Rect.Size), value.Size);
         writer.WriteEndObject();
     }
 }
 
-internal sealed class Transform2DJsonConverter : JsonConverter<Transform2D>
+internal sealed class TransformJsonConverter : JsonConverter<Transform>
 {
     private const int XAxis = 1;
     private const int YAxis = 2;
     private const int Origin = 4;
     private const int Complete = XAxis | YAxis | Origin;
 
-    public override Transform2D Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override Transform Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("A transform must be a JSON object.");
 
-        var transform = default(Transform2D);
+        var transform = default(Transform);
         var fields = 0;
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
         {
@@ -1185,9 +1394,9 @@ internal sealed class Transform2DJsonConverter : JsonConverter<Transform2D>
             var propertyName = reader.GetString();
             var field = propertyName switch
             {
-                nameof(Transform2D.X) => XAxis,
-                nameof(Transform2D.Y) => YAxis,
-                nameof(Transform2D.Origin) => Origin,
+                nameof(Transform.X) => XAxis,
+                nameof(Transform.Y) => YAxis,
+                nameof(Transform.Origin) => Origin,
                 _ => throw new JsonException($"A transform contains unknown field '{propertyName}'."),
             };
             if ((fields & field) != 0)
@@ -1212,15 +1421,15 @@ internal sealed class Transform2DJsonConverter : JsonConverter<Transform2D>
         return transform;
     }
 
-    public override void Write(Utf8JsonWriter writer, Transform2D value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, Transform value, JsonSerializerOptions options)
     {
         if (!value.IsFinite())
             throw new JsonException("Configuration transforms require finite components.");
 
         writer.WriteStartObject();
-        Vector2JsonFields.Write(writer, nameof(Transform2D.X), value.X);
-        Vector2JsonFields.Write(writer, nameof(Transform2D.Y), value.Y);
-        Vector2JsonFields.Write(writer, nameof(Transform2D.Origin), value.Origin);
+        Vector2JsonFields.Write(writer, nameof(Transform.X), value.X);
+        Vector2JsonFields.Write(writer, nameof(Transform.Y), value.Y);
+        Vector2JsonFields.Write(writer, nameof(Transform.Origin), value.Origin);
         writer.WriteEndObject();
     }
 }

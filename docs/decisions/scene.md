@@ -50,7 +50,7 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 
 Last updated: 2026-09-21
 
-- Status: Accepted, except the rejection of a separate `Transform2D`, which is superseded by [ADR 0026](core-math.md#adr-0026)
+- Status: Accepted; the original external-numerics transform choice is superseded by [ADR 0026](core-math.md#adr-0026), [ADR 0032](core-math.md#adr-0032), and [ADR 0033](core-math.md#adr-0033)
 - Scope: Scene-domain public object model
 
 ### Context
@@ -61,7 +61,7 @@ Godot separates non-spatial hierarchy/lifecycle behavior (`Node`) from 2D spatia
 
 - Electron2D exposes one public game-object class named `Node`; it does not expose `Node2D`.
 - `Node` combines hierarchy, lifecycle, paths, groups, processing, deletion, 2D local/global transforms, visibility, and Z ordering.
-- The current Node transform vocabulary uses `System.Numerics.Vector2` and `Matrix3x2` directly. The original decision not to introduce `Transform2D` is preserved here as history but superseded by ADR 0026; ADR 0029 implements the standalone value while leaving Node migration pending.
+- Historical note: the initial Node transform vocabulary used external numerics directly. ADR 0026 introduced the engine-owned affine value, ADR 0029 completed its math, and ADRs 0032/0033 completed Node migration to `Electron2D.Transform` and `Vector2`.
 - Godot-like concepts keep recognizable names where they remain useful, but the API stays typed C#: strings represent paths/groups/names, delegates and virtual methods represent callbacks, and C# events represent signals.
 - Renderer-independent canvas state (`Visible`, `ZIndex`, `ZAsRelative`) belongs on `Node` now. Renderer-bound drawing, materials, canvas handles, lights, clipping, input picking, and viewport behavior wait for their actual domains.
 - `SceneTree` is the host-driven frame boundary. It delivers explicitly enabled process and physics-process callbacks in priority/tree order and flushes deferred work afterward; it does not create a hidden thread or clock.
@@ -71,14 +71,14 @@ Godot separates non-spatial hierarchy/lifecycle behavior (`Node`) from 2D spatia
 - Every game object can be positioned immediately; users never choose between `Node` and `Node2D`.
 - Scene and transform lifetime share one parent tree, making global transforms, inherited visibility, Z state, paths, groups, and processing coherent.
 - The public API is intentionally similar rather than source-compatible with Godot: there is no Variant, NodePath, StringName, CanvasItem, or automatic method-name dispatch.
-- `System.Numerics` fixes the current matrix convention and keeps Electron2D.dll free of another managed math dependency.
+- The original external-numerics dependency was later removed; the current engine-owned `Transform` preserves the documented parent/right-first composition contract.
 - Future renderer and input work extends `Node` or adds purpose-specific derived types; it must not recreate a parallel `Node2D` hierarchy.
 
 ### Rejected alternatives
 
 - Keep separate `Node` and `Node2D`: rejected because the user-facing engine is 2D-only and requires spatial behavior on its single node type.
 - Put transforms in a detachable component: rejected because it makes the primary 2D object more indirect without a demonstrated non-spatial use case.
-- Create Electron2D-specific vector/matrix wrappers in this initial Node slice: rejected at the time because the .NET standard-library types covered the implemented behavior. ADR 0026 later required a complete standalone `Transform2D`, and ADR 0029 delivered it without silently changing Node's existing surface.
+- Create engine-specific vector/matrix values in the initial Node slice: rejected at the time because standard-library types covered that smaller surface. ADRs 0026, 0029, 0032, and 0033 later introduced and migrated the complete engine-owned values as an explicit source-breaking slice.
 - Copy all `CanvasItem` API before a renderer exists: rejected because those members would be non-functional promises rather than a completed runtime contract.
 
 <a id="adr-0011"></a>
