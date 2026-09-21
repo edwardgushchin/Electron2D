@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
-**Inherited By:** [InputEvent](InputEvent.md), [PackedScene](PackedScene.md)
+**Inherited By:** [Image](Image.md), [InputEvent](InputEvent.md), [PackedScene](PackedScene.md)
 
 - **Source:** [`src/Core/IO/Resource.cs`](../../src/Core/IO/Resource.cs)
 - **Namespace:** `Electron2D`
@@ -488,7 +488,7 @@ No placeholder members are exposed for deferred domains.
 
 ## Dependencies and interactions
 
-`Resource` depends on `ElectronObject`, `PropertyDescriptor`, `DeepDuplicateMode`, Scene's `Node` type for local-scene association, cryptographic random generation, weak references, and standard collections. Scene's packed-scene component reciprocally consumes Resource duplication; ADR 0023 records this narrow in-assembly cycle. `Resource` has no dependency on `PackedScene`, `SceneTree`, SDL, renderer, native handle, physics, file serializer, editor, or scripting.
+`Resource` depends on `ElectronObject`, `PropertyDescriptor`, `DeepDuplicateMode`, Scene's `Node` type for local-scene association, cryptographic random generation, weak references, and standard collections. Scene's packed-scene component reciprocally consumes Resource duplication; ADR 0023 records this narrow in-assembly cycle. [`Image`](Image.md) derives from `Resource` and supplies its own managed pixel-state synchronization and duplication. `Resource` has no dependency on `PackedScene`, `SceneTree`, SDL, renderer, native handle, physics, file serializer, editor, or scripting.
 
 Pure managed `Resource` instances are reclaimed by the runtime. `Dispose` performs deterministic logical teardown; future derived resources that own native handles must release them deterministically through safe-handle wrappers. No allocation-free or hard real-time guarantee is claimed for arbitrary resource construction, copying, or user callbacks.
 

@@ -14,6 +14,7 @@ VerifyEventConnections();
 VerifyTranslations();
 VerifyMathf();
 VerifyColors();
+VerifyImages();
 VerifyVector2Values();
 VerifyVector2IValues();
 VerifyVector4Values();
@@ -561,6 +562,465 @@ static void VerifyColors()
     var allocated = GC.GetAllocatedBytesForCurrentThread() - beforeAllocations;
     Require(allocated == 0 && float.IsFinite(hotResult.R),
         "Warmed numeric color operations must not allocate managed memory.");
+}
+
+static void VerifyImages()
+{
+    var expectedMethods = new Dictionary<string, int>(StringComparer.Ordinal)
+    {
+        [nameof(Image.AdjustBcs)] = 1,
+        [nameof(Image.BlendRect)] = 1,
+        [nameof(Image.BlendRectMask)] = 1,
+        [nameof(Image.BlitRect)] = 1,
+        [nameof(Image.BlitRectMask)] = 1,
+        [nameof(Image.BumpMapToNormalMap)] = 1,
+        [nameof(Image.ClearMipmaps)] = 1,
+        [nameof(Image.ComputeImageMetrics)] = 1,
+        [nameof(Image.Convert)] = 1,
+        [nameof(Image.CopyFrom)] = 1,
+        [nameof(Image.Create)] = 1,
+        [nameof(Image.CreateEmpty)] = 1,
+        [nameof(Image.CreateFromData)] = 1,
+        [nameof(Image.Crop)] = 1,
+        [nameof(Image.DetectAlpha)] = 1,
+        [nameof(Image.DetectUsedChannels)] = 1,
+        [nameof(Image.Fill)] = 1,
+        [nameof(Image.FillRect)] = 1,
+        [nameof(Image.FixAlphaEdges)] = 1,
+        [nameof(Image.FlipX)] = 1,
+        [nameof(Image.FlipY)] = 1,
+        [nameof(Image.GenerateMipmaps)] = 1,
+        [nameof(Image.GetData)] = 1,
+        [nameof(Image.GetMipmapOffset)] = 1,
+        [nameof(Image.GetPixel)] = 2,
+        [nameof(Image.GetRegion)] = 1,
+        [nameof(Image.GetUsedRect)] = 1,
+        [nameof(Image.LinearToSrgb)] = 1,
+        [nameof(Image.NormalMapToXy)] = 1,
+        [nameof(Image.PremultiplyAlpha)] = 1,
+        [nameof(Image.Resize)] = 1,
+        [nameof(Image.ResizeToPowerOfTwo)] = 1,
+        [nameof(Image.RgbeToSrgb)] = 1,
+        [nameof(Image.Rotate180)] = 1,
+        [nameof(Image.Rotate90)] = 1,
+        [nameof(Image.SetData)] = 1,
+        [nameof(Image.SetPixel)] = 2,
+        [nameof(Image.ShrinkX2)] = 1,
+        [nameof(Image.SrgbToLinear)] = 1,
+    };
+    var actualMethods = typeof(Image)
+        .GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.DeclaredOnly)
+        .Where(method => !method.IsSpecialName)
+        .GroupBy(method => method.Name, StringComparer.Ordinal)
+        .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
+    Require(expectedMethods.Count == actualMethods.Count && expectedMethods.All(pair =>
+            actualMethods.TryGetValue(pair.Key, out var count) && count == pair.Value),
+        "Image must expose exactly the audited backend-independent method surface.");
+    var expectedProperties = new[]
+    {
+        nameof(Image.DataSize), nameof(Image.HasMipmaps), nameof(Image.Height), nameof(Image.IsCompressed),
+        nameof(Image.IsEmpty), nameof(Image.IsInvisible), nameof(Image.MipmapCount), nameof(Image.PixelFormat),
+        nameof(Image.Size), nameof(Image.Width),
+    };
+    Require(typeof(Image).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance |
+                                       System.Reflection.BindingFlags.DeclaredOnly)
+            .Select(property => property.Name).OrderBy(name => name, StringComparer.Ordinal)
+            .SequenceEqual(expectedProperties),
+        "Image must expose exactly the audited property surface.");
+
+    using (var empty = new Image())
+    {
+        Require(empty.IsEmpty && empty.Width == 0 && empty.Height == 0 && empty.Size == Vector2I.Zero &&
+                empty.PixelFormat == Image.Format.L8 && !empty.HasMipmaps && empty.MipmapCount == 0 &&
+                empty.DataSize == 0 && empty.GetData().Length == 0 && empty.IsInvisible &&
+                empty.DetectAlpha() == Image.AlphaMode.None,
+            "A default image must expose one canonical empty state.");
+        Expect<InvalidOperationException>(() => empty.GetPixel(0, 0), "An empty image must reject pixel access.");
+        Expect<InvalidOperationException>(() => empty.GenerateMipmaps(), "An empty image must reject mipmap generation.");
+    }
+
+    Require(Image.MaxWidth == 16_777_216 && Image.MaxHeight == 16_777_216 &&
+            Enum.GetValues<Image.Format>().Length == 48 && (int)Image.Format.Max == 47 &&
+            Enum.GetValues<Image.Interpolation>().Length == 5 && Enum.GetValues<Image.AlphaMode>().Length == 3 &&
+            Enum.GetValues<Image.UsedChannels>().Length == 6 && Enum.GetValues<Image.CompressSource>().Length == 4 &&
+            Enum.GetValues<Image.CompressMode>().Length == 6 && (int)Image.CompressMode.Max == 5 &&
+            Enum.GetValues<Image.AstcFormat>().Length == 2,
+        "Image constants and nested enum identities must remain stable.");
+    Require(typeof(Image).GetNestedTypes(System.Reflection.BindingFlags.Public).Length == 7 &&
+            (int)Image.CompressMode.S3tc == 0 && (int)Image.CompressMode.Astc == 4 &&
+            (int)Image.AstcFormat.Format4X4 == 0 && (int)Image.AstcFormat.Format8X8 == 1,
+        "Image must expose the complete audited nested enum family and stable identities.");
+    Require((int)ClockDirection.Clockwise == 0 && (int)ClockDirection.CounterClockwise == 1,
+        "ClockDirection values must remain stable.");
+
+    Expect<ArgumentOutOfRangeException>(() => Image.CreateEmpty(0, 1, false, Image.Format.Rgba8),
+        "Image creation must reject zero width.");
+    Expect<ArgumentOutOfRangeException>(() => Image.CreateEmpty(1, -1, false, Image.Format.Rgba8),
+        "Image creation must reject negative height.");
+    Expect<ArgumentOutOfRangeException>(() => Image.CreateEmpty(16_385, 16_385, false, Image.Format.R8),
+        "Image creation must enforce the pixel-count ceiling.");
+    Expect<ArgumentOutOfRangeException>(() => Image.CreateEmpty(16_384, 16_384, false, Image.Format.Rgba16I),
+        "Image creation must reject byte counts beyond a managed array before allocation.");
+    Expect<ArgumentOutOfRangeException>(() => Image.CreateEmpty(1, 1, false, Image.Format.Max),
+        "Image creation must reject the format sentinel.");
+    Expect<ArgumentException>(() => Image.CreateFromData(2, 2, false, Image.Format.Rgba8, new byte[15]),
+        "Raw image creation must require an exact byte count.");
+
+    var uncompressedSizes = new Dictionary<Image.Format, int>
+    {
+        [Image.Format.L8] = 1,
+        [Image.Format.La8] = 2,
+        [Image.Format.R8] = 1,
+        [Image.Format.Rg8] = 2,
+        [Image.Format.Rgb8] = 3,
+        [Image.Format.Rgba8] = 4,
+        [Image.Format.Rgba4444] = 2,
+        [Image.Format.Rgb565] = 2,
+        [Image.Format.Rf] = 4,
+        [Image.Format.Rgf] = 8,
+        [Image.Format.Rgbf] = 12,
+        [Image.Format.Rgbaf] = 16,
+        [Image.Format.Rh] = 2,
+        [Image.Format.Rgh] = 4,
+        [Image.Format.Rgbh] = 6,
+        [Image.Format.Rgbah] = 8,
+        [Image.Format.Rgbe9995] = 4,
+        [Image.Format.R16] = 2,
+        [Image.Format.Rg16] = 4,
+        [Image.Format.Rgb16] = 6,
+        [Image.Format.Rgba16] = 8,
+        [Image.Format.R16I] = 2,
+        [Image.Format.Rg16I] = 4,
+        [Image.Format.Rgb16I] = 6,
+        [Image.Format.Rgba16I] = 8,
+    };
+
+    foreach (var pair in uncompressedSizes)
+    {
+        using var image = Image.CreateEmpty(2, 3, false, pair.Key);
+        Require(image.DataSize == pair.Value * 6 && !image.IsCompressed,
+            $"{pair.Key} must use its documented uncompressed pixel size.");
+        var sample = pair.Key >= Image.Format.R16I
+            ? new Color(10f, 20f, 30f, 40f)
+            : new Color(0.2f, 0.4f, 0.6f, 0.8f);
+        image.SetPixel(1, 2, sample);
+        var decoded = image.GetPixel(new Vector2I(1, 2));
+        Require(float.IsFinite(decoded.R) && float.IsFinite(decoded.G) && float.IsFinite(decoded.B) && float.IsFinite(decoded.A),
+            $"{pair.Key} pixel encoding must produce finite decoded components.");
+    }
+
+    var compressedFormats = Enum.GetValues<Image.Format>()
+        .Where(format => format is >= Image.Format.Dxt1 and <= Image.Format.Astc8X8Hdr)
+        .ToArray();
+    Require(compressedFormats.Length == 22, "The complete compressed storage family must be represented.");
+    foreach (var format in compressedFormats)
+    {
+        using var image = Image.CreateEmpty(4, 4, false, format);
+        Require(image.IsCompressed && image.DataSize is 8 or 16,
+            $"{format} must use one correctly sized 4x4-or-larger storage block.");
+        Expect<InvalidOperationException>(() => image.GetPixel(0, 0),
+            $"{format} must reject direct pixel access without decompression.");
+        Expect<InvalidOperationException>(() => image.Fill(Colors.Red),
+            $"{format} must reject pixel mutation without decompression.");
+        Require(!image.IsInvisible &&
+                image.DetectAlpha() == (format is Image.Format.Dxt3 or Image.Format.Dxt5
+                    ? Image.AlphaMode.Blend
+                    : Image.AlphaMode.None),
+            $"{format} alpha metadata queries must not require a CPU decoder.");
+    }
+
+    using (var compressedMipmaps = Image.CreateEmpty(8, 8, true, Image.Format.Dxt1))
+    {
+        Require(compressedMipmaps.DataSize == 56 && compressedMipmaps.MipmapCount == 3 &&
+                compressedMipmaps.GetMipmapOffset(1) == 32 && compressedMipmaps.GetMipmapOffset(3) == 48,
+            "Compressed mip layouts must respect block minima at every level.");
+    }
+
+    using (var image = Image.CreateEmpty(4, 4, false, Image.Format.Rgba8))
+    {
+        var changes = 0;
+        image.Changed += _ => changes++;
+        image.Fill(new Color(0.25f, 0.5f, 0.75f, 1f));
+        Require(ColorNearlyEqual(image.GetPixel(3, 3), new Color(63 / 255f, 127 / 255f, 191 / 255f, 1f), 0.0001f) && changes == 1,
+            "Fill must encode the complete buffer and publish one post-commit change.");
+        var exported = image.GetData();
+        exported[0] = 255;
+        Require(image.GetData()[0] == 63, "GetData must not expose mutable engine storage.");
+
+        image.Fill(new Color(0f, 0f, 0f, 0f));
+        Require(image.IsInvisible, "An alpha-capable image with zero alpha must be invisible.");
+        image.FillRect(new RectI(-1, -1, 3, 3), Colors.Red);
+        Require(image.GetPixel(0, 0).R == 1f && image.GetPixel(1, 1).R == 1f && image.GetPixel(2, 2).A == 0f,
+            "FillRect must clip a half-open rectangle to image bounds.");
+        Require(image.DetectAlpha() == Image.AlphaMode.Bit && !image.IsInvisible &&
+                image.GetUsedRect() == new RectI(0, 0, 2, 2) && image.DetectUsedChannels() == Image.UsedChannels.Rgba,
+            "Alpha and used-region detection must inspect the base level.");
+        Expect<ArgumentOutOfRangeException>(() => image.DetectUsedChannels(Image.CompressSource.Max),
+            "Channel detection must reject its source sentinel.");
+
+        image.GenerateMipmaps();
+        Require(image.HasMipmaps && image.MipmapCount == 2 && image.DataSize == 84 &&
+                image.GetMipmapOffset(0) == 0 && image.GetMipmapOffset(1) == 64 && image.GetMipmapOffset(2) == 80,
+            "Mipmap generation must produce the complete 4x4, 2x2, 1x1 chain.");
+        var priorMip = image.GetData()[image.GetMipmapOffset(1)];
+        image.SetPixel(0, 0, Colors.Blue);
+        Require(image.GetData()[image.GetMipmapOffset(1)] == priorMip,
+            "Per-pixel edits must leave existing mip bytes intact until explicit regeneration.");
+        image.GenerateMipmaps();
+        Require(image.GetData()[image.GetMipmapOffset(1)] != priorMip,
+            "Explicit regeneration must refresh a stale mip level from edited base pixels.");
+        image.ClearMipmaps();
+        Require(!image.HasMipmaps && image.DataSize == 64, "ClearMipmaps must retain only the base level.");
+
+        var before = image.GetData();
+        Expect<ArgumentException>(() => image.SetData(2, 2, false, Image.Format.Rgba8, new byte[15]),
+            "SetData must reject malformed data before mutation.");
+        Require(image.GetData().SequenceEqual(before), "A rejected SetData call must preserve image state.");
+    }
+
+    var supplied = new byte[] { 1, 2, 3, 4 };
+    using (var copied = Image.CreateFromData(1, 1, false, Image.Format.Rgba8, supplied))
+    using (var target = new Image())
+    {
+        supplied[0] = 99;
+        Require(copied.GetData()[0] == 1, "CreateFromData must copy caller storage.");
+        target.CopyFrom(copied);
+        copied.SetPixel(0, 0, Colors.White);
+        Require(target.GetData()[0] == 1 && target.PixelFormat == Image.Format.Rgba8,
+            "CopyFrom must snapshot independent pixel storage while preserving a valid format.");
+    }
+
+    using (var onePixel = Image.CreateEmpty(1, 1, true, Image.Format.Rgba8))
+    {
+        Require(!onePixel.HasMipmaps && onePixel.MipmapCount == 0 && onePixel.GetMipmapOffset(0) == 0,
+            "A 1x1 image must canonicalize an impossible mip chain to base-only storage.");
+        Expect<ArgumentOutOfRangeException>(() => onePixel.GetMipmapOffset(1),
+            "Mipmap offsets must reject levels that are not stored.");
+    }
+
+    using (var integerAlpha = Image.CreateEmpty(2, 1, false, Image.Format.Rgba16I))
+    using (var integerSource = Image.CreateEmpty(1, 1, false, Image.Format.Rgba16I))
+    {
+        integerAlpha.Fill(new Color(0f, 0f, 1000f, 65535f));
+        integerAlpha.SetPixel(0, 0, new Color(0f, 0f, 0f, 32768f));
+        Require(integerAlpha.DetectAlpha() == Image.AlphaMode.Blend &&
+                integerAlpha.DetectUsedChannels() == Image.UsedChannels.Rgba,
+            "Integer alpha detection must use the 16-bit opaque endpoint, not normalized one.");
+        integerSource.Fill(new Color(1000f, 0f, 0f, 32768f));
+        integerAlpha.BlendRect(integerSource, new RectI(0, 0, 1, 1), new Vector2I(1, 0));
+        var mixed = integerAlpha.GetPixel(1, 0);
+        Require(mixed.R is >= 499f and <= 501f && mixed.B is >= 499f and <= 501f && mixed.A == 65535f,
+            "Integer-alpha compositing must normalize only alpha during straight-alpha mixing.");
+    }
+
+    using (var image = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8))
+    {
+        image.SetPixel(0, 0, Colors.Red);
+        image.SetPixel(1, 0, Colors.Green);
+        image.SetPixel(0, 1, Colors.Blue);
+        image.SetPixel(1, 1, Colors.White);
+        image.FlipX();
+        Require(image.GetPixel(0, 0).G > 0f && image.GetPixel(1, 0).R == 1f,
+            "FlipX must reverse each row.");
+        image.FlipY();
+        Require(image.GetPixel(0, 0) == Colors.White, "FlipY must reverse row order.");
+        image.Rotate180();
+        Require(image.GetPixel(1, 1) == Colors.White, "Rotate180 must reverse both axes.");
+        image.Rotate90(ClockDirection.Clockwise);
+        Require(image.Size == new Vector2I(2, 2), "Rotate90 must swap dimensions while preserving pixel count.");
+        Expect<ArgumentOutOfRangeException>(() => image.Rotate90((ClockDirection)7),
+            "Rotate90 must reject an undefined direction.");
+
+        using var region = image.GetRegion(new RectI(1, 1, 4, 4));
+        Require(region.Size == Vector2I.One && region.GetPixel(0, 0) == image.GetPixel(1, 1),
+            "GetRegion must return only the clipped source intersection.");
+        using var emptyRegion = image.GetRegion(new RectI(9, 9, 1, 1));
+        Require(emptyRegion.IsEmpty, "GetRegion must return an empty image for a disjoint rectangle.");
+    }
+
+    using (var rectangular = Image.CreateEmpty(3, 2, false, Image.Format.R8))
+    {
+        rectangular.SetPixel(0, 0, new Color(1f, 0f, 0f));
+        rectangular.Rotate90(ClockDirection.Clockwise);
+        Require(rectangular.Size == new Vector2I(2, 3) && rectangular.GetPixel(1, 0).R == 1f,
+            "Clockwise rotation must map a rectangular image's top-left pixel to its top-right corner.");
+        rectangular.Rotate90(ClockDirection.CounterClockwise);
+        Require(rectangular.Size == new Vector2I(3, 2) && rectangular.GetPixel(0, 0).R == 1f,
+            "Counterclockwise rotation must invert a prior clockwise quarter turn.");
+    }
+
+    foreach (var interpolation in Enum.GetValues<Image.Interpolation>())
+    {
+        using var image = Image.CreateEmpty(3, 2, true, Image.Format.Rgba8);
+        image.Fill(Colors.Red);
+        image.Resize(7, 5, interpolation);
+        Require(image.Size == new Vector2I(7, 5) && image.HasMipmaps && ColorNearlyEqual(image.GetPixel(6, 4), Colors.Red, 0.01f),
+            $"{interpolation} resizing must preserve dimensions, mipmap policy, and a constant field.");
+    }
+
+    using (var image = Image.CreateEmpty(3, 5, false, Image.Format.Rgba8))
+    {
+        image.ResizeToPowerOfTwo();
+        Require(image.Size == new Vector2I(4, 8), "ResizeToPowerOfTwo must round dimensions independently.");
+        image.ResizeToPowerOfTwo(square: true, Image.Interpolation.Nearest);
+        Require(image.Size == new Vector2I(8, 8), "Square power-of-two resizing must use the larger dimension.");
+        image.ShrinkX2();
+        Require(image.Size == new Vector2I(4, 4), "ShrinkX2 must halve both dimensions.");
+        image.Crop(6, 3);
+        Require(image.Size == new Vector2I(6, 3) && image.GetPixel(5, 2) == default,
+            "Crop must fill expanded pixels with transparent black.");
+    }
+
+    using (var largeFormat = Image.CreateEmpty(1, 1, false, Image.Format.Rgba16I))
+    {
+        Expect<ArgumentOutOfRangeException>(() => largeFormat.Crop(16_384, 16_384),
+            "Crop must reject byte-count overflow before changing state.");
+        Expect<ArgumentOutOfRangeException>(() => largeFormat.Resize(16_384, 16_384),
+            "Resize must reject byte-count overflow before resampling.");
+        Require(largeFormat.Size == Vector2I.One,
+            "Failed size changes must preserve the original image.");
+    }
+
+    using (var destination = Image.CreateEmpty(3, 2, true, Image.Format.Rgba8))
+    using (var source = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8))
+    using (var mask = Image.CreateEmpty(2, 2, false, Image.Format.La8))
+    {
+        destination.Fill(new Color(0f, 0f, 1f, 1f));
+        source.Fill(new Color(1f, 0f, 0f, 0.5f));
+        mask.Fill(new Color(1f, 1f, 1f, 0f));
+        mask.SetPixel(1, 0, Colors.White);
+        destination.BlendRectMask(source, mask, new RectI(0, 0, 2, 2), new Vector2I(1, 0));
+        Require(ColorNearlyEqual(destination.GetPixel(2, 0), new Color(0.5f, 0f, 0.5f, 1f), 0.01f) &&
+                destination.GetPixel(1, 0).B == 1f && destination.HasMipmaps,
+            "Masked blending must honor mask alpha, clipping, straight alpha, and mipmap rebuilding.");
+        destination.BlitRectMask(source, mask, new RectI(0, 0, 2, 2), Vector2I.Zero);
+        Require(destination.GetPixel(1, 0).R == 1f && destination.GetPixel(0, 0).B == 1f,
+            "Masked blitting must copy only selected source pixels without blending.");
+        destination.BlendRect(source, new RectI(0, 0, 1, 1), Vector2I.Zero);
+        Require(destination.GetPixel(0, 0).R > 0f && destination.GetPixel(0, 0).B > 0f,
+            "Unmasked blending must composite straight-alpha source and destination colors.");
+        source.Fill(Colors.Green);
+        destination.BlitRect(source, new RectI(0, 0, 2, 2), new Vector2I(-1, 0));
+        Require(destination.GetPixel(0, 0).G > 0f, "BlitRect must clip negative destinations while keeping source alignment.");
+        using var wrongFormat = Image.CreateEmpty(1, 1, false, Image.Format.Rgb8);
+        Expect<ArgumentException>(() => destination.BlitRect(wrongFormat, new RectI(0, 0, 1, 1), Vector2I.Zero),
+            "BlitRect must reject format mismatch.");
+    }
+
+    using (var image = Image.CreateEmpty(3, 1, false, Image.Format.Rgba8))
+    {
+        image.SetPixel(0, 0, new Color(1f, 0f, 0f, 0f));
+        image.SetPixel(1, 0, new Color(0f, 1f, 0f, 1f));
+        image.SetPixel(2, 0, new Color(0f, 0f, 1f, 0.5f));
+        Require(image.DetectAlpha() == Image.AlphaMode.Blend && image.DetectUsedChannels() == Image.UsedChannels.Rgba,
+            "Alpha detection must distinguish fractional transparency.");
+        image.FixAlphaEdges();
+        Require(image.GetPixel(0, 0).G == 1f && image.GetPixel(0, 0).A == 0f,
+            "FixAlphaEdges must copy the nearest opaque RGB without changing alpha.");
+        image.PremultiplyAlpha();
+        Require(image.GetData()[10] == 127, "PremultiplyAlpha must use deterministic 8-bit rounding.");
+        image.AdjustBcs(1f, 1f, 0f);
+        var desaturated = image.GetPixel(1, 0);
+        Require(desaturated.R == desaturated.G && desaturated.G == desaturated.B,
+            "Zero saturation must collapse RGB to its arithmetic mean.");
+        Expect<ArgumentOutOfRangeException>(() => image.AdjustBcs(float.NaN, 1f, 1f),
+            "Color adjustment must reject non-finite factors.");
+    }
+
+    using (var image = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8))
+    {
+        image.SetPixel(0, 0, new Color(0.5f, 0.25f, 0.75f, 1f));
+        var original = image.GetPixel(0, 0);
+        image.SrgbToLinear();
+        image.LinearToSrgb();
+        Require(ColorNearlyEqual(image.GetPixel(0, 0), original, 0.01f),
+            "sRGB conversions must approximately round-trip normalized RGB8 data.");
+        image.Convert(Image.Format.Rgbaf);
+        Require(image.PixelFormat == Image.Format.Rgbaf && image.DataSize == 16 &&
+                ColorNearlyEqual(image.GetPixel(0, 0), original, 0.01f),
+            "Convert must preserve decoded color while changing raw layout.");
+        Expect<InvalidOperationException>(() => image.Convert(Image.Format.Dxt1),
+            "Convert must reject compression without a compression backend.");
+    }
+
+    using (var bump = Image.CreateEmpty(2, 2, false, Image.Format.L8))
+    {
+        bump.Fill(Colors.Black);
+        bump.SetPixel(1, 0, Colors.White);
+        bump.BumpMapToNormalMap(1f);
+        Require(bump.PixelFormat == Image.Format.Rgba8 && bump.GetPixel(0, 0).A == 1f,
+            "Bump-map conversion must produce opaque RGBA8 normals.");
+        bump.NormalMapToXy();
+        Require(bump.PixelFormat == Image.Format.La8 && bump.DataSize == 8,
+            "NormalMapToXy must pack X and Y into two channels.");
+    }
+
+    using (var rgbe = Image.CreateEmpty(2, 1, true, Image.Format.Rgbe9995))
+    {
+        rgbe.SetPixel(0, 0, new Color(2f, 1f, 0.5f));
+        rgbe.SetPixel(1, 0, new Color(0.25f, 0.5f, 1f));
+        using var srgb = rgbe.RgbeToSrgb();
+        Require(srgb.PixelFormat == Image.Format.Rgb8 && srgb.Size == rgbe.Size && srgb.HasMipmaps,
+            "RGBE conversion must return an RGB8 copy and preserve mipmap policy.");
+    }
+
+    using (var first = Image.CreateEmpty(2, 1, false, Image.Format.Rgba8))
+    using (var second = Image.CreateEmpty(2, 1, false, Image.Format.Rgba8))
+    {
+        first.Fill(Colors.Black);
+        second.Fill(Colors.Black);
+        var identical = first.ComputeImageMetrics(second, useLuma: false);
+        Require(identical.Maximum == 0d && identical.RootMeanSquared == 0d && identical.PeakSignalToNoiseRatio == 500d,
+            "Identical image metrics must report zero error and capped peak SNR.");
+        second.SetPixel(0, 0, Colors.White);
+        var componentMetrics = first.ComputeImageMetrics(second, useLuma: false);
+        Require(componentMetrics.Maximum == 255d && componentMetrics.Mean == 95.625d &&
+                componentMetrics.MeanSquared == 24_384.375d,
+            "RGBA metrics must count each channel over the common base-level area.");
+        var different = first.ComputeImageMetrics(second, useLuma: true);
+        Require(different.Maximum == 255d && different.Mean > 0d && different.RootMeanSquared > 0d,
+            "Image metrics must report nonzero luma error.");
+    }
+
+    using (var hdr = Image.CreateEmpty(1, 1, false, Image.Format.Rgbaf))
+    using (var reference = Image.CreateEmpty(1, 1, false, Image.Format.Rgbaf))
+    {
+        hdr.SetPixel(0, 0, new Color(2f, 0f, 0f, 1f));
+        Expect<InvalidOperationException>(() => hdr.ComputeImageMetrics(reference, useLuma: false),
+            "Eight-bit error metrics must reject HDR components outside normalized range.");
+    }
+
+    using (var source = Image.CreateEmpty(2, 2, true, Image.Format.Rgba8))
+    {
+        source.Fill(new Color(0.2f, 0.4f, 0.6f, 0.8f));
+        using var duplicate = (Image)source.Duplicate(deep: true);
+        duplicate.SetPixel(0, 0, Colors.Red);
+        Require(source.GetPixel(0, 0) != duplicate.GetPixel(0, 0) && duplicate.HasMipmaps &&
+                duplicate.GetPropertyList().Select(property => property.Name).Contains(nameof(Image.DataSize)),
+            "Image duplication must own an independent buffer and expose typed image descriptors.");
+    }
+
+    using (var image = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8))
+    {
+        Action<Resource> throwing = _ => throw new InvalidOperationException("expected image observer failure");
+        image.Changed += throwing;
+        Expect<InvalidOperationException>(() => image.SetPixel(0, 0, Colors.Red),
+            "A throwing image observer must propagate after commit.");
+        image.Changed -= throwing;
+        Require(image.GetPixel(0, 0) == Colors.Red,
+            "Image state must remain committed when a change observer throws.");
+    }
+
+    var disposed = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8);
+    disposed.Dispose();
+    Expect<ObjectDisposedException>(() => _ = disposed.Width, "Disposed images must reject reads.");
+    Expect<ObjectDisposedException>(() => disposed.Fill(Colors.Red), "Disposed images must reject writes.");
+
+    using var concurrent = Image.CreateEmpty(16, 16, false, Image.Format.Rgba8);
+    Parallel.For(0, 256, index => concurrent.SetPixel(index % 16, index / 16, Colors.White));
+    Require(Enumerable.Range(0, 256).All(index => concurrent.GetPixel(index % 16, index / 16) == Colors.White),
+        "Concurrent per-pixel mutations must serialize without lost writes or torn reads.");
 }
 
 static Color ExerciseColorHotPath(int iterations)

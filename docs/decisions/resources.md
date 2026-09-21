@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 This bounded log owns the complete architectural records for resources. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
-Decisions in this log: [0013](#adr-0013), [0014](#adr-0014).
+Decisions in this log: [0013](#adr-0013), [0014](#adr-0014), [0039](#adr-0039).
 
 <a id="adr-0013"></a>
 ## ADR 0013: Managed typed Resource contract
@@ -120,3 +120,88 @@ This ADR changes architecture and documentation only; no runtime behavior is add
 - [.NET `IDisposable` contract](https://learn.microsoft.com/en-us/dotnet/api/system.idisposable)
 - [.NET garbage-collector latency modes](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/latency)
 - [.NET no-GC regions](https://learn.microsoft.com/en-us/dotnet/api/system.gc.trystartnogcregion)
+
+<a id="adr-0039"></a>
+## ADR 0039: Managed image buffers and codec boundaries
+
+Last updated: 2026-09-21
+
+### Status
+
+Accepted and implemented.
+
+### Context
+
+The first concrete asset must provide useful CPU-side image behavior before textures, rendering, importing, or an editor exist. The current official 4.7.2 image contract includes raw storage in 47 uncompressed and GPU-block-compressed formats, mipmaps, pixel access and conversion, region composition, filtering, color processing, normal-map helpers, metrics, file codecs, and editor/GPU compression hooks.
+
+Electron2D already owns `Color`, `Vector2I`, `RectI`, `Resource`, typed duplication, and blocking `FileAccess`, but has no accepted portable image-codec dependency, SDL host, GPU backend, texture type, importer, resource loader/saver, or editor. Pulling a codec package into the runtime would change the one-assembly dependency decision. Reimplementing PNG, JPEG, WebP, SVG, DDS, KTX, and EXR inside this slice would create a large security and maintenance surface unrelated to the buffer contract.
+
+### Decision
+
+`Image` is the first concrete managed `Resource`. It owns a private portable little-endian byte buffer, dimensions, one `Image.Format`, and an optional complete mip chain.
+
+- The public format enum preserves all 47 current raw format identities. Uncompressed formats support pixel operations. GPU-block-compressed formats support exact-size construction, copying, byte export, mip offsets, duplication, and disposal; operations needing decompression reject the state explicitly.
+- Dimensions are positive for populated images, bounded by `MaxWidth`, `MaxHeight`, a 268,435,456-pixel ceiling, and the managed array limit. A default instance is the only empty zero-by-zero state.
+- Integer `Rgba16I` alpha uses the full `0..65535` storage range; detection and blending normalize only the alpha arithmetic rather than treating an integer value of one as fully opaque. Byte counts are checked in wide arithmetic before allocation.
+- `GetData` and every incoming byte-array path copy data. No caller receives mutable engine storage.
+- Per-image reads and mutations are lock-serialized. Bulk mutations compute a complete replacement before publishing it; `SetPixel` updates one pixel under the same serialization to avoid a full-buffer allocation. Every successful mutation releases image locks, then emits one synchronous `Resource.Changed` notification. Observer failure propagates after state commitment. Operations reading other images use stable snapshots and are not multi-image transactions.
+- The implemented backend-independent surface covers typed state queries, pixel reads/writes, base/mipmap offsets, complete mipmap generation/clear, conversion among every uncompressed format, crop/region, flips/rotations, five resize filters, fill, blit/blend with masks, alpha/channel/used-rectangle detection, brightness/contrast/saturation, alpha-edge repair and premultiplication, sRGB conversion, bump/normal/RGBE processing, typed `ImageMetrics`, independent Resource duplication, and the complete compression/source/ASTC enum family needed by the deferred encoder boundary.
+- The dynamic `data` dictionary is replaced by `GetData`, `SetData`, dimensions, `PixelFormat`, and `HasMipmaps`. Error codes are replaced by typed C# exceptions. Vector overload pairs are ordinary overloads rather than suffixed method names. Metric dictionaries are replaced by `ImageMetrics`.
+- `Image` is a managed CPU payload and therefore does not introduce the internal native-asset lease mechanism reserved by ADR 0014. Its buffer is released logically on disposal and reclaimed by the managed runtime.
+- Raw compressed bytes do not imply codec or renderer support. No compression, decompression, load/save, texture, RID, import, or renderer method is added as a placeholder.
+
+### Audit coverage inventory
+
+| Reference category | Electron2D status |
+| --- | --- |
+| `Image -> Resource -> RefCounted -> Object` inheritance | `Image -> Resource -> ElectronObject`; managed lifetime deliberately replaces public reference counting under ADR 0014 |
+| Construction, dimensions, format, mipmap state, byte size, compression/empty/visibility state | Implemented through the constructor, three typed factories, and ten read-only properties |
+| Raw data, mip offsets, copy, pixel/vector access | Implemented with copied `byte[]`, typed overloads, exact length validation, and exceptions |
+| Fill, region, crop, flip, rotation, resize, mipmaps, conversion, blit/blend/masks | Implemented for uncompressed CPU data; compressed inputs fail explicitly where decoding is required |
+| Alpha/channel/used bounds, color adjustment, alpha processing, color-space, bump/normal/RGBE, metrics | Implemented; dynamic metric dictionaries are replaced by `ImageMetrics` |
+| Format/interpolation/alpha/channel/compression/source/ASTC enums and size constants | Implemented as seven nested enums plus `MaxWidth`/`MaxHeight`; encoder-oriented enums are stable types but do not imply an encoder |
+| Inherited change signal, naming/path identity, duplication, descriptors, disposal | Implemented through `Resource`/`ElectronObject`; image duplication owns an independent buffer |
+| Dynamic `data` property and integer error codes | Permanently adapted to typed state properties, copied arrays, and exceptions |
+| Codec load/save, compression/decompression, textures/importing | Dependency-blocked exactly as listed below; no compatibility stubs |
+
+### Deferred coverage and exact implementation triggers
+
+| Deferred official counterpart | Missing prerequisite and exact trigger | Required slice |
+| --- | --- | --- |
+| `load`, `load_from_file`, buffer loaders, and PNG/JPEG/WebP/EXR/DDS save methods | An accepted ADR must select a portable codec implementation and packaging model that works on Linux, Windows, macOS, Android, and iOS without violating the runtime dependency boundary. Work starts only when the user approves that dependency/ownership decision. | The first image-codec vertical slice must add capability discovery, bounded/untrusted-input validation, all selected codec buffer and `FileAccess` paths, malformed/cancellation/failure tests, and native/AOT verification for each claimed target. Unsupported formats remain absent, not success stubs. |
+| `compress` and `compress_from_channels` | The editor executable plus the primary SDL3 GPU renderer must expose a concrete offline texture-compression toolchain and selected BC/ETC/BPTC/ASTC encoders. | The first approved texture-compression/import slice; not the initial renderer draw slice unless that slice explicitly includes authoring/import compression. |
+| `decompress` for BC/ETC/BPTC/ASTC | A selected, portable CPU decompressor or renderer readback/conversion backend must exist with format-capability reporting. | The first vertical slice that consumes compressed image pixels on CPU. Raw upload-only texture work does not trigger CPU decompression. |
+| `ImageTexture` conversion and renderer upload | The backend-neutral texture API and first SDL3 GPU renderer vertical slice must exist. | That renderer slice must define copy/ownership, format capability, mip upload, device loss, and fallback behavior. |
+| Resource loading/import metadata, cache leases, and scene-file image persistence | A typed resource loader/saver/import format and a native-backed texture payload must establish real cache and ownership transitions. | The first concrete resource-manager plus native-backed texture slice under ADR 0014; managed `Image` alone does not trigger leases. |
+
+### Consequences
+
+- Procedural images, CPU processing, atlas preparation, tests, and future texture uploads have a complete typed foundation without committing to a codec or renderer package prematurely.
+- Raw data remains deterministic across supported CPU endianness because multi-byte fields use canonical little-endian encoding.
+- Large processing operations allocate replacement buffers by contract and are not real-time frame hot paths. Pixel reads/writes themselves allocate no managed memory after warmup.
+- A codec or renderer integration can consume the existing buffer contract without changing `Image` ownership or exposing mutable arrays.
+
+### Rejected alternatives
+
+- Add an image-codec dependency implicitly: rejected because external runtime packaging requires an explicit accepted ADR and five-target evaluation.
+- Vendor or hand-write all common codecs in this slice: rejected because it creates unnecessary parser/security maintenance and duplicates mature libraries.
+- Expose only RGBA8: rejected because the accepted renderer/shader direction foreseeably needs HDR, integer, compact, and precompressed texture payloads.
+- Pretend compression/load/save succeeds while doing nothing: rejected because it creates dependency fiction and corrupts asset expectations.
+- Expose the backing array for performance: rejected because callers could bypass validation, locking, mipmap invariants, and change notification.
+
+### Verification
+
+The executable harness verifies empty/invalid states, all 25 uncompressed byte sizes and all 22 compressed identities, block/mipmap sizing, copy isolation, every processing family, clipping, interpolation, alpha/channel detection, typed metrics, Resource duplication, post-commit observer failure, and disposed-state rejection. Release XML generation and the repository identity scan remain part of the full gate.
+
+Verification is Linux/.NET 8 only. It does not establish codec, renderer, GPU upload, native ABI, AOT, memory-pressure, visual-quality, or five-platform behavior.
+
+### Related decisions
+
+- [0001: Typed C# without Variant](product.md#adr-0001)
+- [0002: C# events for signals](product.md#adr-0002)
+- [0013: Managed typed Resource contract](resources.md#adr-0013)
+- [0014: Managed Resource lifetime and realtime allocation](resources.md#adr-0014)
+- [0020: Typed file access](core-data-io.md#adr-0020)
+- [0021: Cross-platform runtime target matrix](product.md#adr-0021)
+- [0024: Typed color values and portable quantization](core-math.md#adr-0024)
+- [0035: Foreseeable public type-family completeness](core-math.md#adr-0035)

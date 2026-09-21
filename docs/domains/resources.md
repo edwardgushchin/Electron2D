@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 ## Responsibility
 
-The Resources domain defines the reusable typed data base used by future textures, audio data, fonts, scripts, and other assets across Linux, Windows, macOS, Android, and iOS. Its present production type remains the portable common resource contract, now consumed by Scene's in-memory packed-scene component; no concrete asset formats are claimed.
+The Resources domain defines reusable typed data and portable CPU image buffers used by future textures, atlases, importers, and other assets across Linux, Windows, macOS, Android, and iOS. It contains the common resource contract plus a concrete managed `Image`; no file codec, texture, renderer, or importer is claimed.
 
 Its production sources live under `src/Core/IO/`, matching their low-level engine module while the living architecture retains Resources as a separate logical domain. The public namespace remains `Electron2D`.
 
@@ -13,14 +13,15 @@ Its production sources live under `src/Core/IO/`, matching their low-level engin
 | Component | Types | State |
 | --- | --- | --- |
 | [Resource base](../components/resources.md) | [`Resource`](../classes/Resource.md), [`DeepDuplicateMode`](../classes/DeepDuplicateMode.md) | Implemented and verified |
+| [Images](../components/images.md) | [`Image`](../classes/Image.md), its seven nested enums, [`ImageMetrics`](../classes/ImageMetrics.md), [`ClockDirection`](../classes/ClockDirection.md) | Managed buffer and processing contract implemented and verified; codecs/rendering deferred |
 
 ## Public surface
 
-The domain exposes resource name/path/scene configuration, built-in classification, synchronous change/setup events, local-scene association, reset and raw-cache hooks, copy and graph-preserving duplication, explicit deep-copy policy, scene ID generation, path takeover, typed property descriptors, and deterministic disposal through Core.
+The domain exposes resource name/path/scene configuration, built-in classification, synchronous change/setup events, local-scene association, reset and raw-cache hooks, copy and graph-preserving duplication, explicit deep-copy policy, scene ID generation, path takeover, typed property descriptors, deterministic disposal, and typed CPU image storage/processing across uncompressed and raw GPU-compressed formats.
 
 ## Dependency direction
 
-Resources depends on Core and, narrowly, Scene's `Node` type for `Resource.GetLocalScene()`. Scene's packed-scene component in turn depends on Resources for typed resource duplication, so ADR 0023 accepts a contained Resources↔Scene type cycle inside the single `Electron2D.dll`. The Resource base does not depend on `PackedScene`, `SceneTree`, rendering, SDL integration, input, audio, physics, scripting, file serialization, importing, or an editor.
+Resources depends on Core and, narrowly, Scene's `Node` type for `Resource.GetLocalScene()`. Image processing uses Core `Color`, `Vector2I`, and `RectI`. Scene's packed-scene component in turn depends on Resources for typed resource duplication, so ADR 0023 accepts a contained Resources↔Scene type cycle inside the single `Electron2D.dll`. Neither the Resource base nor Image depends on rendering, SDL integration, codecs, importing, or an editor.
 
 ## Domain-wide invariants
 
@@ -35,10 +36,12 @@ Resources depends on Core and, narrowly, Scene's `Node` type for `Resource.GetLo
 - Managed object memory is reclaimed by the runtime; deterministic disposal controls logical and native-resource lifetime, not managed memory reclamation.
 - Public resources do not expose manual reference counting. A future asset manager may count internal disposable leases solely to retain shared native-backed payloads.
 - Serialized resource state and ownership semantics must remain portable across all five runtime targets; platform-native payloads require explicit internal backends.
+- Image buffers own copied bytes, use canonical little-endian multi-byte fields, publish complete states atomically, and never expose mutable backing storage.
+- Raw GPU-compressed storage is not a claim of compressor, decompressor, texture, or renderer support.
 
 ## Current limitations
 
-There are no concrete asset types, asset loader/saver, cache modes, importer, renderer RID, editor resource-ID map, script resource, automatic file-serialization discovery, resource manager, or asset lease type. In-memory packed scenes now perform automatic per-instance local duplication, association, setup, and root ownership, but there is no disk format, UID/import integration, or cross-platform asset import/package verification. Internal asset leases are an accepted future ownership boundary, not an implemented API.
+`Image` is the first concrete asset type, but there is no asset loader/saver, image codec, cache mode, importer, texture, renderer RID, editor resource-ID map, script resource, automatic file-serialization discovery, resource manager, or asset lease type. In-memory packed scenes perform automatic per-instance local duplication, association, setup, and root ownership, but there is no disk format, UID/import integration, or cross-platform asset import/package verification. Exact triggers for codec, compression, texture, and lease work are recorded in ADR 0039.
 
 ## Decisions
 
@@ -51,7 +54,8 @@ There are no concrete asset types, asset loader/saver, cache modes, importer, re
 - [ADR 0017: Source-tree module layout](../decisions/product.md#adr-0017)
 - [ADR 0021: Cross-platform runtime target matrix](../decisions/product.md#adr-0021)
 - [ADR 0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
+- [ADR 0039: Managed image buffers and codec boundaries](../decisions/resources.md#adr-0039)
 
 ## Verification
 
-Resource and packed-scene checks live in `tests/Electron2D.Tests/Program.cs`. They exercise base duplication plus per-instance local graph association/setup/ownership without requiring an absent asset loader/saver, file serialization, editor, or rendering subsystem.
+Resource, Image, and packed-scene checks live in `tests/Electron2D.Tests/Program.cs`. They exercise base duplication, image formats and processing, and per-instance local graph association/setup/ownership without requiring an absent codec, asset loader/saver, editor, or renderer.
