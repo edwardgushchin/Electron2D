@@ -165,7 +165,7 @@ The BCL supplies robust streams, hashes, DEFLATE/GZip/Brotli, PBKDF2, and AES-GC
 
 ### Decision
 
-`FileAccess` derives directly from `ElectronObject` and owns one stream until idempotent `Close` or disposal. Exact reference enum numbers are preserved in `FileAccessMode`, `FileCompressionMode`, and `UnixPermissionFlags`. Public members use typed PascalCase C# and standard exceptions. No process-global last error exists.
+`FileAccess` derives directly from `ElectronObject` and owns one stream until idempotent `Close` or disposal. Exact reference enum numbers are preserved in `FileAccessMode`, `FileCompressionMode`, and `UnixPermissionFlags`. Public members use typed PascalCase C# and standard exceptions; acronyms in method names stay fully uppercase under [ADR 0045](product.md#adr-0045). No process-global last error exists.
 
 Ordinary, `res://`, and `user://` paths resolve through `ProjectSettings`; the latter two remain directory-backed. Raw access uses `FileStream`. The cursor, EOF state, endian state, and individual operations are serialized by one instance lock. Compound caller sequences are explicitly not transactional.
 

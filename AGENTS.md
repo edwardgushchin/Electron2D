@@ -11,6 +11,7 @@ These instructions apply to the whole repository. Keep this file about how to wo
 
 ## Make a change
 
+- Keep every acronym in Electron2D-owned function and method names fully uppercase, regardless of its length or position: `LoadPNGFromBuffer`, `SaveJPGToBuffer`, `GetGLVersion`. Follow [ADR 0045](docs/decisions/product.md#adr-0045); update callers, XML, class pages and coverage together when renaming.
 - Preserve unrelated work and keep changes task-scoped. For a requested implementation, deliver a complete executable vertical slice under the accepted architecture; do not add inert compatibility stubs. Audit the relevant API and behavior in both directions, including applicable sibling types, and record accepted adaptations, exclusions, and dependency triggers in coverage.
 - Update affected source XML documentation, class/component/domain pages, inventory, and coverage in the same change as behavior or public API. Change an ADR only when an architectural decision changes. Document actual behavior and verification limits, never planned behavior as implemented.
 - Godot is an internal comparison source, not shipped Electron2D identity. Never mention it in production source or comments, C# XML or generated XML documentation, or any `README.md`. Keep compatibility discussion in internal design and coverage documents. Check this with the repository search below when documentation changes.

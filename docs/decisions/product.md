@@ -4,7 +4,7 @@ Last updated: 2026-09-22
 
 This bounded document owns the current product architecture decisions. Use [the decision index](index.md) to route other work; read only the affected documents and explicitly linked dependencies.
 
-Decisions in this log: [0001](#adr-0001), [0002](#adr-0002), [0004](#adr-0004), [0012](#adr-0012), [0017](#adr-0017), [0021](#adr-0021), [0027](#adr-0027), [0030](#adr-0030).
+Decisions in this log: [0001](#adr-0001), [0002](#adr-0002), [0004](#adr-0004), [0012](#adr-0012), [0017](#adr-0017), [0021](#adr-0021), [0027](#adr-0027), [0030](#adr-0030), [0045](#adr-0045).
 
 <a id="adr-0001"></a>
 ## ADR 0001: Use typed C# without Variant
@@ -404,3 +404,35 @@ Class, component, domain, and repository instruction documents may link directly
 ### Verification boundary
 
 The migration preserves ADR 0001 through ADR 0029 as complete records, adds this routing decision as ADR 0030, and updates repository references to the new stable domain-log anchors. Link, anchor, size, and repository checks verify the current structure; Git history retains the old paths.
+
+
+<a id="adr-0045"></a>
+## ADR 0045: Keep acronyms uppercase in function and method names
+
+Last updated: 2026-09-22
+
+### Status
+
+Accepted. Existing names require migration; this decision does not assert repository-wide compliance.
+
+### Decision
+
+Every acronym in an Electron2D-owned function or method name is written entirely in uppercase, regardless of its length or position in the identifier. This includes public, protected, internal and private methods, and local functions. Ordinary words retain the surrounding C# casing convention.
+
+Examples: `LoadPNGFromBuffer`, `LoadJPGFromBuffer`, `LoadBMPFromBuffer`, `LoadTGAFromBuffer`, `SavePNG`, `SaveJPGToBuffer`, `GetGLVersion`, `CompileHLSL`, `CompileGLSL`, `GetGPUInfo`, `GetInstanceID` and `ReadUTF8`. These illustrate spelling; they do not introduce or claim implementation of those APIs. The rule also applies to other acronyms; this list is not exhaustive.
+
+Do not turn acronyms into title-case words such as `Png`, `Jpg`, `Gl`, `Gpu` or `Utf8`. Compound names retain ordinary words while capitalizing their acronym parts: `WebP` and `OpenGL`; `SPIR-V` is written `SPIRV` inside an identifier, where a hyphen cannot be used.
+
+Apply the rule to new functions immediately. Existing nonconforming names are migration work, not a second accepted convention. A rename updates every affected call site, source XML, current class/component documentation and bidirectional coverage mapping in the same change. Preserve behavior while changing spelling. Do not add aliases solely to retain the rejected casing.
+
+Externally prescribed override/interface member names and vendored upstream declarations retain the spelling required by their defining contract. Electron2D-owned wrapper methods follow this rule. This decision concerns function and method names; it does not impose an unrelated rename of types, properties, fields, file extensions, serialized keys or shader entry points.
+
+### Rationale and consequences
+
+Acronyms identify formats, technologies and protocols consistently throughout the API. The project deliberately uses uppercase acronyms even where general C# naming guidance would use title case for a longer acronym. Method-name adaptations remain explicit in the reference coverage register under [ADR 0004](#adr-0004).
+
+The migration can change public source and binary compatibility and must be recorded with the affected API. Existing class pages continue to describe actual declarations until their corresponding code is renamed.
+
+### Verification boundary
+
+The decision, routing index and maintenance instructions establish the rule. Build, call-site and coverage checks accompany each code migration; a documentation-only adoption does not prove that all existing identifiers comply.
