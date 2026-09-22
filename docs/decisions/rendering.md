@@ -21,7 +21,7 @@ Electron2D needs one portable 2D rendering contract for Windows, macOS, Linux (X
 
 SDL exposes two relevant layers. The [SDL GPU API](https://wiki.libsdl.org/SDL3/CategoryGPU) provides cross-platform graphics devices, shaders, pipelines, command buffers, and render passes. The [SDL Render API](https://wiki.libsdl.org/SDL3/CategoryRender) accelerates a smaller set of simple 2D operations but does not expose arbitrary user shader pipelines. Treating both as equivalent would either remove shader support from the engine or make the fallback claim behavior it cannot provide.
 
-SDL3-CS now supplies managed bindings to the DisplayServer. Native SDL packaging, a complete application host, and the Electron2D rendering domain are not implemented yet. This decision fixes the future boundary without introducing placeholder renderer or shader types.
+SDL3-CS supplies managed bindings to the DisplayServer. The self-contained Linux x64 example packages native SDL and runs a window, input, and scene-frame host through the public Electron2D API. Other target packages remain unverified, and the rendering domain is not implemented yet. This decision fixes the rendering boundary without introducing placeholder renderer or shader types.
 
 ### Decision
 
