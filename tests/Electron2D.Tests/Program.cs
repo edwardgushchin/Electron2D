@@ -852,6 +852,7 @@ static void VerifyMathf()
         [nameof(Mathf.RoundToInt)] = 2,
         [nameof(Mathf.Sign)] = 3,
         [nameof(Mathf.Sin)] = 2,
+        [nameof(Mathf.SinCos)] = 2,
         [nameof(Mathf.Sinh)] = 2,
         [nameof(Mathf.SmoothStep)] = 2,
         [nameof(Mathf.Snapped)] = 2,
@@ -868,7 +869,7 @@ static void VerifyMathf()
         .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
     Require(actualOverloads.Count == expectedOverloads.Count && expectedOverloads.All(pair =>
             actualOverloads.TryGetValue(pair.Key, out var count) && count == pair.Value) &&
-            actualOverloads.Values.Sum() == 125,
+            actualOverloads.Values.Sum() == 127,
         "Mathf must expose the complete audited method family without missing or extra overloads.");
     var constants = typeof(Mathf)
         .GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static |
@@ -877,7 +878,7 @@ static void VerifyMathf()
         .Select(field => field.Name)
         .OrderBy(name => name, StringComparer.Ordinal)
         .ToArray();
-    Require(constants.SequenceEqual(new[] { "Inf", "NaN", "Pi", "Tau" }),
+    Require(constants.SequenceEqual(new[] { "E", "Epsilon", "Inf", "NaN", "Pi", "Sqrt2", "Tau" }),
         "Mathf must expose exactly the audited constant surface.");
 
     Require(Mathf.Pi == MathF.PI && Mathf.Tau == MathF.Tau && Mathf.E == MathF.E &&

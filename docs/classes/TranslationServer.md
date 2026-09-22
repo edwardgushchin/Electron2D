@@ -1,6 +1,6 @@
 # TranslationServer
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** —
 
@@ -162,7 +162,7 @@ The culture chain includes the exact culture, each parent, and invariant culture
 
 ## Threading
 
-One process-wide lock protects catalogs and `Culture`. `Enabled` uses volatile reads/writes. Lookup and registration are thread-safe, but plural selectors currently execute while the lock is held and should therefore be short; recursive selector logic remains the caller's responsibility.
+One process-wide lock protects catalogs and `Culture`. The internal `Enabled` flag uses volatile reads/writes. Lookup and registration are thread-safe, but plural selectors currently execute while the lock is held and should therefore be short; recursive selector logic remains the caller's responsibility.
 
 ## Dependencies and interactions
 

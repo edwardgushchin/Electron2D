@@ -18,7 +18,7 @@ The production type is [`TranslationServer`](../classes/TranslationServer.md). `
 
 ## Public surface
 
-`TranslationServer` exposes the global enabled flag and culture, singular/plural registration, singular/plural lookup, and complete catalog clearing. `ElectronObject` supplies the per-instance translation entry points from Core.
+`TranslationServer` exposes the culture, singular/plural registration, singular/plural lookup, and complete catalog clearing. `ElectronObject` supplies the per-instance translation enablement and lookup entry points from Core. The service's global enabled flag is internal.
 
 ## Dependency direction
 

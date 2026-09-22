@@ -1927,6 +1927,32 @@
     "value": "2011"
   },
   {
+    "id": "constant:Electron2D.Mathf.E()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Mathf",
+    "name": "E",
+    "signature": "public const System.Single E = 2.7182817f",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": "2.7182817f"
+  },
+  {
+    "id": "constant:Electron2D.Mathf.Epsilon()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Mathf",
+    "name": "Epsilon",
+    "signature": "public const System.Single Epsilon = 1E-06f",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": "1E-06f"
+  },
+  {
     "id": "constant:Electron2D.Mathf.Inf()",
     "kind": "constant",
     "declaringType": "Electron2D.Mathf",
@@ -1964,6 +1990,19 @@
     "parameters": [],
     "returnType": "System.Single",
     "value": "3.1415927f"
+  },
+  {
+    "id": "constant:Electron2D.Mathf.Sqrt2()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Mathf",
+    "name": "Sqrt2",
+    "signature": "public const System.Single Sqrt2 = 1.4142135f",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": "1.4142135f"
   },
   {
     "id": "constant:Electron2D.Mathf.Tau()",
@@ -22296,6 +22335,44 @@
       }
     ],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mathf.SinCos(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mathf",
+    "name": "SinCos",
+    "signature": "public static System.ValueTuple\u003CSystem.Double, System.Double\u003E SinCos(System.Double angle)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "angle",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.ValueTuple\u003CSystem.Double, System.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mathf.SinCos(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mathf",
+    "name": "SinCos",
+    "signature": "public static System.ValueTuple\u003CSystem.Single, System.Single\u003E SinCos(System.Single angle)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "angle",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.ValueTuple\u003CSystem.Single, System.Single\u003E",
     "value": null
   },
   {

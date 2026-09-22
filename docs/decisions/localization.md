@@ -1,6 +1,6 @@
 # Electron2D localization decisions
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 This bounded log owns the complete architectural records for localization. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0007](#adr-0007).
 <a id="adr-0007"></a>
 ## ADR 0007: Use a typed process-wide translation service
 
-Last updated: 2026-09-20
+Last updated: 2026-09-22
 
 - Status: Accepted
 - Scope: Runtime message translation
@@ -25,7 +25,7 @@ Godot `Object` provides per-object translation enablement, a domain, and `tr`/`t
 - `ElectronObject` stores a translation-enabled flag and domain and exposes typed `Tr`/`TrN` methods.
 - Missing messages return the source text.
 - Plural registrations receive `Func<long, string>` so catalog owners provide language-specific rules rather than relying on an incomplete engine heuristic.
-- Catalog access is lock-protected; the global enabled flag uses volatile access.
+- Catalog access is lock-protected; the global enabled flag is internal and uses volatile access. Applications control translation per object through `ElectronObject`.
 
 ### Consequences
 

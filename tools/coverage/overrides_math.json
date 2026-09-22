@@ -1053,6 +1053,21 @@
       "adr": "core-math.md#adr-0034"
     },
     {
+      "electron2d": "constant:Electron2D.Mathf.E()",
+      "reason": "Typed C# scalar constant absent from the XML class reference.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
+      "electron2d": "constant:Electron2D.Mathf.Epsilon()",
+      "reason": "Typed C# scalar constant absent from the XML class reference.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
+      "electron2d": "constant:Electron2D.Mathf.Sqrt2()",
+      "reason": "Typed C# scalar constant absent from the XML class reference.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
       "electron2d": "constructor:Electron2D.Image..ctor()",
       "reason": "C# Resource construction or protected lifecycle hook with no Image XML declaration.",
       "adr": "resources.md#adr-0039"
@@ -1169,6 +1184,16 @@
     },
     {
       "electron2d": "method:Electron2D.Mathf.IsEqualApprox(System.Single,System.Single,System.Single)",
+      "reason": "Managed C# convenience overload without the same XML signature.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.SinCos(System.Double)",
+      "reason": "Managed C# convenience overload without the same XML signature.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.SinCos(System.Single)",
       "reason": "Managed C# convenience overload without the same XML signature.",
       "adr": "core-math.md#adr-0034"
     },
