@@ -1,10 +1,40 @@
 #!/usr/bin/env python3
-"""Small regression check for overload pairing and inventory accounting."""
+"""Regression check for overload pairing, texture pages and inventory accounting."""
 
 import json
 import re
 
 from render import CLASS_PAGES, DATA, choose, render
+
+
+def check_texture_pages(pages, upstream):
+    names = {"Texture": "Texture", "Texture2D": "Texture", "Texture2DArray": "TextureArray",
+             "Texture2DArrayRD": "TextureArrayRD", "Texture2DRD": "TextureRD"}
+    expected_rows = {}
+    for item in upstream["types"]:
+        if item["name"] not in names:
+            continue
+        page = CLASS_PAGES / f"{names[item['name']]}.md"
+        rows = expected_rows.setdefault(page, [])
+        rows.append(f"| [`class {item['name']}`]")
+        rows.extend(f"| [`{member['kind']} {member['signature']}`]" for member in item["members"])
+    for page, rows in expected_rows.items():
+        assert pages[page].startswith(f"# {page.stem} API coverage\n")
+        actual = [line.split("](", 1)[0] + "]" for line in pages[page].splitlines() if line.startswith("| [`")]
+        assert sorted(actual) == sorted(rows), f"Lost or duplicated texture declarations in {page}"
+    for name in names:
+        if "2D" in name:
+            assert CLASS_PAGES / f"{name}.md" not in pages, f"Redundant texture page: {name}"
+    for page, content in pages.items():
+        for link, anchor in re.findall(r"\]\(([^)]+\.md)(#[^)]+)?\)", content):
+            target = (page.parent / link).resolve()
+            if target.parent == CLASS_PAGES:
+                assert target in pages, f"Link to obsolete class page in {page}: {link}"
+                if target.stem == "Texture":
+                    assert anchor in {"#godot-texture", "#godot-texture2d"}
+                    assert f"## Godot {anchor.removeprefix('#godot-')}".lower() in pages[target].lower()
+            else:
+                assert target in pages or target.exists(), f"Broken link in {page}: {link}"
 
 
 def main():
@@ -22,6 +52,7 @@ def main():
     ]
 
     pages, summary = render()
+    check_texture_pages(pages, upstream)
     assert sum(summary["states"].values()) == summary["upstream_types"] + summary["upstream_members"]
     assert (summary["mapped_engine"] + summary["reviewed_extras"] + summary["unmapped_engine"]
             == summary["electron2d_declarations"])
@@ -36,10 +67,6 @@ def main():
                               ("distance_squared_to(", "distance_to(", "length()", "length_squared()"))]
     assert len(vector4i_norm_rows) == 4
     assert all(" | Implemented | " in line for line in vector4i_norm_rows)
-    for page, content in pages.items():
-        for link in re.findall(r"\]\(([^)]+\.md)\)", content):
-            target = (page.parent / link).resolve()
-            assert target in pages or target.exists(), f"Broken link in {page}: {link}"
 
 
 if __name__ == "__main__":

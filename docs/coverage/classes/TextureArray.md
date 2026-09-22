@@ -1,4 +1,4 @@
-# Texture2DArray API coverage
+# TextureArray API coverage
 
 Last updated: 2026-09-22
 

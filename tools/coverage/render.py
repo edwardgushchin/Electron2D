@@ -17,6 +17,18 @@ ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
 OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
+TEXTURE_NAMES = {
+    "Texture2D": "Texture",
+    "Texture2DArray": "TextureArray",
+    "Texture2DArrayRD": "TextureArrayRD",
+    "Texture2DRD": "TextureRD",
+}
+
+
+def coverage_target(name):
+    page = TEXTURE_NAMES.get(name, name)
+    anchor = f"#godot-{name.lower()}" if page == "Texture" else ""
+    return f"{page}.md{anchor}"
 
 
 def ident(value):
@@ -364,7 +376,7 @@ def render():
     represented = []
     for godot_type in upstream["types"]:
         name = godot_type["name"]
-        mapped = aliases.get("classes", {}).get(name, name)
+        mapped = aliases.get("classes", {}).get(name, TEXTURE_NAMES.get(name, name))
         owners = mapped if isinstance(mapped, list) else [mapped]
         owners = [engine_name(owner) for owner in owners if engine_name(owner) in engine_types]
         class_state, class_reason = reason_for_type(godot_type, type_lookup)
@@ -377,12 +389,18 @@ def render():
             class_state, class_reason = row["state"], row["reason"]
         source = godot_type["source"]
         url = f"https://github.com/godotengine/godot/blob/{COMMIT}/{source}"
-        inherited = f"[{godot_type['inherits']}]({godot_type['inherits']}.md)" if godot_type["inherits"] else "—"
-        lines = [f"# {name} API coverage", "", "Last updated: 2026-09-22", "",
-                 f"Godot source: [{source}]({url}) at `{upstream['godot_version']}` (`{COMMIT}`).", "",
+        inherited = f"[{godot_type['inherits']}]({coverage_target(godot_type['inherits'])})" if godot_type["inherits"] else "—"
+        page_name = TEXTURE_NAMES.get(name, name)
+        page = CLASS_PAGES / f"{page_name}.md"
+        lines = [] if page in page_text else [f"# {page_name} API coverage", "", "Last updated: 2026-09-22", ""]
+        if page_name == "Texture":
+            if page not in page_text:
+                lines.extend(["The reference Texture and Texture2D contracts share one Electron2D Texture page under [ADR 0004](../../decisions/product.md#adr-0004). Each source declaration remains accounted for below.", ""])
+            lines.extend([f"## Godot {name}", ""])
+        lines.extend([f"Godot source: [{source}]({url}) at `{upstream['godot_version']}` (`{COMMIT}`).", "",
                  f"Godot base: {inherited}. "
                  f"Electron2D type: {', '.join(engine_link(engine_by_id[f'T:{owner}']) for owner in owners) if owners else '—'}.", "",
-                 "Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.", ""]
+                 "Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.", ""])
         if name == "DisplayServer":
             lines.extend(["Current release verification requires Linux/Wayland only under [ADR 0021](../../decisions/product.md#adr-0021). The earlier self-contained host example, before Window/Engine.Run migration, started on Wayland with packaged SDL and advanced its scene; user-assisted physical arrow-key input and Escape exit passed. See the [class verification](../../classes/DisplayServer.md#verification). Other target platforms remain in the product matrix without blocking this stage.", ""])
         lines.extend(["| Godot API | Electron2D API | State | Reason / implementation trigger |",
@@ -464,7 +482,7 @@ def render():
             member_states[state] += 1
             target = "<br>".join(engine_link(match) for match in matches) if matches else code(adapted) if adapted else "—"
             lines.append(f"| [{code(member['kind'] + ' ' + member['signature'])}]({url}) | {target} | {state} | {cell(reason)} |")
-        page_text[CLASS_PAGES / f"{name}.md"] = "\n".join(lines) + "\n"
+        page_text[page] = page_text.get(page, "") + ("\n" if page in page_text else "") + "\n".join(lines) + "\n"
         if owners and (member_states["Unimplemented"] or member_states["Partial"]):
             represented.append((name, member_states["Unimplemented"], member_states["Partial"]))
         if class_state == "Blocked":
@@ -489,15 +507,15 @@ def render():
         lines.append(f"| — | {engine_link(entry, from_class=False)} | {state} | {cell(reason)} |")
     page_text[COVERAGE / "electron2d-unmapped.md"] = "\n".join(lines) + "\n"
     catalog = ["# Godot class-reference catalog", "", "Last updated: 2026-09-22", "",
-               f"Source: Godot `{upstream['godot_version']}` at `{COMMIT}`. One page per XML class, including editor and 3D exclusions.", "",
+               f"Source: Godot `{upstream['godot_version']}` at `{COMMIT}`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.", "",
                "| Godot class | Base | Class state | Declared members |", "| --- | --- | --- | ---: |"]
     for item in upstream["types"]:
-        state = "Partial" if engine_name(aliases.get("classes", {}).get(item["name"], item["name"])) in engine_types else reason_for_type(item, type_lookup)[0]
+        state = "Partial" if engine_name(aliases.get("classes", {}).get(item["name"], TEXTURE_NAMES.get(item["name"], item["name"]))) in engine_types else reason_for_type(item, type_lookup)[0]
         if item["id"] in manual_statuses:
             state = manual_statuses[item["id"]]["state"]
-        catalog.append(f"| [{cell(item['name'])}](classes/{item['name']}.md) | {cell(item['inherits'] or '—')} | {state} | {len(item['members'])} |")
+        catalog.append(f"| [{cell(item['name'])}](classes/{coverage_target(item['name'])}) | {cell(item['inherits'] or '—')} | {state} | {len(item['members'])} |")
     page_text[COVERAGE / "catalog.md"] = "\n".join(catalog) + "\n"
-    actionable_note = (" Start with the independent " + ", ".join(f"[{name}](classes/{name}.md)" for name in actionable) + " class slices.") if actionable else ""
+    actionable_note = (" Start with the independent " + ", ".join(f"[{name}](classes/{coverage_target(name)})" for name in actionable) + " class slices.") if actionable else ""
     road = ["# Coverage roadmap", "", "Last updated: 2026-09-22", "",
             "The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.", "",
             f"1. Review {counts['Partial']} partially implemented rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.",
@@ -507,7 +525,7 @@ def render():
             "These classes already have an Electron2D type. Sort by missing member count, then unaudited mapped count; this is workload order, not a claim that dependencies can be skipped.", "",
             "| Godot class | Unimplemented members | Partial members |", "| --- | ---: | ---: |"]
     for name, missing, partial in sorted(represented, key=lambda row: (-row[1], -row[2], row[0])):
-        road.append(f"| [{cell(name)}](classes/{name}.md) | {missing} | {partial} |")
+        road.append(f"| [{cell(name)}](classes/{coverage_target(name)}) | {missing} | {partial} |")
     road.extend(["", "## Blocked type families", "", "| Exact trigger | Classes |", "| --- | ---: |"])
     scope_names = []
     for trigger, names in sorted(roadmap.items(), key=lambda pair: (-len(pair[1]), pair[0])):

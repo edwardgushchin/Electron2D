@@ -2,7 +2,7 @@
 
 Last updated: 2026-09-22
 
-Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. One page per XML class, including editor and 3D exclusions.
+Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.
 
 | Godot class | Base | Class state | Declared members |
 | --- | --- | --- | ---: |
@@ -854,11 +854,11 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. One 
 | [TextServerExtension](classes/TextServerExtension.md) | TextServer | Blocked | 249 |
 | [TextServerFallback](classes/TextServerFallback.md) | TextServerExtension | Blocked | 0 |
 | [TextServerManager](classes/TextServerManager.md) | Object | Blocked | 10 |
-| [Texture](classes/Texture.md) | Resource | Blocked | 0 |
-| [Texture2D](classes/Texture2D.md) | Texture | Blocked | 23 |
-| [Texture2DArray](classes/Texture2DArray.md) | ImageTextureLayered | Blocked | 1 |
-| [Texture2DArrayRD](classes/Texture2DArrayRD.md) | TextureLayeredRD | Blocked | 0 |
-| [Texture2DRD](classes/Texture2DRD.md) | Texture2D | Blocked | 2 |
+| [Texture](classes/Texture.md#godot-texture) | Resource | Blocked | 0 |
+| [Texture2D](classes/Texture.md#godot-texture2d) | Texture | Blocked | 23 |
+| [Texture2DArray](classes/TextureArray.md) | ImageTextureLayered | Blocked | 1 |
+| [Texture2DArrayRD](classes/TextureArrayRD.md) | TextureLayeredRD | Blocked | 0 |
+| [Texture2DRD](classes/TextureRD.md) | Texture2D | Blocked | 2 |
 | [Texture3D](classes/Texture3D.md) | Texture | Excluded | 13 |
 | [Texture3DRD](classes/Texture3DRD.md) | Texture3D | Excluded | 1 |
 | [TextureButton](classes/TextureButton.md) | BaseButton | Blocked | 18 |

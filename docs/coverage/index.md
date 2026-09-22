@@ -14,6 +14,8 @@ The upstream baseline must be an exact official stable release and source revisi
 
 Count every upstream class and global API declaration, including 3D, editor, platform-specific, and deprecated declarations. Count every Electron2D-owned public and protected production declaration. The unit of accounting is the *declaration*: each overload, constructor, property, signal/event, notification, callback, enum type and enum value, constant, operator, indexer, delegate, and type/inheritance relationship receives a stable identity. A member inherited from an engine-owned base is recorded once at its declaring type and linked from derived-type coverage; inherited .NET framework members not declared by Electron2D, compiler-generated artifacts, tests, and internal declarations are outside this census. Enum values retain their numeric identities and methods retain full signatures and defaults.
 
+Coverage pages follow accepted Electron2D texture names under [ADR 0004](../decisions/product.md#adr-0004): [Texture](classes/Texture.md) contains both reference `Texture` and `Texture2D` sections, and the related pages are [TextureArray](classes/TextureArray.md), [TextureArrayRD](classes/TextureArrayRD.md), and [TextureRD](classes/TextureRD.md). Catalog entries, source names and declaration identities remain distinct for exhaustive accounting. Renaming or combining a page does not change its implementation status.
+
 The table for each family uses this minimum schema; the page header links to the pinned official XML source, and the Electron2D inventory comes from the compiled runtime:
 
 | Godot API | Electron2D API | State | Mapping, reason, or exact implementation trigger |
