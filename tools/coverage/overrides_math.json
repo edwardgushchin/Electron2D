@@ -1053,21 +1053,6 @@
       "adr": "core-math.md#adr-0034"
     },
     {
-      "electron2d": "constant:Electron2D.Mathf.E()",
-      "reason": "Typed C# scalar constant absent from the XML class reference.",
-      "adr": "core-math.md#adr-0034"
-    },
-    {
-      "electron2d": "constant:Electron2D.Mathf.Epsilon()",
-      "reason": "Typed C# scalar constant absent from the XML class reference.",
-      "adr": "core-math.md#adr-0034"
-    },
-    {
-      "electron2d": "constant:Electron2D.Mathf.Sqrt2()",
-      "reason": "Typed C# scalar constant absent from the XML class reference.",
-      "adr": "core-math.md#adr-0034"
-    },
-    {
       "electron2d": "constructor:Electron2D.Image..ctor()",
       "reason": "C# Resource construction or protected lifecycle hook with no Image XML declaration.",
       "adr": "resources.md#adr-0039"
@@ -1101,11 +1086,6 @@
       "electron2d": "constructor:Electron2D.Transform..ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
       "reason": "Typed C# affine convenience, array overload, or standard value/format member without one exact XML row.",
       "adr": "core-math.md#adr-0029"
-    },
-    {
-      "electron2d": "enumValue:Electron2D.Image.CompressSource.Max()",
-      "reason": "C# sentinel equal to 3; upstream CompressSource has only Generic, Srgb and Normal (0, 1, 2). It is not an upstream enum value.",
-      "adr": "resources.md#adr-0039"
     },
     {
       "electron2d": "indexer:Electron2D.Transform.Item(System.Int32,System.Int32)",
@@ -1189,16 +1169,6 @@
     },
     {
       "electron2d": "method:Electron2D.Mathf.IsEqualApprox(System.Single,System.Single,System.Single)",
-      "reason": "Managed C# convenience overload without the same XML signature.",
-      "adr": "core-math.md#adr-0034"
-    },
-    {
-      "electron2d": "method:Electron2D.Mathf.SinCos(System.Double)",
-      "reason": "Managed C# convenience overload without the same XML signature.",
-      "adr": "core-math.md#adr-0034"
-    },
-    {
-      "electron2d": "method:Electron2D.Mathf.SinCos(System.Single)",
       "reason": "Managed C# convenience overload without the same XML signature.",
       "adr": "core-math.md#adr-0034"
     },

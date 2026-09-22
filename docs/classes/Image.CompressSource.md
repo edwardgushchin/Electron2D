@@ -31,7 +31,6 @@ Image.UsedChannels channels = image.DetectUsedChannels(Image.CompressSource.Norm
 | [`Generic`](#generic) | 0 | Ordinary color or data. |
 | [`Srgb`](#srgb) | 1 | Nonlinear sRGB color. |
 | [`Normal`](#normal) | 2 | Tangent-space normal data. |
-| [`Max`](#max) | 3 | Sentinel; not a valid source. |
 
 ## Enumeration Descriptions
 
@@ -50,14 +49,9 @@ Marks nonlinear sRGB color. Current channel detection uses the same component-pr
 
 Marks tangent-space normal data and selects `UsedChannels.RedGreen`, because X and Y are sufficient to reconstruct Z in the intended future compression path.
 
-<a id="max"></a>
-### `Max = 3`
-
-Counts valid source modes and is rejected as input.
-
 ## Invariants and errors
 
-The enum is immutable and thread-safe. Undefined values and `Max` cause `ArgumentOutOfRangeException` before analysis begins.
+The enum is immutable and thread-safe. Undefined values cause `ArgumentOutOfRangeException` before analysis begins.
 
 ## Verification and limitations
 

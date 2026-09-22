@@ -70,7 +70,6 @@ root.AddChild(new Node { Name = "Player", Position = new Vector2(32f, 16f) });
 | [`public bool IsVisibleInTree { get; }`](#p-electron2d-node-isvisibleintree) | Gets whether this node is active and locally visible through its complete ancestor chain. |
 | [`public int ZIndex { get; set; }`](#p-electron2d-node-zindex) | Gets or sets this node's local Z-order value. |
 | [`public bool ZAsRelative { get; set; }`](#p-electron2d-node-zasrelative) | Gets or sets whether effective Z order accumulates ancestor Z values. |
-| [`public int EffectiveZIndex { get; }`](#p-electron2d-node-effectivezindex) | Gets the Z order after optional ancestor accumulation. |
 | [`public bool NotifyLocalTransformChanges { get; set; }`](#p-electron2d-node-notifylocaltransformchanges) | Gets or sets whether local transform changes dispatch [`Node.NotificationLocalTransformChanged`](Node.md#f-electron2d-node-notificationlocaltransformchanged). |
 | [`public bool NotifyTransformChanges { get; set; }`](#p-electron2d-node-notifytransformchanges) | Gets or sets whether global transform changes dispatch [`Node.NotificationTransformChanged`](Node.md#f-electron2d-node-notificationtransformchanged). |
 | [`public NodeProcessMode ProcessMode { get; set; }`](#p-electron2d-node-processmode) | Gets or sets the pause policy used by both process callback lanes. |
@@ -546,17 +545,6 @@ Gets or sets whether effective Z order accumulates ancestor Z values.
 
 - `InvalidOperationException`: An attached node is mutated off the owner thread.
 - `ObjectDisposedException`: The node is disposing on another thread or has finished disposing.
-
-<a id="p-electron2d-node-effectivezindex"></a>
-### `public int EffectiveZIndex { get; }`
-
-Gets the Z order after optional ancestor accumulation.
-
-**Value:** The accumulated or absolute value, clamped to the supported Z range.
-
-**Exceptions**
-
-- `ObjectDisposedException`: This node or a queried ancestor is disposing on another thread, or has finished disposing.
 
 <a id="p-electron2d-node-notifylocaltransformchanges"></a>
 ### `public bool NotifyLocalTransformChanges { get; set; }`

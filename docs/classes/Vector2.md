@@ -1059,7 +1059,7 @@ Compares vectors lexicographically by X and then Y.
 ## Numeric invariants and error behavior
 
 - Ordinary arithmetic, division, remainder, reciprocal, projection, and interpolation retain IEEE 754 NaN and infinity propagation.
-- `Normalized()` and `DirectionTo()` return `Zero` for an exactly zero squared length. `IsNormalized()` uses the engine's `0.001` unit-length tolerance; approximate component comparisons use [`Mathf.Epsilon`](Mathf.md) (`1e-6f`) with exact equality first.
+- `Normalized()` and `DirectionTo()` return `Zero` for an exactly zero squared length. `IsNormalized()` uses the engine's `0.001` unit-length tolerance; approximate component comparisons use the internal tolerance (`1e-6f`) with exact equality first.
 - Angles are radians; positive angles rotate positive X toward positive Y and therefore appear clockwise in screen coordinates.
 - `Reflect` follows the line-reflection convention `2 * Dot(normal) * normal - value`; `Bounce` negates it. `Reflect`, `Bounce`, and `Slide` require a normalized normal and do not validate it.
 - `Project(Zero)` produces NaN components. `PosMod` with a nonzero divisor uses the divisor's sign; zero divisors produce IEEE NaN.

@@ -35,7 +35,6 @@ string text = TranslationServer.Translate("ui", "menu.play");
 
 | Member | Description |
 | --- | --- |
-| [`public static bool Enabled { get; set; }`](#p-electron2d-translationserver-enabled) | Gets or sets whether translation lookup is enabled globally. |
 | [`public static CultureInfo Culture { get; set; }`](#p-electron2d-translationserver-culture) | Gets or sets the culture used for subsequent translation lookups. |
 
 ## Methods
@@ -49,13 +48,6 @@ string text = TranslationServer.Translate("ui", "menu.play");
 | [`public static void Clear()`](#m-electron2d-translationserver-clear) | Removes all singular and plural translation registrations. |
 
 ## Property Descriptions
-
-<a id="p-electron2d-translationserver-enabled"></a>
-### `public static bool Enabled { get; set; }`
-
-Gets or sets whether translation lookup is enabled globally.
-
-**Value:** `true` by default. When false, lookup returns source text without consulting the catalogs.
 
 <a id="p-electron2d-translationserver-culture"></a>
 ### `public static CultureInfo Culture { get; set; }`
@@ -153,7 +145,7 @@ Resolves a plural message for the current culture and its parent cultures.
 
 Removes all singular and plural translation registrations.
 
-**Remarks:** The selected [`TranslationServer.Culture`](TranslationServer.md#p-electron2d-translationserver-culture) and [`TranslationServer.Enabled`](TranslationServer.md#p-electron2d-translationserver-enabled) state are not changed.
+**Remarks:** The selected [`TranslationServer.Culture`](TranslationServer.md#p-electron2d-translationserver-culture) is not changed.
 
 ## State and key rules
 

@@ -7,7 +7,7 @@ These instructions apply to the whole repository. Keep this file about how to wo
 - For architecture work, read `docs/decisions/index.md`, the affected bounded decision document, and only the cross-domain ADRs it links. Update the active ADR in place when its decision changes, following [ADR 0030](docs/decisions/product.md#adr-0030).
 - For current behavior, read the affected `docs/domains/`, `docs/components/`, and `docs/classes/` pages. `docs/inventory.md` maps implemented production types; it is not a compatibility register.
 - For API comparison and its roadmap, use `docs/coverage/index.md` and its linked tables. Read [the maintenance contract](docs/maintaining.md) for implementation, documentation, XML, and audit requirements when changing code or those documents.
-- Runtime source is under `src/` and built by `Electron2D.csproj`; executable checks are under `tests/Electron2D.Tests/`. `editor/` and `examples/` contain separate consumers when implemented. Verify the current project layout before adding files.
+- Runtime source is under `src/` and built by `Electron2D.csproj`; executable checks are under `tests/Electron2D.Tests/`. `editor/` and `examples/` contain separate consumers when implemented. Consumer code and projects use only the public Electron2D API; backend dependencies and probes stay in the runtime project and tests. Verify the current project layout before adding files.
 
 ## Make a change
 
@@ -28,7 +28,7 @@ These instructions apply to the whole repository. Keep this file about how to wo
 Use the relevant commands, not necessarily all of them for a documentation-only change. Record only checks that actually ran.
 
 ```bash
-dotnet format Electron2D.csproj --verify-no-changes --no-restore
+dotnet format Electron2D.csproj --verify-no-changes --no-restore --exclude src/Vendor/SDL3-CS
 dotnet format tests/Electron2D.Tests/Electron2D.Tests.csproj --verify-no-changes --no-restore
 dotnet build Electron2D.csproj -c Release
 dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release

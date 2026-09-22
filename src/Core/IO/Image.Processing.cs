@@ -61,7 +61,7 @@ public sealed partial class Image
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     public UsedChannels DetectUsedChannels(CompressSource source = CompressSource.Generic)
     {
-        if (source < CompressSource.Generic || source >= CompressSource.Max)
+        if (source < CompressSource.Generic || source > CompressSource.Normal)
             throw new ArgumentOutOfRangeException(nameof(source));
 
         var state = RequireReadablePixels();

@@ -1,4 +1,5 @@
 using Microsoft.Win32.SafeHandles;
+using System.Runtime.InteropServices;
 using SDL3;
 
 namespace Electron2D;
@@ -29,18 +30,25 @@ public sealed partial class DisplayServer : ElectronObject
     private static readonly object InstanceGate = new();
     private static DisplayServer? _instance;
 
+    [LibraryImport("libc", EntryPoint = "setenv", StringMarshalling = StringMarshalling.Utf8)]
+    private static partial int SetNativeEnvironmentVariable(string name, string value, int overwrite);
+
     private readonly int _ownerThreadId;
     private readonly SdlWindowHandle _window;
     private readonly uint _sdlWindowId;
     private readonly bool _waylandWindowPosition;
     private readonly bool _linuxPortalThemeDriver;
     private readonly bool _linuxPortalThemeSupported;
+    private readonly nint _gtkScreen;
+    private readonly nint _gtkTitlebarProvider;
     private RectI _windowRect;
     private Vector2I _waylandMinimumSize = new(64, 64);
     private Vector2I _waylandMaximumSize;
 
-    private DisplayServer(nint window)
+    private DisplayServer(nint window, nint gtkScreen, nint gtkTitlebarProvider)
     {
+        _gtkScreen = gtkScreen;
+        _gtkTitlebarProvider = gtkTitlebarProvider;
         _ownerThreadId = Environment.CurrentManagedThreadId;
         _sdlWindowId = SDL.GetWindowID(window);
         if (_sdlWindowId == 0)
@@ -80,7 +88,7 @@ public sealed partial class DisplayServer : ElectronObject
     /// <param name="size">Positive initial dimensions in native window coordinates, which are logical on Wayland.</param>
     /// <param name="hidden">Whether the window starts hidden.</param>
     /// <returns>The process's active display server.</returns>
-    /// <remarks>The caller owns and must dispose the returned server on the opening thread. The main window starts with a 64-by-64 minimum in client pixels on Wayland and native window coordinates elsewhere, so smaller requested dimensions may be constrained by the native window manager.</remarks>
+    /// <remarks>The caller owns and must dispose the returned server on the opening thread. The main window starts with a 64-by-64 minimum in client pixels on Wayland and native window coordinates elsewhere, so smaller requested dimensions may be constrained by the native window manager. A visible Wayland window presents a blank surface so the compositor can show it before rendering is available; size and scale events refresh that surface. If a Wayland session inherits an X11-only GTK backend setting, this method selects the matching GTK backend before initializing video. An available GTK decoration plugin keeps its desktop theme while filling the border below its title bar.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="title"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="size"/> has a nonpositive component.</exception>
     /// <exception cref="InvalidOperationException">Another server is active, the call is off SDL's main thread, or SDL fails to open video or create the window.</exception>
@@ -94,13 +102,38 @@ public sealed partial class DisplayServer : ElectronObject
         {
             if (_instance is not null)
                 throw new InvalidOperationException("A display server is already open.");
-            if (!SDL.IsMainThread())
-                throw new InvalidOperationException("The display server must be opened on SDL's main thread.");
-            if (!SDL.InitSubSystem(SDL.InitFlags.Video))
-                throw SdlFailure("initialize the video subsystem");
-
+            var previousGdkBackend = Environment.GetEnvironmentVariable("GDK_BACKEND");
+            var videoDriver = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER");
+            var correctedGdkBackend = OperatingSystem.IsLinux() && previousGdkBackend == "x11" &&
+                (videoDriver == "wayland" || videoDriver is null &&
+                    Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "wayland" &&
+                    !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WAYLAND_DISPLAY")));
+            if (correctedGdkBackend)
+                SetGdkBackend("wayland");
             try
             {
+                if (!SDL.IsMainThread())
+                    throw new InvalidOperationException("The display server must be opened on SDL's main thread.");
+                if (!SDL.InitSubSystem(SDL.InitFlags.Video))
+                    throw SdlFailure("initialize the video subsystem");
+            }
+            catch
+            {
+                if (correctedGdkBackend)
+                    SetGdkBackend(previousGdkBackend!);
+                throw;
+            }
+
+            (nint GtkScreen, nint GtkProvider) gtkStyle = default;
+            try
+            {
+                if (correctedGdkBackend && SDL.GetCurrentVideoDriver() != "wayland")
+                {
+                    SetGdkBackend(previousGdkBackend!);
+                    correctedGdkBackend = false;
+                }
+                if (SDL.GetCurrentVideoDriver() == "wayland")
+                    gtkStyle = InstallGtkTitlebarStyle();
                 var flags = SDL.WindowFlags.Resizable | SDL.WindowFlags.HighPixelDensity;
                 if (hidden)
                     flags |= SDL.WindowFlags.Hidden;
@@ -115,7 +148,9 @@ public sealed partial class DisplayServer : ElectronObject
                         : new Vector2I(64, 64);
                     if (!SDL.SetWindowMinimumSize(window, minimumSize.X, minimumSize.Y))
                         throw SdlFailure("set the main window's minimum size");
-                    _instance = new DisplayServer(window);
+                    if (!hidden && SDL.GetCurrentVideoDriver() == "wayland")
+                        PresentBlankWindowSurface(window);
+                    _instance = new DisplayServer(window, gtkStyle.GtkScreen, gtkStyle.GtkProvider);
                     Input.Instance.SetNativeFlush(_instance.FlushBufferedInput);
                     return _instance;
                 }
@@ -127,10 +162,37 @@ public sealed partial class DisplayServer : ElectronObject
             }
             catch
             {
+                RemoveGtkTitlebarStyle(gtkStyle.GtkScreen, gtkStyle.GtkProvider);
+                if (correctedGdkBackend)
+                    SetGdkBackend(previousGdkBackend!);
                 SDL.QuitSubSystem(SDL.InitFlags.Video);
                 throw;
             }
         }
+    }
+
+    private static void SetGdkBackend(string value)
+    {
+        if (SetNativeEnvironmentVariable("GDK_BACKEND", value, 1) != 0)
+            throw new InvalidOperationException("Failed to select the GTK display backend.");
+        Environment.SetEnvironmentVariable("GDK_BACKEND", value);
+    }
+
+    private static void PresentBlankWindowSurface(nint window)
+    {
+        var surface = SDL.GetWindowSurface(window);
+        if (surface == 0)
+            throw SdlFailure("create the main window's initial surface");
+        if (!SDL.FillSurfaceRect(surface, 0, SDL.MapSurfaceRGB(surface, 32, 32, 32)) ||
+            !SDL.UpdateWindowSurface(window))
+            throw SdlFailure("present the main window's initial surface");
+    }
+
+    private void RefreshBlankWindowSurface()
+    {
+        var window = _window.DangerousGetHandle();
+        if (_waylandWindowPosition && SDL.WindowHasSurface(window))
+            PresentBlankWindowSurface(window);
     }
 
     /// <summary>Gets the display backend name.</summary>
@@ -315,7 +377,7 @@ public sealed partial class DisplayServer : ElectronObject
     /// <summary>Gets the title of the main window.</summary>
     /// <param name="windowId">The main-window ID, zero.</param>
     /// <returns>The title observed by SDL.</returns>
-    public string WindowGetTitle(int windowId = MainWindowId)
+    internal string WindowGetTitle(int windowId = MainWindowId)
     {
         EnsureOwner();
         return SDL.GetWindowTitle(GetWindow(windowId));
@@ -516,7 +578,9 @@ public sealed partial class DisplayServer : ElectronObject
             DisposeDialogs();
             ReleasePointer();
             Input.Instance.SetNativeFlush(null);
+            Input.Instance.ReleasePressedEvents();
             _window.Dispose();
+            RemoveGtkTitlebarStyle(_gtkScreen, _gtkTitlebarProvider);
             SDL.QuitSubSystem(SDL.InitFlags.Video);
             if (ReferenceEquals(_instance, this))
                 _instance = null;

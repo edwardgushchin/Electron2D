@@ -50,7 +50,6 @@ int nodeCount = state.NodeCount;
 | [`public string GetNodePath(int nodeIndex, bool forParent = false)`](#m-electron2d-scenestate-getnodepath-system-int32-system-boolean) | Gets a stored node path or its parent's path. |
 | [`public int GetNodePropertyCount(int nodeIndex)`](#m-electron2d-scenestate-getnodepropertycount-system-int32) | Gets the number of stored properties for a node. |
 | [`public string GetNodePropertyName(int nodeIndex, int propertyIndex)`](#m-electron2d-scenestate-getnodepropertyname-system-int32-system-int32) | Gets the name of a stored node property. |
-| [`public Type GetNodePropertyType(int nodeIndex, int propertyIndex)`](#m-electron2d-scenestate-getnodepropertytype-system-int32-system-int32) | Gets the declared type of a stored node property. |
 | [`public TValue GetNodePropertyValue<TValue>(int nodeIndex, int propertyIndex)`](#m-electron2d-scenestate-getnodepropertyvalue-1-system-int32-system-int32) | Gets a stored node property through a requested compatible type. |
 | [`public string GetNodeType(int nodeIndex)`](#m-electron2d-scenestate-getnodetype-system-int32) | Gets a stored node's runtime type name. |
 | [`public string GetPath()`](#m-electron2d-scenestate-getpath) | Gets the resource path associated with this state. |
@@ -231,23 +230,6 @@ Gets the name of a stored node property.
 - `propertyIndex`: The zero-based property index.
 
 **Returns:** The property name.
-
-**Exceptions**
-
-- `ArgumentOutOfRangeException`: Either index is outside the state.
-- `ObjectDisposedException`: This state has been disposed.
-
-<a id="m-electron2d-scenestate-getnodepropertytype-system-int32-system-int32"></a>
-### `public Type GetNodePropertyType(int nodeIndex, int propertyIndex)`
-
-Gets the declared type of a stored node property.
-
-**Parameters**
-
-- `nodeIndex`: The zero-based node index.
-- `propertyIndex`: The zero-based property index.
-
-**Returns:** The exact declared property type.
 
 **Exceptions**
 

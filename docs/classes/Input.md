@@ -78,7 +78,6 @@ if (input.IsActionPressed("jump"))
 
 | Member | Description |
 | --- | --- |
-| [`public const int MaxEventsPerAction = 32`](#f-electron2d-input-maxeventsperaction) | Defines the maximum number of binding sources supported by one action. |
 
 ## Property Descriptions
 
@@ -493,11 +492,6 @@ Overrides must therefore be side-effect-free and tolerate repeated execution.
 The process-wide input service cannot be disposed.
 
 ## Constant Descriptions
-
-<a id="f-electron2d-input-maxeventsperaction"></a>
-### `public const int MaxEventsPerAction = 32`
-
-Defines the maximum number of binding sources supported by one action.
 
 ## Inherited API
 

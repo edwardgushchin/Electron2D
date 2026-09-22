@@ -257,7 +257,10 @@ public sealed partial class DisplayServer
                 break;
             case SDL.EventType.WindowDisplayScaleChanged:
                 if (_waylandWindowPosition)
+                {
                     ReapplyWaylandWindowLimits();
+                    RefreshBlankWindowSurface();
+                }
                 WindowDpiChanged?.Invoke();
                 break;
             case SDL.EventType.WindowCloseRequested:
@@ -266,6 +269,8 @@ public sealed partial class DisplayServer
                 break;
             case SDL.EventType.WindowResized when !_waylandWindowPosition:
             case SDL.EventType.WindowPixelSizeChanged when _waylandWindowPosition:
+                if (_waylandWindowPosition)
+                    RefreshBlankWindowSurface();
                 var resizedRect = new RectI(_windowRect.Position,
                     new Vector2I(nativeEvent.Window.Data1, nativeEvent.Window.Data2));
                 if (resizedRect != _windowRect)
@@ -624,7 +629,11 @@ public sealed partial class DisplayServer
 
     private static Key MapKeycode(SDL.Keycode source)
     {
+        if (source == SDL.Keycode.Unknown)
+            return Key.None;
         var value = (uint)source;
+        if (value is < 0x20 or 0x7f)
+            return LogicalKeys.GetValueOrDefault(source);
         if (value is >= 0x61 and <= 0x7a)
             return (Key)(value - 0x20);
         if (value is >= 0x20 and <= 0x7e)

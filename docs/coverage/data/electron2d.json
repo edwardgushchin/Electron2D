@@ -1732,19 +1732,6 @@
     "value": "16777216"
   },
   {
-    "id": "constant:Electron2D.Input.MaxEventsPerAction()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Input",
-    "name": "MaxEventsPerAction",
-    "signature": "public const System.Int32 MaxEventsPerAction = 32",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "32"
-  },
-  {
     "id": "constant:Electron2D.InputEvent.DeviceIdEmulation()",
     "kind": "constant",
     "declaringType": "Electron2D.InputEvent",
@@ -1782,32 +1769,6 @@
     "parameters": [],
     "returnType": "System.Int32",
     "value": "32"
-  },
-  {
-    "id": "constant:Electron2D.InputMap.AllDevices()",
-    "kind": "constant",
-    "declaringType": "Electron2D.InputMap",
-    "name": "AllDevices",
-    "signature": "public const System.Int32 AllDevices = -1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "-1"
-  },
-  {
-    "id": "constant:Electron2D.InputMap.DefaultDeadzone()",
-    "kind": "constant",
-    "declaringType": "Electron2D.InputMap",
-    "name": "DefaultDeadzone",
-    "signature": "public const System.Single DefaultDeadzone = 0.2f",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Single",
-    "value": "0.2f"
   },
   {
     "id": "constant:Electron2D.MainLoop.NotificationApplicationFocusIn()",
@@ -1966,32 +1927,6 @@
     "value": "2011"
   },
   {
-    "id": "constant:Electron2D.Mathf.E()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Mathf",
-    "name": "E",
-    "signature": "public const System.Single E = 2.7182817f",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Single",
-    "value": "2.7182817f"
-  },
-  {
-    "id": "constant:Electron2D.Mathf.Epsilon()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Mathf",
-    "name": "Epsilon",
-    "signature": "public const System.Single Epsilon = 1E-06f",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Single",
-    "value": "1E-06f"
-  },
-  {
     "id": "constant:Electron2D.Mathf.Inf()",
     "kind": "constant",
     "declaringType": "Electron2D.Mathf",
@@ -2029,19 +1964,6 @@
     "parameters": [],
     "returnType": "System.Single",
     "value": "3.1415927f"
-  },
-  {
-    "id": "constant:Electron2D.Mathf.Sqrt2()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Mathf",
-    "name": "Sqrt2",
-    "signature": "public const System.Single Sqrt2 = 1.4142135f",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Single",
-    "value": "1.4142135f"
   },
   {
     "id": "constant:Electron2D.Mathf.Tau()",
@@ -5326,19 +5248,6 @@
     "parameters": [],
     "returnType": "Electron2D.Image.CompressSource",
     "value": "0"
-  },
-  {
-    "id": "enumValue:Electron2D.Image.CompressSource.Max()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Image.CompressSource",
-    "name": "Max",
-    "signature": "public const Electron2D.Image.CompressSource Max = 3",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Image.CompressSource",
-    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.Image.CompressSource.Normal()",
@@ -13935,25 +13844,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.WindowGetTitle(System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.DisplayServer",
-    "name": "WindowGetTitle",
-    "signature": "public System.String WindowGetTitle(System.Int32 windowId = 0)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "windowId",
-        "type": "System.Int32",
-        "default": "0"
-      }
-    ],
-    "returnType": "System.String",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.DisplayServer.WindowIsFocused(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -15599,25 +15489,6 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.FileAccess.ReadString(System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.FileAccess",
-    "name": "ReadString",
-    "signature": "public System.String ReadString(System.Int32 byteLength)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "byteLength",
-        "type": "System.Int32",
-        "default": null
-      }
-    ],
-    "returnType": "System.String",
     "value": null
   },
   {
@@ -17789,30 +17660,6 @@
       }
     ],
     "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.InputEvent.GetActionRawStrength(System.String,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.InputEvent",
-    "name": "GetActionRawStrength",
-    "signature": "public System.Single GetActionRawStrength(System.String action, System.Boolean exactMatch = false)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "action",
-        "type": "System.String",
-        "default": null
-      },
-      {
-        "name": "exactMatch",
-        "type": "System.Boolean",
-        "default": "false"
-      }
-    ],
-    "returnType": "System.Single",
     "value": null
   },
   {
@@ -22452,44 +22299,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.SinCos(System.Double)",
-    "kind": "method",
-    "declaringType": "Electron2D.Mathf",
-    "name": "SinCos",
-    "signature": "public static System.ValueTuple\u003CSystem.Double, System.Double\u003E SinCos(System.Double angle)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "angle",
-        "type": "System.Double",
-        "default": null
-      }
-    ],
-    "returnType": "System.ValueTuple\u003CSystem.Double, System.Double\u003E",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Mathf.SinCos(System.Single)",
-    "kind": "method",
-    "declaringType": "Electron2D.Mathf",
-    "name": "SinCos",
-    "signature": "public static System.ValueTuple\u003CSystem.Single, System.Single\u003E SinCos(System.Single angle)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "angle",
-        "type": "System.Single",
-        "default": null
-      }
-    ],
-    "returnType": "System.ValueTuple\u003CSystem.Single, System.Single\u003E",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.Mathf.Sinh(System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.Mathf",
@@ -26292,30 +26101,6 @@
       }
     ],
     "returnType": "System.String",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.SceneState.GetNodePropertyType(System.Int32,System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.SceneState",
-    "name": "GetNodePropertyType",
-    "signature": "public System.Type GetNodePropertyType(System.Int32 nodeIndex, System.Int32 propertyIndex)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "nodeIndex",
-        "type": "System.Int32",
-        "default": null
-      },
-      {
-        "name": "propertyIndex",
-        "type": "System.Int32",
-        "default": null
-      }
-    ],
-    "returnType": "System.Type",
     "value": null
   },
   {
@@ -36971,19 +36756,6 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Node.EffectiveZIndex()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "EffectiveZIndex",
-    "signature": "public System.Int32 EffectiveZIndex { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": null
-  },
-  {
     "id": "property:Electron2D.Node.GlobalPosition()",
     "kind": "property",
     "declaringType": "Electron2D.Node",
@@ -37894,19 +37666,6 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.SceneTree.HasDeferredWork()",
-    "kind": "property",
-    "declaringType": "Electron2D.SceneTree",
-    "name": "HasDeferredWork",
-    "signature": "public System.Boolean HasDeferredWork { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
     "id": "property:Electron2D.SceneTree.NodeCount()",
     "kind": "property",
     "declaringType": "Electron2D.SceneTree",
@@ -37933,32 +37692,6 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.SceneTree.PhysicsFrameCount()",
-    "kind": "property",
-    "declaringType": "Electron2D.SceneTree",
-    "name": "PhysicsFrameCount",
-    "signature": "public System.UInt64 PhysicsFrameCount { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.UInt64",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.SceneTree.ProcessFrameCount()",
-    "kind": "property",
-    "declaringType": "Electron2D.SceneTree",
-    "name": "ProcessFrameCount",
-    "signature": "public System.UInt64 ProcessFrameCount { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.UInt64",
-    "value": null
-  },
-  {
     "id": "property:Electron2D.SceneTree.Root()",
     "kind": "property",
     "declaringType": "Electron2D.SceneTree",
@@ -37969,32 +37702,6 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Node",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.SceneTreeTimer.ProcessAlways()",
-    "kind": "property",
-    "declaringType": "Electron2D.SceneTreeTimer",
-    "name": "ProcessAlways",
-    "signature": "public System.Boolean ProcessAlways { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.SceneTreeTimer.ProcessInPhysics()",
-    "kind": "property",
-    "declaringType": "Electron2D.SceneTreeTimer",
-    "name": "ProcessInPhysics",
-    "signature": "public System.Boolean ProcessInPhysics { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -38190,19 +37897,6 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Globalization.CultureInfo",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.TranslationServer.Enabled()",
-    "kind": "property",
-    "declaringType": "Electron2D.TranslationServer",
-    "name": "Enabled",
-    "signature": "public static System.Boolean Enabled { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
     "value": null
   },
   {

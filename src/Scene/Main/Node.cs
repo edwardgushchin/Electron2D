@@ -701,7 +701,7 @@ public class Node : ElectronObject
     /// <summary>Gets the Z order after optional ancestor accumulation.</summary>
     /// <value>The accumulated or absolute value, clamped to the supported Z range.</value>
     /// <exception cref="ObjectDisposedException">This node or a queried ancestor is disposing on another thread, or has finished disposing.</exception>
-    public int EffectiveZIndex => ZAsRelative && Parent is not null
+    internal int EffectiveZIndex => ZAsRelative && Parent is not null
         ? Mathf.Clamp(Parent.EffectiveZIndex + ZIndex, MinimumZIndex, MaximumZIndex)
         : ZIndex;
 

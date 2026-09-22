@@ -60,8 +60,6 @@ map.ActionAddEvent("jump", new InputEventKey { Keycode = Key.Space });
 
 | Member | Description |
 | --- | --- |
-| [`public const int AllDevices = -1`](#f-electron2d-inputmap-alldevices) | Allows a controller binding to match the same control on every device. |
-| [`public const float DefaultDeadzone = 0.2f`](#f-electron2d-inputmap-defaultdeadzone) | Defines the default analog deadzone for newly registered actions. |
 
 ## Property Descriptions
 
@@ -308,16 +306,6 @@ Overrides must therefore be side-effect-free and tolerate repeated execution.
 The process-wide action map cannot be disposed.
 
 ## Constant Descriptions
-
-<a id="f-electron2d-inputmap-alldevices"></a>
-### `public const int AllDevices = -1`
-
-Allows a controller binding to match the same control on every device.
-
-<a id="f-electron2d-inputmap-defaultdeadzone"></a>
-### `public const float DefaultDeadzone = 0.2f`
-
-Defines the default analog deadzone for newly registered actions.
 
 ## Inherited API
 

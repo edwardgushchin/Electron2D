@@ -106,7 +106,7 @@ internal static class DisplayServerKeyboardNativeTests
         var expectedLabel = PrintableKey(label, false);
         Check(display.KeyboardGetKeycodeFromPhysical(physical) == (expectedKeycode == Key.None ? physical : expectedKeycode) &&
               display.KeyboardGetLabelFromPhysical(physical) == (expectedLabel == Key.None ? physical : expectedLabel),
-            $"Physical {physical} follows native scancode {scancode} and modifier state {modifiers}.");
+            $"Physical {physical} follows native scancode {scancode} and modifier state {modifiers}: native {keycode}, expected {expectedKeycode}, actual {display.KeyboardGetKeycodeFromPhysical(physical)}.");
     }
 
     private static Key PrintableKey(SDL.Keycode code, bool logicalKeycode)

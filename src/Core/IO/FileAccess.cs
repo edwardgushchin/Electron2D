@@ -708,7 +708,7 @@ public sealed class FileAccess : ElectronObject
     /// <exception cref="InvalidOperationException">The file is closed or not readable.</exception>
     /// <exception cref="IOException">Reading fails.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
-    public string ReadString(int byteLength) => StrictUtf8.GetString(ReadExact(byteLength));
+    internal string ReadString(int byteLength) => StrictUtf8.GetString(ReadExact(byteLength));
 
     /// <summary>Reads the entire file as UTF-8 without changing the cursor.</summary>
     /// <param name="skipCarriageReturns">Whether CR bytes are omitted before decoding.</param>

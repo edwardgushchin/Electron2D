@@ -18,7 +18,7 @@ Provides scalar constants and common mathematical operations for engine code and
 
 `Mathf` is the engine's stateless scalar-math surface. It centralizes single- and double-precision transcendental functions, angle conversion and shortest-path arithmetic, interpolation, approximation, rounding, wrapping, audio-scale conversion, and integer helpers. It owns no mutable state, resource, handle, callback, or lifecycle.
 
-Single precision is the primary engine scalar contract. Double overloads exist where the audited typed API provides them. `Pi`, `Tau`, `E`, `Sqrt2`, `Inf`, `NaN`, and `Epsilon` are single-precision constants; `Epsilon` is exactly `1e-6f`. Double approximate comparisons use an internal `1e-14` threshold.
+Single precision is the primary engine scalar contract. Double overloads exist where the audited typed API provides them. `Pi`, `Tau`, `Inf`, and `NaN` are single-precision public constants. Approximate single-precision comparisons use an internal `1e-6f` threshold. Double approximate comparisons use an internal `1e-14` threshold.
 
 Angles use radians unless a member explicitly names degrees. Single-precision overloads are the
 primary engine-scalar API; double-precision overloads are provided for calculations that need a
@@ -108,7 +108,7 @@ float value = Mathf.Lerp(0f, 10f, 0.25f);
 | [`public static bool IsInf(double value)`](#m-electron2d-mathf-isinf-system-double) | Tests whether a double-precision value is positive or negative infinity. |
 | [`public static bool IsNaN(float value)`](#m-electron2d-mathf-isnan-system-single) | Tests whether a single-precision value is not a number. |
 | [`public static bool IsNaN(double value)`](#m-electron2d-mathf-isnan-system-double) | Tests whether a double-precision value is not a number. |
-| [`public static bool IsZeroApprox(float value)`](#m-electron2d-mathf-iszeroapprox-system-single) | Tests whether a single-precision value's magnitude is strictly below [`Mathf.Epsilon`](Mathf.md#f-electron2d-mathf-epsilon). |
+| [`public static bool IsZeroApprox(float value)`](#m-electron2d-mathf-iszeroapprox-system-single) | Tests whether a single-precision value's magnitude is strictly below the internal `1e-6f` threshold. |
 | [`public static bool IsZeroApprox(double value)`](#m-electron2d-mathf-iszeroapprox-system-double) | Tests whether a double-precision value's magnitude is strictly below the double-precision epsilon. |
 | [`public static float Lerp(float from, float to, float weight)`](#m-electron2d-mathf-lerp-system-single-system-single-system-single) | Linearly interpolates without clamping the weight. |
 | [`public static double Lerp(double from, double to, double weight)`](#m-electron2d-mathf-lerp-system-double-system-double-system-double) | Linearly interpolates double-precision values without clamping the weight. |
@@ -147,8 +147,6 @@ float value = Mathf.Lerp(0f, 10f, 0.25f);
 | [`public static int Sign(double value)`](#m-electron2d-mathf-sign-system-double) | Returns negative one, zero, or positive one according to a double-precision value's sign. |
 | [`public static float Sin(float angle)`](#m-electron2d-mathf-sin-system-single) | Returns the sine of an angle in radians. |
 | [`public static double Sin(double angle)`](#m-electron2d-mathf-sin-system-double) | Returns the double-precision sine of an angle in radians. |
-| [`public static ValueTuple<float, float> SinCos(float angle)`](#m-electron2d-mathf-sincos-system-single) | Returns the sine and cosine of an angle in one operation. |
-| [`public static ValueTuple<double, double> SinCos(double angle)`](#m-electron2d-mathf-sincos-system-double) | Returns the double-precision sine and cosine of an angle in one operation. |
 | [`public static float Sinh(float value)`](#m-electron2d-mathf-sinh-system-single) | Returns the hyperbolic sine. |
 | [`public static double Sinh(double value)`](#m-electron2d-mathf-sinh-system-double) | Returns the double-precision hyperbolic sine. |
 | [`public static float SmoothStep(float from, float to, float value)`](#m-electron2d-mathf-smoothstep-system-single-system-single-system-single) | Returns a cubic Hermite step between two edges. |
@@ -176,9 +174,6 @@ float value = Mathf.Lerp(0f, 10f, 0.25f);
 | [`public const float Pi = 3.1415927f`](#f-electron2d-mathf-pi) | The ratio of a circle's circumference to its diameter. |
 | [`public const float Inf = Infinityf`](#f-electron2d-mathf-inf) | Positive single-precision infinity. |
 | [`public const float NaN = NaNf`](#f-electron2d-mathf-nan) | A single-precision value that is not a number. |
-| [`public const float E = 2.7182817f`](#f-electron2d-mathf-e) | The base of the natural logarithm. |
-| [`public const float Sqrt2 = 1.4142135f`](#f-electron2d-mathf-sqrt2) | The positive square root of two. |
-| [`public const float Epsilon = 1E-06f`](#f-electron2d-mathf-epsilon) | The default absolute single-precision comparison tolerance. |
 
 ## Method Descriptions
 
@@ -936,7 +931,7 @@ Tests two single-precision values for scale-aware approximate equality.
 - `left`: The first value.
 - `right`: The second value.
 
-**Returns:** `true` for exact equality or a difference below the larger of [`Mathf.Epsilon`](Mathf.md#f-electron2d-mathf-epsilon) and `Epsilon * abs(left)`.
+**Returns:** `true` for exact equality or a difference below the larger of the internal `1e-6f` threshold and `1e-6f * abs(left)`.
 
 <a id="m-electron2d-mathf-isequalapprox-system-double-system-double"></a>
 ### `public static bool IsEqualApprox(double left, double right)`
@@ -1049,7 +1044,7 @@ Tests whether a double-precision value is not a number.
 <a id="m-electron2d-mathf-iszeroapprox-system-single"></a>
 ### `public static bool IsZeroApprox(float value)`
 
-Tests whether a single-precision value's magnitude is strictly below [`Mathf.Epsilon`](Mathf.md#f-electron2d-mathf-epsilon).
+Tests whether a single-precision value's magnitude is strictly below the internal `1e-6f` threshold.
 
 **Parameters**
 
@@ -1535,28 +1530,6 @@ Returns the double-precision sine of an angle in radians.
 
 **Returns:** The sine.
 
-<a id="m-electron2d-mathf-sincos-system-single"></a>
-### `public static ValueTuple<float, float> SinCos(float angle)`
-
-Returns the sine and cosine of an angle in one operation.
-
-**Parameters**
-
-- `angle`: The angle in radians.
-
-**Returns:** A tuple containing sine followed by cosine.
-
-<a id="m-electron2d-mathf-sincos-system-double"></a>
-### `public static ValueTuple<double, double> SinCos(double angle)`
-
-Returns the double-precision sine and cosine of an angle in one operation.
-
-**Parameters**
-
-- `angle`: The angle in radians.
-
-**Returns:** A tuple containing sine followed by cosine.
-
 <a id="m-electron2d-mathf-sinh-system-single"></a>
 ### `public static float Sinh(float value)`
 
@@ -1799,21 +1772,6 @@ A single-precision value that is not a number.
 
 **Remarks:** This value is unequal to every value, including itself.
 
-<a id="f-electron2d-mathf-e"></a>
-### `public const float E = 2.7182817f`
-
-The base of the natural logarithm.
-
-<a id="f-electron2d-mathf-sqrt2"></a>
-### `public const float Sqrt2 = 1.4142135f`
-
-The positive square root of two.
-
-<a id="f-electron2d-mathf-epsilon"></a>
-### `public const float Epsilon = 1E-06f`
-
-The default absolute single-precision comparison tolerance.
-
 ## Numeric invariants and error behavior
 
 - Floating-point operations retain normal IEEE 754 behavior. Domain errors generally produce NaN; zero logarithms produce negative infinity; floating modulus by zero produces NaN.
@@ -1837,7 +1795,7 @@ Normal nonthrowing calls allocate zero managed memory after JIT warmup; thrown m
 
 Implementation uses only .NET scalar mathematics and decimal bit access. [`Vector2`](Vector2.md), [`Vector4`](Vector4.md), their integer counterparts, [`Color`](Color.md), [`Rect`](Rect.md), [`Transform`](Transform.md), and [`Node`](Node.md) route matching scalar operations through `Mathf`. Internal color math continues to call the BCL directly only for cube root because no audited `Mathf` member exists for it.
 
-The migration intentionally corrected the former `1e-5f` component-comparison tolerance to the canonical `Mathf.Epsilon` contract. Electron2D has no released compatibility baseline, so known incorrect pre-release behavior is corrected rather than preserved behind a second tolerance or compatibility path.
+The migration corrected the former `1e-5f` component-comparison tolerance to the internal `1e-6f` contract. Electron2D has no released compatibility baseline, so known incorrect pre-release behavior is corrected rather than preserved behind a second tolerance or compatibility path.
 
 ## Verification and known limitations
 

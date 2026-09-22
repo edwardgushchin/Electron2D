@@ -1,0 +1,44 @@
+﻿#region License
+/* SDL3# - C# Wrapper for SDL3
+ *
+ * Copyright (c) 2024-2026 Eduard Gushchin.
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from
+ * the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you, must not
+ * claim that you, wrote the original software. If you, use this software in a
+ * product, an acknowledgment in the product documentation would be
+ * appreciated but is not required.
+ *
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ * misrepresented as being the original software.
+ *
+ * 3. This notice may not be removed or altered from any source distribution.
+ *
+ * Eduard "edwardgushchin" Gushchin <eduardgushchin@yandex.ru>
+ *
+ */
+#endregion
+
+namespace SDL3;
+
+internal static partial class SDL
+{
+    /// <code>#define SDL_SCANCODE_TO_KEYCODE(X) (X | SDLK_SCANCODE_MASK)</code>
+    /// <summary>
+    /// <para>Convert a scancode value to the corresponding scancode-masked keycode value.</para>
+    /// </summary>
+    /// <param name="scancode">the scancode to convert.</param>
+    /// <returns>the keycode value for <paramref name="scancode"/>.</returns>
+    [Macro]
+    public static Keycode ScancodeToKeycode(Scancode scancode)
+    {
+        return (Keycode)((uint)scancode | (uint)Keycode.ScanCodeMask);
+    }
+}

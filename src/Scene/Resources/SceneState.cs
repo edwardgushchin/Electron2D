@@ -118,7 +118,7 @@ public sealed class SceneState : ElectronObject
     /// <returns>The exact declared property type.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Either index is outside the state.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
-    public Type GetNodePropertyType(int nodeIndex, int propertyIndex) =>
+    internal Type GetNodePropertyType(int nodeIndex, int propertyIndex) =>
         ReadProperty(nodeIndex, propertyIndex).Value.ValueType;
 
     /// <summary>Gets a stored node property through a requested compatible type.</summary>

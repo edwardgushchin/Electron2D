@@ -613,7 +613,7 @@ Tests all components for scale-aware approximate equality.
 
 - `other`: The other color.
 
-**Returns:** `true` when every component is within the scale-aware [`Mathf.Epsilon`](Mathf.md#f-electron2d-mathf-epsilon) tolerance.
+**Returns:** `true` when every component is within the scale-aware the internal `1e-6f` threshold tolerance.
 
 <a id="m-electron2d-color-gethashcode"></a>
 ### `public override int GetHashCode()`

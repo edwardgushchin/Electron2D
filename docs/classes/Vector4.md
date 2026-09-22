@@ -841,7 +841,7 @@ Compares vectors lexicographically by X, Y, Z, then W.
 ## Numeric invariants and error behavior
 
 - Arithmetic retains IEEE 754 behavior. Zero scalar/component division produces infinity or NaN; zero remainder or positive modulus produces NaN; reciprocal preserves signed zero through signed infinity.
-- Exact zero normalization and equal-point direction return `Zero`. Non-finite normalization follows ordinary managed floating-point propagation. `IsNormalized` uses tolerance `0.001`; approximate component predicates use [`Mathf.Epsilon`](Mathf.md) (`1e-6f`) with exact equality first.
+- Exact zero normalization and equal-point direction return `Zero`. Non-finite normalization follows ordinary managed floating-point propagation. `IsNormalized` uses tolerance `0.001`; approximate component predicates use the internal tolerance (`1e-6f`) with exact equality first.
 - Maximum-axis ties choose the first maximum; minimum-axis ties choose the last minimum. NaN is skipped by ordered comparisons, and an initial NaN therefore keeps X.
 - Relational operators compare X, then Y, then Z, then W directly. If the first differing component is NaN, all four relational results are false; no artificial total ordering is introduced.
 - `Round` is midpoint-to-even. `Snapped` uses `floor(value / step + 0.5) * step`; zero steps preserve components. `Sign` throws `ArithmeticException` for NaN.

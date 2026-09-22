@@ -188,7 +188,7 @@ The `SceneTree` frame scheduler and timer phase reuse owned lists after warm-up,
 - `SceneTree` can be driven through either `MainLoop.Process`/`PhysicsProcess` or its existing void frame wrappers.
 - Explicit `FinalizeLoop()` releases `SceneTree` ownership but does not itself dispose the base object; `Dispose()` remains required for complete logical lifetime termination.
 - Callback and teardown failures have deterministic state outcomes instead of allowing lifecycle retries.
-- The future SDL host has one integration boundary for timing, stop requests, system notifications, and permission results.
+- The first executable SDL consumer uses this integration boundary for timing and stop requests; platform permission results remain separate work.
 - Core remains independent of SDL and Scene; Scene depends on Core.
 
 ### Rejected alternatives
@@ -223,7 +223,7 @@ Accepted. Extends ADR 0015 after the explicit implementation request for `Engine
 
 `MainLoop` and `SceneTree` already provided complete owner-thread lifecycle and callback lanes, but the caller had to choose all fixed-step cadence, time scaling, catch-up, metrics, and global service lookup policy. The current reference `Engine` API centralizes those settings and observations, while its native main iteration and timer synchronizer turn real elapsed time into fixed and process callbacks.
 
-Electron2D still has no SDL host, renderer, logger, script runtime, movie writer, or editor. A production implementation therefore needs deterministic scheduling over supplied elapsed time without fabricating platform behavior or adding inert compatibility flags.
+At this decision’s implementation point, Electron2D had no SDL host, renderer, logger, script runtime, movie writer, or editor. A production implementation therefore needs deterministic scheduling over supplied elapsed time without fabricating platform behavior or adding inert compatibility flags.
 
 ### Decision
 
@@ -248,7 +248,7 @@ APIs that cannot act without an absent domain are not exposed as stored-but-unus
 
 ### Rejected alternatives
 
-- A background engine thread and internal stopwatch: the future SDL host must own platform pumping and wait/presentation policy.
+- A background engine thread and internal stopwatch: the executable host owns platform pumping and wait policy; presentation awaits rendering.
 - Leaving fixed-step scheduling entirely to every host: it duplicates timing, interpolation, catch-up, and metric semantics.
 - A naive accumulator that ignores jitter tolerance: it leaves a documented timing property inert and distributes fixed steps poorly near cadence boundaries.
 - Disposing a loop from `Stop()`: finalization ownership belongs to Engine, but final object/native-handle ownership remains with the creator.

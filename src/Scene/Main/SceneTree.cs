@@ -158,12 +158,12 @@ public sealed class SceneTree : MainLoop
     /// <summary>Gets an advisory snapshot indicating whether deferred actions or deletions are queued.</summary>
     /// <value><see langword="true"/> when either concurrent queue is currently nonempty.</value>
     /// <remarks>This property is not a synchronization barrier and may change immediately after it is read.</remarks>
-    public bool HasDeferredWork => !_deferred.IsEmpty || !_deletions.IsEmpty;
+    internal bool HasDeferredWork => !_deferred.IsEmpty || !_deletions.IsEmpty;
 
     /// <summary>Gets the number of completed process-frame attempts.</summary>
     /// <value>The number of valid calls to <see cref="ProcessFrame"/>, including calls that reported callback failures.</value>
     /// <exception cref="ObjectDisposedException">The tree is disposing on another thread or has finished disposing.</exception>
-    public ulong ProcessFrameCount
+    internal ulong ProcessFrameCount
     {
         get
         {
@@ -175,7 +175,7 @@ public sealed class SceneTree : MainLoop
     /// <summary>Gets the number of completed physics-frame attempts.</summary>
     /// <value>The number of valid calls to <see cref="PhysicsFrame"/>, including calls that reported callback failures.</value>
     /// <exception cref="ObjectDisposedException">The tree is disposing on another thread or has finished disposing.</exception>
-    public ulong PhysicsFrameCount
+    internal ulong PhysicsFrameCount
     {
         get
         {

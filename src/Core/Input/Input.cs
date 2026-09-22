@@ -9,7 +9,7 @@ namespace Electron2D;
 public sealed class Input : ElectronObject
 {
     /// <summary>Defines the maximum number of binding sources supported by one action.</summary>
-    public const int MaxEventsPerAction = 32;
+    internal const int MaxEventsPerAction = 32;
 
     private static readonly Input SharedInstance = new();
     [ThreadStatic]

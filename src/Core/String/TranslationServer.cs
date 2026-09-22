@@ -20,7 +20,7 @@ public static class TranslationServer
 
     /// <summary>Gets or sets whether translation lookup is enabled globally.</summary>
     /// <value><see langword="true"/> by default. When false, lookup returns source text without consulting the catalogs.</value>
-    public static bool Enabled
+    internal static bool Enabled
     {
         get => Volatile.Read(ref _enabled) != 0;
         set => Volatile.Write(ref _enabled, value ? 1 : 0);

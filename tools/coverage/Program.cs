@@ -64,7 +64,9 @@ if (args.Length > 0)
 else
     Console.WriteLine(json);
 
-static bool VisibleType(Type type) => type.IsPublic || type.IsNestedPublic || type.IsNestedFamily || type.IsNestedFamORAssem;
+static bool VisibleType(Type type) => type.DeclaringType is null
+    ? type.IsPublic
+    : VisibleType(type.DeclaringType) && (type.IsNestedPublic || type.IsNestedFamily || type.IsNestedFamORAssem);
 
 static bool VisibleMethod(MethodBase method) => method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly;
 

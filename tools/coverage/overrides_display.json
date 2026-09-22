@@ -243,11 +243,6 @@
       "adr": "ADR 0040"
     },
     {
-      "electron2d": "method:Electron2D.DisplayServer.WindowGetTitle(System.Int32)",
-      "reason": "Readback of the active window title supplements Godot's write-only title method for typed C# hosts.",
-      "adr": "ADR 0040"
-    },
-    {
       "electron2d": "method:Electron2D.DisplayServer.Dispose(System.Boolean)",
       "reason": "Protected deterministic SDL handle release overrides the engine-owned object lifecycle.",
       "adr": "ADR 0003/0014"

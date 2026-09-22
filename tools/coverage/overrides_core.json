@@ -493,11 +493,6 @@
       "adr": "adr-0018"
     },
     {
-      "electron2d": "method:Electron2D.FileAccess.ReadString(System.Int32)",
-      "reason": "Strict UTF-8 decode of a byte count; upstream only exposes raw get_buffer.",
-      "adr": "adr-0020"
-    },
-    {
       "electron2d": "event:Electron2D.ElectronObject.Disposed()",
       "reason": "Typed deterministic-disposal event, not an upstream signal.",
       "adr": "adr-0003"
@@ -571,11 +566,6 @@
       "electron2d": "constructor:Electron2D.Resource..ctor()",
       "reason": "Managed Resource construction and ownership.",
       "adr": "adr-0013"
-    },
-    {
-      "electron2d": "property:Electron2D.TranslationServer.Enabled()",
-      "reason": "Process-wide translation switch; upstream Object has per-instance flags.",
-      "adr": "adr-0007"
     },
     {
       "electron2d": "T:Electron2D.ProjectSetting<T>",

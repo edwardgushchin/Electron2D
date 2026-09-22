@@ -993,21 +993,6 @@
   ],
   "extras": [
     {
-      "electron2d": "constant:Electron2D.Input.MaxEventsPerAction()",
-      "reason": "Bounded per-action source capacity for deterministic input processing.",
-      "adr": "docs/decisions/input.md#adr-0038"
-    },
-    {
-      "electron2d": "constant:Electron2D.InputMap.AllDevices()",
-      "reason": "Wildcard controller-binding device ID in typed action map.",
-      "adr": "docs/decisions/input.md#adr-0038"
-    },
-    {
-      "electron2d": "constant:Electron2D.InputMap.DefaultDeadzone()",
-      "reason": "Named C# value for upstream add_action default argument of 0.2.",
-      "adr": "docs/decisions/input.md#adr-0038"
-    },
-    {
       "electron2d": "constructor:Electron2D.InputEvent..ctor()",
       "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
       "adr": "docs/decisions/product.md#adr-0001"
@@ -1205,11 +1190,6 @@
     {
       "electron2d": "method:Electron2D.InputEvent.EmitInputChanged(System.Boolean)",
       "reason": "Protected input-state change hook for map consistency.",
-      "adr": "docs/decisions/input.md#adr-0038"
-    },
-    {
-      "electron2d": "method:Electron2D.InputEvent.GetActionRawStrength(System.String,System.Boolean)",
-      "reason": "Typed raw-strength convenience query; upstream InputEvent only has get_action_strength.",
       "adr": "docs/decisions/input.md#adr-0038"
     },
     {
@@ -1518,11 +1498,6 @@
       "adr": "docs/decisions/resources.md#adr-0013"
     },
     {
-      "electron2d": "method:Electron2D.SceneState.GetNodePropertyType(System.Int32,System.Int32)",
-      "reason": "Typed C# metadata for packed-scene property values; upstream exposes Variant values without a type-query row.",
-      "adr": "docs/decisions/scene.md#adr-0023"
-    },
-    {
       "electron2d": "method:Electron2D.SceneTree.FlushDeferred()",
       "reason": "Explicit owner-thread deferred-batch drain for host-driven loop.",
       "adr": "docs/decisions/scene.md#adr-0006"
@@ -1626,36 +1601,6 @@
       "electron2d": "property:Electron2D.InputMap.Instance()",
       "reason": "C# process-wide singleton accessor.",
       "adr": "docs/decisions/input.md#adr-0038"
-    },
-    {
-      "electron2d": "property:Electron2D.Node.EffectiveZIndex()",
-      "reason": "Computed absolute Z order on unified Node; upstream exposes relative z_index/z_as_relative fields instead.",
-      "adr": "docs/decisions/scene.md#adr-0008"
-    },
-    {
-      "electron2d": "property:Electron2D.SceneTree.HasDeferredWork()",
-      "reason": "Typed observation of pending deferred work for host integration.",
-      "adr": "docs/decisions/scene.md#adr-0006"
-    },
-    {
-      "electron2d": "property:Electron2D.SceneTree.PhysicsFrameCount()",
-      "reason": "Dedicated fixed-frame counter; upstream SceneTree has only get_frame().",
-      "adr": "docs/decisions/core-object-runtime.md#adr-0016"
-    },
-    {
-      "electron2d": "property:Electron2D.SceneTree.ProcessFrameCount()",
-      "reason": "Dedicated process-frame counter; upstream SceneTree has only get_frame().",
-      "adr": "docs/decisions/core-object-runtime.md#adr-0016"
-    },
-    {
-      "electron2d": "property:Electron2D.SceneTreeTimer.ProcessAlways()",
-      "reason": "Exposes captured process_always timer-creation mode.",
-      "adr": "docs/decisions/scene.md#adr-0006"
-    },
-    {
-      "electron2d": "property:Electron2D.SceneTreeTimer.ProcessInPhysics()",
-      "reason": "Exposes captured process_in_physics timer-creation mode.",
-      "adr": "docs/decisions/scene.md#adr-0006"
     }
   ]
 }

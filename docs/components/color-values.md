@@ -35,7 +35,7 @@ Production sources are [`src/Core/Math/Color.cs`](../../src/Core/Math/Color.cs),
 - `Color` remains a sequential four-`float`, 16-byte value; zero initialization is transparent black.
 - Ordinary math preserves HDR and IEEE 754 behavior; output quantization is separately clamped and deterministic.
 - RGB is treated as nonlinear sRGB unless a method explicitly states linear space; alpha remains linear.
-- Exact comparisons do not hide NaN; approximate equality uses exact equality first and then strict scale-aware `Mathf.Epsilon` (`1e-6f`).
+- Exact comparisons do not hide NaN; approximate equality uses exact equality first and then a strict scale-aware internal tolerance (`1e-6f`).
 - Named lookup is immutable after type initialization, thread-safe, and normalized without culture-sensitive casing.
 - Numeric hot paths do not allocate; strings and normalized name parsing may allocate.
 - Public OKHSL coordinates are clamped to `0..1`; a narrow saturated gamut edge whose raw reference saturation exceeds one cannot round-trip exactly through only those clamped coordinates.
@@ -53,7 +53,7 @@ Implemented and verified. The delivered public surface contains the complete typ
 
 ## Verification
 
-The executable harness covers construction, mutation, conversions, primary/interior/saturated-boundary OKHSL fixtures, arithmetic, strict `Mathf.Epsilon` comparison boundaries, exhaustive byte and packing/HTML boundary cases, the complete named-property count and lookup mapping, concurrency, strict JSON persistence, packed-scene value copying, and warmed allocation behavior. Verification is Linux/.NET 8 only; native rendering and six-target runtime output are not yet testable.
+The executable harness covers construction, mutation, conversions, primary/interior/saturated-boundary OKHSL fixtures, arithmetic, the strict internal tolerance comparison boundaries, exhaustive byte and packing/HTML boundary cases, the complete named-property count and lookup mapping, concurrency, strict JSON persistence, packed-scene value copying, and warmed allocation behavior. Verification is Linux/.NET 8 only; native rendering and six-target runtime output are not yet testable.
 
 ## Decisions
 

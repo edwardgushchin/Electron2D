@@ -7,11 +7,12 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="src/**/*.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SDL3-CS" Version="3.4.16.1" />
+    <PackageReference Include="SDL3-CS.Linux" Version="3.4.16.0" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
   </ItemGroup>
 </Project>

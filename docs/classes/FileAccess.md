@@ -72,7 +72,6 @@ file.WriteString("ready");
 | [`public string ReadLine()`](#m-electron2d-fileaccess-readline) | Reads UTF-8 bytes through the next LF, CR, CRLF, or null terminator. |
 | [`public string[] ReadCsvLine(char delimiter = ',')`](#m-electron2d-fileaccess-readcsvline-system-char) | Reads one CSV record. |
 | [`public string ReadPascalString()`](#m-electron2d-fileaccess-readpascalstring) | Reads a length-prefixed UTF-8 string. |
-| [`public string ReadString(int byteLength)`](#m-electron2d-fileaccess-readstring-system-int32) | Reads an exact number of bytes and decodes them as UTF-8. |
 | [`public string ReadAllText(bool skipCarriageReturns = false)`](#m-electron2d-fileaccess-readalltext-system-boolean) | Reads the entire file as UTF-8 without changing the cursor. |
 | [`public void WriteByte(byte value)`](#m-electron2d-fileaccess-writebyte-system-byte) | Writes one unsigned byte. |
 | [`public void WriteUInt16(ushort value)`](#m-electron2d-fileaccess-writeuint16-system-uint16) | Writes one unsigned 16-bit integer. |
@@ -604,26 +603,6 @@ Reads a length-prefixed UTF-8 string.
 - `Text.DecoderFallbackException`: The payload is not valid UTF-8.
 - `IO.IOException`: The declared length exceeds the supported managed array length.
 - `InvalidOperationException`: The file is closed or not readable.
-- `ObjectDisposedException`: The instance is disposing or disposed.
-
-<a id="m-electron2d-fileaccess-readstring-system-int32"></a>
-### `public string ReadString(int byteLength)`
-
-Reads an exact number of bytes and decodes them as UTF-8.
-
-**Parameters**
-
-- `byteLength`: The nonnegative byte count.
-
-**Returns:** The decoded string.
-
-**Exceptions**
-
-- `ArgumentOutOfRangeException`: `byteLength` is negative.
-- `IO.EndOfStreamException`: The requested bytes are incomplete.
-- `Text.DecoderFallbackException`: The bytes are not valid UTF-8.
-- `InvalidOperationException`: The file is closed or not readable.
-- `IO.IOException`: Reading fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-readalltext-system-boolean"></a>

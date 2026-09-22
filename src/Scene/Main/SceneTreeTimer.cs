@@ -58,11 +58,11 @@ public sealed class SceneTreeTimer : ElectronObject
 
     /// <summary>Gets whether this timer continues while its tree is paused.</summary>
     /// <value><see langword="true"/> to ignore tree pause; otherwise <see langword="false"/>.</value>
-    public bool ProcessAlways { get; }
+    internal bool ProcessAlways { get; }
 
     /// <summary>Gets whether this timer advances in physics frames instead of process frames.</summary>
     /// <value><see langword="true"/> for physics frames; <see langword="false"/> for process frames.</value>
-    public bool ProcessInPhysics { get; }
+    internal bool ProcessInPhysics { get; }
 
     /// <summary>Occurs once when the remaining delay reaches zero.</summary>
     /// <remarks>

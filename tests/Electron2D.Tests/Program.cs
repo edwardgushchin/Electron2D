@@ -113,6 +113,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY") == "1")
     DisplayServerClipboardTests.Run();
     using (var display = DisplayServer.Open("Icon checks", new Vector2I(64, 64), hidden: true))
         DisplayServerIconTests.Run(display);
+    ApplicationHostTests.Run();
 }
 
 Console.WriteLine("Electron2D checks passed.");
@@ -634,6 +635,19 @@ static void VerifyDisplayServer()
         display.ProcessEvents();
         Require(!Input.Instance.IsKeyPressed(Key.A) && !Input.Instance.IsPhysicalKeyPressed(Key.A),
             "The event pump releases logical and physical key state.");
+        keyDown.Key.Key = SDL3.SDL.Keycode.Escape;
+        keyDown.Key.Scancode = SDL3.SDL.Scancode.Escape;
+        keyDown.Key.Type = SDL3.SDL.EventType.KeyDown;
+        keyDown.Key.Down = true;
+        Require(SDL3.SDL.PushEvent(ref keyDown), "The native queue accepts Escape.");
+        display.ProcessEvents();
+        Require(Input.Instance.IsKeyPressed(Key.Escape), "Escape maps to the special key identity.");
+        keyDown.Key.Type = SDL3.SDL.EventType.KeyUp;
+        keyDown.Key.Down = false;
+        Require(SDL3.SDL.PushEvent(ref keyDown), "The native queue accepts Escape release.");
+        display.ProcessEvents();
+        Require(!Input.Instance.IsKeyPressed(Key.Escape), "Escape releases its special key identity.");
+        keyDown.Key.Key = SDL3.SDL.Keycode.A;
         var unicodeKeyMapper = typeof(DisplayServer).GetMethod("MapKeycode",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
         Require(unicodeKeyMapper is not null &&
@@ -838,7 +852,6 @@ static void VerifyMathf()
         [nameof(Mathf.RoundToInt)] = 2,
         [nameof(Mathf.Sign)] = 3,
         [nameof(Mathf.Sin)] = 2,
-        [nameof(Mathf.SinCos)] = 2,
         [nameof(Mathf.Sinh)] = 2,
         [nameof(Mathf.SmoothStep)] = 2,
         [nameof(Mathf.Snapped)] = 2,
@@ -855,7 +868,7 @@ static void VerifyMathf()
         .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
     Require(actualOverloads.Count == expectedOverloads.Count && expectedOverloads.All(pair =>
             actualOverloads.TryGetValue(pair.Key, out var count) && count == pair.Value) &&
-            actualOverloads.Values.Sum() == 127,
+            actualOverloads.Values.Sum() == 125,
         "Mathf must expose the complete audited method family without missing or extra overloads.");
     var constants = typeof(Mathf)
         .GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static |
@@ -864,7 +877,7 @@ static void VerifyMathf()
         .Select(field => field.Name)
         .OrderBy(name => name, StringComparer.Ordinal)
         .ToArray();
-    Require(constants.SequenceEqual(new[] { "E", "Epsilon", "Inf", "NaN", "Pi", "Sqrt2", "Tau" }),
+    Require(constants.SequenceEqual(new[] { "Inf", "NaN", "Pi", "Tau" }),
         "Mathf must expose exactly the audited constant surface.");
 
     Require(Mathf.Pi == MathF.PI && Mathf.Tau == MathF.Tau && Mathf.E == MathF.E &&
@@ -1385,7 +1398,7 @@ static void VerifyImages()
     Require(Image.MaxWidth == 16_777_216 && Image.MaxHeight == 16_777_216 &&
             Enum.GetValues<Image.Format>().Length == 48 && (int)Image.Format.Max == 47 &&
             Enum.GetValues<Image.Interpolation>().Length == 5 && Enum.GetValues<Image.AlphaMode>().Length == 3 &&
-            Enum.GetValues<Image.UsedChannels>().Length == 6 && Enum.GetValues<Image.CompressSource>().Length == 4 &&
+            Enum.GetValues<Image.UsedChannels>().Length == 6 && Enum.GetValues<Image.CompressSource>().Length == 3 &&
             Enum.GetValues<Image.CompressMode>().Length == 6 && (int)Image.CompressMode.Max == 5 &&
             Enum.GetValues<Image.AstcFormat>().Length == 2,
         "Image constants and nested enum identities must remain stable.");
@@ -1498,7 +1511,7 @@ static void VerifyImages()
         Require(image.DetectAlpha() == Image.AlphaMode.Bit && !image.IsInvisible &&
                 image.GetUsedRect() == new RectI(0, 0, 2, 2) && image.DetectUsedChannels() == Image.UsedChannels.Rgba,
             "Alpha and used-region detection must inspect the base level.");
-        Expect<ArgumentOutOfRangeException>(() => image.DetectUsedChannels(Image.CompressSource.Max),
+        Expect<ArgumentOutOfRangeException>(() => image.DetectUsedChannels((Image.CompressSource)3),
             "Channel detection must reject its source sentinel.");
 
         image.GenerateMipmaps();

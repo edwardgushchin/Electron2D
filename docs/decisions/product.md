@@ -82,7 +82,7 @@ Last updated: 2026-09-22
 - Status: Accepted; managed-dependency packaging specified by [0012](product.md#adr-0012), runtime target matrix defined by [0021](product.md#adr-0021), editor/game product boundary amended by [0027](product.md#adr-0027), and rendering backend strategy defined by [0028](rendering.md#adr-0028)
 - Scope: Entire product architecture and packaging
 
-The one-assembly rule covers Electron2D-owned code and the managed source of the selected runtime dependencies under ADR 0012. SDL3-CS must migrate from its current package reference into `Electron2D.dll`; Box2D.NET joins that assembly with the physics domain. ADR 0027 clarifies that separately shipped editor and game executable assemblies are runtime consumers rather than engine-domain assemblies.
+The one-assembly rule covers Electron2D-owned code and the managed source of selected runtime dependencies under ADR 0012. SDL3-CS core source is compiled into `Electron2D.dll`; Box2D.NET joins that assembly with the first physics slice. ADR 0027 clarifies that separately shipped editor and game executable assemblies are runtime consumers rather than engine-domain assemblies.
 
 ### Context
 
@@ -93,14 +93,15 @@ Electron2D is intended to provide a familiar high-level API modeled on Godot's 2
 - Electron2D supports only two-dimensional games.
 - Three-dimensional rendering, physics, transforms, cameras, assets, nodes, compatibility aliases, and speculative shared 2D/3D abstractions are outside scope.
 - The high-level API follows Godot's 2D concepts, lifecycle, composition model, and recognizable naming where they remain compatible with the typed C# decisions in ADR 0001 and ADR 0002.
+- The public and protected runtime API is bounded by the reference engine's public 2D capabilities. A C# projection may use constructors, typed values, events, disposal, and explicit library-host entry points to express an existing capability or lifecycle. Such a projection must name its reference concept in the bidirectional coverage register and must not add an independent game-facing capability. Backend helpers, observations available only to the implementation, and executable application policy stay internal or in a consumer assembly. Review the complete compiled surface, including existing declarations, against this rule; a rationale for an Electron2D-only row is not itself permission to expand the semantic scope.
 - All production runtime-engine domains and components compile into `Electron2D.csproj` with assembly name `Electron2D`, producing one managed engine assembly: `Electron2D.dll`.
 - Tests, examples, benchmarks, analyzers, and development tools may use separate projects because they are not shipped as parts of the engine.
 - The first-party editor is a separately shipped self-hosted application and games are separate executables; both consume the public runtime under ADR 0027 and are not runtime-domain assemblies.
-- SDL3-CS is integrated as the managed binding for the DisplayServer window and event pump. Native SDL deployment and a complete application host remain unresolved. ADR 0028 selects its GPU API as the primary future 2D renderer and SDL_Renderer as a reduced-capability fallback without claiming either as implemented.
+- SDL3-CS core source is integrated as the internal managed binding for the DisplayServer window and event pump. The first executable example owns its clock, frame loop, and shutdown policy in its own assembly using only the public engine API; there is no public application-host type in `Electron2D.dll`. ADR 0028 selects SDL's GPU API as the primary future 2D renderer and SDL_Renderer as a reduced-capability fallback without claiming either as implemented.
 
 ### Packaging boundary
 
-The current verified engine artifact is the managed `Electron2D.dll`. DisplayServer currently references the separately shipped `SDL3-CS` package; it must migrate to vendored source in `Electron2D.dll` before this packaging decision is implemented. No native SDL binary is packaged by the current project, and its target-specific packaging still needs verification.
+The managed runtime artifact is `Electron2D.dll`, with internal SDL3-CS core binding source from pinned release `v3.4.16.1`. The Linux x64 self-contained example packages native SDL 3.4.16 beside the application files. The native library is not embedded in the managed DLL; other target packages remain unverified.
 
 Native SDL deployment is a separate unresolved platform constraint. This ADR does not claim that native SDL code has already been embedded into the managed DLL or that a physical one-file native deployment has been achieved. That decision requires an implemented and verified SDL integration.
 
@@ -109,6 +110,7 @@ Native SDL deployment is a separate unresolved platform constraint. This ADR doe
 - Production code remains easy to reference: consumers add one engine assembly.
 - Domain boundaries are namespaces and documentation boundaries, not assembly boundaries.
 - Features designed only to preserve a possible future 3D path must be rejected.
+- New public declarations require a semantic reference counterpart or a documented C# projection of one; application orchestration belongs to the executable consumer.
 - Godot familiarity does not imply GDScript, Variant, binary, scene-format, or source compatibility where another accepted ADR explicitly differs.
 - SDL3-CS and Box2D.NET must be source-vendored into the managed engine assembly when integrated; other managed runtime dependencies require their own decision.
 
@@ -131,14 +133,15 @@ Last updated: 2026-09-22
 
 Electron2D distributes one managed runtime assembly and exposes one engine-owned public API. SDL3-CS is the selected managed SDL binding; Box2D.NET is the selected managed 2D physics backend. Keeping either as a separate package would add a managed assembly to the application deployment. Source vendoring keeps the managed dependency graph inside `Electron2D.dll`, with upstream updates and local patches owned by Electron2D maintainers.
 
-SDL3-CS is currently integrated through a package reference for DisplayServer, while Box2D.NET and the physics domain are absent. Native SDL is a separate platform-specific library: copying its C# binding into the engine does not include native SDL code or prove native packaging.
+SDL3-CS core binding source is pinned in `src/Vendor/SDL3-CS` and compiled into `Electron2D.dll`; Box2D.NET and the physics domain remain absent. Native SDL is a separate platform-specific library supplied transitively by the runtime project to Linux applications.
 
 ### Decision
 
 - Keep all Electron2D runtime code and the managed source of SDL3-CS and Box2D.NET in `Electron2D.csproj`, producing only `Electron2D.dll` as the managed engine artifact. Do not ship either dependency as a separate managed runtime assembly or depend on its NuGet package in a completed integration.
-- Replace DisplayServer's current SDL3-CS package reference with vendored source under `src/` in the next SDL packaging integration. Vendor the managed source of `ikpil/Box2D.NET` under `src/` in the first executable 2D physics slice; do not add it as unused source before then.
+- Keep the SDL3-CS core source vendored under `src/` and refresh it by release tag with `tools/update-sdl3-cs.sh`; vendor the managed source of `ikpil/Box2D.NET` under `src/` in the first executable 2D physics slice.
 - Pin each vendored source to an upstream release and commit, retain its required license notices, record local patches, and make upgrades explicit reviewable changes. Verify the compiled assembly, dependent behavior, and target-specific packaging after each update.
 - Keep vendored types behind internal implementation boundaries. The public and protected Electron2D API must not expose SDL3-CS or Box2D.NET types; verify the exported assembly surface when integrating either source tree. Physics nodes, resources, queries, contacts, and errors will use Electron2D types.
+- Engine consumers, including examples, games, and the editor, use only Electron2D's public API. They must not reference, import, or call SDL3-CS, Box2D.NET, or their native APIs, and must not declare backend package dependencies in their projects. Platform packages required by the engine flow from `Electron2D.csproj` into published applications. This rule applies to bootstrap code as well as scene code; backend probes belong in engine tests.
 - Native SDL remains a target-specific deployment dependency. Its binary packaging, host lifecycle, and native verification belong to the SDL integration and platform slices under ADR 0021. Vendor source does not imply a single physical deployment file.
 - ADR 0028 selects the future SDL GPU and SDL_Renderer roles; this decision does not implement either renderer or the physics domain.
 
@@ -146,7 +149,7 @@ SDL3-CS is currently integrated through a package reference for DisplayServer, w
 
 - SDL3-CS and Box2D.NET become maintained vendored source rather than separate managed packages. Upstream fixes require an explicit source refresh and regression checks.
 - Applications deploy `Electron2D.dll` plus any required target-specific native SDL library and application host files. One managed engine DLL is not a claim of single-file native deployment.
-- The current build is unchanged: DisplayServer uses a separate managed SDL3-CS package; Box2D.NET, physics, vendored source, and native SDL packaging remain absent.
+- The Linux x64 example publishes `Electron2D.dll` and native `libSDL3.so` without `SDL3-CS.dll`; Box2D.NET and physics remain absent. Other platform packages remain separate work.
 
 ### Rejected alternatives
 
@@ -242,7 +245,7 @@ The editor targets the three desktop operating systems and both Linux display pr
 
 ### Current implementation boundary
 
-The current project targets `net8.0`. A published Linux x64 test consumer has loaded its packaged SDL and passed a limited native smoke under Wayland; this does not establish full Wayland behavior or a production application host. Some file-system code contains macOS and Windows backends, but they have not been exercised on native hosts. There is no complete SDL application host, Web browser host/build/package/test pipeline, mobile target project, Android package, iOS application bundle, editor executable, signing pipeline, or six-target CI matrix. Therefore this ADR establishes the product targets and the current Wayland-only verification gate, not a claim that distributable applications already exist on every target.
+The project targets `net8.0`. A self-contained Linux x64 example starts on Wayland with its packaged SDL and advances its scene; user-assisted physical arrow-key input and Escape exit passed in the compositor-focused window. Some file-system code contains macOS and Windows backends, but they have not been exercised on native hosts. There is no Web browser host/build/package/test pipeline, mobile target project, Android package, iOS application bundle, editor executable, signing pipeline, or six-target CI matrix. The current Wayland-only gate does not establish distributable applications on other targets.
 
 The first Web runtime vertical slice must choose and verify a browser-compatible host and dependency model, then integrate the required rendering, input, storage, lifecycle, and packaging capabilities. No placeholder API or unverified browser package is authorized by this target decision.
 
@@ -293,7 +296,7 @@ Accepted. This decision amends ADR 0004 by limiting its one-assembly rule to the
 
 Electron2D is both a reusable 2D runtime and the foundation on which its own editor and games are built. The editor must exercise the same engine-facing scene, rendering, input, resource, UI, and application lifecycle capabilities available to games instead of becoming a parallel application framework with privileged private behavior.
 
-The current repository contains one runtime project, one executable test project, an empty tracked `examples/` root, and no editor implementation. The runtime compiles only `src/**/*.cs` into `Electron2D.dll`. Mixing future editor classes into that project would ship editor-only code to every game and mobile runtime, while compiling the editor from the same `src/` tree into another project would blur ownership and risk duplicate type definitions.
+The current repository contains one runtime project, an executable test project, a first user-facing window/input example, and no editor implementation. The runtime compiles only `src/**/*.cs` into `Electron2D.dll`. Mixing future editor classes into that project would ship editor-only code to every game and mobile runtime, while compiling the editor from the same `src/` tree into another project would blur ownership and risk duplicate type definitions.
 
 ### Decision
 
@@ -301,9 +304,11 @@ The repository has three one-way product layers:
 
 1. `src/` and `Electron2D.csproj` contain only portable runtime engine code and produce the single Electron2D-owned runtime assembly `Electron2D.dll`.
 2. `editor/Electron2D.Editor/` is the reserved root for a future standalone editor executable project and all editor-only production source. The editor project will reference `Electron2D.csproj`/`Electron2D.dll`; it will not compile runtime source files into its own assembly.
-3. `examples/<Game>/` is the root for first-party example games and templates. Each game is an independent executable project that references `Electron2D.csproj`/`Electron2D.dll`.
+3. `examples/<Example>/` is the root for user-facing examples and game templates. Each example is an independent executable project that references `Electron2D.csproj`/`Electron2D.dll`.
 
-The editor and every first-party game must be built with Electron2D's public runtime API. Their scenes, UI, rendering, input, resources, and lifecycle must use Electron2D facilities as those domains become implemented. A minimal .NET entry point, platform launcher, packaging metadata, and backend bootstrap are allowed, but they must only start/host Electron2D; they must not become an alternative game or editor UI framework.
+Examples teach a user how to build with the public engine API. They may cover individual features such as shaders, lighting, audio, and networking, or complete small games such as a platformer or top-down game. Their code and explanations must be useful as application examples. Example source and project files must not name or depend on SDL, Box2D, or another implementation backend; this includes the application bootstrap. API conformance probes, injected events, failure fixtures, diagnostic harnesses, and coverage checks belong in `tests/` or development tools, even when they run an example's production path. The initial window/input example is a user-facing bootstrap and scene-update example; its host logic is application code in its executable assembly, not a new runtime API.
+
+The editor and every first-party game must be built with Electron2D's public runtime API. Their scenes, UI, rendering, input, resources, and lifecycle must use Electron2D facilities as those domains become implemented. A minimal .NET entry point, platform launcher, and packaging metadata are allowed, but they must only start/host Electron2D through its public API; they must not become an alternative game or editor UI framework.
 
 Dependency direction is strict:
 

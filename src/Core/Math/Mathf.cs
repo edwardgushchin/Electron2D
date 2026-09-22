@@ -32,13 +32,13 @@ public static class Mathf
     public const float NaN = float.NaN;
 
     /// <summary>The base of the natural logarithm.</summary>
-    public const float E = 2.7182818284590452353602874714f;
+    internal const float E = 2.7182818284590452353602874714f;
 
     /// <summary>The positive square root of two.</summary>
-    public const float Sqrt2 = 1.4142135623730950488016887242f;
+    internal const float Sqrt2 = 1.4142135623730950488016887242f;
 
     /// <summary>The default absolute single-precision comparison tolerance.</summary>
-    public const float Epsilon = FloatEpsilon;
+    internal const float Epsilon = FloatEpsilon;
 
     /// <summary>Returns the absolute value of an integer.</summary>
     /// <param name="value">The input value.</param>
@@ -908,12 +908,12 @@ public static class Mathf
     /// <summary>Returns the sine and cosine of an angle in one operation.</summary>
     /// <param name="angle">The angle in radians.</param>
     /// <returns>A tuple containing sine followed by cosine.</returns>
-    public static (float Sin, float Cos) SinCos(float angle) => MathF.SinCos(angle);
+    internal static (float Sin, float Cos) SinCos(float angle) => MathF.SinCos(angle);
 
     /// <summary>Returns the double-precision sine and cosine of an angle in one operation.</summary>
     /// <param name="angle">The angle in radians.</param>
     /// <returns>A tuple containing sine followed by cosine.</returns>
-    public static (double Sin, double Cos) SinCos(double angle) => Math.SinCos(angle);
+    internal static (double Sin, double Cos) SinCos(double angle) => Math.SinCos(angle);
 
     /// <summary>Returns the hyperbolic sine.</summary>
     /// <param name="value">The input value.</param>

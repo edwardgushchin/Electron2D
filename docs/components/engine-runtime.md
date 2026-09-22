@@ -23,7 +23,7 @@ Callback exceptions restore Engine's running state. Initialization/finalization 
 
 ## Dependencies
 
-The component depends on Core object lifecycle, MainLoop, ProjectSettings, and the permanent Input/InputMap service registrations plus ordinary .NET synchronization, runtime architecture reporting, and assembly metadata. `SceneTree` is accepted through `MainLoop`. Future SDL hosting will depend on Engine for timing policy and lifecycle but Engine does not depend on SDL.
+The component depends on Core object lifecycle, MainLoop, ProjectSettings, and the permanent Input/InputMap service registrations plus ordinary .NET synchronization, runtime architecture reporting, and assembly metadata. `SceneTree` is accepted through `MainLoop`. The first executable SDL consumer uses Engine for timing policy and lifecycle; Engine does not depend on SDL.
 
 ## Invariants
 
@@ -40,11 +40,11 @@ The component depends on Core object lifecycle, MainLoop, ProjectSettings, and t
 
 ## Current implementation status and exclusions
 
-Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. SDL clock/event/window integration, actual maximum-FPS waiting, rendering/draw counts, logging flags, generated attribution/license data, script debugging/languages, movie writing, and editor hints remain absent. Their exact reference-API disposition is in the [`Engine` class inventory](../classes/Engine.md#official-reference-coverage-inventory).
+Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. The executable example owns a monotonic clock, SDL event pumping, and a frame-rate wait outside this component. Rendering/draw counts, logging flags, generated attribution/license data, script debugging/languages, movie writing, and editor hints remain absent. Their exact reference-API disposition is in the [`Engine` class inventory](../classes/Engine.md#official-reference-coverage-inventory).
 
 ## Verification
 
-Executable checks cover success, invalid values/order, wrong threads, lifecycle and frame re-entry, stop requests, long stalls, callback and lifecycle failures, `SceneTree` attachment, original-delta Timer behavior at zero scale, permanent Input service registration, registry concurrency, metadata, counters/FPS/interpolation, and warmed idle allocation. They do not verify platform cadence, native input, rendering, or hard real-time behavior.
+Executable checks cover success, invalid values/order, wrong threads, lifecycle and frame re-entry, stop requests, long stalls, callback and lifecycle failures, `SceneTree` attachment, original-delta Timer behavior at zero scale, permanent Input service registration, registry concurrency, metadata, counters/FPS/interpolation, and warmed idle allocation. The separate SDL host checks verify loop ordering, bounded waiting, and cleanup under the dummy driver; they do not prove hard real-time cadence or rendering.
 
 ## Decisions
 

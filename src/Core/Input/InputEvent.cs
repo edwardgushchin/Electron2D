@@ -127,7 +127,7 @@ public abstract class InputEvent : Resource
     /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
-    public float GetActionRawStrength(string action, bool exactMatch = false)
+    internal float GetActionRawStrength(string action, bool exactMatch = false)
     {
         ThrowIfDisposed();
         return InputMap.Instance.TryGetActionStatus(this, action, exactMatch, out var status) ? status.RawStrength : 0f;

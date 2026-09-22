@@ -189,8 +189,6 @@ public sealed partial class Image : Resource
         Srgb = 1,
         /// <summary>Treats the image as a tangent-space normal map whose red and green channels are sufficient.</summary>
         Normal = 2,
-        /// <summary>Marks the number of source modes and is not a valid source.</summary>
-        Max = 3,
     }
 
     /// <summary>Identifies a block-compression family used by a future texture-compression backend.</summary>

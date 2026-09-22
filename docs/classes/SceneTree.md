@@ -43,9 +43,6 @@ tree.ProcessFrame(1.0 / 60.0);
 | Member | Description |
 | --- | --- |
 | [`public Node Root { get; }`](#p-electron2d-scenetree-root) | Gets the root node owned by this tree. |
-| [`public bool HasDeferredWork { get; }`](#p-electron2d-scenetree-hasdeferredwork) | Gets an advisory snapshot indicating whether deferred actions or deletions are queued. |
-| [`public ulong ProcessFrameCount { get; }`](#p-electron2d-scenetree-processframecount) | Gets the number of completed process-frame attempts. |
-| [`public ulong PhysicsFrameCount { get; }`](#p-electron2d-scenetree-physicsframecount) | Gets the number of completed physics-frame attempts. |
 | [`public int NodeCount { get; }`](#p-electron2d-scenetree-nodecount) | Gets the number of nodes currently inside this tree. |
 | [`public bool Paused { get; set; }`](#p-electron2d-scenetree-paused) | Gets or sets whether pause-aware processing and timers are paused. |
 
@@ -124,37 +121,6 @@ a terminal disposed tree.
 Gets the root node owned by this tree.
 
 **Value:** The immutable root reference. Tree finalization exits and recursively disposes this hierarchy.
-
-<a id="p-electron2d-scenetree-hasdeferredwork"></a>
-### `public bool HasDeferredWork { get; }`
-
-Gets an advisory snapshot indicating whether deferred actions or deletions are queued.
-
-**Value:** `true` when either concurrent queue is currently nonempty.
-
-**Remarks:** This property is not a synchronization barrier and may change immediately after it is read.
-
-<a id="p-electron2d-scenetree-processframecount"></a>
-### `public ulong ProcessFrameCount { get; }`
-
-Gets the number of completed process-frame attempts.
-
-**Value:** The number of valid calls to [`SceneTree.ProcessFrame(Double)`](SceneTree.md#m-electron2d-scenetree-processframe-system-double), including calls that reported callback failures.
-
-**Exceptions**
-
-- `ObjectDisposedException`: The tree is disposing on another thread or has finished disposing.
-
-<a id="p-electron2d-scenetree-physicsframecount"></a>
-### `public ulong PhysicsFrameCount { get; }`
-
-Gets the number of completed physics-frame attempts.
-
-**Value:** The number of valid calls to [`SceneTree.PhysicsFrame(Double)`](SceneTree.md#m-electron2d-scenetree-physicsframe-system-double), including calls that reported callback failures.
-
-**Exceptions**
-
-- `ObjectDisposedException`: The tree is disposing on another thread or has finished disposing.
 
 <a id="p-electron2d-scenetree-nodecount"></a>
 ### `public int NodeCount { get; }`
@@ -712,7 +678,7 @@ Group names are nonblank and ordinal case-sensitive. Immediate group operations 
 
 ## Threading guarantees and non-guarantees
 
-The creating thread owns lifecycle, hierarchy reads and mutation, input dispatch/handled state, pause mutation, immediate group operations, timer/tween creation, mutation and disposal, frames, flushes, and tree disposal. `Defer`, `SetDeferred`, deferred group operations, `QueueDelete`, and `Node.QueueFree` are cross-thread request boundaries. Typed event receipt by `AwaitTweener` may also originate elsewhere, but continuation occurs on the owner thread. Their acceptance is serialized with disposal. `HasDeferredWork` is an advisory concurrent snapshot, not a barrier. User game state, event subscription, timer/tween reads, and node reads are not made thread-safe by the tree.
+The creating thread owns lifecycle, hierarchy reads and mutation, input dispatch/handled state, pause mutation, immediate group operations, timer/tween creation, mutation and disposal, frames, flushes, and tree disposal. `Defer`, `SetDeferred`, deferred group operations, `QueueDelete`, and `Node.QueueFree` are cross-thread request boundaries. Typed event receipt by `AwaitTweener` may also originate elsewhere, but continuation occurs on the owner thread. Their acceptance is serialized with disposal. User game state, event subscription, timer/tween reads, and node reads are not made thread-safe by the tree.
 
 ## Dependencies and interactions
 

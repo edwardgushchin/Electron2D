@@ -8,10 +8,10 @@ namespace Electron2D;
 public sealed class InputMap : ElectronObject
 {
     /// <summary>Allows a controller binding to match the same control on every device.</summary>
-    public const int AllDevices = -1;
+    internal const int AllDevices = -1;
 
     /// <summary>Defines the default analog deadzone for newly registered actions.</summary>
-    public const float DefaultDeadzone = 0.2f;
+    internal const float DefaultDeadzone = 0.2f;
 
     private static readonly InputMap SharedInstance = new();
     private readonly object _gate = new();

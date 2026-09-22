@@ -52,7 +52,6 @@ Console.WriteLine(inputEvent.AsText());
 | [`public bool IsActionPressed(string action, bool allowEcho = false, bool exactMatch = false)`](#m-electron2d-inputevent-isactionpressed-system-string-system-boolean-system-boolean) | Gets whether this event presses a registered action. |
 | [`public bool IsActionReleased(string action, bool exactMatch = false)`](#m-electron2d-inputevent-isactionreleased-system-string-system-boolean) | Gets whether this event releases a registered action. |
 | [`public float GetActionStrength(string action, bool exactMatch = false)`](#m-electron2d-inputevent-getactionstrength-system-string-system-boolean) | Gets the deadzone-adjusted strength contributed by this event to an action. |
-| [`public float GetActionRawStrength(string action, bool exactMatch = false)`](#m-electron2d-inputevent-getactionrawstrength-system-string-system-boolean) | Gets the strength contributed by this event before action deadzone remapping. |
 | [`public bool IsCanceled()`](#m-electron2d-inputevent-iscanceled) | Gets whether the event was canceled by its source. |
 | [`public bool IsPressed()`](#m-electron2d-inputevent-ispressed) | Gets whether the event represents a non-canceled press. |
 | [`public bool IsReleased()`](#m-electron2d-inputevent-isreleased) | Gets whether the event represents a non-canceled release. |
@@ -176,25 +175,6 @@ Gets whether this event releases a registered action.
 ### `public float GetActionStrength(string action, bool exactMatch = false)`
 
 Gets the deadzone-adjusted strength contributed by this event to an action.
-
-**Parameters**
-
-- `action`: The nonblank, case-sensitive action name.
-- `exactMatch`: Whether modifiers and analog direction must match exactly.
-
-**Returns:** A value from zero through one, or zero when the event does not match.
-
-**Exceptions**
-
-- `ArgumentException`: `action` is empty or whitespace.
-- `ArgumentNullException`: `action` is `null`.
-- `Collections.Generic.KeyNotFoundException`: The action is not registered.
-- `ObjectDisposedException`: The event is disposing or disposed.
-
-<a id="m-electron2d-inputevent-getactionrawstrength-system-string-system-boolean"></a>
-### `public float GetActionRawStrength(string action, bool exactMatch = false)`
-
-Gets the strength contributed by this event before action deadzone remapping.
 
 **Parameters**
 

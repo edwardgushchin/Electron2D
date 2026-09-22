@@ -37,8 +37,6 @@ timer.Timeout += _ => Console.WriteLine("Elapsed");
 | Member | Description |
 | --- | --- |
 | [`public double TimeLeft { get; set; }`](#p-electron2d-scenetreetimer-timeleft) | Gets or sets the remaining delay in seconds. |
-| [`public bool ProcessAlways { get; }`](#p-electron2d-scenetreetimer-processalways) | Gets whether this timer continues while its tree is paused. |
-| [`public bool ProcessInPhysics { get; }`](#p-electron2d-scenetreetimer-processinphysics) | Gets whether this timer advances in physics frames instead of process frames. |
 
 ## Methods
 
@@ -70,20 +68,6 @@ Gets or sets the remaining delay in seconds.
 - `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
 
 **Remarks:** Changing the value does not change the timer's selected frame lane or pause policy. Zero expires on the next matching frame.
-
-<a id="p-electron2d-scenetreetimer-processalways"></a>
-### `public bool ProcessAlways { get; }`
-
-Gets whether this timer continues while its tree is paused.
-
-**Value:** `true` to ignore tree pause; otherwise `false`.
-
-<a id="p-electron2d-scenetreetimer-processinphysics"></a>
-### `public bool ProcessInPhysics { get; }`
-
-Gets whether this timer advances in physics frames instead of process frames.
-
-**Value:** `true` for physics frames; `false` for process frames.
 
 ## Method Descriptions
 
@@ -150,7 +134,7 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 ## Lifecycle and error behavior
 
-The timer starts with the requested delay. Matching frames subtract their supplied delta unless the tree is paused and `ProcessAlways` is false. A zero duration waits for the next matching frame. At zero, the tree removes the timer before invoking `Timeout`; disposal is attempted even when a handler throws. Timeout and disposal failures are combined. Manual disposal cancels future timeout delivery. Setting an invalid duration throws without changing the prior value.
+The timer starts with the requested delay. Matching frames subtract their supplied delta unless the tree is paused and the timer is not configured to process while paused. A zero duration waits for the next matching frame. At zero, the tree removes the timer before invoking `Timeout`; disposal is attempted even when a handler throws. Timeout and disposal failures are combined. Manual disposal cancels future timeout delivery. Setting an invalid duration throws without changing the prior value.
 
 ## Threading guarantees and non-guarantees
 
