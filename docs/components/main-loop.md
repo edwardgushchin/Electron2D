@@ -4,7 +4,7 @@ Last updated: 2026-09-21
 
 ## Scope
 
-This Core component defines the host-facing application lifecycle, variable-step and fixed-step callback lanes, stable system-notification identifiers, typed operating-system permission-result delivery, and internal boundaries for Input transition completion and event forwarding. It does not implement a host, clock, native event translation, rendering, raw input ownership, or physics simulation.
+This Core component defines the host-facing application lifecycle, variable-step and fixed-step callback lanes, stable system-notification identifiers, typed operating-system permission-result delivery, and internal boundaries for Input transition completion and event forwarding. It does not implement a clock, native event translation, rendering, raw input ownership, or physics simulation. The separate Display domain now owns an SDL window and event pump.
 
 ## Owned types
 
@@ -22,7 +22,7 @@ The host may deliver system notifications through inherited `Notify(int)` and pu
 
 ## Dependencies
 
-The component depends on Core object lifecycle, the process-wide Input transition service, and the .NET Base Class Library. The Engine runtime depends on this component, future SDL application hosting depends on both, and `SceneTree` depends on it from the Scene domain.
+The component depends on Core object lifecycle, the process-wide Input transition service, and the .NET Base Class Library. The Engine runtime depends on this component, SDL `DisplayServer` is called separately by a consumer host, and `SceneTree` depends on it from the Scene domain.
 
 ## Invariants
 
@@ -36,11 +36,11 @@ The component depends on Core object lifecycle, the process-wide Input transitio
 
 ## Current implementation status and exclusions
 
-The managed lifecycle, event, callbacks, stop result, constants, `Engine` attachment, Input transition integration, error states, and `SceneTree` integration are implemented and verified. Native system-event generation, permission requests, real clock ownership, frame pacing/waiting, window/application ownership, exit codes, crash integration, and focus synchronization are blocked on the SDL host under ADR 0038. They are absent rather than stubbed.
+The managed lifecycle, event, callbacks, stop result, constants, `Engine` attachment, Input transition integration, error states, and `SceneTree` integration are implemented and verified. SDL `DisplayServer` now owns one native window and partial event/focus translation. Permission requests, real clock ownership, frame pacing/waiting, complete application ownership, exit codes, and crash integration remain absent.
 
 ## Verification
 
-Executable checks cover success, invalid order, delta boundaries, wrong-thread calls, frame and lifecycle callback failures, re-entry, deterministic disposal pairing, permission delivery, numeric constants, SceneTree input/system propagation and finalization, independent Input transition lanes, and warmed idle-frame allocations. They do not exercise an SDL host or real operating-system events.
+Executable checks cover success, invalid order, delta boundaries, wrong-thread calls, frame and lifecycle callback failures, re-entry, deterministic disposal pairing, permission delivery, numeric constants, SceneTree input/system propagation and finalization, independent Input transition lanes, and warmed idle-frame allocations. Optional separate Display tests exercise SDL's dummy video driver but do not prove real operating-system behavior.
 
 ## Decisions
 

@@ -7,6 +7,72 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_CLIPBOARD_CHILD") == "1")
+{
+    DisplayServerClipboardNativeTests.RunChild();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_NATIVE") == "1")
+{
+    DisplayServerNativeSmokeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_IME_MOVE") == "1")
+{
+    DisplayServerImeNativeTests.RunMove();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_THEME_PORTAL") == "1")
+{
+    DisplayServerThemePortalNativeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_SCREENSAVER") == "1")
+{
+    DisplayServerScreenSaverNativeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_ATTENTION") == "1")
+{
+    DisplayServerAttentionNativeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_DIALOG_NATIVE") == "1")
+{
+    DisplayServerDialogNativeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_WINDOW_EVENTS") == "1")
+{
+    DisplayServerWindowEventNativeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_SCALE_MOVE") == "1")
+{
+    DisplayServerScaleMoveNativeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_POINTER_FOCUS") == "1")
+{
+    DisplayServerPointerFocusNativeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_POINTER_CONFINE") == "1")
+{
+    DisplayServerPointerFocusNativeTests.RunConfinement();
+    return;
+}
+
 VerifyInstanceIds();
 VerifyLifetime();
 VerifyNotificationsAndProperties();
@@ -29,6 +95,7 @@ VerifyProjectSettings();
 VerifyResources();
 VerifyPackedScenes();
 VerifyInput();
+VerifyInputEmulation();
 VerifyEngine();
 VerifyMainLoop();
 VerifyNodeHierarchyAndTransforms();
@@ -38,8 +105,683 @@ VerifySceneTreeGroupsEventsAndTimers();
 VerifyTimers();
 VerifyTweens();
 VerifySceneTreeFailureSafety();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY") == "1")
+{
+    VerifyDisplayServer();
+    VerifyDisplayServerPointerModifiers();
+    DisplayServerDialogTests.Run();
+    DisplayServerClipboardTests.Run();
+    using (var display = DisplayServer.Open("Icon checks", new Vector2I(64, 64), hidden: true))
+        DisplayServerIconTests.Run(display);
+}
 
 Console.WriteLine("Electron2D checks passed.");
+
+static void VerifyDisplayServer()
+{
+    Require(DisplayServer.Instance is null, "No display server is open before initialization.");
+    Expect<ArgumentOutOfRangeException>(() => DisplayServer.Open("invalid", new Vector2I(0, 40)),
+        "A native window requires positive dimensions.");
+
+    using (var display = DisplayServer.Open("Initial", new Vector2I(320, 240), hidden: true))
+    {
+        Require(ReferenceEquals(DisplayServer.Instance, display), "Opening registers the process display server.");
+        var expectedBackendName = SDL3.SDL.GetCurrentVideoDriver() switch
+        {
+            "dummy" => "headless",
+            "wayland" => "Wayland",
+            "x11" => "X11",
+            var driver => driver,
+        };
+        Require(display.GetName() == expectedBackendName && display.GetScreenCount() > 0,
+            "The backend reports its public name and an active display.");
+        DisplayServerKeyboardNativeTests.Run(display);
+        var systemTheme = SDL3.SDL.GetSystemTheme();
+        Require(display.IsDarkMode() == (systemTheme == SDL3.SDL.SystemTheme.Dark) &&
+                display.IsDarkModeSupported() == (systemTheme != SDL3.SDL.SystemTheme.Unknown),
+            "Theme queries reflect the native light, dark, or unknown state.");
+        Expect<InvalidOperationException>(() => Task.Run(display.IsDarkMode).GetAwaiter().GetResult(),
+            "Theme queries remain on the opening thread.");
+        Expect<InvalidOperationException>(() => Task.Run(display.IsDarkModeSupported).GetAwaiter().GetResult(),
+            "Theme support queries remain on the opening thread.");
+        Require(display.HasHardwareKeyboard(),
+            "Desktop hosts report hardware keyboard support independent of attached devices.");
+        var priorTouchEmulation = Input.Instance.EmulateTouchFromMouse;
+        try
+        {
+            Input.Instance.EmulateTouchFromMouse = false;
+            var nativeTouchAvailable = display.IsTouchscreenAvailable();
+            Input.Instance.EmulateTouchFromMouse = true;
+            Require(display.IsTouchscreenAvailable(),
+                "Mouse-to-touch emulation makes touchscreen input available without native touch hardware.");
+            Input.Instance.EmulateTouchFromMouse = false;
+            Require(display.IsTouchscreenAvailable() == nativeTouchAvailable,
+                "Disabling emulation restores the native touch-device result.");
+        }
+        finally
+        {
+            Input.Instance.EmulateTouchFromMouse = priorTouchEmulation;
+        }
+        var wasKeptOn = display.ScreenIsKeptOn();
+        try
+        {
+            display.ScreenSetKeepOn(!wasKeptOn);
+            Require(display.ScreenIsKeptOn() != wasKeptOn,
+                "Accepted screen blanking requests are observable through the public API.");
+            display.ScreenSetKeepOn(wasKeptOn);
+        }
+        catch (InvalidOperationException)
+        {
+            Require(display.ScreenIsKeptOn() == wasKeptOn,
+                "A rejected screen blanking request does not pretend to change native state.");
+        }
+        Require((int)DisplayServer.Feature.Mouse == 3 &&
+                (int)DisplayServer.Feature.ClipboardPrimary == 18 &&
+                (int)DisplayServer.Feature.PipMode == 36 &&
+                display.HasFeature(DisplayServer.Feature.Clipboard) &&
+                !display.HasFeature(DisplayServer.Feature.NativeDialog) &&
+                !display.HasFeature((DisplayServer.Feature)999),
+            "Feature IDs remain stable and capability queries do not advertise absent services.");
+        Require((int)DisplayServer.HandleType.DisplayHandle == 0 &&
+                (int)DisplayServer.HandleType.WindowHandle == 1,
+            "Native handle categories retain their display/window numeric identities.");
+        Expect<NotSupportedException>(() => display.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle),
+            "The dummy video driver has no operating-system window handle.");
+        Expect<ArgumentOutOfRangeException>(() => display.WindowGetNativeHandle((DisplayServer.HandleType)99),
+            "Undefined native handle categories are rejected.");
+        Expect<ArgumentOutOfRangeException>(() => display.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle, 1),
+            "Native handles belong only to the main window.");
+        Expect<InvalidOperationException>(() => Task.Run(() =>
+            display.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle)).GetAwaiter().GetResult(),
+            "Native handles are queried only on the opening thread.");
+        display.ClipboardSet("DisplayServer clipboard probe");
+        Require(display.ClipboardHas() && display.ClipboardGet() == "DisplayServer clipboard probe",
+            "The advertised text clipboard round-trips through the dummy native driver.");
+        var mainScreen = display.WindowGetCurrentScreen();
+        var nativeRefreshRate = SDL3.SDL.GetCurrentDisplayMode(
+            SDL3.SDL.GetDisplays(out _)![mainScreen])?.RefreshRate ?? 0f;
+        Require(display.ScreenGetRefreshRate(mainScreen) ==
+                (float.IsFinite(nativeRefreshRate) && nativeRefreshRate > 0f ? nativeRefreshRate : -1f),
+            "A missing or nonpositive native refresh rate is reported as unavailable.");
+        Require(display.WindowGetCurrentScreen(DisplayServer.InvalidWindowId) == DisplayServer.InvalidScreen,
+            "An unknown window has no current screen.");
+        var unchangedPosition = display.WindowGetPosition();
+        var unchangedMode = display.WindowGetMode();
+        display.WindowSetCurrentScreen(mainScreen);
+        display.WindowSetCurrentScreen(DisplayServer.ScreenOfMainWindow);
+        Require(display.WindowGetPosition() == unchangedPosition && display.WindowGetMode() == unchangedMode,
+            "Selecting the current screen, including its selector, leaves the window unchanged.");
+        Expect<ArgumentOutOfRangeException>(() => display.WindowSetCurrentScreen(int.MaxValue),
+            "An unknown target display is rejected before a move.");
+        Expect<ArgumentOutOfRangeException>(() => display.WindowSetCurrentScreen(mainScreen, 1),
+            "An unknown window ID is rejected even when the target is the current screen.");
+        Require(mainScreen >= 0 && display.ScreenGetPosition() == display.ScreenGetPosition(mainScreen) &&
+                display.ScreenGetSize() == display.ScreenGetSize(mainScreen) &&
+                display.ScreenGetScale() == display.ScreenGetScale(mainScreen) &&
+                display.ScreenGetRefreshRate() == display.ScreenGetRefreshRate(mainScreen),
+            "Default screen queries select the display containing the main window.");
+        Require(display.ScreenGetSize(DisplayServer.ScreenPrimary) ==
+                display.ScreenGetSize(display.GetPrimaryScreen()) &&
+                display.ScreenGetSize(DisplayServer.ScreenWithKeyboardFocus).X > 0 &&
+                display.ScreenGetSize(DisplayServer.ScreenWithMouseFocus).X > 0,
+            "Negative screen selectors resolve to connected displays.");
+        Require(display.ScreenGetPosition(int.MaxValue) == Vector2I.Zero &&
+                display.ScreenGetSize(int.MaxValue) == Vector2I.Zero &&
+                display.ScreenGetScale(int.MaxValue) == 1f &&
+                display.ScreenGetRefreshRate(int.MaxValue) == -1f,
+            "Invalid screen queries return their documented fallbacks.");
+        var screenPosition = display.ScreenGetPosition();
+        Require(display.GetScreenFromRect(new Rect(screenPosition.X, screenPosition.Y, 1, 1)) == mainScreen &&
+                display.GetScreenFromRect(new Rect(screenPosition.X, screenPosition.Y, 0.5f, 0.5f)) ==
+                DisplayServer.InvalidScreen &&
+                display.GetScreenFromRect(new Rect(screenPosition.X, screenPosition.Y, 0, 1)) ==
+                DisplayServer.InvalidScreen &&
+                display.GetScreenFromRect(new Rect(float.NaN, 0, 1, 1)) == DisplayServer.InvalidScreen,
+            "Screen overlap requires at least one whole pixel of finite intersection.");
+        Require(display.WindowGetTitle() == "Initial" && display.WindowGetSize() == new Vector2I(320, 240),
+            "The native window exposes its initial title and logical size.");
+        Require(display.WindowGetMinSize() == new Vector2I(64, 64),
+            "The main window starts with its documented minimum size.");
+        display.WindowSetTitle("Updated");
+        Expect<ArgumentNullException>(() => display.WindowSetTitle(null!),
+            "A null title is rejected without changing the native title.");
+        Expect<ArgumentOutOfRangeException>(() => display.WindowSetTitle("Wrong window", 1),
+            "A title request for an unknown window is rejected.");
+        display.WindowSetSize(new Vector2I(400, 300));
+        Require(display.WindowGetTitle() == "Updated" && display.WindowGetSize() == new Vector2I(400, 300),
+            "Native title and size mutations are observable.");
+        Expect<InvalidOperationException>(() => DisplayServer.Open("duplicate", new Vector2I(100, 100)),
+            "Only one native display server can own the process window.");
+        Expect<ArgumentOutOfRangeException>(() => display.WindowGetSize(1),
+            "Unknown window identifiers fail explicitly.");
+        Expect<InvalidOperationException>(() => Task.Run(display.GetScreenCount).GetAwaiter().GetResult(),
+            "Native display calls remain on the opening thread.");
+
+        var quitCount = 0;
+        display.QuitRequested += () => quitCount++;
+        var quit = new SDL3.SDL.Event { Type = (uint)SDL3.SDL.EventType.Quit };
+        Require(SDL3.SDL.PushEvent(ref quit), "The native queue accepts a quit request.");
+        display.ProcessEvents();
+        Require(quitCount == 1, "The display event pump delivers quit requests synchronously.");
+        Action failingQuit = () => throw new InvalidOperationException("injected display callback failure");
+        display.QuitRequested += failingQuit;
+        Require(SDL3.SDL.PushEvent(ref quit) && SDL3.SDL.PushEvent(ref quit),
+            "The native queue accepts multiple quit requests.");
+        try
+        {
+            display.ProcessEvents();
+            throw new Exception("The display pump must aggregate callback failures.");
+        }
+        catch (AggregateException errors)
+        {
+            Require(errors.InnerExceptions.Count == 2 && quitCount == 3,
+                "Callback failure does not prevent later native events from being delivered.");
+        }
+        display.QuitRequested -= failingQuit;
+        Action reenter = () => Expect<InvalidOperationException>(display.ProcessEvents,
+            "The display event pump rejects callback re-entry.");
+        display.QuitRequested += reenter;
+        Require(SDL3.SDL.PushEvent(ref quit), "The native queue accepts a re-entry probe.");
+        display.ProcessEvents();
+        display.QuitRequested -= reenter;
+
+        var themeDelivery = new List<string>();
+        Action themeChanged = () => themeDelivery.Add("theme");
+        Action themeOrderedQuit = () => themeDelivery.Add("quit");
+        display.SystemThemeChanged += themeChanged;
+        display.QuitRequested += themeOrderedQuit;
+        var nativeThemeChanged = new SDL3.SDL.Event { Type = (uint)SDL3.SDL.EventType.SystemThemeChanged };
+        try
+        {
+            Require(SDL3.SDL.PushEvent(ref nativeThemeChanged) && SDL3.SDL.PushEvent(ref quit) &&
+                    SDL3.SDL.PushEvent(ref nativeThemeChanged),
+                "The native queue accepts system theme changes between quit requests.");
+            display.ProcessEvents();
+            Require(themeDelivery.SequenceEqual(["theme", "quit", "theme"]),
+                "Global theme events retain queue order among other global events.");
+
+            Action failingTheme = () => throw new InvalidOperationException("injected theme callback failure");
+            display.SystemThemeChanged += failingTheme;
+            try
+            {
+                Require(SDL3.SDL.PushEvent(ref nativeThemeChanged) && SDL3.SDL.PushEvent(ref quit),
+                    "The native queue accepts a failing theme callback followed by quit.");
+                try
+                {
+                    display.ProcessEvents();
+                    throw new Exception("A failing theme callback must be reported after the queue drains.");
+                }
+                catch (AggregateException errors)
+                {
+                    Require(errors.InnerExceptions.Count == 1 &&
+                            themeDelivery.SequenceEqual(["theme", "quit", "theme", "theme", "quit"]),
+                        "A theme callback failure is aggregated after later global events are delivered.");
+                }
+            }
+            finally
+            {
+                display.SystemThemeChanged -= failingTheme;
+            }
+        }
+        finally
+        {
+            display.SystemThemeChanged -= themeChanged;
+            display.QuitRequested -= themeOrderedQuit;
+        }
+
+        Require(!display.WindowGetFlag(DisplayServer.WindowFlag.ResizeDisabled) &&
+                (int)DisplayServer.WindowFlag.ResizeDisabled == 0 &&
+                (int)DisplayServer.WindowFlag.Borderless == 1 &&
+                (int)DisplayServer.WindowFlag.Transparent == 3 &&
+                (int)DisplayServer.WindowFlag.NoFocus == 4 &&
+                (int)DisplayServer.WindowFlag.Max == 13 &&
+                (int)DisplayServer.WindowMode.ExclusiveFullscreen == 4,
+            "The native main window starts resizable and flag IDs match the public contract.");
+        display.WindowSetFlag(DisplayServer.WindowFlag.ResizeDisabled, true);
+        display.ProcessEvents();
+        var observedResizable = (SDL3.SDL.GetWindowFlags(SDL3.SDL.GetWindows(out _)![0]) &
+            SDL3.SDL.WindowFlags.Resizable) != 0;
+        Require(display.WindowGetFlag(DisplayServer.WindowFlag.ResizeDisabled) == !observedResizable,
+            "The resize-disabled flag is the inverse of the observed native resizable flag.");
+        display.WindowSetFlag(DisplayServer.WindowFlag.ResizeDisabled, false);
+        Expect<NotSupportedException>(() => display.WindowSetFlag(DisplayServer.WindowFlag.Transparent, true),
+            "A defined flag requiring the absent renderer rejects mutation explicitly.");
+        Expect<NotSupportedException>(() => display.WindowGetFlag(DisplayServer.WindowFlag.Transparent),
+            "A defined but unavailable flag is not reported as native state.");
+        Expect<ArgumentOutOfRangeException>(() => display.WindowSetMode((DisplayServer.WindowMode)99),
+            "Unknown window modes are rejected before native mutation.");
+        Expect<ArgumentOutOfRangeException>(() => display.WindowSetFlag(DisplayServer.WindowFlag.Max, true),
+            "The terminal enum marker is not a policy.");
+        Expect<ArgumentOutOfRangeException>(() => display.WindowSetFlag((DisplayServer.WindowFlag)100, true),
+            "An unknown window flag is rejected before native mutation.");
+        Require((int)DisplayServer.CursorShape.Drag == 6 &&
+                (int)DisplayServer.CursorShape.CanDrop == 7 &&
+                (int)DisplayServer.CursorShape.Forbidden == 8 &&
+                (int)DisplayServer.CursorShape.VSize == 9 &&
+                (int)DisplayServer.CursorShape.HSize == 10 &&
+                (int)DisplayServer.CursorShape.BDiagSize == 11 &&
+                (int)DisplayServer.CursorShape.FDiagSize == 12 &&
+                (int)DisplayServer.CursorShape.Move == 13 &&
+                (int)DisplayServer.CursorShape.Help == 16 &&
+                (int)DisplayServer.CursorShape.Max == 17 &&
+                (int)DisplayServer.MouseMode.Max == 5,
+            "Pointer enum values retain their complete public identities.");
+        Expect<ArgumentOutOfRangeException>(() => display.CursorSetShape(DisplayServer.CursorShape.Max),
+            "The cursor shape terminal marker cannot be selected.");
+        Expect<ArgumentOutOfRangeException>(() => display.CursorSetCustomImage(null, DisplayServer.CursorShape.Max),
+            "The cursor shape terminal marker is not a custom slot.");
+        Expect<ArgumentOutOfRangeException>(() => display.MouseSetMode(DisplayServer.MouseMode.Max),
+            "The mouse-mode terminal marker cannot be applied.");
+        Require(!display.HasFeature(DisplayServer.Feature.MouseWarp),
+            "The dummy backend does not advertise pointer warping.");
+        Expect<NotSupportedException>(() => display.WarpMouse(new Vector2I(20, 20)),
+            "An unavailable pointer warp rejects use before native mutation.");
+
+        using (var icon = Image.CreateFromData(2, 2, false, Image.Format.Rgba8,
+            [255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 255, 255]))
+        {
+            Expect<InvalidOperationException>(() => display.WindowSetIcon(icon),
+                "The dummy video backend reports unsupported icon installation explicitly.");
+            Expect<ArgumentOutOfRangeException>(() => display.CursorSetCustomImage(icon,
+                hotspot: new Vector2I(2, 0)), "A cursor hotspot must remain inside its image.");
+        }
+
+        var windows = SDL3.SDL.GetWindows(out var windowCount);
+        Require(windows is { Length: 1 } && windowCount == 1, "The display owns exactly one native window.");
+        var nativeWindowId = SDL3.SDL.GetWindowID(windows![0]);
+        var pointerDelivery = new List<string>();
+        Action entered = () => pointerDelivery.Add("enter");
+        Action exited = () => pointerDelivery.Add("exit");
+        Action orderedQuit = () => pointerDelivery.Add("quit");
+        display.WindowMouseEntered += entered;
+        display.WindowMouseExited += exited;
+        display.QuitRequested += orderedQuit;
+        try
+        {
+            var pointerWindowEvent = new SDL3.SDL.Event
+            {
+                Window = new SDL3.SDL.WindowEvent
+                {
+                    Type = SDL3.SDL.EventType.WindowMouseEnter,
+                    WindowID = nativeWindowId,
+                },
+            };
+            Require(SDL3.SDL.PushEvent(ref pointerWindowEvent) && SDL3.SDL.PushEvent(ref quit),
+                "The native queue accepts pointer-enter and quit events.");
+            pointerWindowEvent.Window.Type = SDL3.SDL.EventType.WindowMouseLeave;
+            Require(SDL3.SDL.PushEvent(ref pointerWindowEvent),
+                "The native queue accepts pointer-leave events.");
+            Expect<InvalidOperationException>(() => Task.Run(display.ProcessEvents).GetAwaiter().GetResult(),
+                "Window callbacks may be pumped only on the opening thread.");
+            Require(pointerDelivery.Count == 0, "An off-thread pump leaves queued window events untouched.");
+            display.ProcessEvents();
+            Require(pointerDelivery.SequenceEqual(["enter", "quit", "exit"]),
+                "Pointer focus callbacks follow native event order among other window events.");
+
+            pointerWindowEvent.Window.Type = SDL3.SDL.EventType.WindowMouseEnter;
+            pointerWindowEvent.Window.WindowID = nativeWindowId + 1;
+            Require(SDL3.SDL.PushEvent(ref pointerWindowEvent),
+                "The native queue accepts a foreign-window pointer event.");
+            display.ProcessEvents();
+            Require(pointerDelivery.Count == 3, "Foreign-window pointer events are ignored.");
+
+            pointerWindowEvent.Window.WindowID = nativeWindowId;
+            Action failingEnter = () => throw new InvalidOperationException("injected pointer-enter failure");
+            display.WindowMouseEntered += failingEnter;
+            try
+            {
+                Require(SDL3.SDL.PushEvent(ref pointerWindowEvent),
+                    "The native queue accepts a failing pointer-enter event.");
+                pointerWindowEvent.Window.Type = SDL3.SDL.EventType.WindowMouseLeave;
+                Require(SDL3.SDL.PushEvent(ref pointerWindowEvent),
+                    "The native queue accepts a following pointer-leave event.");
+                try
+                {
+                    display.ProcessEvents();
+                    throw new Exception("A failing pointer callback must be reported after draining the queue.");
+                }
+                catch (AggregateException errors)
+                {
+                    Require(errors.InnerExceptions.Count == 1 &&
+                            pointerDelivery.SequenceEqual(["enter", "quit", "exit", "enter", "exit"]),
+                        "A pointer callback failure is aggregated after later window events are delivered.");
+                }
+            }
+            finally
+            {
+                display.WindowMouseEntered -= failingEnter;
+            }
+        }
+        finally
+        {
+            display.WindowMouseEntered -= entered;
+            display.WindowMouseExited -= exited;
+            display.QuitRequested -= orderedQuit;
+        }
+
+        var dpiDelivery = new List<string>();
+        Action dpiChanged = () => dpiDelivery.Add("dpi");
+        Action dpiOrderedQuit = () => dpiDelivery.Add("quit");
+        display.WindowDpiChanged += dpiChanged;
+        display.QuitRequested += dpiOrderedQuit;
+        var scaleChanged = new SDL3.SDL.Event
+        {
+            Window = new SDL3.SDL.WindowEvent
+            {
+                Type = SDL3.SDL.EventType.WindowDisplayScaleChanged,
+                WindowID = nativeWindowId,
+            },
+        };
+        try
+        {
+            Require(SDL3.SDL.PushEvent(ref scaleChanged) && SDL3.SDL.PushEvent(ref quit) &&
+                    SDL3.SDL.PushEvent(ref scaleChanged),
+                "The native queue accepts content-scale changes around a quit request.");
+            display.ProcessEvents();
+            Require(dpiDelivery.SequenceEqual(["dpi", "quit", "dpi"]),
+                "Content-scale callbacks retain native event order.");
+
+            scaleChanged.Window.WindowID = nativeWindowId + 1;
+            Require(SDL3.SDL.PushEvent(ref scaleChanged),
+                "The native queue accepts a foreign-window content-scale event.");
+            display.ProcessEvents();
+            Require(dpiDelivery.Count == 3, "Foreign-window content-scale changes are ignored.");
+
+            scaleChanged.Window.WindowID = nativeWindowId;
+            Action failingDpi = () => throw new InvalidOperationException("injected content-scale callback failure");
+            display.WindowDpiChanged += failingDpi;
+            try
+            {
+                Require(SDL3.SDL.PushEvent(ref scaleChanged) && SDL3.SDL.PushEvent(ref quit),
+                    "The native queue accepts a failing content-scale callback followed by quit.");
+                try
+                {
+                    display.ProcessEvents();
+                    throw new Exception("A failing content-scale callback must be reported after the queue drains.");
+                }
+                catch (AggregateException errors)
+                {
+                    Require(errors.InnerExceptions.Count == 1 &&
+                            dpiDelivery.SequenceEqual(["dpi", "quit", "dpi", "dpi", "quit"]),
+                        "A content-scale callback failure is aggregated after later events are delivered.");
+                }
+            }
+            finally
+            {
+                display.WindowDpiChanged -= failingDpi;
+            }
+        }
+        finally
+        {
+            display.WindowDpiChanged -= dpiChanged;
+            display.QuitRequested -= dpiOrderedQuit;
+        }
+
+        display.ProcessEvents();
+        var initialRect = new RectI(display.WindowGetPosition(), display.WindowGetSize());
+        var movedPosition = initialRect.Position + new Vector2I(17, 19);
+        var resizedSize = initialRect.Size + new Vector2I(23, 29);
+        var rectDelivery = new List<RectI>();
+        var rectOrder = new List<string>();
+        Action<RectI> rectChanged = rect =>
+        {
+            rectDelivery.Add(rect);
+            rectOrder.Add("rect");
+        };
+        Action rectOrderedQuit = () => rectOrder.Add("quit");
+        display.WindowRectChanged += rectChanged;
+        display.QuitRequested += rectOrderedQuit;
+        var rectEvent = new SDL3.SDL.Event
+        {
+            Window = new SDL3.SDL.WindowEvent
+            {
+                Type = SDL3.SDL.EventType.WindowMoved,
+                WindowID = nativeWindowId,
+                Data1 = movedPosition.X,
+                Data2 = movedPosition.Y,
+            },
+        };
+        try
+        {
+            Require(SDL3.SDL.PushEvent(ref rectEvent) && SDL3.SDL.PushEvent(ref rectEvent) &&
+                    SDL3.SDL.PushEvent(ref quit),
+                "The native queue accepts duplicate moves followed by quit.");
+            rectEvent.Window.Type = SDL3.SDL.EventType.WindowResized;
+            rectEvent.Window.Data1 = resizedSize.X;
+            rectEvent.Window.Data2 = resizedSize.Y;
+            Require(SDL3.SDL.PushEvent(ref rectEvent), "The native queue accepts a following resize.");
+            rectEvent.Window.WindowID = nativeWindowId + 1;
+            rectEvent.Window.Data1++;
+            Require(SDL3.SDL.PushEvent(ref rectEvent), "The native queue accepts a foreign-window resize.");
+            Expect<InvalidOperationException>(() => Task.Run(display.ProcessEvents).GetAwaiter().GetResult(),
+                "Rectangle callbacks may be pumped only on the opening thread.");
+            Require(rectDelivery.Count == 0, "An off-thread pump leaves rectangle events queued.");
+            display.ProcessEvents();
+            Require(rectDelivery.SequenceEqual([
+                    new RectI(movedPosition, initialRect.Size),
+                    new RectI(movedPosition, resizedSize),
+                ]) && rectOrder.SequenceEqual(["rect", "quit", "rect"]),
+                "Move and resize callbacks deliver full intermediate rectangles in queue order; duplicate and foreign events are ignored.");
+
+            rectEvent.Window.WindowID = nativeWindowId;
+            rectEvent.Window.Type = SDL3.SDL.EventType.WindowMoved;
+            rectEvent.Window.Data1 = movedPosition.X + 5;
+            rectEvent.Window.Data2 = movedPosition.Y + 7;
+            var throwOnNextRect = true;
+            Action<RectI> failingRect = rect =>
+            {
+                if (throwOnNextRect)
+                {
+                    throwOnNextRect = false;
+                    throw new InvalidOperationException("injected rectangle callback failure");
+                }
+            };
+            display.WindowRectChanged += failingRect;
+            try
+            {
+                Require(SDL3.SDL.PushEvent(ref rectEvent), "The native queue accepts a failing rectangle callback.");
+                rectEvent.Window.Type = SDL3.SDL.EventType.WindowResized;
+                rectEvent.Window.Data1 = resizedSize.X + 11;
+                rectEvent.Window.Data2 = resizedSize.Y + 13;
+                Require(SDL3.SDL.PushEvent(ref rectEvent) && SDL3.SDL.PushEvent(ref quit),
+                    "The native queue accepts resize and quit after a failing rectangle callback.");
+                try
+                {
+                    display.ProcessEvents();
+                    throw new Exception("A failing rectangle callback must be reported after the queue drains.");
+                }
+                catch (AggregateException errors)
+                {
+                    Require(errors.InnerExceptions.Count == 1 && rectDelivery.Count == 4 &&
+                            rectDelivery[2] == new RectI(new Vector2I(movedPosition.X + 5, movedPosition.Y + 7),
+                                resizedSize) &&
+                            rectDelivery[3] == new RectI(new Vector2I(movedPosition.X + 5, movedPosition.Y + 7),
+                                new Vector2I(resizedSize.X + 11, resizedSize.Y + 13)) &&
+                            rectOrder.SequenceEqual(["rect", "quit", "rect", "rect", "rect", "quit"]),
+                        "The rectangle cache commits before callbacks, and callback failure does not stop later events.");
+                }
+            }
+            finally
+            {
+                display.WindowRectChanged -= failingRect;
+            }
+        }
+        finally
+        {
+            display.WindowRectChanged -= rectChanged;
+            display.QuitRequested -= rectOrderedQuit;
+        }
+
+        Input.Instance.ReleasePressedEvents();
+        var keyDown = new SDL3.SDL.Event
+        {
+            Key = new SDL3.SDL.KeyboardEvent
+            {
+                Type = SDL3.SDL.EventType.KeyDown,
+                WindowID = nativeWindowId,
+                Key = SDL3.SDL.Keycode.A,
+                Scancode = SDL3.SDL.Scancode.A,
+                Down = true,
+            },
+        };
+        Require(SDL3.SDL.PushEvent(ref keyDown), "The native queue accepts a keyboard press.");
+        display.ProcessEvents();
+        Require(Input.Instance.IsKeyPressed(Key.A) && Input.Instance.IsPhysicalKeyPressed(Key.A),
+            "The event pump commits logical and physical key state.");
+        keyDown.Key.Type = SDL3.SDL.EventType.KeyUp;
+        keyDown.Key.Down = false;
+        Require(SDL3.SDL.PushEvent(ref keyDown), "The native queue accepts a keyboard release.");
+        display.ProcessEvents();
+        Require(!Input.Instance.IsKeyPressed(Key.A) && !Input.Instance.IsPhysicalKeyPressed(Key.A),
+            "The event pump releases logical and physical key state.");
+        var unicodeKeyMapper = typeof(DisplayServer).GetMethod("MapKeycode",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        Require(unicodeKeyMapper is not null &&
+                (Key)unicodeKeyMapper.Invoke(null, new object[] { (SDL3.SDL.Keycode)'й' })! == (Key)'Й',
+            "Native non-Latin key labels retain their Unicode scalar identity.");
+        keyDown.Key.Scancode = SDL3.SDL.Scancode.B;
+        keyDown.Key.Type = SDL3.SDL.EventType.KeyDown;
+        keyDown.Key.Down = true;
+        Require(SDL3.SDL.PushEvent(ref keyDown), "The native queue accepts a layout-label probe.");
+        display.ProcessEvents();
+        Require(Input.Instance.IsKeyPressed(Key.A) && Input.Instance.IsKeyLabelPressed(Key.B) &&
+                !Input.Instance.IsKeyLabelPressed(Key.A),
+            "A key event records its localized label independently of its logical keycode.");
+        keyDown.Key.Type = SDL3.SDL.EventType.KeyUp;
+        keyDown.Key.Down = false;
+        Require(SDL3.SDL.PushEvent(ref keyDown), "The native queue accepts the label-probe release.");
+        display.ProcessEvents();
+        Require(!Input.Instance.IsKeyLabelPressed(Key.B), "The localized key label is released.");
+        keyDown.Key.Scancode = SDL3.SDL.Scancode.A;
+        keyDown.Key.Type = SDL3.SDL.EventType.KeyDown;
+        keyDown.Key.Down = true;
+        Require(SDL3.SDL.PushEvent(ref keyDown) && SDL3.SDL.PushEvent(ref quit),
+            "The native queue accepts an input-discard probe.");
+        var quitsBeforeDiscard = quitCount;
+        display.ForceProcessAndDropEvents();
+        Require(!Input.Instance.IsKeyPressed(Key.A) && quitCount == quitsBeforeDiscard + 1,
+            "Forced window processing discards input while preserving quit delivery.");
+
+        Input.Instance.UseAccumulatedInput = true;
+        var motion = new SDL3.SDL.Event
+        {
+            Motion = new SDL3.SDL.MouseMotionEvent
+            {
+                Type = SDL3.SDL.EventType.MouseMotion,
+                WindowID = nativeWindowId,
+                Timestamp = 1_000_000_000,
+                X = 10,
+                XRel = 2,
+            },
+        };
+        Require(SDL3.SDL.PushEvent(ref motion), "The native queue accepts pointer motion.");
+        motion.Motion.Timestamp = 2_000_000_000;
+        motion.Motion.X = 13;
+        motion.Motion.XRel = 3;
+        Require(SDL3.SDL.PushEvent(ref motion), "The native queue accepts consecutive pointer motion.");
+        display.ProcessEvents();
+        Require(NearlyEqual(Input.Instance.LastMouseVelocity.X, 2.5f),
+            "Accumulated pointer motion combines relative travel across the batch.");
+        Input.Instance.UseAccumulatedInput = false;
+        motion.Motion.Timestamp = 3_000_000_000;
+        motion.Motion.XRel = 4;
+        Require(SDL3.SDL.PushEvent(ref motion), "The native queue accepts direct pointer motion.");
+        display.ProcessEvents();
+        Require(NearlyEqual(Input.Instance.LastMouseVelocity.X, 4f),
+            "Disabling accumulation dispatches each pointer motion separately.");
+        Input.Instance.UseAccumulatedInput = true;
+        motion.Motion.WindowID = nativeWindowId + 1;
+        motion.Motion.XRel = 100;
+        Require(SDL3.SDL.PushEvent(ref motion), "The native queue accepts foreign-window pointer motion.");
+        display.ProcessEvents();
+        Require(NearlyEqual(Input.Instance.LastMouseVelocity.X, 4f),
+            "Pointer motion from an unowned window cannot enter the accumulated input stream.");
+        Input.Instance.FlushBufferedEvents();
+        VerifyDisplayServerDropBatches(display);
+        DisplayServerFocusEventsTests.Run(display);
+        DisplayServerCloseEventsTests.Run(display);
+    }
+
+    Require(DisplayServer.Instance is null, "Disposal unregisters the native display server.");
+    using var reopened = DisplayServer.Open("Reopened", new Vector2I(120, 80), hidden: true);
+    Require(reopened.WindowGetSize() == new Vector2I(120, 80),
+        "The native video subsystem can reopen after deterministic disposal.");
+    reopened.Dispose();
+    Expect<ObjectDisposedException>(() => reopened.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle),
+        "Disposed display servers cannot expose native handles.");
+    Expect<ObjectDisposedException>(() => reopened.IsDarkMode(),
+        "Disposed display servers cannot query the system theme.");
+}
+
+static void VerifyDisplayServerDropBatches(DisplayServer display)
+{
+    var dispatch = typeof(DisplayServer).GetMethod("DispatchDrop",
+        System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+        ?? throw new Exception("The native drop adapter is missing.");
+    void Drop(SDL3.SDL.EventType type, string? path = null) =>
+        dispatch.Invoke(display, [type, path]);
+
+    var deliveries = new List<string[]>();
+    void Capture(IReadOnlyList<string> files) => deliveries.Add(files.ToArray());
+    display.FilesDropped += Capture;
+    try
+    {
+        Drop(SDL3.SDL.EventType.DropBegin);
+        Drop(SDL3.SDL.EventType.DropFile, "first.txt");
+        Drop(SDL3.SDL.EventType.DropFile, "second.txt");
+        Require(deliveries.Count == 0, "File-drop callbacks wait for the completed batch.");
+        Drop(SDL3.SDL.EventType.DropComplete);
+        Require(deliveries.Count == 1 && deliveries[0].SequenceEqual(["first.txt", "second.txt"]),
+            "A multi-file drop emits one ordered path snapshot.");
+
+        Drop(SDL3.SDL.EventType.DropFile, "single.txt");
+        Drop(SDL3.SDL.EventType.DropBegin);
+        Drop(SDL3.SDL.EventType.DropComplete);
+        Require(deliveries.Count == 2 && deliveries[1].SequenceEqual(["single.txt"]),
+            "A standalone file emits one path and an empty batch emits nothing.");
+
+        Action<IReadOnlyList<string>> fail = _ => throw new InvalidOperationException("injected drop failure");
+        display.FilesDropped += fail;
+        Drop(SDL3.SDL.EventType.DropBegin);
+        Drop(SDL3.SDL.EventType.DropFile, "failed.txt");
+        Expect<System.Reflection.TargetInvocationException>(() => Drop(SDL3.SDL.EventType.DropComplete),
+            "A failing callback propagates after its batch state is cleared.");
+        display.FilesDropped -= fail;
+        Drop(SDL3.SDL.EventType.DropBegin);
+        Drop(SDL3.SDL.EventType.DropFile, "next.txt");
+        Drop(SDL3.SDL.EventType.DropComplete);
+        Require(deliveries.Count == 4 && deliveries[2].SequenceEqual(["failed.txt"]) &&
+                deliveries[3].SequenceEqual(["next.txt"]),
+            "A failing drop callback cannot contaminate the following batch.");
+
+        Drop(SDL3.SDL.EventType.DropBegin);
+        Drop(SDL3.SDL.EventType.DropFile, "abandoned.txt");
+        Drop(SDL3.SDL.EventType.DropBegin);
+        Drop(SDL3.SDL.EventType.DropFile, "kept.txt");
+        Drop(SDL3.SDL.EventType.DropComplete);
+        Require(deliveries.Count == 5 && deliveries[4].SequenceEqual(["kept.txt"]),
+            "An interrupted drop is discarded rather than reported as completed.");
+
+        Drop(SDL3.SDL.EventType.DropBegin);
+        Drop(SDL3.SDL.EventType.DropFile, "closing.txt");
+        var close = new SDL3.SDL.Event
+        {
+            Window = new SDL3.SDL.WindowEvent
+            {
+                Type = SDL3.SDL.EventType.WindowCloseRequested,
+                WindowID = SDL3.SDL.GetWindowID(SDL3.SDL.GetWindows(out _)![0]),
+            },
+        };
+        Require(SDL3.SDL.PushEvent(ref close), "The native queue accepts a window-close request.");
+        display.ProcessEvents();
+        Drop(SDL3.SDL.EventType.DropComplete);
+        Require(deliveries.Count == 5, "Closing the window discards its unfinished file drop.");
+    }
+    finally
+    {
+        display.FilesDropped -= Capture;
+    }
+}
 
 static void VerifyMathf()
 {
@@ -3853,6 +4595,386 @@ static void VerifyInput()
         }
         foreach (var binding in bindings)
             binding.Dispose();
+    }
+}
+
+static void VerifyInputEmulation()
+{
+    const string click = "tests.input.emulation.click";
+    var input = Input.Instance;
+    var map = InputMap.Instance;
+    input.ReleasePressedEvents();
+    input.EmulateMouseFromTouch = true;
+    input.EmulateTouchFromMouse = false;
+    if (map.HasAction(click))
+        map.EraseAction(click);
+    map.AddAction(click);
+    using var binding = new InputEventMouseButton
+    {
+        Device = InputMap.AllDevices,
+        ButtonIndex = MouseButton.Left,
+    };
+    map.ActionAddEvent(click, binding);
+    var probe = new InputEmulationProbeNode { InputEnabled = true };
+    using var tree = new SceneTree(probe);
+    Engine.Instance.Start(tree);
+    try
+    {
+        using var first = new InputEventScreenTouch
+        {
+            Device = 2,
+            Index = 7,
+            WindowId = 0,
+            Position = new Vector2(20f, 30f),
+            Pressed = true,
+        };
+        input.ParseInputEvent(first);
+        Require(probe.Events.Count == 2 &&
+                probe.Events[0] is InputEventMouseButton
+                {
+                    Device: InputEvent.DeviceIdEmulation, ButtonIndex: MouseButton.Left,
+                    ButtonMask: MouseButtonMask.Left, Position: { X: 20f, Y: 30f }, Pressed: true,
+                } && probe.Events[1] is InputEventScreenTouch { Device: 2, Index: 7 } &&
+                input.IsMouseButtonPressed(MouseButton.Left) && input.IsActionPressed(click),
+            "The first touch must commit and deliver an emulated left click before the source touch.");
+        probe.Clear();
+
+        using var second = new InputEventScreenTouch
+        {
+            Device = 3,
+            Index = 7,
+            WindowId = 0,
+            Position = new Vector2(50f, 60f),
+            Pressed = true,
+        };
+        input.ParseInputEvent(second);
+        Require(probe.Events.Count == 1 && probe.Events[0] is InputEventScreenTouch { Device: 3 },
+            "A second physical contact with the same index on another device stays touch-only.");
+        probe.Clear();
+
+        using var drag = new InputEventScreenDrag
+        {
+            Device = 2,
+            Index = 7,
+            WindowId = 0,
+            Position = new Vector2(25f, 34f),
+            Relative = new Vector2(5f, 4f),
+            ScreenRelative = new Vector2(5f, 4f),
+            Velocity = new Vector2(50f, 40f),
+            ScreenVelocity = new Vector2(50f, 40f),
+            Pressure = 0.5f,
+        };
+        input.ParseInputEvent(drag);
+        Require(probe.Events.Count == 2 && probe.Events[0] is InputEventMouseMotion
+        {
+            Device: InputEvent.DeviceIdEmulation, ButtonMask: MouseButtonMask.Left,
+            Relative: { X: 5f, Y: 4f }, Pressure: 0.5f,
+        } && probe.Events[1] is InputEventScreenDrag { Device: 2, Index: 7 } &&
+                input.LastMouseVelocity == new Vector2(50f, 40f),
+            "The tracked contact's drag must become emulated mouse motion with velocity and pressure.");
+        probe.Clear();
+
+        first.Pressed = false;
+        input.EmulateMouseFromTouch = false;
+        input.ParseInputEvent(first);
+        Require(probe.Events.Count == 2 && probe.Events[0] is InputEventMouseButton
+        { Device: InputEvent.DeviceIdEmulation, Pressed: false } &&
+                !input.IsMouseButtonPressed(MouseButton.Left) && !input.IsActionPressed(click),
+            "Turning emulation off during a contact must still release its synthetic button.");
+        probe.Clear();
+        second.Pressed = false;
+        input.ParseInputEvent(second);
+        Require(probe.Events.Count == 1 && probe.Events[0] is InputEventScreenTouch,
+            "The other contact must not inherit mouse ownership after the first releases.");
+        probe.Clear();
+
+        input.EmulateTouchFromMouse = true;
+        using var mousePress = new InputEventMouseButton
+        {
+            ButtonIndex = MouseButton.Left,
+            ButtonMask = MouseButtonMask.Left,
+            Position = new Vector2(12f, 14f),
+            GlobalPosition = new Vector2(112f, 114f),
+            Pressed = true,
+        };
+        input.ParseInputEvent(mousePress);
+        Require(probe.Events.Count == 2 && probe.Events[0] is InputEventScreenTouch
+        {
+            Device: InputEvent.DeviceIdEmulation, Index: 0, Pressed: true,
+            Position: { X: 12f, Y: 14f }
+        } &&
+                probe.Events[1] is InputEventMouseButton { Device: InputEvent.DeviceIdMouse },
+            "A physical left click must deliver touch index zero before its source mouse event.");
+        probe.Clear();
+
+        using var otherMousePress = new InputEventMouseButton
+        {
+            Device = 4,
+            ButtonIndex = MouseButton.Left,
+            ButtonMask = MouseButtonMask.Left,
+            Position = new Vector2(70f, 80f),
+            Pressed = true,
+        };
+        input.ParseInputEvent(otherMousePress);
+        Require(probe.Events.Count == 1 && probe.Events[0] is InputEventMouseButton { Device: 4 },
+            "Another mouse device cannot take over an active emulated touch contact.");
+        probe.Clear();
+        otherMousePress.Pressed = false;
+        input.ParseInputEvent(otherMousePress);
+        Require(probe.Events.Count == 1 && probe.Events[0] is InputEventMouseButton { Device: 4 },
+            "Another mouse device cannot end the active emulated touch contact.");
+        probe.Clear();
+
+        using var mouseDrag = new InputEventMouseMotion
+        {
+            ButtonMask = MouseButtonMask.Left,
+            Position = new Vector2(17f, 16f),
+            GlobalPosition = new Vector2(117f, 116f),
+            Relative = new Vector2(5f, 2f),
+            ScreenRelative = new Vector2(5f, 2f),
+            Velocity = new Vector2(50f, 20f),
+            ScreenVelocity = new Vector2(50f, 20f),
+        };
+        input.ParseInputEvent(mouseDrag);
+        Require(probe.Events.Count == 2 && probe.Events[0] is InputEventScreenDrag
+        {
+            Device: InputEvent.DeviceIdEmulation, Index: 0,
+            Relative: { X: 5f, Y: 2f }
+        } &&
+                probe.Events[1] is InputEventMouseMotion { Device: InputEvent.DeviceIdMouse },
+            "A held left-button mouse motion must deliver an emulated touch drag.");
+        probe.Clear();
+
+        input.EmulateTouchFromMouse = false;
+        mousePress.Pressed = false;
+        input.ParseInputEvent(mousePress);
+        Require(probe.Events.Count == 2 && probe.Events[0] is InputEventScreenTouch
+        { Device: InputEvent.DeviceIdEmulation, Pressed: false } &&
+                !input.IsMouseButtonPressed(MouseButton.Left),
+            "Disabling touch emulation during a press must still end the contact on release.");
+        probe.Clear();
+
+        input.EmulateMouseFromTouch = true;
+        first.Pressed = true;
+        probe.ThrowOnEmulated = true;
+        Expect<AggregateException>(() => input.ParseInputEvent(first),
+            "A failing synthetic callback must be reported after source delivery.");
+        Require(probe.Events.Count == 2 && input.IsMouseButtonPressed(MouseButton.Left) &&
+                input.IsActionPressed(click),
+            "A synthetic callback failure must not undo state or skip the physical touch callback.");
+        probe.ThrowOnEmulated = false;
+        probe.Clear();
+        first.Pressed = false;
+        input.ParseInputEvent(first);
+        probe.Clear();
+
+        using var emulatedTouch = new InputEventScreenTouch
+        {
+            Device = InputEvent.DeviceIdEmulation,
+            Index = 0,
+            Pressed = true,
+        };
+        input.ParseInputEvent(emulatedTouch);
+        Require(probe.Events.Count == 1 && !input.IsMouseButtonPressed(MouseButton.Left),
+            "An emulated event must never recursively generate the opposite pointer family.");
+    }
+    finally
+    {
+        Engine.Instance.Stop();
+        probe.Clear();
+        input.ReleasePressedEvents();
+        input.EmulateMouseFromTouch = true;
+        input.EmulateTouchFromMouse = false;
+        map.EraseAction(click);
+    }
+}
+
+static void VerifyDisplayServerPointerModifiers()
+{
+    using var display = DisplayServer.Open("Pointer modifiers", new Vector2I(320, 240), hidden: true);
+    var probe = new InputEmulationProbeNode { InputEnabled = true, PhysicsProcessEnabled = true };
+    using var tree = new SceneTree(probe);
+    var previousModifiers = SDL3.SDL.GetModState();
+    var previousAccumulation = Input.Instance.UseAccumulatedInput;
+    Engine.Instance.Start(tree);
+    try
+    {
+        Input.Instance.UseAccumulatedInput = false;
+        SDL3.SDL.SetModState(SDL3.SDL.Keymod.Shift | SDL3.SDL.Keymod.Ctrl);
+        var windows = SDL3.SDL.GetWindows(out var count);
+        Require(windows is { Length: 1 } && count == 1,
+            "The pointer modifier test needs one native window.");
+        var id = SDL3.SDL.GetWindowID(windows![0]);
+        var motion = new SDL3.SDL.Event
+        {
+            Motion = new SDL3.SDL.MouseMotionEvent
+            {
+                Type = SDL3.SDL.EventType.MouseMotion,
+                WindowID = id,
+                X = 13f,
+                Y = 17f,
+                XRel = 3f,
+                YRel = 4f,
+            },
+        };
+        var button = new SDL3.SDL.Event
+        {
+            Button = new SDL3.SDL.MouseButtonEvent
+            {
+                Type = SDL3.SDL.EventType.MouseButtonDown,
+                WindowID = id,
+                Button = 1,
+                Down = true,
+                X = 13f,
+                Y = 17f,
+            },
+        };
+        Require(SDL3.SDL.PushEvent(ref motion) && SDL3.SDL.PushEvent(ref button),
+            "The native queue accepts pointer modifier probes.");
+        display.ProcessEvents();
+        Require(probe.Events.Count == 2 &&
+                probe.Events[0] is InputEventMouseMotion first &&
+                first.ShiftPressed && first.ControlPressed &&
+                first.Position == first.GlobalPosition &&
+                probe.Events[1] is InputEventMouseButton second &&
+                second.ShiftPressed && second.ControlPressed &&
+                second.Position == second.GlobalPosition,
+            "Native mouse motion and buttons preserve keyboard modifiers and root-window coordinates.");
+
+        probe.Clear();
+        var modifiedKey = new SDL3.SDL.Event
+        {
+            Key = new SDL3.SDL.KeyboardEvent
+            {
+                Type = SDL3.SDL.EventType.KeyDown,
+                WindowID = id,
+                Key = SDL3.SDL.Keycode.A,
+                Scancode = SDL3.SDL.Scancode.A,
+                Mod = SDL3.SDL.Keymod.Shift,
+                Down = true,
+            },
+        };
+        var unmodifiedKey = modifiedKey;
+        unmodifiedKey.Key.Type = SDL3.SDL.EventType.KeyUp;
+        unmodifiedKey.Key.Mod = SDL3.SDL.Keymod.None;
+        unmodifiedKey.Key.Down = false;
+        SDL3.SDL.SetModState(SDL3.SDL.Keymod.None);
+        Require(SDL3.SDL.PushEvent(ref modifiedKey) && SDL3.SDL.PushEvent(ref motion) &&
+                SDL3.SDL.PushEvent(ref unmodifiedKey),
+            "The native queue accepts a mixed keyboard and pointer sequence.");
+        display.ProcessEvents();
+        Require(probe.Events.Count == 3 &&
+                probe.Events[1] is InputEventMouseMotion { ShiftPressed: true, ControlPressed: false },
+            "Queued pointer modifiers follow the preceding keyboard snapshot, not the final global state.");
+        probe.Clear();
+        var keyLocations = new (SDL3.SDL.Scancode Scancode, KeyLocation Location)[]
+        {
+            (SDL3.SDL.Scancode.LCtrl, KeyLocation.Left),
+            (SDL3.SDL.Scancode.LShift, KeyLocation.Left),
+            (SDL3.SDL.Scancode.LAlt, KeyLocation.Left),
+            (SDL3.SDL.Scancode.LGUI, KeyLocation.Left),
+            (SDL3.SDL.Scancode.RCtrl, KeyLocation.Right),
+            (SDL3.SDL.Scancode.RShift, KeyLocation.Right),
+            (SDL3.SDL.Scancode.RAlt, KeyLocation.Right),
+            (SDL3.SDL.Scancode.RGUI, KeyLocation.Right),
+            (SDL3.SDL.Scancode.A, KeyLocation.Unspecified),
+        };
+        foreach (var (scancode, _) in keyLocations)
+        {
+            var locationKey = new SDL3.SDL.Event
+            {
+                Key = new SDL3.SDL.KeyboardEvent
+                {
+                    Type = SDL3.SDL.EventType.KeyDown,
+                    WindowID = id,
+                    Key = SDL3.SDL.GetKeyFromScancode(scancode, SDL3.SDL.Keymod.None, false),
+                    Scancode = scancode,
+                    Down = true,
+                },
+            };
+            Require(SDL3.SDL.PushEvent(ref locationKey), "The native queue accepts a side-specific key press.");
+            locationKey.Key.Type = SDL3.SDL.EventType.KeyUp;
+            locationKey.Key.Down = false;
+            Require(SDL3.SDL.PushEvent(ref locationKey), "The native queue accepts a side-specific key release.");
+        }
+        display.ProcessEvents();
+        Require(probe.Events.Count == keyLocations.Length * 2,
+            "Every queued side-specific key press and release reaches input callbacks.");
+        for (var i = 0; i < keyLocations.Length; i++)
+        {
+            Require(probe.Events[2 * i] is InputEventKey { Pressed: true } pressed &&
+                    pressed.Location == keyLocations[i].Location &&
+                    probe.Events[2 * i + 1] is InputEventKey { Pressed: false } released &&
+                    released.Location == keyLocations[i].Location,
+                "Key location follows the SDL physical modifier side on both press and release.");
+        }
+        probe.Clear();
+        SDL3.SDL.SetModState(SDL3.SDL.Keymod.Shift | SDL3.SDL.Keymod.Ctrl);
+
+        probe.ThrowOnWheel = true;
+        var wheel = new SDL3.SDL.Event
+        {
+            Wheel = new SDL3.SDL.MouseWheelEvent
+            {
+                Type = SDL3.SDL.EventType.MouseWheel,
+                WindowID = id,
+                X = 1f,
+                Y = 1f,
+                MouseX = 13f,
+                MouseY = 17f,
+            },
+        };
+        Require(SDL3.SDL.PushEvent(ref wheel), "The native queue accepts a wheel failure probe.");
+        try
+        {
+            display.ProcessEvents();
+            throw new Exception("Both wheel callback failures must be reported.");
+        }
+        catch (AggregateException errors)
+        {
+            Require(errors.Flatten().InnerExceptions.Count == 2 &&
+                    probe.Events.Count == 4 &&
+                    probe.Events[0] is InputEventMouseButton { ButtonIndex: MouseButton.WheelUp, Pressed: true } &&
+                    probe.Events[1] is InputEventMouseButton { ButtonIndex: MouseButton.WheelUp, Pressed: false } &&
+                    probe.Events[2] is InputEventMouseButton { ButtonIndex: MouseButton.WheelRight, Pressed: true } &&
+                    probe.Events[3] is InputEventMouseButton { ButtonIndex: MouseButton.WheelRight, Pressed: false },
+                "A failing wheel axis still releases its button, delivers the other axis, and preserves both callback failures.");
+        }
+        probe.ThrowOnWheel = false;
+
+        probe.Clear();
+        var key = new SDL3.SDL.Event
+        {
+            Key = new SDL3.SDL.KeyboardEvent
+            {
+                Type = SDL3.SDL.EventType.KeyDown,
+                WindowID = id,
+                Key = SDL3.SDL.Keycode.A,
+                Scancode = SDL3.SDL.Scancode.A,
+                Down = true,
+            },
+        };
+        Require(SDL3.SDL.PushEvent(ref key), "The native queue accepts an input preflight probe.");
+        probe.DisplayPumpAttempt = display;
+        Engine.Instance.AdvanceFrame(0.1d);
+        Require(probe.DisplayPumpError is InvalidOperationException &&
+                !Input.Instance.IsKeyPressed(Key.A) && probe.Events.Count == 0,
+            "Pumping inside a frame callback rejects before consuming queued native input.");
+        display.ProcessEvents();
+        Require(Input.Instance.IsKeyPressed(Key.A) && probe.Events.Count == 1,
+            "The retained native input is delivered when pumping becomes valid.");
+        key.Key.Type = SDL3.SDL.EventType.KeyUp;
+        key.Key.Down = false;
+        Require(SDL3.SDL.PushEvent(ref key), "The native queue accepts the preflight key release.");
+        display.ProcessEvents();
+    }
+    finally
+    {
+        SDL3.SDL.SetModState(previousModifiers);
+        Input.Instance.UseAccumulatedInput = previousAccumulation;
+        Input.Instance.ReleasePressedEvents();
+        Engine.Instance.Stop();
+        probe.Clear();
     }
 }
 
@@ -8051,6 +9173,51 @@ sealed class PauseBarrierNode : Node
         catch (Exception error)
         {
             return error;
+        }
+    }
+}
+
+sealed class InputEmulationProbeNode : Node
+{
+    public List<InputEvent> Events { get; } = [];
+
+    public bool ThrowOnEmulated { get; set; }
+
+    public bool ThrowOnWheel { get; set; }
+
+    public DisplayServer? DisplayPumpAttempt { get; set; }
+
+    public Exception? DisplayPumpError { get; private set; }
+
+    public void Clear()
+    {
+        foreach (var @event in Events)
+            @event.Dispose();
+        Events.Clear();
+    }
+
+    protected override void OnInput(InputEvent @event)
+    {
+        Events.Add((InputEvent)@event.Duplicate());
+        if (ThrowOnEmulated && @event.Device == InputEvent.DeviceIdEmulation)
+            throw new InvalidOperationException("injected synthetic input callback failure");
+        if (ThrowOnWheel && @event is InputEventMouseButton { ButtonIndex: MouseButton.WheelUp })
+            throw new InvalidOperationException("injected wheel callback failure");
+    }
+
+    protected override void OnPhysicsProcess(double delta)
+    {
+        var display = DisplayPumpAttempt;
+        if (display is null)
+            return;
+        DisplayPumpAttempt = null;
+        try
+        {
+            display.ProcessEvents();
+        }
+        catch (Exception error)
+        {
+            DisplayPumpError = error;
         }
     }
 }

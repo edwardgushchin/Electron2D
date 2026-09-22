@@ -8,5 +8,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" />
+    <PackageReference Include="SDL3-CS.Linux" Version="3.4.16.0" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
   </ItemGroup>
 </Project>

@@ -21,13 +21,14 @@ Electron2D needs one portable 2D rendering contract for Windows, macOS, Linux (X
 
 SDL exposes two relevant layers. The [SDL GPU API](https://wiki.libsdl.org/SDL3/CategoryGPU) provides cross-platform graphics devices, shaders, pipelines, command buffers, and render passes. The [SDL Render API](https://wiki.libsdl.org/SDL3/CategoryRender) accelerates a smaller set of simple 2D operations but does not expose arbitrary user shader pipelines. Treating both as equivalent would either remove shader support from the engine or make the fallback claim behavior it cannot provide.
 
-SDL3-CS, native SDL packaging, an application host, and the Electron2D rendering domain are not implemented yet. This decision fixes the future boundary without introducing placeholder renderer or shader types.
+SDL3-CS now supplies managed bindings to the DisplayServer. Native SDL packaging, a complete application host, and the Electron2D rendering domain are not implemented yet. This decision fixes the future boundary without introducing placeholder renderer or shader types.
 
 ### Decision
 
-- The primary Electron2D rendering backend will use the SDL3 GPU API through the future SDL3-CS integration.
+- The primary Electron2D rendering backend will use the SDL3 GPU API through the installed SDL3-CS binding when the rendering domain is implemented.
 - Electron2D will support engine-provided and user-authored graphics shaders for 2D rendering on the GPU backend. Three-dimensional pipelines and shader functionality are outside the product boundary.
 - SDL_Renderer will be the fallback backend for the portable baseline of simple 2D drawing when the GPU backend is unavailable, cannot be initialized, or a host explicitly selects fallback mode.
+- The SDL_Renderer fallback may select an OpenGL or OpenGL ES driver. This does not itself expose a window-associated GL/EGL/GLX context through the public API; the first executable fallback slice must audit those identities individually under [ADR 0042](display.md#adr-0042).
 - SDL_Renderer fallback will not pretend to support arbitrary shaders. Shader-dependent resources or operations must be rejected explicitly before drawing when the active backend lacks the required capability; ignoring a shader, silently changing the effect, or reporting false success is prohibited.
 - The public Electron2D rendering API will be backend-neutral and typed. It must expose the active backend and relevant capabilities without exposing SDL-owned handles or types. A project or host that requires shaders must be able to reject fallback during startup.
 - Shared baseline operations must retain their documented visible semantics on both backends, subject to explicit capability and precision limits. Exact output, performance, advanced blend behavior, and shader support must not be claimed equivalent without backend-specific verification.
@@ -50,11 +51,11 @@ SDL3-CS, native SDL packaging, an application host, and the Electron2D rendering
 - **Emulate arbitrary shaders on SDL_Renderer:** rejected because it would create incompatible behavior, high maintenance cost, and misleading capability claims.
 - **Silently drop shader effects on fallback:** rejected because output would be incorrect while appearing successful.
 - **Expose SDL handles in the public API:** rejected because it would couple games and the editor to one backend and prevent controlled backend evolution.
-- **Add renderer interfaces and shader resources immediately:** rejected because no SDL integration or executable rendering behavior exists yet.
+- **Add renderer interfaces and shader resources immediately:** rejected because no executable rendering behavior exists yet.
 
 ### Current implementation boundary
 
-This ADR selects a future architecture only. The repository currently contains no rendering domain, backend, graphics device, window host, texture, material, shader, pipeline, canvas, draw command, or render test. Existing visibility, Z-order, color, geometry, timing, and node state do not produce pixels. No cross-platform graphics behavior or shader support is claimed as implemented or verified.
+This ADR selects a future renderer architecture only. [ADR 0040](display.md#adr-0040) now provides a native SDL window and input pump; the repository still contains no rendering domain, backend, graphics device, texture, material, shader, pipeline, canvas, draw command, or render test. Existing visibility, Z-order, color, geometry, timing, and node state do not produce pixels. No cross-platform graphics behavior or shader support is claimed as implemented or verified.
 
 The Web target has no browser graphics host or verified mapping to these SDL backends. Its first rendering/host slice must establish that mapping and explicit capability behavior before claiming browser output.
 

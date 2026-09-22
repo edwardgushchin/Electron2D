@@ -1,6 +1,6 @@
 # Input
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -19,8 +19,10 @@ Owns process-wide input state and translates typed events into named actions.
 `Input` is the non-disposable process-wide owner of raw keyboard/mouse/controller state, mapped action contributions, and independent process/physics transition windows. It never owns submitted events or native devices.
 
 A platform host submits events through [`Input.ParseInputEvent(InputEvent)`](Input.md#m-electron2d-input-parseinputevent-electron2d-inputevent). State is committed before scene delivery,
-so callbacks observe the new state. Queries and synthetic action changes are lock-serialized; event delivery is
-synchronous on the caller thread and an attached [`SceneTree`](SceneTree.md) requires its owner thread.
+so callbacks observe the new state. Optional touch-to-mouse and mouse-to-touch emulation sends a generated event
+before its source event; generated mouse events also update raw and mapped state. Queries and synthetic action changes
+are lock-serialized; event delivery is synchronous on the caller thread and an attached [`SceneTree`](SceneTree.md)
+requires its owner thread.
 
 ## Examples
 
@@ -37,6 +39,9 @@ if (input.IsActionPressed("jump"))
 | Member | Description |
 | --- | --- |
 | [`public static Input Instance { get; }`](#p-electron2d-input-instance) | Gets the process-wide input service. |
+| [`public bool UseAccumulatedInput { get; set; }`](#p-electron2d-input-useaccumulatedinput) | Controls native pointer-motion accumulation; defaults to `true`. |
+| [`public bool EmulateMouseFromTouch { get; set; }`](#p-electron2d-input-emulatemousefromtouch) | Makes the first active touch contact generate left-button mouse input; defaults to `true`. |
+| [`public bool EmulateTouchFromMouse { get; set; }`](#p-electron2d-input-emulatetouchfrommouse) | Makes left-button mouse input generate touch input; defaults to `false`. |
 | [`public MouseButtonMask MouseButtonMask { get; }`](#p-electron2d-input-mousebuttonmask) | Gets the non-wheel mouse buttons currently held. |
 | [`public Vector2 LastMouseVelocity { get; }`](#p-electron2d-input-lastmousevelocity) | Gets the most recently submitted local mouse velocity. |
 | [`public Vector2 LastMouseScreenVelocity { get; }`](#p-electron2d-input-lastmousescreenvelocity) | Gets the most recently submitted screen-space mouse velocity. |
@@ -63,6 +68,7 @@ if (input.IsActionPressed("jump"))
 | [`public Vector2 GetVector(string negativeX, string positiveX, string negativeY, string positiveY, float deadzone = -1f)`](#m-electron2d-input-getvector-system-string-system-string-system-string-system-string-system-single) | Combines four actions into a circularly deadzoned two-dimensional input vector. |
 | [`public void ActionPress(string action, float strength = 1f)`](#m-electron2d-input-actionpress-system-string-system-single) | Presses a registered action without producing an input event. |
 | [`public void ActionRelease(string action)`](#m-electron2d-input-actionrelease-system-string) | Releases the synthetic source of a registered action without producing an input event. |
+| [`public void FlushBufferedEvents()`](#m-electron2d-input-flushbufferedevents) | Delivers native pointer motion buffered by the display adapter. |
 | [`public void ParseInputEvent(InputEvent event)`](#m-electron2d-input-parseinputevent-electron2d-inputevent) | Submits one typed input event, updates state, and synchronously routes it to the active main loop. |
 | [`public void ReleasePressedEvents()`](#m-electron2d-input-releasepressedevents) | Releases every tracked key, mouse button, controller button, axis, and action source. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-input-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
@@ -82,6 +88,27 @@ if (input.IsActionPressed("jump"))
 Gets the process-wide input service.
 
 **Value:** The same non-disposable instance for the lifetime of the process.
+
+<a id="p-electron2d-input-useaccumulatedinput"></a>
+### `public bool UseAccumulatedInput { get; set; }`
+
+Controls whether the native display adapter combines consecutive pointer-motion events in its pending batch.
+
+**Value:** `true` by default. A change applies to the next native event; without a native host this setting has no effect. Keyboard, button, and touch event order is preserved.
+
+<a id="p-electron2d-input-emulatemousefromtouch"></a>
+### `public bool EmulateMouseFromTouch { get; set; }`
+
+Controls whether the first active touch contact generates left-button mouse press, motion, and release events.
+
+**Value:** `true` by default. Generated mouse events use device ID `-1` and update mouse-button and action state. Other contacts remain touch-only. Turning this off during an emulated press suppresses further motion, but that contact still sends the release needed to clear state.
+
+<a id="p-electron2d-input-emulatetouchfrommouse"></a>
+### `public bool EmulateTouchFromMouse { get; set; }`
+
+Controls whether left-button mouse input also generates touch press, drag, and release events at index zero.
+
+**Value:** `false` by default. Generated touch events use device ID `-1` and are delivered to the active scene without changing raw input or mapped action state. One mouse device owns an active emulated contact; another device cannot move or end it. Turning this off during an emulated press suppresses further drags, but the release still ends the generated contact. Without an active scene there is no generated touch delivery.
 
 <a id="p-electron2d-input-mousebuttonmask"></a>
 ### `public MouseButtonMask MouseButtonMask { get; }`
@@ -399,6 +426,13 @@ Releases the synthetic source of a registered action without producing an input 
 - `ArgumentNullException`: `action` is `null`.
 - `Collections.Generic.KeyNotFoundException`: The action is not registered.
 
+<a id="m-electron2d-input-flushbufferedevents"></a>
+### `public void FlushBufferedEvents()`
+
+Delivers pointer motion currently accumulated by the native display adapter, in event order, on the caller thread.
+This is a no-op if no native host is active or its pending batch contains no motion. A native host can reject calls
+outside its owner thread or while pumping events.
+
 <a id="m-electron2d-input-parseinputevent-electron2d-inputevent"></a>
 ### `public void ParseInputEvent(InputEvent event)`
 
@@ -416,17 +450,22 @@ Submits one typed input event, updates state, and synchronously routes it to the
 - `ObjectDisposedException`: `event` or a matched binding is disposing or disposed.
 - `AggregateException`: One or more scene input callbacks throw after state is committed.
 
-**Remarks:** Mapping and state changes are committed before callbacks. Re-entry is rejected. If scene delivery throws, the
-committed state remains observable and the exception propagates. An active loop validates owner-thread and
-lifecycle eligibility before any state changes. Events may be submitted without an active loop.
+**Remarks:** Mapping and state changes are committed before callbacks. With pointer emulation enabled, a generated
+event with device ID `-1` is sent before the source event. The first active touch contact generates left-button mouse
+input; left-button mouse input can generate a scene-only touch at index zero. Generated events do not recursively
+emulate. If a callback for the generated event throws, the source event is still delivered; failures from both are
+combined in an `AggregateException`. Committed state is not rolled back. Re-entry is rejected. An active loop validates
+owner-thread and lifecycle eligibility before any state changes. Events may be submitted without an active loop;
+mouse emulation still updates state, while touch emulation requires an active scene.
 
 <a id="m-electron2d-input-releasepressedevents"></a>
 ### `public void ReleasePressedEvents()`
 
 Releases every tracked key, mouse button, controller button, axis, and action source.
 
-**Remarks:** Actions that were pressed receive a just-released transition in both callback lanes. This method does not emit
-events or route callbacks and does not alter [`InputMap`](InputMap.md).
+**Remarks:** Actions that were pressed receive a just-released transition in both callback lanes. Emulated contact
+tracking and per-device mouse button masks are cleared. This method does not emit events or route callbacks and does
+not alter [`InputMap`](InputMap.md) or the emulation settings.
 
 <a id="m-electron2d-input-getpropertydescriptors"></a>
 ### `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
@@ -466,14 +505,14 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 ## Lifecycle, ordering, and errors
 
-The singleton exists for the process lifetime. Parsing first validates any active MainLoop's owner thread and idle-running lifecycle, then fully resolves mappings before mutation, commits state, and dispatches. Wrong-thread, nested-frame/lifecycle, source-capacity, and parse re-entry failures occur before state mutation. Scene callback failure propagates without rolling committed state back. Invalid names/devices/enums/non-finite strengths/deadzones throw typed C# exceptions; unregistered actions throw `KeyNotFoundException`.
+The singleton exists for the process lifetime. Parsing first validates any active MainLoop's owner thread and idle-running lifecycle, then fully resolves mappings before mutation, commits state, and dispatches. Wrong-thread, nested-frame/lifecycle, source-capacity, and parse re-entry failures occur before state mutation. Pointer emulation delivers a generated event before its source and keeps each contact's release paired even if an emulation setting changes mid-contact. Scene callback failure propagates without rolling committed state back; the source event is delivered after a generated-event callback failure. Invalid names/devices/enums/non-finite strengths/deadzones throw typed C# exceptions; unregistered actions throw `KeyNotFoundException`.
 
 Each process/physics callback sees its own transition latch. That lane clears in MainLoop `finally`; a failed frame cannot leak a just transition into its next frame. Outside a callback, transition queries use the process lane.
 
 ## Threading and invariants
 
-State/configuration queries are lock-serialized. Event parsing is serialized and callback delivery runs on the caller thread; an active MainLoop therefore requires its owner thread and rejects calls made inside another loop callback. Returned value snapshots need no lifetime management. The warmed mapped parse/traversal path is allocation-free.
+State/configuration queries are lock-serialized. Event parsing is serialized and callback delivery runs on the caller thread; an active MainLoop therefore requires its owner thread and rejects calls made inside another loop callback. Returned value snapshots need no lifetime management. The warmed non-emulated mapped parse/traversal path is allocation-free; generating a pointer event allocates a short-lived resource.
 
 ## Dependencies, verification, and limitations
 
-Depends on InputMap, typed event classes, Engine/MainLoop, SceneTree, and core math. Managed tests cover all behavior named above, including failure/re-entry/allocation. Hardware APIs are absent; their exact implementation triggers are in [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers).
+Depends on InputMap, typed event classes, Engine/MainLoop, SceneTree, and core math. Managed tests cover input state, emulation order, first-contact ownership, release pairing, failure/re-entry, and non-emulated allocation. The optional SDL dummy-driver suite checks pointer modifier translation. Controller discovery/effects, sensors, MIDI, shortcuts, action persistence, and GUI routing have exact implementation triggers in [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers); physical pointer hardware and the full native-host matrix have not been exercised.

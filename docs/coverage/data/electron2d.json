@@ -137,6 +137,165 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.DisplayServer",
+    "kind": "type",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "DisplayServer",
+    "signature": "public sealed class Electron2D.DisplayServer",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.DisplayServer.CursorShape",
+    "kind": "type",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "CursorShape",
+    "signature": "public enum Electron2D.DisplayServer.CursorShape",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.DisplayServer.Feature",
+    "kind": "type",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "Feature",
+    "signature": "public enum Electron2D.DisplayServer.Feature",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.DisplayServer.FileDialogMode",
+    "kind": "type",
+    "declaringType": "Electron2D.DisplayServer.FileDialogMode",
+    "name": "FileDialogMode",
+    "signature": "public enum Electron2D.DisplayServer.FileDialogMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.DisplayServer.HandleType",
+    "kind": "type",
+    "declaringType": "Electron2D.DisplayServer.HandleType",
+    "name": "HandleType",
+    "signature": "public enum Electron2D.DisplayServer.HandleType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.DisplayServer.MouseMode",
+    "kind": "type",
+    "declaringType": "Electron2D.DisplayServer.MouseMode",
+    "name": "MouseMode",
+    "signature": "public enum Electron2D.DisplayServer.MouseMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.DisplayServer.ProgressState",
+    "kind": "type",
+    "declaringType": "Electron2D.DisplayServer.ProgressState",
+    "name": "ProgressState",
+    "signature": "public enum Electron2D.DisplayServer.ProgressState",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.DisplayServer.WindowFlag",
+    "kind": "type",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "WindowFlag",
+    "signature": "public enum Electron2D.DisplayServer.WindowFlag",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.DisplayServer.WindowMode",
+    "kind": "type",
+    "declaringType": "Electron2D.DisplayServer.WindowMode",
+    "name": "WindowMode",
+    "signature": "public enum Electron2D.DisplayServer.WindowMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ElectronObject",
     "kind": "type",
     "declaringType": "Electron2D.ElectronObject",
@@ -1428,6 +1587,97 @@
     "parameters": null,
     "returnType": null,
     "value": null
+  },
+  {
+    "id": "constant:Electron2D.DisplayServer.InvalidScreen()",
+    "kind": "constant",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "InvalidScreen",
+    "signature": "public const System.Int32 InvalidScreen = -1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "-1"
+  },
+  {
+    "id": "constant:Electron2D.DisplayServer.InvalidWindowId()",
+    "kind": "constant",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "InvalidWindowId",
+    "signature": "public const System.Int32 InvalidWindowId = -1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "-1"
+  },
+  {
+    "id": "constant:Electron2D.DisplayServer.MainWindowId()",
+    "kind": "constant",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "MainWindowId",
+    "signature": "public const System.Int32 MainWindowId = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "0"
+  },
+  {
+    "id": "constant:Electron2D.DisplayServer.ScreenOfMainWindow()",
+    "kind": "constant",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenOfMainWindow",
+    "signature": "public const System.Int32 ScreenOfMainWindow = -1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "-1"
+  },
+  {
+    "id": "constant:Electron2D.DisplayServer.ScreenPrimary()",
+    "kind": "constant",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenPrimary",
+    "signature": "public const System.Int32 ScreenPrimary = -2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "-2"
+  },
+  {
+    "id": "constant:Electron2D.DisplayServer.ScreenWithKeyboardFocus()",
+    "kind": "constant",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenWithKeyboardFocus",
+    "signature": "public const System.Int32 ScreenWithKeyboardFocus = -3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "-3"
+  },
+  {
+    "id": "constant:Electron2D.DisplayServer.ScreenWithMouseFocus()",
+    "kind": "constant",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenWithMouseFocus",
+    "signature": "public const System.Int32 ScreenWithMouseFocus = -4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "-4"
   },
   {
     "id": "constant:Electron2D.ElectronObject.NotificationPostInitialize()",
@@ -3580,6 +3830,1176 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.DeepDuplicateMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.Arrow()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "Arrow",
+    "signature": "public const Electron2D.DisplayServer.CursorShape Arrow = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.BDiagSize()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "BDiagSize",
+    "signature": "public const Electron2D.DisplayServer.CursorShape BDiagSize = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.Busy()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "Busy",
+    "signature": "public const Electron2D.DisplayServer.CursorShape Busy = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.CanDrop()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "CanDrop",
+    "signature": "public const Electron2D.DisplayServer.CursorShape CanDrop = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.Cross()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "Cross",
+    "signature": "public const Electron2D.DisplayServer.CursorShape Cross = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.Drag()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "Drag",
+    "signature": "public const Electron2D.DisplayServer.CursorShape Drag = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.FDiagSize()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "FDiagSize",
+    "signature": "public const Electron2D.DisplayServer.CursorShape FDiagSize = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.Forbidden()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "Forbidden",
+    "signature": "public const Electron2D.DisplayServer.CursorShape Forbidden = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.HSize()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "HSize",
+    "signature": "public const Electron2D.DisplayServer.CursorShape HSize = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.HSplit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "HSplit",
+    "signature": "public const Electron2D.DisplayServer.CursorShape HSplit = 15",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "15"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.Help()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "Help",
+    "signature": "public const Electron2D.DisplayServer.CursorShape Help = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.IBeam()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "IBeam",
+    "signature": "public const Electron2D.DisplayServer.CursorShape IBeam = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "Max",
+    "signature": "public const Electron2D.DisplayServer.CursorShape Max = 17",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "17"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.Move()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "Move",
+    "signature": "public const Electron2D.DisplayServer.CursorShape Move = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.PointingHand()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "PointingHand",
+    "signature": "public const Electron2D.DisplayServer.CursorShape PointingHand = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.VSize()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "VSize",
+    "signature": "public const Electron2D.DisplayServer.CursorShape VSize = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.VSplit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "VSplit",
+    "signature": "public const Electron2D.DisplayServer.CursorShape VSplit = 14",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "14"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.CursorShape.Wait()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.CursorShape",
+    "name": "Wait",
+    "signature": "public const Electron2D.DisplayServer.CursorShape Wait = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.AccessibilityScreenReader()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "AccessibilityScreenReader",
+    "signature": "public const Electron2D.DisplayServer.Feature AccessibilityScreenReader = 34",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "34"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.Clipboard()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "Clipboard",
+    "signature": "public const Electron2D.DisplayServer.Feature Clipboard = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.ClipboardPrimary()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "ClipboardPrimary",
+    "signature": "public const Electron2D.DisplayServer.Feature ClipboardPrimary = 18",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "18"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.CursorShape()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "CursorShape",
+    "signature": "public const Electron2D.DisplayServer.Feature CursorShape = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.CustomCursorShape()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "CustomCursorShape",
+    "signature": "public const Electron2D.DisplayServer.Feature CustomCursorShape = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.EmojiAndSymbolPicker()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "EmojiAndSymbolPicker",
+    "signature": "public const Electron2D.DisplayServer.Feature EmojiAndSymbolPicker = 31",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "31"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.ExtendToTitle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "ExtendToTitle",
+    "signature": "public const Electron2D.DisplayServer.Feature ExtendToTitle = 20",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "20"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.HdrOutput()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "HdrOutput",
+    "signature": "public const Electron2D.DisplayServer.Feature HdrOutput = 35",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "35"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.Hidpi()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "Hidpi",
+    "signature": "public const Electron2D.DisplayServer.Feature Hidpi = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.Icon()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "Icon",
+    "signature": "public const Electron2D.DisplayServer.Feature Icon = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.Ime()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "Ime",
+    "signature": "public const Electron2D.DisplayServer.Feature Ime = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.Mouse()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "Mouse",
+    "signature": "public const Electron2D.DisplayServer.Feature Mouse = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.MouseWarp()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "MouseWarp",
+    "signature": "public const Electron2D.DisplayServer.Feature MouseWarp = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.NativeColorPicker()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "NativeColorPicker",
+    "signature": "public const Electron2D.DisplayServer.Feature NativeColorPicker = 32",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "32"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.NativeDialog()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "NativeDialog",
+    "signature": "public const Electron2D.DisplayServer.Feature NativeDialog = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.NativeDialogFile()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "NativeDialogFile",
+    "signature": "public const Electron2D.DisplayServer.Feature NativeDialogFile = 25",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "25"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.NativeDialogFileExtra()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "NativeDialogFileExtra",
+    "signature": "public const Electron2D.DisplayServer.Feature NativeDialogFileExtra = 26",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "26"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.NativeDialogFileMime()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "NativeDialogFileMime",
+    "signature": "public const Electron2D.DisplayServer.Feature NativeDialogFileMime = 30",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "30"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.NativeDialogInput()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "NativeDialogInput",
+    "signature": "public const Electron2D.DisplayServer.Feature NativeDialogInput = 24",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "24"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.NativeHelp()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "NativeHelp",
+    "signature": "public const Electron2D.DisplayServer.Feature NativeHelp = 23",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "23"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.NativeIcon()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "NativeIcon",
+    "signature": "public const Electron2D.DisplayServer.Feature NativeIcon = 14",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "14"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.Orientation()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "Orientation",
+    "signature": "public const Electron2D.DisplayServer.Feature Orientation = 15",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "15"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.PipMode()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "PipMode",
+    "signature": "public const Electron2D.DisplayServer.Feature PipMode = 36",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "36"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.ScreenCapture()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "ScreenCapture",
+    "signature": "public const Electron2D.DisplayServer.Feature ScreenCapture = 21",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "21"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.ScreenExcludeFromCapture()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "ScreenExcludeFromCapture",
+    "signature": "public const Electron2D.DisplayServer.Feature ScreenExcludeFromCapture = 28",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "28"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.SelfFittingWindows()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "SelfFittingWindows",
+    "signature": "public const Electron2D.DisplayServer.Feature SelfFittingWindows = 33",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "33"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.StatusIndicator()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "StatusIndicator",
+    "signature": "public const Electron2D.DisplayServer.Feature StatusIndicator = 22",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "22"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.Subwindows()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "Subwindows",
+    "signature": "public const Electron2D.DisplayServer.Feature Subwindows = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.SwapBuffers()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "SwapBuffers",
+    "signature": "public const Electron2D.DisplayServer.Feature SwapBuffers = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.TextToSpeech()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "TextToSpeech",
+    "signature": "public const Electron2D.DisplayServer.Feature TextToSpeech = 19",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "19"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.Touchscreen()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "Touchscreen",
+    "signature": "public const Electron2D.DisplayServer.Feature Touchscreen = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.VirtualKeyboard()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "VirtualKeyboard",
+    "signature": "public const Electron2D.DisplayServer.Feature VirtualKeyboard = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.WindowDrag()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "WindowDrag",
+    "signature": "public const Electron2D.DisplayServer.Feature WindowDrag = 27",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "27"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.WindowEmbedding()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "WindowEmbedding",
+    "signature": "public const Electron2D.DisplayServer.Feature WindowEmbedding = 29",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "29"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.Feature.WindowTransparency()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.Feature",
+    "name": "WindowTransparency",
+    "signature": "public const Electron2D.DisplayServer.Feature WindowTransparency = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.Feature",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenAny()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.FileDialogMode",
+    "name": "OpenAny",
+    "signature": "public const Electron2D.DisplayServer.FileDialogMode OpenAny = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.FileDialogMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenDirectory()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.FileDialogMode",
+    "name": "OpenDirectory",
+    "signature": "public const Electron2D.DisplayServer.FileDialogMode OpenDirectory = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.FileDialogMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenFile()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.FileDialogMode",
+    "name": "OpenFile",
+    "signature": "public const Electron2D.DisplayServer.FileDialogMode OpenFile = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.FileDialogMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenFiles()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.FileDialogMode",
+    "name": "OpenFiles",
+    "signature": "public const Electron2D.DisplayServer.FileDialogMode OpenFiles = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.FileDialogMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.FileDialogMode.SaveFile()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.FileDialogMode",
+    "name": "SaveFile",
+    "signature": "public const Electron2D.DisplayServer.FileDialogMode SaveFile = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.FileDialogMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.HandleType.DisplayHandle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.HandleType",
+    "name": "DisplayHandle",
+    "signature": "public const Electron2D.DisplayServer.HandleType DisplayHandle = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.HandleType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.HandleType.WindowHandle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.HandleType",
+    "name": "WindowHandle",
+    "signature": "public const Electron2D.DisplayServer.HandleType WindowHandle = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.HandleType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.MouseMode.Captured()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.MouseMode",
+    "name": "Captured",
+    "signature": "public const Electron2D.DisplayServer.MouseMode Captured = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.MouseMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.MouseMode.Confined()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.MouseMode",
+    "name": "Confined",
+    "signature": "public const Electron2D.DisplayServer.MouseMode Confined = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.MouseMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.MouseMode.ConfinedHidden()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.MouseMode",
+    "name": "ConfinedHidden",
+    "signature": "public const Electron2D.DisplayServer.MouseMode ConfinedHidden = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.MouseMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.MouseMode.Hidden()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.MouseMode",
+    "name": "Hidden",
+    "signature": "public const Electron2D.DisplayServer.MouseMode Hidden = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.MouseMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.MouseMode.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.MouseMode",
+    "name": "Max",
+    "signature": "public const Electron2D.DisplayServer.MouseMode Max = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.MouseMode",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.MouseMode.Visible()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.MouseMode",
+    "name": "Visible",
+    "signature": "public const Electron2D.DisplayServer.MouseMode Visible = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.MouseMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.ProgressState.Error()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.ProgressState",
+    "name": "Error",
+    "signature": "public const Electron2D.DisplayServer.ProgressState Error = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.ProgressState",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.ProgressState.Indeterminate()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.ProgressState",
+    "name": "Indeterminate",
+    "signature": "public const Electron2D.DisplayServer.ProgressState Indeterminate = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.ProgressState",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.ProgressState.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.ProgressState",
+    "name": "None",
+    "signature": "public const Electron2D.DisplayServer.ProgressState None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.ProgressState",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.ProgressState.Normal()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.ProgressState",
+    "name": "Normal",
+    "signature": "public const Electron2D.DisplayServer.ProgressState Normal = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.ProgressState",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.ProgressState.Paused()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.ProgressState",
+    "name": "Paused",
+    "signature": "public const Electron2D.DisplayServer.ProgressState Paused = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.ProgressState",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.AlwaysOnTop()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "AlwaysOnTop",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag AlwaysOnTop = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.Borderless()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "Borderless",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag Borderless = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.ExcludeFromCapture()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "ExcludeFromCapture",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag ExcludeFromCapture = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.ExtendToTitle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "ExtendToTitle",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag ExtendToTitle = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "Max",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag Max = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.MaximizeDisabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "MaximizeDisabled",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag MaximizeDisabled = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.MinimizeDisabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "MinimizeDisabled",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag MinimizeDisabled = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.MousePassthrough()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "MousePassthrough",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag MousePassthrough = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.NoFocus()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "NoFocus",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag NoFocus = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.Popup()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "Popup",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag Popup = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.PopupWmHint()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "PopupWmHint",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag PopupWmHint = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.ResizeDisabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "ResizeDisabled",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag ResizeDisabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.SharpCorners()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "SharpCorners",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag SharpCorners = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowFlag.Transparent()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowFlag",
+    "name": "Transparent",
+    "signature": "public const Electron2D.DisplayServer.WindowFlag Transparent = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowFlag",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowMode.ExclusiveFullscreen()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowMode",
+    "name": "ExclusiveFullscreen",
+    "signature": "public const Electron2D.DisplayServer.WindowMode ExclusiveFullscreen = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowMode.Fullscreen()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowMode",
+    "name": "Fullscreen",
+    "signature": "public const Electron2D.DisplayServer.WindowMode Fullscreen = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowMode.Maximized()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowMode",
+    "name": "Maximized",
+    "signature": "public const Electron2D.DisplayServer.WindowMode Maximized = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowMode.Minimized()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowMode",
+    "name": "Minimized",
+    "signature": "public const Electron2D.DisplayServer.WindowMode Minimized = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowMode.Windowed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowMode",
+    "name": "Windowed",
+    "signature": "public const Electron2D.DisplayServer.WindowMode Windowed = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowMode",
     "value": "0"
   },
   {
@@ -8874,6 +10294,149 @@
     "value": "2"
   },
   {
+    "id": "event:Electron2D.DisplayServer.CloseRequested()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "CloseRequested",
+    "signature": "public event System.Action CloseRequested",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayServer.FilesDropped()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "FilesDropped",
+    "signature": "public event System.Action\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E FilesDropped",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayServer.QuitRequested()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "QuitRequested",
+    "signature": "public event System.Action QuitRequested",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayServer.SystemThemeChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "SystemThemeChanged",
+    "signature": "public event System.Action SystemThemeChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayServer.TextEditing()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "TextEditing",
+    "signature": "public event System.Action\u003CSystem.String, Electron2D.Vector2I\u003E TextEditing",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String, Electron2D.Vector2I\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayServer.TextInput()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "TextInput",
+    "signature": "public event System.Action\u003CSystem.String\u003E TextInput",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayServer.WindowDpiChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowDpiChanged",
+    "signature": "public event System.Action WindowDpiChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayServer.WindowFocusChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowFocusChanged",
+    "signature": "public event System.Action\u003CSystem.Boolean\u003E WindowFocusChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayServer.WindowMouseEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowMouseEntered",
+    "signature": "public event System.Action WindowMouseEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayServer.WindowMouseExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowMouseExited",
+    "signature": "public event System.Action WindowMouseExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayServer.WindowRectChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowRectChanged",
+    "signature": "public event System.Action\u003CElectron2D.RectI\u003E WindowRectChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.RectI\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.ElectronObject.Disposed()",
     "kind": "event",
     "declaringType": "Electron2D.ElectronObject",
@@ -11379,6 +12942,1405 @@
         "name": "destination",
         "type": "System.String",
         "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ClipboardGet()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ClipboardGet",
+    "signature": "public System.String ClipboardGet()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ClipboardGetPrimary()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ClipboardGetPrimary",
+    "signature": "public System.String ClipboardGetPrimary()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ClipboardHas()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ClipboardHas",
+    "signature": "public System.Boolean ClipboardHas()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ClipboardSet(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ClipboardSet",
+    "signature": "public System.Void ClipboardSet(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ClipboardSetPrimary(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ClipboardSetPrimary",
+    "signature": "public System.Void ClipboardSetPrimary(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.CursorGetShape()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "CursorGetShape",
+    "signature": "public Electron2D.DisplayServer.CursorShape CursorGetShape()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.CursorShape",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.CursorSetCustomImage(Electron2D.Image,Electron2D.DisplayServer.CursorShape,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "CursorSetCustomImage",
+    "signature": "public System.Void CursorSetCustomImage(Electron2D.Image image, Electron2D.DisplayServer.CursorShape shape = Arrow, Electron2D.Vector2 hotspot = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "image",
+        "type": "Electron2D.Image",
+        "default": null
+      },
+      {
+        "name": "shape",
+        "type": "Electron2D.DisplayServer.CursorShape",
+        "default": "Arrow"
+      },
+      {
+        "name": "hotspot",
+        "type": "Electron2D.Vector2",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.CursorSetShape(Electron2D.DisplayServer.CursorShape)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "CursorSetShape",
+    "signature": "public System.Void CursorSetShape(Electron2D.DisplayServer.CursorShape shape)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shape",
+        "type": "Electron2D.DisplayServer.CursorShape",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.DialogShow(System.String,System.String,System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E,System.Action\u003CSystem.Int32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "DialogShow",
+    "signature": "public System.Void DialogShow(System.String title, System.String description, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E buttons, System.Action\u003CSystem.Int32\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "title",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "description",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "buttons",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CSystem.Int32\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.FileDialogShow(System.String,System.String,System.String,System.Boolean,Electron2D.DisplayServer.FileDialogMode,System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E,System.Action\u003CSystem.Boolean, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E, System.Int32\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "FileDialogShow",
+    "signature": "public System.Void FileDialogShow(System.String title, System.String currentDirectory, System.String filename, System.Boolean showHidden, Electron2D.DisplayServer.FileDialogMode mode, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E filters, System.Action\u003CSystem.Boolean, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E, System.Int32\u003E callback, System.Int32 parentWindowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "title",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "currentDirectory",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "filename",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "showHidden",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DisplayServer.FileDialogMode",
+        "default": null
+      },
+      {
+        "name": "filters",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CSystem.Boolean, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E, System.Int32\u003E",
+        "default": null
+      },
+      {
+        "name": "parentWindowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ForceProcessAndDropEvents()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ForceProcessAndDropEvents",
+    "signature": "public System.Void ForceProcessAndDropEvents()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.GetKeyboardFocusScreen()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "GetKeyboardFocusScreen",
+    "signature": "public System.Int32 GetKeyboardFocusScreen()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.GetName()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "GetName",
+    "signature": "public System.String GetName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.GetPrimaryScreen()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "GetPrimaryScreen",
+    "signature": "public System.Int32 GetPrimaryScreen()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.GetScreenCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "GetScreenCount",
+    "signature": "public System.Int32 GetScreenCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.GetScreenFromRect(Electron2D.Rect)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "GetScreenFromRect",
+    "signature": "public System.Int32 GetScreenFromRect(Electron2D.Rect rectangle)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rectangle",
+        "type": "Electron2D.Rect",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.GetWindowAtScreenPosition(Electron2D.Vector2I)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "GetWindowAtScreenPosition",
+    "signature": "public System.Int32 GetWindowAtScreenPosition(Electron2D.Vector2I position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.GetWindowList()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "GetWindowList",
+    "signature": "public System.Int32[] GetWindowList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.HasFeature(Electron2D.DisplayServer.Feature)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "HasFeature",
+    "signature": "public System.Boolean HasFeature(Electron2D.DisplayServer.Feature feature)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "feature",
+        "type": "Electron2D.DisplayServer.Feature",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.HasHardwareKeyboard()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "HasHardwareKeyboard",
+    "signature": "public System.Boolean HasHardwareKeyboard()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ImeGetSelection()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ImeGetSelection",
+    "signature": "public Electron2D.Vector2I ImeGetSelection()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ImeGetText()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ImeGetText",
+    "signature": "public System.String ImeGetText()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.IsDarkMode()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "IsDarkMode",
+    "signature": "public System.Boolean IsDarkMode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.IsDarkModeSupported()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "IsDarkModeSupported",
+    "signature": "public System.Boolean IsDarkModeSupported()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.IsTouchscreenAvailable()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "IsTouchscreenAvailable",
+    "signature": "public System.Boolean IsTouchscreenAvailable()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.KeyboardGetKeycodeFromPhysical(Electron2D.Key)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "KeyboardGetKeycodeFromPhysical",
+    "signature": "public Electron2D.Key KeyboardGetKeycodeFromPhysical(Electron2D.Key physical)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "physical",
+        "type": "Electron2D.Key",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Key",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.KeyboardGetLabelFromPhysical(Electron2D.Key)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "KeyboardGetLabelFromPhysical",
+    "signature": "public Electron2D.Key KeyboardGetLabelFromPhysical(Electron2D.Key physical)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "physical",
+        "type": "Electron2D.Key",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Key",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.MouseGetButtonState()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "MouseGetButtonState",
+    "signature": "public Electron2D.MouseButtonMask MouseGetButtonState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MouseButtonMask",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.MouseGetMode()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "MouseGetMode",
+    "signature": "public Electron2D.DisplayServer.MouseMode MouseGetMode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.MouseMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.MouseGetPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "MouseGetPosition",
+    "signature": "public Electron2D.Vector2I MouseGetPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.MouseSetMode(Electron2D.DisplayServer.MouseMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "MouseSetMode",
+    "signature": "public System.Void MouseSetMode(Electron2D.DisplayServer.MouseMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mode",
+        "type": "Electron2D.DisplayServer.MouseMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.Open(System.String,Electron2D.Vector2I,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "Open",
+    "signature": "public static Electron2D.DisplayServer Open(System.String title, Electron2D.Vector2I size, System.Boolean hidden = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "title",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      },
+      {
+        "name": "hidden",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.DisplayServer",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ProcessEvents()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ProcessEvents",
+    "signature": "public System.Void ProcessEvents()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ScreenGetMaxScale()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenGetMaxScale",
+    "signature": "public System.Single ScreenGetMaxScale()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ScreenGetPosition(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenGetPosition",
+    "signature": "public Electron2D.Vector2I ScreenGetPosition(System.Int32 screen = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "screen",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ScreenGetRefreshRate(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenGetRefreshRate",
+    "signature": "public System.Single ScreenGetRefreshRate(System.Int32 screen = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "screen",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ScreenGetScale(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenGetScale",
+    "signature": "public System.Single ScreenGetScale(System.Int32 screen = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "screen",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ScreenGetSize(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenGetSize",
+    "signature": "public Electron2D.Vector2I ScreenGetSize(System.Int32 screen = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "screen",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ScreenGetUsableRect(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenGetUsableRect",
+    "signature": "public Electron2D.RectI ScreenGetUsableRect(System.Int32 screen = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "screen",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "Electron2D.RectI",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ScreenIsKeptOn()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenIsKeptOn",
+    "signature": "public System.Boolean ScreenIsKeptOn()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ScreenSetKeepOn(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenSetKeepOn",
+    "signature": "public System.Void ScreenSetKeepOn(System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.SetIcon(Electron2D.Image)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "SetIcon",
+    "signature": "public System.Void SetIcon(Electron2D.Image image)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "image",
+        "type": "Electron2D.Image",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WarpMouse(Electron2D.Vector2I)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WarpMouse",
+    "signature": "public System.Void WarpMouse(Electron2D.Vector2I position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetCurrentScreen(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetCurrentScreen",
+    "signature": "public System.Int32 WindowGetCurrentScreen(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetFlag(Electron2D.DisplayServer.WindowFlag,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetFlag",
+    "signature": "public System.Boolean WindowGetFlag(Electron2D.DisplayServer.WindowFlag flag, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "flag",
+        "type": "Electron2D.DisplayServer.WindowFlag",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetMaxSize(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetMaxSize",
+    "signature": "public Electron2D.Vector2I WindowGetMaxSize(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetMinSize(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetMinSize",
+    "signature": "public Electron2D.Vector2I WindowGetMinSize(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetMode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetMode",
+    "signature": "public Electron2D.DisplayServer.WindowMode WindowGetMode(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.DisplayServer.WindowMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetNativeHandle(Electron2D.DisplayServer.HandleType,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetNativeHandle",
+    "signature": "public System.IntPtr WindowGetNativeHandle(Electron2D.DisplayServer.HandleType handleType, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "handleType",
+        "type": "Electron2D.DisplayServer.HandleType",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.IntPtr",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetPosition(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetPosition",
+    "signature": "public Electron2D.Vector2I WindowGetPosition(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetPositionWithDecorations(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetPositionWithDecorations",
+    "signature": "public Electron2D.Vector2I WindowGetPositionWithDecorations(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetSize(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetSize",
+    "signature": "public Electron2D.Vector2I WindowGetSize(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetSizeWithDecorations(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetSizeWithDecorations",
+    "signature": "public Electron2D.Vector2I WindowGetSizeWithDecorations(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetTitle(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetTitle",
+    "signature": "public System.String WindowGetTitle(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowIsFocused(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowIsFocused",
+    "signature": "public System.Boolean WindowIsFocused(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowIsMaximizeAllowed(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowIsMaximizeAllowed",
+    "signature": "public System.Boolean WindowIsMaximizeAllowed(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowMoveToForeground(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowMoveToForeground",
+    "signature": "public System.Void WindowMoveToForeground(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowRequestAttention(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowRequestAttention",
+    "signature": "public System.Void WindowRequestAttention(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetCurrentScreen(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetCurrentScreen",
+    "signature": "public System.Void WindowSetCurrentScreen(System.Int32 screen, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "screen",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetFlag(Electron2D.DisplayServer.WindowFlag,System.Boolean,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetFlag",
+    "signature": "public System.Void WindowSetFlag(Electron2D.DisplayServer.WindowFlag flag, System.Boolean enabled, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "flag",
+        "type": "Electron2D.DisplayServer.WindowFlag",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetIcon(Electron2D.Image,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetIcon",
+    "signature": "public System.Void WindowSetIcon(Electron2D.Image image, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "image",
+        "type": "Electron2D.Image",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetImeActive(System.Boolean,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetImeActive",
+    "signature": "public System.Void WindowSetImeActive(System.Boolean active, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "active",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetImePosition(Electron2D.Vector2I,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetImePosition",
+    "signature": "public System.Void WindowSetImePosition(Electron2D.Vector2I position, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetMaxSize(Electron2D.Vector2I,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetMaxSize",
+    "signature": "public System.Void WindowSetMaxSize(Electron2D.Vector2I size, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetMinSize(Electron2D.Vector2I,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetMinSize",
+    "signature": "public System.Void WindowSetMinSize(Electron2D.Vector2I size, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetMode(Electron2D.DisplayServer.WindowMode,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetMode",
+    "signature": "public System.Void WindowSetMode(Electron2D.DisplayServer.WindowMode mode, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mode",
+        "type": "Electron2D.DisplayServer.WindowMode",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetPosition(Electron2D.Vector2I,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetPosition",
+    "signature": "public System.Void WindowSetPosition(Electron2D.Vector2I position, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetSize(Electron2D.Vector2I,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetSize",
+    "signature": "public System.Void WindowSetSize(Electron2D.Vector2I size, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetTaskbarProgressState(Electron2D.DisplayServer.ProgressState,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetTaskbarProgressState",
+    "signature": "public System.Void WindowSetTaskbarProgressState(Electron2D.DisplayServer.ProgressState state, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "state",
+        "type": "Electron2D.DisplayServer.ProgressState",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetTaskbarProgressValue(System.Single,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetTaskbarProgressValue",
+    "signature": "public System.Void WindowSetTaskbarProgressValue(System.Single value, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetTitle(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetTitle",
+    "signature": "public System.Void WindowSetTitle(System.String title, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "title",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
       }
     ],
     "returnType": "System.Void",
@@ -14223,6 +17185,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.FlushBufferedEvents()",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "FlushBufferedEvents",
+    "signature": "public System.Void FlushBufferedEvents()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -32514,6 +35489,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.DisplayServer.Instance()",
+    "kind": "property",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "Instance",
+    "signature": "public static Electron2D.DisplayServer Instance { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ElectronObject.CanTranslateMessages()",
     "kind": "property",
     "declaringType": "Electron2D.ElectronObject",
@@ -33112,6 +36100,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Input.EmulateMouseFromTouch()",
+    "kind": "property",
+    "declaringType": "Electron2D.Input",
+    "name": "EmulateMouseFromTouch",
+    "signature": "public System.Boolean EmulateMouseFromTouch { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Input.EmulateTouchFromMouse()",
+    "kind": "property",
+    "declaringType": "Electron2D.Input",
+    "name": "EmulateTouchFromMouse",
+    "signature": "public System.Boolean EmulateTouchFromMouse { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Input.Instance()",
     "kind": "property",
     "declaringType": "Electron2D.Input",
@@ -33161,6 +36175,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.MouseButtonMask",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Input.UseAccumulatedInput()",
+    "kind": "property",
+    "declaringType": "Electron2D.Input",
+    "name": "UseAccumulatedInput",
+    "signature": "public System.Boolean UseAccumulatedInput { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

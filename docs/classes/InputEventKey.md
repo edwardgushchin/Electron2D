@@ -1,6 +1,6 @@
 # InputEventKey
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** [InputEventWithModifiers](InputEventWithModifiers.md)
 
@@ -20,10 +20,12 @@ Represents a keyboard key press, release, or operating-system repeat.
 - Complete declared API: `Pressed`, `Echo`, `Keycode`, `PhysicalKeycode`, `KeyLabel`, `Unicode`, `Location`; `GetKeycodeWithModifiers`, `GetPhysicalKeycodeWithModifiers`, `GetKeyLabelWithModifiers`; `AsTextKeycode`, `AsTextPhysicalKeycode`, `AsTextKeyLabel`, `AsTextLocation`; overrides `IsEcho`, `IsMatch`, `AsText`; protected creation/copy/property-descriptor hooks. Inherited `IsActionType` classifies this sealed built-in as bindable. All seven declared values are stored typed descriptors.
 - Matching: label-only bindings use labels; otherwise logical code wins over physical code. Physical bindings may require location. Non-exact presses allow extra modifiers; releases ignore required modifiers; exact matching requires equality.
 - Errors/threading: Unicode must be zero or a scalar, location must be defined, and disposed access fails. Mutable caller-owned state is not synchronized.
-- Verification: raw logical/physical/label state, modifiers, exactness, repeat policy, text, duplication, and release matching are covered.
+- Verification: raw logical/physical/label state, modifiers, exactness, repeat policy, text, duplication, and release matching are covered; the SDL dummy suite checks label separation and all defined left/right modifier locations on press and release.
 
-A host event normally supplies logical, physical, label, and Unicode data. An action binding should generally set
+A caller-created event can supply logical, physical, label, and Unicode data. An action binding should generally set
 only one of [`InputEventKey.Keycode`](InputEventKey.md#p-electron2d-inputeventkey-keycode), [`InputEventKey.PhysicalKeycode`](InputEventKey.md#p-electron2d-inputeventkey-physicalkeycode), or [`InputEventKey.KeyLabel`](InputEventKey.md#p-electron2d-inputeventkey-keylabel).
+
+The current SDL display adapter supplies `Keycode` from the native key event, `PhysicalKeycode` from its scancode, and `KeyLabel` independently from the unmodified scancode under the active layout. A printable non-Latin label can therefore differ from the logical key. Left/right modifier scancodes set `Location` to the matching side; other scancodes use `Unspecified`. That adapter leaves `Unicode` at zero; committed text uses a separate text-input event. SDL key events contain no produced text scalar, and a text-input event may contain multiple scalars or an IME commit without identifying a corresponding key press. Native key-event Unicode needs a per-key Unicode source and verified IME/composition semantics in the first native keyboard/text adapter slice. Code constructing this type directly may assign a valid Unicode scalar.
 
 ## Examples
 
@@ -134,6 +136,8 @@ Gets or sets the localized label printed on the key.
 
 **Value:** A key identifier or Unicode-compatible printable character; [`Key.None`](Key.md#f-electron2d-key-none) when absent.
 
+**Native adapter:** The SDL display adapter derives this value from the unmodified physical scancode under the current keyboard layout rather than copying `Keycode`; non-Latin printable scalars are converted to invariant uppercase key identities.
+
 **Exceptions**
 
 - `ObjectDisposedException`: The event is disposing or disposed.
@@ -145,6 +149,10 @@ Gets or sets the localized label printed on the key.
 Gets or sets the Unicode scalar produced by the press.
 
 **Value:** Zero when no text scalar is associated with the event.
+
+**Native adapter:** The current SDL key-event path leaves this value at zero. Committed text is delivered separately and does not mutate the key event.
+
+**Integration trigger:** Integrate a native per-key Unicode source with verified IME/composition semantics in the first native keyboard/text adapter slice. SDL keyboard and text-input events alone do not provide a reliable key-to-text association.
 
 **Exceptions**
 
@@ -158,6 +166,8 @@ Gets or sets the Unicode scalar produced by the press.
 Gets or sets the side of a key that has left and right variants.
 
 **Value:** [`KeyLocation.Unspecified`](KeyLocation.md#f-electron2d-keylocation-unspecified) by default.
+
+**Native adapter:** Left control, shift, alt, and GUI scancodes produce `KeyLocation.Left`; their right-side counterparts produce `KeyLocation.Right`; every other scancode produces `KeyLocation.Unspecified`. The rule is the same for press and release.
 
 **Exceptions**
 

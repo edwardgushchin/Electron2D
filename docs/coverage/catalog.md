@@ -223,7 +223,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. One 
 | [DirAccess](classes/DirAccess.md) | RefCounted | Partial | 40 |
 | [DirectionalLight2D](classes/DirectionalLight2D.md) | Light2D | Blocked | 2 |
 | [DirectionalLight3D](classes/DirectionalLight3D.md) | Light3D | Excluded | 17 |
-| [DisplayServer](classes/DisplayServer.md) | Object | Blocked | 552 |
+| [DisplayServer](classes/DisplayServer.md) | Object | Implemented | 552 |
 | [DrawableTexture2D](classes/DrawableTexture2D.md) | Texture2D | Blocked | 13 |
 | [ENetConnection](classes/ENetConnection.md) | RefCounted | Blocked | 35 |
 | [ENetMultiplayerPeer](classes/ENetMultiplayerPeer.md) | MultiplayerPeer | Blocked | 7 |

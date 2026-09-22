@@ -11,4 +11,7 @@
   <ItemGroup>
     <Compile Include="src/**/*.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SDL3-CS" Version="3.4.16.1" />
+  </ItemGroup>
 </Project>

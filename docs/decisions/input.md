@@ -1,12 +1,12 @@
 # Input decisions
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 This log owns durable decisions for input events, action mapping, process-wide input state, and scene input propagation. Current executable behavior is described by the [Input domain](../domains/input.md), [Input runtime component](../components/input-runtime.md), and class documents.
 
 ## ADR 0038: Typed input events, action state, and scene propagation
 
-- Status: Accepted
+- Status: Accepted; the native display/event-pump integration, including pointer emulation, is recorded in [ADR 0040](display.md#adr-0040)
 - Date: 2026-09-21
 
 ### Context
@@ -23,11 +23,13 @@ An earlier statement that a missing feature was merely "deferred" was not suffic
 - Controller-axis events remain motion values rather than button-like presses. Action matching applies each action's own deadzone, while `GetVector` composes raw strengths before applying its one circular deadzone.
 - Action-map descriptions omit synthetic action indirection. A synthetic event description uses the first concrete binding or falls back to its action name, preventing recursive description lookup and duplicate alternatives.
 - `Input.ParseInputEvent` serializes parsing, validates the active loop's owner thread and execution state, rejects re-entry and source-capacity overflow, resolves mappings before mutation, commits raw/action state before callbacks, and synchronously forwards the same caller-owned event to the active `MainLoop`.
+- Pointer emulation is an Input policy over typed source events. The first active touch contact produces left-button mouse input by default; optional mouse-to-touch translation uses left-button input and touch index zero. Generated events use device ID `-1`, precede the source event, and never recurse. Generated mouse events update raw and mapped state; generated touch events are scene-only. A setting change during an emulated press retains its matching release. Native SDL pointer counterparts are deduplicated before parsing. Source delivery continues after generated-event callback failure, and the failures are combined if both dispatches fail.
+- The native SDL keyboard adapter keeps layout-aware `Keycode`, physical `PhysicalKeycode`, and localized `KeyLabel` distinct. It derives the label from the scancode under the active layout without SDL's Latin-letter normalization and preserves printable non-ASCII Unicode scalars in the typed key vocabulary. Left/right modifier scancodes identify key location. `InputEventKey.Unicode` stays zero on native SDL key events: they contain no produced text scalar, and separate text-input events may carry multiple scalars or an IME commit without identifying the producing key press. The first native keyboard/text adapter slice must integrate a native per-key Unicode source and verify IME/composition semantics; key-to-text correlation from the SDL event stream alone is not a valid substitute.
 - Registered binding changes use an internal invalidation channel before public `Resource.Changed` delivery, so a throwing user handler cannot preserve stale action contributions. Disposing a registered binding removes it from every affected action before public disposal observers. Motion accumulation commits all fields atomically before its single public change notification.
 - Positional transforms require finite inputs. They transform local position and applicable local motion; pan gesture delta remains the host-reported value while only its position changes.
 - `SceneTree` dispatches a captured hierarchy in reverse depth-first order through `OnInput`, then keyboard-only `OnUnhandledKeyInput`, then `OnUnhandledInput`. `SetInputAsHandled` stops the current and later stages. Removed/disposed nodes are skipped; callback failures are aggregated after eligible delivery continues.
 - Node input participation is explicit and pause-aware through `InputEnabled`, `UnhandledKeyInputEnabled`, `UnhandledInputEnabled`, and `CanProcess()`.
-- Process and physics just-pressed/just-released windows are independent. Each lane clears its own transition state in `MainLoop` `finally`, including failed callbacks. Warmed event matching and scene traversal reuse buffers and allocate no managed memory.
+- Process and physics just-pressed/just-released windows are independent. Each lane clears its own transition state in `MainLoop` `finally`, including failed callbacks. Warmed non-emulated event matching and scene traversal reuse buffers and allocate no managed memory; generated pointer events allocate short-lived resources.
 - Typed C# exceptions replace numeric error codes. Dynamic `Variant` event payloads, string-based calls, and untyped metadata are permanently excluded by ADR 0001.
 
 ### Deferred coverage and exact implementation triggers
@@ -36,7 +38,6 @@ The following items are **not actionable now** unless their trigger is present i
 
 | Deferred item | Exact missing dependency | Implementation trigger | When to implement |
 | --- | --- | --- | --- |
-| Native mouse mode, cursor shape/image, pointer warp, focus filtering, buffered accumulation, `FlushBufferedEvents`, and mouse/touch emulation policy | SDL window plus event-pump ownership and event-source deduplication | The first accepted SDL window/event-pump vertical slice has a real window, pump, coordinate conversion, and frame flush boundary | In that first SDL window/input-adapter slice; do not start earlier |
 | Controller discovery, names, GUID/info, mapping database changes, ignored-device policy, connection-change event, vibration, duration/strength queries, and controller lights | SDL gamepad backend and lifecycle ownership | The first accepted SDL gamepad backend slice can open/close devices and receive connection events | In that first SDL gamepad slice; do not simulate devices before it |
 | Accelerometer, gravity, gyroscope, magnetometer, and controller motion sensors | Mobile/gamepad sensor backend plus an accepted typed three-component sensor-value representation that does not introduce a 3D scene domain | Both the sensor-value ADR and a concrete SDL/mobile sensor adapter exist | In the first sensor slice after both prerequisites; not implied by ordinary gamepad work |
 | MIDI event type, device enumeration, and message delivery | Product approval for a MIDI domain plus a selected native host API | A user-approved MIDI ADR names scope, host API, ownership, and platform matrix | Only after that separate decision; MIDI is not automatically part of SDL input work |
@@ -46,8 +47,8 @@ The following items are **not actionable now** unless their trigger is present i
 
 ### Consequences
 
-Gameplay can use deterministic typed input and scene callbacks before SDL integration. No method reports fictitious hardware success. A later agent can start a deferred row only by demonstrating its named trigger or by first obtaining the separate decision required by the row.
+Gameplay uses deterministic typed input and scene callbacks with a native SDL event source and pointer emulation. No method reports fictitious hardware success. A later agent can start a deferred row only by demonstrating its named trigger or by first obtaining the separate decision required by the row.
 
 ### Verification
 
-The executable harness covers singleton lifetime, map validation and matching, the 32-source ceiling, complete event-property descriptors/defaults, modifiers, raw and mapped state, raw-strength analog vectors, independent transition lanes, direct action events, pre-mutation owner/execution rejection, reverse scene ordering, handled propagation, pause eligibility, re-entry rejection, callback failure continuation, failure-safe binding invalidation, atomic accumulation, transform semantics including unchanged pan delta, controller device state, release-all behavior, and zero warmed parsing/traversal allocation.
+The executable harness covers singleton lifetime, map validation and matching, the 32-source ceiling, complete event-property descriptors/defaults, modifiers, raw and mapped state, raw-strength analog vectors, independent transition lanes, direct action events, pre-mutation owner/execution rejection, reverse scene ordering, handled propagation, pause eligibility, re-entry rejection, callback failure continuation, failure-safe binding invalidation, atomic accumulation, transform semantics including unchanged pan delta, controller device state, release-all behavior, zero warmed non-emulated parsing/traversal allocation, pointer-emulation defaults and order, multi-device first-touch ownership, release pairing across setting changes, generated action state, generated-event callback failures, and native SDL pointer modifiers in the optional dummy-driver suite.

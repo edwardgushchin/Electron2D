@@ -15,7 +15,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 
 
@@ -74,6 +74,8 @@ def return_note(member, matches):
     upstream = member["attributes"].get("return", {}).get("type", "void")
     differences = []
     for match in matches:
+        if match["kind"] == "event":
+            continue
         local = match.get("returnType")
         if local is None:
             continue
@@ -380,9 +382,11 @@ def render():
                  f"Godot source: [{source}]({url}) at `{upstream['godot_version']}` (`{COMMIT}`).", "",
                  f"Godot base: {inherited}. "
                  f"Electron2D type: {', '.join(engine_link(engine_by_id[f'T:{owner}']) for owner in owners) if owners else '—'}.", "",
-                 "Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.", "",
-                 "| Godot API | Electron2D API | State | Reason / implementation trigger |",
-                 "| --- | --- | --- | --- |"]
+                 "Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.", ""]
+        if name == "DisplayServer":
+            lines.extend(["Current release verification requires Linux/Wayland only under [ADR 0021](../../decisions/product.md#adr-0021). A published test consumer has loaded packaged SDL and passed a limited Wayland native smoke; production-host packaging and full native behavior remain unverified. See the [class verification](../../classes/DisplayServer.md#verification). Other target platforms remain in the product matrix without blocking this stage.", ""])
+        lines.extend(["| Godot API | Electron2D API | State | Reason / implementation trigger |",
+                      "| --- | --- | --- | --- |"])
         class_engine = engine_by_id.get(f"T:{owners[0]}") if owners else None
         if class_engine:
             used_engine.add(class_engine["id"])
@@ -498,7 +502,7 @@ def render():
             "The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.", "",
             f"1. Review {counts['Partial']} partially implemented rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.",
             f"2. Complete {counts['Unimplemented']} missing declarations in already represented type families; split each type by its documented dependency trigger.{actionable_note}",
-            "3. Implement the blocked domains in dependency order: SDL host/input and display; SDL3 GPU 2D rendering; GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; self-hosted editor.", "",
+            "3. Implement the blocked domains in dependency order: SDL host/input and display; SDL3 GPU 2D rendering with the accepted SDL_Renderer fallback; GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; self-hosted editor. The first executable fallback slice must audit each of the five blocked GL/EGL/GLX `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.", "",
             "## Existing type backlog", "",
             "These classes already have an Electron2D type. Sort by missing member count, then unaudited mapped count; this is workload order, not a claim that dependencies can be skipped.", "",
             "| Godot class | Unimplemented members | Partial members |", "| --- | ---: | ---: |"]

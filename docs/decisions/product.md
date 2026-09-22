@@ -96,11 +96,11 @@ Electron2D is intended to provide a familiar high-level API modeled on Godot's 2
 - All production runtime-engine domains and components compile into `Electron2D.csproj` with assembly name `Electron2D`, producing one managed engine assembly: `Electron2D.dll`.
 - Tests, examples, benchmarks, analyzers, and development tools may use separate projects because they are not shipped as parts of the engine.
 - The first-party editor is a separately shipped self-hosted application and games are separate executables; both consume the public runtime under ADR 0027 and are not runtime-domain assemblies.
-- SDL3-CS is the intended low-level backend but is not integrated yet. ADR 0028 selects its GPU API as the primary future 2D renderer and SDL_Renderer as a reduced-capability fallback without claiming either as implemented.
+- SDL3-CS is integrated as the managed binding for the DisplayServer window and event pump. Native SDL deployment and a complete application host remain unresolved. ADR 0028 selects its GPU API as the primary future 2D renderer and SDL_Renderer as a reduced-capability fallback without claiming either as implemented.
 
 ### Packaging boundary
 
-The current verified engine artifact is the managed `Electron2D.dll`. No SDL binding or native SDL binary is currently part of the build. When SDL3-CS is integrated, its managed binding must not create a second shipping engine assembly.
+The current verified engine artifact is the managed `Electron2D.dll`. The project references the managed `SDL3-CS` binding, which ships separately from the engine assembly; no native SDL binary is packaged by the current project. This dependency does not create a second Electron2D-owned runtime assembly.
 
 Native SDL deployment is a separate unresolved platform constraint. This ADR does not claim that native SDL code has already been embedded into the managed DLL or that a physical one-file native deployment has been achieved. That decision requires an implemented and verified SDL integration.
 
@@ -145,7 +145,7 @@ The engine remains exclusively 2D and should continue exposing one coherent publ
 - Electron2D's public API must not expose dependency-owned types. Physics nodes, resources, queries, contacts, and errors will use Electron2D types, with dependency translation kept behind the physics-domain boundary.
 - Dependency upgrades are explicit changes requiring license review, release-note review, compatibility tests, regression tests, and physics benchmarks appropriate to the affected behavior.
 - The package must not be added before executable physics behavior uses it. Selection is an accepted design decision, not an implemented physics feature.
-- ADR 0028 selects the future SDL GPU and SDL_Renderer roles, but SDL3-CS integration and native SDL deployment remain unresolved and require an implemented packaging decision.
+- ADR 0028 selects the future SDL GPU and SDL_Renderer roles. SDL3-CS now supplies the DisplayServer managed binding; native SDL deployment and renderer integration remain unresolved and require executable packaging and rendering slices.
 
 ### Consequences
 
@@ -241,13 +241,15 @@ An unavailable platform capability must fail explicitly with the documented exce
 
 Target intent, implemented code, successful compilation, host integration, application packaging, automated tests, and native or browser verification are separate states. Documentation must state each state accurately. A feature may be described as cross-platform verified only after it has run on every applicable target, including X11 and Wayland when Linux display behavior applies.
 
+For the current development and release-readiness stage, Linux under Wayland is the only required platform for executable native behavior, application-host packaging, and release verification. X11, Windows, macOS, Android, iOS, and Web remain product targets, but their host integration and native or browser checks do not block completion at this stage. Each additional platform becomes a release gate when its integration is explicitly taken into scope. A Linux/Wayland result must be reported as such, never as verification of X11 or the full target matrix.
+
 The one-assembly rule continues to cover Electron2D-owned runtime code. Native libraries, approved external managed dependencies, platform application hosts, signing, and store packaging remain deployment concerns and are not implied to be contained in `Electron2D.dll`.
 
 The editor targets the three desktop operating systems and both Linux display protocols. This narrower boundary cannot leak a desktop-only requirement into the game runtime or its public data model. Its source and dependency direction follow ADR 0027.
 
 ### Current implementation boundary
 
-The current project targets `net8.0` and its executable verification has run on Linux, without separate X11/Wayland acceptance. Some file-system code contains macOS and Windows backends, but they have not been exercised on native hosts. There is no complete SDL application host, Web browser host/build/package/test pipeline, mobile target project, Android package, iOS application bundle, editor executable, signing pipeline, or six-target CI matrix. Therefore this ADR establishes the required product targets, not a claim that distributable applications already exist on every target.
+The current project targets `net8.0`. A published Linux x64 test consumer has loaded its packaged SDL and passed a limited native smoke under Wayland; this does not establish full Wayland behavior or a production application host. Some file-system code contains macOS and Windows backends, but they have not been exercised on native hosts. There is no complete SDL application host, Web browser host/build/package/test pipeline, mobile target project, Android package, iOS application bundle, editor executable, signing pipeline, or six-target CI matrix. Therefore this ADR establishes the product targets and the current Wayland-only verification gate, not a claim that distributable applications already exist on every target.
 
 The first Web runtime vertical slice must choose and verify a browser-compatible host and dependency model, then integrate the required rendering, input, storage, lifecycle, and packaging capabilities. No placeholder API or unverified browser package is authorized by this target decision.
 
@@ -256,7 +258,8 @@ ADR 0028 selects a capability-driven GPU-primary and SDL_Renderer-fallback archi
 ### Consequences
 
 - Every runtime domain and component must preserve the six-target contract as it evolves.
-- Editor work must cover the three desktop operating systems and both Linux display protocols.
+- Current feature and release-readiness reviews require Linux/Wayland execution and packaging evidence for applicable native behavior; they do not require the rest of the target matrix until its integration is taken into scope.
+- The editor retains its three-desktop-operating-system target, but current-stage verification requires only Linux/Wayland when editor work exists.
 - Platform-specific dependencies require an accepted packaging and lifecycle decision before integration.
 - Platform support reports must distinguish compilation from native or browser execution and packaging.
 - Mobile lifecycle, permissions, storage, input, suspension, and graphics integration remain work for their owning future domains rather than placeholders in Core.

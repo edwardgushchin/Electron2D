@@ -1,0 +1,1241 @@
+{
+  "mappings": [
+    {
+      "electron2d": "T:Electron2D.DisplayServer.WindowFlag",
+      "godot": "DisplayServer::enum:WindowFlags",
+      "reason": "C# uses singular WindowFlag; IDs are retained, while individual window policies retain explicit capability gaps (ADR 0040)."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.AlwaysOnTop()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_ALWAYS_ON_TOP",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.Borderless()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_BORDERLESS",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.ExcludeFromCapture()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_EXCLUDE_FROM_CAPTURE",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.ExtendToTitle()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_EXTEND_TO_TITLE",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.Max()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_MAX",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.MaximizeDisabled()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_MAXIMIZE_DISABLED",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.MinimizeDisabled()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_MINIMIZE_DISABLED",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.MousePassthrough()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_MOUSE_PASSTHROUGH",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.NoFocus()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_NO_FOCUS",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.Popup()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_POPUP",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.PopupWmHint()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_POPUP_WM_HINT",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.ResizeDisabled()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_RESIZE_DISABLED",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.SharpCorners()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_SHARP_CORNERS",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.Transparent()",
+      "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_TRANSPARENT",
+      "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.ProgressState.None()",
+      "godot": "DisplayServer::enum_value:ProgressState.PROGRESS_STATE_NOPROGRESS",
+      "reason": "None is the typed C# name for no progress; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.GetKeyboardFocusScreen()",
+      "godot": "DisplayServer::method:get_keyboard_focus_screen()",
+      "reason": "C# query method maps the same display operation; native result and fallback semantics require platform verification (ADR 0040)."
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.GetName()",
+      "godot": "DisplayServer::method:get_name()",
+      "reason": "Returns the public backend identity rather than SDL's lowercase driver token; Wayland and X11 use their published names, and dummy maps to headless (ADR 0040)."
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.GetPrimaryScreen()",
+      "godot": "DisplayServer::method:get_primary_screen()",
+      "reason": "C# query method maps the same display operation; native result and fallback semantics require platform verification (ADR 0040)."
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.GetScreenCount()",
+      "godot": "DisplayServer::method:get_screen_count()",
+      "reason": "C# query method maps the same display operation; native result and fallback semantics require platform verification (ADR 0040)."
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.GetWindowList()",
+      "godot": "DisplayServer::method:get_window_list()",
+      "reason": "C# query method maps the same display operation; native result and fallback semantics require platform verification (ADR 0040)."
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.CursorSetCustomImage(Electron2D.Image,Electron2D.DisplayServer.CursorShape,Electron2D.Vector2)",
+      "godot": "DisplayServer::method:cursor_set_custom_image(Resource:,int:DisplayServer.CursorShape,Vector2:)",
+      "reason": "The Image path accepts a Vector2 hotspot, truncates fractional coordinates to native pixels, enforces the 256x256 image limit, and copies source pixels. A Texture2D resource path belongs to the first 2D texture/rendering vertical slice, because no texture resource exists yet (ADR 0040)."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.CloseRequested()",
+      "godot": "DisplayServer::method:window_set_window_event_callback(Callable:,int:)",
+      "reason": "Typed main-window close event preserves native queue order and leaves the window open. Synthetic dummy and Wayland events cover filtering and callback failure; a real Wayland compositor close request reached the callback while the native window remained alive. No per-window registration exists in this one-window host (ADRs 0002/0040)."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.SystemThemeChanged()",
+      "godot": "DisplayServer::method:set_system_theme_change_callback(Callable:)",
+      "reason": "Typed event replaces callback registration; SDL system-theme notifications are delivered in native queue order (ADR 0043)."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.CloseRequested()",
+      "godot": "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_CLOSE_REQUEST",
+      "reason": "Typed main-window close notification replaces the enum code. A real Wayland compositor request reached the callback without closing the native window; synthetic dummy and Wayland tests cover queue order, foreign-window filtering, and callback-failure continuation (ADRs 0002/0040)."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.WindowFocusChanged()",
+      "godot": "DisplayServer::method:window_set_window_event_callback(Callable:,int:)",
+      "reason": "Typed event for focus changes; no per-window callback registration because only the main window exists (ADR 0040)."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.WindowFocusChanged()",
+      "godot": "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_FOCUS_IN",
+      "reason": "The true argument reports main-window focus gain; a native Wayland session delivered two gains, and a synthetic test verifies window callback before application notification. No enum value is passed (ADRs 0002/0040)."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.WindowFocusChanged()",
+      "godot": "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_FOCUS_OUT",
+      "reason": "The false argument reports main-window focus loss; a native Wayland session delivered one loss. Synthetic tests verify window callback before application notification and pressed-input release even when callbacks fail (ADRs 0002/0040)."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.WindowMouseEntered()",
+      "godot": "DisplayServer::method:window_set_window_event_callback(Callable:,int:)",
+      "reason": "Typed main-window pointer-enter notification replaces the enum callback registration (ADRs 0002/0040)."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.WindowMouseEntered()",
+      "godot": "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_MOUSE_ENTER",
+      "reason": "Typed main-window pointer-enter event replaces the enum code; a native Wayland session delivered an enter, and dummy-driver tests cover ordered, filtered, effective transitions and callback failure (ADRs 0002/0040)."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.WindowMouseExited()",
+      "godot": "DisplayServer::method:window_set_window_event_callback(Callable:,int:)",
+      "reason": "Typed main-window pointer-exit notification replaces the enum callback registration (ADRs 0002/0040)."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.WindowMouseExited()",
+      "godot": "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_MOUSE_EXIT",
+      "reason": "Typed main-window pointer-exit event replaces the enum code; a native Wayland session delivered an exit, and dummy-driver tests cover ordered, filtered, effective transitions and callback failure (ADRs 0002/0040)."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.WindowDpiChanged()",
+      "godot": "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_DPI_CHANGE",
+      "reason": "Typed main-window notification follows SDL window content-scale changes. The pinned Wayland backend likewise emits this identity when its effective window scale changes, despite the DPI name. Native event ordering relative to rectangle and first-buffer updates remains to verify (ADR 0044)."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.WindowRectChanged()",
+      "godot": "DisplayServer::method:window_set_rect_changed_callback(Callable:,int:)",
+      "reason": "Typed main-window full RectI notification on effective move or resize; Wayland reports the reference zero-position convention. A native Wayland resize produced the matching pixel rectangle, and dummy checks cover movement, queue order, filtering, and callback failures (ADR 0044)."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.FilesDropped()",
+      "godot": "DisplayServer::method:window_set_drop_files_callback(Callable:,int:)",
+      "reason": "Typed main-window file-drop batch event; synthetic SDL checks cover owned ordered path snapshots, interrupted groups, close cancellation, callback failure, and queue continuation. A physical Wayland data-offer drop remains an explicit native acceptance prerequisite."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.TextInput()",
+      "godot": "DisplayServer::method:window_set_input_text_callback(Callable:,int:)",
+      "reason": "Typed committed-text event; synthetic Wayland delivery clears composition before callback, but a real input method and candidate popup remain unverified."
+    },
+    {
+      "electron2d": "event:Electron2D.DisplayServer.TextEditing()",
+      "godot": "DisplayServer::method:window_set_input_text_callback(Callable:,int:)",
+      "reason": "Typed composition event extends the text callback. Synthetic Wayland delivery verifies Unicode-codepoint selection and state-before-callback ordering; a real input method remains unverified."
+    },
+    {
+      "electron2d": "T:Electron2D.DisplayServer.FileDialogMode",
+      "godot": "DisplayServer::enum:FileDialogMode",
+      "reason": "Typed C# file-dialog mode has matching numeric values; OpenAny is explicitly unavailable in the current SDL dialog backend (ADR 0040)."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenAny()",
+      "godot": "DisplayServer::enum_value:FileDialogMode.FILE_DIALOG_MODE_OPEN_ANY",
+      "reason": "Numeric mode identity matches; the current SDL file-dialog method rejects this mode explicitly."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenDirectory()",
+      "godot": "DisplayServer::enum_value:FileDialogMode.FILE_DIALOG_MODE_OPEN_DIR",
+      "reason": "OpenDirectory is the typed C# name for upstream Open Dir; compiled numeric identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenFile()",
+      "godot": "DisplayServer::enum_value:FileDialogMode.FILE_DIALOG_MODE_OPEN_FILE",
+      "reason": "Compiled numeric mode identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenFiles()",
+      "godot": "DisplayServer::enum_value:FileDialogMode.FILE_DIALOG_MODE_OPEN_FILES",
+      "reason": "Compiled numeric mode identity matches."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.DisplayServer.FileDialogMode.SaveFile()",
+      "godot": "DisplayServer::enum_value:FileDialogMode.FILE_DIALOG_MODE_SAVE_FILE",
+      "reason": "Compiled numeric mode identity matches."
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.DialogShow(System.String,System.String,System.Collections.Generic.IReadOnlyList<System.String>,System.Action<System.Int32>)",
+      "godot": "DisplayServer::method:dialog_show(String:,String:,PackedStringArray:,Callable:)",
+      "reason": "Button choices and selection use typed C# collections and callback; the upstream Error return is adapted to exceptions. SDL also offers a Linux Wayland message box although the pinned Wayland backend does not advertise FEATURE_NATIVE_DIALOG. A physical Wayland check verified button index one and owner-thread callback before return. A one-button dialog closed through its title bar reported zero; the pinned reference does not specify unselected-close behavior (ADR 0040)."
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.FileDialogShow(System.String,System.String,System.String,System.Boolean,Electron2D.DisplayServer.FileDialogMode,System.Collections.Generic.IReadOnlyList<System.String>,System.Action<System.Boolean, System.Collections.Generic.IReadOnlyList<System.String>, System.Int32>,System.Int32)",
+      "godot": "DisplayServer::method:file_dialog_show(String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Callable:,int:)",
+      "reason": "The SDL path implements basic asynchronous file/folder selection with a typed callback, and adapts the Error return to exceptions. Linux ignores showHidden as the reference does. The pinned Wayland FileChooser uses MIME terms, while SDL filters are extension-only; MIME-only filters and OpenAny reject explicitly. The remaining contract is blocked by a native Linux portal chooser bridge with MIME filters in its first vertical slice, plus a separately approved file-or-directory chooser capability for OpenAny. Native selection, cancellation, and selected-filter behavior still need executable Wayland checks (ADR 0040)."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "event:Electron2D.DisplayServer.QuitRequested()",
+      "reason": "SDL application quit notification exposed to the native host as a typed event; no direct DisplayServer signal.",
+      "adr": "ADR 0040"
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.Open(System.String,Electron2D.Vector2I,System.Boolean)",
+      "reason": "Typed C# native-host bootstrap creates the SDL video connection and main window.",
+      "adr": "ADR 0040"
+    },
+    {
+      "electron2d": "property:Electron2D.DisplayServer.Instance()",
+      "reason": "Current process-wide display host readback follows the typed C# bootstrap lifecycle.",
+      "adr": "ADR 0040"
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.WindowGetTitle(System.Int32)",
+      "reason": "Readback of the active window title supplements Godot's write-only title method for typed C# hosts.",
+      "adr": "ADR 0040"
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.Dispose(System.Boolean)",
+      "reason": "Protected deterministic SDL handle release overrides the engine-owned object lifecycle.",
+      "adr": "ADR 0003/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.ValidateDisposal()",
+      "reason": "Protected owner-thread validation overrides the engine-owned object lifecycle.",
+      "adr": "ADR 0003/0014"
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "The DisplayServer type owns one SDL video connection and main window with an explicit typed-C# Open/Instance lifecycle, owner-thread event pump, and deterministic disposal. Member and enum rows independently record every remaining capability gap and accepted adaptation; the class declaration itself is executable (ADR 0040).",
+      "godot": ["class:DisplayServer"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Typed FilesDropped copies native UTF-8 paths and publishes one ordered main-window batch after DropComplete; dummy checks cover standalone files, interrupted/empty groups, close cancellation, and callback failure. Trigger: the first native Wayland file-drop acceptance slice needs a real compositor data offer with at least two files, then must verify path ownership, ordering, callback thread, and failure continuation through ProcessEvents (ADR 0040).",
+      "godot": ["DisplayServer::method:window_set_drop_files_callback(Callable:,int:)"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "A real Linux Wayland message box selected button index one, invoked the callback on the owner thread before return, and closed through the title bar. SDL reported zero for closing a one-button dialog, which the native toolkit cannot distinguish from choosing that button; the pinned reference does not specify a close-without-selection result and its Wayland backend does not offer dialog_show. Invalid arguments and owner-thread rejection have executable dummy checks; typed exceptions replace the upstream Error return (ADR 0040).",
+      "godot": ["DisplayServer::method:dialog_show(String:,String:,PackedStringArray:,Callable:)"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "The SDL chooser already handles asynchronous OpenFile, OpenFiles, OpenDirectory, and SaveFile with owner-thread typed result delivery, and accepts but ignores showHidden on Linux. The pinned Wayland FileChooser applies MIME filters, which SDL's extension-only filter type cannot represent; MIME-only filters and OpenAny reject explicitly. Trigger: the first native Linux portal FileChooser bridge must implement MIME filters and selected-filter behavior with executable Wayland checks; file-or-directory selection requires a separately approved native chooser capability because the standard portal has no combined mode (ADR 0040).",
+      "godot": ["DisplayServer::method:file_dialog_show(String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Callable:,int:)"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "The current Image path accepts a Vector2 hotspot, truncates fractional coordinates to native pixels, enforces the 256x256 image limit, and copies source pixels. The remaining Texture2D Resource path requires a production 2D texture type and conversion to a cursor image; implement it in the first SDL GPU/SDL_Renderer texture resource and rendering vertical slice (ADR 0028/0040).",
+      "godot": ["DisplayServer::method:cursor_set_custom_image(Resource:,int:DisplayServer.CursorShape,Vector2:)"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ProcessEvents drains the native SDL queue on the opening thread, flushes accumulated pointer motion before the next event and at the end, commits typed input before synchronous callbacks, and continues after callback failures before reporting their aggregate. Dummy tests cover queue order, reentry/off-thread rejection, input drop and failure continuation; native Wayland smoke exercises real window, pointer and clipboard event service. Renderer, popup, color-profile and other absent-domain event families have separate Blocked rows (ADR 0040).",
+      "godot": ["DisplayServer::method:process_events()"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The pinned class XML labels the getters macOS-only, but its Wayland backend implements them. Wayland synthetic composition and commit checks cover selection offset normalization, state-before-callback order, and native text-input activation. A native user-assisted Wayland test at pixel density 1.25 verified that the public client-pixel candidate position (125,75) reaches SDL in logical coordinates (100,60), with the expected 1x10 area and zero cursor offset. A real input method and visible candidate popup were not exercised; that remains a native acceptance limit rather than a known API behavior gap (ADR 0040).",
+      "godot": [
+        "DisplayServer::method:ime_get_selection()",
+        "DisplayServer::method:ime_get_text()",
+        "DisplayServer::method:window_set_ime_active(bool:,int:)",
+        "DisplayServer::method:window_set_ime_position(Vector2i:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Wayland client pixels convert through SDL window pixel density; minimum bounds round upward, maximum bounds downward, and zero leaves each axis unbounded. Native smoke passed at density 1.25 for size and constraint readback, a real resize callback, invalid/one-axis-zero limits, and user-driven 1.25-to-1-to-1.25 window moves with native limit reapplication after each scale event (ADR 0040).",
+      "godot": [
+        "DisplayServer::method:window_get_size(int:)",
+        "DisplayServer::method:window_get_size_with_decorations(int:)",
+        "DisplayServer::method:window_set_size(Vector2i:,int:)",
+        "DisplayServer::method:window_get_min_size(int:)",
+        "DisplayServer::method:window_set_min_size(Vector2i:,int:)",
+        "DisplayServer::method:window_get_max_size(int:)",
+        "DisplayServer::method:window_set_max_size(Vector2i:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The pinned Wayland backend defines window focus by the pointer's pointed-window ID. SDL.GetMouseFocus reports the same pointer-focus state, and the native Wayland check compares the public result with that state (ADR 0040).",
+      "godot": ["DisplayServer::method:window_is_focused(int:)"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The pinned Wayland backend performs no foreground operation; Electron2D validates the main-window ID and likewise sends no activation request. A native WAYLAND_DEBUG probe observed zero activation requests. Other video drivers delegate the raise request to SDL and may be refused by window-manager focus policy (ADR 0040).",
+      "godot": ["DisplayServer::method:window_move_to_foreground(int:)"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Wayland attention submits a serial-free xdg activation token as the pinned backend does. A native WAYLAND_DEBUG probe observed one token request, commit, and activate call without set_serial; a foreign window ID is rejected. The compositor controls any visible urgency indicator, which this probe does not establish. Other video drivers use SDL's until-focused attention request (ADR 0040).",
+      "godot": ["DisplayServer::method:window_request_attention(int:)"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Visible native Wayland checks cover compositor-accepted maximize, ordinary fullscreen, exclusive-as-ordinary fullscreen, and restoration to windowed mode; a prior run also observed minimized state. Wayland lacks reliable programmatic restoration from minimized state, and the pinned backend has the same limitation. SDL reports current flags rather than pretending every request was accepted (ADR 0040).",
+      "godot": [
+        "DisplayServer::method:window_get_mode(int:)",
+        "DisplayServer::method:window_set_mode(int:DisplayServer.WindowMode,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "On GNOME/Wayland SDL may accept and store progress without a desktop taskbar listener, so Electron2D now rejects both setters explicitly and preserves native state. Trigger: after the first Linux application-host slice owns a stable app ID and installed .desktop entry, a separately approved desktop taskbar integration must deliver notifications to a supported Wayland desktop and verify observable acceptance. Non-Wayland SDL delegation also needs native acceptance checks (ADR 0040).",
+      "godot": [
+        "DisplayServer::method:window_set_taskbar_progress_state(int:DisplayServer.ProgressState,int:)",
+        "DisplayServer::method:window_set_taskbar_progress_value(float:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "All five compiled enum values and numeric identities match the pinned reference; OpenAny invocation is tracked separately on file_dialog_show.",
+      "godot": ["DisplayServer::enum:FileDialogMode"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Owner-thread event pump drops queued keyboard, pointer, touch, and text input while preserving window and quit dispatch; deterministic queue tests cover pressed-state release and quit ordering.",
+      "godot": ["DisplayServer::method:force_process_and_drop_events()"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The compiled C# enum contains every pinned value with the same numeric ID; native behavior and capability restrictions remain tracked in the corresponding method rows.",
+      "godot": [
+        "DisplayServer::enum:CursorShape",
+        "DisplayServer::enum:MouseMode",
+        "DisplayServer::enum:WindowFlags",
+        "DisplayServer::enum:WindowMode",
+        "DisplayServer::enum:ProgressState"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Wayland returns the primary screen as specified by the pinned reference; the native Wayland smoke verifies this fallback. On desktop drivers with global keyboard-focus information, the focused main window selects its center display; absent focus selects the primary display.",
+      "godot": ["DisplayServer::method:get_keyboard_focus_screen()"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The public backend identity matches the pinned Wayland and X11 names, while the dummy driver reports headless; dummy and native smoke checks cover the selected driver.",
+      "godot": ["DisplayServer::method:get_name()"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The overlap comparison truncates subpixel area and keeps the first display on ties. The pinned Wayland backend also combines output origins with physical mode sizes, allowing mixed-scale rectangles to overlap. Native three-monitor tests verified the overlap rule, and a protocol trace confirmed that SDL xdg-output positions equal wl_output geometry positions on this host (ADR 0040).",
+      "godot": ["DisplayServer::method:get_screen_from_rect(Rect2:)"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The owner-thread title request reaches the native Wayland main window, and both native and dummy checks verify observable title readback, invalid IDs, and null input.",
+      "godot": ["DisplayServer::method:window_set_title(String:,int:)"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The main-window hit test uses half-open client bounds on X11, with native border and edge checks. ADR 0040 deliberately rejects the query on Wayland because global top-level positions are unavailable; a native check covers that accepted adaptation.",
+      "godot": ["DisplayServer::method:get_window_at_screen_position(Vector2i:)"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The native Wayland smoke checks the connected-display snapshot, primary index, center-containing window display, invalid-window fallback, and sole owned window ID against SDL; the dummy suite checks selectors and invalid IDs.",
+      "godot": [
+        "DisplayServer::method:get_primary_screen()",
+        "DisplayServer::method:get_screen_count()",
+        "DisplayServer::method:get_window_list()",
+        "DisplayServer::method:window_get_current_screen(int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "All 35 active Feature IDs match the compiled C# enum; the one retired global-menu ID is excluded under ADR 0041. Runtime availability of each capability is audited separately in HasFeature and its owning service.",
+      "godot": ["DisplayServer::enum:Feature"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "The query reports integrated SDL-backed paths and current device state; Wayland IME advertising and SDL text-input activation passed native smoke, and the native message dialog opened. However, a true IME or file-dialog result is not yet backed by a non-UI check that the Wayland text-input-v3 protocol or Linux FileChooser service is available. Trigger: add a Wayland text-input protocol capability probe in the first native keyboard/text adapter slice and a portal FileChooser capability probe in the first Linux native chooser slice; then verify positive and absent-service results without opening UI. Other driver/device-dependent results remain separate executable verification work (ADR 0040).",
+      "godot": ["DisplayServer::method:has_feature(int:DisplayServer.Feature)"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First Android/iOS native application host with orientation source and permission/lifecycle handling (ADR 0021).",
+      "godot": [
+        "DisplayServer::enum:ScreenOrientation",
+        "DisplayServer::enum_value:ScreenOrientation.SCREEN_LANDSCAPE",
+        "DisplayServer::enum_value:ScreenOrientation.SCREEN_PORTRAIT",
+        "DisplayServer::enum_value:ScreenOrientation.SCREEN_REVERSE_LANDSCAPE",
+        "DisplayServer::enum_value:ScreenOrientation.SCREEN_REVERSE_PORTRAIT",
+        "DisplayServer::enum_value:ScreenOrientation.SCREEN_SENSOR",
+        "DisplayServer::enum_value:ScreenOrientation.SCREEN_SENSOR_LANDSCAPE",
+        "DisplayServer::enum_value:ScreenOrientation.SCREEN_SENSOR_PORTRAIT"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First Android/iOS native application host with orientation, safe area, virtual keyboard, lifecycle and permission signals (ADR 0021).",
+      "godot": [
+        "DisplayServer::method:get_display_cutouts()",
+        "DisplayServer::method:get_display_safe_area()",
+        "DisplayServer::method:is_in_pip_mode(int:)",
+        "DisplayServer::method:pip_mode_enter(int:)",
+        "DisplayServer::method:pip_mode_set_aspect_ratio(int:,int:,int:)",
+        "DisplayServer::method:pip_mode_set_auto_enter_on_background(bool:,int:)",
+        "DisplayServer::method:screen_get_orientation(int:)",
+        "DisplayServer::method:screen_set_orientation(int:DisplayServer.ScreenOrientation,int:)",
+        "DisplayServer::method:set_hardware_keyboard_connection_change_callback(Callable:)",
+        "DisplayServer::method:virtual_keyboard_get_height()",
+        "DisplayServer::method:virtual_keyboard_hide()",
+        "DisplayServer::method:virtual_keyboard_show(String:,Rect2:,int:DisplayServer.VirtualKeyboardType,int:,int:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The desktop contract returns true on Linux/Wayland; the executable mobile SDL keyboard probe remains outside the current native verification gate (ADR 0021).",
+      "godot": ["DisplayServer::method:has_hardware_keyboard()"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The query combines the native touch-device list with the current Input.EmulateTouchFromMouse setting. Dummy checks exercise both setting states and their restoration; this matches the pinned Wayland backend (ADR 0040).",
+      "godot": ["DisplayServer::method:is_touchscreen_available()"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The cursor state and all 17 selectable system shapes were checked under native Wayland; terminal and invalid identities reject requests (ADR 0040).",
+      "godot": [
+        "DisplayServer::method:cursor_get_shape()",
+        "DisplayServer::method:cursor_set_shape(int:DisplayServer.CursorShape)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Dummy round trips, empty values, and thread failures pass. A visible keyboard-focused Wayland child read the same stable nonempty clipboard and primary-selection text as the parent without modifying either selection; its IPC returned only match booleans and lengths (ADR 0040).",
+      "godot": [
+        "DisplayServer::method:clipboard_get()",
+        "DisplayServer::method:clipboard_get_primary()",
+        "DisplayServer::method:clipboard_has()"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Dummy round trips and thread failures pass, but Wayland publication of nonempty text to a separate focused process remains unverified. A private headless Mutter compositor ran without focusing the SDL publisher or delivering an input serial, so it could not exercise either setter. Trigger: the first native clipboard-setter acceptance slice needs an isolated Wayland compositor with an input-capable seat that can focus publisher and reader and deliver a recent input serial; then verify both nonempty selections across processes without touching the user's clipboard (ADR 0040).",
+      "godot": [
+        "DisplayServer::method:clipboard_set(String:)",
+        "DisplayServer::method:clipboard_set_primary(String:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Wayland window-relative pointer state is converted to client pixels. Synthetic native pointer events passed at density 1.25, and a focused visible window passed real pointer motion against SDL's current state; focus-loss behavior is delegated to SDL (ADR 0040).",
+      "godot": ["DisplayServer::method:mouse_get_position()"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The Wayland native smoke matches SDL's five held-button flags to the typed mask at rest; a focused visible window passed real left-button press and release against SDL's current state (ADR 0040).",
+      "godot": ["DisplayServer::method:mouse_get_button_state()"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The native Wayland smoke checks all five selectable modes, idempotent repeats, reported mode, and SDL relative/grab/cursor flags. A focused visible window received real relative motion in Captured mode. During a 25-second Confined test, the pointer reached all four client edges (x=0..599, y=0..449 in a 600x450 window) without losing focus while pushed outward (ADR 0040).",
+      "godot": [
+        "DisplayServer::method:mouse_get_mode()",
+        "DisplayServer::method:mouse_set_mode(int:DisplayServer.MouseMode)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "On the current Wayland release target, pointer warping is unavailable: HasFeature(MouseWarp) is false and WarpMouse rejects before native mutation. A focused native run exposed SDL's synthetic reported position without physical movement, and a subsequent Wayland boundary check verified rejection without that false movement. Desktop drivers that advertise MouseWarp still require their own native acceptance checks outside this Wayland release gate (ADR 0040).",
+      "godot": ["DisplayServer::method:warp_mouse(Vector2i:)"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "SetIcon currently applies the default to the only owned window and preserves an explicit per-window override. Propagation to windows created later requires the first multiwindow window-host vertical slice, which must store the default icon and apply it to each new window before presentation (ADR 0040).",
+      "godot": ["DisplayServer::method:set_icon(Image:)"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "On the current Wayland release target, WindowSetIcon copies and converts a live image, enforces a square image, and preserves a successful window override against later SetIcon calls. When the compositor lacks the icon protocol SDL rejects the request explicitly and Feature.Icon stays false; the native smoke and dummy boundary checks cover these paths. Visible shell-icon acceptance needs a compositor that advertises the optional protocol and remains a separate native capability check (ADR 0040).",
+      "godot": ["DisplayServer::method:window_set_icon(Image:,int:)"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Native Wayland smoke checked all three displays with one compositor output at 1.25 scale. The physical 1920x1080 size is reconstructed from SDL's 1536x864 logical bounds and current-mode PixelDensity. A Wayland protocol trace confirmed that SDL xdg-output positions equal wl_output geometry positions for all three outputs on this host (ADR 0040).",
+      "godot": [
+        "DisplayServer::method:screen_get_position(int:)",
+        "DisplayServer::method:screen_get_size(int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Wayland usable rect combines the output position with physical pixel size, matching the pinned backend structure. Native three-display smoke covers one 1.25-scale output and invalid fallback; a Wayland protocol trace confirmed matching SDL xdg-output and wl_output geometry positions on all three outputs (ADR 0040).",
+      "godot": ["DisplayServer::method:screen_get_usable_rect(int:)"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "The three-display GNOME Wayland probe has one 1.25-scale output. The main-window selector reports the current SDL window scale; indexed output scale rounds SDL mode pixel density upward. A Wayland protocol trace observed wl_output.scale 2 for the 1.25 output, and a user-driven transfer verified two native scale events and size/limit reapplication. Open may return a provisional window scale before the compositor assigns its preferred fractional scale: one run returned 1 while the estimated output mode was 1.25. The pinned reference also waits only for initial xdg configure. Trigger for completing initial-scale semantics: the first renderer vertical slice must present the initial buffer and verify scale-event ordering for visible and hidden/show windows (ADR 0040).",
+      "godot": ["DisplayServer::method:screen_get_scale(int:)"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ScreenGetMaxScale scans indexed screen scales, matching the pinned base implementation. On a three-display Wayland host it returned 2 for the 1.25 output; the Wayland protocol trace confirmed wl_output.scale 2 for that output and 1 for the other two (ADR 0040).",
+      "godot": ["DisplayServer::method:screen_get_max_scale()"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The Wayland native probe checked all three current modes against SDL's precise numerator and denominator: 143.980 and 143.997 Hz on this host, matching the wl_output mode refresh values independently observed in a protocol trace. Invalid/unavailable fallback is covered under dummy. The method queries the current mode on every call, so no stale rate is cached (ADR 0040).",
+      "godot": ["DisplayServer::method:screen_get_refresh_rate(int:)"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The Linux Wayland native probe observed ScreenSetKeepOn(false/true/false) through both public readback and the session bus: the same SDL process sent UnInhibit, Inhibit, then UnInhibit to org.freedesktop.ScreenSaver. SDL 3.4.14 also supports the Wayland idle-inhibit protocol when available; SDL-reported failure is surfaced with rollback of its request state (ADR 0040).",
+      "godot": [
+        "DisplayServer::method:screen_is_kept_on()",
+        "DisplayServer::method:screen_set_keep_on(bool:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First Android/iOS native application host with virtual keyboard and text-input integration (ADR 0021).",
+      "godot": [
+        "DisplayServer::enum:VirtualKeyboardType",
+        "DisplayServer::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_DEFAULT",
+        "DisplayServer::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_EMAIL_ADDRESS",
+        "DisplayServer::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_MULTILINE",
+        "DisplayServer::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_NUMBER",
+        "DisplayServer::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_NUMBER_DECIMAL",
+        "DisplayServer::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_PASSWORD",
+        "DisplayServer::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_PHONE",
+        "DisplayServer::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_URL"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: Separately accepted additional-output registration capability after the first 2D renderer. Its first executable slice must own output objects, registration lifetime, and renderer composition; these methods are outside the baseline drawing slice (ADR 0028).",
+      "godot": [
+        "DisplayServer::method:has_additional_outputs()",
+        "DisplayServer::method:register_additional_output(Object:)",
+        "DisplayServer::method:unregister_additional_output(Object:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: Separately accepted native screen-image capture capability. Its first executable slice must obtain compositor or renderer pixels into owned Image buffers, define permission and failure behavior, and verify screen coordinates; a renderer alone does not provide screen capture (ADR 0028).",
+      "godot": [
+        "DisplayServer::method:screen_get_image(int:)",
+        "DisplayServer::method:screen_get_image_rect(Rect2i:)",
+        "DisplayServer::method:screen_get_pixel(Vector2i:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: Separately accepted HDR output/presentation capability after the first 2D renderer. Its first executable slice must probe backend and compositor support, own requested versus effective HDR state, and report measured luminance values (ADR 0028).",
+      "godot": [
+        "DisplayServer::method:window_get_hdr_output_current_max_luminance(int:)",
+        "DisplayServer::method:window_get_hdr_output_current_reference_luminance(int:)",
+        "DisplayServer::method:window_get_hdr_output_max_luminance(int:)",
+        "DisplayServer::method:window_get_hdr_output_reference_luminance(int:)",
+        "DisplayServer::method:window_get_output_max_linear_value(int:)",
+        "DisplayServer::method:window_is_hdr_output_enabled(int:)",
+        "DisplayServer::method:window_is_hdr_output_requested(int:)",
+        "DisplayServer::method:window_is_hdr_output_supported(int:)",
+        "DisplayServer::method:window_request_hdr_output(bool:,int:)",
+        "DisplayServer::method:window_set_hdr_output_max_luminance(float:,int:)",
+        "DisplayServer::method:window_set_hdr_output_reference_luminance(float:,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First executable SDL3 GPU/SDL_Renderer 2D presentation slice with observable swap policy and explicit unsupported modes (ADR 0028).",
+      "godot": [
+        "DisplayServer::method:window_get_vsync_mode(int:)",
+        "DisplayServer::method:window_set_vsync_mode(int:DisplayServer.VSyncMode,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First SDL3 GPU/SDL_Renderer 2D presentation slice with observable swap policy (ADR 0028).",
+      "godot": [
+        "DisplayServer::enum:VSyncMode",
+        "DisplayServer::enum_value:VSyncMode.VSYNC_ADAPTIVE",
+        "DisplayServer::enum_value:VSyncMode.VSYNC_DISABLED",
+        "DisplayServer::enum_value:VSyncMode.VSYNC_ENABLED",
+        "DisplayServer::enum_value:VSyncMode.VSYNC_MAILBOX"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First Window/viewport/popup scene domain with hierarchy, attachment, composition and native-window ownership.",
+      "godot": [
+        "DisplayServer::method:window_get_active_popup()",
+        "DisplayServer::method:window_get_attached_instance_id(int:)",
+        "DisplayServer::method:window_get_popup_safe_rect(int:)",
+        "DisplayServer::method:window_set_color(Color:)",
+        "DisplayServer::method:window_set_exclusive(int:,bool:)",
+        "DisplayServer::method:window_set_popup_safe_rect(int:,Rect2i:)",
+        "DisplayServer::method:window_set_transient(int:,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First clipboard image MIME/decoder integration using owned Image buffers; include in its first native image-I/O slice.",
+      "godot": [
+        "DisplayServer::method:clipboard_get_image()",
+        "DisplayServer::method:clipboard_has_image()"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First native programmatic interactive-resize operation with per-platform compositor checks.",
+      "godot": [
+        "DisplayServer::enum:WindowResizeEdge",
+        "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_BOTTOM",
+        "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_BOTTOM_LEFT",
+        "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_BOTTOM_RIGHT",
+        "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_LEFT",
+        "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_MAX",
+        "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_RIGHT",
+        "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_TOP",
+        "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_TOP_LEFT",
+        "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_TOP_RIGHT"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First native title-bar font metric and geometry service.",
+      "godot": [
+        "DisplayServer::method:window_get_title_size(String:,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First native title-bar geometry service and compositor tests.",
+      "godot": [
+        "DisplayServer::method:window_set_window_buttons_offset(Vector2i:,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First native title-bar geometry service, adapting the upstream Vector3i margin tuple to 2D-owned types.",
+      "godot": [
+        "DisplayServer::method:window_get_safe_title_margins(int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First native title-bar policy service and compositor tests.",
+      "godot": [
+        "DisplayServer::method:window_maximize_on_title_dbl_click()",
+        "DisplayServer::method:window_minimize_on_title_dbl_click()"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First platform-native icon resource packaging and host integration; Image icon is already separate.",
+      "godot": [
+        "DisplayServer::method:set_native_icon(String:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First native desktop-operation bridge: X11 _NET_WM_MOVERESIZE or Wayland xdg_toplevel.move with the initiating pointer-button serial, plus compositor tests. SDL hit testing does not start a move.",
+      "godot": [
+        "DisplayServer::method:window_start_drag(int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First native desktop-operation bridge: X11 _NET_WM_MOVERESIZE or Wayland xdg_toplevel.resize with the initiating pointer-button serial, plus all-edge compositor tests. SDL hit testing does not start a resize.",
+      "godot": [
+        "DisplayServer::method:window_start_resize(int:DisplayServer.WindowResizeEdge,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First portable native keyboard-layout backend and host integration; SDL3-CS does not enumerate layouts.",
+      "godot": [
+        "DisplayServer::method:keyboard_get_current_layout()",
+        "DisplayServer::method:keyboard_get_layout_count()",
+        "DisplayServer::method:keyboard_get_layout_language(int:)",
+        "DisplayServer::method:keyboard_get_layout_name(int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First portable native keyboard-layout backend with host permission policy; SDL3-CS does not enumerate layouts.",
+      "godot": [
+        "DisplayServer::method:keyboard_set_current_layout(int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Wayland conversion preserves modifier bits, reads SDL's current layout and modifier state, maps the reference physical bracket/grave/ISO positions and common special keys, and falls back for unmapped symbols. Native Wayland checks pass for number-row, bracket, grave, ISO, and Shift positions. SDL 3.4.16 returns fixed keypad keycodes under Num Lock and Shift, unlike the reference's live XKB state lookup; F25-F35 and a live Latin/non-Latin layout switch are also unverified. Trigger for parity: first native Wayland keyboard keymap/state bridge and layout-switch integration test (ADR 0040).",
+      "godot": ["DisplayServer::method:keyboard_get_keycode_from_physical(int:Key)"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Wayland label conversion preserves modifier bits and reads SDL's live layout for mapped physical positions; native checks cover number-row, bracket, grave, ISO, and Shift positions. SDL 3.4.16 exposes fixed keypad codes rather than Num Lock's printable labels; a live non-Latin layout switch and F25-F35 physical identities are unverified. Trigger for parity: first native Wayland keyboard keymap/state bridge and layout-switch integration test (ADR 0040).",
+      "godot": ["DisplayServer::method:keyboard_get_label_from_physical(int:Key)"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First native desktop-operation bridge with X11 XBell and Wayland's optional xdg_system_bell_v1 protocol, including unsupported-capability checks. SDL has no equivalent.",
+      "godot": [
+        "DisplayServer::method:beep()"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First native display-metrics bridge mapping SDL displays to physical size and pixel resolution, with invalid/unknown fallback 96 and per-driver tests. SDL content scale is not physical DPI.",
+      "godot": [
+        "DisplayServer::method:screen_get_dpi(int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First renderer and presentation loop; drawability needs a real rendering backend.",
+      "godot": [
+        "DisplayServer::method:window_can_draw(int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First renderer/window-composition slice plus native polygonal input-region backend; SDL hit testing and mouse confinement do not pass clicks through.",
+      "godot": [
+        "DisplayServer::method:window_set_mouse_passthrough(PackedVector2Array:,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First renderer/window-composition slice with a transparent-window capability probe on each native compositor.",
+      "godot": [
+        "DisplayServer::method:is_window_transparency_available()"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: Separately accepted desktop/theme native service with portable platform APIs and callback ownership; include in its first executable slice.",
+      "godot": [
+        "DisplayServer::method:color_picker(Callable:)",
+        "DisplayServer::method:get_accent_color()",
+        "DisplayServer::method:get_base_color()",
+        "DisplayServer::method:get_swap_cancel_ok()",
+        "DisplayServer::method:help_set_search_callbacks(Callable:,Callable:)",
+        "DisplayServer::method:show_emoji_and_symbol_picker()"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The current Linux Wayland release gate queries Settings interface version independently of color scheme. A private native session-bus test verified version zero rejects support despite a dark value, while version one with an unset value reports support; the host's version-two portal and an unavailable-bus branch were also checked. Windows UxTheme equivalence and other target platforms remain unverified outside the current gate (ADR 0043).",
+      "godot": [
+        "DisplayServer::method:is_dark_mode_supported()"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "A private native Wayland session-bus test verified initial dark and unset values, then real Settings.SettingChanged signals for light, unset, and dark. SDL state changed before each typed callback, and IsDarkMode agreed inside each callback. Dummy tests cover native queue order, owner thread and callback failure continuation. A physical GNOME preference change and other target platforms remain unverified outside this Linux Wayland protocol check (ADR 0043).",
+      "godot": [
+        "DisplayServer::method:is_dark_mode()",
+        "DisplayServer::method:set_system_theme_change_callback(Callable:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: Separately accepted native UI/menu domain with typed callback ownership, platform capability reporting, and dialog lifetime; include in its first executable slice.",
+      "godot": [
+        "DisplayServer::method:create_status_indicator(Texture2D:,String:,Callable:)",
+        "DisplayServer::method:delete_status_indicator(int:)",
+        "DisplayServer::method:dialog_input_text(String:,String:,String:,Callable:)",
+        "DisplayServer::method:file_dialog_with_options_show(String:,String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Dictionary[]:,Callable:,int:)",
+        "DisplayServer::method:status_indicator_get_rect(int:)",
+        "DisplayServer::method:status_indicator_set_callback(int:,Callable:)",
+        "DisplayServer::method:status_indicator_set_icon(int:,Texture2D:)",
+        "DisplayServer::method:status_indicator_set_menu(int:,RID:)",
+        "DisplayServer::method:status_indicator_set_tooltip(int:,String:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First Windows application-host integration of interprocess foreground permission. Implement the operating-system focus-stealing exception for a validated process ID with explicit failure and native host checks; it is a separate platform capability from tablet input (ADR 0021).",
+      "godot": [
+        "DisplayServer::method:enable_for_stealing_focus(int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: Separately accepted Windows tablet-driver selection service after the native Windows input host. Its first executable slice must enumerate and switch real Windows Ink/Wintab drivers, own device lifecycle, and test invalid or unavailable drivers; the pinned reference implements these methods only on Windows (ADR 0021).",
+      "godot": [
+        "DisplayServer::method:tablet_get_current_driver()",
+        "DisplayServer::method:tablet_get_driver_count()",
+        "DisplayServer::method:tablet_get_driver_name(int:)",
+        "DisplayServer::method:tablet_set_current_driver(String:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: Separately accepted speech domain with typed utterance callbacks and native/audio backend; first executable slice.",
+      "godot": [
+        "DisplayServer::enum:TTSUtteranceEvent",
+        "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_BOUNDARY",
+        "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_CANCELED",
+        "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_ENDED",
+        "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_STARTED"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: Separately accepted speech domain with voices, utterance state, native/audio backend, and typed callbacks; include in its first executable slice.",
+      "godot": [
+        "DisplayServer::method:tts_get_voices()",
+        "DisplayServer::method:tts_get_voices_for_language(String:)",
+        "DisplayServer::method:tts_is_paused()",
+        "DisplayServer::method:tts_is_speaking()",
+        "DisplayServer::method:tts_pause()",
+        "DisplayServer::method:tts_resume()",
+        "DisplayServer::method:tts_set_utterance_callback(int:DisplayServer.TTSUtteranceEvent,Callable:)",
+        "DisplayServer::method:tts_speak(String:,String:,int:,float:,float:,int:,bool:)",
+        "DisplayServer::method:tts_stop()"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First native accessibility and theme platform-preferences bridge with supported-target probes and defined unknown-value behavior (ADR 0041); these four nondeprecated queries remain in DisplayServer.",
+      "godot": [
+        "DisplayServer::method:accessibility_screen_reader_active()",
+        "DisplayServer::method:accessibility_should_increase_contrast()",
+        "DisplayServer::method:accessibility_should_reduce_animation()",
+        "DisplayServer::method:accessibility_should_reduce_transparency()"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: first Android/iOS native orientation source in the mobile application host; deliver a typed event (ADR 0021).",
+      "godot": [
+        "DisplayServer::signal:orientation_changed(int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: first native status-indicator service with owned indicator IDs and typed callback/menu lifecycle.",
+      "godot": [
+        "DisplayServer::constant:INVALID_INDICATOR_ID"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "The enum type is incomplete relative to the pinned reference: WINDOW_VIEW and five GL/EGL/GLX identities remain dependency-blocked until their native view or renderer context integration (ADR 0042).",
+      "godot": [
+        "DisplayServer::enum:HandleType"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The borrowed display and window identities match the pinned Wayland wl_display and wl_surface contracts. Native Wayland smoke compared both public nint values exactly with SDL's window properties, checked nonzero values, and covered invalid/disposed access; remaining native identity kinds have separate blocked rows (ADR 0042).",
+      "godot": [
+        "DisplayServer::enum_value:HandleType.DISPLAY_HANDLE",
+        "DisplayServer::enum_value:HandleType.WINDOW_HANDLE",
+        "DisplayServer::method:window_get_native_handle(int:DisplayServer.HandleType,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First platform-native view bridge with Win32 renderer policy and AppKit/UIKit view ownership and native-host checks (ADR 0042). No view handle is exposed by the current display host.",
+      "godot": [
+        "DisplayServer::enum_value:HandleType.WINDOW_VIEW"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: first executable SDL_Renderer fallback slice must inspect the selected GL/GLES driver and window-associated context, then verify each borrowed identity's ownership, thread, and lifetime. EGL values require an EGL-backed context; GLX values additionally require a verified X11/GLX native query bridge, with a separately accepted platform capability if that bridge is outside the first slice (ADR 0042).",
+      "godot": [
+        "DisplayServer::enum_value:HandleType.OPENGL_CONTEXT",
+        "DisplayServer::enum_value:HandleType.EGL_DISPLAY",
+        "DisplayServer::enum_value:HandleType.EGL_CONFIG",
+        "DisplayServer::enum_value:HandleType.GLX_VISUALID",
+        "DisplayServer::enum_value:HandleType.GLX_FBCONFIG"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Typed Input delivery and DisplayServer events replace callback setters on the current main window. Complete key/text association requires the first native text-input and IME integration slice; per-window callback routing requires the first multiwindow window-host slice. Both must verify owner-thread ordering and callback failure behavior before these adapted contracts are complete (ADRs 0038/0040).",
+      "godot": [
+        "DisplayServer::method:window_set_input_event_callback(Callable:,int:)",
+        "DisplayServer::method:window_set_input_text_callback(Callable:,int:)",
+        "DisplayServer::method:window_set_window_event_callback(Callable:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Typed WindowRectChanged supplies a complete event-time RectI on effective move or resize; Wayland uses the documented zero-position convention. A native Wayland resize delivered the effective pixel rectangle; dummy-driver checks cover movement, unchanged and foreign-window suppression, queue order, and callback failure behavior. X11 compositor verification is outside the current Wayland release gate (ADR 0044).",
+      "godot": [
+        "DisplayServer::method:window_set_rect_changed_callback(Callable:,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Wayland native checks cover Borderless and ResizeDisabled; AlwaysOnTop has no SDL Wayland hook and NoFocus is supported only for popup-menu windows, so both now reject before SDL mutation. Remaining flags need exact first-slice triggers: Transparent a transparent renderer/window; Popup and PopupWmHint a multiwindow popup role; ExtendToTitle, SharpCorners, MinimizeDisabled, and MaximizeDisabled native window-style integration; MousePassthrough native hit testing; ExcludeFromCapture a capture-policy bridge. An optional Wayland topmost layer role needs a separately accepted native integration (ADR 0040).",
+      "godot": [
+        "DisplayServer::method:window_set_flag(int:DisplayServer.WindowFlags,bool:,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Wayland native checks cover Borderless and ResizeDisabled; AlwaysOnTop and NoFocus reject unavailable top-level policy rather than reporting inert SDL state. Remaining flags need exact first-slice triggers: Transparent a transparent renderer/window; Popup and PopupWmHint a multiwindow popup role; ExtendToTitle, SharpCorners, MinimizeDisabled, and MaximizeDisabled native window-style integration; MousePassthrough native hit testing; ExcludeFromCapture a capture-policy bridge. Wayland topmost support requires a separately accepted native layer role (ADR 0040).",
+      "godot": [
+        "DisplayServer::method:window_get_flag(int:DisplayServer.WindowFlags,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "The SDL resizable policy is checked without treating the current fullscreen mode as permanent inhibition, but the Wayland compositor can independently disallow maximization. Trigger: a native window-policy integration that observes xdg_toplevel wm_capabilities through SDL's owned listener or an SDL-exposed capability, plus MaximizeDisabled policy; include in its first compositor-tested slice (ADR 0040).",
+      "godot": [
+        "DisplayServer::method:window_is_maximize_allowed(int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "On the current Wayland release target, same-screen requests are no-ops and cross-screen requests fail explicitly; a three-display native check verifies both paths. This is an accepted ADR 0040 behavior adaptation: the pinned Wayland reference silently ignores a cross-screen request, while the compositor offers no standard top-level placement protocol. X11 relocation code exists but its native acceptance is outside the current Wayland release gate.",
+      "godot": [
+        "DisplayServer::method:window_set_current_screen(int:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "On the current Wayland release target, all three operations reject unavailable global coordinates or positioning explicitly; a native test verifies those outcomes. This is an accepted ADR 0040 behavior adaptation: the pinned Wayland reference returns a conventional (0, 0) and silently ignores position requests. X11 positioning code exists but native acceptance is outside the current Wayland release gate; this row does not claim literal Wayland behavior parity.",
+      "godot": [
+        "DisplayServer::method:window_get_position(int:)",
+        "DisplayServer::method:window_get_position_with_decorations(int:)",
+        "DisplayServer::method:window_set_position(Vector2i:,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Typed C# events replace the numeric WindowEvent vocabulary for the one-window host. The aggregate waits for the first Wayland Window/Popup scene-host slice (FORCE_CLOSE), first Android application-host slice (GO_BACK_REQUEST), first HDR renderer/output slice (OUTPUT_MAX_LINEAR_VALUE_CHANGED), and native macOS title-bar integration after that platform enters scope (TITLEBAR_CHANGE); those values retain separate triggers below (ADRs 0002/0040).",
+      "godot": ["DisplayServer::enum:WindowEvent"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "A real Wayland compositor close request reached the typed CloseRequested event without destroying the window. A native Wayland session also delivered focus gain/loss and pointer enter/exit; synthetic dummy and Wayland checks cover native queue order, foreign-window filtering, effective hover transitions, focus notification and pressed-input release order, and callback failure continuation (ADRs 0002/0040).",
+      "godot": [
+        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_CLOSE_REQUEST",
+        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_FOCUS_IN",
+        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_FOCUS_OUT",
+        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_MOUSE_ENTER",
+        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_MOUSE_EXIT"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Typed WindowDpiChanged follows SDL window content-scale changes on the main window in ProcessEvents, matching the pinned Wayland scale-change trigger despite the DPI name. A user-driven 1.25-to-1-to-1.25 move produced two native events. Exact ordering relative to the event-time client rectangle and first rendered buffer still requires the renderer vertical slice (ADR 0044).",
+      "godot": ["DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_DPI_CHANGE"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: First Wayland Window/Popup scene-host slice with independently owned subwindows and renderer references. The pinned Wayland backend emits this event when unwinding an XDG popup stack or when a native window readiness wait times out; its typed notification must hide the affected window and release rendering references in callback order, distinct from a user close request (ADRs 0021/0040).",
+      "godot": ["DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_FORCE_CLOSE"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "The first Android application-host slice must integrate native back navigation and verify main-window callback order.",
+      "godot": ["DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_GO_BACK_REQUEST"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "The first HDR renderer/output slice must expose the observed maximum linear output value and a matching display-change notification.",
+      "godot": ["DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_OUTPUT_MAX_LINEAR_VALUE_CHANGED"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "The first native title-bar integration must observe decoration changes and verify callback order on supported desktop targets.",
+      "godot": ["DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_TITLEBAR_CHANGE"]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Godot 4.7.2 deprecates these DisplayServer accessibility-tree declarations in favor of AccessibilityServer. ADR 0041 excludes their former placement permanently; the typed 2D accessibility tree and native bridge belong to the first separately accepted AccessibilityServer slice after GUI/rendering. This does not exclude accessibility behavior.",
+      "godot": [
+        "DisplayServer::enum:AccessibilityAction",
+        "DisplayServer::enum:AccessibilityFlags",
+        "DisplayServer::enum:AccessibilityLiveMode",
+        "DisplayServer::enum:AccessibilityPopupType",
+        "DisplayServer::enum:AccessibilityRole",
+        "DisplayServer::enum:AccessibilityScrollHint",
+        "DisplayServer::enum:AccessibilityScrollUnit",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_BLUR",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_CLICK",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_COLLAPSE",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_CUSTOM",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_DECREMENT",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_EXPAND",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_FOCUS",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_HIDE_TOOLTIP",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_INCREMENT",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_REPLACE_SELECTED_TEXT",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_SCROLL_BACKWARD",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_SCROLL_DOWN",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_SCROLL_FORWARD",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_SCROLL_INTO_VIEW",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_SCROLL_LEFT",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_SCROLL_RIGHT",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_SCROLL_TO_POINT",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_SCROLL_UP",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_SET_SCROLL_OFFSET",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_SET_TEXT_SELECTION",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_SET_VALUE",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_SHOW_CONTEXT_MENU",
+        "DisplayServer::enum_value:AccessibilityAction.ACTION_SHOW_TOOLTIP",
+        "DisplayServer::enum_value:AccessibilityFlags.FLAG_BUSY",
+        "DisplayServer::enum_value:AccessibilityFlags.FLAG_CLIPS_CHILDREN",
+        "DisplayServer::enum_value:AccessibilityFlags.FLAG_DISABLED",
+        "DisplayServer::enum_value:AccessibilityFlags.FLAG_HIDDEN",
+        "DisplayServer::enum_value:AccessibilityFlags.FLAG_MODAL",
+        "DisplayServer::enum_value:AccessibilityFlags.FLAG_MULTISELECTABLE",
+        "DisplayServer::enum_value:AccessibilityFlags.FLAG_READONLY",
+        "DisplayServer::enum_value:AccessibilityFlags.FLAG_REQUIRED",
+        "DisplayServer::enum_value:AccessibilityFlags.FLAG_TOUCH_PASSTHROUGH",
+        "DisplayServer::enum_value:AccessibilityFlags.FLAG_VISITED",
+        "DisplayServer::enum_value:AccessibilityLiveMode.LIVE_ASSERTIVE",
+        "DisplayServer::enum_value:AccessibilityLiveMode.LIVE_OFF",
+        "DisplayServer::enum_value:AccessibilityLiveMode.LIVE_POLITE",
+        "DisplayServer::enum_value:AccessibilityPopupType.POPUP_DIALOG",
+        "DisplayServer::enum_value:AccessibilityPopupType.POPUP_LIST",
+        "DisplayServer::enum_value:AccessibilityPopupType.POPUP_MENU",
+        "DisplayServer::enum_value:AccessibilityPopupType.POPUP_TREE",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_AUDIO",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_BUTTON",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_CELL",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_CHECK_BOX",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_CHECK_BUTTON",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_COLOR_PICKER",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_COLUMN_HEADER",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_CONTAINER",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_DEFAULT_BUTTON",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_DIALOG",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_IMAGE",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_LINK",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_LIST",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_LIST_BOX",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_LIST_BOX_OPTION",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_LIST_ITEM",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_MENU",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_MENU_BAR",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_MENU_ITEM",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_MENU_ITEM_CHECK_BOX",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_MENU_ITEM_RADIO",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_MULTILINE_TEXT_FIELD",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_PANEL",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_PROGRESS_INDICATOR",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_RADIO_BUTTON",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_REGION",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_ROW",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_ROW_GROUP",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_ROW_HEADER",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_SCROLL_BAR",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_SCROLL_VIEW",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_SLIDER",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_SPIN_BUTTON",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_SPLITTER",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_STATIC_TEXT",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_TAB",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_TABLE",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_TAB_BAR",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_TAB_PANEL",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_TEXT_FIELD",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_TEXT_RUN",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_TITLE_BAR",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_TOOLTIP",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_TREE",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_TREE_ITEM",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_UNKNOWN",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_VIDEO",
+        "DisplayServer::enum_value:AccessibilityRole.ROLE_WINDOW",
+        "DisplayServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_BOTTOM_EDGE",
+        "DisplayServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_BOTTOM_RIGHT",
+        "DisplayServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_LEFT_EDGE",
+        "DisplayServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_RIGHT_EDGE",
+        "DisplayServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_TOP_EDGE",
+        "DisplayServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_TOP_LEFT",
+        "DisplayServer::enum_value:AccessibilityScrollUnit.SCROLL_UNIT_ITEM",
+        "DisplayServer::enum_value:AccessibilityScrollUnit.SCROLL_UNIT_PAGE",
+        "DisplayServer::method:accessibility_create_element(int:,int:DisplayServer.AccessibilityRole)",
+        "DisplayServer::method:accessibility_create_sub_element(RID:,int:DisplayServer.AccessibilityRole,int:)",
+        "DisplayServer::method:accessibility_create_sub_text_edit_elements(RID:,RID:,float:,int:,bool:)",
+        "DisplayServer::method:accessibility_element_get_meta(RID:)",
+        "DisplayServer::method:accessibility_element_set_meta(RID:,Variant:)",
+        "DisplayServer::method:accessibility_free_element(RID:)",
+        "DisplayServer::method:accessibility_get_window_root(int:)",
+        "DisplayServer::method:accessibility_has_element(RID:)",
+        "DisplayServer::method:accessibility_set_window_focused(int:,bool:)",
+        "DisplayServer::method:accessibility_set_window_rect(int:,Rect2:,Rect2:)",
+        "DisplayServer::method:accessibility_update_add_action(RID:,int:DisplayServer.AccessibilityAction,Callable:)",
+        "DisplayServer::method:accessibility_update_add_child(RID:,RID:)",
+        "DisplayServer::method:accessibility_update_add_custom_action(RID:,int:,String:)",
+        "DisplayServer::method:accessibility_update_add_related_controls(RID:,RID:)",
+        "DisplayServer::method:accessibility_update_add_related_described_by(RID:,RID:)",
+        "DisplayServer::method:accessibility_update_add_related_details(RID:,RID:)",
+        "DisplayServer::method:accessibility_update_add_related_flow_to(RID:,RID:)",
+        "DisplayServer::method:accessibility_update_add_related_labeled_by(RID:,RID:)",
+        "DisplayServer::method:accessibility_update_add_related_radio_group(RID:,RID:)",
+        "DisplayServer::method:accessibility_update_set_active_descendant(RID:,RID:)",
+        "DisplayServer::method:accessibility_update_set_background_color(RID:,Color:)",
+        "DisplayServer::method:accessibility_update_set_bounds(RID:,Rect2:)",
+        "DisplayServer::method:accessibility_update_set_checked(RID:,bool:)",
+        "DisplayServer::method:accessibility_update_set_classname(RID:,String:)",
+        "DisplayServer::method:accessibility_update_set_color_value(RID:,Color:)",
+        "DisplayServer::method:accessibility_update_set_description(RID:,String:)",
+        "DisplayServer::method:accessibility_update_set_error_message(RID:,RID:)",
+        "DisplayServer::method:accessibility_update_set_extra_info(RID:,String:)",
+        "DisplayServer::method:accessibility_update_set_flag(RID:,int:DisplayServer.AccessibilityFlags,bool:)",
+        "DisplayServer::method:accessibility_update_set_focus(RID:)",
+        "DisplayServer::method:accessibility_update_set_foreground_color(RID:,Color:)",
+        "DisplayServer::method:accessibility_update_set_in_page_link_target(RID:,RID:)",
+        "DisplayServer::method:accessibility_update_set_language(RID:,String:)",
+        "DisplayServer::method:accessibility_update_set_list_item_count(RID:,int:)",
+        "DisplayServer::method:accessibility_update_set_list_item_expanded(RID:,bool:)",
+        "DisplayServer::method:accessibility_update_set_list_item_index(RID:,int:)",
+        "DisplayServer::method:accessibility_update_set_list_item_level(RID:,int:)",
+        "DisplayServer::method:accessibility_update_set_list_item_selected(RID:,bool:)",
+        "DisplayServer::method:accessibility_update_set_list_orientation(RID:,bool:)",
+        "DisplayServer::method:accessibility_update_set_live(RID:,int:DisplayServer.AccessibilityLiveMode)",
+        "DisplayServer::method:accessibility_update_set_member_of(RID:,RID:)",
+        "DisplayServer::method:accessibility_update_set_name(RID:,String:)",
+        "DisplayServer::method:accessibility_update_set_next_on_line(RID:,RID:)",
+        "DisplayServer::method:accessibility_update_set_num_jump(RID:,float:)",
+        "DisplayServer::method:accessibility_update_set_num_range(RID:,float:,float:)",
+        "DisplayServer::method:accessibility_update_set_num_step(RID:,float:)",
+        "DisplayServer::method:accessibility_update_set_num_value(RID:,float:)",
+        "DisplayServer::method:accessibility_update_set_placeholder(RID:,String:)",
+        "DisplayServer::method:accessibility_update_set_popup_type(RID:,int:DisplayServer.AccessibilityPopupType)",
+        "DisplayServer::method:accessibility_update_set_previous_on_line(RID:,RID:)",
+        "DisplayServer::method:accessibility_update_set_role(RID:,int:DisplayServer.AccessibilityRole)",
+        "DisplayServer::method:accessibility_update_set_role_description(RID:,String:)",
+        "DisplayServer::method:accessibility_update_set_scroll_x(RID:,float:)",
+        "DisplayServer::method:accessibility_update_set_scroll_x_range(RID:,float:,float:)",
+        "DisplayServer::method:accessibility_update_set_scroll_y(RID:,float:)",
+        "DisplayServer::method:accessibility_update_set_scroll_y_range(RID:,float:,float:)",
+        "DisplayServer::method:accessibility_update_set_shortcut(RID:,String:)",
+        "DisplayServer::method:accessibility_update_set_state_description(RID:,String:)",
+        "DisplayServer::method:accessibility_update_set_table_cell_position(RID:,int:,int:)",
+        "DisplayServer::method:accessibility_update_set_table_cell_span(RID:,int:,int:)",
+        "DisplayServer::method:accessibility_update_set_table_column_count(RID:,int:)",
+        "DisplayServer::method:accessibility_update_set_table_column_index(RID:,int:)",
+        "DisplayServer::method:accessibility_update_set_table_row_count(RID:,int:)",
+        "DisplayServer::method:accessibility_update_set_table_row_index(RID:,int:)",
+        "DisplayServer::method:accessibility_update_set_text_align(RID:,int:HorizontalAlignment)",
+        "DisplayServer::method:accessibility_update_set_text_decorations(RID:,bool:,bool:,bool:)",
+        "DisplayServer::method:accessibility_update_set_text_orientation(RID:,bool:)",
+        "DisplayServer::method:accessibility_update_set_text_selection(RID:,RID:,int:,RID:,int:)",
+        "DisplayServer::method:accessibility_update_set_tooltip(RID:,String:)",
+        "DisplayServer::method:accessibility_update_set_transform(RID:,Transform2D:)",
+        "DisplayServer::method:accessibility_update_set_url(RID:,String:)",
+        "DisplayServer::method:accessibility_update_set_value(RID:,String:)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Godot 4.7.2 deprecates these DisplayServer global-menu declarations in favor of NativeMenu or PopupMenu. ADR 0041 excludes their former placement permanently; typed native and in-scene menu behavior belongs to the first separately accepted menu/GUI slice. This does not exclude menu behavior.",
+      "godot": [
+        "DisplayServer::enum_value:Feature.FEATURE_GLOBAL_MENU",
+        "DisplayServer::method:global_menu_add_check_item(String:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
+        "DisplayServer::method:global_menu_add_icon_check_item(String:,Texture2D:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
+        "DisplayServer::method:global_menu_add_icon_item(String:,Texture2D:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
+        "DisplayServer::method:global_menu_add_icon_radio_check_item(String:,Texture2D:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
+        "DisplayServer::method:global_menu_add_item(String:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
+        "DisplayServer::method:global_menu_add_multistate_item(String:,String:,int:,int:,Callable:,Callable:,Variant:,int:Key,int:)",
+        "DisplayServer::method:global_menu_add_radio_check_item(String:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
+        "DisplayServer::method:global_menu_add_separator(String:,int:)",
+        "DisplayServer::method:global_menu_add_submenu_item(String:,String:,String:,int:)",
+        "DisplayServer::method:global_menu_clear(String:)",
+        "DisplayServer::method:global_menu_get_item_accelerator(String:,int:)",
+        "DisplayServer::method:global_menu_get_item_callback(String:,int:)",
+        "DisplayServer::method:global_menu_get_item_count(String:)",
+        "DisplayServer::method:global_menu_get_item_icon(String:,int:)",
+        "DisplayServer::method:global_menu_get_item_indentation_level(String:,int:)",
+        "DisplayServer::method:global_menu_get_item_index_from_tag(String:,Variant:)",
+        "DisplayServer::method:global_menu_get_item_index_from_text(String:,String:)",
+        "DisplayServer::method:global_menu_get_item_key_callback(String:,int:)",
+        "DisplayServer::method:global_menu_get_item_max_states(String:,int:)",
+        "DisplayServer::method:global_menu_get_item_state(String:,int:)",
+        "DisplayServer::method:global_menu_get_item_submenu(String:,int:)",
+        "DisplayServer::method:global_menu_get_item_tag(String:,int:)",
+        "DisplayServer::method:global_menu_get_item_text(String:,int:)",
+        "DisplayServer::method:global_menu_get_item_tooltip(String:,int:)",
+        "DisplayServer::method:global_menu_get_system_menu_roots()",
+        "DisplayServer::method:global_menu_is_item_checkable(String:,int:)",
+        "DisplayServer::method:global_menu_is_item_checked(String:,int:)",
+        "DisplayServer::method:global_menu_is_item_disabled(String:,int:)",
+        "DisplayServer::method:global_menu_is_item_hidden(String:,int:)",
+        "DisplayServer::method:global_menu_is_item_radio_checkable(String:,int:)",
+        "DisplayServer::method:global_menu_remove_item(String:,int:)",
+        "DisplayServer::method:global_menu_set_item_accelerator(String:,int:,int:Key)",
+        "DisplayServer::method:global_menu_set_item_callback(String:,int:,Callable:)",
+        "DisplayServer::method:global_menu_set_item_checkable(String:,int:,bool:)",
+        "DisplayServer::method:global_menu_set_item_checked(String:,int:,bool:)",
+        "DisplayServer::method:global_menu_set_item_disabled(String:,int:,bool:)",
+        "DisplayServer::method:global_menu_set_item_hidden(String:,int:,bool:)",
+        "DisplayServer::method:global_menu_set_item_hover_callbacks(String:,int:,Callable:)",
+        "DisplayServer::method:global_menu_set_item_icon(String:,int:,Texture2D:)",
+        "DisplayServer::method:global_menu_set_item_indentation_level(String:,int:,int:)",
+        "DisplayServer::method:global_menu_set_item_key_callback(String:,int:,Callable:)",
+        "DisplayServer::method:global_menu_set_item_max_states(String:,int:,int:)",
+        "DisplayServer::method:global_menu_set_item_radio_checkable(String:,int:,bool:)",
+        "DisplayServer::method:global_menu_set_item_state(String:,int:,int:)",
+        "DisplayServer::method:global_menu_set_item_submenu(String:,int:,String:)",
+        "DisplayServer::method:global_menu_set_item_tag(String:,int:,Variant:)",
+        "DisplayServer::method:global_menu_set_item_text(String:,int:,String:)",
+        "DisplayServer::method:global_menu_set_item_tooltip(String:,int:,String:)",
+        "DisplayServer::method:global_menu_set_popup_callbacks(String:,Callable:,Callable:)"
+      ]
+    }
+  ]
+}

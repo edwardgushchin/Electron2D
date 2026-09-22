@@ -29,12 +29,19 @@ public sealed class Input : ElectronObject
     private readonly HashSet<Key> _keyLabelsPressed = [];
     private readonly HashSet<JoyButtonState> _joyButtonsPressed = [];
     private readonly Dictionary<JoyAxisState, float> _joyAxes = [];
+    private readonly Dictionary<int, MouseButtonMask> _mouseButtonMasks = [];
     private readonly Dictionary<string, ActionState> _actions = new(StringComparer.Ordinal);
     private readonly List<MappedInputAction> _matches = [];
     private MouseButtonMask _mouseButtonMask;
     private Vector2 _lastMouseVelocity;
     private Vector2 _lastMouseScreenVelocity;
     private bool _isParsing;
+    private bool _useAccumulatedInput = true;
+    private bool _emulateMouseFromTouch = true;
+    private bool _emulateTouchFromMouse;
+    private int? _touchFromMouseDevice;
+    private (int Device, int Index)? _mouseFromTouch;
+    private Action? _flushBufferedEvents;
 
     private Input()
     {
@@ -43,6 +50,49 @@ public sealed class Input : ElectronObject
     /// <summary>Gets the process-wide input service.</summary>
     /// <value>The same non-disposable instance for the lifetime of the process.</value>
     public static Input Instance => SharedInstance;
+
+    /// <summary>Gets or sets whether the native host combines consecutive pointer-motion events.</summary>
+    /// <value><see langword="true"/> by default; the setting has no effect without a native host.</value>
+    /// <remarks>Changes take effect on the next native event. Keyboard, button, and touch events retain queue order.</remarks>
+    public bool UseAccumulatedInput
+    {
+        get { lock (_gate) return _useAccumulatedInput; }
+        set { lock (_gate) _useAccumulatedInput = value; }
+    }
+
+    /// <summary>Gets or sets whether the first active touch contact also sends left-button mouse events.</summary>
+    /// <value><see langword="true"/> by default.</value>
+    /// <remarks>Generated mouse events use <see cref="InputEvent.DeviceIdEmulation"/> and update mouse and action state before scene delivery. Other contacts remain touch-only. Disabling this during a contact suppresses further motion but its release still releases the emulated button.</remarks>
+    public bool EmulateMouseFromTouch
+    {
+        get { lock (_gate) return _emulateMouseFromTouch; }
+        set { lock (_gate) _emulateMouseFromTouch = value; }
+    }
+
+    /// <summary>Gets or sets whether left-button mouse clicks and drags also send touch events.</summary>
+    /// <value><see langword="false"/> by default.</value>
+    /// <remarks>Generated touch events use index zero and <see cref="InputEvent.DeviceIdEmulation"/>. One mouse device owns an active emulated contact. Events from another device cannot move or end it. Generated touch events are delivered to the scene without changing raw or mapped input state. Disabling this during a press suppresses further drags but its release still ends the emulated contact.</remarks>
+    public bool EmulateTouchFromMouse
+    {
+        get { lock (_gate) return _emulateTouchFromMouse; }
+        set { lock (_gate) _emulateTouchFromMouse = value; }
+    }
+
+    /// <summary>Delivers any native pointer motion currently held by the display adapter.</summary>
+    /// <remarks>This is a no-op when no native host is active or its event batch has no pending motion.</remarks>
+    public void FlushBufferedEvents()
+    {
+        Action? flush;
+        lock (_gate)
+            flush = _flushBufferedEvents;
+        flush?.Invoke();
+    }
+
+    internal void SetNativeFlush(Action? flush)
+    {
+        lock (_gate)
+            _flushBufferedEvents = flush;
+    }
 
     /// <summary>Gets the non-wheel mouse buttons currently held.</summary>
     /// <value>A thread-safe snapshot of the current button mask.</value>
@@ -331,9 +381,10 @@ public sealed class Input : ElectronObject
     /// <summary>Submits one typed input event, updates state, and synchronously routes it to the active main loop.</summary>
     /// <param name="event">A live event. Ownership remains with the caller.</param>
     /// <remarks>
-    /// Mapping and state changes are committed before callbacks. Re-entry is rejected. If scene delivery throws, the
-    /// committed state remains observable and the exception propagates. An active loop validates owner-thread and
-    /// lifecycle eligibility before any state changes. Events may be submitted without an active loop.
+    /// Mapping and state changes are committed before callbacks. Optional pointer emulation delivers its synthetic
+    /// event before the source event, with device ID <see cref="InputEvent.DeviceIdEmulation"/>. Re-entry is rejected.
+    /// Both events remain delivered if either callback fails; committed state is not rolled back. An active loop
+    /// validates owner-thread and lifecycle eligibility before any state changes.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="event"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">Parsing is re-entered, an active loop is called off its owner thread or during another callback, or a direct action event cannot obtain a valid source index.</exception>
@@ -355,26 +406,34 @@ public sealed class Input : ElectronObject
             _isParsing = true;
             try
             {
-                InputMap.Instance.CollectMatches(@event, _matches);
-
-                lock (_gate)
+                CommitEvent(@event);
+                using var emulated = CreateEmulatedEvent(@event, mainLoop is not null);
+                Exception? emulationFailure = null;
+                if (emulated is not null)
                 {
-                    UpdateRawState(@event);
-                    if (!@event.IsCanceled())
+                    try
                     {
-                        foreach (var match in _matches)
-                        {
-                            UpdateContribution(
-                                match.Action,
-                                new ActionSource(@event.Device, match.SourceIndex),
-                                match.Status,
-                                match.Exact,
-                                @event.InstanceId);
-                        }
+                        if (emulated is InputEventMouse)
+                            CommitEvent(emulated);
+                        mainLoop?.DispatchInputEvent(emulated);
+                    }
+                    catch (Exception error)
+                    {
+                        emulationFailure = error;
                     }
                 }
 
-                mainLoop?.DispatchInputEvent(@event);
+                try
+                {
+                    mainLoop?.DispatchInputEvent(@event);
+                }
+                catch (Exception error) when (emulationFailure is not null)
+                {
+                    throw new AggregateException("Emulated and source input callbacks failed.", emulationFailure, error);
+                }
+
+                if (emulationFailure is not null)
+                    System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(emulationFailure).Throw();
             }
             finally
             {
@@ -382,6 +441,124 @@ public sealed class Input : ElectronObject
                 _isParsing = false;
             }
         }
+    }
+
+    private void CommitEvent(InputEvent @event)
+    {
+        try
+        {
+            InputMap.Instance.CollectMatches(@event, _matches);
+            lock (_gate)
+            {
+                UpdateRawState(@event);
+                if (!@event.IsCanceled() || @event is InputEventMouseButton { Pressed: false })
+                {
+                    foreach (var match in _matches)
+                    {
+                        UpdateContribution(match.Action, new ActionSource(@event.Device, match.SourceIndex),
+                            match.Status, match.Exact, @event.InstanceId);
+                    }
+                }
+            }
+        }
+        finally
+        {
+            _matches.Clear();
+        }
+    }
+
+    private InputEvent? CreateEmulatedEvent(InputEvent source, bool hasScene)
+    {
+        if (source.Device == InputEvent.DeviceIdEmulation)
+            return null;
+
+        lock (_gate)
+        {
+            if (source is InputEventMouseButton button && button.ButtonIndex == MouseButton.Left)
+            {
+                if (button.Pressed && hasScene && _emulateTouchFromMouse && _touchFromMouseDevice is null)
+                    _touchFromMouseDevice = button.Device;
+                var deliver = hasScene && _touchFromMouseDevice == button.Device;
+                if (!button.Pressed && _touchFromMouseDevice == button.Device)
+                    _touchFromMouseDevice = null;
+                return deliver ? new InputEventScreenTouch
+                {
+                    Device = InputEvent.DeviceIdEmulation,
+                    WindowId = button.WindowId,
+                    Index = 0,
+                    Position = button.Position,
+                    Pressed = button.Pressed,
+                    Canceled = button.Canceled,
+                    DoubleTap = button.DoubleClick,
+                } : null;
+            }
+
+            if (source is InputEventMouseMotion motion && hasScene && _emulateTouchFromMouse &&
+                _touchFromMouseDevice == motion.Device &&
+                (motion.ButtonMask & MouseButtonMask.Left) != 0)
+                return new InputEventScreenDrag
+                {
+                    Device = InputEvent.DeviceIdEmulation,
+                    WindowId = motion.WindowId,
+                    Index = 0,
+                    Position = motion.Position,
+                    Relative = motion.Relative,
+                    ScreenRelative = motion.ScreenRelative,
+                    Velocity = motion.Velocity,
+                    ScreenVelocity = motion.ScreenVelocity,
+                    Tilt = motion.Tilt,
+                    PenInverted = motion.PenInverted,
+                    Pressure = motion.Pressure,
+                };
+
+            if (source is InputEventScreenTouch touch)
+            {
+                var current = _mouseFromTouch == (touch.Device, touch.Index);
+                if (touch.Pressed && _emulateMouseFromTouch && _mouseFromTouch is null)
+                {
+                    _mouseFromTouch = (touch.Device, touch.Index);
+                    current = true;
+                }
+                else if (!touch.Pressed && current)
+                    _mouseFromTouch = null;
+
+                if (!current)
+                    return null;
+
+                return new InputEventMouseButton
+                {
+                    Device = InputEvent.DeviceIdEmulation,
+                    WindowId = touch.WindowId,
+                    ButtonIndex = MouseButton.Left,
+                    ButtonMask = touch.Pressed ? _mouseButtonMask | MouseButtonMask.Left : _mouseButtonMask & ~MouseButtonMask.Left,
+                    Position = touch.Position,
+                    GlobalPosition = touch.Position,
+                    Pressed = touch.Pressed,
+                    Canceled = touch.Canceled,
+                    DoubleClick = touch.DoubleTap,
+                };
+            }
+
+            if (source is InputEventScreenDrag drag && _emulateMouseFromTouch &&
+                _mouseFromTouch == (drag.Device, drag.Index))
+                return new InputEventMouseMotion
+                {
+                    Device = InputEvent.DeviceIdEmulation,
+                    WindowId = drag.WindowId,
+                    ButtonMask = _mouseButtonMask,
+                    Position = drag.Position,
+                    GlobalPosition = drag.Position,
+                    Relative = drag.Relative,
+                    ScreenRelative = drag.ScreenRelative,
+                    Velocity = drag.Velocity,
+                    ScreenVelocity = drag.ScreenVelocity,
+                    Tilt = drag.Tilt,
+                    PenInverted = drag.PenInverted,
+                    Pressure = drag.Pressure,
+                };
+        }
+
+        return null;
     }
 
     /// <summary>Releases every tracked key, mouse button, controller button, axis, and action source.</summary>
@@ -398,7 +575,10 @@ public sealed class Input : ElectronObject
             _keyLabelsPressed.Clear();
             _joyButtonsPressed.Clear();
             _joyAxes.Clear();
+            _mouseButtonMasks.Clear();
             _mouseButtonMask = MouseButtonMask.None;
+            _mouseFromTouch = null;
+            _touchFromMouseDevice = null;
 
             foreach (var state in _actions.Values)
             {
@@ -515,7 +695,7 @@ public sealed class Input : ElectronObject
 
     private void UpdateRawState(InputEvent @event)
     {
-        if (@event.IsCanceled())
+        if (@event.IsCanceled() && @event is not InputEventMouseButton)
             return;
 
         switch (@event)
@@ -530,14 +710,17 @@ public sealed class Input : ElectronObject
                 var mask = ToMask(mouseButton.ButtonIndex);
                 if (mask != MouseButtonMask.None)
                 {
-                    _mouseButtonMask = mouseButton.IsPressed()
-                        ? _mouseButtonMask | mask
-                        : _mouseButtonMask & ~mask;
+                    var deviceMask = _mouseButtonMasks.GetValueOrDefault(mouseButton.Device);
+                    deviceMask = mouseButton.IsPressed() && !mouseButton.IsCanceled()
+                        ? deviceMask | mask : deviceMask & ~mask;
+                    SetMouseDeviceMask(mouseButton.Device, deviceMask);
                 }
                 break;
 
             case InputEventMouseMotion mouseMotion:
-                _mouseButtonMask = mouseMotion.ButtonMask;
+                SetMouseDeviceMask(mouseMotion.Device,
+                    mouseMotion.Device == InputEvent.DeviceIdEmulation
+                        ? mouseMotion.ButtonMask & MouseButtonMask.Left : mouseMotion.ButtonMask);
                 _lastMouseVelocity = mouseMotion.Velocity;
                 _lastMouseScreenVelocity = mouseMotion.ScreenVelocity;
                 break;
@@ -554,6 +737,18 @@ public sealed class Input : ElectronObject
                 _joyAxes[new JoyAxisState(joyMotion.Device, joyMotion.Axis)] = joyMotion.AxisValue;
                 break;
         }
+    }
+
+    private void SetMouseDeviceMask(int device, MouseButtonMask mask)
+    {
+        if (mask == MouseButtonMask.None)
+            _mouseButtonMasks.Remove(device);
+        else
+            _mouseButtonMasks[device] = mask;
+
+        _mouseButtonMask = MouseButtonMask.None;
+        foreach (var deviceMask in _mouseButtonMasks.Values)
+            _mouseButtonMask |= deviceMask;
     }
 
     private void UpdateContribution(
