@@ -80,6 +80,8 @@ public abstract partial class CanvasItem : Node
 
     private static readonly PropertyDescriptor[] CanvasItemProperties =
     [
+        new PropertyDescriptor<CanvasItem, bool>(nameof(ShowBehindParent), node => node.ShowBehindParent, (node, value) => node.ShowBehindParent = value, _ => false, stored: true),
+        new PropertyDescriptor<CanvasItem, bool>(nameof(YSortEnabled), node => node.YSortEnabled, (node, value) => node.YSortEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<CanvasItem, bool>(nameof(Visible), node => node.Visible, (node, value) => node.Visible = value, _ => true, stored: true),
         new PropertyDescriptor<CanvasItem, int>(
             nameof(ZIndex),
@@ -119,9 +121,42 @@ public abstract partial class CanvasItem : Node
 
     private int _zIndex;
 
+    private bool _showBehindParent;
+    private bool _ySortEnabled;
+
+    /// <summary>Gets or sets whether this canvas subtree draws before its canvas parent.</summary>
+    /// <value>False by default.</value>
+    /// <remarks>Effective Z remains the primary ordering key. A parent sorting its children by Y uses their Y
+    /// positions instead of this flag. Neutral parents and TopLevel items have no canvas parent to draw behind.
+    /// Changes affect the next submission without requiring QueueRedraw.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation occurs off the owner thread or during scene capture.</exception>
+    /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
+    public bool ShowBehindParent
+    {
+        get { ThrowIfDisposed(); return _showBehindParent; }
+        set { EnsureMutable(); _showBehindParent = value; }
+    }
+
+    /// <summary>Gets or sets whether this item and its canvas children draw in ascending local Y order.</summary>
+    /// <value>False by default.</value>
+    /// <remarks>Sorting uses positions relative to this item's coordinate system; this item's own position in
+    /// that system is zero. Nested Y-sorted children join the same group. Other child subtrees remain together
+    /// at their root's Y position. Approximate Y ties retain scene order. Effective Z takes precedence, and
+    /// neutral nodes and TopLevel children start independent canvas roots. Processing and input order are unchanged.
+    /// Changes affect the next submission without requiring QueueRedraw.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation occurs off the owner thread or during scene capture.</exception>
+    /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
+    public bool YSortEnabled
+    {
+        get { ThrowIfDisposed(); return _ySortEnabled; }
+        set { EnsureMutable(); _ySortEnabled = value; }
+    }
+
     /// <summary>Gets or sets whether this node ignores its parent's transform.</summary>
     /// <value><see langword="false"/> by default.</value>
-    /// <remarks>The local transform stays unchanged; global coordinates are recomputed against the new canvas boundary.</remarks>
+    /// <remarks>The local transform stays unchanged; global coordinates are recomputed against the new canvas boundary.
+    /// This item becomes a separate canvas root, drawn after the preceding root's entire canvas subtree at the same Z.
+    /// Canvas roots retain scene order; Z still takes precedence. Logical visibility continues to follow direct canvas ancestors.</remarks>
     /// <exception cref="InvalidOperationException">Mutation occurs off the owner thread or during packed-scene capture.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
     /// <exception cref="Exception">A transform notification or event handler throws after the mode changes.</exception>

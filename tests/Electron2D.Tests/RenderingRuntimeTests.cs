@@ -23,6 +23,7 @@ internal static partial class RenderingRuntimeTests
             {
                 settings.Set(ProjectSettings.RenderingMethod, backend);
                 VerifySceneHierarchy(backend);
+                VerifyCanvasOrdering(backend);
                 VerifyFrame(backend);
                 VerifyFrameAllocations(backend);
                 VerifyCanvasTexture(backend);
@@ -192,8 +193,12 @@ internal static partial class RenderingRuntimeTests
             material.SetShaderParameter("tint", Colors.White);
         }
         var window = new Window { Size = new Vector2I(96, 80) };
+        var sorted = new Entity { YSortEnabled = true };
+        var island = new Entity();
+        var nested = new Entity { YSortEnabled = true };
+        window.AddChild(sorted); sorted.AddChild(island); island.AddChild(nested);
         for (var i = 0; i < 8; i++)
-            window.AddChild(new CanvasNode
+            (i % 2 == 0 ? sorted : nested).AddChild(new CanvasNode
             {
                 Name = "canvas" + i,
                 Position = new Vector2(i * 8, 0),

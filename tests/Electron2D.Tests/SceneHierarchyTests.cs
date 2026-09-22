@@ -9,7 +9,7 @@ internal static class SceneHierarchyTests
             typeof(CanvasItem).BaseType == typeof(Node) && typeof(Entity).BaseType == typeof(CanvasItem) &&
             typeof(Sprite).BaseType == typeof(Entity) && typeof(EngineTimer).BaseType == typeof(Node) &&
             typeof(Viewport).BaseType == typeof(Node) && typeof(Window).BaseType == typeof(Viewport), "Declared inheritance.");
-        foreach (var name in new[] { "Position", "Transform", "Visible", "Material", "TopLevel", "Modulate" })
+        foreach (var name in new[] { "Position", "Transform", "Visible", "Material", "TopLevel", "Modulate", "ShowBehindParent", "YSortEnabled" })
             Check(typeof(Node).GetProperty(name) is null && typeof(EngineTimer).GetProperty(name) is null, $"Neutral API has no {name}.");
         Check(typeof(Node).GetMethod("DrawRect") is null && typeof(CanvasItem).GetProperty("Position") is null,
             "Drawing and concrete placement remain separate.");
@@ -50,6 +50,9 @@ internal static class SceneHierarchyTests
         Check(direct.Transform == local && direct.GlobalTransform == local && direct.EffectiveZIndex == 1,
             "TopLevel keeps local state and detaches transform/Z chain.");
         direct.TopLevel = false;
+        Check(!direct.ShowBehindParent && !direct.YSortEnabled, "Canvas ordering defaults.");
+        Reject<InvalidOperationException>(() => Task.Run(() => direct.YSortEnabled = true).GetAwaiter().GetResult());
+        Reject<InvalidOperationException>(() => Task.Run(() => direct.ShowBehindParent = true).GetAwaiter().GetResult());
         var before = direct.GlobalTransform;
         Node neutralView = direct;
         neutralView.Reparent(neutral);
@@ -76,7 +79,7 @@ internal static class SceneHierarchyTests
     {
         using var root = new Node { Name = "mixed" };
         var group = new Node { Name = "group" };
-        var node = new Entity { Name = "node", Position = new(4, 9), Modulate = Colors.Cyan };
+        var node = new Entity { Name = "node", Position = new(4, 9), Modulate = Colors.Cyan, ShowBehindParent = true, YSortEnabled = true };
         var timer = new EngineTimer { Name = "timer", WaitTime = 2 };
         root.AddChild(group); group.AddChild(node); root.AddChild(timer);
         group.Owner = root; node.Owner = root; timer.Owner = root;
@@ -84,7 +87,7 @@ internal static class SceneHierarchyTests
         using var copy = packed.Instantiate();
         Check(copy.GetType() == typeof(Node) && copy.GetChild(0).GetType() == typeof(Node), "Packed neutral factories.");
         Check(copy.GetNode<Entity>("group/node").Position == node.Position && copy.GetNode<Entity>("group/node").Modulate == node.Modulate &&
-            copy.GetNode<EngineTimer>("timer").WaitTime == 2, "Stored state is contributed by the proper base.");
+            copy.GetNode<EngineTimer>("timer").WaitTime == 2 && copy.GetNode<Entity>("group/node").ShowBehindParent && copy.GetNode<Entity>("group/node").YSortEnabled, "Stored state is contributed by the proper base.");
         Check(copy.GetPropertyList().All(p => p.Name != "Visible" && p.Name != "Position"), "Neutral descriptors exclude canvas state.");
     }
 

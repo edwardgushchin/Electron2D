@@ -12,7 +12,9 @@ Last updated: 2026-09-23
 
 ## Description
 
-The abstract canvas base. Owns visibility, Z order, modulation, materials, retained drawing and transform queries/notifications. Entity supplies a concrete spatial placement model. A direct CanvasItem subclass can provide its own model through GetTransform and notify changes with NotifyLocalTransformChanged. The Control/UI branch is not yet implemented. Only direct canvas parents contribute transforms, modulation and materials; a neutral Node breaks those chains. TopLevel preserves the local transform while ending transform/material/modulation/Z inheritance. Visibility follows direct canvas parents, including TopLevel items, and the containing window.
+The abstract canvas base. Owns visibility, Z/Y order, behind-parent drawing, modulation, materials, retained drawing and transform queries/notifications. Entity supplies a concrete spatial placement model. A direct CanvasItem subclass can provide its own model through GetTransform and notify changes with NotifyLocalTransformChanged. The Control/UI branch is not yet implemented. Only direct canvas parents contribute transforms, modulation and materials; a neutral Node breaks those chains. TopLevel preserves the local transform while ending transform/material/modulation/Z inheritance. Visibility follows direct canvas parents, including TopLevel items, and the containing window.
+
+Canvas roots follow scene order; a root's canvas subtree is ordered before the following root. TopLevel and neutral Node boundaries create separate canvas roots. Effective Z is always the primary draw key. At equal Z, children normally draw after their parent; ShowBehindParent draws a child subtree before it. YSortEnabled instead sorts the item itself (Y = 0) and its canvas children by local Y, merging nested enabled groups while keeping other child subtrees together. Drawing order does not change processing or input order.
 
 ## Examples
 
@@ -41,9 +43,11 @@ class PaintedNode : Entity
 | [`public bool NotifyLocalTransformChanges { get; set; }`](#p-electron2d-canvasitem-notifylocaltransformchanges) | Gets or sets whether local transform changes dispatch `CanvasItem.NotificationLocalTransformChanged`. |
 | [`public bool NotifyTransformChanges { get; set; }`](#p-electron2d-canvasitem-notifytransformchanges) | Gets or sets whether global transform changes dispatch `CanvasItem.NotificationTransformChanged`. |
 | [`public Color SelfModulate { get; set; }`](#p-electron2d-canvasitem-selfmodulate) | Gets or sets the color multiplier applied only to this node's drawing. |
+| [`public bool ShowBehindParent { get; set; }`](#p-electron2d-canvasitem-showbehindparent) | Draws this canvas subtree before its parent at equal Z, unless the parent sorts it by Y. |
 | [`public bool TopLevel { get; set; }`](#p-electron2d-canvasitem-toplevel) | Gets or sets whether this node ignores its parent's transform. |
 | [`public bool UseParentMaterial { get; set; }`](#p-electron2d-canvasitem-useparentmaterial) | Gets or sets whether this node uses its parent's effective material. |
 | [`public bool Visible { get; set; }`](#p-electron2d-canvasitem-visible) | Gets or sets this node's local logical visibility. |
+| [`public bool YSortEnabled { get; set; }`](#p-electron2d-canvasitem-ysortenabled) | Sorts this item and its canvas children by local Y at equal Z. |
 | [`public bool ZAsRelative { get; set; }`](#p-electron2d-canvasitem-zasrelative) | Gets or sets whether effective Z order accumulates ancestor Z values. |
 | [`public int ZIndex { get; set; }`](#p-electron2d-canvasitem-zindex) | Gets or sets this node's local Z-order value. |
 
@@ -167,6 +171,13 @@ Gets or sets the color multiplier applied only to this node's drawing.
 
 **System.ObjectDisposedException:** The node is disposed.
 
+<a id="p-electron2d-canvasitem-showbehindparent"></a>
+### `public bool ShowBehindParent { get; set; }`
+
+False by default. True draws this canvas subtree before its canvas parent when effective Z is equal. Effective Z takes precedence. An enabled Y-sorting parent orders participating children by Y instead of this flag. Neutral parents and TopLevel items have no canvas parent to draw behind.
+
+Changes affect the next submission without QueueRedraw. The value is stored by PackedScene. Mutation off an attached tree's owner thread or during capture throws InvalidOperationException; access after disposal throws ObjectDisposedException.
+
 <a id="p-electron2d-canvasitem-toplevel"></a>
 ### `public bool TopLevel { get; set; }`
 
@@ -174,7 +185,7 @@ Gets or sets whether this node ignores its parent's transform.
 
 **Value:** `false` by default.
 
-**Remarks:** The local transform stays unchanged; global coordinates are recomputed against the new canvas boundary.
+**Remarks:** The local transform stays unchanged; global coordinates are recomputed against the new canvas boundary. The item becomes a separate canvas root, drawn after the preceding root's entire canvas subtree at the same Z. Roots retain scene order; Z takes precedence. Logical visibility continues to follow direct canvas ancestors.
 
 **System.InvalidOperationException:** Mutation occurs off the owner thread or during packed-scene capture.
 
@@ -207,6 +218,15 @@ Gets or sets this node's local logical visibility.
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
 **System.Exception:** A visibility notification or event handler throws after visibility changes.
+
+<a id="p-electron2d-canvasitem-ysortenabled"></a>
+### `public bool YSortEnabled { get; set; }`
+
+False by default. True orders the item itself at Y = 0 and its direct canvas children in ascending Y in this item's local coordinate system. The root's global rotation or scale does not change the sorting coordinates. Nested enabled children join the same group using composed local transforms. A child with sorting disabled keeps its canvas subtree together at that child's Y; any deeper enabled group sorts independently within that subtree. Approximate ties use Mathf.IsEqualApprox and preserve scene order. Effective Z takes precedence over Y.
+
+Invisible children do not participate. TopLevel children and children below neutral nodes are separate canvas roots. ShowBehindParent is ignored for items directly ordered by the Y group, but still applies inside unsorted subtrees. Processing and input order remain unchanged.
+
+Changes affect the next submission without QueueRedraw. PackedScene stores the value. Mutation off an attached tree's owner thread or during capture throws InvalidOperationException; access after disposal throws ObjectDisposedException.
 
 <a id="p-electron2d-canvasitem-zasrelative"></a>
 ### `public bool ZAsRelative { get; set; }`
@@ -535,6 +555,8 @@ Drawing commands are valid only during OnDraw and retain borrowed resources. Que
 ## Verification and limits
 
 [SceneHierarchyTests](../../tests/Electron2D.Tests/SceneHierarchyTests.cs) verifies inheritance, neutral API boundaries, direct custom CanvasItem transforms, mixed parenting, notifications, timer/tween scheduling, packed factories/state, deletion and failure continuation. Existing [runtime checks](../../tests/Electron2D.Tests/Program.cs) retain lifecycle, input, math and ownership coverage. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) verifies mixed-tree pixels and a direct CanvasItem drawing texture through both GPU and compatibility backends on Linux Wayland. This does not establish visual owner acceptance or other platforms.
+
+[CanvasOrderingTests](../../tests/Electron2D.Tests/CanvasOrderingTests.cs) verifies 31 framebuffer cases for behind-parent subtrees, effective Z, canvas-root order, local/nested Y groups, visibility and mutations from drawing callbacks on Wayland GPU/compatibility and dummy/software. Managed checks cover defaults, owner-thread guards and packed ordering flags; warmed rendering with nested Y groups allocates zero managed bytes in the measured interval.
 
 The hierarchy is implemented; complete reference API parity is not claimed. Missing GUI, canvas policies, rendering primitives, interpolation, scene-file authoring and other capabilities remain classified per member in [coverage](../coverage/index.md). No inert compatibility members are added.
 

@@ -16,6 +16,7 @@ public sealed class RenderingServer : ElectronObject
     private readonly List<CanvasVertex> _vertices = [];
     private readonly List<CanvasBatch> _batches = [];
     private readonly List<RenderEntry> _order = [];
+    private readonly List<YSortEntry> _ySort = [];
     private bool _renderLoopEnabled = true;
     private bool _closing;
     private bool _rendering;
@@ -127,12 +128,12 @@ public sealed class RenderingServer : ElectronObject
             var client = _window.Size;
             if (pixels.X <= 0 || pixels.Y <= 0) return;
             var viewportTransform = new Transform(0f, new Vector2((float)pixels.X / client.X, (float)pixels.Y / client.Y), 0f, Vector2.Zero);
-            for (var i = 0; i < _nodes.Count; i++)
-            {
-                var node = _nodes[i];
-                if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.IsVisibleInTree)
-                    _order.Add(new(node, node.EffectiveZIndex, i));
-            }
+            // Drawing callbacks may change parenting, visibility or sibling order.
+            _nodes.Clear();
+            Capture(tree.Root);
+            foreach (var node in _nodes)
+                if (node.GetParentItem() is null)
+                    OrderCanvas(node);
             _order.Sort(static (x, y) => { var z = x.Z.CompareTo(y.Z); return z != 0 ? z : x.Order.CompareTo(y.Order); });
             foreach (var item in _order)
                 item.Node.AppendCanvas(_vertices, _batches, viewportTransform);
@@ -142,13 +143,57 @@ public sealed class RenderingServer : ElectronObject
             _backend.Draw(CollectionsMarshal.AsSpan(_vertices), CollectionsMarshal.AsSpan(_batches), _clearColor, present: true);
             FramePostDraw?.Invoke();
         }
-        finally { _nodes.Clear(); _order.Clear(); _rendering = false; }
+        finally { _nodes.Clear(); _order.Clear(); _ySort.Clear(); _rendering = false; }
     }
 
     private void Capture(Node node)
     {
         if (node is CanvasItem item) _nodes.Add(item);
         for (var i = 0; i < node.ChildCount; i++) Capture(node.GetChild(i));
+    }
+
+    private void OrderCanvas(CanvasItem item, bool alreadyYSorted = false)
+    {
+        if (!item.IsVisibleInTree) return;
+        if (item.YSortEnabled)
+        {
+            if (alreadyYSorted)
+            {
+                _order.Add(new(item, item.EffectiveZIndex, _order.Count));
+                return;
+            }
+            var first = _ySort.Count;
+            _ySort.Add(new(item, 0, first));
+            CollectYSort(item, Transform.Identity);
+            var count = _ySort.Count - first;
+            CollectionsMarshal.AsSpan(_ySort).Slice(first, count).Sort(static (left, right) =>
+                Mathf.IsEqualApprox(left.Y, right.Y) ? left.Order.CompareTo(right.Order) : left.Y.CompareTo(right.Y));
+            for (var index = first; index < first + count; index++)
+                OrderCanvas(_ySort[index].Node, alreadyYSorted: true);
+            _ySort.RemoveRange(first, count);
+            return;
+        }
+        OrderChildren(item, behind: true);
+        _order.Add(new(item, item.EffectiveZIndex, _order.Count));
+        OrderChildren(item, behind: false);
+    }
+
+    private void OrderChildren(CanvasItem item, bool behind)
+    {
+        for (var index = 0; index < item.ChildCount; index++)
+            if (item.GetChild(index) is CanvasItem { TopLevel: false } child && child.ShowBehindParent == behind)
+                OrderCanvas(child);
+    }
+
+    private void CollectYSort(CanvasItem parent, Transform parentTransform)
+    {
+        for (var index = 0; index < parent.ChildCount; index++)
+        {
+            if (parent.GetChild(index) is not CanvasItem { TopLevel: false } child || !child.Visible) continue;
+            var transform = parentTransform * child.GetTransform();
+            _ySort.Add(new(child, transform.Origin.Y, _ySort.Count));
+            if (child.YSortEnabled) CollectYSort(child, transform);
+        }
     }
 
     internal Image Readback() { EnsureOwner(); return _backend.Readback(); }
@@ -171,7 +216,7 @@ public sealed class RenderingServer : ElectronObject
             finally
             {
                 FramePreDraw = FramePostDraw = null;
-                _nodes.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear();
+                _nodes.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _ySort.Clear();
                 if (ReferenceEquals(Instance, this)) Volatile.Write(ref _instance, null);
             }
         }
@@ -185,4 +230,5 @@ public sealed class RenderingServer : ElectronObject
     }
 
     private readonly record struct RenderEntry(CanvasItem Node, int Z, int Order);
+    private readonly record struct YSortEntry(CanvasItem Node, float Y, int Order);
 }

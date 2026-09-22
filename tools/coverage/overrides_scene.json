@@ -1324,7 +1324,7 @@
       "electron2d": "property:Electron2D.CanvasItem.TopLevel()",
       "godot": "CanvasItem::property:top_level",
       "state": "Partial",
-      "reason": "The default is false; toggling preserves the local transform and ends canvas transform/material/modulation/Z inheritance. Visibility still follows direct canvas parents. SceneHierarchyTests covers the transform boundary. Special top-level draw ordering remains unimplemented; trigger: the next canvas ordering slice under ADR 0028."
+      "reason": "Default false; toggling preserves local transform and ends transform/material/modulation/Z inheritance, while visibility follows direct canvas parents. SceneHierarchyTests verifies the transform boundary. CanvasOrderingTests verifies independent canvas-root subtree order, later-root order and Z precedence on Wayland GPU/compatibility and dummy/software. Remaining gaps: canvas enter/exit notifications and interpolation reset on toggling; triggers: the first canvas lifecycle and physics-interpolation slices under ADRs 0008/0028."
     }
   ],
   "extras": [
@@ -2516,6 +2516,20 @@
         "Window::method:set_taskbar_progress_value(float:)",
         "Window::property:current_screen",
         "Window::property:mode"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Orders the canvas subtree before its parent at equal effective Z; Y-sorted parents use Y instead, while neutral/TopLevel boundaries create independent roots. Default false; typed stored property with scene capture, disposal and owner-thread guards under ADRs 0008/0023. SceneHierarchyTests checks defaults, affinity and PackedScene. CanvasOrderingTests verifies framebuffer ordering on Linux Wayland GPU/compatibility and dummy/software; RenderingRuntimeTests verifies zero warmed rendering allocations. Other native platforms remain unverified (ADR 0021). Audited against pinned CanvasItem and renderer_canvas_cull sources.",
+      "godot": [
+        "CanvasItem::property:show_behind_parent"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Local ascending Y includes the parent at zero, flattens nested enabled children and keeps disabled child subtrees grouped; effective Z takes precedence. Composed local transforms, visibility/root boundaries and approximate scene-order ties follow the shared Mathf tolerance (ADR 0034). Default false; typed stored property with scene capture, disposal and owner-thread guards under ADRs 0008/0023. SceneHierarchyTests checks defaults, affinity and PackedScene. CanvasOrderingTests verifies framebuffer ordering on Linux Wayland GPU/compatibility and dummy/software; RenderingRuntimeTests verifies zero warmed rendering allocations. Other native platforms remain unverified (ADR 0021). Audited against pinned CanvasItem and renderer_canvas_cull sources.",
+      "godot": [
+        "CanvasItem::property:y_sort_enabled"
       ]
     }
   ]

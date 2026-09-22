@@ -173,7 +173,7 @@
     {
       "godot": "CanvasItem::method:_draw()",
       "electron2d": "method:Electron2D.CanvasItem.OnDraw()",
-      "reason": "Entity.OnDraw is the protected C# virtual callback for retained drawing in the unified scene type. It records commands during owner-thread canvas preparation and redraw requests are coalesced. Native frame and callback-failure checks cover the initial rectangle/line/texture profile. Clipping, further drawing commands and complete canvas lifecycle integration remain pending (ADRs 0023/0028)."
+      "reason": "CanvasItem.OnDraw is the protected C# virtual callback for retained drawing, inherited by Entity and Sprite. It records commands during owner-thread canvas preparation and redraw requests are coalesced. Native frame and callback-failure checks cover the initial rectangle/line/texture profile. Clipping, further drawing commands and complete canvas lifecycle integration remain pending (ADRs 0023/0028)."
     },
     {
       "godot": "RenderingServer::method:get_current_rendering_method()",
@@ -371,7 +371,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Entity.OnDraw is the protected C# virtual callback for retained drawing in the unified scene type. It records commands during owner-thread canvas preparation and redraw requests are coalesced. Native frame and callback-failure checks cover the initial rectangle/line/texture profile. Clipping, further drawing commands and complete canvas lifecycle integration remain pending (ADRs 0023/0028).",
+      "reason": "CanvasItem.OnDraw is the protected C# virtual callback for retained drawing, inherited by Entity and Sprite. It records commands during owner-thread canvas preparation and redraw requests are coalesced. Native frame and callback-failure checks cover the initial rectangle/line/texture profile. Clipping, further drawing commands and complete canvas lifecycle integration remain pending (ADRs 0023/0028).",
       "godot": [
         "CanvasItem::method:_draw()"
       ]

@@ -36203,6 +36203,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.CanvasItem.ShowBehindParent()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "ShowBehindParent",
+    "signature": "public System.Boolean ShowBehindParent { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.CanvasItem.TopLevel()",
     "kind": "property",
     "declaringType": "Electron2D.CanvasItem",
@@ -36234,6 +36247,19 @@
     "declaringType": "Electron2D.CanvasItem",
     "name": "Visible",
     "signature": "public System.Boolean Visible { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.YSortEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "YSortEnabled",
+    "signature": "public System.Boolean YSortEnabled { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
