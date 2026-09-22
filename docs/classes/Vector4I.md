@@ -1,6 +1,6 @@
 # Vector4I
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** —
 
@@ -20,6 +20,7 @@ Represents a four-component integer vector for masks and numeric tuples.
 
 Addition, subtraction, multiplication, and negation use wrapping 32-bit arithmetic.
 Division and remainder follow C# truncated-division rules. The zero-initialized value is [`Vector4I.Zero`](Vector4I.md#p-electron2d-vector4i-zero).
+Squared norms return signed 64-bit integers and reject results outside that range. Length and distance use widened floating-point arithmetic and remain finite for all 32-bit components.
 Numeric operations do not allocate managed memory; string formatting allocates a string.
 
 ## Examples
@@ -56,10 +57,10 @@ var doubled = margins * 2;
 | [`public Vector4I Abs()`](#m-electron2d-vector4i-abs) | Returns the componentwise absolute value. |
 | [`public Vector4I Clamp(Vector4I min, Vector4I max)`](#m-electron2d-vector4i-clamp-electron2d-vector4i-electron2d-vector4i) | Clamps each component between corresponding vector bounds. |
 | [`public Vector4I Clamp(int min, int max)`](#m-electron2d-vector4i-clamp-system-int32-system-int32) | Clamps every component between scalar bounds. |
-| [`public int DistanceSquaredTo(Vector4I to)`](#m-electron2d-vector4i-distancesquaredto-electron2d-vector4i) | Returns the squared Euclidean distance to another point. |
+| [`public long DistanceSquaredTo(Vector4I to)`](#m-electron2d-vector4i-distancesquaredto-electron2d-vector4i) | Returns the squared Euclidean distance to another point. |
 | [`public float DistanceTo(Vector4I to)`](#m-electron2d-vector4i-distanceto-electron2d-vector4i) | Returns the Euclidean distance to another point. |
 | [`public float Length()`](#m-electron2d-vector4i-length) | Returns the Euclidean length. |
-| [`public int LengthSquared()`](#m-electron2d-vector4i-lengthsquared) | Returns the squared Euclidean length. |
+| [`public long LengthSquared()`](#m-electron2d-vector4i-lengthsquared) | Returns the squared Euclidean length. |
 | [`public Vector4I Max(Vector4I with)`](#m-electron2d-vector4i-max-electron2d-vector4i) | Returns the componentwise maximum with another vector. |
 | [`public Vector4I Max(int with)`](#m-electron2d-vector4i-max-system-int32) | Returns the componentwise maximum with a scalar. |
 | [`public Vector4I.Axis MaxAxisIndex()`](#m-electron2d-vector4i-maxaxisindex) | Returns the axis containing the greatest component. |
@@ -256,7 +257,7 @@ Clamps every component between scalar bounds.
 - `ArgumentException`: `min` is greater than `max`.
 
 <a id="m-electron2d-vector4i-distancesquaredto-electron2d-vector4i"></a>
-### `public int DistanceSquaredTo(Vector4I to)`
+### `public long DistanceSquaredTo(Vector4I to)`
 
 Returns the squared Euclidean distance to another point.
 
@@ -264,7 +265,11 @@ Returns the squared Euclidean distance to another point.
 
 - `to`: The destination point.
 
-**Returns:** The squared distance using wrapping 32-bit arithmetic.
+**Returns:** The exact squared distance when it fits in a signed 64-bit integer. Component differences are widened before subtraction, so they do not use wrapping vector subtraction.
+
+**Exceptions**
+
+- `OverflowException`: The squared distance exceeds `long.MaxValue`.
 
 <a id="m-electron2d-vector4i-distanceto-electron2d-vector4i"></a>
 ### `public float DistanceTo(Vector4I to)`
@@ -275,21 +280,25 @@ Returns the Euclidean distance to another point.
 
 - `to`: The destination point.
 
-**Returns:** The square root of [`Vector4I.DistanceSquaredTo(Vector4I)`](Vector4I.md#m-electron2d-vector4i-distancesquaredto-electron2d-vector4i); overflow in the squared result can produce NaN.
+**Returns:** The nonnegative distance rounded to single precision. Widened coordinate differences and floating-point squares keep it finite even when [`Vector4I.DistanceSquaredTo(Vector4I)`](Vector4I.md#m-electron2d-vector4i-distancesquaredto-electron2d-vector4i) exceeds `long.MaxValue`.
 
 <a id="m-electron2d-vector4i-length"></a>
 ### `public float Length()`
 
 Returns the Euclidean length.
 
-**Returns:** The square root of [`Vector4I.LengthSquared`](Vector4I.md#m-electron2d-vector4i-lengthsquared); overflow in the squared result can produce NaN.
+**Returns:** The nonnegative length rounded to single precision. Widened floating-point squares keep it finite even when [`Vector4I.LengthSquared`](Vector4I.md#m-electron2d-vector4i-lengthsquared) exceeds `long.MaxValue`.
 
 <a id="m-electron2d-vector4i-lengthsquared"></a>
-### `public int LengthSquared()`
+### `public long LengthSquared()`
 
 Returns the squared Euclidean length.
 
-**Returns:** The sum of the four squared components using wrapping 32-bit arithmetic.
+**Returns:** The exact sum of the four squared components when it fits in a signed 64-bit integer; components are widened before multiplication.
+
+**Exceptions**
+
+- `OverflowException`: The squared length exceeds `long.MaxValue`.
 
 <a id="m-electron2d-vector4i-max-electron2d-vector4i"></a>
 ### `public Vector4I Max(Vector4I with)`
@@ -778,10 +787,10 @@ Converts a finite in-range floating-point vector by truncating every component t
 
 ## Numeric invariants and error behavior
 
-- Ordinary integer addition, subtraction, multiplication, and negation wrap explicitly. Squared length and distance also use wrapping 32-bit arithmetic; negative overflow can make their square roots NaN.
+- Ordinary integer addition, subtraction, multiplication, and negation wrap explicitly. Squared length and distance widen before multiplication and return `long`; a result above `long.MaxValue` throws `OverflowException`. Length and distance use widened floating-point arithmetic and remain finite at `int` endpoints.
 - Division truncates toward zero and remainder has the dividend's sign. Zero scalar/component divisors throw `DivideByZeroException`; `int.MinValue / -1` and `int.MinValue % -1` throw `OverflowException`. Float division retains IEEE behavior.
 - `Abs(int.MinValue)` throws `OverflowException`. Reversed clamp bounds throw `ArgumentException`; invalid indices throw `ArgumentOutOfRangeException`.
-- Maximum-axis ties choose X and minimum-axis ties choose W. Snapping uses double intermediate arithmetic, ties toward positive infinity, preserves zero-step components, and throws `OverflowException` when the result is outside `int`.
+- Maximum-axis ties choose X and minimum-axis ties choose W. Snapping uses double intermediate arithmetic; midpoint ties go toward larger values for positive steps and smaller values for negative steps. Zero steps preserve the value and an out-of-range snapped result throws `OverflowException`.
 - Float conversion truncates toward zero and rejects non-finite or out-of-range values with `ArgumentOutOfRangeException`; widening can lose precision above 2^24.
 - Invalid formats throw `FormatException`.
 
@@ -795,7 +804,7 @@ The type depends on canonical scalar [`Mathf`](Mathf.md) for snapping and scalar
 
 The complete implementable pure-value surface is present. Universal-value truth conversion is permanently excluded, and there is no 3D projection or external numerics integration.
 
-The executable harness covers layout, constants, indexing, conversions, every method/operator family, wraparound, overflow and zero-division failures, axis ties, snapping, formatting, strict persistence, packed-scene storage, and warmed zero-allocation math. Execution is Linux/.NET 8 only.
+The executable harness covers layout, constants, indexing, conversions, every method/operator family, widened norms and their overflow boundaries, wraparound, division failures, axis ties, snapping, formatting, strict persistence, packed-scene storage, and warmed zero-allocation math. Execution is Linux/.NET 8 only.
 
 ## Decisions
 

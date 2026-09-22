@@ -1483,8 +1483,8 @@
       "godot": [
         "class:Vector2i"
       ],
-      "state": "Partial",
-      "reason": "All 53 members are accounted for and the C# value type has no inherited engine API. Four length/distance rows retain the accepted 32-bit managed calculation, which differs from the native 64-bit calculation (ADR 0033); boolean truth conversion is excluded by ADR 0001."
+      "state": "Implemented",
+      "reason": "All 53 members are accounted for and behavior-audited. Squared norms use signed 64-bit results with a checked C# boundary; ordinary lengths remain finite across all 32-bit coordinates (ADR 0033). Boolean truth conversion is excluded by ADR 0001."
     },
     {
       "godot": [
@@ -1544,29 +1544,29 @@
       "godot": [
         "Vector2i::method:length_squared()"
       ],
-      "state": "Partial",
-      "reason": "The accepted managed C# int calculation wraps at 32 bits, while the pinned native implementation computes an int64 square. For (50000, 0), the native result is 2500000000 and Electron2D wraps; Trigger: separately approve widened integer-vector norms in ADR 0033 and correct Vector2I/Vector4I together in the first slice of that capability."
+      "state": "Implemented",
+      "reason": "Components widen before multiplication and the result is exact signed 64-bit within range: (50000, 0) yields 2500000000. Results above long.MaxValue throw OverflowException as the ADR 0033 typed C# boundary."
     },
     {
       "godot": [
         "Vector2i::method:distance_squared_to(Vector2i:)"
       ],
-      "state": "Partial",
-      "reason": "Distance first subtracts in Vector2I, then uses the accepted managed 32-bit squared calculation; the pinned native implementation uses an int64 square. Trigger: separately approve widened integer-vector norms in ADR 0033 and correct Vector2I/Vector4I together in the first slice of that capability."
+      "state": "Implemented",
+      "reason": "Coordinate differences widen before subtraction, then square into an exact signed 64-bit result within range. Results above long.MaxValue throw OverflowException; this avoids native int32 subtraction overflow (ADR 0033)."
     },
     {
       "godot": [
         "Vector2i::method:length()"
       ],
-      "state": "Partial",
-      "reason": "The square root uses the accepted managed 32-bit squared result, so moderate magnitudes can return NaN after overflow; the pinned native implementation takes the square root of an int64 square. Trigger: separately approve widened integer-vector norms in ADR 0033 and correct Vector2I/Vector4I together in the first slice of that capability."
+      "state": "Implemented",
+      "reason": "Widened floating-point squares produce a finite single-precision length over the full int32 component range, including when the signed 64-bit squared API reaches its checked limit (ADR 0033)."
     },
     {
       "godot": [
         "Vector2i::method:distance_to(Vector2i:)"
       ],
-      "state": "Partial",
-      "reason": "Distance first subtracts in Vector2I and uses the accepted managed 32-bit squared result, which can make the distance NaN; the pinned native implementation uses an int64 square. Trigger: separately approve widened integer-vector norms in ADR 0033 and correct Vector2I/Vector4I together in the first slice of that capability."
+      "state": "Implemented",
+      "reason": "Widened coordinate differences and floating-point squares produce a finite single-precision distance over the full int32 range, avoiding native int32 subtraction overflow (ADR 0033)."
     },
     {
       "godot": [
@@ -1670,8 +1670,8 @@
         "Vector4i::method:length()",
         "Vector4i::method:length_squared()"
       ],
-      "state": "Partial",
-      "reason": "Sibling audit: the accepted managed C# 32-bit squared calculation can wrap and make length/distance NaN for moderate components, while the pinned native implementation uses int64. Trigger: separately approve widened integer-vector norms in ADR 0033 and correct Vector2I/Vector4I together in the first slice of that capability."
+      "state": "Implemented",
+      "reason": "Sibling norm implementation widens before multiplication and distance subtraction; squared results return exact signed 64-bit values or throw above long.MaxValue, while ordinary length/distance remain finite across the int32 range (ADR 0033)."
     }
   ]
 }

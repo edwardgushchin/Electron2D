@@ -496,7 +496,7 @@ def render():
     actionable_note = (" Start with the independent " + ", ".join(f"[{name}](classes/{name}.md)" for name in actionable) + " class slices.") if actionable else ""
     road = ["# Coverage roadmap", "", "Last updated: 2026-09-22", "",
             "The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.", "",
-            f"1. Review {counts['Partial']} partially implemented rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains. Four Vector2i length/distance rows are already audited and require a deliberate ADR 0033 contract change for native parity.",
+            f"1. Review {counts['Partial']} partially implemented rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.",
             f"2. Complete {counts['Unimplemented']} missing declarations in already represented type families; split each type by its documented dependency trigger.{actionable_note}",
             "3. Implement the blocked domains in dependency order: SDL host/input and display; SDL3 GPU 2D rendering; GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; self-hosted editor.", "",
             "## Existing type backlog", "",

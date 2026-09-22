@@ -1184,10 +1184,23 @@ static void VerifyVector2IValues()
     Require(float.IsPositiveInfinity(new Vector2I(1, 0).Aspect()) && float.IsNaN(Vector2I.Zero.Aspect()),
         "Vector2I aspect must preserve IEEE zero-division results.");
     var large = new Vector2I(50_000, 0);
-    Require(large.LengthSquared() == unchecked((int)2_500_000_000L) &&
-            large.DistanceSquaredTo(Vector2I.Zero) == unchecked((int)2_500_000_000L) &&
-            float.IsNaN(large.Length()) && float.IsNaN(large.DistanceTo(Vector2I.Zero)),
-        "Vector2I must retain the accepted managed 32-bit squared-length limit.");
+    Require(typeof(Vector2I).GetMethod(nameof(Vector2I.LengthSquared))!.ReturnType == typeof(long) &&
+            large.LengthSquared() == 2_500_000_000L && large.DistanceSquaredTo(Vector2I.Zero) == 2_500_000_000L &&
+            large.Length() == 50_000f && large.DistanceTo(Vector2I.Zero) == 50_000f,
+        "Vector2I norms must widen before squaring and expose the signed 64-bit result.");
+    Require(new Vector2I(-1_500_000_000, 0).DistanceSquaredTo(new Vector2I(1_500_000_000, 0)) == 9_000_000_000_000_000_000L &&
+            new Vector2I(-1_500_000_000, 0).DistanceTo(new Vector2I(1_500_000_000, 0)) == 3_000_000_000f,
+        "Vector2I distance must widen before subtracting components across the Int32 span.");
+    Require(Vector2I.MaxValue.LengthSquared() == 2L * int.MaxValue * int.MaxValue &&
+            float.IsFinite(Vector2I.MinValue.Length()) &&
+            MathF.Abs(Vector2I.MinValue.Length() - (float)(Math.Sqrt(2d) * 2_147_483_648d)) <= 512f &&
+            float.IsFinite(Vector2I.MinValue.DistanceTo(Vector2I.MaxValue)) &&
+            MathF.Abs(Vector2I.MinValue.DistanceTo(Vector2I.MaxValue) - (float)(Math.Sqrt(2d) * uint.MaxValue)) <= 512f,
+        "Vector2I lengths and distances must remain finite across the entire component range.");
+    Expect<OverflowException>(() => _ = Vector2I.MinValue.LengthSquared(),
+        "Vector2I squared length must reject a result above Int64.MaxValue.");
+    Expect<OverflowException>(() => _ = Vector2I.MinValue.DistanceSquaredTo(Vector2I.MaxValue),
+        "Vector2I squared distance must reject a widened difference above Int64.MaxValue.");
     Require(new Vector2I(-3, 4).Abs() == value && new Vector2I(-3, 0).Sign() == new Vector2I(-1, 0) &&
             new Vector2I(5, -2).Clamp(0, 4) == new Vector2I(4, 0) &&
             new Vector2I(5, -2).Clamp(new Vector2I(1, -1), new Vector2I(4, 3)) == new Vector2I(4, -1),
@@ -1335,6 +1348,24 @@ static void VerifyVector4IValues()
             value.LengthSquared() == 30 && NearlyEqual(value.Length(), MathF.Sqrt(30f)) &&
             value.DistanceSquaredTo(Vector4I.Zero) == 30 && NearlyEqual(value.DistanceTo(Vector4I.Zero), MathF.Sqrt(30f)),
         "Vector4I indexing, deconstruction, length, and distance operations must be stable.");
+    var large = new Vector4I(50_000, 50_000, 50_000, 50_000);
+    Require(typeof(Vector4I).GetMethod(nameof(Vector4I.DistanceSquaredTo))!.ReturnType == typeof(long) &&
+            large.LengthSquared() == 10_000_000_000L &&
+            large.DistanceSquaredTo(Vector4I.Zero) == 10_000_000_000L &&
+            large.Length() == 100_000f && large.DistanceTo(Vector4I.Zero) == 100_000f,
+        "Vector4I norms must widen all four components before squaring.");
+    Require(new Vector4I(-1_500_000_000, 0, 0, 0).DistanceSquaredTo(new Vector4I(1_500_000_000, 0, 0, 0)) == 9_000_000_000_000_000_000L &&
+            new Vector4I(-1_500_000_000, 0, 0, 0).DistanceTo(new Vector4I(1_500_000_000, 0, 0, 0)) == 3_000_000_000f,
+        "Vector4I distance must widen before subtracting components across the Int32 span.");
+    Require(float.IsFinite(Vector4I.MinValue.Length()) &&
+            MathF.Abs(Vector4I.MinValue.Length() - (float)(2d * 2_147_483_648d)) <= 512f &&
+            float.IsFinite(Vector4I.MinValue.DistanceTo(Vector4I.MaxValue)) &&
+            MathF.Abs(Vector4I.MinValue.DistanceTo(Vector4I.MaxValue) - (float)(2d * uint.MaxValue)) <= 1024f,
+        "Vector4I lengths and distances must remain finite across the entire component range.");
+    Expect<OverflowException>(() => _ = Vector4I.MinValue.LengthSquared(),
+        "Vector4I squared length must reject a result above Int64.MaxValue.");
+    Expect<OverflowException>(() => _ = Vector4I.MinValue.DistanceSquaredTo(Vector4I.MaxValue),
+        "Vector4I squared distance must reject a widened difference above Int64.MaxValue.");
     Expect<ArgumentOutOfRangeException>(() => _ = value[-1], "Vector4I must reject negative indices.");
     Require(new Vector4I(-1, -2, -3, -4).Abs() == value && new Vector4I(-1, 0, 3, -4).Sign() == new Vector4I(-1, 0, 1, -1) &&
             value.Clamp(2, 3) == new Vector4I(2, 2, 3, 3) &&
@@ -3134,9 +3165,17 @@ static void VerifyProjectSettings()
             "Feature tags must reject whitespace.");
         Expect<ArgumentException>(() => settings.AddCustomFeature("bad..feature"),
             "Feature tags must reject empty dotted segments.");
-        Require(settings.GetActiveFeatures().Contains("dotnet") &&
-                settings.GetActiveFeatures().Contains("debug") == false,
-            "Release tests must expose deterministic runtime feature tags.");
+        var activeFeatures = settings.GetActiveFeatures();
+#if DEBUG
+        const string buildFeature = "debug";
+        const string otherFeature = "release";
+#else
+        const string buildFeature = "release";
+        const string otherFeature = "debug";
+#endif
+        Require(activeFeatures.Contains("dotnet") && activeFeatures.Contains(buildFeature) &&
+                !activeFeatures.Contains(otherFeature),
+            "Tests must expose the feature tag for their build configuration.");
 
         var settingsEvents = 0;
         var reenterEvent = true;

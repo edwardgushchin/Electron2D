@@ -26421,7 +26421,7 @@
     "kind": "method",
     "declaringType": "Electron2D.Vector2I",
     "name": "DistanceSquaredTo",
-    "signature": "public System.Int32 DistanceSquaredTo(Electron2D.Vector2I to)",
+    "signature": "public System.Int64 DistanceSquaredTo(Electron2D.Vector2I to)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -26432,7 +26432,7 @@
         "default": null
       }
     ],
-    "returnType": "System.Int32",
+    "returnType": "System.Int64",
     "value": null
   },
   {
@@ -26523,12 +26523,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Vector2I",
     "name": "LengthSquared",
-    "signature": "public System.Int32 LengthSquared()",
+    "signature": "public System.Int64 LengthSquared()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "System.Int32",
+    "returnType": "System.Int64",
     "value": null
   },
   {
@@ -27517,7 +27517,7 @@
     "kind": "method",
     "declaringType": "Electron2D.Vector4I",
     "name": "DistanceSquaredTo",
-    "signature": "public System.Int32 DistanceSquaredTo(Electron2D.Vector4I to)",
+    "signature": "public System.Int64 DistanceSquaredTo(Electron2D.Vector4I to)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27528,7 +27528,7 @@
         "default": null
       }
     ],
-    "returnType": "System.Int32",
+    "returnType": "System.Int64",
     "value": null
   },
   {
@@ -27619,12 +27619,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Vector4I",
     "name": "LengthSquared",
-    "signature": "public System.Int32 LengthSquared()",
+    "signature": "public System.Int64 LengthSquared()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "System.Int32",
+    "returnType": "System.Int64",
     "value": null
   },
   {

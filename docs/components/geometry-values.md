@@ -40,7 +40,7 @@ This Core component owns the engine's backend-independent value mathematics: two
 - `Rect` is 16 bytes containing `Vector2 Position` then `Vector2 Size`; `RectI` is 16 bytes containing `Vector2I Position` then `Vector2I Size`; `Transform` is 24 bytes containing `Vector2 X`, `Y`, then `Origin`.
 - Floating-point ordinary math retains IEEE values; finite persistence validates only at its serialization boundary.
 - Floating-point component approximation uses strict `Mathf.Epsilon` (`1e-6f`) and accepts exact equality first; unit-vector checks retain their separate `0.001` tolerance.
-- Integer ordinary arithmetic wraps explicitly; division and invalid absolute values retain managed exceptions; integer squared values can wrap.
+- Integer ordinary component arithmetic wraps explicitly; division and invalid absolute values retain managed exceptions. Integer-vector squared norms widen before multiplication, return `long`, and throw when the exact result exceeds `long.MaxValue`; ordinary lengths/distances remain finite across all 32-bit coordinates.
 - Float-to-integer vector conversion truncates toward zero and rejects non-finite or out-of-range components. Integer-to-float conversion can lose low-order precision above 2^24.
 - Maximum-axis ties select the first component; minimum-axis ties select the last component.
 - Numeric hot paths allocate no managed memory after warmup; formatting, transform array operators, and persistence allocate by contract.
@@ -62,7 +62,7 @@ Implemented and verified. `Rect`, `Transform`, and `Node` use the engine-owned `
 
 ## Verification
 
-The executable harness covers every method/operator family, layouts and constants, index failures, interpolation, strict `Mathf.Epsilon` migration boundaries, NaN/infinity/signed-zero behavior, integer wrap/overflow/zero division, conversion boundaries, axis ties, floating-point and integer rectangle boundaries, affine order/inversion/decomposition, Node integration, strict malformed persistence, packed-scene value copying, invariant formatting, and warmed allocation behavior.
+The executable harness covers every method/operator family, layouts and constants, index failures, interpolation, strict `Mathf.Epsilon` migration boundaries, NaN/infinity/signed-zero behavior, integer wrap/overflow/zero division, widened integer norms and their checked limits, conversion boundaries, axis ties, floating-point and integer rectangle boundaries, affine order/inversion/decomposition, Node integration, strict malformed persistence, packed-scene value copying, invariant formatting, and warmed allocation behavior.
 
 Execution is verified on Linux/.NET 8 only. Native ABI and the Windows/macOS/Linux (X11/Wayland)/Android/iOS/Web build and host matrix remain unverified.
 

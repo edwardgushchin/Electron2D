@@ -166,21 +166,40 @@ public struct Vector4I : IEquatable<Vector4I>
 
     /// <summary>Returns the squared Euclidean distance to another point.</summary>
     /// <param name="to">The destination point.</param>
-    /// <returns>The squared distance using wrapping 32-bit arithmetic.</returns>
-    public readonly int DistanceSquaredTo(Vector4I to) => unchecked((to - this).LengthSquared());
+    /// <returns>The exact squared distance when it fits in a signed 64-bit integer.</returns>
+    /// <remarks>Coordinate differences are widened before subtraction. This operation does not use wrapping vector subtraction.</remarks>
+    /// <exception cref="OverflowException">The squared distance exceeds <see cref="long.MaxValue"/>.</exception>
+    public readonly long DistanceSquaredTo(Vector4I to)
+    {
+        var dx = (long)to.X - X;
+        var dy = (long)to.Y - Y;
+        var dz = (long)to.Z - Z;
+        var dw = (long)to.W - W;
+        return checked((dx * dx) + (dy * dy) + (dz * dz) + (dw * dw));
+    }
 
     /// <summary>Returns the Euclidean distance to another point.</summary>
     /// <param name="to">The destination point.</param>
-    /// <returns>The square root of <see cref="DistanceSquaredTo(Vector4I)"/>; overflow in the squared result can produce NaN.</returns>
-    public readonly float DistanceTo(Vector4I to) => Mathf.Sqrt(DistanceSquaredTo(to));
+    /// <returns>The nonnegative distance, rounded to single precision.</returns>
+    /// <remarks>Coordinate differences and squared terms use widened arithmetic, so this remains finite even when <see cref="DistanceSquaredTo(Vector4I)"/> exceeds the signed 64-bit range.</remarks>
+    public readonly float DistanceTo(Vector4I to)
+    {
+        var dx = (long)to.X - X;
+        var dy = (long)to.Y - Y;
+        var dz = (long)to.Z - Z;
+        var dw = (long)to.W - W;
+        return (float)Mathf.Sqrt(((double)dx * dx) + ((double)dy * dy) + ((double)dz * dz) + ((double)dw * dw));
+    }
 
     /// <summary>Returns the Euclidean length.</summary>
-    /// <returns>The square root of <see cref="LengthSquared"/>; overflow in the squared result can produce NaN.</returns>
-    public readonly float Length() => Mathf.Sqrt(LengthSquared());
+    /// <returns>The nonnegative length, rounded to single precision.</returns>
+    /// <remarks>Squared terms use widened arithmetic, so this remains finite even when <see cref="LengthSquared"/> exceeds the signed 64-bit range.</remarks>
+    public readonly float Length() => (float)Mathf.Sqrt(((double)X * X) + ((double)Y * Y) + ((double)Z * Z) + ((double)W * W));
 
     /// <summary>Returns the squared Euclidean length.</summary>
-    /// <returns>The sum of the four squared components using wrapping 32-bit arithmetic.</returns>
-    public readonly int LengthSquared() => unchecked((X * X) + (Y * Y) + (Z * Z) + (W * W));
+    /// <returns>The exact squared length when it fits in a signed 64-bit integer.</returns>
+    /// <exception cref="OverflowException">The squared length exceeds <see cref="long.MaxValue"/>.</exception>
+    public readonly long LengthSquared() => checked(((long)X * X) + ((long)Y * Y) + ((long)Z * Z) + ((long)W * W));
 
     /// <summary>Returns the componentwise maximum with another vector.</summary>
     /// <param name="with">The other vector.</param>

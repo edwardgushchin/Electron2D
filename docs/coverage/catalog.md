@@ -909,7 +909,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. One 
 | [VSplitContainer](classes/VSplitContainer.md) | SplitContainer | Blocked | 0 |
 | [Variant](classes/Variant.md) | — | Excluded | 0 |
 | [Vector2](classes/Vector2.md) | — | Partial | 82 |
-| [Vector2i](classes/Vector2i.md) | — | Partial | 53 |
+| [Vector2i](classes/Vector2i.md) | — | Implemented | 53 |
 | [Vector3](classes/Vector3.md) | — | Excluded | 94 |
 | [Vector3i](classes/Vector3i.md) | — | Excluded | 56 |
 | [Vector4](classes/Vector4.md) | — | Partial | 66 |

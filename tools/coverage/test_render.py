@@ -28,9 +28,14 @@ def main():
     assert summary["unmapped_engine"] == 0, "Every Electron2D declaration needs a pairing or rationale"
     vector2i_rows = [line for line in pages[CLASS_PAGES / "Vector2i.md"].splitlines() if line.startswith("| [`")]
     assert len(vector2i_rows) == 54
-    assert sum(" | Partial | " in line for line in vector2i_rows) == 5
-    assert sum(" | Implemented | " in line for line in vector2i_rows) == 49
+    assert sum(" | Partial | " in line for line in vector2i_rows) == 0
+    assert sum(" | Implemented | " in line for line in vector2i_rows) == 54
     assert all("Declaration mapping is structural" not in line for line in vector2i_rows)
+    vector4i_norm_rows = [line for line in pages[CLASS_PAGES / "Vector4i.md"].splitlines()
+                          if line.startswith("| [`method ") and any(name in line for name in
+                              ("distance_squared_to(", "distance_to(", "length()", "length_squared()"))]
+    assert len(vector4i_norm_rows) == 4
+    assert all(" | Implemented | " in line for line in vector4i_norm_rows)
     for page, content in pages.items():
         for link in re.findall(r"\]\(([^)]+\.md)\)", content):
             target = (page.parent / link).resolve()
