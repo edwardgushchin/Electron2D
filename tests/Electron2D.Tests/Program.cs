@@ -73,6 +73,24 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_POINTER_CONFINE"
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "1")
+{
+    ImageCodecTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDER_HANDLES") == "1")
+{
+    RenderingNativeHandleTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDER") == "1")
+{
+    RenderingRuntimeTests.Run();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW") == "1")
 {
     WindowRuntimeTests.Run();
@@ -1358,6 +1376,13 @@ static void VerifyImages()
         [nameof(Image.GetRegion)] = 1,
         [nameof(Image.GetUsedRect)] = 1,
         [nameof(Image.LinearToSRGB)] = 1,
+        [nameof(Image.Load)] = 1,
+        [nameof(Image.LoadFromFile)] = 1,
+        [nameof(Image.LoadPNGFromBuffer)] = 1,
+        [nameof(Image.LoadJPGFromBuffer)] = 1,
+        [nameof(Image.LoadWebPFromBuffer)] = 1,
+        [nameof(Image.LoadBMPFromBuffer)] = 1,
+        [nameof(Image.LoadTGAFromBuffer)] = 1,
         [nameof(Image.NormalMapToXY)] = 1,
         [nameof(Image.PremultiplyAlpha)] = 1,
         [nameof(Image.Resize)] = 1,
@@ -1365,6 +1390,10 @@ static void VerifyImages()
         [nameof(Image.RGBEToSRGB)] = 1,
         [nameof(Image.Rotate180)] = 1,
         [nameof(Image.Rotate90)] = 1,
+        [nameof(Image.SavePNG)] = 1,
+        [nameof(Image.SavePNGToBuffer)] = 1,
+        [nameof(Image.SaveJPG)] = 1,
+        [nameof(Image.SaveJPGToBuffer)] = 1,
         [nameof(Image.SetData)] = 1,
         [nameof(Image.SetPixel)] = 2,
         [nameof(Image.ShrinkX2)] = 1,
@@ -1378,7 +1407,7 @@ static void VerifyImages()
         .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
     Require(expectedMethods.Count == actualMethods.Count && expectedMethods.All(pair =>
             actualMethods.TryGetValue(pair.Key, out var count) && count == pair.Value),
-        "Image must expose exactly the audited backend-independent method surface.");
+        "Image must expose exactly the audited image-processing and codec method surface.");
     var expectedProperties = new[]
     {
         nameof(Image.DataSize), nameof(Image.HasMipmaps), nameof(Image.Height), nameof(Image.IsCompressed),

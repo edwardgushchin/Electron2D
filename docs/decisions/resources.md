@@ -128,13 +128,13 @@ Last updated: 2026-09-22
 
 ### Status
 
-Accepted and implemented.
+Accepted; managed buffers implemented, native codec integration partially executable.
 
 ### Context
 
 The first concrete asset must provide useful CPU-side image behavior before textures, rendering, importing, or an editor exist. The current official 4.7.2 image contract includes raw storage in 47 uncompressed and GPU-block-compressed formats, mipmaps, pixel access and conversion, region composition, filtering, color processing, normal-map helpers, metrics, file codecs, and editor/GPU compression hooks.
 
-Electron2D already owns `Color`, `Vector2I`, `RectI`, `Resource`, typed duplication, and blocking `FileAccess`, but has no accepted portable image-codec dependency, SDL host, GPU backend, texture type, importer, resource loader/saver, or editor. Pulling a codec package into the runtime would change the one-assembly dependency decision. Reimplementing PNG, JPEG, WebP, SVG, DDS, KTX, and EXR inside this slice would create a large security and maintenance surface unrelated to the buffer contract.
+Electron2D owns `Color`, `Vector2I`, `RectI`, `Resource`, typed duplication, blocking `FileAccess`, and an SDL host. Texture and GPU integration is in progress. The user selected SDL_image through SDL3-CS for encoded images, including the `SDL3-CS.Linux.Image` native package. Importing and general resource loading/saving remain unfinished. Image has five native loaders and PNG/JPEG saving; the full codec family and semantics remain unfinished. Reimplementing PNG, JPEG, WebP, SVG, DDS, KTX, and EXR would duplicate mature codec libraries.
 
 ### Decision
 
@@ -149,6 +149,7 @@ Electron2D already owns `Color`, `Vector2I`, `RectI`, `Resource`, typed duplicat
 - The dynamic `data` dictionary is replaced by `GetData`, `SetData`, dimensions, `PixelFormat`, and `HasMipmaps`. Error codes are replaced by typed C# exceptions. Vector overload pairs are ordinary overloads rather than suffixed method names. Metric dictionaries are replaced by `ImageMetrics`.
 - `Image` is a managed CPU payload and therefore does not introduce the internal native-asset lease mechanism reserved by ADR 0014. Its buffer is released logically on disposal and reclaimed by the managed runtime.
 - Raw compressed bytes do not imply codec or renderer support. No compression, decompression, load/save, texture, RID, import, or renderer method is added as a placeholder.
+- Use SDL_image through the complete vendored SDL3-CS Image module for image decoding and supported encoding. Linux uses `SDL3-CS.Linux.Image` 3.4.6.9 under [ADR 0012](product.md#adr-0012). Native surfaces are temporary implementation details: public `Image` retains copied managed buffers, and `Texture`/`ImageTexture` retain the ownership contract recorded in [shader materials](../components/shader-materials.md). This approves the dependency; each codec, file/buffer path, limit, and claimed platform still requires executable integration and verification. The current profile loads PNG/JPEG/WebP/BMP/TGA to RGBA8 base pixels and saves PNG/JPEG; input/output is capped at 64 MiB and dimensions are checked before native decoding. PNG uses the bundled SDL core decoder to avoid confirmed grayscale scaling and RGB16 byte-order defects in SDL_image 3.4.6. This workaround adds no dependency. Original channel layouts, color/metadata interpretation and further codec variants remain Partial until their semantic audit and integration are complete.
 
 ### Audit coverage inventory
 
@@ -162,13 +163,13 @@ Electron2D already owns `Color`, `Vector2I`, `RectI`, `Resource`, typed duplicat
 | Format/interpolation/alpha/channel/compression/source/ASTC enums and size constants | Implemented as seven nested enums plus `MaxWidth`/`MaxHeight`; encoder-oriented enums are stable types but do not imply an encoder |
 | Inherited change signal, naming/path identity, duplication, descriptors, disposal | Implemented through `Resource`/`ElectronObject`; image duplication owns an independent buffer |
 | Dynamic `data` property and integer error codes | Permanently adapted to typed state properties, copied arrays, and exceptions |
-| Codec load/save, compression/decompression, textures/importing | Dependency-blocked exactly as listed below; no compatibility stubs |
+| Codec load/save, compression/decompression, textures/importing | Five native file/buffer loaders and PNG/JPEG saving execute; source-layout/color/metadata semantics and further formats remain pending. Texture sampling is partially integrated; further work is listed below. |
 
 ### Deferred coverage and exact implementation triggers
 
 | Deferred official counterpart | Missing prerequisite and exact trigger | Required slice |
 | --- | --- | --- |
-| `load`, `load_from_file`, buffer loaders, and PNG/JPEG/WebP/EXR/DDS save methods | An accepted ADR must select a portable codec implementation and packaging model that works on Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web without violating the runtime dependency boundary. Work starts only when the user approves that dependency/ownership decision. | The first image-codec vertical slice must add capability discovery, bounded/untrusted-input validation, all selected codec buffer and `FileAccess` paths, malformed/cancellation/failure tests, and native/AOT verification for each claimed target. Unsupported formats remain absent, not success stubs. |
+| `load`, `load_from_file`, buffer loaders, and PNG/JPEG/WebP/EXR/DDS save methods | SDL_image and its Linux native package are selected and authorized above. The five selected loaders and PNG/JPEG saves now have executable file/buffer paths, preflight size checks and native tests. Supported-format discovery, remaining formats, complete channel/color/metadata adaptation and AOT delivery remain unfinished; another dependency approval is not required for this integration. SDL_image 3.4.6 WebP saving at quality 100 failed an exact opaque-color lossless round trip; WebP saving requires a verified native correction before being exposed. | The first image-codec vertical slice must add capability discovery, bounded/untrusted-input validation, all selected codec buffer and `FileAccess` paths, malformed/cancellation/failure tests, and native/AOT verification for each claimed target. Formats SDL_image cannot supply need their own implementation decision; unsupported formats remain absent, not success stubs. |
 | `compress` and `compress_from_channels` | The editor executable plus the primary SDL3 GPU renderer must expose a concrete offline texture-compression toolchain and selected BC/ETC/BPTC/ASTC encoders. | The first approved texture-compression/import slice; not the initial renderer draw slice unless that slice explicitly includes authoring/import compression. |
 | `decompress` for BC/ETC/BPTC/ASTC | A selected, portable CPU decompressor or renderer readback/conversion backend must exist with format-capability reporting. | The first vertical slice that consumes compressed image pixels on CPU. Raw upload-only texture work does not trigger CPU decompression. |
 | `ImageTexture` conversion and renderer upload | The backend-neutral texture API and first SDL3 GPU renderer vertical slice must exist. | That renderer slice must define copy/ownership, format capability, mip upload, device loss, and fallback behavior. |
@@ -176,14 +177,14 @@ Electron2D already owns `Color`, `Vector2I`, `RectI`, `Resource`, typed duplicat
 
 ### Consequences
 
-- Procedural images, CPU processing, atlas preparation, tests, and future texture uploads have a complete typed foundation without committing to a codec or renderer package prematurely.
+- Procedural images, CPU processing, atlas preparation, tests, and future texture uploads have a complete typed foundation independent of the selected codec and renderer integrations.
 - Raw data remains deterministic across supported CPU endianness because multi-byte fields use canonical little-endian encoding.
 - Large processing operations allocate replacement buffers by contract and are not real-time frame hot paths. Pixel reads/writes themselves allocate no managed memory after warmup.
 - A codec or renderer integration can consume the existing buffer contract without changing `Image` ownership or exposing mutable arrays.
 
 ### Rejected alternatives
 
-- Add an image-codec dependency implicitly: rejected because external runtime packaging requires an explicit accepted ADR and five-target evaluation.
+- Add an image-codec dependency implicitly: rejected; SDL_image is now explicitly authorized and recorded above. Platform and codec claims still require their own verification.
 - Vendor or hand-write all common codecs in this slice: rejected because it creates unnecessary parser/security maintenance and duplicates mature libraries.
 - Expose only RGBA8: rejected because the accepted renderer/shader direction foreseeably needs HDR, integer, compact, and precompressed texture payloads.
 - Pretend compression/load/save succeeds while doing nothing: rejected because it creates dependency fiction and corrupts asset expectations.
@@ -193,7 +194,7 @@ Electron2D already owns `Color`, `Vector2I`, `RectI`, `Resource`, typed duplicat
 
 The executable harness verifies empty/invalid states, all 25 uncompressed byte sizes and all 22 compressed identities, block/mipmap sizing, copy isolation, every processing family, clipping, interpolation, alpha/channel detection, typed metrics, Resource duplication, post-commit observer failure, and disposed-state rejection. Release XML generation and the repository identity scan remain part of the full gate.
 
-Verification is Linux/.NET 8 only. It does not establish codec, renderer, GPU upload, native ABI, AOT, memory-pressure, visual-quality, or six-target behavior.
+The managed image checks are Linux/.NET 8 only and do not establish native codec or GPU behavior. The rendering integration separately verifies Texture/ImageTexture sampling and the SDL_image package probe, including PNG alpha, malformed input and repeat loading, on Linux x64. Native ImageCodecTests additionally verifies the five public loaders and PNG/JPEG savers, and rendering tests verify decoded PNG texture pixels. AOT, further codec APIs, memory-pressure, visual-quality and other target-platform verification remain pending.
 
 ### Related decisions
 

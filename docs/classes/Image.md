@@ -6,7 +6,7 @@ Last updated: 2026-09-22
 
 **Inherited By:** none
 
-- **Sources:** [`src/Core/IO/Image.cs`](../../src/Core/IO/Image.cs), [`src/Core/IO/Image.Processing.cs`](../../src/Core/IO/Image.Processing.cs)
+- **Sources:** [`src/Core/IO/Image.cs`](../../src/Core/IO/Image.cs), [`src/Core/IO/Image.Processing.cs`](../../src/Core/IO/Image.Processing.cs), [`src/Core/IO/Image.Codecs.cs`](../../src/Core/IO/Image.Codecs.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public sealed partial class Image : Resource`
 
@@ -100,6 +100,17 @@ byte[] ownedCopy = image.GetData();
 | [`public void NormalMapToXY()`](#normalmaptoxy) | Packs normal X/Y into `La8`. |
 | [`public Image RGBEToSRGB()`](#rgbetosrgb) | Decodes `Rgbe9995` into a new `Rgb8` image. |
 | [`public ImageMetrics ComputeImageMetrics(Image comparedImage, bool useLuma)`](#computeimagemetrics) | Computes absolute-error statistics over the common area. |
+| [`public void Load(string path)`](#load) | Replaces pixels from a PNG, JPEG, WebP, BMP or TGA file. |
+| [`public static Image LoadFromFile(string path)`](#loadfromfile) | Returns an independent caller-owned image decoded from a file. |
+| [`public void LoadPNGFromBuffer(ReadOnlySpan<byte> buffer)`](#loadpngfrombuffer) | Replaces pixels from PNG bytes. |
+| [`public void LoadJPGFromBuffer(ReadOnlySpan<byte> buffer)`](#loadjpgfrombuffer) | Replaces pixels from JPEG bytes. |
+| [`public void LoadWebPFromBuffer(ReadOnlySpan<byte> buffer)`](#loadwebpfrombuffer) | Replaces pixels from WebP bytes. |
+| [`public void LoadBMPFromBuffer(ReadOnlySpan<byte> buffer)`](#loadbmpfrombuffer) | Replaces pixels from BMP bytes. |
+| [`public void LoadTGAFromBuffer(ReadOnlySpan<byte> buffer)`](#loadtgafrombuffer) | Replaces pixels from TGA bytes. |
+| [`public byte[] SavePNGToBuffer()`](#savepngtobuffer) | Encodes a stable base-level snapshot as PNG. |
+| [`public byte[] SaveJPGToBuffer(float quality = 0.75f)`](#savejpgtobuffer) | Encodes the base level as lossy JPEG without alpha. |
+| [`public void SavePNG(string path)`](#savepng) | Atomically replaces a file with encoded PNG bytes. |
+| [`public void SaveJPG(string path, float quality = 0.75f)`](#savejpg) | Atomically replaces a file with JPEG bytes without alpha. |
 
 ## Enumerations
 
@@ -293,7 +304,7 @@ Builds the complete chain using 2×2 averaging. With `renormalize`, averaged RGB
 <a id="convert"></a>
 ### `public void Convert(Image.Format format)`
 
-Decodes and re-encodes every stored pixel into an uncompressed destination. Compressed source or destination layouts are rejected because no codec is linked.
+Decodes and re-encodes every stored pixel into an uncompressed destination. Compressed source or destination layouts are rejected because block decompression is not integrated.
 
 <a id="crop"></a>
 ### `public void Crop(int width, int height)`
@@ -439,6 +450,65 @@ Appends read-only descriptors for `Width`, `Height`, `Size`, `PixelFormat`, `Has
 
 When `disposing` is true, serializes with mutations, releases the managed pixel buffer, restores canonical empty fields, and then completes inherited resource cleanup. The winning disposal thread follows the lifecycle rules documented by [`ElectronObject`](ElectronObject.md).
 
+## Encoded image methods
+
+The current native codec profile decodes to copied `Rgba8` base pixels without mipmaps. Input is limited to 64 MiB and image dimensions are checked before invoking a decoder. Sixteen-bit PNG input is reduced to eight bits per channel. Source channel-layout preservation, color-profile/gamma metadata and complete codec-variant parity remain pending; this is not the complete codec contract.
+
+<a id="load"></a>
+### `public void Load(string path)`
+
+Replaces pixels from a PNG, JPEG, WebP, BMP or TGA file. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The path accepts operating-system paths and existing `res://`/`user://` directory mappings through `FileAccess`. Extensions are case-insensitive; unknown extensions raise `NotSupportedException`. Normal path and I/O errors propagate.
+
+<a id="loadfromfile"></a>
+### `public static Image LoadFromFile(string path)`
+
+Returns an independent caller-owned image decoded from a file. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The path accepts operating-system paths and existing `res://`/`user://` directory mappings through `FileAccess`. Extensions are case-insensitive; unknown extensions raise `NotSupportedException`. Normal path and I/O errors propagate.
+
+<a id="loadpngfrombuffer"></a>
+### `public void LoadPNGFromBuffer(ReadOnlySpan<byte> buffer)`
+
+Replaces pixels from PNG bytes. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access.
+
+<a id="loadjpgfrombuffer"></a>
+### `public void LoadJPGFromBuffer(ReadOnlySpan<byte> buffer)`
+
+Replaces pixels from JPEG bytes. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access.
+
+<a id="loadwebpfrombuffer"></a>
+### `public void LoadWebPFromBuffer(ReadOnlySpan<byte> buffer)`
+
+Replaces pixels from WebP bytes. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access. Animated WebP supplies its first composited frame.
+
+<a id="loadbmpfrombuffer"></a>
+### `public void LoadBMPFromBuffer(ReadOnlySpan<byte> buffer)`
+
+Replaces pixels from BMP bytes. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access.
+
+<a id="loadtgafrombuffer"></a>
+### `public void LoadTGAFromBuffer(ReadOnlySpan<byte> buffer)`
+
+Replaces pixels from TGA bytes. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access.
+
+<a id="savepngtobuffer"></a>
+### `public byte[] SavePNGToBuffer()`
+
+Encodes a stable base-level snapshot as PNG. Empty and compressed images are rejected. Encoding reads an independent snapshot and neither mutates pixels nor emits `Changed`. Only the base level is encoded; output is capped at 64 MiB. PNG converts the snapshot to RGBA8. Returned bytes belong to the caller.
+
+<a id="savejpgtobuffer"></a>
+### `public byte[] SaveJPGToBuffer(float quality = 0.75f)`
+
+Encodes the base level as lossy JPEG without alpha. Empty and compressed images are rejected. Encoding reads an independent snapshot and neither mutates pixels nor emits `Changed`. Only the base level is encoded; output is capped at 64 MiB. JPEG converts to RGB8, discards alpha and remains lossy at maximum quality. Quality must be finite and in `[0.01, 1]`; invalid values throw `ArgumentOutOfRangeException`. Returned bytes belong to the caller.
+
+<a id="savepng"></a>
+### `public void SavePNG(string path)`
+
+Atomically replaces a file with encoded PNG bytes. Empty and compressed images are rejected. Encoding reads an independent snapshot and neither mutates pixels nor emits `Changed`. Only the base level is encoded; output is capped at 64 MiB. PNG converts the snapshot to RGBA8. Encoding completes before `AtomicFile` replaces the destination in the same directory. Parent directories must exist; failures before replacement preserve an existing file. Paths use the same `res://`/`user://` resolution as loading.
+
+<a id="savejpg"></a>
+### `public void SaveJPG(string path, float quality = 0.75f)`
+
+Atomically replaces a file with JPEG bytes without alpha. Empty and compressed images are rejected. Encoding reads an independent snapshot and neither mutates pixels nor emits `Changed`. Only the base level is encoded; output is capped at 64 MiB. JPEG converts to RGB8, discards alpha and remains lossy at maximum quality. Quality must be finite and in `[0.01, 1]`; invalid values throw `ArgumentOutOfRangeException`. Encoding completes before `AtomicFile` replaces the destination in the same directory. Parent directories must exist; failures before replacement preserve an existing file. Paths use the same `res://`/`user://` resolution as loading.
+
 ## Lifecycle and state transitions
 
 `new Image()` starts empty. A factory or `SetData` establishes nonempty storage. Processing operations preserve or replace format, size, and mipmap policy as documented. `Dispose` clears the buffer and closes inherited resource state; all later public state access fails with `ObjectDisposedException`.
@@ -459,7 +529,7 @@ Public state reads and writes are safe for concurrent calls on the same image. M
 
 ## Dependencies and interactions
 
-`Image` depends on `Resource`, `Color`, `Vector2I`, `RectI`, `ClockDirection`, `Mathf`/BCL scalar operations, binary primitives, and managed arrays. It has no SDL, renderer, texture, filesystem-codec, importer, editor, or native-handle dependency. Packed scenes duplicate image buffers through the normal resource graph rules.
+`Image` depends on `Resource`, `Color`, `Vector2I`, `RectI`, `ClockDirection`, `Mathf`/BCL scalar operations, binary primitives, and managed arrays. Managed processing does not invoke native code. File/buffer codecs use internal SDL3-CS bindings, temporary native surfaces, `FileAccess`, and atomic file replacement; no native surface escapes to callers. Packed scenes duplicate image buffers through the normal resource graph rules.
 
 ## Verification
 
@@ -469,11 +539,13 @@ Public state reads and writes are safe for concurrent calls on the same image. M
 
 The implemented surface covers all backend-independent CPU operations in the audited reference API, adapted to typed C# properties, exceptions, arrays, and `ImageMetrics`. The following members are intentionally absent, not stubs:
 
-- File and buffer `load_*`/`save_*` codecs start only after an approved portable codec package/ADR exists; they belong in that image-codec vertical slice.
+- PNG/JPEG/WebP/BMP/TGA file and buffer loading and PNG/JPEG saving are executable under the codec profile above. SVG/DDS/KTX/EXR, WebP saving, supported-format discovery, source channel layouts and complete color/metadata semantics remain unfinished. SDL_image 3.4.6 changes opaque colors when saving WebP at its lossless setting, so no public lossless encoder is claimed.
 - `compress` and `compress_from_channels` start with the editor plus primary SDL3 GPU renderer and its selected offline texture-compression toolchain; they belong in the first approved texture import/compression slice.
 - `decompress` starts when a portable CPU decoder or renderer readback path is selected; it belongs in the first compressed-CPU-consumption slice.
-- GPU textures start with a backend-neutral texture API in the first SDL3 GPU renderer slice.
+- ImageTexture converts copied pixels for GPU sampling in the first rendering slice; ordinary texture drawing and additional formats remain unfinished.
 - Loader/import cache leases start with the typed loader/import domain and first native-backed texture resource.
 - Dynamic dictionaries, universal values, integer error codes, and untyped format loaders are permanently replaced by typed return values, arrays, and exceptions.
 
 See [ADR 0039](../decisions/resources.md#adr-0039).
+
+The native codec checks in `ImageCodecTests` cover five load formats, PNG/JPEG saving, PNG grayscale/16-bit/alpha vectors, BMP/TGA orientation and pitch, callback failure, state preservation, parallel independent decoding, disposal, virtual paths, oversized inputs and atomic-write failures on Linux x64. The rendering checks additionally upload decoded PNG pixels and verify GPU readback through both HLSL and GLSL. These checks do not establish AOT or other-platform acceptance.

@@ -1,0 +1,148 @@
+namespace Electron2D;
+
+/// <summary>A canvas fragment program loaded from compiled SPIR-V bytecode.</summary>
+/// <remarks>HLSL and GLSL source is compiled during import or build. Runtime loading checks module structure and
+/// reflected interfaces without compiling source; it does not perform full instruction-level semantic validation.
+/// This interface accepts optional float4 color at location zero,
+/// float2 UV at location one, framebuffer position, and one float4 color output. TEXTURE at set two, binding zero
+/// samples the current canvas command, or opaque white for untextured geometry; it is not a material parameter.
+/// Material uniforms use validated std140 buffers at descriptor
+/// set three and sampled 2D textures at set two. Matrices, nested uniform structs and user vertex programs remain pending.</remarks>
+public sealed class Shader : Resource
+{
+    /// <summary>Identifies the supported two-dimensional shader domain.</summary>
+    public enum Mode
+    {
+        /// <summary>A shader applied to canvas geometry.</summary>
+        CanvasItem = 1,
+    }
+
+    private readonly object _codeGate = new();
+    private ShaderProgram _program = ShaderProgram.Default;
+    private readonly Dictionary<string, Texture> _defaultTextures = new(StringComparer.Ordinal);
+
+    /// <summary>Creates a canvas shader multiplying command texture samples by drawing color.</summary>
+    public Shader() { }
+
+    /// <summary>Gets this shader's canvas domain.</summary>
+    /// <returns>Mode.CanvasItem.</returns>
+    /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
+    public Mode GetMode() { ThrowIfDisposed(); return Mode.CanvasItem; }
+
+    /// <summary>Creates a canvas fragment shader from a copied SPIR-V module.</summary>
+    /// <param name="bytecode">A little-endian SPIR-V module, at most 16 MiB, with one fragment entry point named main.</param>
+    /// <returns>A shader owning an immutable copy of the validated bytecode.</returns>
+    /// <exception cref="ArgumentException">The bytecode is malformed or reflection fails.</exception>
+    /// <exception cref="NotSupportedException">The module uses unsupported stages, capabilities or interfaces.</exception>
+    public static Shader CreateFromSPIRV(ReadOnlySpan<byte> bytecode)
+    {
+        return new Shader { _program = ShaderCompiler.ValidateFragmentInterface(bytecode) };
+    }
+
+    /// <summary>Replaces the program after copying the input and checking its structure and reflected interface.</summary>
+    /// <param name="bytecode">Compiled SPIR-V with the supported canvas fragment interface.</param>
+    /// <remarks>A failure preserves the prior program. A successful replacement emits Changed. Native pipelines
+    /// are rebuilt by the renderer on demand; the resource itself owns no device handles.</remarks>
+    /// <exception cref="ArgumentException">The bytecode is malformed or reflection fails.</exception>
+    /// <exception cref="NotSupportedException">The module uses unsupported stages, capabilities or interfaces.</exception>
+    /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
+    public void SetSPIRV(ReadOnlySpan<byte> bytecode)
+    {
+        ThrowIfDisposed();
+        var program = ShaderCompiler.ValidateFragmentInterface(bytecode);
+        lock (_codeGate)
+        {
+            ThrowIfDisposed(); _program = program;
+            foreach (var entry in _defaultTextures)
+                if (!program.Textures.Any(t => t.Name == entry.Key)) _defaultTextures.Remove(entry.Key);
+        }
+        EmitChanged();
+    }
+
+    /// <summary>Returns an independent copy of this program's compiled SPIR-V bytecode.</summary>
+    /// <returns>The compiled shader payload, suitable for later binary loading.</returns>
+    /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
+    public byte[] GetSPIRV() => (byte[])GetProgram().Code.Clone();
+
+    /// <summary>Returns typed material property descriptors for this program's reflected uniforms.</summary>
+    /// <returns>An immutable list with case-sensitive member names. Float4 values use Vector4 descriptors;
+    /// material access also accepts Color. Fixed arrays use array-valued descriptors; sampled images use Texture descriptors.
+    /// The built-in command TEXTURE is omitted.</returns>
+    /// <remarks>Descriptors access ShaderMaterial values through its typed parameter methods. Buffer padding and
+    /// resource handles remain internal. The returned list describes this program version and does not change after reload.</remarks>
+    /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
+    public IReadOnlyList<PropertyDescriptor> GetShaderUniformList() => GetProgram().Descriptors;
+
+    /// <summary>Sets the borrowed default texture for a reflected sampled 2D parameter.</summary>
+    /// <param name="name">The exact texture parameter name.</param>
+    /// <param name="texture">The default texture, or null to clear it.</param>
+    /// <param name="index">Zero; arrays of texture bindings are not integrated.</param>
+    /// <remarks>A material override takes precedence. Changes emit Changed; texture ownership remains with the caller.</remarks>
+    /// <exception cref="ArgumentException">The parameter is not a sampled texture.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The index is not zero.</exception>
+    /// <exception cref="ObjectDisposedException">The shader or supplied texture is disposed.</exception>
+    public void SetDefaultTextureParameter(string name, Texture? texture, int index = 0)
+    {
+        lock (_codeGate)
+        {
+            ThrowIfDisposed();
+            if (index != 0) throw new ArgumentOutOfRangeException(nameof(index));
+            _program.FindTexture(name);
+            if (texture is { IsDisposed: true }) throw new ObjectDisposedException(nameof(texture));
+            if (texture is null) _defaultTextures.Remove(name); else _defaultTextures[name] = texture;
+        }
+        EmitChanged();
+    }
+
+    /// <summary>Gets the borrowed default texture for a reflected sampled 2D parameter.</summary>
+    /// <param name="name">The exact texture parameter name.</param>
+    /// <param name="index">Zero; arrays of texture bindings are not integrated.</param>
+    /// <returns>The assigned default, or null.</returns>
+    /// <exception cref="ArgumentException">The parameter is not a sampled texture.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The index is not zero.</exception>
+    /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
+    public Texture? GetDefaultTextureParameter(string name, int index = 0)
+    {
+        lock (_codeGate)
+        {
+            ThrowIfDisposed();
+            if (index != 0) throw new ArgumentOutOfRangeException(nameof(index));
+            _program.FindTexture(name);
+            return _defaultTextures.GetValueOrDefault(name);
+        }
+    }
+
+    internal Texture? DefaultTexture(string name) { lock (_codeGate) { ThrowIfDisposed(); return _defaultTextures.GetValueOrDefault(name); } }
+
+    internal ShaderProgram GetProgram()
+    {
+        lock (_codeGate) { ThrowIfDisposed(); return _program; }
+    }
+
+    /// <inheritdoc />
+    protected override Resource CreateDuplicateInstance() => new Shader();
+
+    /// <inheritdoc />
+    protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
+        Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
+    {
+        ShaderProgram program;
+        KeyValuePair<string, Texture>[] defaults;
+        lock (_codeGate) { program = GetProgram(); defaults = _defaultTextures.ToArray(); }
+        if (deep)
+            for (var i = 0; i < defaults.Length; i++) defaults[i] = new(defaults[i].Key, (Texture)duplicateSubresource(defaults[i].Value)!);
+        var copy = (Shader)target;
+        lock (copy._codeGate)
+        {
+            copy._program = program; copy._defaultTextures.Clear();
+            foreach (var pair in defaults) copy._defaultTextures.Add(pair.Key, pair.Value);
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing) lock (_codeGate) { _program = ShaderProgram.Default; _defaultTextures.Clear(); }
+        base.Dispose(disposing);
+    }
+}

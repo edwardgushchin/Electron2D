@@ -22,7 +22,7 @@ Production types include [`Window`](../classes/Window.md), [`Viewport`](../class
 
 ## Public surface
 
-- `Node`: the primary public game-object base and one combined Godot-style `Node` + `Node2D` abstraction with ordered hierarchy, lifecycle, local/global `Transform` transforms, `Vector2` spatial helpers, logical canvas state, paths/search/groups, processing/input configuration, and queued deletion.
+- `Node`: the primary public game-object base and one combined Godot-style `Node` + `Node2D` abstraction with ordered hierarchy, lifecycle, local/global `Transform` transforms, `Vector2` spatial helpers, retained canvas drawing, paths/search/groups, processing/input configuration, and queued deletion.
 - `NodeProcessMode`: inherited, pausable, paused-only, always, and disabled process policies.
 - `SceneTree`: concrete main loop and active hierarchy owner with failure-safe lifecycle/finalization, typed input/system-notification propagation, pause state, caller-driven process/physics frames, frame/tree events and counters, typed group work, timers, deferred actions, and deletion flushing.
 - `Timer`: reusable hierarchy-owned countdown with selected frame lane, one-shot/repeat, autostart, local/tree pause, optional time-scale bypass, and typed timeout event.
@@ -39,7 +39,7 @@ Production types include [`Window`](../classes/Window.md), [`Viewport`](../class
 - Scene depends on Core's `Mathf`/`Vector2`/`Transform` math, Resources including `Resource`, and .NET collections and filesystem-name matching.
 - Resources has a narrow reciprocal dependency on `Node` for `Resource.GetLocalScene()` under ADR 0023. This is an intentional in-assembly type cycle, not another managed assembly.
 - Scene depends on the Input domain's typed event values and process-wide service boundary for propagation.
-- Window now depends on the backend-neutral DisplayServer API for its native lifetime. Scene has no direct SDL3-CS dependency, rendering, audio, collision physics, asset loading/saving, file serialization, scripting, networking, or Localization.
+- Window now depends on the backend-neutral DisplayServer API for its native lifetime. Scene delegates drawing to the backend-neutral RenderingServer and has no direct SDL3-CS dependency, audio, collision physics, asset loading/saving, file serialization, scripting, networking, or Localization.
 - Future gameplay, rendering, GUI input, and 2D physics types may depend on Scene.
 - Scene must not introduce 3D types or a separate `Node2D` hierarchy.
 - Scene lifecycle and game-state semantics must not vary by target platform; native event generation remains a host boundary.
@@ -70,8 +70,8 @@ Production types include [`Window`](../classes/Window.md), [`Viewport`](../class
 ## Current limitations
 
 - A caller may supply deltas directly through inherited `Process`/`PhysicsProcess` or wrappers. Core `Engine` can instead apply time scaling and fixed-step accumulation from host-supplied elapsed time. There is still no automatic SDL pump/clock, frame-wait policy, or background scene thread.
-- Visibility and Z ordering are logical state only until a renderer consumes them.
-- There is no drawing, viewport, render server, native/GUI input routing, collision/rigid-body physics, automatic scene switching, scene file loader/saver, RPC/multiplayer, accessibility backend, or scripting. Typed root-tree input propagation is implemented; Tweening is runtime-only and has no editor/serialization surface.
+- Visibility and Z ordering govern the retained commands consumed by the canvas renderer.
+- Root-window drawing and its input/client Viewport are integrated. There is no independent offscreen viewport, GUI input routing, collision/rigid-body physics, automatic scene switching, scene file loader/saver, RPC/multiplayer, accessibility backend, or scripting. Typed root-tree input propagation is implemented; Tweening is runtime-only and has no editor/serialization surface.
 - Packed scenes are in-memory only. Nested/inherited scene authoring, placeholders, editable instances, persistent event endpoint storage, node-reference remapping, UID/import integration, and every editor edit mode remain absent.
 - Paths are typed as `string`, not a separate `NodePath`; groups are strings; wildcard search covers names with `*` and `?`.
 - A detached node may remember `QueueFree`, but deletion occurs only after attachment to a tree and a flush/frame boundary.
@@ -107,4 +107,4 @@ Production types include [`Window`](../classes/Window.md), [`Viewport`](../class
 
 ## Windowed lifecycle
 
-The [Window runtime component](../components/window-runtime.md) provides Window : Viewport : Node, root native ownership, presentation mode, four executable native policies, optional screen selection, client/decorated geometry, IME/taskbar requests, window events and scene input handling. Window.ModeEnum and Window.Flags describe the mode/policy identifiers. Capability failures stay explicit; declared policy IDs do not imply implemented native integration. Engine.Run consumes the configured window and children. Renderer, offscreen viewports, nested windows, GUI and content scaling are still absent.
+The [Window runtime component](../components/window-runtime.md) provides Window : Viewport : Node, root native ownership, presentation mode, four executable native policies, optional screen selection, client/decorated geometry, IME/taskbar requests, window events and scene input handling. Window.ModeEnum and Window.Flags describe the mode/policy identifiers. Capability failures stay explicit; declared policy IDs do not imply implemented native integration. Engine.Run consumes the configured window and children. The root canvas renders retained rectangles, lines, textures and GPU shader materials after scene processing. Offscreen viewports, nested windows, GUI and content scaling are still absent.

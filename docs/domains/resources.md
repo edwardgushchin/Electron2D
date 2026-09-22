@@ -4,24 +4,29 @@ Last updated: 2026-09-22
 
 ## Responsibility
 
-The Resources domain defines reusable typed data and portable CPU image buffers used by future textures, atlases, importers, and other assets across Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web. It contains the common resource contract plus a concrete managed `Image`; no file codec, texture, renderer, or importer is claimed.
+The Resources domain defines reusable typed data and portable CPU image buffers used by textures, atlases, importers, and other assets across the runtime targets. It contains the common resource contract, managed `Image`, and the partial shader/material integration described below. Texture resources, ordinary Node/Texture drawing and sampled shader bindings are executable; PNG/JPEG/WebP/BMP/TGA file/buffer decoding and PNG/JPEG saving are executable, while general asset loading remains absent. SDL_image is an approved internal dependency for the codec integration.
 
-Its production sources live under `src/Core/IO/`, matching their low-level engine module while the living architecture retains Resources as a separate logical domain. The public namespace remains `Electron2D`.
+Resource base and image sources live under `src/Core/IO/`; shader/material/texture resources live under `src/Scene/Resources/`. The public namespace remains `Electron2D`.
 
 ## Component inventory
 
 | Component | Types | State |
 | --- | --- | --- |
 | [Resource base](../components/resources.md) | [`Resource`](../classes/Resource.md), [`DeepDuplicateMode`](../classes/DeepDuplicateMode.md) | Implemented and verified |
-| [Images](../components/images.md) | [`Image`](../classes/Image.md), its seven nested enums, [`ImageMetrics`](../classes/ImageMetrics.md), [`ClockDirection`](../classes/ClockDirection.md) | Managed buffer and processing contract implemented and verified; codecs/rendering deferred |
+| [Images](../components/images.md) | [`Image`](../classes/Image.md), its seven nested enums, [`ImageMetrics`](../classes/ImageMetrics.md), [`ClockDirection`](../classes/ClockDirection.md) | Managed buffer and processing contract implemented and verified; five native load formats and PNG/JPEG saving; further codec semantics pending; copied pixels feed textures |
+| [Shader materials](../components/shader-materials.md) | [`Shader`](../classes/Shader.md), [`Shader.Mode`](../classes/Shader.Mode.md), [`Material`](../classes/Material.md), [`ShaderMaterial`](../classes/ShaderMaterial.md), [`Texture`](../classes/Texture.md), [`ImageTexture`](../classes/ImageTexture.md) | SPIR-V fragment programs, typed uniform buffers and sampled textures execute on Linux Wayland/Vulkan; further mappings and ordinary texture drawing remain pending |
 
 ## Public surface
 
 The domain exposes resource name/path/scene configuration, built-in classification, synchronous change/setup events, local-scene association, reset and raw-cache hooks, copy and graph-preserving duplication, explicit deep-copy policy, scene ID generation, path takeover, typed property descriptors, deterministic disposal, and typed CPU image storage/processing across uncompressed and raw GPU-compressed formats.
 
+Shader resources add copied binary loading and reflected typed parameter discovery. ShaderMaterial adds borrowed Shader assignment and typed scalar/vector/array values and borrowed Texture bindings with independent resource copies and migration across shader reload. ImageTexture adds copied pixel snapshots, Update, logical size overrides, mip metadata and independent image readback; Texture is its direct abstract parent.
+
 ## Dependency direction
 
-Resources depends on Core and, narrowly, Scene's `Node` type for `Resource.GetLocalScene()`. Image processing uses Core `Color`, `Vector2I`, and `RectI`. Scene's packed-scene component in turn depends on Resources for typed resource duplication, so ADR 0023 accepts a contained Resources↔Scene type cycle inside the single `Electron2D.dll`. Neither the Resource base nor Image depends on rendering, SDL integration, codecs, importing, or an editor.
+Resources depends on Core and, narrowly, Scene's `Node` type for `Resource.GetLocalScene()`. Image processing uses Core `Color`, `Vector2I`, and `RectI`. Scene's packed-scene component in turn depends on Resources for typed resource duplication, so ADR 0023 accepts a contained Resources↔Scene type cycle inside the single `Electron2D.dll`. Resource base and managed Image processing remain independent of rendering/importing/editor. Image file/buffer codecs use internal SDL3-CS and FileAccess without exposing native handles.
+
+Concrete Shader/ShaderMaterial resources use the internal rendering reflection and uniform-upload path. SDL3-CS and the already packaged SPIRV-Cross native library remain internal; public material APIs expose engine value types and typed descriptors. Resource base and Image retain their independent managed behavior.
 
 ## Domain-wide invariants
 
@@ -41,7 +46,7 @@ Resources depends on Core and, narrowly, Scene's `Node` type for `Resource.GetLo
 
 ## Current limitations
 
-`Image` is the first concrete asset type, but there is no asset loader/saver, image codec, cache mode, importer, texture, renderer RID, editor resource-ID map, script resource, automatic file-serialization discovery, resource manager, or asset lease type. In-memory packed scenes perform automatic per-instance local duplication, association, setup, and root ownership, but there is no disk format, UID/import integration, or cross-platform asset import/package verification. Exact triggers for codec, compression, texture, and lease work are recorded in ADR 0039.
+`Image` is the first concrete asset type, but there is no asset loader/saver, complete image-codec family, cache mode, importer, renderer RID, editor resource-ID map, script resource, automatic file-serialization discovery, resource manager, or asset lease type. In-memory packed scenes perform automatic per-instance local duplication, association, setup, and root ownership, but there is no disk format, UID/import integration, or cross-platform asset import/package verification. Exact triggers for codec, compression, texture, and lease work are recorded in ADR 0039.
 
 ## Decisions
 
@@ -58,4 +63,4 @@ Resources depends on Core and, narrowly, Scene's `Node` type for `Resource.GetLo
 
 ## Verification
 
-Resource, Image, and packed-scene checks live in `tests/Electron2D.Tests/Program.cs`. They exercise base duplication, image formats and processing, and per-instance local graph association/setup/ownership without requiring an absent codec, asset loader/saver, editor, or renderer.
+Resource, Image, and packed-scene checks live in `tests/Electron2D.Tests/Program.cs`. They exercise base duplication, image formats and processing, and per-instance local graph association/setup/ownership without requiring a codec, asset loader/saver, editor, or renderer. RenderingTextureTests separately verifies texture resources, native sampling, and SDL_image package loading/PNG decoding; that backend probe does not establish a public codec API.

@@ -9,19 +9,18 @@ This directory describes the engine as it exists now. Planned features are liste
 - Product boundary: exclusively 2D; 3D is out of scope.
 - Game runtime target matrix: Windows, macOS, Linux on X11 and Wayland, Android, iOS, and Web. Editor target matrix: Windows, macOS, and Linux on X11 and Wayland. These are product boundaries, not claims of completed delivery.
 - Game-object model: Node-based and scene-oriented. `Node` is the primary public game object, `SceneTree` owns the active hierarchy, and `PackedScene` packages any reusable Node hierarchy—from one composed object to a complete level—for independent instantiation. The current packing implementation is typed and in-memory; disk and editor workflows are not implemented.
-- Public engine assembly: one managed `Electron2D.dll` class library. DisplayServer currently uses a separate SDL3-CS package; ADR 0012 requires its source to move into the engine assembly. Box2D.NET source will join that assembly with the first physics slice.
+- Public engine assembly: one managed `Electron2D.dll` class library, including internal SDL3-CS core, Image and ShaderCross bindings. Box2D.NET source will join that assembly with the first physics slice.
 - Product source boundary: runtime engine code lives in `src/`; the future self-hosted editor belongs to a separate executable project under `editor/Electron2D.Editor/`; first-party example games and templates belong under `examples/<Game>/`. Editor and games depend on the public runtime API, never the reverse.
 - Production source root: `src/`, organized by engine module while retaining the flat public `Electron2D` namespace.
 - Architecture context: `decisions/index.md` routes to bounded domain decision documents; read only the affected documents and explicit cross-domain dependencies. No decision document may exceed 500 lines.
 - Target framework: .NET 8 (`net8.0`).
-- Implemented domains: Core, Input, Scene, Localization, and Resources.
-- Implemented components: Object lifecycle, typed event connections, typed editor properties, scalar math, color values, geometry values, configuration files, file and directory access, project settings, main loop, engine runtime, input runtime, unified 2D node, scene tree, tweening, packed scenes, translation, the resource base, and managed images.
-- Implemented production types: `ElectronObject`, `EventConnection`, `PropertyDescriptor`, `PropertyDescriptor<TOwner, TValue>`, `Mathf`, `Color`, `Colors`, `Vector2`, `Vector2I`, `Vector4`, `Vector4I`, `Rect`, `RectI`, `Transform`, `Side`, `ClockDirection`, `ConfigKey<T>`, `ConfigFile`, `FileAccess`, `DirAccess`, `FileAccessMode`, `FileCompressionMode`, `UnixPermissionFlags`, `ProjectSetting<T>`, `ProjectSettings`, `MainLoop`, `Engine`, `EngineVersionInfo`, `Input`, `InputMap`, the typed `InputEvent` hierarchy, `Key`, `KeyModifierMask`, `KeyLocation`, `MouseButton`, `MouseButtonMask`, `JoyAxis`, `JoyButton`, `Node`, `NodeProcessMode`, `SceneTree`, `Timer`, `TimerProcessCallback`, `SceneTreeTimer`, `GroupCallFlags`, `Tween`, `Tween.TweenProcessMode`, `Tween.TweenPauseMode`, `Tween.TransitionType`, `Tween.EaseType`, `Tweener`, `PropertyTweener<TValue>`, `MethodTweener<TValue>`, `CallbackTweener`, `IntervalTweener`, `SubtweenTweener`, `AwaitTweener`, `PackedScene`, `SceneState`, `PackedSceneEditState`, `TranslationServer`, `Resource`, `DeepDuplicateMode`, `Image`, `Image.Format`, `Image.Interpolation`, `Image.AlphaMode`, `Image.UsedChannels`, `Image.CompressSource`, `Image.CompressMode`, `Image.AstcFormat`, and `ImageMetrics`.
-- SDL3-CS managed bindings: integrated for the DisplayServer window and event pump; native SDL deployment remains unresolved.
-- Native SDL packaging: not designed or verified yet.
-- Platform delivery status: the current `net8.0` project and executable harness are verified on Linux only, without separate X11/Wayland acceptance. There is no six-target CI matrix, Web browser host/build, complete SDL application host, Android package, iOS bundle, editor executable, signing workflow, or native/browser verification for all targets yet.
+- Implemented domains: Core, Input, Scene, Localization, Resources, Display and the initial Rendering canvas.
+- Implemented components include object/resource lifetime, math, configuration and I/O, input, scene scheduling, window lifecycle, translation, CPU images and codecs, canvas drawing and typed shader materials. The [inventory](inventory.md) links every implemented production type to its source and reference page.
+- SDL3-CS managed bindings: complete core, Image and ShaderCross modules from pinned release `v3.4.16.1`, internal to the engine assembly and refreshed by the release import script.
+- Native SDL packaging: Linux x64 consumers receive SDL 3.4.16, SDL_image 3.4.6 and SDL_shadercross 3.0.0 from the runtime project’s pinned native packages. Published self-contained host/rendering/codec checks run without a development library path; native libraries remain separate files.
+- Platform delivery status: Linux Wayland has native host, canvas, shader and image-codec checks, with narrower XWayland display/GL context probes. This does not establish complete X11 or cross-platform acceptance. There is no complete target CI matrix, Web browser host/build, Android package, iOS bundle, editor executable or signing workflow.
 - 2D physics backend: `Box2D.NET` is selected for source vendoring in the first physics slice; neither its source nor a physics domain is integrated yet.
-- Rendering architecture: the SDL3 GPU API is selected as the primary future backend with 2D shader support; SDL_Renderer is the reduced-capability fallback for baseline 2D drawing. The public API will expose backend capabilities and reject unsupported shader use explicitly. No rendering or shader code is implemented yet.
+- Rendering architecture: Engine.Run owns an SDL GPU primary renderer with a startup SDL_Renderer fallback. Retained Node rectangles, lines and textures use transforms, visibility, stable Z order and modulation. Typed shader materials require the GPU path; fallback rejects them explicitly. HLSL/GLSL compile at import/build into the common SPIR-V path. The [rendering domain](domains/rendering.md) records the verified baseline and remaining capabilities.
 - Managed memory remains runtime-owned; `IDisposable` controls deterministic logical/native cleanup. Public manual reference counting is excluded, while internal asset leases are reserved for a future resource manager with concrete native-backed assets.
 - Canonical scalar mathematics with seven constants, 127 typed overloads, strict `1e-6f`/`1e-14` approximation, angle/interpolation/wrapping helpers, documented managed failures, and allocation-free warmed execution: implemented in `Mathf`. Geometry and Node transform math use this shared contract.
 - Floating-point RGBA values, HSV and perceptual OKHSL conversion, straight-alpha blend, arithmetic/comparison, packed/HTML formats, strict finite configuration serialization, packed-scene value storage, and all 146 standard named colors: implemented without a renderer dependency.
@@ -30,8 +29,8 @@ This directory describes the engine as it exists now. Planned features are liste
 - Integer `RectI` geometry with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge, typed `Rect` conversions, strict configuration serialization, and packed-scene storage: implemented for foreseeable pixel, atlas, image-region, and grid bounds without depending on those future consumers.
 - Engine-owned `Transform` is implemented with complete affine math, rectangle operators, strict finite configuration persistence, direct packed-scene storage, allocation-free numeric hot paths, and direct `Node` local/global integration through `Vector2`.
 - Process-wide typed project settings, feature overrides, directory-backed `res://`/`user://`, blocking typed file access with metadata/hashes/temporary files/cross-platform extended attributes/compression/authenticated encryption, scoped directory navigation/listing/mutations/links/temporary ownership/filesystem identity, host-driven bounded fixed-step scheduling, scaled/original frame deltas, time scaling, frame metrics, named engine singletons, typed keyboard/mouse/touch/gesture/controller events, action mapping and frame-latched state, deterministic Node input propagation, typed sectioned configuration files with atomic persistence and authenticated encryption, unified 2D nodes, local/global transforms, hierarchy paths and groups, visibility and Z state, pause-aware public/internal process lanes, reusable Node timers, lightweight one-shot frame timers, typed Tween sequences and interpolation, exception-safe scene-tree lifecycle, typed group operations, queued deletion, typed deferred work and event connections, in-memory typed packed scenes with per-instance local resources, translations, notifications including the future-facing `ScriptChanged` hook, typed editor-property descriptors, and the typed resource base with graph duplication: implemented.
-- Managed CPU images are the first concrete asset: all declared raw pixel layouts, exact copied-buffer ownership, mip chains, format conversion, transforms, filters, compositing, channel/alpha inspection, normal-map helpers, and metrics are implemented without renderer dependencies. File/buffer codecs, block compression/decompression, textures, import, and saving remain absent under the triggers in ADR 0039.
-- Rendering, a complete application host/native SDL packaging, audio, collision/rigid-body physics, other concrete assets, scene file serialization, and an editor application: not implemented. Native input pumping exists in DisplayServer; remaining hardware gaps have explicit triggers in ADR 0038.
+- Managed CPU images implement raw pixel layouts, copied-buffer ownership, mip chains, format conversion, transforms, filters, compositing, channel/alpha inspection, normal-map helpers and metrics. PNG/JPEG/WebP/BMP/TGA file/buffer decoding and PNG/JPEG encoding execute through the native image integration. Further codecs and block compression/decompression remain incomplete under ADR 0039.
+- The initial rendering vertical has Linux Wayland native pixel checks for canvas geometry, shader parameters, image textures and resource cleanup. Broader rendering and shader features remain partial in coverage. Audio, collision/rigid-body physics, scene file serialization and an editor application remain unimplemented. Native input pumping exists in DisplayServer; remaining hardware gaps have explicit triggers in ADR 0038.
 - The editor source root is reserved in this repository, but no editor project or source exists yet. Its future assembly is a consumer of `Electron2D.dll` and is not part of the one-runtime-DLL boundary.
 - Persistent event connections: deferred until a typed stable endpoint schema exists.
 - Packed/exported resource filesystems, import remapping, `uid://`, and `pipe://` are not implemented; current `res://`/`user://` resolution is directory-backed and lexically confined. FastLZ and Zstandard are explicit file-access gaps. Extended attributes and directory links are implemented for Linux, macOS, and Windows, with native-host verification currently limited to Linux. Android/iOS link and drive-enumeration integration is explicitly absent.
@@ -45,6 +44,8 @@ This directory describes the engine as it exists now. Planned features are liste
 - Domain: [Scene](domains/scene.md)
 - Domain: [Localization](domains/localization.md)
 - Domain: [Resources](domains/resources.md)
+- Domain: [Display](domains/display.md)
+- Domain: [Rendering](domains/rendering.md)
 - Component: [Object lifecycle](components/object-lifecycle.md)
 - Component: [Typed event connections](components/event-connections.md)
 - Component: [Typed editor properties](components/editor-properties.md)
@@ -64,6 +65,12 @@ This directory describes the engine as it exists now. Planned features are liste
 - Component: [Translation](components/localization.md)
 - Component: [Resource base](components/resources.md)
 - Component: [Managed images](components/images.md)
+- Component: [Display server](components/display-server.md)
+- Component: [Window runtime](components/window-runtime.md)
+- Component: [Canvas rendering](components/canvas-rendering.md)
+- Component: [Shader materials](components/shader-materials.md)
+- Classes: [DisplayServer](classes/DisplayServer.md), [Window](classes/Window.md), [Viewport](classes/Viewport.md), [RenderingServer](classes/RenderingServer.md)
+- Classes: [Shader](classes/Shader.md), [Shader.Mode](classes/Shader.Mode.md), [Material](classes/Material.md), [ShaderMaterial](classes/ShaderMaterial.md), [Texture](classes/Texture.md), [ImageTexture](classes/ImageTexture.md)
 - Class: [ElectronObject](classes/ElectronObject.md)
 - Class: [EventConnection](classes/EventConnection.md)
 - Class: [PropertyDescriptor](classes/PropertyDescriptor.md)
@@ -127,3 +134,9 @@ This directory describes the engine as it exists now. Planned features are liste
 - Decisions: [routing index](decisions/index.md) with bounded logs for [Product architecture](decisions/product.md), [Core object/runtime](decisions/core-object-runtime.md), [Core data/I/O](decisions/core-data-io.md), [Core math](decisions/core-math.md), [Input](decisions/input.md), [Scene](decisions/scene.md), [Resources](decisions/resources.md), [Localization](decisions/localization.md), and [Rendering](decisions/rendering.md).
 
 Repository workflow instructions live in [AGENTS.md](../AGENTS.md). The [maintenance contract](maintaining.md) covers implementation and documentation checks; the [decision index](decisions/index.md) routes to architectural decisions.
+
+## Rendering integration
+
+- Domain: [Rendering](domains/rendering.md)
+- Component: [Canvas rendering](components/canvas-rendering.md)
+- Class: [RenderingServer](classes/RenderingServer.md)

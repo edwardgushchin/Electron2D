@@ -71,6 +71,7 @@ public sealed partial class Engine
                 lastFrame = now;
                 if (AdvanceFrameCore(elapsed))
                     break;
+                window.Render(tree);
                 while (!tree.QuitRequested)
                 {
                     var limit = MaxFPS;

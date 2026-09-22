@@ -1,0 +1,81 @@
+﻿#region License
+/* Copyright (c) 2024-2026 Eduard Gushchin.
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from
+ * the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ * claim that you wrote the original software. If you use this software in a
+ * product, an acknowledgment in the product documentation would be
+ * appreciated but is not required.
+ *
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ * misrepresented as being the original software.
+ *
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+#endregion
+
+using System.Runtime.InteropServices;
+
+namespace SDL3;
+
+internal partial class ShaderCross
+{
+    [StructLayout(LayoutKind.Sequential)]
+    public struct HLSLInfo
+    {
+        public IntPtr Source;
+        
+        /// <summary>
+        /// The HLSL source code for the shader.
+        /// </summary>
+        public string ManagedSource
+        {
+            get => Marshal.PtrToStringUTF8(Source)!;
+            set => Source = SDL.StringToPointer(value);
+        }
+        
+        public IntPtr Entrypoint;
+        
+        /// <summary>
+        /// The entry point function name for the shader in UTF-8.
+        /// </summary>
+        public string ManagedEntrypoint
+        {
+            get => Marshal.PtrToStringUTF8(Entrypoint)!;
+            set => Entrypoint = SDL.StringToPointer(value);
+        }
+        
+        public IntPtr IncludeDir;
+        
+        /// <summary>
+        /// The include directory for shader code. Optional, can be <c>null</c>.
+        /// </summary>
+        public string? ManagedIncludeDir
+        {
+            get => Marshal.PtrToStringUTF8(IncludeDir);
+            set => IncludeDir = SDL.StringToPointer(value);
+        }
+        
+        /// <summary>
+        /// An array of defines. Optional, can be <c>null</c>. If not <c>null</c>, must be terminated with a fully <c>null</c> define struct.
+        /// </summary>
+        public IntPtr Defines;
+        
+        /// <summary>
+        /// The shader stage to compile the shader with.
+        /// </summary>
+        public ShaderStage ShaderStage;
+
+        /// <summary>
+        /// A properties ID for extensions. Should be 0 if no extensions are needed.
+        /// </summary>
+        public uint Props;
+    }
+}

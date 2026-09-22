@@ -21,8 +21,7 @@ A parent owns its children. An active [`SceneTree`](SceneTree.md) owns its root 
 Any self-contained root and its owned descendants can be captured by [`PackedScene`](PackedScene.md) as a reusable scene. Instantiation returns an independent detached hierarchy; lifecycle begins only after explicit attachment to a `SceneTree`.
 
 The type combines ordered child ownership, tree lifecycle, paths, groups, processing, typed input callbacks, queued
-deletion, visibility, Z ordering, and 2D spatial state. Logical visibility and Z state do not render anything until
-a renderer domain is added.
+deletion, visibility, Z ordering, and 2D spatial state. Engine.Run renders retained rectangle, line and texture commands through the [canvas renderer](../components/canvas-rendering.md).
 
 ## Examples
 
@@ -32,6 +31,60 @@ The following focused snippet uses the current public API. Names not declared in
 using var root = new Node { Name = "World" };
 root.AddChild(new Node { Name = "Player", Position = new Vector2(32f, 16f) });
 ```
+
+## Canvas drawing
+
+Source: [Node.Drawing.cs](../../src/Scene/Main/Node.Drawing.cs). Drawing is retained and consumed by Engine.Run; a detached Node records no frames by itself.
+
+| Declaration | Contract |
+| --- | --- |
+| `Color Modulate { get; set; }` | White by default; multiplies this node and descendants. |
+| `Color SelfModulate { get; set; }` | White by default; multiplies only this node. |
+| `Material? Material { get; set; }` | Borrowed material; null selects ordinary drawing. |
+| `bool UseParentMaterial { get; set; }` | False by default; true uses the parent's effective material. |
+| `void QueueRedraw()` | Coalesces regeneration requests until a visible frame. |
+| `void DrawRect(Rect rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)` | Filled rectangle or centered outline. |
+| `void DrawLine(Vector2 from, Vector2 to, Color color, float width = -1f, bool antialiased = false)` | Flat-cap line. |
+| `void DrawTexture(Texture texture, Vector2 position, Color? modulate = null)` | Texture at logical size. |
+| `void DrawTextureRect(Texture texture, Rect rect, bool tile, Color? modulate = null, bool transpose = false)` | Stretch or repeat. |
+| `void DrawTextureRectRegion(Texture texture, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)` | Source region in logical texture pixels. |
+| `void DrawSetTransform(Vector2 position, float rotation = 0f, Vector2? scale = null)` | Additional translation, radian rotation and scale for later commands. |
+| `void DrawSetTransformMatrix(Transform transform)` | Full additional transform for later commands. |
+| `protected virtual void OnDraw()` | Records commands before first visible frame and after QueueRedraw. |
+
+### Modulate and SelfModulate
+
+Finite channel values multiply the per-command color. Modulate propagates through parents; SelfModulate is local. Nonfinite values throw ArgumentException. Changes affect retained drawing without QueueRedraw. Both properties are stored by PackedScene.
+
+### Material and UseParentMaterial
+
+Material is borrowed and stored; disposal of Node does not dispose it. Assigning a disposed material fails. UseParentMaterial resolves the parent's effective choice recursively; a root uses ordinary drawing. ShaderMaterial with an assigned shader requires GPU rendering and fails explicitly on compatibility. These changes need no redraw.
+
+### QueueRedraw and OnDraw
+
+The command list is cleared and the draw transform resets to identity before OnDraw. Requests coalesce; hidden nodes wait until visible. A request within OnDraw schedules the following frame. Geometry/texture/draw-transform methods require this node's active OnDraw callback and owner thread; invalid use throws InvalidOperationException. Callback failure aborts the frame through Engine.Run cleanup. Retained commands borrow resources and store geometry by value. New geometry requires QueueRedraw; scene transforms, modulation and pixel updates do not.
+
+### DrawRect and DrawLine
+
+Geometry, widths and colors must be finite. Rectangles normalize negative dimensions; this differs from texture reflection. Filled rectangles ignore outline width. Outlines are centered and collapse their hole when too wide. Lines have flat caps. Zero-area rectangles, coincident line endpoints and zero-width outlines/lines draw nothing. A negative width means one framebuffer pixel; positive widths use local units. Antialiasing feathers the edge across one framebuffer pixel.
+
+### DrawTexture
+
+Invokes the resource's virtual Texture.Draw, so custom textures can supply their own drawing. Position is the finite local top-left coordinate; null modulation means white. The texture must be non-null and alive. Default drawing uses logical Size and records nothing for an uninitialized zero-size texture.
+
+### DrawTextureRect
+
+Invokes Texture.DrawRect. `tile` chooses repeat at logical pixel size or stretching across the destination. Negative destination dimensions reflect the image without relocating the origin. Transpose exchanges destination dimensions and source axes. Filtering is nearest; repetition is subject to backend capabilities. Null modulation means white; node modulation also applies.
+
+### DrawTextureRectRegion
+
+Invokes Texture.DrawRectRegion. Source positions and sizes are in logical texture pixels; negative sizes toggle the corresponding reflection. `clipUV` clamps to texel centers inside the region while preserving interior interpolation. Sampling outside the full image still clamps to image edges. Zero-area source/destination regions draw nothing. Nonfinite arguments throw ArgumentException; null textures throw ArgumentNullException, and disposed nodes/textures throw ObjectDisposedException. A texture disposed after recording fails when the frame consumes it. See [Texture](Texture.md#drawrectregion) for the shared resource contract.
+
+### DrawSetTransform and DrawSetTransformMatrix
+
+Affect only commands recorded after the call. Rotation is in radians; null scale means Vector2.One. The supplied finite transform composes with the node's global and viewport transforms. Singular transforms may collapse geometry; nonfinite values are rejected. Each OnDraw starts at identity.
+
+Verification: [CanvasTextureTests](../../tests/Electron2D.Tests/CanvasTextureTests.cs) and [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs), with precise platform and capability limits in [canvas rendering](../components/canvas-rendering.md).
 
 ## Constructors
 
@@ -201,7 +254,7 @@ root.AddChild(new Node { Name = "Player", Position = new Vector2(32f, 16f) });
 | [`public const int NotificationApplicationPipModeEntered = 2019`](#f-electron2d-node-notificationapplicationpipmodeentered) | Identifies that the application entered picture-in-picture mode. |
 | [`public const int NotificationApplicationPipModeExited = 2020`](#f-electron2d-node-notificationapplicationpipmodeexited) | Identifies that the application exited picture-in-picture mode. |
 | [`public const int MinimumZIndex = -4096`](#f-electron2d-node-minimumzindex) | Specifies the smallest supported local or effective Z index. |
-| [`public const int MaximumZIndex = 4095`](#f-electron2d-node-maximumzindex) | Specifies the largest supported local or effective Z index. |
+| [`public const int MaximumZIndex = 4096`](#f-electron2d-node-maximumzindex) | Specifies the largest supported local or effective Z index. |
 
 ## Constructor Descriptions
 
@@ -1842,7 +1895,7 @@ Identifies that the application exited picture-in-picture mode.
 Specifies the smallest supported local or effective Z index.
 
 <a id="f-electron2d-node-maximumzindex"></a>
-### `public const int MaximumZIndex = 4095`
+### `public const int MaximumZIndex = 4096`
 
 Specifies the largest supported local or effective Z index.
 
@@ -1881,13 +1934,13 @@ Every node created by `PackedScene.Instantiate()` is also marked unfinished unti
 
 ## Dependencies and interactions
 
-`Node` depends on `ElectronObject`, `MainLoop` notification identifiers, `PropertyDescriptor`, `NodeProcessMode`, `SceneTree`, typed `InputEvent` values, [`Tween`](Tween.md), the Resource base for owned scene duplicates, [`Mathf`](Mathf.md), `Vector2`, `Transform`, LINQ, `FileSystemName`, and atomic operations. Degree/radian conversion and scalar transform math use the canonical `Mathf` contract. It does not depend on SDL3-CS, a native input backend, renderer, audio, collision physics, scene file serialization, or a scripting runtime.
+`Node` depends on `ElectronObject`, `MainLoop` notification identifiers, `PropertyDescriptor`, `NodeProcessMode`, `SceneTree`, typed `InputEvent` values, [`Tween`](Tween.md), the Resource base for owned scene duplicates, [`Mathf`](Mathf.md), `Vector2`, `Transform`, LINQ, `FileSystemName`, and atomic operations. Retained drawing also uses Texture, Material and the internal canvas geometry/batch types. Degree/radian conversion and scalar transform math use the canonical `Mathf` contract. It does not depend on SDL3-CS, a native input backend, audio, collision physics, scene file serialization, or a scripting runtime.
 
 ## Verification and known limitations
 
 `tests/Electron2D.Tests/Program.cs` verifies lifecycle order, activation/ready rollback, stale snapshot rejection, lifecycle re-entry guards, failure-continuing exit and recursive disposal, disposing-parent mutation rejection, hierarchy validation, reparenting, owner cleanup, paths/search/persistent groups, packed capture and instantiation guards/factories/escape rollback/resource ownership, node/tree event order, child order and sender-first child event arguments, transform behavior, visibility and Z state, spatial helpers, pause modes/priorities/scaled and original deltas, internal-before-public processing and failure continuation, three-stage reverse input ordering/handled state/re-entry/failure continuation/state-before-callback, attached/detached tween creation and bound lifetime, inherited disable/enable notifications, MainLoop system aliases and tree propagation, owner-thread rejection, direct disposal, detached/cross-tree queued deletion, and queued recursive disposal.
 
-There is no renderer-backed canvas behavior, native system-event creation, GUI/viewport consumption, focus synchronization, collision/rigid-body physics, scene file loader/saver, inherited/nested scene authoring, editable-instance metadata, persistent event endpoint schema, RPC/multiplayer, public control of internal processing, process/input auto-enable by override detection, unique-name shorthand, or separate spatial-node subclass. Visibility and Z are currently logical state only. Hardware/input-routing gaps use ADR 0038's exact triggers.
+There is no native system-event creation, GUI/viewport consumption, focus synchronization, collision/rigid-body physics, scene file loader/saver, inherited/nested scene authoring, editable-instance metadata, persistent event endpoint schema, RPC/multiplayer, public control of internal processing, process/input auto-enable by override detection, unique-name shorthand, or separate spatial-node subclass. Visibility, transforms, Z ordering and modulation affect retained canvas commands. Hardware/input-routing gaps use ADR 0038's exact triggers.
 
 ## Relevant decisions
 

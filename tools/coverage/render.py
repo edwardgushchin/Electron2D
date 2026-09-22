@@ -15,7 +15,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 TEXTURE_NAMES = {
     "Texture2D": "Texture",
@@ -203,6 +203,17 @@ def reason_for_type(item, lookup):
 def special_reason(item, member):
     name = member["name"].lower()
     signature = member["signature"]
+    if item["name"] == "RenderingServer":
+        enum = member["name"] if member["kind"] == "enum" else member["attributes"].get("enum", "")
+        # These RID families belong to the 3D scene server; canvas lights and shared mesh/texture APIs do not.
+        if (name.startswith(("camera_", "decal_", "directional_light_", "directional_shadow_",
+                             "directional_soft_shadow_", "fog_volume_", "instance_", "light_", "lightmap_",
+                             "omni_light_", "reflection_probe_", "scenario_", "sky_", "spot_light_", "voxel_gi_"))
+                or enum.startswith(("CubeMapLayer", "Decal", "DOF", "FogVolume", "Instance", "Light",
+                                    "ReflectionProbe", "ShadowCastingSetting", "SkyMode", "ViewportScaling3DMode",
+                                    "VisibilityRangeFadeMode", "VoxelGI"))
+                or re.search(r"(?:^|_)3d(?:$|_)", name)):
+            return "Excluded", "3D scene, lighting or texture API is outside ADR 0004; canvas and shared 2D resources are audited separately."
     if item["name"] == "ProjectSettings" and member["kind"] == "property":
         root = name.split("/", 1)[0]
         if re.search(r"(?:^|[/_])3d(?:$|[/_])", name) or root in {"xr", "collada"}:

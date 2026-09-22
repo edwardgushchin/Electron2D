@@ -104,7 +104,7 @@ display.FileDialogShow("Open image", "", "", false,
 | [`public void WarpMouse(Vector2I position)`](#method-warpmouse) | Requests a client-area pointer move when the backend supports warping. |
 | [`public CursorShape CursorGetShape()`](#method-cursorgetshape) | Gets the last successfully selected standard pointer shape. |
 | [`public void CursorSetShape(CursorShape shape)`](#method-cursorsetshape) | Selects a standard pointer shape from the native cursor theme. |
-| [`public void CursorSetCustomImage(Image? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`](#method-cursorsetcustomimage) | Sets or clears the image used for one pointer shape. |
+| [`public void CursorSetCustomImage(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`](#method-cursorsetcustomimage) | Sets or clears the image used for one pointer shape. |
 | [`public string IMEGetText()`](#method-imegettext) | Gets the most recently received native IME composition text. |
 | [`public Vector2I IMEGetSelection()`](#method-imegetselection) | Gets the current composition selection. |
 | [`public void WindowSetIMEActive(bool active, int windowId = MainWindowId)`](#method-windowsetimeactive) | Enables or disables native text input for the main window. |
@@ -114,7 +114,7 @@ display.FileDialogShow("Open image", "", "", false,
 | [`public int GetKeyboardFocusScreen()`](#method-getkeyboardfocusscreen) | Gets the index of the display with keyboard focus. |
 | [`public int GetScreenFromRect(Rect rectangle)`](#method-getscreenfromrect) | Gets the display containing the largest portion of a desktop rectangle. |
 | [`public int[] GetWindowList()`](#method-getwindowlist) | Gets a snapshot of the engine-owned native window IDs. |
-| [`public nint WindowGetNativeHandle(HandleType handleType, int windowId = MainWindowId)`](#method-windowgetnativehandle) | Gets a borrowed operating-system display or window identity. |
+| [`public nint WindowGetNativeHandle(HandleType handleType, int windowId = MainWindowId)`](#method-windowgetnativehandle) | Gets a borrowed operating-system display, window or graphics-context identity. |
 | [`public int GetWindowAtScreenPosition(Vector2I position)`](#method-getwindowatscreenposition) | Finds the engine-owned window at a desktop position. |
 | [`public void WindowSetCurrentScreen(int screen, int windowId = MainWindowId)`](#method-windowsetcurrentscreen) | Requests that the main window move to another connected display. |
 | [`public float ScreenGetRefreshRate(int screen = ScreenOfMainWindow)`](#method-screengetrefreshrate) | Gets the current mode's refresh rate in hertz, or `-1` when unavailable. |
@@ -449,17 +449,17 @@ Selects a standard pointer shape from the native cursor theme.
 **Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
 
 <a id="method-cursorsetcustomimage"></a>
-#### `public void CursorSetCustomImage(Image? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`
+#### `public void CursorSetCustomImage(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`
 
 Sets or clears the image used for one pointer shape.
 
-- `image`: A live image to copy into a native cursor, or `null` to restore the system shape.
+- `image`: A live `Image` or readable `Texture` to copy into a native cursor, or `null` to restore the system shape. Other Resource types are rejected.
 - `shape`: The pointer shape slot to customize.
 - `hotspot`: The active point relative to the image's upper-left corner; each component is truncated toward zero when submitted to the native cursor.
 
-**Remarks:** Image pixels are copied before this method returns. Source images must be at most 256×256 pixels, and the hotspot must lie inside them. The default hotspot is the upper-left pixel. Other cursor slots are unaffected. A texture-backed image overload depends on the first 2D texture/rendering vertical slice.
+**Remarks:** Image pixels are copied before this method returns. Source images must be at most 256×256 pixels, and the hotspot must lie inside them. The default hotspot is the upper-left pixel. Other cursor slots are unaffected. Texture conversion calls `GetImage` and disposes the returned temporary image on success or failure. Dimensions and hotspots use its original pixels, independently of logical size overrides. The supplied resource remains caller-owned; later updates require another call. Custom image callbacks may fail; native access rechecks the display lifetime after the callback.
 
-**Errors:** `ArgumentException` — The image is empty or exceeds 256×256 pixels. `ArgumentOutOfRangeException` — The shape or hotspot is invalid. `InvalidOperationException` — Native cursor creation or installation fails. `ObjectDisposedException` — The server or image is disposed.
+**Errors:** `ArgumentException` — The resource type is unsupported, has no readable image, or the image is empty or exceeds 256×256 pixels. `ArgumentOutOfRangeException` — The shape or hotspot is invalid. `InvalidOperationException` — The caller is off the owner thread or native cursor creation/installation fails. `ObjectDisposedException` — The server, source resource or returned image is disposed. `NotSupportedException` — The image needs unavailable pixel conversion or decompression. Custom `GetImage` failures propagate; validation/conversion failure preserves the previously installed cursor unless the callback itself mutates or disposes the display.
 
 **Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
 
@@ -563,14 +563,14 @@ Gets a snapshot of the engine-owned native window IDs.
 
 Gets a borrowed operating-system identity through SDL window properties. `DisplayHandle` is an X11 `Display*` or Wayland `wl_display*`; `WindowHandle` is an X11 window ID, Wayland `wl_surface*`, Win32 `HWND`, or Cocoa `NSWindow*`. The result is pointer-sized and nonzero. It is neither the SDL window pointer nor an owned handle.
 
-- `handleType`: `DisplayHandle` or `WindowHandle`; other enum values are invalid.
+- `handleType`: One of the declared [HandleType](DisplayServer.HandleType.md) values. Linux compatibility rendering adds `OpenGLContext`, `EGLDisplay`, `EGLConfig`, `GLXVisualID` and `GLXFBConfig`; unavailable identities fail explicitly.
 - `windowId`: Main-window ID, zero; other IDs are invalid.
 
 **Returns:** The borrowed pointer or platform window ID represented as `nint`. Never free or close it. Requery after native window state changes and stop using it after disposal.
 
 **Errors:** `ArgumentOutOfRangeException` for an unknown handle type or window ID; `NotSupportedException` when the active driver cannot provide that identity; `InvalidOperationException` for a call from another thread, failed SDL properties, or an absent native property; `ObjectDisposedException` after disposal.
 
-**Threading and limitations:** Opening SDL main thread only. Android Activity handles need JNI local-reference ownership and iOS view-controller handles need a UIKit bridge; both remain blocked on their native host slices. Native views and GL/EGL/GLX identities remain blocked on their native-view or renderer-context integration under [ADR 0042](../decisions/display.md#adr-0042). See the [HandleType reference](DisplayServer.HandleType.md).
+**Threading and limitations:** Opening SDL main thread only. Android Activity handles need JNI local-reference ownership and iOS view-controller handles need a UIKit bridge; both remain blocked on their native host slices. Native views remain blocked. Linux compatibility GL/EGL/GLX identities are captured from the window-associated renderer context; they expire at renderer shutdown. Getters neither select a context nor return a foreign current context. GPU/software renderers and non-Linux graphics paths reject these queries. Callers must not destroy, replace or mutate the engine context or its graphics state. See [ADR 0042](../decisions/display.md#adr-0042). See the [HandleType reference](DisplayServer.HandleType.md).
 
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
@@ -1134,12 +1134,17 @@ Occurs once when the operating system completes a group of dropped files on the 
 <a id="enum-handletype"></a>
 #### `public enum HandleType`
 
-Selects a borrowed OS display or window identity for `WindowGetNativeHandle`. The engine owns the underlying native objects. See the [complete enum reference](DisplayServer.HandleType.md).
+Selects a borrowed OS display, window or graphics-context identity for `WindowGetNativeHandle`. The engine owns the underlying native objects. See the [complete enum reference](DisplayServer.HandleType.md).
 
 | Value | Meaning |
 | --- | --- |
 | `DisplayHandle = 0` | X11 or Wayland display connection. |
 | `WindowHandle = 1` | Native main-window identity. |
+| `OpenGLContext = 3` | Linux compatibility renderer's GL context. |
+| `EGLDisplay = 4` | EGL display associated with that context. |
+| `EGLConfig = 5` | EGL framebuffer configuration associated with that context. |
+| `GLXVisualID = 6` | X11/GLX visual ID associated with that context. |
+| `GLXFBConfig = 7` | X11/GLX framebuffer configuration associated with that context. |
 
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
@@ -1373,11 +1378,11 @@ When `disposing` is true, restores the default pointer, releases cursors and the
 - Main-window ID is zero. Invalid window IDs, dimensions, modes, flags, and cursor hotspots are rejected before their corresponding native operation. Invalid screen queries return their documented fallback values; a setter that requires a real screen rejects an invalid selector.
 - SDL screen and window getters report observed state; setters are requests to the window manager.
 - `Input` owns committed input state. Focus loss clears tracked touch contacts, delivers window and application notifications, then releases pressed inputs even when a callback fails.
-- SDL-owned window and resource handles stay private. Borrowed operating-system display/window identities may cross the public API through `WindowGetNativeHandle`; the server still owns their lifetime and requires deterministic owner-thread disposal.
+- SDL-owned window and resource handles stay private. Borrowed operating-system display/window and supported graphics-context identities may cross the public API through `WindowGetNativeHandle`; the server still owns their lifetime and requires deterministic owner-thread disposal.
 
 ## Dependencies and interactions
 
-Internal SDL3-CS source is compiled into `Electron2D.dll`; the Linux native SDL3 library is supplied by the runtime project's transitive package. Linux Wayland/X11 theme-capability detection also calls the system `libdbus-1.so.3` through `LinuxPortalThemeSupport`; it has no managed package or external command dependency. Uses `Input` and its typed event hierarchy, `Image` for icon/cursor pixel copies, `Engine` only through host calls, and `ElectronObject` lifetime semantics. The display server itself owns no rendering device or scene tree.
+Internal SDL3-CS source is compiled into `Electron2D.dll`; the Linux native SDL3 library is supplied by the runtime project's transitive package. Linux Wayland/X11 theme-capability detection also calls the system `libdbus-1.so.3` through `LinuxPortalThemeSupport`; it has no managed package or external command dependency. Uses `Input` and its typed event hierarchy, `Image` for icon pixel copies and `Image`/`Texture` for cursor pixel copies, `Engine` only through host calls, and `ElectronObject` lifetime semantics. The display server itself owns no rendering device or scene tree.
 
 On GNOME Wayland, libdecor supplies the title bar. The verified session inherited `GDK_BACKEND=x11`, causing `libdecor-gtk` initialization to fail and libdecor to use its Cairo style. `Open` selects the Wayland GTK backend before SDL initializes and restores the inherited value if startup fails or SDL selects another driver. With GTK 3 available, it installs and later removes a process-local style provider that fills the default title bar's border box. The visible Stillglass-Dark window retained its themed, focus-colored controls without the transparent one-pixel seam. The desktop theme is never changed.
 
@@ -1417,7 +1422,7 @@ The X11 native smoke in `tests/Electron2D.Tests/DisplayServerNativeSmokeTests.cs
 
 ## Known limitations
 
-The complete coverage and exact implementation triggers for absent services are tracked in [the coverage inventory](../coverage/classes/DisplayServer.md). The retired `accessibility_*` and `global_menu_*` entry points and their obsolete enum vocabulary are permanently excluded from this class under [ADR 0041](../decisions/display.md#adr-0041); accessibility and menu behavior belongs to separately accepted services. Borrowed OS display/window identities are available on the listed desktop drivers; native views, mobile identities, and five GL/EGL/GLX identities remain blocked under [ADR 0042](../decisions/display.md#adr-0042). Four current accessibility preference queries remain in this class's blocked coverage. The typed main-window events cover close, focus, pointer enter/exit, complete client-rectangle changes, and native content-scale changes; `WindowDpiChanged` is a content-scale event; its ordering with a simultaneous rectangle update and the first rendered buffer remains unverified. Other `WindowEvent` identities require the native-host or renderer integrations named in the coverage register. The current theme API reports SDL's light/dark/unknown preference and change events, plus Linux Wayland/X11 Settings portal capability at server creation. A portal becoming available after creation requires reopening to refresh support. Other drivers use SDL's known-theme result; Windows' native theme API availability is not yet proven equivalent to that result. Accent colors, high contrast, and other appearance settings are absent; an unset portal preference, physical appearance transitions, and native change delivery remain unverified. Rendering/presentation, advanced text/option dialogs, speech, mobile host, scene window composition, tablet integration, keyboard layout switching, image clipboard codecs, and platform-specific window controls do not have public compatibility stubs. Native file dialogs cannot combine file and folder selection or control hidden-file visibility; on Linux the `showHidden` parameter is accepted and ignored. MIME-only filters reject before native UI opens. The first native Linux portal FileChooser bridge must implement MIME terms and verify the selected-filter result on Wayland; combined file-or-folder selection requires a separately approved chooser capability. Wayland has no reliable global pointer or top-level window-position query; `WindowRectChanged` uses a conventional zero position there, and the mouse-focus screen selector returns `InvalidScreen` when this server's window does not own mouse focus. Linux x64 native library packaging is implemented for the user example. Windows, macOS, Android, iOS, and a Web host and browser-compatible display backend remain unresolved.
+The complete coverage and exact implementation triggers for absent services are tracked in [the coverage inventory](../coverage/classes/DisplayServer.md). The retired `accessibility_*` and `global_menu_*` entry points and their obsolete enum vocabulary are permanently excluded from this class under [ADR 0041](../decisions/display.md#adr-0041); accessibility and menu behavior belongs to separately accepted services. Borrowed OS display/window identities are available on the listed desktop drivers; five Linux compatibility GL/EGL/GLX identities now execute with native ownership checks; native views, mobile identities and other-platform graphics integration remain incomplete under [ADR 0042](../decisions/display.md#adr-0042). Four current accessibility preference queries remain in this class's blocked coverage. The typed main-window events cover close, focus, pointer enter/exit, complete client-rectangle changes, and native content-scale changes; `WindowDpiChanged` is a content-scale event; its ordering with a simultaneous rectangle update and the first rendered buffer remains unverified. Other `WindowEvent` identities require the native-host or renderer integrations named in the coverage register. The current theme API reports SDL's light/dark/unknown preference and change events, plus Linux Wayland/X11 Settings portal capability at server creation. A portal becoming available after creation requires reopening to refresh support. Other drivers use SDL's known-theme result; Windows' native theme API availability is not yet proven equivalent to that result. Accent colors, high contrast, and other appearance settings are absent; an unset portal preference, physical appearance transitions, and native change delivery remain unverified. Window/Engine.Run has executable initial rendering/presentation. Advanced text/option dialogs, speech, mobile hosts, multiwindow scene composition, tablet integration, keyboard layout switching, image clipboard codecs and additional platform-specific controls remain absent without public compatibility stubs. Native file dialogs cannot combine file and folder selection or control hidden-file visibility; on Linux the `showHidden` parameter is accepted and ignored. MIME-only filters reject before native UI opens. The first native Linux portal FileChooser bridge must implement MIME terms and verify the selected-filter result on Wayland; combined file-or-folder selection requires a separately approved chooser capability. Wayland has no reliable global pointer or top-level window-position query; `WindowRectChanged` uses a conventional zero position there, and the mouse-focus screen selector returns `InvalidScreen` when this server's window does not own mouse focus. Linux x64 native library packaging is implemented for the user example. Windows, macOS, Android, iOS, and a Web host and browser-compatible display backend remain unresolved.
 
 ## Relevant decisions
 

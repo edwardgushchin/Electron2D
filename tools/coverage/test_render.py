@@ -53,6 +53,15 @@ def main():
 
     pages, summary = render()
     check_texture_pages(pages, upstream)
+    rendering_rows = pages[CLASS_PAGES / "RenderingServer.md"].splitlines()
+    for kind, name in [('method', 'camera_create('), ('method', 'light_set_color('),
+                       ('method', 'texture_3d_create('), ('method', 'voxel_gi_create('),
+                       ('enum', 'LightType'), ('enum_value', 'LIGHT_DIRECTIONAL [LightType]')]:
+        row, = [line for line in rendering_rows if line.startswith(f'| [`{kind} {name}')]
+        assert ' | Excluded | ' in row, f'3D API appeared in the implementation roadmap: {row}'
+    for name in ('canvas_light_create(', 'canvas_item_create(', 'mesh_create(', 'texture_2d_create('):
+        row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
+        assert ' | Excluded | ' not in row, f'Shared or 2D API was excluded: {row}'
     assert sum(summary["states"].values()) == summary["upstream_types"] + summary["upstream_members"]
     assert (summary["mapped_engine"] + summary["reviewed_extras"] + summary["unmapped_engine"]
             == summary["electron2d_declarations"])

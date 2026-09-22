@@ -1,0 +1,608 @@
+{
+  "mappings": [
+    {
+      "godot": "CanvasItem::method:draw_texture(Texture2D:,Vector2:,Color:)",
+      "electron2d": "method:Electron2D.Node.DrawTexture(Electron2D.Texture,Electron2D.Vector2,System.Nullable<Electron2D.Color>)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+    },
+    {
+      "godot": "CanvasItem::method:draw_texture_rect(Texture2D:,Rect2:,bool:,Color:,bool:)",
+      "electron2d": "method:Electron2D.Node.DrawTextureRect(Electron2D.Texture,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+    },
+    {
+      "godot": "CanvasItem::method:draw_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:,bool:,bool:)",
+      "electron2d": "method:Electron2D.Node.DrawTextureRectRegion(Electron2D.Texture,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+    },
+    {
+      "godot": "Texture2D::method:_draw(RID:,Vector2:,Color:,bool:)",
+      "electron2d": "method:Electron2D.Texture.Draw(Electron2D.Node,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+    },
+    {
+      "godot": "Texture2D::method:_draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
+      "electron2d": "method:Electron2D.Texture.DrawRect(Electron2D.Node,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+    },
+    {
+      "godot": "Texture2D::method:_draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
+      "electron2d": "method:Electron2D.Texture.DrawRectRegion(Electron2D.Node,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+    },
+    {
+      "godot": "Texture2D::method:draw(RID:,Vector2:,Color:,bool:)",
+      "electron2d": "method:Electron2D.Texture.Draw(Electron2D.Node,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+    },
+    {
+      "godot": "Texture2D::method:draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
+      "electron2d": "method:Electron2D.Texture.DrawRect(Electron2D.Node,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+    },
+    {
+      "godot": "Texture2D::method:draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
+      "electron2d": "method:Electron2D.Texture.DrawRectRegion(Electron2D.Node,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+    },
+    {
+      "godot": "Texture2D::method:get_width()",
+      "electron2d": "property:Electron2D.Texture.Width()",
+      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+    },
+    {
+      "godot": "Texture2D::method:get_width()",
+      "electron2d": "property:Electron2D.ImageTexture.Width()",
+      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+    },
+    {
+      "godot": "Texture2D::method:_get_width()",
+      "electron2d": "property:Electron2D.Texture.Width()",
+      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+    },
+    {
+      "godot": "Texture2D::method:_get_width()",
+      "electron2d": "property:Electron2D.ImageTexture.Width()",
+      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+    },
+    {
+      "godot": "Texture2D::method:get_height()",
+      "electron2d": "property:Electron2D.Texture.Height()",
+      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+    },
+    {
+      "godot": "Texture2D::method:get_height()",
+      "electron2d": "property:Electron2D.ImageTexture.Height()",
+      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+    },
+    {
+      "godot": "Texture2D::method:_get_height()",
+      "electron2d": "property:Electron2D.Texture.Height()",
+      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+    },
+    {
+      "godot": "Texture2D::method:_get_height()",
+      "electron2d": "property:Electron2D.ImageTexture.Height()",
+      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+    },
+    {
+      "godot": "Texture2D::method:get_size()",
+      "electron2d": "property:Electron2D.Texture.Size()",
+      "reason": "Virtual Size and its synchronized ImageTexture override return logical Width/Height as Vector2. ImageTexture state starts at zero and supports independent pixel dimensions through SetSizeOverride. Additional texture families remain pending (ADRs 0004/0028)."
+    },
+    {
+      "godot": "Texture2D::method:get_size()",
+      "electron2d": "property:Electron2D.ImageTexture.Size()",
+      "reason": "Virtual Size and its synchronized ImageTexture override return logical Width/Height as Vector2. ImageTexture state starts at zero and supports independent pixel dimensions through SetSizeOverride. Additional texture families remain pending (ADRs 0004/0028)."
+    },
+    {
+      "godot": "Texture2D::method:get_format()",
+      "electron2d": "property:Electron2D.Texture.PixelFormat()",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039)."
+    },
+    {
+      "godot": "Texture2D::method:_get_format()",
+      "electron2d": "property:Electron2D.Texture.PixelFormat()",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039)."
+    },
+    {
+      "godot": "Texture2D::method:has_alpha()",
+      "electron2d": "property:Electron2D.Texture.HasAlpha()",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039)."
+    },
+    {
+      "godot": "Texture2D::method:_has_alpha()",
+      "electron2d": "property:Electron2D.Texture.HasAlpha()",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039)."
+    },
+    {
+      "godot": "Texture2D::method:has_mipmaps()",
+      "electron2d": "property:Electron2D.Texture.HasMipmaps()",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039)."
+    },
+    {
+      "godot": "Texture2D::method:_has_mipmaps()",
+      "electron2d": "property:Electron2D.Texture.HasMipmaps()",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039)."
+    },
+    {
+      "godot": "Texture2D::method:get_mipmap_count()",
+      "electron2d": "property:Electron2D.Texture.MipmapCount()",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039)."
+    },
+    {
+      "godot": "Texture2D::method:_get_mipmap_count()",
+      "electron2d": "property:Electron2D.Texture.MipmapCount()",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039)."
+    },
+    {
+      "godot": "Texture2D::method:get_image()",
+      "electron2d": "method:Electron2D.Texture.GetImage()",
+      "reason": "Virtual GetImage and the ImageTexture override project the public query and extension hook. Results are caller-owned image copies; an uninitialized/unreadable texture returns null. GPU allocation is owned separately by the renderer. Additional texture kinds, compressed/integer formats and GPU-only readback remain pending (ADRs 0014/0028)."
+    },
+    {
+      "godot": "Texture2D::method:get_image()",
+      "electron2d": "method:Electron2D.ImageTexture.GetImage()",
+      "reason": "Virtual GetImage and the ImageTexture override project the public query and extension hook. Results are caller-owned image copies; an uninitialized/unreadable texture returns null. GPU allocation is owned separately by the renderer. Additional texture kinds, compressed/integer formats and GPU-only readback remain pending (ADRs 0014/0028)."
+    },
+    {
+      "godot": "Texture2D::method:_get_image()",
+      "electron2d": "method:Electron2D.Texture.GetImage()",
+      "reason": "Virtual GetImage and the ImageTexture override project the public query and extension hook. Results are caller-owned image copies; an uninitialized/unreadable texture returns null. GPU allocation is owned separately by the renderer. Additional texture kinds, compressed/integer formats and GPU-only readback remain pending (ADRs 0014/0028)."
+    },
+    {
+      "godot": "Texture2D::method:_get_image()",
+      "electron2d": "method:Electron2D.ImageTexture.GetImage()",
+      "reason": "Virtual GetImage and the ImageTexture override project the public query and extension hook. Results are caller-owned image copies; an uninitialized/unreadable texture returns null. GPU allocation is owned separately by the renderer. Additional texture kinds, compressed/integer formats and GPU-only readback remain pending (ADRs 0014/0028)."
+    },
+    {
+      "godot": "Texture2D::method:_is_pixel_opaque(int:,int:)",
+      "electron2d": "method:Electron2D.Texture.IsPixelOpaque(System.Int32,System.Int32)",
+      "reason": "The virtual query supplies the typed extension hook, including ImageTexture logical-to-source coordinate conversion, edge clamping and alpha > 0.1. Missing pixels are treated as opaque. RenderingTextureTests covers size overrides and pixel ownership; additional texture-family behavior remains pending (ADRs 0004/0028)."
+    },
+    {
+      "godot": "Texture2D::method:_is_pixel_opaque(int:,int:)",
+      "electron2d": "method:Electron2D.ImageTexture.IsPixelOpaque(System.Int32,System.Int32)",
+      "reason": "The virtual query supplies the typed extension hook, including ImageTexture logical-to-source coordinate conversion, edge clamping and alpha > 0.1. Missing pixels are treated as opaque. RenderingTextureTests covers size overrides and pixel ownership; additional texture-family behavior remains pending (ADRs 0004/0028)."
+    },
+    {
+      "godot": "ImageTexture::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "Inherited ResourceLocalToScene supplies the existing default-false scene-local duplication policy; no redundant ImageTexture property. Resource graph copying exists, but the complete texture serialization/import and scene-instantiation integration remains pending (ADRs 0013/0014/0028)."
+    },
+    {
+      "godot": "CanvasItem::method:_draw()",
+      "electron2d": "method:Electron2D.Node.OnDraw()",
+      "reason": "Node.OnDraw is the protected C# virtual callback for retained drawing in the unified scene type. It records commands during owner-thread canvas preparation and redraw requests are coalesced. Native frame and callback-failure checks cover the initial rectangle/line/texture profile. Clipping, further drawing commands and complete canvas lifecycle integration remain pending (ADRs 0023/0028)."
+    },
+    {
+      "godot": "RenderingServer::method:get_current_rendering_method()",
+      "electron2d": "method:Electron2D.RenderingServer.GetCurrentRenderingMethod()",
+      "reason": "Reports the active backend after startup selection, on the scene owner thread. Method tokens are gpu/compatibility; driver names come from the active SDL backend. Native Linux Wayland and dummy fallback checks exist. Backend-neutral SDL adaptation follows ADR 0028; other targets and live device recovery remain unimplemented."
+    },
+    {
+      "godot": "RenderingServer::method:get_current_rendering_driver_name()",
+      "electron2d": "method:Electron2D.RenderingServer.GetCurrentRenderingDriverName()",
+      "reason": "Reports the active backend after startup selection, on the scene owner thread. Method tokens are gpu/compatibility; driver names come from the active SDL backend. Native Linux Wayland and dummy fallback checks exist. Backend-neutral SDL adaptation follows ADR 0028; other targets and live device recovery remain unimplemented."
+    },
+    {
+      "godot": "RenderingServer::method:get_default_clear_color()",
+      "electron2d": "method:Electron2D.RenderingServer.GetDefaultClearColor()",
+      "reason": "Owner-thread readback of the finite root-framebuffer color initialized from the typed project setting. Runtime changes are observed by the initial canvas renderer. Offscreen/multiwindow target clear policies and the full backend matrix remain pending (ADR 0028)."
+    },
+    {
+      "godot": "ProjectSettings::property:rendering/renderer/rendering_method",
+      "electron2d": "property:Electron2D.ProjectSettings.RenderingMethod()",
+      "reason": "Typed backend-selection setting defaults to gpu and accepts gpu/compatibility. It is sampled at Engine.Run startup; native identities are adapted to SDL GPU and SDL_Renderer under ADR 0028. Feature overrides use the existing registry. Remaining target backends require native verification."
+    },
+    {
+      "godot": "ProjectSettings::property:rendering/rendering_device/fallback_to_opengl3",
+      "electron2d": "property:Electron2D.ProjectSettings.RenderingFallback()",
+      "reason": "Typed startup fallback policy defaults to true. Under ADR 0028 this reference key projects GPU-to-SDL_Renderer fallback, whose driver need not be OpenGL. False requires GPU initialization; it is not a live recovery switch. Initial dummy/Wayland checks exist, other targets remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:rendering/environment/defaults/default_clear_color",
+      "electron2d": "property:Electron2D.ProjectSettings.DefaultClearColor()",
+      "reason": "Typed Color definition defaults to (0.3, 0.3, 0.3, 1) and rejects nonfinite channels. Engine.Run initializes the root framebuffer from the active setting/feature override. The initial renderer is executable; offscreen/multiwindow clear policies remain pending (ADR 0028)."
+    },
+    {
+      "godot": "Shader::method:get_mode()",
+      "electron2d": "method:Electron2D.Shader.GetMode()",
+      "reason": "Returns the typed Shader.Mode.CanvasItem value (1) and rejects disposed resources; VerifyResources checks the mode. Particle simulation and drawable-texture shader domains need their own 2D vertical slices (ADR 0028)."
+    },
+    {
+      "godot": "Shader::property:code",
+      "electron2d": "method:Electron2D.Shader.CreateFromSPIRV(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0028 adapts source-code storage/loading to copied compiled SPIR-V artifacts: HLSL/GLSL compile at import/build, including compatible third-party input. Create/Set reject oversized or unaligned payloads before copying, then check the owned snapshot through one structure/reflection/interface path; failed reload preserves the old program and Get returns a copy. This does not expose source text. Runtime checks cover structure and reflected interfaces, not all instruction semantics. Import/cache integration and further shader profiles remain pending."
+    },
+    {
+      "godot": "Shader::property:code",
+      "electron2d": "method:Electron2D.Shader.GetSPIRV()",
+      "reason": "ADR 0028 adapts source-code storage/loading to copied compiled SPIR-V artifacts: HLSL/GLSL compile at import/build, including compatible third-party input. Create/Set reject oversized or unaligned payloads before copying, then check the owned snapshot through one structure/reflection/interface path; failed reload preserves the old program and Get returns a copy. This does not expose source text. Runtime checks cover structure and reflected interfaces, not all instruction semantics. Import/cache integration and further shader profiles remain pending."
+    },
+    {
+      "godot": "Shader::property:code",
+      "electron2d": "method:Electron2D.Shader.SetSPIRV(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0028 adapts source-code storage/loading to copied compiled SPIR-V artifacts: HLSL/GLSL compile at import/build, including compatible third-party input. Create/Set reject oversized or unaligned payloads before copying, then check the owned snapshot through one structure/reflection/interface path; failed reload preserves the old program and Get returns a copy. This does not expose source text. Runtime checks cover structure and reflected interfaces, not all instruction semantics. Import/cache integration and further shader profiles remain pending."
+    },
+    {
+      "godot": "Shader::method:get_shader_uniform_list(bool:)",
+      "electron2d": "method:Electron2D.Shader.GetShaderUniformList()",
+      "reason": "Immutable typed PropertyDescriptor lists replace dictionaries for material scalar/vector/fixed-array/texture parameters; built-in TEXTURE is omitted. Reflection validates std140 layouts and bindings; old descriptor snapshots survive reload. Group hints/get_groups, matrices and further uniform types remain pending, so the bool overload is not claimed implemented (ADRs 0005/0028)."
+    },
+    {
+      "godot": "ShaderMaterial::method:get_shader_parameter(StringName:)",
+      "electron2d": "method:Electron2D.ShaderMaterial.GetShaderParameter(System.String)",
+      "reason": "Typed scalar/vector, copied fixed-array and borrowed Texture getters replace Variant. Names and type/shape are validated; scalar/array defaults are zero and an absent texture override returns null. Reflected Shader defaults resolve at draw time. Matrices, further uniform types, authored value defaults and complete material integration remain pending (ADRs 0001/0005/0028)."
+    },
+    {
+      "godot": "ShaderMaterial::method:get_shader_parameter(StringName:)",
+      "electron2d": "method:Electron2D.ShaderMaterial.GetShaderParameter`1(System.String)",
+      "reason": "Typed scalar/vector, copied fixed-array and borrowed Texture getters replace Variant. Names and type/shape are validated; scalar/array defaults are zero and an absent texture override returns null. Reflected Shader defaults resolve at draw time. Matrices, further uniform types, authored value defaults and complete material integration remain pending (ADRs 0001/0005/0028)."
+    },
+    {
+      "godot": "ShaderMaterial::method:get_shader_parameter(StringName:)",
+      "electron2d": "method:Electron2D.ShaderMaterial.GetShaderParameterArray`1(System.String)",
+      "reason": "Typed scalar/vector, copied fixed-array and borrowed Texture getters replace Variant. Names and type/shape are validated; scalar/array defaults are zero and an absent texture override returns null. Reflected Shader defaults resolve at draw time. Matrices, further uniform types, authored value defaults and complete material integration remain pending (ADRs 0001/0005/0028)."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Partial",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028.",
+      "godot": [
+        "CanvasItem::method:draw_texture(Texture2D:,Vector2:,Color:)",
+        "CanvasItem::method:draw_texture_rect(Texture2D:,Rect2:,bool:,Color:,bool:)",
+        "CanvasItem::method:draw_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:,bool:,bool:)",
+        "Texture2D::method:_draw(RID:,Vector2:,Color:,bool:)",
+        "Texture2D::method:_draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
+        "Texture2D::method:_draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
+        "Texture2D::method:draw(RID:,Vector2:,Color:,bool:)",
+        "Texture2D::method:draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
+        "Texture2D::method:draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028).",
+      "godot": [
+        "Texture2D::method:get_width()",
+        "Texture2D::method:_get_width()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028).",
+      "godot": [
+        "Texture2D::method:get_height()",
+        "Texture2D::method:_get_height()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Virtual Size and its synchronized ImageTexture override return logical Width/Height as Vector2. ImageTexture state starts at zero and supports independent pixel dimensions through SetSizeOverride. Additional texture families remain pending (ADRs 0004/0028).",
+      "godot": [
+        "Texture2D::method:get_size()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039).",
+      "godot": [
+        "Texture2D::method:get_format()",
+        "Texture2D::method:_get_format()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039).",
+      "godot": [
+        "Texture2D::method:has_alpha()",
+        "Texture2D::method:_has_alpha()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039).",
+      "godot": [
+        "Texture2D::method:has_mipmaps()",
+        "Texture2D::method:_has_mipmaps()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039).",
+      "godot": [
+        "Texture2D::method:get_mipmap_count()",
+        "Texture2D::method:_get_mipmap_count()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Virtual GetImage and the ImageTexture override project the public query and extension hook. Results are caller-owned image copies; an uninitialized/unreadable texture returns null. GPU allocation is owned separately by the renderer. Additional texture kinds, compressed/integer formats and GPU-only readback remain pending (ADRs 0014/0028).",
+      "godot": [
+        "Texture2D::method:get_image()",
+        "Texture2D::method:_get_image()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "The virtual query supplies the typed extension hook, including ImageTexture logical-to-source coordinate conversion, edge clamping and alpha > 0.1. Missing pixels are treated as opaque. RenderingTextureTests covers size overrides and pixel ownership; additional texture-family behavior remains pending (ADRs 0004/0028).",
+      "godot": [
+        "Texture2D::method:_is_pixel_opaque(int:,int:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "The reference Texture/Texture2D hierarchy is consolidated as Texture : Resource; ImageTexture derives directly from Texture (ADR 0004). Copied image resources, metadata, duplication and retained drawing execute on the initial backends. Remaining placeholder/family implementations, compressed/integer formats and complete renderer integration prevent a complete type claim (ADRs 0028/0039).",
+      "godot": [
+        "class:Texture",
+        "class:Texture2D",
+        "class:ImageTexture"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Image inputs are copied; creation and SetImage replace pixel configuration, while Update requires matching dimensions/format/mipmap state and preserves the allocation identity. Validation precedes mutation and Changed is emitted after publication. Managed resource and Linux Wayland GPU/compatibility pixel checks exist. Compressed/integer formats and the full backend matrix remain pending (ADRs 0014/0028/0039).",
+      "godot": [
+        "ImageTexture::method:create_from_image(Image:)",
+        "ImageTexture::method:set_image(Image:)",
+        "ImageTexture::method:update(Image:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Nonnegative logical dimensions are stored independently of source pixels; zero preserves the corresponding axis. Size, opacity and texture drawing use the override; SetImage resets it. Update retains source-image dimensions. Existing resource and canvas tests cover this profile; remaining texture/backend behavior requires the rendering integration (ADR 0028).",
+      "godot": [
+        "ImageTexture::method:set_size_override(Vector2i:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Inherited ResourceLocalToScene supplies the existing default-false scene-local duplication policy; no redundant ImageTexture property. Resource graph copying exists, but the complete texture serialization/import and scene-instantiation integration remains pending (ADRs 0013/0014/0028).",
+      "godot": [
+        "ImageTexture::property:resource_local_to_scene"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Node.OnDraw is the protected C# virtual callback for retained drawing in the unified scene type. It records commands during owner-thread canvas preparation and redraw requests are coalesced. Native frame and callback-failure checks cover the initial rectangle/line/texture profile. Clipping, further drawing commands and complete canvas lifecycle integration remain pending (ADRs 0023/0028).",
+      "godot": [
+        "CanvasItem::method:_draw()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Reports the active backend after startup selection, on the scene owner thread. Method tokens are gpu/compatibility; driver names come from the active SDL backend. Native Linux Wayland and dummy fallback checks exist. Backend-neutral SDL adaptation follows ADR 0028; other targets and live device recovery remain unimplemented.",
+      "godot": [
+        "RenderingServer::method:get_current_rendering_method()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Reports the active backend after startup selection, on the scene owner thread. Method tokens are gpu/compatibility; driver names come from the active SDL backend. Native Linux Wayland and dummy fallback checks exist. Backend-neutral SDL adaptation follows ADR 0028; other targets and live device recovery remain unimplemented.",
+      "godot": [
+        "RenderingServer::method:get_current_rendering_driver_name()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Owner-thread readback of the finite root-framebuffer color initialized from the typed project setting. Runtime changes are observed by the initial canvas renderer. Offscreen/multiwindow target clear policies and the full backend matrix remain pending (ADR 0028).",
+      "godot": [
+        "RenderingServer::method:get_default_clear_color()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "The Engine.Run-owned root renderer exposes finite clear-color changes, retained render-loop enablement and synchronous frame events on the owner thread. Post-draw means submission, not GPU completion/presentation; callback failures propagate after cleanup. Initial native checks exist; multiwindow/offscreen behavior and the remaining renderer surface are not implemented (ADRs 0015/0016/0028).",
+      "godot": [
+        "RenderingServer::method:set_default_clear_color(Color:)",
+        "RenderingServer::property:render_loop_enabled",
+        "RenderingServer::signal:frame_pre_draw()",
+        "RenderingServer::signal:frame_post_draw()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Typed backend-selection setting defaults to gpu and accepts gpu/compatibility. It is sampled at Engine.Run startup; native identities are adapted to SDL GPU and SDL_Renderer under ADR 0028. Feature overrides use the existing registry. Remaining target backends require native verification.",
+      "godot": [
+        "ProjectSettings::property:rendering/renderer/rendering_method"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Typed startup fallback policy defaults to true. Under ADR 0028 this reference key projects GPU-to-SDL_Renderer fallback, whose driver need not be OpenGL. False requires GPU initialization; it is not a live recovery switch. Initial dummy/Wayland checks exist, other targets remain unverified.",
+      "godot": [
+        "ProjectSettings::property:rendering/rendering_device/fallback_to_opengl3"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Typed Color definition defaults to (0.3, 0.3, 0.3, 1) and rejects nonfinite channels. Engine.Run initializes the root framebuffer from the active setting/feature override. The initial renderer is executable; offscreen/multiwindow clear policies remain pending (ADR 0028).",
+      "godot": [
+        "ProjectSettings::property:rendering/environment/defaults/default_clear_color"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Returns the typed Shader.Mode.CanvasItem value (1) and rejects disposed resources; VerifyResources checks the mode. Particle simulation and drawable-texture shader domains need their own 2D vertical slices (ADR 0028).",
+      "godot": [
+        "Shader::method:get_mode()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0028 adapts source-code storage/loading to copied compiled SPIR-V artifacts: HLSL/GLSL compile at import/build, including compatible third-party input. Create/Set reject oversized or unaligned payloads before copying, then check the owned snapshot through one structure/reflection/interface path; failed reload preserves the old program and Get returns a copy. This does not expose source text. Runtime checks cover structure and reflected interfaces, not all instruction semantics. Import/cache integration and further shader profiles remain pending.",
+      "godot": [
+        "Shader::property:code"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Immutable typed PropertyDescriptor lists replace dictionaries for material scalar/vector/fixed-array/texture parameters; built-in TEXTURE is omitted. Reflection validates std140 layouts and bindings; old descriptor snapshots survive reload. Group hints/get_groups, matrices and further uniform types remain pending, so the bool overload is not claimed implemented (ADRs 0005/0028).",
+      "godot": [
+        "Shader::method:get_shader_uniform_list(bool:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Case-sensitive borrowed texture defaults are available at index zero; null clears and material overrides take precedence. Unknown/reserved names, disposed inputs and nonzero indices reject explicitly. Native HLSL/GLSL texture/default/reload checks exist. Sampler arrays and sampler configuration remain pending (ADR 0028).",
+      "godot": [
+        "Shader::method:get_default_texture_parameter(StringName:,int:)",
+        "Shader::method:set_default_texture_parameter(StringName:,Texture:,int:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Typed scalar/vector, copied fixed-array and borrowed Texture getters replace Variant. Names and type/shape are validated; scalar/array defaults are zero and an absent texture override returns null. Reflected Shader defaults resolve at draw time. Matrices, further uniform types, authored value defaults and complete material integration remain pending (ADRs 0001/0005/0028).",
+      "godot": [
+        "ShaderMaterial::method:get_shader_parameter(StringName:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Typed ShaderMaterial supports copied scalar/vector/array values, borrowed texture overrides, shared shaders, reload migration and graph duplication; mutations notify Changed in the C# Resource model. HLSL/GLSL native pixel tests cover the documented canvas profile. Further uniform types/defaults, instance uniforms, sampler configuration and full backend behavior remain pending (ADRs 0001/0014/0028).",
+      "godot": [
+        "ShaderMaterial::method:set_shader_parameter(StringName:,Variant:)",
+        "ShaderMaterial::property:shader",
+        "class:ShaderMaterial"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Executable canvas fragment shaders use the HLSL/GLSL import and shared SPIR-V interface under ADR 0028. Mode.CanvasItem retains value 1. This is a partial 2D profile: other applicable shader domains, import/cache integration and the full backend matrix remain pending.",
+      "godot": [
+        "class:Shader",
+        "Shader::enum:Mode"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Spatial surfaces, Sky resources and volumetric fog are 3D domains excluded by the strict 2D product boundary (ADRs 0004/0028).",
+      "godot": [
+        "Shader::enum_value:Mode.MODE_SPATIAL",
+        "Shader::enum_value:Mode.MODE_SKY",
+        "Shader::enum_value:Mode.MODE_FOG"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: the first GPU 2D particle-simulation slice must implement particle state, compute execution, resource bindings and validation before exposing this mode (ADR 0028).",
+      "godot": [
+        "Shader::enum_value:Mode.MODE_PARTICLES"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: the first drawable-texture/offscreen blit slice must implement its shader entry/interface, target lifecycle and backend checks; ordinary canvas texture sampling does not supply that mode (ADR 0028).",
+      "godot": [
+        "Shader::enum_value:Mode.MODE_TEXTURE_BLIT"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: the first editor shader-inspection slice must show actual generated backend code and variants through the public engine API; compiling/reflection alone does not implement this editor UI (ADRs 0027/0028).",
+      "godot": [
+        "Shader::method:inspect_native_shader_code()",
+        "Material::method:inspect_native_shader_code()"
+      ]
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.Texture..ctor()",
+      "reason": "Managed construction of the existing texture/shader/material resource concept has no separate class-reference constructor row. Defaults and lifecycle are described in the corresponding class page; this does not assert complete rendering behavior.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ImageTexture..ctor()",
+      "reason": "Managed construction of the existing texture/shader/material resource concept has no separate class-reference constructor row. Defaults and lifecycle are described in the corresponding class page; this does not assert complete rendering behavior.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Shader..ctor()",
+      "reason": "Managed construction of the existing texture/shader/material resource concept has no separate class-reference constructor row. Defaults and lifecycle are described in the corresponding class page; this does not assert complete rendering behavior.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ShaderMaterial..ctor()",
+      "reason": "Managed construction of the existing texture/shader/material resource concept has no separate class-reference constructor row. Defaults and lifecycle are described in the corresponding class page; this does not assert complete rendering behavior.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.Texture.Dispose(System.Boolean)",
+      "reason": "Protected deterministic cleanup override of the existing managed object/resource lifetime. Releases owned snapshots/references or renderer handles without disposing borrowed resources; rendering feature coverage is recorded independently.",
+      "adr": "ADRs 0003/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageTexture.Dispose(System.Boolean)",
+      "reason": "Protected deterministic cleanup override of the existing managed object/resource lifetime. Releases owned snapshots/references or renderer handles without disposing borrowed resources; rendering feature coverage is recorded independently.",
+      "adr": "ADRs 0003/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.Shader.Dispose(System.Boolean)",
+      "reason": "Protected deterministic cleanup override of the existing managed object/resource lifetime. Releases owned snapshots/references or renderer handles without disposing borrowed resources; rendering feature coverage is recorded independently.",
+      "adr": "ADRs 0003/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderMaterial.Dispose(System.Boolean)",
+      "reason": "Protected deterministic cleanup override of the existing managed object/resource lifetime. Releases owned snapshots/references or renderer handles without disposing borrowed resources; rendering feature coverage is recorded independently.",
+      "adr": "ADRs 0003/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingServer.Dispose(System.Boolean)",
+      "reason": "Protected deterministic cleanup override of the existing managed object/resource lifetime. Releases owned snapshots/references or renderer handles without disposing borrowed resources; rendering feature coverage is recorded independently.",
+      "adr": "ADRs 0003/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageTexture.CreateDuplicateInstance()",
+      "reason": "Protected implementation hook of Resource.Duplicate/DuplicateDeep. Copies resource state and applies the existing subresource graph policy; immutable program/pixel snapshots may be shared, mutable material state is copied. No independent product capability is added.",
+      "adr": "ADRs 0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Protected implementation hook of Resource.Duplicate/DuplicateDeep. Copies resource state and applies the existing subresource graph policy; immutable program/pixel snapshots may be shared, mutable material state is copied. No independent product capability is added.",
+      "adr": "ADRs 0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.Shader.CreateDuplicateInstance()",
+      "reason": "Protected implementation hook of Resource.Duplicate/DuplicateDeep. Copies resource state and applies the existing subresource graph policy; immutable program/pixel snapshots may be shared, mutable material state is copied. No independent product capability is added.",
+      "adr": "ADRs 0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.Shader.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Protected implementation hook of Resource.Duplicate/DuplicateDeep. Copies resource state and applies the existing subresource graph policy; immutable program/pixel snapshots may be shared, mutable material state is copied. No independent product capability is added.",
+      "adr": "ADRs 0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderMaterial.CreateDuplicateInstance()",
+      "reason": "Protected implementation hook of Resource.Duplicate/DuplicateDeep. Copies resource state and applies the existing subresource graph policy; immutable program/pixel snapshots may be shared, mutable material state is copied. No independent product capability is added.",
+      "adr": "ADRs 0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderMaterial.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Protected implementation hook of Resource.Duplicate/DuplicateDeep. Copies resource state and applies the existing subresource graph policy; immutable program/pixel snapshots may be shared, mutable material state is copied. No independent product capability is added.",
+      "adr": "ADRs 0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.Texture.GetPropertyDescriptors()",
+      "reason": "Protected implementation of the existing typed property-list contract for texture metadata or shader/material parameters; replaces dictionary-shaped property metadata and exposes no dynamic invocation.",
+      "adr": "ADR 0005"
+    },
+    {
+      "electron2d": "method:Electron2D.ShaderMaterial.GetPropertyDescriptors()",
+      "reason": "Protected implementation of the existing typed property-list contract for texture metadata or shader/material parameters; replaces dictionary-shaped property metadata and exposes no dynamic invocation.",
+      "adr": "ADR 0005"
+    },
+    {
+      "electron2d": "property:Electron2D.RenderingServer.Instance()",
+      "reason": "Typed access to the existing rendering singleton, scoped to Engine.Run. Null outside the owned startup/frame/shutdown lifetime; does not provide an independent renderer constructor.",
+      "adr": "ADRs 0015/0016/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingServer.ValidateDisposal()",
+      "reason": "Protected implementation of owner-thread/lifetime validation for the Engine.Run-owned rendering service. Public disposal cannot interrupt an active host or render frame.",
+      "adr": "ADRs 0003/0015/0028"
+    }
+  ]
+}

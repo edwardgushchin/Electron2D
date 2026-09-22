@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>Electron2D.ShaderImport</AssemblyName>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ShaderToolchainDirectory>$(MSBuildThisFileDirectory)obj/toolchain/$(NETCoreSdkRuntimeIdentifier)</ShaderToolchainDirectory>
+  </PropertyGroup>
+  <ItemGroup><ProjectReference Include="../../Electron2D.csproj" /></ItemGroup>
+  <ItemGroup>
+    <Content Include="Electron2D.Shaders.targets" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="$(ShaderToolchainDirectory)/**/*" Link="toolchain/%(RecursiveDir)%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Target Name="RequireShaderToolchain" BeforeTargets="ComputeFilesToPublish">
+    <Error Condition="!Exists('$(ShaderToolchainDirectory)/bin/glslangValidator') or !Exists('$(ShaderToolchainDirectory)/bin/spirv-val')"
+           Text="Build the pinned import tools first: python3 tools/shaders/build_toolchain.py" />
+    <Error Condition="'$(RuntimeIdentifier)' != '' and '$(RuntimeIdentifier)' != '$(NETCoreSdkRuntimeIdentifier)'"
+           Text="The shader import toolchain must be published for the host runtime identifier." />
+  </Target>
+</Project>

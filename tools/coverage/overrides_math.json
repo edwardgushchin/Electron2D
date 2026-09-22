@@ -1034,6 +1034,61 @@
       "electron2d": "property:Electron2D.Vector4I.MinValue()",
       "godot": "Vector4i::constant:MIN",
       "reason": "All components equal int.MinValue, matching upstream MIN."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.Load(System.String)",
+      "godot": "Image::method:load(String:)",
+      "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.LoadBMPFromBuffer(System.ReadOnlySpan<System.Byte>)",
+      "godot": "Image::method:load_bmp_from_buffer(PackedByteArray:)",
+      "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.LoadFromFile(System.String)",
+      "godot": "Image::method:load_from_file(String:)",
+      "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.LoadJPGFromBuffer(System.ReadOnlySpan<System.Byte>)",
+      "godot": "Image::method:load_jpg_from_buffer(PackedByteArray:)",
+      "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.LoadPNGFromBuffer(System.ReadOnlySpan<System.Byte>)",
+      "godot": "Image::method:load_png_from_buffer(PackedByteArray:)",
+      "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.LoadTGAFromBuffer(System.ReadOnlySpan<System.Byte>)",
+      "godot": "Image::method:load_tga_from_buffer(PackedByteArray:)",
+      "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.LoadWebPFromBuffer(System.ReadOnlySpan<System.Byte>)",
+      "godot": "Image::method:load_webp_from_buffer(PackedByteArray:)",
+      "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.SaveJPG(System.String,System.Single)",
+      "godot": "Image::method:save_jpg(String:,float:)",
+      "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.SaveJPGToBuffer(System.Single)",
+      "godot": "Image::method:save_jpg_to_buffer(float:)",
+      "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.SavePNG(System.String)",
+      "godot": "Image::method:save_png(String:)",
+      "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.SavePNGToBuffer()",
+      "godot": "Image::method:save_png_to_buffer()",
+      "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
     }
   ],
   "extras": [
@@ -1667,6 +1722,31 @@
       ],
       "state": "Implemented",
       "reason": "Sibling norm implementation widens before multiplication and distance subtraction; squared results return exact signed 64-bit values or throw above long.MaxValue, while ordinary length/distance remain finite across the int32 range (ADR 0033)."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "Image::method:load(String:)",
+        "Image::method:load_bmp_from_buffer(PackedByteArray:)",
+        "Image::method:load_from_file(String:)",
+        "Image::method:load_jpg_from_buffer(PackedByteArray:)",
+        "Image::method:load_png_from_buffer(PackedByteArray:)",
+        "Image::method:load_tga_from_buffer(PackedByteArray:)",
+        "Image::method:load_webp_from_buffer(PackedByteArray:)",
+        "Image::method:save_jpg(String:,float:)",
+        "Image::method:save_jpg_to_buffer(float:)",
+        "Image::method:save_png(String:)",
+        "Image::method:save_png_to_buffer()"
+      ],
+      "reason": "Executable native PNG/JPEG/WebP/BMP/TGA loading and PNG/JPEG saving with file/buffer paths, RGBA8 copied base pixels, size preflight, atomic replacement and Linux x64 tests in ImageCodecTests; decoded PNG texture output verified on Wayland/Vulkan. Original channel layouts, color/profile metadata, full codec variants, additional Load formats and AOT remain unaudited or unfinished. See docs/classes/Image.md and ADR 0039."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "Image::method:save_webp(String:,bool:,float:)",
+        "Image::method:save_webp_to_buffer(bool:,float:)"
+      ],
+      "reason": "The authorized SDL_image 3.4.6 encoder at quality 100 changes opaque colors in a lossless round trip. Native encoder correction with exact color/alpha verification is required before the public lossless/lossy WebP save contract can be exposed (ADR 0039); no additional package was selected."
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Project settings component
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Scope
 
@@ -17,7 +17,7 @@ Both types are implemented in [`src/Core/Config/ProjectSettings.cs`](../../src/C
 
 ## Runtime flow
 
-1. The component creates built-in application/timing definitions and registers them in each registry.
+1. The component creates built-in application, timing and rendering definitions and registers them in each registry.
 2. Domains register additional `ProjectSetting<T>` definitions. A definition immediately claims and validates compatible values that may already exist in the loaded document.
 3. Typed writes snapshot through the configuration serializer, validate, commit under the registry lock, mark the base name unsaved, increment `Version`, and queue one change notification.
 4. Typed reads choose base/default or the first active feature override, then return a scalar cache or independent mutable snapshot.
@@ -26,6 +26,8 @@ Both types are implemented in [`src/Core/Config/ProjectSettings.cs`](../../src/C
 7. Virtual paths resolve lexically against immutable snapshots of the current project/user roots; `DirAccess` can capture both roots under one lock for a two-path operation.
 
 ## Dependencies
+
+The root renderer samples `RenderingMethod`, `RenderingFallback` and `DefaultClearColor` from the process registry during Engine.Run startup. Their feature overrides use the same typed lookup as other settings. They do not switch an active backend or continuously update its clear color. [ProjectSettings](../classes/ProjectSettings.md) documents keys, defaults and validation; [canvas rendering](canvas-rendering.md) documents startup fallback and runtime controls.
 
 - Core `ElectronObject`, typed `PropertyDescriptor`, `ConfigFile`, `Engine`, `FileAccess`, and `DirAccess` integration.
 - .NET path, filesystem, runtime-platform, architecture, collection, and synchronization primitives.
@@ -53,7 +55,7 @@ Implemented and covered by the executable harness. The process singleton is regi
 - Global script-class discovery requires a scripting domain.
 - Resource pack loading, exported archive mounts, and non-directory `res://` require file-access/resource-pack domains.
 - Editor-specific hints, override layers, hidden-prefix UI, and settings dialogs require an editor.
-- Settings owned by rendering, input, audio, networking, collision physics, and other absent domains are registered only when those domains exist; three-dimensional settings will never be added.
+- Rendering registers backend selection, startup fallback and clear color with its executable canvas integration. Remaining settings enter with their owning input, audio, networking, physics or other domain capabilities; three-dimensional settings will never be added.
 - Symbolic-link resolution and hostile-filesystem confinement are outside the current lexical resolver contract.
 
 ## Verification

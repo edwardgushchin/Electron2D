@@ -4,13 +4,13 @@ Last updated: 2026-09-22
 
 ## Scope
 
-This Resources component owns portable managed 2D pixel buffers, raw format identity, mipmap layout, CPU image processing, and typed image metrics. It does not own file codecs, importing, textures, renderer handles, GPU compression, or presentation.
+This Resources component owns portable managed 2D pixel buffers, raw format identity, mipmap layout, CPU image processing, and typed image metrics. It also owns file/buffer decoding and PNG/JPEG saving. Importing, textures, renderer handles, GPU compression and presentation remain separate integrations.
 
 ## Owned types
 
 | Type | Role | Source |
 | --- | --- | --- |
-| [`Image`](../classes/Image.md) | Mutable managed pixel resource and processing API | [`Image.cs`](../../src/Core/IO/Image.cs), [`Image.Processing.cs`](../../src/Core/IO/Image.Processing.cs) |
+| [`Image`](../classes/Image.md) | Mutable managed pixel resource and processing API | [`Image.cs`](../../src/Core/IO/Image.cs), [`Image.Processing.cs`](../../src/Core/IO/Image.Processing.cs), [`Image.Codecs.cs`](../../src/Core/IO/Image.Codecs.cs) |
 | [`Image.Format`](../classes/Image.Format.md) | Raw uncompressed and GPU block-compressed layout identity | [`Image.cs`](../../src/Core/IO/Image.cs) |
 | [`Image.Interpolation`](../classes/Image.Interpolation.md) | Resize reconstruction filter | [`Image.cs`](../../src/Core/IO/Image.cs) |
 | [`Image.AlphaMode`](../classes/Image.AlphaMode.md) | Detected alpha classification | [`Image.cs`](../../src/Core/IO/Image.cs) |
@@ -35,7 +35,7 @@ This Resources component owns portable managed 2D pixel buffers, raw format iden
 
 Color-space conversions use `SRGBToLinear`, `LinearToSRGB` and `RGBEToSRGB`, following the same acronym spelling as the underlying Color API. Their pixel conversion and format contracts are unchanged.
 
-The component depends on `Resource`, typed property descriptors, `Color`, `Vector2I`, `RectI`, and BCL binary/numeric primitives. Future texture upload consumes its copied raw buffer and format metadata. `FileAccess` may later supply encoded bytes to an approved codec layer, but Image currently has no dependency on file formats, SDL, GPU APIs, or third-party packages.
+The component depends on `Resource`, typed property descriptors, `Color`, `Vector2I`, `RectI`, and BCL binary/numeric primitives. ImageTexture consumes its copied raw buffer and format metadata for GPU upload. `FileAccess` supplies encoded bytes through existing virtual paths. SDL3-CS provides internal native decoding/encoding; temporary surfaces are copied and released before Image commits. PNG decoding uses the already delivered SDL core decoder because SDL_image 3.4.6 corrupts grayscale and RGB16 colors; JPEG/WebP/BMP/TGA decoding and PNG/JPEG encoding use SDL_image. CPU processing retains its managed-only path.
 
 ## Invariants and error behavior
 
@@ -56,13 +56,13 @@ All 47 current raw format identities, the complete compression/source/ASTC enum 
 
 The dynamic image-data dictionary is permanently replaced by typed properties plus `GetData`/`SetData`; error-code returns are replaced by exceptions; metric dictionaries are replaced by `ImageMetrics`.
 
-File/buffer codecs, saving, GPU compression/decompression, texture upload, importing, resource loading, and native-backed asset leases are absent. [ADR 0039](../decisions/resources.md#deferred-coverage-and-exact-implementation-triggers) gives each row a concrete prerequisite and first required vertical slice. Raw DXT/RGTC/BPTC/ETC/ASTC bytes can be held but not decoded or encoded.
+PNG/JPEG/WebP/BMP/TGA loading and PNG/JPEG saving are executable; GPU compression/decompression, importing, resource loading and native-backed asset leases are absent. Texture upload belongs to the in-progress shader-material component. The native codec API currently normalizes to RGBA8, without mipmaps, with a 64 MiB encoded-input/output limit and preflight dimension checks. SVG/DDS/KTX/EXR, WebP saving, format discovery, channel-layout and color/metadata parity remain pending. No lossless WebP encoder is exposed after the pinned native encoder failed exact opaque-color round trips. [ADR 0039](../decisions/resources.md#deferred-coverage-and-exact-implementation-triggers) gives each row a concrete prerequisite and first required vertical slice. Raw DXT/RGTC/BPTC/ETC/ASTC bytes can be held but not decoded or encoded.
 
 ## Verification
 
 `tests/Electron2D.Tests/Program.cs` covers format and block sizes, mip offsets, copy isolation, invalid dimensions/data, every processing family and interpolation mode, clipping/masking, normal/HDR helpers, typed metrics, observer failures, duplication, descriptors, and disposal. Release build and generated XML checks are part of the full gate.
 
-Current execution is Linux/.NET 8 only. No codec, GPU, visual-quality, memory-pressure, AOT, or six-target claim follows from these checks.
+The managed checks are Linux/.NET 8 only. Native `ImageCodecTests` separately verifies all five integrated loaders, PNG/JPEG saves, header/decoder failure atomicity, independent concurrent calls, virtual paths and atomic file failures. RenderingTextureTests verifies decoded PNG pixels in the fourteenth GPU frame for each source language. Visual-quality, memory-pressure, AOT and other-target acceptance remain pending.
 
 ## Decisions
 

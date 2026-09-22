@@ -6,6 +6,7 @@
     "Rect2": "Rect",
     "Rect2i": "RectI",
     "Transform2D": "Transform",
+    "Texture2D": "Texture",
     "Vector2i": "Vector2I",
     "Vector4i": "Vector4I",
     "MethodTweener": "MethodTweener<TValue>",

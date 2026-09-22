@@ -375,7 +375,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Image](classes/Image.md) | Resource | Partial | 159 |
 | [ImageFormatLoader](classes/ImageFormatLoader.md) | RefCounted | Blocked | 4 |
 | [ImageFormatLoaderExtension](classes/ImageFormatLoaderExtension.md) | ImageFormatLoader | Blocked | 4 |
-| [ImageTexture](classes/ImageTexture.md) | Texture2D | Blocked | 5 |
+| [ImageTexture](classes/ImageTexture.md) | Texture2D | Partial | 5 |
 | [ImageTexture3D](classes/ImageTexture3D.md) | Texture3D | Excluded | 2 |
 | [ImageTextureLayered](classes/ImageTextureLayered.md) | TextureLayered | Blocked | 2 |
 | [ImmediateMesh](classes/ImmediateMesh.md) | Mesh | Blocked | 10 |
@@ -441,7 +441,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Marker2D](classes/Marker2D.md) | Node2D | Blocked | 1 |
 | [Marker3D](classes/Marker3D.md) | Node3D | Excluded | 1 |
 | [Marshalls](classes/Marshalls.md) | Object | Blocked | 6 |
-| [Material](classes/Material.md) | Resource | Blocked | 10 |
+| [Material](classes/Material.md) | Resource | Partial | 10 |
 | [MenuBar](classes/MenuBar.md) | Control | Blocked | 40 |
 | [MenuButton](classes/MenuButton.md) | Button | Blocked | 17 |
 | [Mesh](classes/Mesh.md) | Resource | Blocked | 89 |
@@ -713,7 +713,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RenderSceneDataExtension](classes/RenderSceneDataExtension.md) | RenderSceneData | Blocked | 6 |
 | [RenderSceneDataRD](classes/RenderSceneDataRD.md) | RenderSceneData | Blocked | 0 |
 | [RenderingDevice](classes/RenderingDevice.md) | Object | Blocked | 748 |
-| [RenderingServer](classes/RenderingServer.md) | Object | Blocked | 1137 |
+| [RenderingServer](classes/RenderingServer.md) | Object | Partial | 1137 |
 | [Resource](classes/Resource.md) | RefCounted | Partial | 28 |
 | [ResourceFormatLoader](classes/ResourceFormatLoader.md) | RefCounted | Blocked | 17 |
 | [ResourceFormatSaver](classes/ResourceFormatSaver.md) | RefCounted | Blocked | 5 |
@@ -765,11 +765,11 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SeparationRayShape2D](classes/SeparationRayShape2D.md) | Shape2D | Blocked | 2 |
 | [SeparationRayShape3D](classes/SeparationRayShape3D.md) | Shape3D | Excluded | 2 |
 | [Separator](classes/Separator.md) | Control | Blocked | 2 |
-| [Shader](classes/Shader.md) | Resource | Blocked | 13 |
+| [Shader](classes/Shader.md) | Resource | Partial | 13 |
 | [ShaderGlobalsOverride](classes/ShaderGlobalsOverride.md) | Node | Blocked | 0 |
 | [ShaderInclude](classes/ShaderInclude.md) | Resource | Blocked | 1 |
 | [ShaderIncludeDB](classes/ShaderIncludeDB.md) | Object | Blocked | 3 |
-| [ShaderMaterial](classes/ShaderMaterial.md) | Material | Blocked | 3 |
+| [ShaderMaterial](classes/ShaderMaterial.md) | Material | Partial | 3 |
 | [Shape2D](classes/Shape2D.md) | Resource | Blocked | 7 |
 | [Shape3D](classes/Shape3D.md) | Resource | Excluded | 3 |
 | [ShapeCast2D](classes/ShapeCast2D.md) | Node2D | Blocked | 27 |
@@ -854,8 +854,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TextServerExtension](classes/TextServerExtension.md) | TextServer | Blocked | 249 |
 | [TextServerFallback](classes/TextServerFallback.md) | TextServerExtension | Blocked | 0 |
 | [TextServerManager](classes/TextServerManager.md) | Object | Blocked | 10 |
-| [Texture](classes/Texture.md#godot-texture) | Resource | Blocked | 0 |
-| [Texture2D](classes/Texture.md#godot-texture2d) | Texture | Blocked | 23 |
+| [Texture](classes/Texture.md#godot-texture) | Resource | Partial | 0 |
+| [Texture2D](classes/Texture.md#godot-texture2d) | Texture | Partial | 23 |
 | [Texture2DArray](classes/TextureArray.md) | ImageTextureLayered | Blocked | 1 |
 | [Texture2DArrayRD](classes/TextureArrayRD.md) | TextureLayeredRD | Blocked | 0 |
 | [Texture2DRD](classes/TextureRD.md) | Texture2D | Blocked | 2 |

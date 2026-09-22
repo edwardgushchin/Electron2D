@@ -1418,6 +1418,13 @@ public sealed class SceneTree : MainLoop
         _activeExecution = 1;
     }
 
+    internal void RenderCanvas(RenderingServer renderer)
+    {
+        ThrowIfDisposed(); EnsureOwnerThread(); EnsureAcceptingWork(); BeginExecution();
+        try { renderer.Render(this); }
+        finally { EndExecution(); }
+    }
+
     private void EnsureExecutionAvailable()
     {
         if (_activeExecution != 0 || _lifecycleExecutionDepth != 0 || _isChangingPause)

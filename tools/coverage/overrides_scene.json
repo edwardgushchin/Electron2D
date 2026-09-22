@@ -1942,7 +1942,7 @@
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "Executable root native window and scene input boundary; no renderer, offscreen targets, embedded/multiple windows, GUI, theme, or content scaling. ADRs 0004, 0008, 0028.",
+      "reason": "Executable root native window, scene input and canvas rendering boundary; offscreen targets, embedded/multiple windows, GUI, theme and content scaling remain incomplete. ADRs 0004, 0008, 0028.",
       "godot": [
         "class:Viewport",
         "class:Window"

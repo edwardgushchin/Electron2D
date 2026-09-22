@@ -50,12 +50,12 @@ Implemented and verified. The delivered public surface contains the complete typ
 
 - No boolean truth conversion is exposed; it belongs to a different language model and has no idiomatic C# contract.
 - No native-only color-name index/count functions or RGBE9995 encoder are added to the public API.
-- No renderer texture/pixel formats, gradients, images, theme colors, color picker/editor UI, native structure conversion, or display-color-management pipeline exists yet. Those integrations require their owning domains and are not represented by placeholders.
+- Image pixel processing, canvas modulation and float4 shader parameters consume Color through their owning components. Gradients, theme colors, color picker/editor UI and display color management remain absent.
 - The type intentionally has no `System.Drawing` dependency or conversion.
 
 ## Verification
 
-The executable harness covers construction, mutation, conversions, primary/interior/saturated-boundary OKHSL fixtures, arithmetic, the strict internal tolerance comparison boundaries, exhaustive byte and packing/HTML boundary cases, the complete named-property count and lookup mapping, concurrency, strict JSON persistence, packed-scene value copying, and warmed allocation behavior. Verification is Linux/.NET 8 only; native rendering and six-target runtime output are not yet testable.
+The executable harness covers construction, mutation, conversions, primary/interior/saturated-boundary OKHSL fixtures, arithmetic, the strict internal tolerance comparison boundaries, exhaustive byte and packing/HTML boundary cases, the complete named-property count and lookup mapping, concurrency, strict JSON persistence, packed-scene value copying, and warmed allocation behavior. These color-value checks are Linux/.NET 8 checks. Native canvas/material output is verified separately by the Rendering component; six-target runtime output remains unverified.
 
 ## Decisions
 

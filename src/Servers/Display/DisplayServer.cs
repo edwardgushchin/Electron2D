@@ -35,6 +35,7 @@ public sealed partial class DisplayServer : ElectronObject
 
     private readonly int _ownerThreadId;
     private readonly SdlWindowHandle _window;
+    private bool _renderingAttached;
     private readonly uint _sdlWindowId;
     private readonly bool _waylandWindowPosition;
     private readonly bool _linuxPortalThemeDriver;
@@ -92,7 +93,13 @@ public sealed partial class DisplayServer : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="title"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="size"/> has a nonpositive component.</exception>
     /// <exception cref="InvalidOperationException">Another server is active, the call is off SDL's main thread, or SDL fails to open video or create the window.</exception>
-    public static DisplayServer Open(string title, Vector2I size, bool hidden = false)
+    public static DisplayServer Open(string title, Vector2I size, bool hidden = false) =>
+        OpenCore(title, size, hidden, presentBlank: true);
+
+    internal static DisplayServer OpenForRendering(string title, Vector2I size, bool hidden) =>
+        OpenCore(title, size, hidden, presentBlank: false);
+
+    private static DisplayServer OpenCore(string title, Vector2I size, bool hidden, bool presentBlank)
     {
         ArgumentNullException.ThrowIfNull(title);
         if (size.X <= 0 || size.Y <= 0)
@@ -148,7 +155,7 @@ public sealed partial class DisplayServer : ElectronObject
                         : new Vector2I(64, 64);
                     if (!SDL.SetWindowMinimumSize(window, minimumSize.X, minimumSize.Y))
                         throw SDLFailure("set the main window's minimum size");
-                    if (!hidden && SDL.GetCurrentVideoDriver() == "wayland")
+                    if (presentBlank && !hidden && SDL.GetCurrentVideoDriver() == "wayland")
                         PresentBlankWindowSurface(window);
                     _instance = new DisplayServer(window, gtkStyle.GtkScreen, gtkStyle.GtkProvider);
                     Input.Instance.SetNativeFlush(_instance.FlushBufferedInput);
@@ -562,6 +569,8 @@ public sealed partial class DisplayServer : ElectronObject
     protected override void ValidateDisposal()
     {
         EnsureOwner();
+        if (_renderingAttached)
+            throw new InvalidOperationException("The rendering owner must release the window before display disposal.");
         if (_processingEvents)
             throw new InvalidOperationException("The display server cannot be disposed during event delivery.");
         ValidateDialogDisposal();
@@ -594,7 +603,7 @@ public sealed partial class DisplayServer : ElectronObject
         var window = GetWindow(MainWindowId);
         if (!(visible ? SDL.ShowWindow(window) : SDL.HideWindow(window)))
             throw SDLFailure("change window visibility");
-        if (visible && _waylandWindowPosition)
+        if (visible && _waylandWindowPosition && !_renderingAttached)
             PresentBlankWindowSurface(window);
     }
 
@@ -604,6 +613,28 @@ public sealed partial class DisplayServer : ElectronObject
         if (Environment.CurrentManagedThreadId != _ownerThreadId)
             throw new InvalidOperationException("DisplayServer calls must run on the opening thread.");
     }
+
+    internal SafeHandle AcquireRenderingWindow()
+    {
+        EnsureOwner();
+        if (_renderingAttached) throw new InvalidOperationException("The window already has a rendering owner.");
+        var window = _window.DangerousGetHandle();
+        if (SDL.WindowHasSurface(window) && !SDL.DestroyWindowSurface(window))
+            throw SDLFailure("release the bootstrap window surface");
+        _renderingAttached = true;
+        return _window;
+    }
+
+    private Func<HandleType, nint>? _graphicsHandleQuery;
+
+    internal void SetGraphicsHandleQuery(Func<HandleType, nint> query)
+    {
+        EnsureOwner();
+        if (!_renderingAttached) throw new InvalidOperationException("The window has no rendering owner.");
+        _graphicsHandleQuery = query;
+    }
+
+    internal void ReleaseRenderingWindow() { EnsureOwner(); _graphicsHandleQuery = null; _renderingAttached = false; }
 
     private nint GetWindow(int windowId)
     {

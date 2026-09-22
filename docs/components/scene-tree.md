@@ -32,9 +32,11 @@ Immediate typed group operations snapshot members in hierarchy or reverse order 
 
 Queue acceptance uses one lock shared with finalization closure. A successful cross-thread enqueue is either executed by a later safe point or deliberately discarded by later finalization; an enqueue that reaches the closed tree is rejected. Finalization closes the queues, exits and recursively disposes the hierarchy, disposes timers, invalidates tweens, and clears subscribers while aggregating every failure.
 
+Window-driven frames invoke the internal RenderingServer under the scene execution barrier after frame processing. Re-entry and mutation during protected phases remain guarded; the renderer itself owns native submission and cleanup.
+
 ## Dependencies
 
-The component depends on Core's `MainLoop` and `EventConnection`, typed Input events, the unified `Node` including its input/internal lanes and packed-scene construction barriers, `Timer`, the [Tweening component](tweening.md), reusable lists, concurrent queues, and ordinary .NET synchronization. Core `Engine` may drive it through `MainLoop` and supplies scaled/original deltas. It has no SDL3-CS, clock, native input backend, renderer, audio, collision-physics, asset loader/serializer, networking, or editor dependency.
+The component depends on Core's `MainLoop` and `EventConnection`, typed Input events, the unified `Node` including its input/internal lanes and packed-scene construction barriers, `Timer`, the [Tweening component](tweening.md), reusable lists, concurrent queues, and ordinary .NET synchronization. Core `Engine` may drive it through `MainLoop` and supplies scaled/original deltas. It has no SDL3-CS, clock, native input backend, audio, collision-physics, asset loader/serializer, networking, or editor dependency.
 
 ## Invariants
 
@@ -59,7 +61,7 @@ The component depends on Core's `MainLoop` and `EventConnection`, typed Input ev
 
 ## Current implementation status and exclusions
 
-Implemented and covered by executable checks. Core Engine supplies host-driven time scaling, original delta delivery for `Timer.IgnoreTimeScale` and `Tween.SetIgnoreTimeScale`, fixed-step scheduling, and interpolation metrics when used, and Engine.Run supplies an owner-thread window clock/pump and frame wait. There is no background game-loop thread, permission request implementation, focus synchronization, automatic current-scene switching/loading, renderer synchronization, GUI input consumption, multiplayer polling, accessibility backend, editor behavior, or physics simulation. Callers may explicitly install a detached root returned by the separate [Packed scenes](packed-scenes.md) component. Blocked reference APIs and their missing domains are enumerated in the [`SceneTree`](../classes/SceneTree.md#official-reference-coverage-inventory), [`Timer`](../classes/Timer.md#official-reference-coverage-inventory), [`Tween`](../classes/Tween.md#official-reference-coverage-inventory), and [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers); no placeholder surface is exposed for them.
+Implemented and covered by executable checks. Core Engine supplies host-driven time scaling, original delta delivery for `Timer.IgnoreTimeScale` and `Tween.SetIgnoreTimeScale`, fixed-step scheduling, and interpolation metrics when used, and Engine.Run supplies an owner-thread window clock/pump and frame wait. There is no background game-loop thread, permission request implementation, focus synchronization, automatic current-scene switching/loading, advanced renderer synchronization, GUI input consumption, multiplayer polling, accessibility backend, editor behavior, or physics simulation. Callers may explicitly install a detached root returned by the separate [Packed scenes](packed-scenes.md) component. Blocked reference APIs and their missing domains are enumerated in the [`SceneTree`](../coverage/classes/SceneTree.md), [`Timer`](../coverage/classes/Timer.md), [`Tween`](../coverage/classes/Tween.md), and [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers); no placeholder surface is exposed for them.
 
 ## Verification
 

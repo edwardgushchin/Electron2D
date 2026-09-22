@@ -5,8 +5,8 @@ namespace Electron2D;
 /// <summary>Stores portable 2D pixel data and provides common in-memory image processing operations.</summary>
 /// <remarks>
 /// Image state is held in a managed byte buffer. Reads and writes are serialized per image, mutations commit atomically,
-/// and <see cref="Resource.Changed"/> is raised synchronously after a successful commit. File codecs, VRAM compression,
-/// textures, and renderer handles belong to separate integration layers and are not part of this type.
+/// and <see cref="Resource.Changed"/> is raised synchronously after a successful commit. File and buffer codecs
+/// copy decoded native pixels into managed storage. VRAM compression and renderer handles require separate integration.
 /// </remarks>
 public sealed partial class Image : Resource
 {
@@ -504,6 +504,12 @@ public sealed partial class Image : Resource
         }
     }
 
+    internal State CopyPixels() => Snapshot();
+    internal static State ConvertPixels(State state, Format format) => ConvertState(state, format);
+    internal static Color ReadTexturePixel(State state, int x, int y) => ReadColor(state.Data,
+        (y * state.Width + x) * GetBytesPerPixel(state.Format), state.Format);
+    internal static bool TextureHasAlpha(Format format) => HasAlpha(format);
+
     private State CaptureState(bool copyData) =>
         new(_width, _height, _format, _hasMipmaps, copyData ? (byte[])_data.Clone() : _data);
 
@@ -876,7 +882,7 @@ public sealed partial class Image : Resource
         return exponentBits | (b << 18) | (g << 9) | (r & 511u);
     }
 
-    private readonly record struct State(int Width, int Height, Format Format, bool HasMipmaps, byte[] Data);
+    internal readonly record struct State(int Width, int Height, Format Format, bool HasMipmaps, byte[] Data);
 
     private readonly record struct Level(int Offset, int Length, int Width, int Height);
 }

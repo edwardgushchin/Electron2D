@@ -3,7 +3,8 @@ namespace Electron2D;
 /// <summary>A configurable native root window that owns scene children.</summary>
 /// <remarks>Pass a detached window to <see cref="Engine.Run"/>. The runtime opens its native window before
 /// scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels
-/// on Wayland and native window units elsewhere. Rendering and embedded windows are not implemented.</remarks>
+/// on Wayland and native window units elsewhere. The root canvas renders after scene processing;
+/// embedded windows are not implemented.</remarks>
 public partial class Window : Viewport
 {
     private static readonly PropertyDescriptor[] WindowProperties =
@@ -20,6 +21,7 @@ public partial class Window : Viewport
     ];
 
     private DisplayServer? _display;
+    private RenderingServer? _renderer;
     private string _title = "";
     private Vector2I _size = new(100, 100);
     private Vector2I _minSize;
@@ -193,7 +195,7 @@ public partial class Window : Viewport
 
     internal void OpenNative()
     {
-        _display = DisplayServer.Open(_title, _size, hidden: !Visible);
+        _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible);
         _display.WindowSetMinSize(_minSize);
         _display.WindowSetMaxSize(_maxSize);
         _display.WindowSetSize(_size);
@@ -215,6 +217,8 @@ public partial class Window : Viewport
         _display.WindowMouseExited += HandleMouseExited;
         _display.WindowDpiChanged += HandleDPIChanged;
         _display.FilesDropped += HandleFilesDropped;
+        _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow());
+        _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
     }
 
     internal void EnsureNativeOpen()
@@ -227,6 +231,10 @@ public partial class Window : Viewport
     {
         if (_display is not { } display)
             return;
+        Exception? renderFailure = null;
+        try { _renderer?.Close(); }
+        catch (Exception error) { renderFailure = error; }
+        finally { _renderer = null; display.ReleaseRenderingWindow(); }
         display.CloseRequested -= HandleClose;
         display.QuitRequested -= HandleClose;
         display.WindowRectChanged -= HandleRect;
@@ -235,11 +243,14 @@ public partial class Window : Viewport
         display.WindowMouseExited -= HandleMouseExited;
         display.WindowDpiChanged -= HandleDPIChanged;
         display.FilesDropped -= HandleFilesDropped;
-        display.Dispose();
-        _display = null;
+        try { display.Dispose(); _display = null; }
+        catch (Exception error) when (renderFailure is not null) { throw new AggregateException(renderFailure, error); }
+        if (renderFailure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(renderFailure).Throw();
     }
 
     internal void PumpEvents() => GetDisplay().ProcessEvents();
+
+    internal void Render(SceneTree tree) => tree.RenderCanvas(_renderer ?? throw new InvalidOperationException("Rendering has not started."));
 
     private DisplayServer GetDisplay()
     {

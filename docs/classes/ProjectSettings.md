@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -52,6 +52,9 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<int> PhysicsTicksPerSecond { get; }`](#p-electron2d-projectsettings-physicstickspersecond) | Defines the fixed-step callback frequency used by [`Engine`](Engine.md). |
 | [`public static ProjectSetting<int> MaxPhysicsStepsPerFrame { get; }`](#p-electron2d-projectsettings-maxphysicsstepsperframe) | Defines the maximum fixed-step callbacks processed during one frame. |
 | [`public static ProjectSetting<double> PhysicsJitterFix { get; }`](#p-electron2d-projectsettings-physicsjitterfix) | Defines the finite non-negative fixed-step boundary tolerance. |
+| [`public static ProjectSetting<string> RenderingMethod { get; }`](#p-electron2d-projectsettings-renderingmethod) | Selects `gpu` or `compatibility` at renderer startup. |
+| [`public static ProjectSetting<bool> RenderingFallback { get; }`](#p-electron2d-projectsettings-renderingfallback) | Allows compatibility rendering if GPU initialization fails. |
+| [`public static ProjectSetting<Color> DefaultClearColor { get; }`](#p-electron2d-projectsettings-defaultclearcolor) | Defines the initial root-framebuffer clear color. |
 | [`public static ProjectSettings Instance { get; }`](#p-electron2d-projectsettings-instance) | Gets the process-wide project settings registry. |
 | [`public string ProjectRoot { get; }`](#p-electron2d-projectsettings-projectroot) | Gets the current absolute project resource directory. |
 | [`public string UserDataRoot { get; }`](#p-electron2d-projectsettings-userdataroot) | Gets the current absolute user-data directory. |
@@ -177,6 +180,21 @@ Defines the maximum fixed-step callbacks processed during one frame.
 ### `public static ProjectSetting<double> PhysicsJitterFix { get; }`
 
 Defines the finite non-negative fixed-step boundary tolerance.
+
+<a id="p-electron2d-projectsettings-renderingmethod"></a>
+### `public static ProjectSetting<string> RenderingMethod { get; }`
+
+Defines `rendering/renderer/rendering_method`, default `gpu`. Only `gpu` and `compatibility` are valid. Engine.Run reads the active feature override when opening the renderer. Changing the setting does not switch an active renderer; the new value applies to the next run. RenderingServer.GetCurrentRenderingMethod reports the method actually selected after startup fallback.
+
+<a id="p-electron2d-projectsettings-renderingfallback"></a>
+### `public static ProjectSetting<bool> RenderingFallback { get; }`
+
+Defines `rendering/rendering_device/fallback_to_opengl3`, default `true`. This key controls startup fallback from SDL GPU to SDL_Renderer; the compatibility driver may use a different graphics API. Set `false` to require GPU initialization. Shader materials reject compatibility rendering even if fallback was allowed. This setting provides no live device-loss recovery.
+
+<a id="p-electron2d-projectsettings-defaultclearcolor"></a>
+### `public static ProjectSetting<Color> DefaultClearColor { get; }`
+
+Defines `rendering/environment/defaults/default_clear_color`, default `(0.3, 0.3, 0.3, 1)`. Every channel must be finite; invalid writes fail before mutation. The renderer reads the active feature override during startup. Use RenderingServer.SetDefaultClearColor to change the active renderer's color; it does not change this stored setting. Normalized framebuffer output clamps channels to `[0, 1]`.
 
 <a id="p-electron2d-projectsettings-instance"></a>
 ### `public static ProjectSettings Instance { get; }`

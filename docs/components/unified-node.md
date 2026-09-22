@@ -17,9 +17,11 @@ This Scene component provides Electron2D's primary and only public game-object b
 
 Local transforms are stored as `Electron2D.Transform`. A non-top-level node computes its global transform by composing its local matrix with its parent's global matrix. Position, rotation, scale, and skew are typed projections over that matrix; global setters solve back to local space through the inverse parent transform. Transform changes synchronously notify the node and non-top-level descendants.
 
-Hierarchy operations maintain one parent, ordered unique-name children, path addressability, optional ancestor `Owner` metadata for packed storage, and at most one active [`SceneTree`](../classes/SceneTree.md). Tree membership drives enter/ready/exit callbacks, tree-level node/change events, pause-aware processing and input, group operations, queued deletion, and depth-first propagation of MainLoop system notifications. Core [`Engine`](../classes/Engine.md) can schedule the tree and supplies scaled callback deltas plus original elapsed deltas for built-in nodes such as [`Timer`](../classes/Timer.md). Typed input is opt-in and runs reverse depth-first through regular, unhandled-key, and unhandled callbacks. Engine-internal process notifications run before independently enabled public callbacks; callback failures are aggregated, while a public lane disabled during internal delivery or a node detached/disposed there is skipped. Lifecycle and disposal cleanup attempt every owned stage before aggregating callback failures. Child-related events pass the publishing parent first and the affected child second; self events pass the publishing node. Visibility and relative Z state are inherited through the same hierarchy but do not render by themselves.
+Hierarchy operations maintain one parent, ordered unique-name children, path addressability, optional ancestor `Owner` metadata for packed storage, and at most one active [`SceneTree`](../classes/SceneTree.md). Tree membership drives enter/ready/exit callbacks, tree-level node/change events, pause-aware processing and input, group operations, queued deletion, and depth-first propagation of MainLoop system notifications. Core [`Engine`](../classes/Engine.md) can schedule the tree and supplies scaled callback deltas plus original elapsed deltas for built-in nodes such as [`Timer`](../classes/Timer.md). Typed input is opt-in and runs reverse depth-first through regular, unhandled-key, and unhandled callbacks. Engine-internal process notifications run before independently enabled public callbacks; callback failures are aggregated, while a public lane disabled during internal delivery or a node detached/disposed there is skipped. Lifecycle and disposal cleanup attempt every owned stage before aggregating callback failures. Child-related events pass the publishing parent first and the affected child second; self events pass the publishing node. Visibility and relative Z state are inherited through the same hierarchy and consumed by the [canvas renderer](canvas-rendering.md).
 
 The [Packed scenes](packed-scenes.md) component is the reuse boundary for Node hierarchies. It freezes a source hierarchy during capture, stores explicitly enabled properties and persistent groups, reconstructs independent detached instances through a static factory hook, and transfers per-instance resource ownership to the new root. The packed hierarchy may be one reusable game object or a complete level; `SceneFilePath` records only an external packed-scene source on an instantiated root.
+
+OnDraw and the retained rectangle/line/texture API delegate to the [canvas rendering component](canvas-rendering.md), using typed Texture and Material resources. Commands are regenerated on QueueRedraw; transforms, modulation and texture updates reuse them.
 
 ## Dependencies
 
@@ -30,14 +32,14 @@ The [Packed scenes](packed-scenes.md) component is the reuse boundary for Node h
 - Typed [`InputEvent`](../classes/InputEvent.md) values for protected scene-input callbacks.
 - [`PackedScene`](../classes/PackedScene.md) and the Resource base for capture factories, owner selection, stored state, and per-instance resource ownership.
 
-The component has no SDL3-CS, native input backend, renderer, audio, collision, or file-serialization dependency.
+The component has no SDL3-CS, native input backend, audio, collision, or file-serialization dependency.
 
 ## Invariants and errors
 
 - Node names are non-blank, cannot be `.` or `..`, cannot contain `/`, and are unique among siblings using ordinal comparison.
 - Self-parenting, cycles, multiple parents, and direct insertion of an already tree-attached child are rejected. `Reparent` may move a node between trees when both trees' owner-thread requirements are satisfied.
 - All scalar/vector/matrix transform inputs must be finite. Operations requiring an inverse reject singular transforms.
-- `ZIndex` is restricted to `-4096..4095`; effective relative Z is clamped to the same range.
+- `ZIndex` is restricted to `-4096..4096`; effective relative Z is clamped to the same range.
 - Mutation of an attached node is restricted to the tree's owner thread. `QueueFree`/`CancelFree` remain atomic request operations.
 - Constructor lifecycle failure rolls tree membership and newly consumed ready state back; later exit/disposal failures complete cleanup and are aggregated.
 - Lifecycle snapshots revalidate membership; a node cannot be removed, reparented, or disposed during its active enter/ready/exit delivery, and children cannot escape an exiting or disposing parent through re-entrant lifecycle, pre-delete, or cleanup mutation.
@@ -55,7 +57,7 @@ Implemented: ordered hierarchy and reparenting, lifecycle and typed events, rela
 ## Exclusions
 
 - No separate spatial-node subclass, canvas base, typed path/name wrappers, public internal-lane controls, GUI/viewport input consumption, multiplayer/RPC, editable-instance metadata, nested/inherited scene authoring, persistent event endpoints, or child-name auto-generation.
-- No drawing API, canvas/render-server handle, material, texture filter/repeat, clipping, light mask, Y sorting, or viewport behavior. Current visibility and Z values are logical state for the future renderer.
+- No public native canvas handle, configurable texture filter/repeat inheritance, clipping, light mask, Y sorting, or independent viewport rendering. Retained rectangle/line/texture drawing and materials are integrated.
 - No collision/rigid-body physics. `PhysicsFrame` is only a fixed-step callback lane; Engine can schedule it from host-supplied elapsed time.
 - `Transform` decomposition returns a canonical representation; equivalent matrices involving negative scale may not reproduce the exact originally assigned scalar tuple.
 

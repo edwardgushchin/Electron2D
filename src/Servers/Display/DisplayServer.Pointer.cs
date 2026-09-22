@@ -212,31 +212,49 @@ public sealed partial class DisplayServer
     }
 
     /// <summary>Sets or clears the image used for one pointer shape.</summary>
-    /// <param name="image">A live image to copy into a native cursor, or <see langword="null"/> to restore the system shape.</param>
+    /// <param name="image">A live Image or readable Texture to copy into a native cursor, or <see langword="null"/> to restore the system shape.</param>
     /// <param name="shape">The pointer shape slot to customize.</param>
     /// <param name="hotspot">The active point relative to the image's upper-left corner, truncated to a pixel on native submission.</param>
-    /// <remarks>Image pixels are copied before this method returns. Cursor images must be at most 256 by 256 pixels. The default hotspot is the top-left pixel. Other cursor slots are unaffected. Texture-backed images require a rendering resource that is not yet available.</remarks>
-    /// <exception cref="ArgumentException">The image is empty or exceeds the cursor size limit.</exception>
+    /// <remarks>Pixels are copied before this method returns; the resource remains caller-owned. Texture.GetImage
+    /// supplies a temporary owned image, which is disposed after conversion. Cursor dimensions and hotspots use
+    /// this image's pixels, independently of the texture's logical size override. Images must be at most 256 by 256
+    /// pixels. The default hotspot is the top-left pixel. Other cursor slots are unaffected. Later resource changes
+    /// require another call to refresh the cursor.</remarks>
+    /// <exception cref="ArgumentException">The resource is neither Image nor Texture, has no readable nonempty image, or exceeds the cursor size limit.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The shape or hotspot is invalid.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner thread or the native cursor operation fails.</exception>
-    /// <exception cref="ObjectDisposedException">The display server or image is disposing or disposed.</exception>
-    public void CursorSetCustomImage(Image? image, CursorShape shape = CursorShape.Arrow,
+    /// <exception cref="ObjectDisposedException">The display server, source resource or returned image is disposing or disposed.</exception>
+    /// <exception cref="NotSupportedException">The image requires an unavailable pixel conversion, including decompression.</exception>
+    public void CursorSetCustomImage(Resource? image, CursorShape shape = CursorShape.Arrow,
         Vector2 hotspot = default)
     {
         EnsureOwner();
         if ((uint)shape >= (uint)CursorShape.Max)
             throw new ArgumentOutOfRangeException(nameof(shape), shape, "Unknown cursor shape.");
-        SdlCursorHandle? replacement = null;
-        if (image is not null)
+        if (image is { IsDisposed: true }) throw new ObjectDisposedException(nameof(image));
+        using var textureImage = image is Texture texture
+            ? texture.GetImage() ?? throw new ArgumentException("The cursor texture has no readable image.", nameof(image))
+            : null;
+        // Custom texture capture can run user code that closes the display.
+        EnsureOwner();
+        var pixels = image switch
         {
-            if (image.IsEmpty)
+            null => null,
+            Image source => source,
+            Texture => textureImage,
+            _ => throw new ArgumentException("A cursor resource must be an Image or Texture.", nameof(image)),
+        };
+        SdlCursorHandle? replacement = null;
+        if (pixels is not null)
+        {
+            if (pixels.IsEmpty)
                 throw new ArgumentException("A cursor image must not be empty.", nameof(image));
-            if (image.Width > 256 || image.Height > 256)
+            if (pixels.Width > 256 || pixels.Height > 256)
                 throw new ArgumentException("A cursor image must not exceed 256 by 256 pixels.", nameof(image));
             if (!float.IsFinite(hotspot.X) || !float.IsFinite(hotspot.Y) ||
-                hotspot.X < 0 || hotspot.Y < 0 || hotspot.X >= image.Width || hotspot.Y >= image.Height)
+                hotspot.X < 0 || hotspot.Y < 0 || hotspot.X >= pixels.Width || hotspot.Y >= pixels.Height)
                 throw new ArgumentOutOfRangeException(nameof(hotspot), hotspot, "Hotspot must lie inside the image.");
-            WithImageSurface(image, surface =>
+            WithImageSurface(pixels, surface =>
             {
                 var handle = SDL.CreateColorCursor(surface, (int)hotspot.X, (int)hotspot.Y);
                 if (handle == 0)

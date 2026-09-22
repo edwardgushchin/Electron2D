@@ -14,9 +14,9 @@ Last updated: 2026-09-22
 
 A configurable native root window that owns scene children.
 
-Pass a detached window to `Engine.Run(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels on Wayland and native window units elsewhere. Rendering and embedded windows are not implemented.
+Pass a detached window to `Engine.Run(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels on Wayland and native window units elsewhere. The root canvas renders after scene processing; embedded windows are not implemented.
 
-Native lifetime belongs to Engine.Run. Children retain the unified Node transform and visibility rules. Desktop ScreenPosition is separate from scene Position. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Window.md).
+Native lifetime belongs to Engine.Run. Children retain the unified Node transform and visibility rules. Desktop ScreenPosition is separate from scene Position. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Offscreen and multiwindow rendering remain incomplete; see the [coverage page](../coverage/classes/Window.md).
 
 ## Examples
 
@@ -27,7 +27,7 @@ Engine.Instance.MaxFPS = 60;
 int exitCode = Engine.Instance.Run(window);
 ```
 
-Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested code and consumes the supplied window hierarchy. The native window is open and Engine.MainLoop exposes the tree before OnReady.
+Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested code and consumes the supplied window hierarchy. The native window and RenderingServer are open and Engine.MainLoop exposes the tree before OnReady.
 
 ## Constructors
 

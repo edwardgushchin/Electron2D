@@ -106,9 +106,9 @@
       "reason": "C# query method maps the same display operation; native result and fallback semantics require platform verification (ADR 0040)."
     },
     {
-      "electron2d": "method:Electron2D.DisplayServer.CursorSetCustomImage(Electron2D.Image,Electron2D.DisplayServer.CursorShape,Electron2D.Vector2)",
+      "electron2d": "method:Electron2D.DisplayServer.CursorSetCustomImage(Electron2D.Resource,Electron2D.DisplayServer.CursorShape,Electron2D.Vector2)",
       "godot": "DisplayServer::method:cursor_set_custom_image(Resource:,int:DisplayServer.CursorShape,Vector2:)",
-      "reason": "The Image path accepts a Vector2 hotspot, truncates fractional coordinates to native pixels, enforces the 256x256 image limit, and copies source pixels. A Texture2D resource path belongs to the first 2D texture/rendering vertical slice, because no texture resource exists yet (ADR 0040)."
+      "reason": "The typed Resource entry point accepts Image and readable Texture, copies original image pixels into an owned native cursor, truncates fractional hotspots and preserves the 256x256 limit. Texture.GetImage temporaries are released on success/failure; logical size overrides do not resize the cursor (ADR 0040)."
     },
     {
       "electron2d": "event:Electron2D.DisplayServer.CloseRequested()",
@@ -275,8 +275,8 @@
       "godot": ["DisplayServer::method:file_dialog_show(String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Callable:,int:)"]
     },
     {
-      "state": "Blocked",
-      "reason": "The current Image path accepts a Vector2 hotspot, truncates fractional coordinates to native pixels, enforces the 256x256 image limit, and copies source pixels. The remaining Texture2D Resource path requires a production 2D texture type and conversion to a cursor image; implement it in the first SDL GPU/SDL_Renderer texture resource and rendering vertical slice (ADR 0028/0040).",
+      "state": "Partial",
+      "reason": "Image and readable Texture paths execute on native Wayland with original pixel dimensions, temporary-image cleanup, source lifetime, shape isolation, owner-thread and callback-disposal checks. Compressed cursor images still require CPU decompression: implement that path in the first CPU compressed-image consumption slice under ADR 0039. Other native platforms and visual hotspot acceptance remain unverified (ADR 0040).",
       "godot": ["DisplayServer::method:cursor_set_custom_image(Resource:,int:DisplayServer.CursorShape,Vector2:)"]
     },
     {
@@ -869,18 +869,17 @@
     },
     {
       "state": "Blocked",
-      "reason": "The enum type is incomplete relative to the pinned reference: WINDOW_VIEW and five GL/EGL/GLX identities remain dependency-blocked until their native view or renderer context integration (ADR 0042).",
+      "reason": "The enum remains incomplete: WINDOW_VIEW is blocked on native view ownership. Five graphics identities execute on Linux compatibility renderers, with other-platform integration recorded separately (ADR 0042).",
       "godot": [
         "DisplayServer::enum:HandleType"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "The borrowed display and window identities match the pinned Wayland wl_display and wl_surface contracts. Native Wayland smoke compared both public nint values exactly with SDL's window properties, checked nonzero values, and covered invalid/disposed access; remaining native identity kinds have separate blocked rows (ADR 0042).",
+      "reason": "Borrowed display and window values match the pinned Wayland wl_display/wl_surface identities, verified against native SDL properties, including invalid/disposed access. Other identity kinds and the aggregate method have separate rows (ADR 0042).",
       "godot": [
         "DisplayServer::enum_value:HandleType.DISPLAY_HANDLE",
-        "DisplayServer::enum_value:HandleType.WINDOW_HANDLE",
-        "DisplayServer::method:window_get_native_handle(int:DisplayServer.HandleType,int:)"
+        "DisplayServer::enum_value:HandleType.WINDOW_HANDLE"
       ]
     },
     {
@@ -891,8 +890,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: first executable SDL_Renderer fallback slice must inspect the selected GL/GLES driver and window-associated context, then verify each borrowed identity's ownership, thread, and lifetime. EGL values require an EGL-backed context; GLX values additionally require a verified X11/GLX native query bridge, with a separately accepted platform capability if that bridge is outside the first slice (ADR 0042).",
+      "state": "Partial",
+      "reason": "Linux graphics identities execute with verified window association and borrowed lifetime: Wayland GL/GLES uses EGL; XWayland GL uses GLX. Native config/visual queries, foreign context/config isolation, readback, owner-thread/invalid/disposed access and reopen pass. GPU/software reject GL identities. Native views, other-platform graphics integration and X11/EGL creation remain incomplete/unverified (ADR 0042).",
       "godot": [
         "DisplayServer::enum_value:HandleType.OPENGL_CONTEXT",
         "DisplayServer::enum_value:HandleType.EGL_DISPLAY",
@@ -1230,6 +1229,13 @@
         "DisplayServer::method:global_menu_set_item_text(String:,int:,String:)",
         "DisplayServer::method:global_menu_set_item_tooltip(String:,int:,String:)",
         "DisplayServer::method:global_menu_set_popup_callbacks(String:,Callable:,Callable:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "The desktop display/window paths retain their native checks. The method now also exposes five Linux compatibility GL/EGL/GLX identities with native association, foreign context isolation and lifetime checks. Native-view/mobile and other-platform graphics paths remain incomplete; unavailable identities throw explicitly (ADR 0042).",
+      "godot": [
+        "DisplayServer::method:window_get_native_handle(int:DisplayServer.HandleType,int:)"
       ]
     }
   ]

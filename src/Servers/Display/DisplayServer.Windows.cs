@@ -4,13 +4,23 @@ namespace Electron2D;
 
 public sealed partial class DisplayServer
 {
-    /// <summary>Identifies a borrowed native display or window handle.</summary>
+    /// <summary>Identifies a borrowed native display, window or graphics-context handle.</summary>
     public enum HandleType
     {
         /// <summary>The X11 or Wayland display connection.</summary>
         DisplayHandle = 0,
         /// <summary>The platform window: an X11 window ID, Wayland surface, Win32 HWND, or Cocoa NSWindow.</summary>
         WindowHandle = 1,
+        /// <summary>The compatibility renderer's GL context on Linux Wayland or X11.</summary>
+        OpenGLContext = 3,
+        /// <summary>The EGL display associated with the Linux compatibility renderer's context.</summary>
+        EGLDisplay = 4,
+        /// <summary>The EGL configuration associated with the Linux compatibility renderer's context.</summary>
+        EGLConfig = 5,
+        /// <summary>The visual ID associated with the X11 compatibility renderer's GLX context.</summary>
+        GLXVisualID = 6,
+        /// <summary>The framebuffer configuration associated with the X11 compatibility renderer's GLX context.</summary>
+        GLXFBConfig = 7,
     }
 
     /// <summary>Selects a main-window policy by its stable display-server ID.</summary>
@@ -141,7 +151,7 @@ public sealed partial class DisplayServer
         return [MainWindowId];
     }
 
-    /// <summary>Gets a borrowed operating-system handle for the main display or window.</summary>
+    /// <summary>Gets a borrowed operating-system or graphics-context handle for the main window.</summary>
     /// <param name="handleType">The native handle category to query.</param>
     /// <param name="windowId">The main-window ID, zero.</param>
     /// <returns>A nonzero pointer or platform window ID represented as a pointer-sized integer.</returns>
@@ -149,7 +159,10 @@ public sealed partial class DisplayServer
     /// The caller does not own the returned handle and must never destroy or release it. Query it again after native
     /// window state changes; it is invalid after this server is disposed. Native interop with it must obey the
     /// platform's thread rules and this server's owner-thread boundary. Display handles are available on X11 and
-    /// Wayland; window handles are available on X11, Wayland, Windows, and macOS.
+    /// Wayland; window handles are available on X11, Wayland, Windows, and macOS. Graphics-context identities
+    /// are available with the Linux compatibility renderer's GL/EGL/GLX driver as applicable. They are invalid
+    /// after renderer shutdown. Querying does not change the current context. The caller must not destroy,
+    /// replace or mutate the renderer's context or graphics state. GPU and software renderers have no GL identity.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="handleType"/> or <paramref name="windowId"/> is not defined or owned.</exception>
     /// <exception cref="NotSupportedException">The requested native handle is unavailable on the active video driver.</exception>
@@ -159,8 +172,12 @@ public sealed partial class DisplayServer
     {
         EnsureOwner();
         var window = GetWindow(windowId);
-        if (handleType is not (HandleType.DisplayHandle or HandleType.WindowHandle))
+        if (handleType is not (HandleType.DisplayHandle or HandleType.WindowHandle or HandleType.OpenGLContext or
+            HandleType.EGLDisplay or HandleType.EGLConfig or HandleType.GLXVisualID or HandleType.GLXFBConfig))
             throw new ArgumentOutOfRangeException(nameof(handleType), handleType, "Unknown native handle type.");
+        if (handleType is not (HandleType.DisplayHandle or HandleType.WindowHandle))
+            return _graphicsHandleQuery?.Invoke(handleType) ??
+                throw new NotSupportedException("This window has no active graphics-context provider.");
 
         var driver = SDL.GetCurrentVideoDriver();
         var property = (handleType, driver) switch

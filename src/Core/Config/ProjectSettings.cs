@@ -145,6 +145,19 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<double> PhysicsJitterFix { get; } =
         new("physics/common/physics_jitter_fix", 0.5d, value => double.IsFinite(value) && value >= 0d);
 
+    /// <summary>Selects the canvas rendering method sampled when Engine.Run opens its window.</summary>
+    public static ProjectSetting<string> RenderingMethod { get; } =
+        new("rendering/renderer/rendering_method", "gpu", value => value is "gpu" or "compatibility");
+
+    /// <summary>Allows startup to use the compatibility renderer when GPU initialization fails.</summary>
+    /// <remarks>Set false to require the programmable GPU path. Shader materials reject compatibility rendering.</remarks>
+    public static ProjectSetting<bool> RenderingFallback { get; } =
+        new("rendering/rendering_device/fallback_to_opengl3", true);
+
+    /// <summary>Defines the finite initial root-framebuffer clear color.</summary>
+    public static ProjectSetting<Color> DefaultClearColor { get; } =
+        new("rendering/environment/defaults/default_clear_color", new Color(0.3f, 0.3f, 0.3f, 1f), value => value.IsFinite());
+
     private static readonly ProjectSettings SharedInstance = CreateSharedInstance();
 
     private readonly object _gate = new();
@@ -195,6 +208,9 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(PhysicsTicksPerSecond, isBasic: true);
         RegisterInternal(MaxPhysicsStepsPerFrame, isBasic: false);
         RegisterInternal(PhysicsJitterFix, isBasic: false);
+        RegisterInternal(RenderingMethod, isBasic: true);
+        RegisterInternal(RenderingFallback, isBasic: false);
+        RegisterInternal(DefaultClearColor, isBasic: true);
     }
 
     /// <summary>Gets the process-wide project settings registry.</summary>
@@ -1479,7 +1495,10 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, ApplicationVersion) ||
         ReferenceEquals(setting, PhysicsTicksPerSecond) ||
         ReferenceEquals(setting, MaxPhysicsStepsPerFrame) ||
-        ReferenceEquals(setting, PhysicsJitterFix);
+        ReferenceEquals(setting, PhysicsJitterFix) ||
+        ReferenceEquals(setting, RenderingMethod) ||
+        ReferenceEquals(setting, RenderingFallback) ||
+        ReferenceEquals(setting, DefaultClearColor);
 
     private static string ResolveWithinRoot(string root, string relativePath)
     {

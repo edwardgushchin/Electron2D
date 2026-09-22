@@ -6,10 +6,10 @@ namespace Electron2D;
 /// <summary>Provides Electron2D's unified hierarchical, input-aware game object and 2D transform type.</summary>
 /// <remarks>
 /// The type combines ordered child ownership, tree lifecycle, paths, groups, processing, typed input callbacks, queued
-/// deletion, visibility, Z ordering, and 2D spatial state. Logical visibility and Z state do not render anything until
-/// a renderer domain is added.
+/// deletion, visibility, Z ordering, and 2D spatial state. During Engine.Run, retained rectangle, line and texture
+/// commands render with the node's transforms, visibility, modulation and material.
 /// </remarks>
-public class Node : ElectronObject
+public partial class Node : ElectronObject
 {
     /// <summary>Identifies the notification sent when a node enters an active <see cref="SceneTree"/>.</summary>
     public const int NotificationEnterTree = 10;
@@ -113,7 +113,7 @@ public class Node : ElectronObject
     public const int MinimumZIndex = -4096;
 
     /// <summary>Specifies the largest supported local or effective Z index.</summary>
-    public const int MaximumZIndex = 4095;
+    public const int MaximumZIndex = 4096;
 
     private const float TransformEpsilon = 0.000001f;
 
@@ -1837,7 +1837,7 @@ public class Node : ElectronObject
 
     /// <inheritdoc />
     /// <remarks>Appends this class's typed hierarchy, spatial, visibility, and processing descriptors to the inherited descriptors.</remarks>
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(NodeProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(NodeProperties).Concat(DrawingProperties);
 
     /// <inheritdoc />
     /// <remarks>Rejects disposal during tree lifecycle delivery or of an active tree root, and requires the owner thread for an attached node.</remarks>
@@ -1902,6 +1902,8 @@ public class Node : ElectronObject
             }
 
             _children.Clear();
+            _canvasCommands?.Clear();
+            _material = null;
             _groups.Clear();
             _owner = null;
 

@@ -16,6 +16,8 @@ namespace Electron2D;
 [StructLayout(LayoutKind.Sequential)]
 public struct Color : IEquatable<Color>
 {
+    internal readonly bool IsFinite() => float.IsFinite(R) && float.IsFinite(G) && float.IsFinite(B) && float.IsFinite(A);
+
     /// <summary>Gets or sets the red component, typically from <c>0</c> to <c>1</c>.</summary>
     public float R;
 

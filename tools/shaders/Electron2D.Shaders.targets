@@ -1,0 +1,117 @@
+<Project>
+  <PropertyGroup>
+    <Electron2DShaderImportTool Condition="'$(Electron2DShaderImportTool)' == ''">$(MSBuildThisFileDirectory)Electron2D.ShaderImport</Electron2DShaderImportTool>
+  </PropertyGroup>
+  <UsingTask TaskName="Electron2DImportShaders" TaskFactory="RoslynCodeTaskFactory"
+             AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Sources ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <ProjectDirectory ParameterType="System.String" Required="true" />
+      <OutputDirectory ParameterType="System.String" Required="true" />
+      <ToolPath ParameterType="System.String" Required="true" />
+      <Compile ParameterType="System.Boolean" />
+      <Outputs ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Collections.Generic" />
+      <Using Namespace="System.Diagnostics" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        try
+        {
+            var directory = Path.GetFullPath(Path.Combine(ProjectDirectory, OutputDirectory));
+            var outputs = new List<Microsoft.Build.Framework.ITaskItem>();
+            var paths = new HashSet<string>(Path.DirectorySeparatorChar == '\\'
+                ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
+            foreach (var source in Sources)
+            {
+                var input = source.GetMetadata("FullPath");
+                var stage = source.GetMetadata("Stage");
+                if (stage != "vertex" && stage != "fragment")
+                    throw new ArgumentException(input + ": Stage must be vertex or fragment.");
+                var target = source.GetMetadata("TargetPath");
+                if (target.Length == 0)
+                {
+                    target = source.GetMetadata("Link");
+                    if (target.Length == 0) target = source.ItemSpec;
+                    target += ".spv";
+                }
+                target = target.Replace('\\', '/');
+                if (Path.IsPathRooted(target) || target.Contains(':') ||
+                    Array.Exists(target.Split('/'), part => part == ".." || part == "." || part.Length == 0) ||
+                    !target.EndsWith(".spv", StringComparison.OrdinalIgnoreCase))
+                    throw new ArgumentException(input + ": TargetPath must be a relative .spv path without . or .. components.");
+                var output = Path.Combine(directory, target);
+                if (!paths.Add(output)) throw new ArgumentException("Duplicate shader TargetPath: " + target);
+                var item = new Microsoft.Build.Utilities.TaskItem(output);
+                item.SetMetadata("TargetPath", target);
+                item.SetMetadata("CopyToOutputDirectory", "PreserveNewest");
+                item.SetMetadata("CopyToPublishDirectory", "PreserveNewest");
+                item.SetMetadata("Source", input);
+                item.SetMetadata("Stage", stage);
+                outputs.Add(item);
+            }
+            if (Compile)
+            {
+                var tool = Path.GetFullPath(Path.Combine(ProjectDirectory, ToolPath));
+                if (!File.Exists(tool)) throw new FileNotFoundException("Electron2DShaderImportTool is missing: " + tool);
+                // ponytail: compile on every build so native include resolution stays authoritative;
+                // skip compilation only after a complete dependency cache is implemented and measured.
+                foreach (var output in outputs)
+                {
+                    var start = new ProcessStartInfo(tool) {
+                        UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true,
+                        WorkingDirectory = ProjectDirectory
+                    };
+                    // The task factory compiles against netstandard2.0; dotnet MSBuild
+                    // provides ArgumentList at runtime, avoiding shell/string argument parsing.
+                    var property = typeof(ProcessStartInfo).GetProperty("ArgumentList");
+                    if (property == null) throw new NotSupportedException("Shader import requires dotnet MSBuild.");
+                    var arguments = (IList<string>)property.GetValue(start);
+                    arguments.Add(output.GetMetadata("Source"));
+                    arguments.Add(output.GetMetadata("Stage"));
+                    arguments.Add(output.ItemSpec);
+                    using (var process = Process.Start(start))
+                    {
+                        if (process == null) throw new InvalidOperationException("Cannot start " + tool);
+                        var stdout = process.StandardOutput.ReadToEndAsync();
+                        var stderr = process.StandardError.ReadToEndAsync();
+                        process.WaitForExit();
+                        var diagnostic = stdout.GetAwaiter().GetResult() + stderr.GetAwaiter().GetResult();
+                        if (process.ExitCode != 0)
+                        {
+                            Log.LogError("Shader import failed ({0}): {1}", process.ExitCode, diagnostic);
+                            return false;
+                        }
+                        Log.LogMessage(Microsoft.Build.Framework.MessageImportance.Normal, "{0}", diagnostic);
+                    }
+                }
+            }
+            Outputs = outputs.ToArray();
+        }
+        catch (Exception error)
+        {
+            Log.LogError("{0}", error.Message);
+            return false;
+        }
+      ]]></Code>
+    </Task>
+  </UsingTask>
+  <Target Name="_PrepareElectron2DShaders" BeforeTargets="AssignTargetPaths"
+          Condition="'@(Electron2DShader)' != '' and '$(DesignTimeBuild)' != 'true' and '$(IsCrossTargetingBuild)' != 'true'">
+    <Electron2DImportShaders Sources="@(Electron2DShader)" ProjectDirectory="$(MSBuildProjectDirectory)"
+                            OutputDirectory="$(IntermediateOutputPath)Electron2D/shaders" ToolPath="$(Electron2DShaderImportTool)">
+      <Output TaskParameter="Outputs" ItemName="_Electron2DShaderOutput" />
+    </Electron2DImportShaders>
+    <ItemGroup>
+      <Content Include="@(_Electron2DShaderOutput)" />
+      <FileWrites Include="@(_Electron2DShaderOutput)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="_CompileElectron2DShaders" BeforeTargets="CoreCompile" DependsOnTargets="_PrepareElectron2DShaders"
+          Condition="'@(Electron2DShader)' != '' and '$(DesignTimeBuild)' != 'true' and '$(IsCrossTargetingBuild)' != 'true'">
+    <Electron2DImportShaders Sources="@(Electron2DShader)" ProjectDirectory="$(MSBuildProjectDirectory)" Compile="true"
+                            OutputDirectory="$(IntermediateOutputPath)Electron2D/shaders" ToolPath="$(Electron2DShaderImportTool)" />
+  </Target>
+</Project>

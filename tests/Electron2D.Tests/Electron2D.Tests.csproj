@@ -4,9 +4,11 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" />
+    <EmbeddedResource Include="Shaders/*.spv" LogicalName="TestShaders.%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

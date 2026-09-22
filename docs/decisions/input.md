@@ -4,6 +4,7 @@ Last updated: 2026-09-22
 
 This log owns durable decisions for input events, action mapping, process-wide input state, and scene input propagation. Current executable behavior is described by the [Input domain](../domains/input.md), [Input runtime component](../components/input-runtime.md), and class documents.
 
+<a id="adr-0038"></a>
 ## ADR 0038: Typed input events, action state, and scene propagation
 
 - Status: Accepted; the native display/event-pump integration, including pointer emulation, is recorded in [ADR 0040](display.md#adr-0040)
