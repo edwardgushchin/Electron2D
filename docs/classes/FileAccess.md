@@ -39,7 +39,7 @@ file.WriteString("ready");
 | [`public string Path { get; }`](#p-electron2d-fileaccess-path) | Gets the path supplied when this file was opened. |
 | [`public string AbsolutePath { get; }`](#p-electron2d-fileaccess-absolutepath) | Gets the normalized absolute operating-system path. |
 | [`public bool IsOpen { get; }`](#p-electron2d-fileaccess-isopen) | Gets whether the owned stream is still open. |
-| [`public bool EofReached { get; }`](#p-electron2d-fileaccess-eofreached) | Gets whether a read has attempted to move beyond the end of the file. |
+| [`public bool EOFReached { get; }`](#p-electron2d-fileaccess-eofreached) | Gets whether a read has attempted to move beyond the end of the file. |
 | [`public long Position { get; }`](#p-electron2d-fileaccess-position) | Gets the current byte offset. |
 | [`public long Length { get; }`](#p-electron2d-fileaccess-length) | Gets the decoded file length in bytes. |
 | [`public bool Hidden { get; set; }`](#p-electron2d-fileaccess-hidden) | Gets or sets whether the physical file has the hidden attribute. |
@@ -70,7 +70,7 @@ file.WriteString("ready");
 | [`public float ReadReal()`](#m-electron2d-fileaccess-readreal) | Reads the engine real-number storage format. |
 | [`public byte[] ReadBytes(int length)`](#m-electron2d-fileaccess-readbytes-system-int32) | Reads up to a requested number of bytes. |
 | [`public string ReadLine()`](#m-electron2d-fileaccess-readline) | Reads UTF-8 bytes through the next LF, CR, CRLF, or null terminator. |
-| [`public string[] ReadCsvLine(char delimiter = ',')`](#m-electron2d-fileaccess-readcsvline-system-char) | Reads one CSV record. |
+| [`public string[] ReadCSVLine(char delimiter = ',')`](#m-electron2d-fileaccess-readcsvline-system-char) | Reads one CSV record. |
 | [`public string ReadPascalString()`](#m-electron2d-fileaccess-readpascalstring) | Reads a length-prefixed UTF-8 string. |
 | [`public string ReadAllText(bool skipCarriageReturns = false)`](#m-electron2d-fileaccess-readalltext-system-boolean) | Reads the entire file as UTF-8 without changing the cursor. |
 | [`public void WriteByte(byte value)`](#m-electron2d-fileaccess-writebyte-system-byte) | Writes one unsigned byte. |
@@ -84,7 +84,7 @@ file.WriteString("ready");
 | [`public void WriteBytes(ReadOnlySpan<byte> bytes)`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte) | Writes bytes at the current cursor. |
 | [`public void WriteString(string value)`](#m-electron2d-fileaccess-writestring-system-string) | Writes UTF-8 text without a length prefix or terminator. |
 | [`public void WriteLine(string value)`](#m-electron2d-fileaccess-writeline-system-string) | Writes UTF-8 text followed by LF. |
-| [`public void WriteCsvLine(IEnumerable<string> values, char delimiter = ',')`](#m-electron2d-fileaccess-writecsvline-system-collections-generic-ienumerable-system-string-system-char) | Writes one CSV record followed by LF. |
+| [`public void WriteCSVLine(IEnumerable<string> values, char delimiter = ',')`](#m-electron2d-fileaccess-writecsvline-system-collections-generic-ienumerable-system-string-system-char) | Writes one CSV record followed by LF. |
 | [`public void WritePascalString(string value)`](#m-electron2d-fileaccess-writepascalstring-system-string) | Writes a UTF-8 string preceded by its unsigned 32-bit byte count. |
 | [`public static bool FileExists(string path)`](#m-electron2d-fileaccess-fileexists-system-string) | Determines whether a physical or directory-backed virtual file exists. |
 | [`public static byte[] GetFileAsBytes(string path)`](#m-electron2d-fileaccess-getfileasbytes-system-string) | Reads a complete physical or directory-backed virtual file. |
@@ -92,8 +92,8 @@ file.WriteString("ready");
 | [`public static long GetAccessTime(string path)`](#m-electron2d-fileaccess-getaccesstime-system-string) | Gets the last-access time as Unix seconds. |
 | [`public static long GetModifiedTime(string path)`](#m-electron2d-fileaccess-getmodifiedtime-system-string) | Gets the last-modification time as Unix seconds. |
 | [`public static long GetSize(string path)`](#m-electron2d-fileaccess-getsize-system-string) | Gets a file's length without opening a persistent instance. |
-| [`public static string GetMd5(string path)`](#m-electron2d-fileaccess-getmd5-system-string) | Computes a file's MD5 digest. |
-| [`public static string GetSha256(string path)`](#m-electron2d-fileaccess-getsha256-system-string) | Computes a file's SHA-256 digest. |
+| [`public static string GetMD5(string path)`](#m-electron2d-fileaccess-getmd5-system-string) | Computes a file's MD5 digest. |
+| [`public static string GetSHA256(string path)`](#m-electron2d-fileaccess-getsha256-system-string) | Computes a file's SHA-256 digest. |
 | [`public static bool IsHidden(string path)`](#m-electron2d-fileaccess-ishidden-system-string) | Gets whether the filesystem marks a file as hidden. |
 | [`public static void SetHidden(string path, bool hidden)`](#m-electron2d-fileaccess-sethidden-system-string-system-boolean) | Changes a file's hidden attribute. |
 | [`public static bool IsReadOnly(string path)`](#m-electron2d-fileaccess-isreadonly-system-string) | Gets whether the filesystem marks a file as read-only. |
@@ -147,7 +147,7 @@ Gets whether the owned stream is still open.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="p-electron2d-fileaccess-eofreached"></a>
-### `public bool EofReached { get; }`
+### `public bool EOFReached { get; }`
 
 Gets whether a read has attempted to move beyond the end of the file.
 
@@ -554,7 +554,7 @@ Reads up to a requested number of bytes.
 - `IO.IOException`: Reading fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** [`FileAccess.EofReached`](FileAccess.md#p-electron2d-fileaccess-eofreached) becomes true when fewer than `length` bytes are available.
+**Remarks:** [`FileAccess.EOFReached`](FileAccess.md#p-electron2d-fileaccess-eofreached) becomes true when fewer than `length` bytes are available.
 
 <a id="m-electron2d-fileaccess-readline"></a>
 ### `public string ReadLine()`
@@ -571,7 +571,7 @@ Reads UTF-8 bytes through the next LF, CR, CRLF, or null terminator.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-readcsvline-system-char"></a>
-### `public string[] ReadCsvLine(char delimiter = ',')`
+### `public string[] ReadCSVLine(char delimiter = ',')`
 
 Reads one CSV record.
 
@@ -793,7 +793,7 @@ Writes UTF-8 text followed by LF.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writecsvline-system-collections-generic-ienumerable-system-string-system-char"></a>
-### `public void WriteCsvLine(IEnumerable<string> values, char delimiter = ',')`
+### `public void WriteCSVLine(IEnumerable<string> values, char delimiter = ',')`
 
 Writes one CSV record followed by LF.
 
@@ -943,7 +943,7 @@ Gets a file's length without opening a persistent instance.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 
 <a id="m-electron2d-fileaccess-getmd5-system-string"></a>
-### `public static string GetMd5(string path)`
+### `public static string GetMD5(string path)`
 
 Computes a file's MD5 digest.
 
@@ -964,7 +964,7 @@ Computes a file's MD5 digest.
 **Remarks:** MD5 is provided for compatibility and integrity checks, not security decisions.
 
 <a id="m-electron2d-fileaccess-getsha256-system-string"></a>
-### `public static string GetSha256(string path)`
+### `public static string GetSHA256(string path)`
 
 Computes a file's SHA-256 digest.
 

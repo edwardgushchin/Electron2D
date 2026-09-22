@@ -379,7 +379,7 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the adjustment commits.</exception>
-    public void AdjustBcs(float brightness, float contrast, float saturation)
+    public void AdjustBCS(float brightness, float contrast, float saturation)
     {
         if (!float.IsFinite(brightness)) throw new ArgumentOutOfRangeException(nameof(brightness));
         if (!float.IsFinite(contrast)) throw new ArgumentOutOfRangeException(nameof(contrast));
@@ -544,7 +544,7 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the conversion commits.</exception>
-    public void NormalMapToXy() => Mutate(
+    public void NormalMapToXY() => Mutate(
         state =>
         {
             state = ConvertState(RequireReadablePixels(state), Format.Rgba8);

@@ -336,12 +336,12 @@
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.Mathf.DbToLinear(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.DBToLinear(System.Double)",
       "godot": "@GlobalScope::method:db_to_linear(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.Mathf.DbToLinear(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.DBToLinear(System.Single)",
       "godot": "@GlobalScope::method:db_to_linear(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
@@ -466,12 +466,12 @@
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.Mathf.LinearToDb(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.LinearToDB(System.Double)",
       "godot": "@GlobalScope::method:linear_to_db(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.Mathf.LinearToDb(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.LinearToDB(System.Single)",
       "godot": "@GlobalScope::method:linear_to_db(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },

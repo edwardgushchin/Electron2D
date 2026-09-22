@@ -108,7 +108,7 @@ public sealed class FileAccess : ElectronObject
     /// <value><see langword="true"/> only after an incomplete read; a successful seek clears it.</value>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
-    public bool EofReached
+    public bool EOFReached
     {
         get
         {
@@ -606,7 +606,7 @@ public sealed class FileAccess : ElectronObject
     /// <summary>Reads up to a requested number of bytes.</summary>
     /// <param name="length">The nonnegative maximum byte count.</param>
     /// <returns>A new array containing all available requested bytes.</returns>
-    /// <remarks><see cref="EofReached"/> becomes true when fewer than <paramref name="length"/> bytes are available.</remarks>
+    /// <remarks><see cref="EOFReached"/> becomes true when fewer than <paramref name="length"/> bytes are available.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is negative.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not readable.</exception>
     /// <exception cref="IOException">Reading fails.</exception>
@@ -654,14 +654,14 @@ public sealed class FileAccess : ElectronObject
     /// <exception cref="InvalidOperationException">The file is closed or not readable.</exception>
     /// <exception cref="IOException">Reading fails.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
-    public string[] ReadCsvLine(char delimiter = ',')
+    public string[] ReadCSVLine(char delimiter = ',')
     {
         ValidateDelimiter(delimiter);
         ThrowIfDisposed();
         lock (_gate)
         {
-            var record = ReadCsvRecordLocked();
-            return record is null ? [] : ParseCsv(record, delimiter);
+            var record = ReadCSVRecordLocked();
+            return record is null ? [] : ParseCSV(record, delimiter);
         }
     }
 
@@ -903,11 +903,11 @@ public sealed class FileAccess : ElectronObject
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
-    public void WriteCsvLine(IEnumerable<string> values, char delimiter = ',')
+    public void WriteCSVLine(IEnumerable<string> values, char delimiter = ',')
     {
         ArgumentNullException.ThrowIfNull(values);
         ValidateDelimiter(delimiter);
-        var encoded = values.Select(value => EncodeCsvField(value ?? throw new ArgumentNullException(nameof(values)), delimiter));
+        var encoded = values.Select(value => EncodeCSVField(value ?? throw new ArgumentNullException(nameof(values)), delimiter));
         WriteLine(string.Join(delimiter, encoded));
     }
 
@@ -1007,7 +1007,7 @@ public sealed class FileAccess : ElectronObject
     /// <exception cref="IOException">The file cannot be read.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static string GetMd5(string path) => ComputeHash(path, MD5.Create());
+    public static string GetMD5(string path) => ComputeHash(path, MD5.Create());
 
     /// <summary>Computes a file's SHA-256 digest.</summary>
     /// <param name="path">The file path.</param>
@@ -1017,7 +1017,7 @@ public sealed class FileAccess : ElectronObject
     /// <exception cref="IOException">The file cannot be read.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static string GetSha256(string path) => ComputeHash(path, SHA256.Create());
+    public static string GetSHA256(string path) => ComputeHash(path, SHA256.Create());
 
     /// <summary>Gets whether the filesystem marks a file as hidden.</summary>
     /// <param name="path">The file path.</param>
@@ -1434,7 +1434,7 @@ public sealed class FileAccess : ElectronObject
         return envelope;
     }
 
-    private static string EncodeCsvField(string value, char delimiter)
+    private static string EncodeCSVField(string value, char delimiter)
     {
         if (value.IndexOfAny([delimiter, '"', '\r', '\n']) < 0)
             return value;
@@ -1540,7 +1540,7 @@ public sealed class FileAccess : ElectronObject
             throw new InvalidDataException("The encrypted file envelope is truncated.");
     }
 
-    private static string[] ParseCsv(string record, char delimiter)
+    private static string[] ParseCSV(string record, char delimiter)
     {
         var fields = new List<string>();
         var field = new StringBuilder();
@@ -1594,7 +1594,7 @@ public sealed class FileAccess : ElectronObject
         return fields.ToArray();
     }
 
-    private string? ReadCsvRecordLocked()
+    private string? ReadCSVRecordLocked()
     {
         var stream = EnsureReadable();
         var output = new MemoryStream();

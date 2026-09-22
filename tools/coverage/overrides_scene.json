@@ -1033,7 +1033,7 @@
       "reason": "Borrowed synchronous client-coordinate input does not update global polling state. No in_local_coords conversion parameter: embedded/scaled viewports, GUI, shortcuts and picking await their first integrations (ADRs 0008, 0028 and 0038)."
     },
     {
-      "electron2d": "method:Electron2D.Window.GetWindowId()",
+      "electron2d": "method:Electron2D.Window.GetWindowID()",
       "godot": "Window::method:get_window_id()",
       "state": "Partial",
       "reason": "Root-window native/input projection under ADRs 0004 and 0008; tests cover the supported window lifecycle. Nested viewport, rendering, content scaling and multiwindow behavior remain absent."
@@ -1231,13 +1231,13 @@
       "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
     },
     {
-      "electron2d": "method:Electron2D.Window.SetImeActive(System.Boolean)",
+      "electron2d": "method:Electron2D.Window.SetIMEActive(System.Boolean)",
       "godot": "Window::method:set_ime_active(bool:)",
       "state": "Partial",
       "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
     },
     {
-      "electron2d": "method:Electron2D.Window.SetImePosition(Electron2D.Vector2I)",
+      "electron2d": "method:Electron2D.Window.SetIMEPosition(Electron2D.Vector2I)",
       "godot": "Window::method:set_ime_position(Vector2i:)",
       "state": "Partial",
       "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
@@ -2378,7 +2378,7 @@
     },
     {
       "state": "Partial",
-      "reason": "MaxFps is executable Run cadence control with zero unlimited, runtime updates and unscaled monotonic waiting. Persistent ProjectSettings application/run/max_fps integration and presentation/VSync interaction await their explicit settings and rendering slices (ADRs 0016 and 0028).",
+      "reason": "MaxFPS is executable Run cadence control with zero unlimited, runtime updates and unscaled monotonic waiting. Persistent ProjectSettings application/run/max_fps integration and presentation/VSync interaction await their explicit settings and rendering slices (ADRs 0016 and 0028).",
       "godot": [
         "Engine::property:max_fps"
       ]

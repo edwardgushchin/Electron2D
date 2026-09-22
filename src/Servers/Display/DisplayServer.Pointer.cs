@@ -167,7 +167,7 @@ public sealed partial class DisplayServer
             return 1f;
         var scale = SDL.GetWindowPixelDensity(_window.DangerousGetHandle());
         if (!float.IsFinite(scale) || scale <= 0f)
-            throw SdlFailure("read the window pixel density");
+            throw SDLFailure("read the window pixel density");
         return scale;
     }
 
@@ -189,7 +189,7 @@ public sealed partial class DisplayServer
         if (_customCursors[(int)shape] is { } custom)
         {
             if (!SDL.SetCursor(custom.DangerousGetHandle()))
-                throw SdlFailure("set the custom cursor");
+                throw SDLFailure("set the custom cursor");
             _cursorShape = shape;
             _cursor?.Dispose();
             _cursor = null;
@@ -197,13 +197,13 @@ public sealed partial class DisplayServer
         }
         var handle = SDL.CreateSystemCursor(native);
         if (handle == 0)
-            throw SdlFailure("create a native cursor");
+            throw SDLFailure("create a native cursor");
         var replacement = new SdlCursorHandle(handle);
         GC.SuppressFinalize(replacement);
         if (!SDL.SetCursor(handle))
         {
             replacement.Dispose();
-            throw SdlFailure("set the native cursor");
+            throw SDLFailure("set the native cursor");
         }
         var previous = _cursor;
         _cursor = replacement;
@@ -240,7 +240,7 @@ public sealed partial class DisplayServer
             {
                 var handle = SDL.CreateColorCursor(surface, (int)hotspot.X, (int)hotspot.Y);
                 if (handle == 0)
-                    throw SdlFailure("create a custom cursor");
+                    throw SDLFailure("create a custom cursor");
                 replacement = new SdlCursorHandle(handle);
                 GC.SuppressFinalize(replacement);
             });
@@ -252,13 +252,13 @@ public sealed partial class DisplayServer
             {
                 var system = SDL.CreateSystemCursor(MapCursorShape(shape));
                 if (system == 0)
-                    throw SdlFailure("create a native cursor");
+                    throw SDLFailure("create a native cursor");
                 replacement = new SdlCursorHandle(system);
                 GC.SuppressFinalize(replacement);
                 if (!SDL.SetCursor(system))
                 {
                     replacement.Dispose();
-                    throw SdlFailure("restore the system cursor");
+                    throw SDLFailure("restore the system cursor");
                 }
                 var oldSystem = _cursor;
                 _cursor = replacement;
@@ -268,7 +268,7 @@ public sealed partial class DisplayServer
             else if (!SDL.SetCursor(replacement.DangerousGetHandle()))
             {
                 replacement.Dispose();
-                throw SdlFailure("set the custom cursor");
+                throw SDLFailure("set the custom cursor");
             }
             else
             {
@@ -309,10 +309,10 @@ public sealed partial class DisplayServer
         var window = _window.DangerousGetHandle();
         if (!SDL.SetWindowRelativeMouseMode(window, mode == MouseMode.Captured) ||
             !SDL.SetWindowMouseGrab(window, mode is MouseMode.Confined or MouseMode.ConfinedHidden))
-            throw SdlFailure("change pointer capture");
+            throw SDLFailure("change pointer capture");
         var success = mode is MouseMode.Visible or MouseMode.Confined ? SDL.ShowCursor() : SDL.HideCursor();
         if (!success)
-            throw SdlFailure("change pointer visibility");
+            throw SDLFailure("change pointer visibility");
     }
 
     private void ReleasePointer()

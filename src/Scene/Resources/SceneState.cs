@@ -261,7 +261,7 @@ internal sealed class SceneFactoryData(Func<Node> create, Type runtimeType, ulon
         var node = Node.InvokeSceneInstanceFactory(create) ??
                    throw new InvalidOperationException("A scene instance factory returned null.");
 
-        if (node.InstanceId == sourceInstanceId || !_issued.TryAdd(node, new object()))
+        if (node.InstanceID == sourceInstanceId || !_issued.TryAdd(node, new object()))
             throw new InvalidOperationException("A scene instance factory returned a source or previously issued node.");
 
         return node;

@@ -194,7 +194,7 @@ public partial class Window
     /// <remarks>Enable while a text field owns focus. Disabling clears native composition state.</remarks>
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public void SetImeActive(bool active) { EnsureMutable(); GetDisplay().WindowSetImeActive(active); }
+    public void SetIMEActive(bool active) { EnsureMutable(); GetDisplay().WindowSetIMEActive(active); }
 
     /// <summary>Requests native IME candidate placement at a client-coordinate caret.</summary>
     /// <param name="position">Caret position in client pixels on Wayland and native window units elsewhere.</param>
@@ -203,7 +203,7 @@ public partial class Window
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the request fails.</exception>
     /// <exception cref="OverflowException">The position cannot be represented in native coordinates.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public void SetImePosition(Vector2I position) { EnsureMutable(); GetDisplay().WindowSetImePosition(position); }
+    public void SetIMEPosition(Vector2I position) { EnsureMutable(); GetDisplay().WindowSetIMEPosition(position); }
 
     /// <summary>Requests a native taskbar progress indication for the active window.</summary>
     /// <param name="state">The progress indication to show.</param>

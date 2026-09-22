@@ -23,7 +23,7 @@ Native lifetime belongs to Engine.Run. Children retain the unified Node transfor
 ```csharp
 var window = new Window { Title = "Game", Size = new Vector2I(960, 540) };
 window.AddChild(scene); // caller-created Node
-Engine.Instance.MaxFps = 60;
+Engine.Instance.MaxFPS = 60;
 int exitCode = Engine.Instance.Run(window);
 ```
 
@@ -60,7 +60,7 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Appends typed title, size, minimum/maximum size, mode and supported policy descriptors to inherited Node descriptors. |
 | [`public override Rect GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
-| [`public int GetWindowId()`](#getwindowid) | Gets the native window identity while running. |
+| [`public int GetWindowID()`](#getwindowid) | Gets the native window identity while running. |
 | [`public void GrabFocus()`](#grabfocus) | Requests keyboard focus and foreground placement from the native system. |
 | [`public bool HasFocus()`](#hasfocus) | Reports whether the active native window has keyboard focus. |
 | [`public void RequestAttention()`](#requestattention) | Requests a platform attention indication until this window is focused. |
@@ -70,8 +70,8 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 | [`public Vector2I GetPositionWithDecorations()`](#getpositionwithdecorations) | Gets the outer window origin, including native borders when visible and active. |
 | [`public Vector2I GetSizeWithDecorations()`](#getsizewithdecorations) | Gets the outer window size, including native borders when visible and active. |
 | [`public void MoveToCenter()`](#movetocenter) | Requests centering of the active client area in its current screen's usable rectangle. |
-| [`public void SetImeActive(bool active)`](#setimeactive) | Enables or disables native text input for the active window. |
-| [`public void SetImePosition(Vector2I position)`](#setimeposition) | Requests native IME candidate placement at a client-coordinate caret. |
+| [`public void SetIMEActive(bool active)`](#setimeactive) | Enables or disables native text input for the active window. |
+| [`public void SetIMEPosition(Vector2I position)`](#setimeposition) | Requests native IME candidate placement at a client-coordinate caret. |
 | [`public void SetTaskbarProgressState(DisplayServer.ProgressState state)`](#settaskbarprogressstate) | Requests a native taskbar progress indication for the active window. |
 | [`public void SetTaskbarProgressValue(float value)`](#settaskbarprogressvalue) | Requests a native taskbar progress fraction for the active window. |
 
@@ -291,7 +291,7 @@ Returns the client rectangle in viewport coordinates.
 **ObjectDisposedException:** The viewport is disposed.
 
 <a id="getwindowid"></a>
-### `public int GetWindowId()`
+### `public int GetWindowID()`
 
 Gets the native window identity while running.
 
@@ -419,7 +419,7 @@ Requires global positioning. Wayland rejects the request.
 **ObjectDisposedException:** The window is disposed.
 
 <a id="setimeactive"></a>
-### `public void SetImeActive(bool active)`
+### `public void SetIMEActive(bool active)`
 
 Enables or disables native text input for the active window.
 
@@ -432,7 +432,7 @@ Enable while a text field owns focus. Disabling clears native composition state.
 **ObjectDisposedException:** The window is disposed.
 
 <a id="setimeposition"></a>
-### `public void SetImePosition(Vector2I position)`
+### `public void SetIMEPosition(Vector2I position)`
 
 Requests native IME candidate placement at a client-coordinate caret.
 

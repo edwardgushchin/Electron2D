@@ -28,24 +28,24 @@ internal static class LinuxPortalThemeSupport
 
     private static bool Probe()
     {
-        var connection = DbusBusGet(SessionBus, 0);
+        var connection = DBusBusGet(SessionBus, 0);
         if (connection == 0)
             return false;
         try
         {
-            var message = DbusMessageNewMethodCall("org.freedesktop.portal.Desktop",
+            var message = DBusMessageNewMethodCall("org.freedesktop.portal.Desktop",
                 "/org/freedesktop/portal/desktop", "org.freedesktop.DBus.Properties", "Get");
             if (message == 0)
                 return false;
             try
             {
-                DbusMessageIterInitAppend(message, out var args);
+                DBusMessageIterInitAppend(message, out var args);
                 var interfaceName = Marshal.StringToCoTaskMemUTF8("org.freedesktop.portal.Settings");
                 var propertyName = Marshal.StringToCoTaskMemUTF8("version");
                 try
                 {
-                    if (DbusMessageIterAppendBasic(ref args, StringType, ref interfaceName) == 0 ||
-                        DbusMessageIterAppendBasic(ref args, StringType, ref propertyName) == 0)
+                    if (DBusMessageIterAppendBasic(ref args, StringType, ref interfaceName) == 0 ||
+                        DBusMessageIterAppendBasic(ref args, StringType, ref propertyName) == 0)
                         return false;
                 }
                 finally
@@ -54,33 +54,33 @@ internal static class LinuxPortalThemeSupport
                     Marshal.FreeCoTaskMem(propertyName);
                 }
 
-                var reply = DbusConnectionSendWithReplyAndBlock(connection, message, 250, 0);
+                var reply = DBusConnectionSendWithReplyAndBlock(connection, message, 250, 0);
                 if (reply == 0)
                     return false;
                 try
                 {
-                    if (DbusMessageIterInit(reply, out var value) == 0 ||
-                        DbusMessageIterGetArgType(ref value) != VariantType)
+                    if (DBusMessageIterInit(reply, out var value) == 0 ||
+                        DBusMessageIterGetArgType(ref value) != VariantType)
                         return false;
-                    DbusMessageIterRecurse(ref value, out var versionValue);
-                    if (DbusMessageIterGetArgType(ref versionValue) != UInt32Type)
+                    DBusMessageIterRecurse(ref value, out var versionValue);
+                    if (DBusMessageIterGetArgType(ref versionValue) != UInt32Type)
                         return false;
-                    DbusMessageIterGetBasic(ref versionValue, out uint version);
+                    DBusMessageIterGetBasic(ref versionValue, out uint version);
                     return version >= 1;
                 }
                 finally
                 {
-                    DbusMessageUnref(reply);
+                    DBusMessageUnref(reply);
                 }
             }
             finally
             {
-                DbusMessageUnref(message);
+                DBusMessageUnref(message);
             }
         }
         finally
         {
-            DbusConnectionUnref(connection);
+            DBusConnectionUnref(connection);
         }
     }
 
@@ -93,39 +93,39 @@ internal static class LinuxPortalThemeSupport
     }
 
     [DllImport(Library, EntryPoint = "dbus_bus_get")]
-    private static extern nint DbusBusGet(int bus, nint error);
+    private static extern nint DBusBusGet(int bus, nint error);
 
     [DllImport(Library, EntryPoint = "dbus_connection_unref")]
-    private static extern void DbusConnectionUnref(nint connection);
+    private static extern void DBusConnectionUnref(nint connection);
 
     [DllImport(Library, EntryPoint = "dbus_message_new_method_call")]
-    private static extern nint DbusMessageNewMethodCall(
+    private static extern nint DBusMessageNewMethodCall(
         [MarshalAs(UnmanagedType.LPUTF8Str)] string destination,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string interfaceName,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string method);
 
     [DllImport(Library, EntryPoint = "dbus_message_unref")]
-    private static extern void DbusMessageUnref(nint message);
+    private static extern void DBusMessageUnref(nint message);
 
     [DllImport(Library, EntryPoint = "dbus_message_iter_init_append")]
-    private static extern void DbusMessageIterInitAppend(nint message, out MessageIter iter);
+    private static extern void DBusMessageIterInitAppend(nint message, out MessageIter iter);
 
     [DllImport(Library, EntryPoint = "dbus_message_iter_append_basic")]
-    private static extern int DbusMessageIterAppendBasic(ref MessageIter iter, int type, ref nint value);
+    private static extern int DBusMessageIterAppendBasic(ref MessageIter iter, int type, ref nint value);
 
     [DllImport(Library, EntryPoint = "dbus_connection_send_with_reply_and_block")]
-    private static extern nint DbusConnectionSendWithReplyAndBlock(nint connection, nint message, int timeoutMs, nint error);
+    private static extern nint DBusConnectionSendWithReplyAndBlock(nint connection, nint message, int timeoutMs, nint error);
 
     [DllImport(Library, EntryPoint = "dbus_message_iter_init")]
-    private static extern int DbusMessageIterInit(nint message, out MessageIter iter);
+    private static extern int DBusMessageIterInit(nint message, out MessageIter iter);
 
     [DllImport(Library, EntryPoint = "dbus_message_iter_get_arg_type")]
-    private static extern int DbusMessageIterGetArgType(ref MessageIter iter);
+    private static extern int DBusMessageIterGetArgType(ref MessageIter iter);
 
     [DllImport(Library, EntryPoint = "dbus_message_iter_recurse")]
-    private static extern void DbusMessageIterRecurse(ref MessageIter iter, out MessageIter sub);
+    private static extern void DBusMessageIterRecurse(ref MessageIter iter, out MessageIter sub);
 
     [DllImport(Library, EntryPoint = "dbus_message_iter_get_basic")]
-    private static extern void DbusMessageIterGetBasic(ref MessageIter iter, out uint value);
+    private static extern void DBusMessageIterGetBasic(ref MessageIter iter, out uint value);
 }

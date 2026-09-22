@@ -75,9 +75,9 @@ internal static class DisplayServerNativeSmokeTests
                 "Wayland mouse position converts SDL's window-relative state to physical client pixels.");
             Check(display.HasFeature(DisplayServer.Feature.Ime),
                 "Wayland reports its integrated text-input capability.");
-            display.WindowSetImeActive(true);
+            display.WindowSetIMEActive(true);
             Check(SDL.TextInputActive(windows![0]), "Wayland started native text input for the main window.");
-            display.WindowSetImeActive(false);
+            display.WindowSetIMEActive(false);
             Check(!SDL.TextInputActive(windows[0]), "Wayland stopped native text input for the main window.");
         }
         for (var index = 0; index < (int)DisplayServer.CursorShape.Max; index++)

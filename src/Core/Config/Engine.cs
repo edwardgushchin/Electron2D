@@ -48,7 +48,7 @@ public sealed partial class Engine : ElectronObject
                 engine => engine.TimeScale,
                 (engine, value) => engine.TimeScale = value,
                 _ => 1d),
-            new PropertyDescriptor<Engine, int>(nameof(MaxFps), engine => engine.MaxFps, (engine, value) => engine.MaxFps = value, _ => 0),
+            new PropertyDescriptor<Engine, int>(nameof(MaxFPS), engine => engine.MaxFPS, (engine, value) => engine.MaxFPS = value, _ => 0),
             new PropertyDescriptor<Engine, ulong>(nameof(ProcessFrames), engine => engine.ProcessFrames),
             new PropertyDescriptor<Engine, ulong>(nameof(PhysicsFrames), engine => engine.PhysicsFrames),
             new PropertyDescriptor<Engine, double>(nameof(FramesPerSecond), engine => engine.FramesPerSecond),

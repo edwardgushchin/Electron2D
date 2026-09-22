@@ -40,7 +40,7 @@ The component depends on Core object lifecycle, MainLoop, ProjectSettings, and t
 
 ## Current implementation status and exclusions
 
-Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. Engine.Run now supplies the monotonic clock, event pumping through Window, MaxFps waiting and complete scene/window lifetime. Rendering/draw counts, logging flags, generated attribution/license data, script debugging/languages, movie writing, and editor hints remain absent. Their exact reference-API disposition is in the [`Engine` class inventory](../classes/Engine.md#official-reference-coverage-inventory).
+Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. Engine.Run now supplies the monotonic clock, event pumping through Window, MaxFPS waiting and complete scene/window lifetime. Rendering/draw counts, logging flags, generated attribution/license data, script debugging/languages, movie writing, and editor hints remain absent. Their exact reference-API disposition is in the [`Engine` class inventory](../classes/Engine.md#official-reference-coverage-inventory).
 
 ## Verification
 

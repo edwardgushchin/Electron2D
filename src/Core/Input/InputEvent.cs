@@ -347,7 +347,7 @@ public abstract class InputEventFromWindow : InputEvent
     private static readonly IReadOnlyList<PropertyDescriptor> WindowProperties =
         Array.AsReadOnly<PropertyDescriptor>(
         [
-            new PropertyDescriptor<InputEventFromWindow, long>(nameof(WindowId), @event => @event.WindowId, (@event, value) => @event.WindowId = value, _ => 0L, stored: true),
+            new PropertyDescriptor<InputEventFromWindow, long>(nameof(WindowID), @event => @event.WindowID, (@event, value) => @event.WindowID = value, _ => 0L, stored: true),
         ]);
 
     private long _windowId;
@@ -356,7 +356,7 @@ public abstract class InputEventFromWindow : InputEvent
     /// <value>A host-defined identifier; zero denotes the primary or unspecified window.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
-    public long WindowId
+    public long WindowID
     {
         get
         {

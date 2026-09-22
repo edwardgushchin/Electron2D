@@ -414,7 +414,7 @@ Last updated: 2026-09-22
 
 ### Status
 
-Accepted. Existing names require migration; this decision does not assert repository-wide compliance.
+Accepted. The rule applies equally to existing and new declarations.
 
 ### Decision
 
@@ -423,6 +423,8 @@ Every acronym in an Electron2D-owned function, method or property name is writte
 Examples: `LoadPNGFromBuffer`, `LoadJPGFromBuffer`, `LoadBMPFromBuffer`, `LoadTGAFromBuffer`, `SavePNG`, `SaveJPGToBuffer`, `GetGLVersion`, `CompileHLSL`, `CompileGLSL`, `GetGPUInfo`, `GetInstanceID`, `ReadUTF8` and `GetFPS`; a property uses `MaxFPS`. `FPS` follows the same uppercase rule as the other acronyms. These illustrate spelling; they do not introduce or claim implementation of those APIs. The rule also applies to other acronyms; this list is not exhaustive.
 
 Color APIs use `ToHTML`, `FromHTML`, `HTMLIsValid`, `LinearToSRGB`, `SRGBToLinear`, `FromHSV`, `ToHSV`, `FromOKHSL`, `FromRGBE9995` and the `ToABGR32`/`ToARGB32`/`ToRGBA32` families, including their 64-bit variants. Component properties retain their suffix: `OKHSLH`, `OKHSLS`, `OKHSLL` (the final `L` is the lightness component after the `OKHSL` acronym).
+
+The same rule gives `ReadCSVLine`, `GetMD5`, `GetSHA256`, `EOFReached`, `SetIMEActive`, `InstanceID`, `AdjustBCS` and `DBToLinear` in other API families. Review the whole identifier for acronyms; matching one of the examples is not the criterion.
 
 Do not turn acronyms into title-case words such as `Png`, `Jpg`, `Gl`, `Gpu`, `Utf8` or `Fps`. Compound names retain ordinary words while capitalizing their acronym parts: `WebP` and `OpenGL`; `SPIR-V` is written `SPIRV` inside an identifier, where a hyphen cannot be used.
 

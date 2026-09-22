@@ -1128,7 +1128,7 @@ public sealed class DirAccess : ElectronObject
         try
         {
             var request = (nuint)(0x80000000u | ((uint)IntPtr.Size << 16) | ((uint)'f' << 8) | 1u);
-            return IoctlUnix(descriptor, request, out var flags) < 0 || (flags & 0x40000000L) == 0;
+            return IOCTLUnix(descriptor, request, out var flags) < 0 || (flags & 0x40000000L) == 0;
         }
         finally
         {
@@ -1149,7 +1149,7 @@ public sealed class DirAccess : ElectronObject
         if (handle.IsInvalid)
             return false;
 
-        var status = NtQueryInformationFile(
+        var status = NTQueryInformationFile(
             handle,
             out _,
             out var information,
@@ -1163,23 +1163,23 @@ public sealed class DirAccess : ElectronObject
         var framework = NativeLibrary.Load("/System/Library/Frameworks/AppKit.framework/AppKit");
         try
         {
-            var workspaceClass = ObjcGetClass("NSWorkspace");
+            var workspaceClass = ObjCGetClass("NSWorkspace");
             if (workspaceClass == IntPtr.Zero)
                 throw new IOException("The macOS workspace could not classify the directory.");
-            var sharedWorkspace = ObjcSend(workspaceClass, SelRegisterName("sharedWorkspace"));
-            var nativePath = CfStringCreateWithCString(IntPtr.Zero, path, 0x08000100);
+            var sharedWorkspace = ObjCSend(workspaceClass, SelRegisterName("sharedWorkspace"));
+            var nativePath = CFStringCreateWithCString(IntPtr.Zero, path, 0x08000100);
             if (sharedWorkspace == IntPtr.Zero || nativePath == IntPtr.Zero)
                 throw new IOException("The macOS workspace could not classify the directory.");
             try
             {
-                return ObjcSendBool(
+                return ObjCSendBool(
                     sharedWorkspace,
                     SelRegisterName("isFilePackageAtPath:"),
                     nativePath) != 0;
             }
             finally
             {
-                CfRelease(nativePath);
+                CFRelease(nativePath);
             }
         }
         finally
@@ -1354,14 +1354,14 @@ public sealed class DirAccess : ElectronObject
     private static DriveEntry[] GetMacDriveEntries()
     {
         var framework = NativeLibrary.Load("/System/Library/Frameworks/Foundation.framework/Foundation");
-        var pool = ObjcAutoreleasePoolPush();
+        var pool = ObjCAutoreleasePoolPush();
         try
         {
-            var managerClass = ObjcGetClass("NSFileManager");
+            var managerClass = ObjCGetClass("NSFileManager");
             if (managerClass == IntPtr.Zero)
                 throw new IOException("The macOS file manager is unavailable.");
-            var manager = ObjcSend(managerClass, SelRegisterName("defaultManager"));
-            var volumes = ObjcSendWithPointerAndUnsigned(
+            var manager = ObjCSend(managerClass, SelRegisterName("defaultManager"));
+            var volumes = ObjCSendWithPointerAndUnsigned(
                 manager,
                 SelRegisterName("mountedVolumeURLsIncludingResourceValuesForKeys:options:"),
                 IntPtr.Zero,
@@ -1369,13 +1369,13 @@ public sealed class DirAccess : ElectronObject
             if (volumes == IntPtr.Zero)
                 throw new IOException("Mounted macOS volumes could not be enumerated.");
 
-            var count = ObjcSendUnsigned(volumes, SelRegisterName("count"));
+            var count = ObjCSendUnsigned(volumes, SelRegisterName("count"));
             var result = new DriveEntry[checked((int)count)];
             for (nuint index = 0; index < count; index++)
             {
-                var url = ObjcSendWithUnsigned(volumes, SelRegisterName("objectAtIndex:"), index);
-                var nativePath = ObjcSend(url, SelRegisterName("path"));
-                var utf8 = ObjcSend(nativePath, SelRegisterName("UTF8String"));
+                var url = ObjCSendWithUnsigned(volumes, SelRegisterName("objectAtIndex:"), index);
+                var nativePath = ObjCSend(url, SelRegisterName("path"));
+                var utf8 = ObjCSend(nativePath, SelRegisterName("UTF8String"));
                 var path = Marshal.PtrToStringUTF8(utf8) ??
                            throw new IOException("A mounted macOS volume has no path.");
                 result[checked((int)index)] = new DriveEntry(path, string.Empty, path);
@@ -1384,7 +1384,7 @@ public sealed class DirAccess : ElectronObject
         }
         finally
         {
-            ObjcAutoreleasePoolPop(pool);
+            ObjCAutoreleasePoolPop(pool);
             NativeLibrary.Free(framework);
         }
     }
@@ -1506,7 +1506,7 @@ public sealed class DirAccess : ElectronObject
         int flags);
 
     [DllImport("libc", EntryPoint = "ioctl", SetLastError = true)]
-    private static extern int IoctlUnix(int descriptor, nuint request, out long flags);
+    private static extern int IOCTLUnix(int descriptor, nuint request, out long flags);
 
     [DllImport("libc", EntryPoint = "close", SetLastError = true)]
     private static extern int CloseUnix(int descriptor);
@@ -1517,44 +1517,44 @@ public sealed class DirAccess : ElectronObject
         int name);
 
     [DllImport("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation", EntryPoint = "CFStringCreateWithCString")]
-    private static extern IntPtr CfStringCreateWithCString(
+    private static extern IntPtr CFStringCreateWithCString(
         IntPtr allocator,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string value,
         uint encoding);
 
     [DllImport("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation", EntryPoint = "CFRelease")]
-    private static extern void CfRelease(IntPtr value);
+    private static extern void CFRelease(IntPtr value);
 
     [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_getClass")]
-    private static extern IntPtr ObjcGetClass([MarshalAs(UnmanagedType.LPUTF8Str)] string name);
+    private static extern IntPtr ObjCGetClass([MarshalAs(UnmanagedType.LPUTF8Str)] string name);
 
     [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "sel_registerName")]
     private static extern IntPtr SelRegisterName([MarshalAs(UnmanagedType.LPUTF8Str)] string name);
 
     [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
-    private static extern IntPtr ObjcSend(IntPtr receiver, IntPtr selector);
+    private static extern IntPtr ObjCSend(IntPtr receiver, IntPtr selector);
 
     [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
-    private static extern byte ObjcSendBool(IntPtr receiver, IntPtr selector, IntPtr argument);
+    private static extern byte ObjCSendBool(IntPtr receiver, IntPtr selector, IntPtr argument);
 
     [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
-    private static extern nuint ObjcSendUnsigned(IntPtr receiver, IntPtr selector);
+    private static extern nuint ObjCSendUnsigned(IntPtr receiver, IntPtr selector);
 
     [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
-    private static extern IntPtr ObjcSendWithUnsigned(IntPtr receiver, IntPtr selector, nuint argument);
+    private static extern IntPtr ObjCSendWithUnsigned(IntPtr receiver, IntPtr selector, nuint argument);
 
     [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
-    private static extern IntPtr ObjcSendWithPointerAndUnsigned(
+    private static extern IntPtr ObjCSendWithPointerAndUnsigned(
         IntPtr receiver,
         IntPtr selector,
         IntPtr pointerArgument,
         nuint unsignedArgument);
 
     [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_autoreleasePoolPush")]
-    private static extern IntPtr ObjcAutoreleasePoolPush();
+    private static extern IntPtr ObjCAutoreleasePoolPush();
 
     [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_autoreleasePoolPop")]
-    private static extern void ObjcAutoreleasePoolPop(IntPtr pool);
+    private static extern void ObjCAutoreleasePoolPop(IntPtr pool);
 
     [DllImport("libc", EntryPoint = "stat", SetLastError = true)]
     private static extern int StatUnix(
@@ -1590,8 +1590,8 @@ public sealed class DirAccess : ElectronObject
         out ulong totalNumberOfBytes,
         out ulong totalNumberOfFreeBytes);
 
-    [DllImport("ntdll.dll")]
-    private static extern int NtQueryInformationFile(
+    [DllImport("ntdll.dll", EntryPoint = "NtQueryInformationFile")]
+    private static extern int NTQueryInformationFile(
         SafeFileHandle file,
         out WindowsIoStatusBlock ioStatusBlock,
         out WindowsCaseSensitiveInformation fileInformation,

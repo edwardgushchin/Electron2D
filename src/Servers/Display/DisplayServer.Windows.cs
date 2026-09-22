@@ -175,7 +175,7 @@ public sealed partial class DisplayServer
         };
         var properties = SDL.GetWindowProperties(window);
         if (properties == 0)
-            throw SdlFailure("query native window properties");
+            throw SDLFailure("query native window properties");
         var handle = driver == "x11" && handleType == HandleType.WindowHandle
             ? checked((nint)SDL.GetNumberProperty(properties, property, 0))
             : SDL.GetPointerProperty(properties, property, 0);
@@ -214,10 +214,10 @@ public sealed partial class DisplayServer
     {
         EnsureOwner();
         var window = GetWindow(windowId);
-        var display = GetDisplayId(screen);
+        var display = GetDisplayID(screen);
         var currentDisplay = SDL.GetDisplayForWindow(window);
         if (currentDisplay == 0)
-            throw SdlFailure("find the window's current display");
+            throw SDLFailure("find the window's current display");
         if (display == currentDisplay)
             return;
         EnsureGlobalWindowCoordinatesAvailable();
@@ -230,17 +230,17 @@ public sealed partial class DisplayServer
         }
 
         if (!SDL.GetDisplayBounds(display, out var targetBounds))
-            throw SdlFailure("read the target display bounds");
+            throw SDLFailure("read the target display bounds");
         if (mode == WindowMode.Fullscreen)
         {
             if (!SDL.SetWindowPosition(window, targetBounds.X, targetBounds.Y))
-                throw SdlFailure("move the fullscreen window to a display");
+                throw SDLFailure("move the fullscreen window to a display");
             return;
         }
         if (mode == WindowMode.Maximized)
         {
             if (!SDL.GetWindowPosition(window, out var oldX, out var oldY))
-                throw SdlFailure("read the maximized window position");
+                throw SDLFailure("read the maximized window position");
             MoveMaximizedToPosition(window, targetBounds.X, targetBounds.Y, oldX, oldY);
             return;
         }
@@ -249,7 +249,7 @@ public sealed partial class DisplayServer
             !SDL.GetDisplayUsableBounds(display, out var usableBounds) ||
             !SDL.GetWindowPosition(window, out var x, out var y) ||
             !SDL.GetWindowSize(window, out var width, out var height))
-            throw SdlFailure("read the window and display bounds");
+            throw SDLFailure("read the window and display bounds");
 
         var targetX = Math.Clamp((long)x - sourceBounds.X + usableBounds.X,
             usableBounds.X, Math.Max((long)usableBounds.X, (long)usableBounds.X + usableBounds.W - width / 3));
@@ -258,25 +258,25 @@ public sealed partial class DisplayServer
         var requestedX = (int)Math.Clamp(targetX, int.MinValue, int.MaxValue);
         var requestedY = (int)Math.Clamp(targetY, int.MinValue, int.MaxValue);
         if (!SDL.SetWindowPosition(window, requestedX, requestedY))
-            throw SdlFailure("move the window to a display");
+            throw SDLFailure("move the window to a display");
     }
 
     private static void MoveMaximizedToPosition(nint window, int x, int y, int oldX, int oldY)
     {
         if (!SDL.RestoreWindow(window))
-            throw SdlFailure("restore the maximized window before moving it");
+            throw SDLFailure("restore the maximized window before moving it");
         try
         {
             if (!SDL.SyncWindow(window) || !SDL.SetWindowPosition(window, x, y) ||
                 !SDL.SyncWindow(window) || !SDL.MaximizeWindow(window))
-                throw SdlFailure("move and remaximize the window");
+                throw SDLFailure("move and remaximize the window");
         }
         catch (Exception failure)
         {
             if (!SDL.RestoreWindow(window) || !SDL.SyncWindow(window) ||
                 !SDL.SetWindowPosition(window, oldX, oldY) || !SDL.SyncWindow(window) ||
                 !SDL.MaximizeWindow(window))
-                throw new AggregateException(failure, SdlFailure("restore the previous maximized window"));
+                throw new AggregateException(failure, SDLFailure("restore the previous maximized window"));
             throw;
         }
     }
@@ -287,9 +287,9 @@ public sealed partial class DisplayServer
             throw new InvalidOperationException("The exclusive fullscreen window has no selected display mode.");
         if (!SDL.GetClosestFullscreenDisplayMode(display, previousMode.W, previousMode.H,
             previousMode.RefreshRate, true, out var targetMode))
-            throw SdlFailure("select a fullscreen mode for the target display");
+            throw SDLFailure("select a fullscreen mode for the target display");
         if (!SDL.SetWindowFullscreenMode(window, targetMode))
-            throw SdlFailure("move the exclusive fullscreen window to a display");
+            throw SDLFailure("move the exclusive fullscreen window to a display");
     }
 
     /// <summary>Gets the current screen refresh rate.</summary>
@@ -298,7 +298,7 @@ public sealed partial class DisplayServer
     public float ScreenGetRefreshRate(int screen = ScreenOfMainWindow)
     {
         EnsureOwner();
-        if (!TryGetDisplayId(screen, out var displayId))
+        if (!TryGetDisplayID(screen, out var displayId))
             return -1f;
         var mode = SDL.GetCurrentDisplayMode(displayId);
         var rate = mode is { RefreshRateNumerator: > 0, RefreshRateDenominator: > 0 } precise
@@ -331,7 +331,7 @@ public sealed partial class DisplayServer
             return _waylandMinimumSize;
         }
         if (!SDL.GetWindowMinimumSize(GetWindow(windowId), out var width, out var height))
-            throw SdlFailure("read minimum window size");
+            throw SDLFailure("read minimum window size");
         return new Vector2I(width, height);
     }
 
@@ -358,7 +358,7 @@ public sealed partial class DisplayServer
                 throw new ArgumentOutOfRangeException(nameof(size), size, "The minimum and maximum cannot both be represented at the current pixel density.");
         }
         if (!SDL.SetWindowMinimumSize(window, nativeSize.X, nativeSize.Y))
-            throw SdlFailure("set minimum window size");
+            throw SDLFailure("set minimum window size");
         if (_waylandWindowPosition)
             _waylandMinimumSize = size;
     }
@@ -375,7 +375,7 @@ public sealed partial class DisplayServer
             return _waylandMaximumSize;
         }
         if (!SDL.GetWindowMaximumSize(GetWindow(windowId), out var width, out var height))
-            throw SdlFailure("read maximum window size");
+            throw SDLFailure("read maximum window size");
         return new Vector2I(width, height);
     }
 
@@ -402,7 +402,7 @@ public sealed partial class DisplayServer
                 throw new ArgumentOutOfRangeException(nameof(size), size, "The minimum and maximum cannot both be represented at the current pixel density.");
         }
         if (!SDL.SetWindowMaximumSize(window, nativeSize.X, nativeSize.Y))
-            throw SdlFailure("set maximum window size");
+            throw SDLFailure("set maximum window size");
         if (_waylandWindowPosition)
             _waylandMaximumSize = size;
     }
@@ -414,7 +414,7 @@ public sealed partial class DisplayServer
         var maximum = WaylandLogicalWindowLimit(_waylandMaximumSize, window, minimum: false);
         if (!SDL.SetWindowMinimumSize(window, minimum.X, minimum.Y) ||
             !SDL.SetWindowMaximumSize(window, maximum.X, maximum.Y))
-            throw SdlFailure("update window size limits for the pixel density");
+            throw SDLFailure("update window size limits for the pixel density");
     }
 
     /// <summary>Gets the main window's current native mode.</summary>
@@ -456,7 +456,7 @@ public sealed partial class DisplayServer
             _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unknown window mode."),
         };
         if (!success)
-            throw SdlFailure("set window mode");
+            throw SDLFailure("set window mode");
     }
 
     private bool SetExclusiveFullscreen(nint window)
@@ -464,7 +464,7 @@ public sealed partial class DisplayServer
         var display = SDL.GetDisplayForWindow(window);
         if (display == 0 || !SDL.GetWindowSize(window, out var width, out var height) ||
             !SDL.GetClosestFullscreenDisplayMode(display, width, height, 0f, true, out var mode))
-            throw SdlFailure("select an exclusive fullscreen mode");
+            throw SDLFailure("select an exclusive fullscreen mode");
         return SetFullscreen(window, mode);
     }
 
@@ -478,12 +478,12 @@ public sealed partial class DisplayServer
             return false;
         if (SDL.SetWindowFullscreen(window, true))
             return true;
-        var failure = SdlFailure("enter fullscreen");
+        var failure = SDLFailure("enter fullscreen");
         var restored = previousMode is { } previous
             ? SDL.SetWindowFullscreenMode(window, previous)
             : SDL.SetWindowFullscreenMode(window, 0);
         if (!restored)
-            throw new AggregateException(failure, SdlFailure("restore the previous fullscreen mode"));
+            throw new AggregateException(failure, SDLFailure("restore the previous fullscreen mode"));
         throw failure;
     }
 
@@ -548,7 +548,7 @@ public sealed partial class DisplayServer
             _ => throw new ArgumentOutOfRangeException(nameof(flag), flag, "Unknown window flag."),
         };
         if (!success)
-            throw SdlFailure("change window flag");
+            throw SDLFailure("change window flag");
     }
 
     /// <summary>Gets whether the current SDL resize policy permits a maximize request.</summary>
@@ -575,7 +575,7 @@ public sealed partial class DisplayServer
         if (SDL.GetCurrentVideoDriver() == "wayland")
             return;
         if (!SDL.RaiseWindow(window))
-            throw SdlFailure("raise the window");
+            throw SDLFailure("raise the window");
     }
 
     /// <summary>Requests user attention until the main window receives focus.</summary>
@@ -588,7 +588,7 @@ public sealed partial class DisplayServer
     {
         EnsureOwner();
         if (!SDL.FlashWindow(GetWindow(windowId), SDL.FlashOperation.UntilFocused))
-            throw SdlFailure("request window attention");
+            throw SDLFailure("request window attention");
     }
 
     /// <summary>Gets the main-window position including its left and top decorations.</summary>
@@ -602,7 +602,7 @@ public sealed partial class DisplayServer
         EnsureGlobalWindowCoordinatesAvailable();
         if (!SDL.GetWindowPosition(window, out var x, out var y) ||
             !SDL.GetWindowBordersSize(window, out var top, out var left, out _, out _))
-            throw SdlFailure("read decorated window position");
+            throw SDLFailure("read decorated window position");
         return new Vector2I(checked(x - left), checked(y - top));
     }
 
@@ -618,7 +618,7 @@ public sealed partial class DisplayServer
             return WindowGetSize(windowId);
         if (!SDL.GetWindowSize(window, out var width, out var height) ||
             !SDL.GetWindowBordersSize(window, out var top, out var left, out var bottom, out var right))
-            throw SdlFailure("read decorated window size");
+            throw SDLFailure("read decorated window size");
         return new Vector2I(checked(width + left + right), checked(height + top + bottom));
     }
 
@@ -647,7 +647,7 @@ public sealed partial class DisplayServer
         if (SDL.GetCurrentVideoDriver() == "wayland")
             throw new NotSupportedException("Taskbar progress is unavailable without verified Wayland desktop integration.");
         if (!SDL.SetWindowProgressState(window, native))
-            throw SdlFailure("set taskbar progress state");
+            throw SDLFailure("set taskbar progress state");
     }
 
     /// <summary>Requests a taskbar progress fraction for the main window where the desktop supports it.</summary>
@@ -668,6 +668,6 @@ public sealed partial class DisplayServer
         if (SDL.GetCurrentVideoDriver() == "wayland")
             throw new NotSupportedException("Taskbar progress is unavailable without verified Wayland desktop integration.");
         if (!SDL.SetWindowProgressValue(window, value))
-            throw SdlFailure("set taskbar progress value");
+            throw SDLFailure("set taskbar progress value");
     }
 }

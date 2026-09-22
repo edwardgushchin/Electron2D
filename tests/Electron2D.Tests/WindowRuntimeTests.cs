@@ -8,9 +8,9 @@ internal static class WindowRuntimeTests
     public static void Run()
     {
         var engine = Engine.Instance;
-        var oldLimit = engine.MaxFps;
-        Reject<ArgumentOutOfRangeException>(() => engine.MaxFps = -1);
-        engine.MaxFps = 20;
+        var oldLimit = engine.MaxFPS;
+        Reject<ArgumentOutOfRangeException>(() => engine.MaxFPS = -1);
+        engine.MaxFPS = 20;
         try
         {
             CheckNativeControls();
@@ -26,7 +26,7 @@ internal static class WindowRuntimeTests
             using (var detached = new Window())
             {
                 Check(detached.Size == new Vector2I(100, 100) && detached.Title == "" && detached.Visible &&
-                      detached.MinSize == Vector2I.Zero && detached.MaxSize == Vector2I.Zero && detached.GetWindowId() == -1,
+                      detached.MinSize == Vector2I.Zero && detached.MaxSize == Vector2I.Zero && detached.GetWindowID() == -1,
                     "Window defaults and detached identity are explicit.");
                 Reject<ArgumentOutOfRangeException>(() => detached.Size = Vector2I.Zero);
                 Reject<ArgumentException>(() => detached.Title = "bad\0title");
@@ -65,7 +65,7 @@ internal static class WindowRuntimeTests
                 {
                     Check(ReferenceEquals(engine.MainLoop, node.Tree) && window.Tree!.Root == window && node.GetWindow() == window && node.GetViewport() == window,
                         "Scene children discover their actual root Window/Viewport before ready.");
-                    Check(window.GetWindowId() == 0 && DisplayServer.Instance is not null,
+                    Check(window.GetWindowID() == 0 && DisplayServer.Instance is not null,
                         "Native window is open before scene ready.");
                     window.Title = "Live title";
                     Check(window.Title == "Live title", "Title round trips through the native backend.");
@@ -103,7 +103,7 @@ internal static class WindowRuntimeTests
                 },
                 ExitAction = node =>
                 {
-                    Check(window.GetWindowId() == 0, "The native window outlives scene exit.");
+                    Check(window.GetWindowID() == 0, "The native window outlives scene exit.");
                     using var other = new Window();
                     Reject<InvalidOperationException>(() => engine.Run(other));
                 }
@@ -219,7 +219,7 @@ internal static class WindowRuntimeTests
             Check(engine.Run(window) == 31 && window.IsDisposed, "Cross-thread quit during ready works and startup observes it before frames.");
             Console.WriteLine("Window runtime checks passed.");
         }
-        finally { engine.MaxFps = oldLimit; }
+        finally { engine.MaxFPS = oldLimit; }
     }
 
     private static Window NewWindow() => new() { Title = "Window runtime checks", Size = new Vector2I(160, 100) };
@@ -246,7 +246,7 @@ internal static class WindowRuntimeTests
                 Reject<ArgumentOutOfRangeException>(() => template.Mode = (Window.ModeEnum)99);
                 Reject<ArgumentOutOfRangeException>(() => template.CurrentScreen = -1);
                 Reject<InvalidOperationException>(template.MoveToCenter);
-                Reject<InvalidOperationException>(() => template.SetImeActive(true));
+                Reject<InvalidOperationException>(() => template.SetIMEActive(true));
                 Check(template.GetSizeWithDecorations() == template.Size && template.GetPositionWithDecorations() == Vector2I.Zero,
                     "Detached decoration geometry needs no native owner.");
                 template.CurrentScreen = 999;
@@ -287,10 +287,10 @@ internal static class WindowRuntimeTests
                     Reject<ArgumentOutOfRangeException>(() => window.CurrentScreen = int.MaxValue);
                     Task.Run(() => Reject<InvalidOperationException>(() => window.Unresizable = true)).GetAwaiter().GetResult();
                     Check(!window.Unresizable, "Off-thread requests preserve configured state.");
-                    window.SetImeActive(true);
+                    window.SetIMEActive(true);
                     Check(SDL.TextInputActive(native), "Window activates native text input.");
-                    window.SetImePosition(new Vector2I(12, 18));
-                    window.SetImeActive(false);
+                    window.SetIMEPosition(new Vector2I(12, 18));
+                    window.SetIMEActive(false);
                     Check(!SDL.TextInputActive(native), "Window deactivates native text input.");
                     Reject<ArgumentOutOfRangeException>(() => window.SetTaskbarProgressValue(float.NaN));
                     Reject<ArgumentOutOfRangeException>(() => window.SetTaskbarProgressState((DisplayServer.ProgressState)99));

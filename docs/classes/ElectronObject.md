@@ -1,6 +1,6 @@
 # ElectronObject
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** —
 
@@ -28,7 +28,7 @@ The following focused snippet uses the current public API. Names not declared in
 ```csharp
 using var node = new Node();
 ElectronObject value = node;
-Console.WriteLine(value.InstanceId);
+Console.WriteLine(value.InstanceID);
 ```
 
 ## Constructors
@@ -41,7 +41,7 @@ Console.WriteLine(value.InstanceId);
 
 | Member | Description |
 | --- | --- |
-| [`public ulong InstanceId { get; }`](#p-electron2d-electronobject-instanceid) | Gets this object's process-local instance identifier. |
+| [`public ulong InstanceID { get; }`](#p-electron2d-electronobject-instanceid) | Gets this object's process-local instance identifier. |
 | [`public string ClassName { get; }`](#p-electron2d-electronobject-classname) | Gets the unqualified runtime class name. |
 | [`public bool IsDisposed { get; }`](#p-electron2d-electronobject-isdisposed) | Gets whether deterministic disposal has started. |
 | [`public bool CanTranslateMessages { get; set; }`](#p-electron2d-electronobject-cantranslatemessages) | Gets or sets whether this object resolves messages through [`TranslationServer`](TranslationServer.md). |
@@ -95,7 +95,7 @@ Initializes a new ElectronObject instance.
 ## Property Descriptions
 
 <a id="p-electron2d-electronobject-instanceid"></a>
-### `public ulong InstanceId { get; }`
+### `public ulong InstanceID { get; }`
 
 Gets this object's process-local instance identifier.
 
@@ -372,7 +372,7 @@ Rejects access after disposal starts, except on the thread currently running dis
 
 Returns a diagnostic string containing the runtime class name and instance identifier.
 
-**Returns:** A string in the form `<ClassName>#<InstanceId>`.
+**Returns:** A string in the form `<ClassName>#<InstanceID>`.
 
 ## Event Descriptions
 
@@ -455,7 +455,7 @@ The class has no finalizer. Derived SDL resource types must put native handles i
 - No `Variant`, `dynamic`, string-based `Get`, `Set`, or `Call`.
 - No metadata bag, script attachment, script runtime, or generic signal registry. `ScriptChanged` is the typed notification contract reserved for the confirmed future scripting component; nothing raises it automatically yet.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers because a typed stable endpoint schema does not yet exist.
-- No global registry or lookup by `InstanceId`.
+- No global registry or lookup by `InstanceID`.
 - No queued deletion; that behavior belongs to [`Node`](Node.md) and [`SceneTree`](SceneTree.md).
 
 ## Verification

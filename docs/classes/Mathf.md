@@ -82,8 +82,8 @@ float value = Mathf.Lerp(0f, 10f, 0.25f);
 | [`public static double BezierInterpolate(double start, double control1, double control2, double end, double weight)`](#m-electron2d-mathf-bezierinterpolate-system-double-system-double-system-double-system-double-system-double) | Evaluates a double-precision one-dimensional cubic Bezier curve. |
 | [`public static float BezierDerivative(float start, float control1, float control2, float end, float weight)`](#m-electron2d-mathf-bezierderivative-system-single-system-single-system-single-system-single-system-single) | Evaluates the derivative of a one-dimensional cubic Bezier curve. |
 | [`public static double BezierDerivative(double start, double control1, double control2, double end, double weight)`](#m-electron2d-mathf-bezierderivative-system-double-system-double-system-double-system-double-system-double) | Evaluates the derivative of a double-precision one-dimensional cubic Bezier curve. |
-| [`public static float DbToLinear(float decibels)`](#m-electron2d-mathf-dbtolinear-system-single) | Converts decibels to linear energy. |
-| [`public static double DbToLinear(double decibels)`](#m-electron2d-mathf-dbtolinear-system-double) | Converts double-precision decibels to linear energy. |
+| [`public static float DBToLinear(float decibels)`](#m-electron2d-mathf-dbtolinear-system-single) | Converts decibels to linear energy. |
+| [`public static double DBToLinear(double decibels)`](#m-electron2d-mathf-dbtolinear-system-double) | Converts double-precision decibels to linear energy. |
 | [`public static float DegToRad(float degrees)`](#m-electron2d-mathf-degtorad-system-single) | Converts degrees to radians. |
 | [`public static double DegToRad(double degrees)`](#m-electron2d-mathf-degtorad-system-double) | Converts double-precision degrees to radians. |
 | [`public static int DecimalCount(double value)`](#m-electron2d-mathf-decimalcount-system-double) | Returns the number of encoded decimal fractional digits. |
@@ -114,8 +114,8 @@ float value = Mathf.Lerp(0f, 10f, 0.25f);
 | [`public static double Lerp(double from, double to, double weight)`](#m-electron2d-mathf-lerp-system-double-system-double-system-double) | Linearly interpolates double-precision values without clamping the weight. |
 | [`public static float LerpAngle(float from, float to, float weight)`](#m-electron2d-mathf-lerpangle-system-single-system-single-system-single) | Linearly interpolates between angles along their shortest path. |
 | [`public static double LerpAngle(double from, double to, double weight)`](#m-electron2d-mathf-lerpangle-system-double-system-double-system-double) | Linearly interpolates between double-precision angles along their shortest path. |
-| [`public static float LinearToDb(float linear)`](#m-electron2d-mathf-lineartodb-system-single) | Converts linear energy to decibels. |
-| [`public static double LinearToDb(double linear)`](#m-electron2d-mathf-lineartodb-system-double) | Converts double-precision linear energy to decibels. |
+| [`public static float LinearToDB(float linear)`](#m-electron2d-mathf-lineartodb-system-single) | Converts linear energy to decibels. |
+| [`public static double LinearToDB(double linear)`](#m-electron2d-mathf-lineartodb-system-double) | Converts double-precision linear energy to decibels. |
 | [`public static float Log(float value)`](#m-electron2d-mathf-log-system-single) | Returns the natural logarithm. |
 | [`public static double Log(double value)`](#m-electron2d-mathf-log-system-double) | Returns the double-precision natural logarithm. |
 | [`public static int Max(int left, int right)`](#m-electron2d-mathf-max-system-int32-system-int32) | Returns the larger integer. |
@@ -737,7 +737,7 @@ Evaluates the derivative of a double-precision one-dimensional cubic Bezier curv
 **Returns:** The derivative at the parameter.
 
 <a id="m-electron2d-mathf-dbtolinear-system-single"></a>
-### `public static float DbToLinear(float decibels)`
+### `public static float DBToLinear(float decibels)`
 
 Converts decibels to linear energy.
 
@@ -748,7 +748,7 @@ Converts decibels to linear energy.
 **Returns:** The corresponding linear energy.
 
 <a id="m-electron2d-mathf-dbtolinear-system-double"></a>
-### `public static double DbToLinear(double decibels)`
+### `public static double DBToLinear(double decibels)`
 
 Converts double-precision decibels to linear energy.
 
@@ -1121,7 +1121,7 @@ Linearly interpolates between double-precision angles along their shortest path.
 **Returns:** The interpolated angle.
 
 <a id="m-electron2d-mathf-lineartodb-system-single"></a>
-### `public static float LinearToDb(float linear)`
+### `public static float LinearToDB(float linear)`
 
 Converts linear energy to decibels.
 
@@ -1132,7 +1132,7 @@ Converts linear energy to decibels.
 **Returns:** The decibel value; zero produces negative infinity and negative input produces NaN.
 
 <a id="m-electron2d-mathf-lineartodb-system-double"></a>
-### `public static double LinearToDb(double linear)`
+### `public static double LinearToDB(double linear)`
 
 Converts double-precision linear energy to decibels.
 

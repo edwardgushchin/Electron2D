@@ -27,7 +27,7 @@ public abstract class ElectronObject : IDisposable
     private static long _lastInstanceId;
     private static readonly IReadOnlyList<PropertyDescriptor> ObjectProperties = Array.AsReadOnly<PropertyDescriptor>(
     [
-        new PropertyDescriptor<ElectronObject, ulong>(nameof(InstanceId), owner => owner.InstanceId),
+        new PropertyDescriptor<ElectronObject, ulong>(nameof(InstanceID), owner => owner.InstanceID),
         new PropertyDescriptor<ElectronObject, string>(nameof(ClassName), owner => owner.ClassName),
         new PropertyDescriptor<ElectronObject, bool>(nameof(IsDisposed), owner => owner.IsDisposed),
         new PropertyDescriptor<ElectronObject, bool>(
@@ -51,7 +51,7 @@ public abstract class ElectronObject : IDisposable
 
     /// <summary>Gets this object's process-local instance identifier.</summary>
     /// <value>A nonzero identifier that is never changed or reused during the current process.</value>
-    public ulong InstanceId { get; } = unchecked((ulong)Interlocked.Increment(ref _lastInstanceId));
+    public ulong InstanceID { get; } = unchecked((ulong)Interlocked.Increment(ref _lastInstanceId));
 
     /// <summary>Gets the unqualified runtime class name.</summary>
     /// <value>The <c>Name</c> of the <see cref="Type"/> returned by <see cref="object.GetType"/>.</value>
@@ -394,6 +394,6 @@ public abstract class ElectronObject : IDisposable
     }
 
     /// <summary>Returns a diagnostic string containing the runtime class name and instance identifier.</summary>
-    /// <returns>A string in the form <c>&lt;ClassName&gt;#&lt;InstanceId&gt;</c>.</returns>
-    public override string ToString() => $"{ClassName}#{InstanceId}";
+    /// <returns>A string in the form <c>&lt;ClassName&gt;#&lt;InstanceID&gt;</c>.</returns>
+    public override string ToString() => $"{ClassName}#{InstanceID}";
 }

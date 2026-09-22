@@ -91,13 +91,13 @@ byte[] ownedCopy = image.GetData();
 | [`public void BlendRect(Image source, RectI sourceRect, Vector2I destination)`](#blendrect) | Alpha-composites a clipped source rectangle. |
 | [`public void BlitRectMask(Image source, Image mask, RectI sourceRect, Vector2I destination)`](#blitrectmask) | Copies source pixels selected by mask alpha. |
 | [`public void BlendRectMask(Image source, Image mask, RectI sourceRect, Vector2I destination)`](#blendrectmask) | Alpha-composites source pixels selected by mask alpha. |
-| [`public void AdjustBcs(float brightness, float contrast, float saturation)`](#adjustbcs) | Adjusts brightness, contrast, and saturation. |
+| [`public void AdjustBCS(float brightness, float contrast, float saturation)`](#adjustbcs) | Adjusts brightness, contrast, and saturation. |
 | [`public void FixAlphaEdges()`](#fixalphaedges) | Propagates nearby opaque RGB into low-alpha `Rgba8` pixels. |
 | [`public void PremultiplyAlpha()`](#premultiplyalpha) | Multiplies `Rgba8` RGB bytes by alpha. |
 | [`public void SRGBToLinear()`](#srgbtolinear) | Converts `Rgb8` or `Rgba8` RGB values to linear encoding. |
 | [`public void LinearToSRGB()`](#lineartosrgb) | Converts `Rgb8` or `Rgba8` RGB values to nonlinear encoding. |
 | [`public void BumpMapToNormalMap(float bumpScale = 1f)`](#bumpmaptonormalmap) | Converts height values to a wrapping tangent-space normal map. |
-| [`public void NormalMapToXy()`](#normalmaptoxy) | Packs normal X/Y into `La8`. |
+| [`public void NormalMapToXY()`](#normalmaptoxy) | Packs normal X/Y into `La8`. |
 | [`public Image RGBEToSRGB()`](#rgbetosrgb) | Decodes `Rgbe9995` into a new `Rgb8` image. |
 | [`public ImageMetrics ComputeImageMetrics(Image comparedImage, bool useLuma)`](#computeimagemetrics) | Computes absolute-error statistics over the common area. |
 
@@ -361,7 +361,7 @@ Copies only pixels whose same-coordinate mask alpha is nonzero. Source and mask 
 Combines mask selection with straight-alpha compositing. Source, destination, and mask validation occurs before destination commit.
 
 <a id="adjustbcs"></a>
-### `public void AdjustBcs(float brightness, float contrast, float saturation)`
+### `public void AdjustBCS(float brightness, float contrast, float saturation)`
 
 Applies finite RGB factors to all stored levels while preserving alpha. `1` is neutral for each factor; non-finite factors throw `ArgumentOutOfRangeException`.
 
@@ -391,7 +391,7 @@ Transforms RGB components of every stored `Rgb8` or `Rgba8` pixel from linear to
 Uses each pixel's red/luminance-derived height and wrapping right/below differences to create a normalized `Rgba8` tangent-space normal. The result has no mipmaps. `bumpScale` must be finite.
 
 <a id="normalmaptoxy"></a>
-### `public void NormalMapToXy()`
+### `public void NormalMapToXY()`
 
 Converts readable data to `Rgba8`, then stores green as luminance and red as alpha in `La8`. The existing mipmap layout is retained.
 

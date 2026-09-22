@@ -27,7 +27,7 @@ public sealed partial class DisplayServer
         WithImageSurface(image, surface =>
         {
             if (!SDL.SetWindowIcon(window, surface))
-                throw SdlFailure("set window icon");
+                throw SDLFailure("set window icon");
         });
         _nativeWaylandIconAvailable = true;
         _windowIconOverridden = true;
@@ -49,7 +49,7 @@ public sealed partial class DisplayServer
         WithImageSurface(image, surface =>
         {
             if (!SDL.SetWindowIcon(GetWindow(MainWindowId), surface))
-                throw SdlFailure("set default window icon");
+                throw SDLFailure("set default window icon");
         });
         _nativeWaylandIconAvailable = true;
     }
@@ -79,7 +79,7 @@ public sealed partial class DisplayServer
             var native = SDL.CreateSurfaceFrom(copy.Width, copy.Height, format,
                 pin.AddrOfPinnedObject(), checked(copy.Width * 4));
             if (native == 0)
-                throw SdlFailure("create an image surface");
+                throw SDLFailure("create an image surface");
             using var surface = new SdlSurfaceHandle(native);
             GC.SuppressFinalize(surface);
             action(surface.DangerousGetHandle());

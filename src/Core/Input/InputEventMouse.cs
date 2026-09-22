@@ -345,7 +345,7 @@ public sealed class InputEventMouseMotion : InputEventMouse
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(withEvent);
         withEvent.EnsureUsable();
-        if (withEvent is not InputEventMouseMotion motion || WindowId != motion.WindowId ||
+        if (withEvent is not InputEventMouseMotion motion || WindowID != motion.WindowID ||
             CanceledState != motion.CanceledState || PressedState != motion.PressedState ||
             ButtonMask != motion.ButtonMask || ShiftPressed != motion.ShiftPressed ||
             ControlPressed != motion.ControlPressed || AltPressed != motion.AltPressed || MetaPressed != motion.MetaPressed)

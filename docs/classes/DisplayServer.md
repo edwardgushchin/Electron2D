@@ -105,10 +105,10 @@ display.FileDialogShow("Open image", "", "", false,
 | [`public CursorShape CursorGetShape()`](#method-cursorgetshape) | Gets the last successfully selected standard pointer shape. |
 | [`public void CursorSetShape(CursorShape shape)`](#method-cursorsetshape) | Selects a standard pointer shape from the native cursor theme. |
 | [`public void CursorSetCustomImage(Image? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`](#method-cursorsetcustomimage) | Sets or clears the image used for one pointer shape. |
-| [`public string ImeGetText()`](#method-imegettext) | Gets the most recently received native IME composition text. |
-| [`public Vector2I ImeGetSelection()`](#method-imegetselection) | Gets the current composition selection. |
-| [`public void WindowSetImeActive(bool active, int windowId = MainWindowId)`](#method-windowsetimeactive) | Enables or disables native text input for the main window. |
-| [`public void WindowSetImePosition(Vector2I position, int windowId = MainWindowId)`](#method-windowsetimeposition) | Moves the native IME candidate area to a window-local text caret. |
+| [`public string IMEGetText()`](#method-imegettext) | Gets the most recently received native IME composition text. |
+| [`public Vector2I IMEGetSelection()`](#method-imegetselection) | Gets the current composition selection. |
+| [`public void WindowSetIMEActive(bool active, int windowId = MainWindowId)`](#method-windowsetimeactive) | Enables or disables native text input for the main window. |
+| [`public void WindowSetIMEPosition(Vector2I position, int windowId = MainWindowId)`](#method-windowsetimeposition) | Moves the native IME candidate area to a window-local text caret. |
 | [`public bool IsTouchscreenAvailable()`](#method-istouchscreenavailable) | Gets whether touch input is available from a device or mouse emulation. |
 | [`public int WindowGetCurrentScreen(int windowId = MainWindowId)`](#method-windowgetcurrentscreen) | Gets the current screen index containing the main window. |
 | [`public int GetKeyboardFocusScreen()`](#method-getkeyboardfocusscreen) | Gets the index of the display with keyboard focus. |
@@ -464,7 +464,7 @@ Sets or clears the image used for one pointer shape.
 **Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
 
 <a id="method-imegettext"></a>
-#### `public string ImeGetText()`
+#### `public string IMEGetText()`
 
 Gets the most recently received native IME composition text.
 
@@ -473,7 +473,7 @@ Gets the most recently received native IME composition text.
 **Source:** `src/Servers/Display/DisplayServer.Text.cs`.
 
 <a id="method-imegetselection"></a>
-#### `public Vector2I ImeGetSelection()`
+#### `public Vector2I IMEGetSelection()`
 
 Gets the current composition selection.
 
@@ -482,7 +482,7 @@ Gets the current composition selection.
 **Source:** `src/Servers/Display/DisplayServer.Text.cs`.
 
 <a id="method-windowsetimeactive"></a>
-#### `public void WindowSetImeActive(bool active, int windowId = MainWindowId)`
+#### `public void WindowSetIMEActive(bool active, int windowId = MainWindowId)`
 
 Enables or disables native text input for the main window.
 
@@ -494,7 +494,7 @@ Enables or disables native text input for the main window.
 **Source:** `src/Servers/Display/DisplayServer.Text.cs`.
 
 <a id="method-windowsetimeposition"></a>
-#### `public void WindowSetImePosition(Vector2I position, int windowId = MainWindowId)`
+#### `public void WindowSetIMEPosition(Vector2I position, int windowId = MainWindowId)`
 
 Moves the native IME candidate area to a window-local text caret.
 
@@ -1116,7 +1116,7 @@ Occurs when the platform commits text input, including text composed through an 
 
 Occurs after the native input method updates its uncommitted composition.
 
-**Remarks:** The text and Unicode-codepoint selection have already committed to `ImeGetText` and `ImeGetSelection`; unknown negative native offsets become zero.
+**Remarks:** The text and Unicode-codepoint selection have already committed to `IMEGetText` and `IMEGetSelection`; unknown negative native offsets become zero.
 
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 

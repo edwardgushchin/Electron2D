@@ -1,6 +1,6 @@
 # Resource
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -46,7 +46,7 @@ resource.Changed += _ => Console.WriteLine("Changed");
 | [`public bool ResourceLocalToScene { get; set; }`](#p-electron2d-resource-resourcelocaltoscene) | Gets or sets whether a scene-instancing component should make this resource unique to each scene instance. |
 | [`public string ResourceName { get; set; }`](#p-electron2d-resource-resourcename) | Gets or sets the optional display name of this resource. |
 | [`public string ResourcePath { get; set; }`](#p-electron2d-resource-resourcepath) | Gets or sets the unique cache path associated with this resource. |
-| [`public string ResourceSceneUniqueId { get; set; }`](#p-electron2d-resource-resourcesceneuniqueid) | Gets or sets the identifier used when this resource is embedded in a serialized scene. |
+| [`public string ResourceSceneUniqueID { get; set; }`](#p-electron2d-resource-resourcesceneuniqueid) | Gets or sets the identifier used when this resource is embedded in a serialized scene. |
 | [`public bool IsBuiltIn { get; }`](#p-electron2d-resource-isbuiltin) | Gets whether this resource is embedded rather than represented by a standalone external path. |
 
 ## Methods
@@ -58,7 +58,7 @@ resource.Changed += _ => Console.WriteLine("Changed");
 | [`public Resource Duplicate(bool deep = false)`](#m-electron2d-resource-duplicate-system-boolean) | Creates a shallow or internally deep duplicate of this resource. |
 | [`public Resource DuplicateDeep(DeepDuplicateMode subresourceMode = DeepDuplicateMode.Internal)`](#m-electron2d-resource-duplicatedeep-electron2d-deepduplicatemode) | Creates a deep duplicate with explicit nested-resource policy. |
 | [`public void EmitChanged()`](#m-electron2d-resource-emitchanged) | Synchronously reports that this resource's meaningful content changed. |
-| [`public static string GenerateSceneUniqueId()`](#m-electron2d-resource-generatesceneuniqueid) | Generates a compact scene-relative resource identifier. |
+| [`public static string GenerateSceneUniqueID()`](#m-electron2d-resource-generatesceneuniqueid) | Generates a compact scene-relative resource identifier. |
 | [`public void ResetState()`](#m-electron2d-resource-resetstate) | Clears non-stored state through [`Resource.OnResetState`](Resource.md#m-electron2d-resource-onresetstate). |
 | [`public void SetPathCache(string path)`](#m-electron2d-resource-setpathcache-system-string) | Sets the path value without registering it in the process-wide resource cache. |
 | [`public void SetupLocalToScene()`](#m-electron2d-resource-setuplocaltoscene) | Invokes scene-local setup callbacks for a resource duplicated by a scene-instancing component. |
@@ -135,7 +135,7 @@ Gets or sets the unique cache path associated with this resource.
 changing either resource. Use [`Resource.TakeOverPath(String)`](Resource.md#m-electron2d-resource-takeoverpath-system-string) to transfer ownership deliberately.
 
 <a id="p-electron2d-resource-resourcesceneuniqueid"></a>
-### `public string ResourceSceneUniqueId { get; set; }`
+### `public string ResourceSceneUniqueID { get; set; }`
 
 Gets or sets the identifier used when this resource is embedded in a serialized scene.
 
@@ -251,7 +251,7 @@ Synchronously reports that this resource's meaningful content changed.
 **Remarks:** Calls made inside a copy batch are coalesced into one event when the outermost batch ends.
 
 <a id="m-electron2d-resource-generatesceneuniqueid"></a>
-### `public static string GenerateSceneUniqueId()`
+### `public static string GenerateSceneUniqueID()`
 
 Generates a compact scene-relative resource identifier.
 
@@ -443,7 +443,7 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 ## Duplication invariants
 
 - Root duplication always creates a new root, regardless of its path.
-- A duplicate never inherits `ResourcePath` or `ResourceSceneUniqueId`.
+- A duplicate never inherits `ResourcePath` or `ResourceSceneUniqueID`.
 - `ResourceName` and `ResourceLocalToScene` are copied.
 - Shallow duplication shares collection containers and nested resources.
 - Deep duplication delegates typed-container copying to the derived class and applies `DeepDuplicateMode` to nested resources.

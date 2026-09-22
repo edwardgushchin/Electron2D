@@ -17,7 +17,7 @@ public sealed partial class Engine
     /// <remarks>May change from any thread. Manual AdvanceFrame calls do not wait. Waiting uses monotonic,
     /// unscaled time and continues to pump window events at intervals of at most ten milliseconds.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The limit is negative.</exception>
-    public int MaxFps
+    public int MaxFPS
     {
         get => Volatile.Read(ref _maxFps);
         set { ArgumentOutOfRangeException.ThrowIfNegative(value); Volatile.Write(ref _maxFps, value); }
@@ -28,7 +28,7 @@ public sealed partial class Engine
     /// <returns>The exit code supplied by SceneTree.Quit, or zero for an automatically accepted close.</returns>
     /// <remarks>The runtime owns the window and children after validation and successful reservation of the idle
     /// engine, including failed native startup or scene activation. It opens the native window before ready, pumps
-    /// events before frames, limits cadence with MaxFps, finalizes and disposes the scene, then releases native resources.
+    /// events before frames, limits cadence with MaxFPS, finalizes and disposes the scene, then releases native resources.
     /// A new window may be run after successful cleanup. Native services opened directly through DisplayServer must
     /// finish before teardown; pending asynchronous dialogs can reject native disposal and the error is reported. Manual Start/AdvanceFrame/Stop cannot interfere with this run.
     /// This entry point does not render yet. It does not install process-wide console or termination handlers.</remarks>
@@ -73,7 +73,7 @@ public sealed partial class Engine
                     break;
                 while (!tree.QuitRequested)
                 {
-                    var limit = MaxFps;
+                    var limit = MaxFPS;
                     if (limit == 0)
                         break;
                     var remaining = 1d / limit - Stopwatch.GetElapsedTime(lastFrame).TotalSeconds;

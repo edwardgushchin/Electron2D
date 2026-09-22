@@ -33,7 +33,7 @@ Duplication is opt-in for every derived type through two protected hooks: constr
 
 `CopyFromResource` requires exact runtime types, preserves target identity, resets non-stored state, shallow-copies stored state, and coalesces notifications. It is non-transactional for arbitrary derived state and therefore emits one change even after a failed attempt.
 
-Invalid scene IDs throw without mutation. Automatic replacement by a random ID is rejected because silently discarding caller input is unsuitable for the typed C# boundary; `GenerateSceneUniqueId` remains explicit.
+Invalid scene IDs throw without mutation. Automatic replacement by a random ID is rejected because silently discarding caller input is unsuitable for the typed C# boundary; `GenerateSceneUniqueID` remains explicit.
 
 Renderer RID, packed-scene owner/setup automation, loader/saver cache modes, editor path-ID mapping, and automatic serialization discovery are deferred to their missing domains. No methods are added for them yet.
 

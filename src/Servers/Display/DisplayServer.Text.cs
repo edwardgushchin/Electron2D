@@ -11,7 +11,7 @@ public sealed partial class DisplayServer
     /// <returns>The active composition, or an empty string before composition begins or after it commits.</returns>
     /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the opening thread.</exception>
-    public string ImeGetText()
+    public string IMEGetText()
     {
         EnsureOwner();
         return _imeText;
@@ -21,7 +21,7 @@ public sealed partial class DisplayServer
     /// <returns>The zero-based Unicode-codepoint start and length reported by the input method. Unknown negative offsets become zero.</returns>
     /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the opening thread.</exception>
-    public Vector2I ImeGetSelection()
+    public Vector2I IMEGetSelection()
     {
         EnsureOwner();
         return _imeSelection;
@@ -34,13 +34,13 @@ public sealed partial class DisplayServer
     /// <exception cref="ArgumentOutOfRangeException">The window ID is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
     /// <exception cref="InvalidOperationException">The caller is off the opening thread or native text input could not change state.</exception>
-    public void WindowSetImeActive(bool active, int windowId = MainWindowId)
+    public void WindowSetIMEActive(bool active, int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
         var success = active ? SDL.StartTextInput(window) : SDL.StopTextInput(window);
         if (!success)
-            throw SdlFailure("change text input state");
+            throw SDLFailure("change text input state");
         if (!active)
         {
             _imeText = string.Empty;
@@ -56,14 +56,14 @@ public sealed partial class DisplayServer
     /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
     /// <exception cref="OverflowException">The pixel position cannot be represented in native window coordinates.</exception>
     /// <exception cref="InvalidOperationException">The caller is off the opening thread or the native density or area request fails.</exception>
-    public void WindowSetImePosition(Vector2I position, int windowId = MainWindowId)
+    public void WindowSetIMEPosition(Vector2I position, int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
         var nativePosition = _waylandWindowPosition ? WaylandLogicalWindowSize(position, window) : position;
         var area = new SDL.Rect { X = nativePosition.X, Y = nativePosition.Y, W = 1, H = 10 };
         if (!SDL.SetTextInputArea(window, in area, 0))
-            throw SdlFailure("set the text input area");
+            throw SDLFailure("set the text input area");
     }
 
     /// <summary>Gets whether touch input is available from a device or mouse emulation.</summary>

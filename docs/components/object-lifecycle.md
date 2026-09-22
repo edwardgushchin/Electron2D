@@ -1,6 +1,6 @@
 # Object lifecycle component
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Scope
 
@@ -22,7 +22,7 @@ The component uses .NET threading and exception-dispatch primitives. Its `Tr`/`T
 
 ## Runtime behavior
 
-Each instance receives a non-zero process-local `ulong InstanceId` from a static counter using `Interlocked.Increment`. `ClassName` exposes `GetType().Name`; `ToString()` returns `<ClassName>#<InstanceId>`. `Notify(int)` dispatches to `OnNotification(int)`. IDs 0 and 1 are reserved for post-initialization and pre-delete notifications; disposal sends pre-delete before resource cleanup.
+Each instance receives a non-zero process-local `ulong InstanceID` from a static counter using `Interlocked.Increment`. `ClassName` exposes `GetType().Name`; `ToString()` returns `<ClassName>#<InstanceID>`. `Notify(int)` dispatches to `OnNotification(int)`. IDs 0 and 1 are reserved for post-initialization and pre-delete notifications; disposal sends pre-delete before resource cleanup.
 
 Lifetime follows this state transition:
 

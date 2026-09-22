@@ -1,6 +1,6 @@
 # Typed editor properties component
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Scope
 
@@ -32,7 +32,7 @@ The component depends on Core's `ElectronObject` and `Resource` plus .NET delega
 5. Revert behavior is supplied by a typed factory and invoked through either the descriptor or `ElectronObject.RevertProperty()`.
 6. A writable descriptor explicitly constructed with `stored: true` may capture/restore a node property for `PackedScene`; storage accepts strings, resources, and reference-free value types such as [`Color`](../classes/Color.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), and [`Transform`](../classes/Transform.md).
 
-The base object exposes `InstanceId`, `ClassName`, `IsDisposed`, `CanTranslateMessages`, and `TranslationDomain`. The two translation properties are stored. `Node` additionally exposes `Name`, `Position`, `RotationDegrees`, `Scale`, `Skew`, `Visible`, `ZIndex`, `ZAsRelative`, `TopLevel`, `ProcessMode`, `ProcessEnabled`, `PhysicsProcessEnabled`, `ProcessPriority`, and `PhysicsProcessPriority`; those node entries are stored, while identity/lifetime entries are not. [`Timer`](../classes/Timer.md) adds stored process lane, wait, one-shot, autostart, and ignore-time-scale configuration plus runtime-only local pause and read-only remaining time. Global/derived state and notification switches are deliberately runtime API rather than tooling properties.
+The base object exposes `InstanceID`, `ClassName`, `IsDisposed`, `CanTranslateMessages`, and `TranslationDomain`. The two translation properties are stored. `Node` additionally exposes `Name`, `Position`, `RotationDegrees`, `Scale`, `Skew`, `Visible`, `ZIndex`, `ZAsRelative`, `TopLevel`, `ProcessMode`, `ProcessEnabled`, `PhysicsProcessEnabled`, `ProcessPriority`, and `PhysicsProcessPriority`; those node entries are stored, while identity/lifetime entries are not. [`Timer`](../classes/Timer.md) adds stored process lane, wait, one-shot, autostart, and ignore-time-scale configuration plus runtime-only local pause and read-only remaining time. Global/derived state and notification switches are deliberately runtime API rather than tooling properties.
 
 ## Invariants and errors
 

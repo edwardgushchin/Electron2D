@@ -456,7 +456,7 @@ public sealed class Input : ElectronObject
                     foreach (var match in _matches)
                     {
                         UpdateContribution(match.Action, new ActionSource(@event.Device, match.SourceIndex),
-                            match.Status, match.Exact, @event.InstanceId);
+                            match.Status, match.Exact, @event.InstanceID);
                     }
                 }
             }
@@ -484,7 +484,7 @@ public sealed class Input : ElectronObject
                 return deliver ? new InputEventScreenTouch
                 {
                     Device = InputEvent.DeviceIdEmulation,
-                    WindowId = button.WindowId,
+                    WindowID = button.WindowID,
                     Index = 0,
                     Position = button.Position,
                     Pressed = button.Pressed,
@@ -499,7 +499,7 @@ public sealed class Input : ElectronObject
                 return new InputEventScreenDrag
                 {
                     Device = InputEvent.DeviceIdEmulation,
-                    WindowId = motion.WindowId,
+                    WindowID = motion.WindowID,
                     Index = 0,
                     Position = motion.Position,
                     Relative = motion.Relative,
@@ -528,7 +528,7 @@ public sealed class Input : ElectronObject
                 return new InputEventMouseButton
                 {
                     Device = InputEvent.DeviceIdEmulation,
-                    WindowId = touch.WindowId,
+                    WindowID = touch.WindowID,
                     ButtonIndex = MouseButton.Left,
                     ButtonMask = touch.Pressed ? _mouseButtonMask | MouseButtonMask.Left : _mouseButtonMask & ~MouseButtonMask.Left,
                     Position = touch.Position,
@@ -544,7 +544,7 @@ public sealed class Input : ElectronObject
                 return new InputEventMouseMotion
                 {
                     Device = InputEvent.DeviceIdEmulation,
-                    WindowId = drag.WindowId,
+                    WindowID = drag.WindowID,
                     ButtonMask = _mouseButtonMask,
                     Position = drag.Position,
                     GlobalPosition = drag.Position,
@@ -689,7 +689,7 @@ public sealed class Input : ElectronObject
             var eventId = exactMatch
                 ? (pressed ? state.ExactLastPressedEventId : state.ExactLastReleasedEventId)
                 : (pressed ? state.LastPressedEventId : state.LastReleasedEventId);
-            return eventId == @event.InstanceId;
+            return eventId == @event.InstanceID;
         }
     }
 

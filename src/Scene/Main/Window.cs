@@ -138,7 +138,7 @@ public partial class Window : Viewport
     /// <summary>Gets the native window identity while running.</summary>
     /// <returns>Zero for the active root window; minus one while detached.</returns>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public int GetWindowId() { ThrowIfDisposed(); return _display is null ? DisplayServer.InvalidWindowId : DisplayServer.MainWindowId; }
+    public int GetWindowID() { ThrowIfDisposed(); return _display is null ? DisplayServer.InvalidWindowId : DisplayServer.MainWindowId; }
 
     /// <summary>Reports whether the active native window has keyboard focus.</summary>
     /// <returns>The platform's current focus observation.</returns>
@@ -213,7 +213,7 @@ public partial class Window : Viewport
         _display.WindowFocusChanged += HandleFocus;
         _display.WindowMouseEntered += HandleMouseEntered;
         _display.WindowMouseExited += HandleMouseExited;
-        _display.WindowDpiChanged += HandleDpiChanged;
+        _display.WindowDpiChanged += HandleDPIChanged;
         _display.FilesDropped += HandleFilesDropped;
     }
 
@@ -233,7 +233,7 @@ public partial class Window : Viewport
         display.WindowFocusChanged -= HandleFocus;
         display.WindowMouseEntered -= HandleMouseEntered;
         display.WindowMouseExited -= HandleMouseExited;
-        display.WindowDpiChanged -= HandleDpiChanged;
+        display.WindowDpiChanged -= HandleDPIChanged;
         display.FilesDropped -= HandleFilesDropped;
         display.Dispose();
         _display = null;
@@ -260,7 +260,7 @@ public partial class Window : Viewport
     private void HandleFocus(bool focused) { if (focused) FocusEntered?.Invoke(); else FocusExited?.Invoke(); }
     private void HandleMouseEntered() => MouseEntered?.Invoke();
     private void HandleMouseExited() => MouseExited?.Invoke();
-    private void HandleDpiChanged() => DpiChanged?.Invoke();
+    private void HandleDPIChanged() => DpiChanged?.Invoke();
     private void HandleFilesDropped(IReadOnlyList<string> paths) => FilesDropped?.Invoke(paths);
 
     private void CommitSize(Vector2I size)

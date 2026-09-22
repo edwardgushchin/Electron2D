@@ -827,7 +827,7 @@ static void VerifyMathf()
         [nameof(Mathf.CubicInterpolateAngle)] = 2,
         [nameof(Mathf.CubicInterpolateAngleInTime)] = 2,
         [nameof(Mathf.CubicInterpolateInTime)] = 2,
-        [nameof(Mathf.DbToLinear)] = 2,
+        [nameof(Mathf.DBToLinear)] = 2,
         [nameof(Mathf.DecimalCount)] = 2,
         [nameof(Mathf.DegToRad)] = 2,
         [nameof(Mathf.Ease)] = 2,
@@ -842,7 +842,7 @@ static void VerifyMathf()
         [nameof(Mathf.IsZeroApprox)] = 2,
         [nameof(Mathf.Lerp)] = 2,
         [nameof(Mathf.LerpAngle)] = 2,
-        [nameof(Mathf.LinearToDb)] = 2,
+        [nameof(Mathf.LinearToDB)] = 2,
         [nameof(Mathf.Log)] = 2,
         [nameof(Mathf.Max)] = 3,
         [nameof(Mathf.Min)] = 3,
@@ -948,8 +948,8 @@ static void VerifyMathf()
             Mathf.BezierDerivative(0d, 1d, 1d, 0d, 0.5d) == 0d,
         "Bezier value and derivative overloads must preserve the cubic curve contract.");
 
-    Require(NearlyEqual(Mathf.DbToLinear(0f), 1f) && NearlyEqual((float)Mathf.DbToLinear(0d), 1f) &&
-            NearlyEqual(Mathf.LinearToDb(1f), 0f) && NearlyEqual((float)Mathf.LinearToDb(1d), 0f) &&
+    Require(NearlyEqual(Mathf.DBToLinear(0f), 1f) && NearlyEqual((float)Mathf.DBToLinear(0d), 1f) &&
+            NearlyEqual(Mathf.LinearToDB(1f), 0f) && NearlyEqual((float)Mathf.LinearToDB(1d), 0f) &&
             NearlyEqual(Mathf.RadToDeg(Mathf.Pi), 180f) && NearlyEqual(Mathf.DegToRad(180f), Mathf.Pi) &&
             NearlyEqual((float)Mathf.RadToDeg(Math.PI), 180f) && NearlyEqual((float)Mathf.DegToRad(180d), Mathf.Pi),
         "Audio-scale and angle-unit conversions must round-trip their neutral anchors.");
@@ -1330,7 +1330,7 @@ static void VerifyImages()
 {
     var expectedMethods = new Dictionary<string, int>(StringComparer.Ordinal)
     {
-        [nameof(Image.AdjustBcs)] = 1,
+        [nameof(Image.AdjustBCS)] = 1,
         [nameof(Image.BlendRect)] = 1,
         [nameof(Image.BlendRectMask)] = 1,
         [nameof(Image.BlitRect)] = 1,
@@ -1358,7 +1358,7 @@ static void VerifyImages()
         [nameof(Image.GetRegion)] = 1,
         [nameof(Image.GetUsedRect)] = 1,
         [nameof(Image.LinearToSRGB)] = 1,
-        [nameof(Image.NormalMapToXy)] = 1,
+        [nameof(Image.NormalMapToXY)] = 1,
         [nameof(Image.PremultiplyAlpha)] = 1,
         [nameof(Image.Resize)] = 1,
         [nameof(Image.ResizeToPowerOfTwo)] = 1,
@@ -1682,11 +1682,11 @@ static void VerifyImages()
             "FixAlphaEdges must copy the nearest opaque RGB without changing alpha.");
         image.PremultiplyAlpha();
         Require(image.GetData()[10] == 127, "PremultiplyAlpha must use deterministic 8-bit rounding.");
-        image.AdjustBcs(1f, 1f, 0f);
+        image.AdjustBCS(1f, 1f, 0f);
         var desaturated = image.GetPixel(1, 0);
         Require(desaturated.R == desaturated.G && desaturated.G == desaturated.B,
             "Zero saturation must collapse RGB to its arithmetic mean.");
-        Expect<ArgumentOutOfRangeException>(() => image.AdjustBcs(float.NaN, 1f, 1f),
+        Expect<ArgumentOutOfRangeException>(() => image.AdjustBCS(float.NaN, 1f, 1f),
             "Color adjustment must reject non-finite factors.");
     }
 
@@ -1713,9 +1713,9 @@ static void VerifyImages()
         bump.BumpMapToNormalMap(1f);
         Require(bump.PixelFormat == Image.Format.Rgba8 && bump.GetPixel(0, 0).A == 1f,
             "Bump-map conversion must produce opaque RGBA8 normals.");
-        bump.NormalMapToXy();
+        bump.NormalMapToXY();
         Require(bump.PixelFormat == Image.Format.La8 && bump.DataSize == 8,
-            "NormalMapToXy must pack X and Y into two channels.");
+            "NormalMapToXY must pack X and Y into two channels.");
     }
 
     using (var rgbe = Image.CreateEmpty(2, 1, true, Image.Format.Rgbe9995))
@@ -3171,7 +3171,7 @@ static void VerifyFileAccess()
         using (var file = EngineFileAccess.Open(path, FileAccessMode.WriteRead))
         {
             Require(file.IsOpen && file.Path == path && file.AbsolutePath == Path.GetFullPath(path) &&
-                    file.Position == 0 && file.Length == 0 && !file.EofReached && !file.BigEndian,
+                    file.Position == 0 && file.Length == 0 && !file.EOFReached && !file.BigEndian,
                 "A newly truncated file must expose its identity, cursor, length, and byte order.");
 
             file.WriteByte(0x7f);
@@ -3191,7 +3191,7 @@ static void VerifyFileAccess()
             file.WriteDouble(-456.5);
             file.WritePascalString("строка");
             file.WriteLine("line\r");
-            file.WriteCsvLine(["plain", "with,delimiter", "quote\"value", "two\nlines"]);
+            file.WriteCSVLine(["plain", "with,delimiter", "quote\"value", "two\nlines"]);
             var length = file.Length;
             Require(length > 0 && file.Position == length,
                 "Writes must advance the cursor and grow the file.");
@@ -3210,15 +3210,15 @@ static void VerifyFileAccess()
                     file.ReadSingle() == 123.25f && file.ReadDouble() == -456.5,
                 "Big-endian numeric values must round-trip exactly.");
             Require(file.ReadPascalString() == "строка" && file.ReadLine() == "line" &&
-                    file.ReadCsvLine().SequenceEqual(["plain", "with,delimiter", "quote\"value", "two\nlines"]),
+                    file.ReadCSVLine().SequenceEqual(["plain", "with,delimiter", "quote\"value", "two\nlines"]),
                 "Length-prefixed strings, CRLF handling, and quoted multiline CSV fields must round-trip.");
-            Require(!file.EofReached && file.Position == file.Length,
+            Require(!file.EOFReached && file.Position == file.Length,
                 "Reaching the exact end must not mark EOF before another read is attempted.");
             Expect<EndOfStreamException>(() => file.ReadByte(),
                 "A scalar read beyond the end must fail.");
-            Require(file.EofReached, "An incomplete read must mark EOF.");
+            Require(file.EOFReached, "An incomplete read must mark EOF.");
             file.SeekEnd(-1);
-            Require(!file.EofReached && file.Position == file.Length - 1,
+            Require(!file.EOFReached && file.Position == file.Length - 1,
                 "A successful seek from the end must clear EOF.");
             var beforeText = file.Position;
             Expect<DecoderFallbackException>(() => file.ReadAllText(),
@@ -3244,7 +3244,7 @@ static void VerifyFileAccess()
             Expect<InvalidOperationException>(() => readOnly.WriteByte(1),
                 "Read-only files must reject writes.");
             Require(readOnly.ReadString(6) == "abcdef", "Raw UTF-8 strings must round-trip.");
-            Require(readOnly.ReadBytes(1).Length == 0 && readOnly.EofReached,
+            Require(readOnly.ReadBytes(1).Length == 0 && readOnly.EOFReached,
                 "A short buffer read must return available bytes and mark EOF.");
             readOnly.Close();
             readOnly.Close();
@@ -3263,8 +3263,8 @@ static void VerifyFileAccess()
                 EngineFileAccess.GetFileAsBytes(path).SequenceEqual(Encoding.UTF8.GetBytes("XYcdef")) &&
                 EngineFileAccess.GetAccessTime(path) > 0 && EngineFileAccess.GetModifiedTime(path) > 0,
             "Static file inspection must resolve contents, size, and timestamps.");
-        Require(EngineFileAccess.GetMd5(path) == Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes("XYcdef"))).ToLowerInvariant() &&
-                EngineFileAccess.GetSha256(path) == Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes("XYcdef"))).ToLowerInvariant(),
+        Require(EngineFileAccess.GetMD5(path) == Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes("XYcdef"))).ToLowerInvariant() &&
+                EngineFileAccess.GetSHA256(path) == Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes("XYcdef"))).ToLowerInvariant(),
             "Static digest helpers must return lowercase MD5 and SHA-256 values.");
 
         var linePath = Path.Combine(directory, "lines.txt");
@@ -3456,7 +3456,7 @@ static void VerifyFileAccess()
 
         Parallel.For(0, 32, _ =>
         {
-            Require(EngineFileAccess.GetSha256(path).Length == 64,
+            Require(EngineFileAccess.GetSHA256(path).Length == 64,
                 "Independent static hash operations must be safe concurrently.");
         });
 
@@ -4152,7 +4152,7 @@ static void VerifyInput()
         var propertyCases = new (InputEvent Event, string[] Names)[]
         {
             (new InputEventAction(), [nameof(InputEvent.Device), nameof(InputEventAction.Action), nameof(InputEventAction.EventIndex), nameof(InputEventAction.Pressed), nameof(InputEventAction.Strength)]),
-            (new InputEventKey(), [nameof(InputEvent.Device), nameof(InputEventFromWindow.WindowId), nameof(InputEventWithModifiers.AltPressed), nameof(InputEventWithModifiers.ShiftPressed), nameof(InputEventWithModifiers.ControlPressed), nameof(InputEventWithModifiers.MetaPressed), nameof(InputEventWithModifiers.CommandOrControlAutoremap), nameof(InputEventKey.Pressed), nameof(InputEventKey.Echo), nameof(InputEventKey.Keycode), nameof(InputEventKey.PhysicalKeycode), nameof(InputEventKey.KeyLabel), nameof(InputEventKey.Unicode), nameof(InputEventKey.Location)]),
+            (new InputEventKey(), [nameof(InputEvent.Device), nameof(InputEventFromWindow.WindowID), nameof(InputEventWithModifiers.AltPressed), nameof(InputEventWithModifiers.ShiftPressed), nameof(InputEventWithModifiers.ControlPressed), nameof(InputEventWithModifiers.MetaPressed), nameof(InputEventWithModifiers.CommandOrControlAutoremap), nameof(InputEventKey.Pressed), nameof(InputEventKey.Echo), nameof(InputEventKey.Keycode), nameof(InputEventKey.PhysicalKeycode), nameof(InputEventKey.KeyLabel), nameof(InputEventKey.Unicode), nameof(InputEventKey.Location)]),
             (new InputEventMouseButton(), [nameof(InputEventMouse.ButtonMask), nameof(InputEventMouse.Position), nameof(InputEventMouse.GlobalPosition), nameof(InputEventMouseButton.ButtonIndex), nameof(InputEventMouseButton.Pressed), nameof(InputEventMouseButton.Canceled), nameof(InputEventMouseButton.DoubleClick), nameof(InputEventMouseButton.Factor)]),
             (new InputEventMouseMotion(), [nameof(InputEventMouseMotion.PenInverted), nameof(InputEventMouseMotion.Pressure), nameof(InputEventMouseMotion.Relative), nameof(InputEventMouseMotion.ScreenRelative), nameof(InputEventMouseMotion.Velocity), nameof(InputEventMouseMotion.ScreenVelocity), nameof(InputEventMouseMotion.Tilt)]),
             (new InputEventJoypadButton(), [nameof(InputEventJoypadButton.ButtonIndex), nameof(InputEventJoypadButton.Pressed), nameof(InputEventJoypadButton.Pressure)]),
@@ -4644,7 +4644,7 @@ static void VerifyInputEmulation()
         {
             Device = 2,
             Index = 7,
-            WindowId = 0,
+            WindowID = 0,
             Position = new Vector2(20f, 30f),
             Pressed = true,
         };
@@ -4663,7 +4663,7 @@ static void VerifyInputEmulation()
         {
             Device = 3,
             Index = 7,
-            WindowId = 0,
+            WindowID = 0,
             Position = new Vector2(50f, 60f),
             Pressed = true,
         };
@@ -4676,7 +4676,7 @@ static void VerifyInputEmulation()
         {
             Device = 2,
             Index = 7,
-            WindowId = 0,
+            WindowID = 0,
             Position = new Vector2(25f, 34f),
             Relative = new Vector2(5f, 4f),
             ScreenRelative = new Vector2(5f, 4f),
@@ -5521,7 +5521,7 @@ static void VerifyInstanceIds()
     const int objectCount = 10_000;
     var instanceIds = new ulong[objectCount];
 
-    Parallel.For(0, objectCount, index => instanceIds[index] = new TestObject().InstanceId);
+    Parallel.For(0, objectCount, index => instanceIds[index] = new TestObject().InstanceID);
 
     Require(!instanceIds.Contains(0UL), "Instance IDs must be non-zero.");
     Require(instanceIds.Distinct().Count() == objectCount, "Instance IDs must be unique.");
@@ -5533,7 +5533,7 @@ static void VerifyLifetime()
     var disposedEvents = 0;
 
     Require(instance.ClassName == nameof(TestObject), "ClassName must contain the runtime type name.");
-    Require(instance.ToString() == $"{nameof(TestObject)}#{instance.InstanceId}", "ToString must identify the instance.");
+    Require(instance.ToString() == $"{nameof(TestObject)}#{instance.InstanceID}", "ToString must identify the instance.");
 
     instance.Disposed += sender =>
     {
@@ -7397,7 +7397,7 @@ static void VerifyResources()
 {
     using var resource = new Resource();
     Require(!resource.ResourceLocalToScene && resource.ResourceName.Length == 0 &&
-            resource.ResourcePath.Length == 0 && resource.ResourceSceneUniqueId.Length == 0 && resource.IsBuiltIn,
+            resource.ResourcePath.Length == 0 && resource.ResourceSceneUniqueID.Length == 0 && resource.IsBuiltIn,
         "A resource must start unnamed, pathless, built-in, and not local to a scene.");
 
     var propertyNames = resource.GetPropertyList().Select(property => property.Name).ToHashSet(StringComparer.Ordinal);
@@ -7405,7 +7405,7 @@ static void VerifyResources()
         nameof(Resource.ResourceLocalToScene),
         nameof(Resource.ResourceName),
         nameof(Resource.ResourcePath),
-        nameof(Resource.ResourceSceneUniqueId)
+        nameof(Resource.ResourceSceneUniqueID)
     ]), "The typed property list must expose all resource properties.");
 
     var changes = 0;
@@ -7417,16 +7417,16 @@ static void VerifyResources()
     resource.ResourceName = "data";
     resource.ResourceName = "data";
     resource.ResourceLocalToScene = true;
-    resource.ResourceSceneUniqueId = "Data_42";
+    resource.ResourceSceneUniqueID = "Data_42";
     Require(changes == 2, "Every resource-name assignment, and no configuration-only assignment, must emit Changed.");
 
     Expect<ArgumentNullException>(() => resource.ResourceName = null!, "A resource name must reject null.");
-    Expect<ArgumentNullException>(() => resource.ResourceSceneUniqueId = null!, "A scene ID must reject null.");
-    Expect<ArgumentException>(() => resource.ResourceSceneUniqueId = "bad-id", "A scene ID must reject punctuation.");
-    Require(resource.ResourceSceneUniqueId == "Data_42", "A rejected scene ID must not change stored state.");
+    Expect<ArgumentNullException>(() => resource.ResourceSceneUniqueID = null!, "A scene ID must reject null.");
+    Expect<ArgumentException>(() => resource.ResourceSceneUniqueID = "bad-id", "A scene ID must reject punctuation.");
+    Require(resource.ResourceSceneUniqueID == "Data_42", "A rejected scene ID must not change stored state.");
 
     var generatedIds = new string[1_024];
-    Parallel.For(0, generatedIds.Length, index => generatedIds[index] = Resource.GenerateSceneUniqueId());
+    Parallel.For(0, generatedIds.Length, index => generatedIds[index] = Resource.GenerateSceneUniqueID());
     Require(generatedIds.All(id => id.Length == 5 && id.All(character =>
             character is >= 'a' and <= 'y' or >= '0' and <= '8')) && generatedIds.Distinct().Count() > 1,
         "Generated scene IDs must use the documented compact alphabet and be safe under concurrent calls.");
@@ -7515,7 +7515,7 @@ static void VerifyResources()
     using var plainDuplicate = resource.Duplicate();
     Require(plainDuplicate.GetType() == typeof(Resource) && plainDuplicate.ResourceName == resource.ResourceName &&
             plainDuplicate.ResourceLocalToScene == resource.ResourceLocalToScene &&
-            plainDuplicate.ResourcePath.Length == 0 && plainDuplicate.ResourceSceneUniqueId.Length == 0,
+            plainDuplicate.ResourcePath.Length == 0 && plainDuplicate.ResourceSceneUniqueID.Length == 0,
         "A base resource duplicate must copy stored content but not path identity.");
 
     using var root = new TestResource
@@ -7523,7 +7523,7 @@ static void VerifyResources()
         ResourceName = "root",
         ResourceLocalToScene = true,
         ResourcePath = $"{prefix}/root",
-        ResourceSceneUniqueId = "root_1",
+        ResourceSceneUniqueID = "root_1",
         Value = 7,
         Numbers = [1, 2, 3]
     };
@@ -7539,7 +7539,7 @@ static void VerifyResources()
     using var shallow = (TestResource)root.Duplicate();
     Require(ReferenceEquals(shallow.Numbers, root.Numbers) && ReferenceEquals(shallow.First, embedded) &&
             shallow.Always is not null && !ReferenceEquals(shallow.Always, external) && ReferenceEquals(shallow.Never, embedded) &&
-            shallow.ResourcePath.Length == 0 && shallow.ResourceSceneUniqueId.Length == 0,
+            shallow.ResourcePath.Length == 0 && shallow.ResourceSceneUniqueID.Length == 0,
         "Shallow duplication must honor default, forced, and never-duplicate typed properties while clearing identity.");
 
     using var containerDeep = (TestResource)root.DuplicateDeep(DeepDuplicateMode.None);
@@ -7569,7 +7569,7 @@ static void VerifyResources()
     {
         ResourceName = "source",
         ResourceLocalToScene = true,
-        ResourceSceneUniqueId = "source_1",
+        ResourceSceneUniqueID = "source_1",
         Value = 21,
         Numbers = [8, 9],
         First = embedded
@@ -7578,7 +7578,7 @@ static void VerifyResources()
     {
         ResourceName = "target",
         ResourcePath = $"{prefix}/copy-target",
-        ResourceSceneUniqueId = "target_1",
+        ResourceSceneUniqueID = "target_1",
         Transient = 99
     };
     var copyChanges = 0;
@@ -7586,7 +7586,7 @@ static void VerifyResources()
     copyTarget.CopyFromResource(copySource);
     Require(copyTarget.ResourceName == "source" && copyTarget.ResourceLocalToScene && copyTarget.Value == 21 &&
             ReferenceEquals(copyTarget.Numbers, copySource.Numbers) && ReferenceEquals(copyTarget.First, embedded) &&
-            copyTarget.ResourcePath == $"{prefix}/copy-target" && copyTarget.ResourceSceneUniqueId == "target_1" &&
+            copyTarget.ResourcePath == $"{prefix}/copy-target" && copyTarget.ResourceSceneUniqueID == "target_1" &&
             copyTarget.Transient == 0 && copyTarget.ResetCount == 1 && copyChanges == 1,
         "CopyFromResource must reset state, shallow-copy stored data, preserve target identity, and coalesce changes.");
     copyTarget.CopyFromResource(copyTarget);

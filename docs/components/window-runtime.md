@@ -10,7 +10,7 @@ Last updated: 2026-09-22
 
 ## Runtime flow
 
-Engine reserves its idle state, opens the native window through DisplayServer, creates and publishes SceneTree before ready, and drives the native event pump before fixed/process frames. MaxFps uses unscaled monotonic time; native events continue during bounded waits. SceneTree.Quit requests exit and returns its code from Run. Window.CloseRequested precedes the default AutoAcceptQuit decision.
+Engine reserves its idle state, opens the native window through DisplayServer, creates and publishes SceneTree before ready, and drives the native event pump before fixed/process frames. MaxFPS uses unscaled monotonic time; native events continue during bounded waits. SceneTree.Quit requests exit and returns its code from Run. Window.CloseRequested precedes the default AutoAcceptQuit decision.
 
 Window properties configure title, positive client size, minimum/maximum constraints, optional desktop position and screen, mode, four executable policies and visibility. Mode queries report observed native state; flag queries retain accepted configuration and are stored in PackedScene. Unsupported policies reject use, and platform refusal does not commit a requested flag. Native calls inherit DisplayServer platform capability failures. Inherited Node.Position remains a scene transform; ScreenPosition is the native desktop position and is rejected on Wayland. Node.Show/Hide dispatch the Window visibility override even through a Node reference. GetVisibleRect uses a zero client origin. SizeChanged follows client-size updates, never mere desktop movement.
 
@@ -22,7 +22,7 @@ Viewport shares SceneTree's current handled-input flag. PushInput borrows a clie
 
 - Engine.Run depends on SceneTree and Window; Window depends on DisplayServer's engine API. Native SDL types stay in DisplayServer. All types remain in Electron2D.dll.
 - One active native root is supported. Child Viewports are rejected before hierarchy mutation; direct SceneTree(Window) activation is rejected unless Engine.Run has opened that root.
-- Attached mutation and native calls use the owner/main thread. Quit and MaxFps configuration accept cross-thread calls.
+- Attached mutation and native calls use the owner/main thread. Quit and MaxFPS configuration accept cross-thread calls.
 - Native services opened directly through DisplayServer must finish before shutdown. Pending asynchronous file dialogs can reject native disposal under the existing DisplayServer contract; Run reports the cleanup failure and DisplayServer.Instance remains available for completion/release. Window exposes no asynchronous dialog API yet.
 - Engine remains reserved throughout scene exit, disposal and native cleanup. Manual frame/stop/tree-disposal interference is rejected. All owned cleanup stages are attempted and failures remain observable.
 - Validation/busy-engine rejection preserves caller ownership. After reservation, failed startup also disposes the transferred root. A later run uses a new Window.

@@ -440,12 +440,12 @@ public static class Mathf
     /// <summary>Converts decibels to linear energy.</summary>
     /// <param name="decibels">The decibel value.</param>
     /// <returns>The corresponding linear energy.</returns>
-    public static float DbToLinear(float decibels) => MathF.Exp(decibels * 0.11512925464970228420089957273422f);
+    public static float DBToLinear(float decibels) => MathF.Exp(decibels * 0.11512925464970228420089957273422f);
 
     /// <summary>Converts double-precision decibels to linear energy.</summary>
     /// <param name="decibels">The decibel value.</param>
     /// <returns>The corresponding linear energy.</returns>
-    public static double DbToLinear(double decibels) => Math.Exp(decibels * 0.11512925464970228420089957273422d);
+    public static double DBToLinear(double decibels) => Math.Exp(decibels * 0.11512925464970228420089957273422d);
 
     /// <summary>Converts degrees to radians.</summary>
     /// <param name="degrees">The angle in degrees.</param>
@@ -664,12 +664,12 @@ public static class Mathf
     /// <summary>Converts linear energy to decibels.</summary>
     /// <param name="linear">The linear energy.</param>
     /// <returns>The decibel value; zero produces negative infinity and negative input produces NaN.</returns>
-    public static float LinearToDb(float linear) => MathF.Log(linear) * 8.6858896380650365530225783783321f;
+    public static float LinearToDB(float linear) => MathF.Log(linear) * 8.6858896380650365530225783783321f;
 
     /// <summary>Converts double-precision linear energy to decibels.</summary>
     /// <param name="linear">The linear energy.</param>
     /// <returns>The decibel value; zero produces negative infinity and negative input produces NaN.</returns>
-    public static double LinearToDb(double linear) => Math.Log(linear) * 8.6858896380650365530225783783321d;
+    public static double LinearToDB(double linear) => Math.Log(linear) * 8.6858896380650365530225783783321d;
 
     /// <summary>Returns the natural logarithm.</summary>
     /// <param name="value">The input; zero produces negative infinity and negative input produces NaN.</param>

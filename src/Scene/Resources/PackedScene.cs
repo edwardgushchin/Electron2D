@@ -299,7 +299,7 @@ public sealed class PackedScene : Resource
                 .ToArray();
 
             nodes[index] = new SceneNodeData(
-                new SceneFactoryData(node.CaptureSceneInstanceFactory(), node.GetType(), node.InstanceId),
+                new SceneFactoryData(node.CaptureSceneInstanceFactory(), node.GetType(), node.InstanceID),
                 node.Name,
                 parentIndex,
                 ownerIndex,

@@ -13732,11 +13732,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.ImeGetSelection()",
+    "id": "method:Electron2D.DisplayServer.IMEGetSelection()",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
-    "name": "ImeGetSelection",
-    "signature": "public Electron2D.Vector2I ImeGetSelection()",
+    "name": "IMEGetSelection",
+    "signature": "public Electron2D.Vector2I IMEGetSelection()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -13745,11 +13745,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.ImeGetText()",
+    "id": "method:Electron2D.DisplayServer.IMEGetText()",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
-    "name": "ImeGetText",
-    "signature": "public System.String ImeGetText()",
+    "name": "IMEGetText",
+    "signature": "public System.String IMEGetText()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -14455,35 +14455,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.WindowSetIcon(Electron2D.Image,System.Int32)",
+    "id": "method:Electron2D.DisplayServer.WindowSetIMEActive(System.Boolean,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
-    "name": "WindowSetIcon",
-    "signature": "public System.Void WindowSetIcon(Electron2D.Image image, System.Int32 windowId = 0)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "image",
-        "type": "Electron2D.Image",
-        "default": null
-      },
-      {
-        "name": "windowId",
-        "type": "System.Int32",
-        "default": "0"
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.DisplayServer.WindowSetImeActive(System.Boolean,System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.DisplayServer",
-    "name": "WindowSetImeActive",
-    "signature": "public System.Void WindowSetImeActive(System.Boolean active, System.Int32 windowId = 0)",
+    "name": "WindowSetIMEActive",
+    "signature": "public System.Void WindowSetIMEActive(System.Boolean active, System.Int32 windowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -14503,11 +14479,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.WindowSetImePosition(Electron2D.Vector2I,System.Int32)",
+    "id": "method:Electron2D.DisplayServer.WindowSetIMEPosition(Electron2D.Vector2I,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
-    "name": "WindowSetImePosition",
-    "signature": "public System.Void WindowSetImePosition(Electron2D.Vector2I position, System.Int32 windowId = 0)",
+    "name": "WindowSetIMEPosition",
+    "signature": "public System.Void WindowSetIMEPosition(Electron2D.Vector2I position, System.Int32 windowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -14515,6 +14491,30 @@
       {
         "name": "position",
         "type": "Electron2D.Vector2I",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetIcon(Electron2D.Image,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetIcon",
+    "signature": "public System.Void WindowSetIcon(Electron2D.Image image, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "image",
+        "type": "Electron2D.Image",
         "default": null
       },
       {
@@ -15601,11 +15601,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.FileAccess.GetMd5(System.String)",
+    "id": "method:Electron2D.FileAccess.GetMD5(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.FileAccess",
-    "name": "GetMd5",
-    "signature": "public static System.String GetMd5(System.String path)",
+    "name": "GetMD5",
+    "signature": "public static System.String GetMD5(System.String path)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -15639,11 +15639,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.FileAccess.GetSha256(System.String)",
+    "id": "method:Electron2D.FileAccess.GetSHA256(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.FileAccess",
-    "name": "GetSha256",
-    "signature": "public static System.String GetSha256(System.String path)",
+    "name": "GetSHA256",
+    "signature": "public static System.String GetSHA256(System.String path)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -15896,11 +15896,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.FileAccess.ReadCsvLine(System.Char)",
+    "id": "method:Electron2D.FileAccess.ReadCSVLine(System.Char)",
     "kind": "method",
     "declaringType": "Electron2D.FileAccess",
-    "name": "ReadCsvLine",
-    "signature": "public System.String[] ReadCsvLine(System.Char delimiter = \u0027,\u0027)",
+    "name": "ReadCSVLine",
+    "signature": "public System.String[] ReadCSVLine(System.Char delimiter = \u0027,\u0027)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -16281,11 +16281,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.FileAccess.WriteCsvLine(System.Collections.Generic.IEnumerable\u003CSystem.String\u003E,System.Char)",
+    "id": "method:Electron2D.FileAccess.WriteCSVLine(System.Collections.Generic.IEnumerable\u003CSystem.String\u003E,System.Char)",
     "kind": "method",
     "declaringType": "Electron2D.FileAccess",
-    "name": "WriteCsvLine",
-    "signature": "public System.Void WriteCsvLine(System.Collections.Generic.IEnumerable\u003CSystem.String\u003E values, System.Char delimiter = \u0027,\u0027)",
+    "name": "WriteCSVLine",
+    "signature": "public System.Void WriteCSVLine(System.Collections.Generic.IEnumerable\u003CSystem.String\u003E values, System.Char delimiter = \u0027,\u0027)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -16495,11 +16495,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.AdjustBcs(System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.Image.AdjustBCS(System.Single,System.Single,System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
-    "name": "AdjustBcs",
-    "signature": "public System.Void AdjustBcs(System.Single brightness, System.Single contrast, System.Single saturation)",
+    "name": "AdjustBCS",
+    "signature": "public System.Void AdjustBCS(System.Single brightness, System.Single contrast, System.Single saturation)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -17212,11 +17212,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.NormalMapToXy()",
+    "id": "method:Electron2D.Image.NormalMapToXY()",
     "kind": "method",
     "declaringType": "Electron2D.Image",
-    "name": "NormalMapToXy",
-    "signature": "public System.Void NormalMapToXy()",
+    "name": "NormalMapToXY",
+    "signature": "public System.Void NormalMapToXY()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -21282,11 +21282,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.DbToLinear(System.Double)",
+    "id": "method:Electron2D.Mathf.DBToLinear(System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.Mathf",
-    "name": "DbToLinear",
-    "signature": "public static System.Double DbToLinear(System.Double decibels)",
+    "name": "DBToLinear",
+    "signature": "public static System.Double DBToLinear(System.Double decibels)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -21301,11 +21301,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.DbToLinear(System.Single)",
+    "id": "method:Electron2D.Mathf.DBToLinear(System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.Mathf",
-    "name": "DbToLinear",
-    "signature": "public static System.Single DbToLinear(System.Single decibels)",
+    "name": "DBToLinear",
+    "signature": "public static System.Single DBToLinear(System.Single decibels)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -21990,11 +21990,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.LinearToDb(System.Double)",
+    "id": "method:Electron2D.Mathf.LinearToDB(System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.Mathf",
-    "name": "LinearToDb",
-    "signature": "public static System.Double LinearToDb(System.Double linear)",
+    "name": "LinearToDB",
+    "signature": "public static System.Double LinearToDB(System.Double linear)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -22009,11 +22009,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.LinearToDb(System.Single)",
+    "id": "method:Electron2D.Mathf.LinearToDB(System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.Mathf",
-    "name": "LinearToDb",
-    "signature": "public static System.Single LinearToDb(System.Single linear)",
+    "name": "LinearToDB",
+    "signature": "public static System.Single LinearToDB(System.Single linear)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -26269,11 +26269,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Resource.GenerateSceneUniqueId()",
+    "id": "method:Electron2D.Resource.GenerateSceneUniqueID()",
     "kind": "method",
     "declaringType": "Electron2D.Resource",
-    "name": "GenerateSceneUniqueId",
-    "signature": "public static System.String GenerateSceneUniqueId()",
+    "name": "GenerateSceneUniqueID",
+    "signature": "public static System.String GenerateSceneUniqueID()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -31337,11 +31337,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Window.GetWindowId()",
+    "id": "method:Electron2D.Window.GetWindowID()",
     "kind": "method",
     "declaringType": "Electron2D.Window",
-    "name": "GetWindowId",
-    "signature": "public System.Int32 GetWindowId()",
+    "name": "GetWindowID",
+    "signature": "public System.Int32 GetWindowID()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -31439,11 +31439,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Window.SetImeActive(System.Boolean)",
+    "id": "method:Electron2D.Window.SetIMEActive(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Window",
-    "name": "SetImeActive",
-    "signature": "public System.Void SetImeActive(System.Boolean active)",
+    "name": "SetIMEActive",
+    "signature": "public System.Void SetIMEActive(System.Boolean active)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -31458,11 +31458,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Window.SetImePosition(Electron2D.Vector2I)",
+    "id": "method:Electron2D.Window.SetIMEPosition(Electron2D.Vector2I)",
     "kind": "method",
     "declaringType": "Electron2D.Window",
-    "name": "SetImePosition",
-    "signature": "public System.Void SetImePosition(Electron2D.Vector2I position)",
+    "name": "SetIMEPosition",
+    "signature": "public System.Void SetIMEPosition(Electron2D.Vector2I position)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -36255,11 +36255,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.ElectronObject.InstanceId()",
+    "id": "property:Electron2D.ElectronObject.InstanceID()",
     "kind": "property",
     "declaringType": "Electron2D.ElectronObject",
-    "name": "InstanceId",
-    "signature": "public System.UInt64 InstanceId { get;  }",
+    "name": "InstanceID",
+    "signature": "public System.UInt64 InstanceID { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -36359,11 +36359,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Engine.MaxFps()",
+    "id": "property:Electron2D.Engine.MaxFPS()",
     "kind": "property",
     "declaringType": "Electron2D.Engine",
-    "name": "MaxFps",
-    "signature": "public System.Int32 MaxFps { get; set; }",
+    "name": "MaxFPS",
+    "signature": "public System.Int32 MaxFPS { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -36541,11 +36541,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.FileAccess.EofReached()",
+    "id": "property:Electron2D.FileAccess.EOFReached()",
     "kind": "property",
     "declaringType": "Electron2D.FileAccess",
-    "name": "EofReached",
-    "signature": "public System.Boolean EofReached { get;  }",
+    "name": "EOFReached",
+    "signature": "public System.Boolean EOFReached { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -37022,11 +37022,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.InputEventFromWindow.WindowId()",
+    "id": "property:Electron2D.InputEventFromWindow.WindowID()",
     "kind": "property",
     "declaringType": "Electron2D.InputEventFromWindow",
-    "name": "WindowId",
-    "signature": "public System.Int64 WindowId { get; set; }",
+    "name": "WindowID",
+    "signature": "public System.Int64 WindowID { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -38608,11 +38608,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Resource.ResourceSceneUniqueId()",
+    "id": "property:Electron2D.Resource.ResourceSceneUniqueID()",
     "kind": "property",
     "declaringType": "Electron2D.Resource",
-    "name": "ResourceSceneUniqueId",
-    "signature": "public System.String ResourceSceneUniqueId { get; set; }",
+    "name": "ResourceSceneUniqueID",
+    "signature": "public System.String ResourceSceneUniqueID { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

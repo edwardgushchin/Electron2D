@@ -86,7 +86,7 @@
       "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
     },
     {
-      "electron2d": "method:Electron2D.FileAccess.ReadCsvLine(System.Char)",
+      "electron2d": "method:Electron2D.FileAccess.ReadCSVLine(System.Char)",
       "godot": "FileAccess::method:get_csv_line(String:)",
       "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
     },
@@ -146,7 +146,7 @@
       "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
     },
     {
-      "electron2d": "method:Electron2D.FileAccess.WriteCsvLine(System.Collections.Generic.IEnumerable<System.String>,System.Char)",
+      "electron2d": "method:Electron2D.FileAccess.WriteCSVLine(System.Collections.Generic.IEnumerable<System.String>,System.Char)",
       "godot": "FileAccess::method:store_csv_line(PackedStringArray:,String:)",
       "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
     },
@@ -236,7 +236,7 @@
       "reason": "C# property for upstream query (ADR 0020)."
     },
     {
-      "electron2d": "property:Electron2D.FileAccess.EofReached()",
+      "electron2d": "property:Electron2D.FileAccess.EOFReached()",
       "godot": "FileAccess::method:eof_reached()",
       "reason": "C# property for upstream query (ADR 0020)."
     },

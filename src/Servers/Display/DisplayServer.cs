@@ -52,7 +52,7 @@ public sealed partial class DisplayServer : ElectronObject
         _ownerThreadId = Environment.CurrentManagedThreadId;
         _sdlWindowId = SDL.GetWindowID(window);
         if (_sdlWindowId == 0)
-            throw SdlFailure("identify the main window");
+            throw SDLFailure("identify the main window");
         var videoDriver = SDL.GetCurrentVideoDriver();
         _waylandWindowPosition = videoDriver == "wayland";
         _linuxPortalThemeDriver = videoDriver is "wayland" or "x11";
@@ -63,12 +63,12 @@ public sealed partial class DisplayServer : ElectronObject
             ? SDL.GetWindowSizeInPixels(window, out width, out height)
             : SDL.GetWindowSize(window, out width, out height);
         if (!sizeRead)
-            throw SdlFailure("read the main window's initial size");
+            throw SDLFailure("read the main window's initial size");
         var position = Vector2I.Zero;
         if (!_waylandWindowPosition)
         {
             if (!SDL.GetWindowPosition(window, out var x, out var y))
-                throw SdlFailure("read the main window's initial position");
+                throw SDLFailure("read the main window's initial position");
             position = new Vector2I(x, y);
         }
         _windowRect = new RectI(position, width, height);
@@ -109,18 +109,18 @@ public sealed partial class DisplayServer : ElectronObject
                     Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "wayland" &&
                     !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WAYLAND_DISPLAY")));
             if (correctedGdkBackend)
-                SetGdkBackend("wayland");
+                SetGDKBackend("wayland");
             try
             {
                 if (!SDL.IsMainThread())
                     throw new InvalidOperationException("The display server must be opened on SDL's main thread.");
                 if (!SDL.InitSubSystem(SDL.InitFlags.Video))
-                    throw SdlFailure("initialize the video subsystem");
+                    throw SDLFailure("initialize the video subsystem");
             }
             catch
             {
                 if (correctedGdkBackend)
-                    SetGdkBackend(previousGdkBackend!);
+                    SetGDKBackend(previousGdkBackend!);
                 throw;
             }
 
@@ -129,17 +129,17 @@ public sealed partial class DisplayServer : ElectronObject
             {
                 if (correctedGdkBackend && SDL.GetCurrentVideoDriver() != "wayland")
                 {
-                    SetGdkBackend(previousGdkBackend!);
+                    SetGDKBackend(previousGdkBackend!);
                     correctedGdkBackend = false;
                 }
                 if (SDL.GetCurrentVideoDriver() == "wayland")
-                    gtkStyle = InstallGtkTitlebarStyle();
+                    gtkStyle = InstallGTKTitlebarStyle();
                 var flags = SDL.WindowFlags.Resizable | SDL.WindowFlags.HighPixelDensity;
                 if (hidden)
                     flags |= SDL.WindowFlags.Hidden;
                 var window = SDL.CreateWindow(title, size.X, size.Y, flags);
                 if (window == 0)
-                    throw SdlFailure("create the main window");
+                    throw SDLFailure("create the main window");
 
                 try
                 {
@@ -147,7 +147,7 @@ public sealed partial class DisplayServer : ElectronObject
                         ? WaylandLogicalWindowLimit(new Vector2I(64, 64), window, minimum: true)
                         : new Vector2I(64, 64);
                     if (!SDL.SetWindowMinimumSize(window, minimumSize.X, minimumSize.Y))
-                        throw SdlFailure("set the main window's minimum size");
+                        throw SDLFailure("set the main window's minimum size");
                     if (!hidden && SDL.GetCurrentVideoDriver() == "wayland")
                         PresentBlankWindowSurface(window);
                     _instance = new DisplayServer(window, gtkStyle.GtkScreen, gtkStyle.GtkProvider);
@@ -162,16 +162,16 @@ public sealed partial class DisplayServer : ElectronObject
             }
             catch
             {
-                RemoveGtkTitlebarStyle(gtkStyle.GtkScreen, gtkStyle.GtkProvider);
+                RemoveGTKTitlebarStyle(gtkStyle.GtkScreen, gtkStyle.GtkProvider);
                 if (correctedGdkBackend)
-                    SetGdkBackend(previousGdkBackend!);
+                    SetGDKBackend(previousGdkBackend!);
                 SDL.QuitSubSystem(SDL.InitFlags.Video);
                 throw;
             }
         }
     }
 
-    private static void SetGdkBackend(string value)
+    private static void SetGDKBackend(string value)
     {
         if (SetNativeEnvironmentVariable("GDK_BACKEND", value, 1) != 0)
             throw new InvalidOperationException("Failed to select the GTK display backend.");
@@ -182,10 +182,10 @@ public sealed partial class DisplayServer : ElectronObject
     {
         var surface = SDL.GetWindowSurface(window);
         if (surface == 0)
-            throw SdlFailure("create the main window's initial surface");
+            throw SDLFailure("create the main window's initial surface");
         if (!SDL.FillSurfaceRect(surface, 0, SDL.MapSurfaceRGB(surface, 32, 32, 32)) ||
             !SDL.UpdateWindowSurface(window))
-            throw SdlFailure("present the main window's initial surface");
+            throw SDLFailure("present the main window's initial surface");
     }
 
     private void RefreshBlankWindowSurface()
@@ -202,7 +202,7 @@ public sealed partial class DisplayServer : ElectronObject
     public string GetName()
     {
         EnsureOwner();
-        return (SDL.GetCurrentVideoDriver() ?? throw SdlFailure("read the video driver name")) switch
+        return (SDL.GetCurrentVideoDriver() ?? throw SDLFailure("read the video driver name")) switch
         {
             "wayland" => "Wayland",
             "x11" => "X11",
@@ -280,10 +280,10 @@ public sealed partial class DisplayServer : ElectronObject
             return;
         if (enable ? SDL.DisableScreenSaver() : SDL.EnableScreenSaver())
             return;
-        var failure = SdlFailure("change screen blanking policy");
+        var failure = SDLFailure("change screen blanking policy");
         _ = wasEnabled ? SDL.EnableScreenSaver() : SDL.DisableScreenSaver();
         if (SDL.ScreenSaverEnabled() != wasEnabled)
-            throw new AggregateException(failure, SdlFailure("restore screen blanking policy"));
+            throw new AggregateException(failure, SDLFailure("restore screen blanking policy"));
         throw failure;
     }
 
@@ -306,7 +306,7 @@ public sealed partial class DisplayServer : ElectronObject
     public Vector2I ScreenGetPosition(int screen = ScreenOfMainWindow)
     {
         EnsureOwner();
-        if (!TryGetDisplayId(screen, out var displayId) || !SDL.GetDisplayBounds(displayId, out var bounds))
+        if (!TryGetDisplayID(screen, out var displayId) || !SDL.GetDisplayBounds(displayId, out var bounds))
             return Vector2I.Zero;
         return new Vector2I(bounds.X, bounds.Y);
     }
@@ -317,7 +317,7 @@ public sealed partial class DisplayServer : ElectronObject
     public Vector2I ScreenGetSize(int screen = ScreenOfMainWindow)
     {
         EnsureOwner();
-        if (!TryGetDisplayId(screen, out var displayId) || !SDL.GetDisplayBounds(displayId, out var bounds))
+        if (!TryGetDisplayID(screen, out var displayId) || !SDL.GetDisplayBounds(displayId, out var bounds))
             return Vector2I.Zero;
         return SDL.GetCurrentVideoDriver() == "wayland"
             ? WaylandPhysicalScreenSize(displayId, bounds)
@@ -330,7 +330,7 @@ public sealed partial class DisplayServer : ElectronObject
     public RectI ScreenGetUsableRect(int screen = ScreenOfMainWindow)
     {
         EnsureOwner();
-        if (!TryGetDisplayId(screen, out var displayId))
+        if (!TryGetDisplayID(screen, out var displayId))
             return default;
         var found = SDL.GetCurrentVideoDriver() == "wayland"
             ? SDL.GetDisplayBounds(displayId, out var bounds)
@@ -359,7 +359,7 @@ public sealed partial class DisplayServer : ElectronObject
     public float ScreenGetScale(int screen = ScreenOfMainWindow)
     {
         EnsureOwner();
-        if (!TryGetDisplayId(screen, out var displayId))
+        if (!TryGetDisplayID(screen, out var displayId))
             return 1f;
         var driver = SDL.GetCurrentVideoDriver();
         if (driver == "x11")
@@ -395,7 +395,7 @@ public sealed partial class DisplayServer : ElectronObject
         EnsureOwner();
         ArgumentNullException.ThrowIfNull(title);
         if (!SDL.SetWindowTitle(GetWindow(windowId), title))
-            throw SdlFailure("set window title");
+            throw SDLFailure("set window title");
     }
 
     /// <summary>Gets the main window's client size.</summary>
@@ -411,7 +411,7 @@ public sealed partial class DisplayServer : ElectronObject
             ? SDL.GetWindowSizeInPixels(window, out width, out height)
             : SDL.GetWindowSize(window, out width, out height);
         if (!sizeRead)
-            throw SdlFailure("read window size");
+            throw SDLFailure("read window size");
         return new Vector2I(width, height);
     }
 
@@ -435,7 +435,7 @@ public sealed partial class DisplayServer : ElectronObject
             requestedSize = new Vector2I(Math.Max(1, requestedSize.X), Math.Max(1, requestedSize.Y));
         }
         if (!SDL.SetWindowSize(window, requestedSize.X, requestedSize.Y))
-            throw SdlFailure("set window size");
+            throw SDLFailure("set window size");
     }
 
     private static Vector2I WaylandLogicalWindowSize(Vector2I pixelSize, nint window)
@@ -461,7 +461,7 @@ public sealed partial class DisplayServer : ElectronObject
     {
         var density = SDL.GetWindowPixelDensity(window);
         if (!float.IsFinite(density) || density <= 0f)
-            throw SdlFailure("read window pixel density");
+            throw SDLFailure("read window pixel density");
         return density;
     }
 
@@ -475,7 +475,7 @@ public sealed partial class DisplayServer : ElectronObject
         var window = GetWindow(windowId);
         EnsureGlobalWindowCoordinatesAvailable();
         if (!SDL.GetWindowPosition(window, out var x, out var y))
-            throw SdlFailure("read window position");
+            throw SDLFailure("read window position");
         return new Vector2I(x, y);
     }
 
@@ -489,7 +489,7 @@ public sealed partial class DisplayServer : ElectronObject
         var window = GetWindow(windowId);
         EnsureGlobalWindowCoordinatesAvailable();
         if (!SDL.SetWindowPosition(window, position.X, position.Y))
-            throw SdlFailure("set window position");
+            throw SDLFailure("set window position");
     }
 
     private static void EnsureGlobalWindowCoordinatesAvailable()
@@ -530,7 +530,7 @@ public sealed partial class DisplayServer : ElectronObject
         EnsureOwner();
         ArgumentNullException.ThrowIfNull(text);
         if (!SDL.SetClipboardText(text))
-            throw SdlFailure("set clipboard text");
+            throw SDLFailure("set clipboard text");
     }
 
     /// <summary>Gets text from the platform's primary selection.</summary>
@@ -555,7 +555,7 @@ public sealed partial class DisplayServer : ElectronObject
         EnsureOwner();
         ArgumentNullException.ThrowIfNull(text);
         if (!SDL.SetPrimarySelectionText(text))
-            throw SdlFailure("set primary selection text");
+            throw SDLFailure("set primary selection text");
     }
 
     /// <inheritdoc />
@@ -580,7 +580,7 @@ public sealed partial class DisplayServer : ElectronObject
             Input.Instance.SetNativeFlush(null);
             Input.Instance.ReleasePressedEvents();
             _window.Dispose();
-            RemoveGtkTitlebarStyle(_gtkScreen, _gtkTitlebarProvider);
+            RemoveGTKTitlebarStyle(_gtkScreen, _gtkTitlebarProvider);
             SDL.QuitSubSystem(SDL.InitFlags.Video);
             if (ReferenceEquals(_instance, this))
                 _instance = null;
@@ -593,7 +593,7 @@ public sealed partial class DisplayServer : ElectronObject
         EnsureOwner();
         var window = GetWindow(MainWindowId);
         if (!(visible ? SDL.ShowWindow(window) : SDL.HideWindow(window)))
-            throw SdlFailure("change window visibility");
+            throw SDLFailure("change window visibility");
         if (visible && _waylandWindowPosition)
             PresentBlankWindowSurface(window);
     }
@@ -615,10 +615,10 @@ public sealed partial class DisplayServer : ElectronObject
     private uint[] GetDisplays()
     {
         var displays = SDL.GetDisplays(out _);
-        return displays ?? throw SdlFailure("enumerate displays");
+        return displays ?? throw SDLFailure("enumerate displays");
     }
 
-    private bool TryGetDisplayId(int screen, out uint displayId)
+    private bool TryGetDisplayID(int screen, out uint displayId)
     {
         var displays = GetDisplays();
         var index = screen switch
@@ -638,7 +638,7 @@ public sealed partial class DisplayServer : ElectronObject
         return true;
     }
 
-    private uint GetDisplayId(int screen) => TryGetDisplayId(screen, out var displayId)
+    private uint GetDisplayID(int screen) => TryGetDisplayID(screen, out var displayId)
         ? displayId : throw new ArgumentOutOfRangeException(nameof(screen), screen, "No display has this index.");
 
     private int GetMouseFocusScreen(uint[] displays)
@@ -651,7 +651,7 @@ public sealed partial class DisplayServer : ElectronObject
         return index >= 0 ? index : GetPrimaryScreen();
     }
 
-    private static InvalidOperationException SdlFailure(string action) =>
+    private static InvalidOperationException SDLFailure(string action) =>
         new($"Unable to {action}: {SDL.GetError()}");
 
     private sealed class SdlWindowHandle : SafeHandleZeroOrMinusOneIsInvalid

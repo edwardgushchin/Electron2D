@@ -235,7 +235,7 @@ Runtime lifecycle is one atomic owner-thread state machine. Callback exceptions 
 
 The reference singleton registry is adapted to ordinal string names and `ElectronObject`, with a generic typed lookup. It starts with a permanent self-registration named `Engine`; ADR 0019 adds the permanent `ProjectSettings` entry and project-backed timing values. The registry is thread-safe and treats user entries as explicitly non-owning. Untyped dictionaries are not introduced: assembly version data uses immutable `EngineVersionInfo`.
 
-APIs that cannot act without an absent domain are not exposed as stored-but-unused state. MaxFps now controls Run waiting (zero means unlimited), with no effect on manual AdvanceFrame; persistent project-backed maximum-FPS configuration remains unimplemented; draw counts to rendering; output flags to logging; author/license maps to generated distribution metadata; script backtraces/languages to scripting; movie paths to capture; and editor hints to an editor runtime.
+APIs that cannot act without an absent domain are not exposed as stored-but-unused state. MaxFPS now controls Run waiting (zero means unlimited), with no effect on manual AdvanceFrame; persistent project-backed maximum-FPS configuration remains unimplemented; draw counts to rendering; output flags to logging; author/license maps to generated distribution metadata; script backtraces/languages to scripting; movie paths to capture; and editor hints to an editor runtime.
 
 ### Consequences
 
@@ -243,7 +243,7 @@ APIs that cannot act without an absent domain are not exposed as stored-but-unus
 - A `SceneTree` can be attached after its constructor has already initialized it; a custom created loop is initialized by `Engine.Start()`.
 - Long host stalls cannot cause unlimited fixed callbacks in one frame, at the cost of deliberately slowing/dropping excess simulated time.
 - Configuration and metrics can be inspected cross-thread, while callbacks remain owner-thread only.
-- Engine.Run pumps native events before frames, applies MaxFps in unscaled monotonic time, checks SceneTree quit during waits, and reserves the engine through cleanup. Direct lifecycle interference during Run is rejected.
+- Engine.Run pumps native events before frames, applies MaxFPS in unscaled monotonic time, checks SceneTree quit during waits, and reserves the engine through cleanup. Direct lifecycle interference during Run is rejected.
 - Reference APIs tied to missing domains remain visible in documentation as deferred work rather than misleading executable surface.
 
 ### Rejected alternatives

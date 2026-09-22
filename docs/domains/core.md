@@ -96,13 +96,13 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 
 ## Not implemented
 
-- No global object registry or lookup by `InstanceId`.
+- No global object registry or lookup by `InstanceID`.
 - No untyped metadata store.
 - No reflection-based property or method invocation.
 - No `Vector3`, `Vector3I`, 3D rectangle, transform, node, renderer, or physics type. Four-component vectors are numeric tuples rather than spatial 4D types.
 - No script attachment, script runtime, editor application, or general file serialization. Only the typed `ScriptChanged` notification contract exists for the confirmed future scripting component.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers, and persistence requires a typed stable endpoint identity/binding schema.
-- Engine.Run now owns windowed application startup, event pumping, monotonic MaxFps pacing, SceneTree.Quit exit codes and cleanup. Permission requests, rendering and other platform integrations remain absent.
+- Engine.Run now owns windowed application startup, event pumping, monotonic MaxFPS pacing, SceneTree.Quit exit codes and cleanup. Permission requests, rendering and other platform integrations remain absent.
 - No six-target build/package/test matrix, Android host/package, iOS host/bundle, Web browser host/build/storage integration, signing pipeline, or complete native/browser verification exists yet. Current executable verification is Linux-only and does not separately establish X11 and Wayland behavior.
 - No resource-pack mount, exported/archive-backed virtual filesystem, resource-UID resolver, or platform-pipe backend exists. `FileAccess`, `DirAccess`, and `ProjectSettings` resolve only configured `res://`/`user://` directories; `uid://` and `pipe://` fail explicitly, and `ConfigFile` still accepts only ordinary operating-system paths. FastLZ and Zstandard are not implemented. The macOS and Windows extended-attribute/directory backends are implemented but not verified on native hosts. Android/iOS directory links and drive enumeration await host/storage integration.
 - No renderer draw count, logging-output controls, generated author/license manifest, script backtrace/language registry, movie writer, or editor hints; the Engine coverage inventory records each dependency boundary.
@@ -144,4 +144,4 @@ The same harness verifies project-setting registration, value snapshots, validat
 
 ## Windowed lifecycle
 
-Engine.Run(Window) is the ordinary application entry point, with MaxFps, monotonic timing, event pumping and deterministic scene/native teardown. This adds a narrow in-assembly dependency on SceneTree and Window; manual Start/AdvanceFrame/Stop remain available for embedding.
+Engine.Run(Window) is the ordinary application entry point, with MaxFPS, monotonic timing, event pumping and deterministic scene/native teardown. This adds a narrow in-assembly dependency on SceneTree and Window; manual Start/AdvanceFrame/Stop remain available for embedding.

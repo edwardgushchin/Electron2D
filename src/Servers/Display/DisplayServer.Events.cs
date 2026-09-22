@@ -61,7 +61,7 @@ public sealed partial class DisplayServer
     public event Action<string>? TextInput;
 
     /// <summary>Occurs after the native input method updates its uncommitted composition.</summary>
-    /// <remarks>The text and Unicode-codepoint selection have already committed to <see cref="ImeGetText"/> and <see cref="ImeGetSelection"/>. Unknown negative native selection offsets become zero.</remarks>
+    /// <remarks>The text and Unicode-codepoint selection have already committed to <see cref="IMEGetText"/> and <see cref="IMEGetSelection"/>. Unknown negative native selection offsets become zero.</remarks>
     public event Action<string, Vector2I>? TextEditing;
 
     /// <summary>Occurs when the operating system finishes dropping one or more files onto the main window.</summary>
@@ -401,7 +401,7 @@ public sealed partial class DisplayServer
         _hasEventKeyModifiers = true;
         using var @event = new InputEventKey
         {
-            WindowId = MainWindowId,
+            WindowID = MainWindowId,
             Pressed = source.Down,
             Echo = source.Repeat,
             Keycode = MapKeycode(source.Key),
@@ -431,7 +431,7 @@ public sealed partial class DisplayServer
         _lastMouseMotionTimestamp = source.Timestamp;
         using var @event = new InputEventMouseMotion
         {
-            WindowId = MainWindowId,
+            WindowID = MainWindowId,
             ButtonMask = _heldMouseButtons,
             Position = position,
             GlobalPosition = position,
@@ -463,7 +463,7 @@ public sealed partial class DisplayServer
         _heldMouseButtons = source.Down ? _heldMouseButtons | mask : _heldMouseButtons & ~mask;
         using var @event = new InputEventMouseButton
         {
-            WindowId = MainWindowId,
+            WindowID = MainWindowId,
             ButtonIndex = button,
             ButtonMask = _heldMouseButtons,
             Position = position,
@@ -518,7 +518,7 @@ public sealed partial class DisplayServer
         var position = new Vector2(x * scale, y * scale);
         using var @event = new InputEventMouseButton
         {
-            WindowId = MainWindowId,
+            WindowID = MainWindowId,
             ButtonIndex = button,
             ButtonMask = _heldMouseButtons,
             Position = position,
@@ -580,7 +580,7 @@ public sealed partial class DisplayServer
             _touchContacts[id] = contact with { Timestamp = source.Timestamp };
             using var @event = new InputEventScreenDrag
             {
-                WindowId = MainWindowId,
+                WindowID = MainWindowId,
                 Device = 0,
                 Index = contact.Index,
                 Position = position,
@@ -598,7 +598,7 @@ public sealed partial class DisplayServer
         {
             using var @event = new InputEventScreenTouch
             {
-                WindowId = MainWindowId,
+                WindowID = MainWindowId,
                 Device = 0,
                 Index = contact.Index,
                 Position = position,

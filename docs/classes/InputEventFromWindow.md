@@ -1,6 +1,6 @@
 # InputEventFromWindow
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** [InputEvent](InputEvent.md)
 
@@ -16,8 +16,8 @@ Last updated: 2026-09-21
 
 Provides the abstract base for input events received from a window.
 
-- Responsibility: adds a host-defined `long WindowId`; zero means primary/unspecified.
-- Complete declared API: `WindowId { get; set; }`; protected overrides `CopyEventStateTo` and `GetPropertyDescriptors`. `WindowId` is a stored typed descriptor.
+- Responsibility: adds a host-defined `long WindowID`; zero means primary/unspecified.
+- Complete declared API: `WindowID { get; set; }`; protected overrides `CopyEventStateTo` and `GetPropertyDescriptors`. `WindowID` is a stored typed descriptor.
 - Lifecycle/errors: mutable Resource state; disposed access throws; copying preserves the identifier.
 - Threading/dependencies: caller-coordinated, backend-neutral; a real window registry begins with the SDL window-host trigger in ADR 0038.
 - Verification: duplication and concrete positional-event tests exercise preservation. Inherited API is documented by [`InputEvent`](InputEvent.md).
@@ -27,8 +27,8 @@ Provides the abstract base for input events received from a window.
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-using InputEventFromWindow inputEvent = new InputEventMouseButton { WindowId = 1 };
-Console.WriteLine(inputEvent.WindowId);
+using InputEventFromWindow inputEvent = new InputEventMouseButton { WindowID = 1 };
+Console.WriteLine(inputEvent.WindowID);
 ```
 
 ## Constructors
@@ -41,7 +41,7 @@ Console.WriteLine(inputEvent.WindowId);
 
 | Member | Description |
 | --- | --- |
-| [`public long WindowId { get; set; }`](#p-electron2d-inputeventfromwindow-windowid) | Gets or sets the receiving window identifier. |
+| [`public long WindowID { get; set; }`](#p-electron2d-inputeventfromwindow-windowid) | Gets or sets the receiving window identifier. |
 
 ## Methods
 
@@ -60,7 +60,7 @@ Initializes a new InputEventFromWindow instance.
 ## Property Descriptions
 
 <a id="p-electron2d-inputeventfromwindow-windowid"></a>
-### `public long WindowId { get; set; }`
+### `public long WindowID { get; set; }`
 
 Gets or sets the receiving window identifier.
 

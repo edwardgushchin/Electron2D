@@ -36,11 +36,11 @@ public class Resource : ElectronObject
             (resource, value) => resource.ResourcePath = value,
             _ => string.Empty),
         new PropertyDescriptor<Resource, string>(
-            nameof(ResourceSceneUniqueId),
-            resource => resource.ResourceSceneUniqueId,
-            (resource, value) => resource.ResourceSceneUniqueId = value,
+            nameof(ResourceSceneUniqueID),
+            resource => resource.ResourceSceneUniqueID,
+            (resource, value) => resource.ResourceSceneUniqueID = value,
             _ => string.Empty,
-            (_, value) => IsValidSceneUniqueId(value))
+            (_, value) => IsValidSceneUniqueID(value))
     ]);
 
     private readonly object _changeBatchGate = new();
@@ -145,7 +145,7 @@ public class Resource : ElectronObject
     /// <exception cref="ArgumentException">The assigned value contains a character outside ASCII letters, digits, and underscores.</exception>
     /// <exception cref="ArgumentNullException">The assigned value is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
-    public string ResourceSceneUniqueId
+    public string ResourceSceneUniqueID
     {
         get
         {
@@ -161,7 +161,7 @@ public class Resource : ElectronObject
             ThrowIfDisposed();
             ArgumentNullException.ThrowIfNull(value);
 
-            if (!IsValidSceneUniqueId(value))
+            if (!IsValidSceneUniqueID(value))
                 throw new ArgumentException("A scene-unique ID may contain only ASCII letters, digits, and underscores.", nameof(value));
 
             lock (_stateGate)
@@ -316,7 +316,7 @@ public class Resource : ElectronObject
     /// <summary>Generates a compact scene-relative resource identifier.</summary>
     /// <returns>A five-character string composed of lowercase letters <c>a</c> through <c>y</c> and digits <c>0</c> through <c>8</c>.</returns>
     /// <remarks>The result is probabilistically unique; a future scene saver must still detect and resolve collisions.</remarks>
-    public static string GenerateSceneUniqueId()
+    public static string GenerateSceneUniqueID()
     {
         return string.Create(
             SceneUniqueIdLength,
@@ -672,7 +672,7 @@ public class Resource : ElectronObject
         resource._pathIsRegistered = false;
     }
 
-    private static bool IsValidSceneUniqueId(string? value)
+    private static bool IsValidSceneUniqueID(string? value)
     {
         if (value is null)
             return false;
@@ -939,7 +939,7 @@ public class Resource : ElectronObject
 
             ObjectDisposedException.ThrowIf(target.IsDisposed, target);
 
-            if (target.ResourcePath.Length != 0 || target.ResourceSceneUniqueId.Length != 0)
+            if (target.ResourcePath.Length != 0 || target.ResourceSceneUniqueID.Length != 0)
                 throw new InvalidOperationException("A resource duplication factory must return a default instance with empty path and scene ID.");
 
             return target;

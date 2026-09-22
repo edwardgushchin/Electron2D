@@ -75,7 +75,7 @@ public sealed partial class DisplayServer
                 Buttons = nativeButtons,
             };
             if (!SDL.ShowMessageBox(in message, out var selected))
-                throw SdlFailure("show a native message dialog");
+                throw SDLFailure("show a native message dialog");
             callback(selected);
         }
         finally
@@ -134,7 +134,7 @@ public sealed partial class DisplayServer
         if (properties == 0)
         {
             request.DisposeFilters();
-            throw SdlFailure("create file dialog properties");
+            throw SDLFailure("create file dialog properties");
         }
 
         try
@@ -150,7 +150,7 @@ public sealed partial class DisplayServer
                 nativeFilters.Length > 0 &&
                 (!SDL.SetPointerProperty(properties, SDL.Props.FileDialogFiltersPointer, request.FiltersPointer) ||
                  !SDL.SetNumberProperty(properties, SDL.Props.FileDialogNFiltersNumber, nativeFilters.Length)))
-                throw SdlFailure("configure a native file dialog");
+                throw SDLFailure("configure a native file dialog");
 
             nint requestId;
             do

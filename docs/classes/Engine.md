@@ -34,7 +34,7 @@ The following focused snippet uses the current public API. Names not declared in
 ```csharp
 var window = new Window { Title = "Game", Size = new Vector2I(960, 540) };
 window.AddChild(scene); // a caller-created Node hierarchy
-Engine.Instance.MaxFps = 60;
+Engine.Instance.MaxFPS = 60;
 int exitCode = Engine.Instance.Run(window);
 ```
 
@@ -42,7 +42,7 @@ int exitCode = Engine.Instance.Run(window);
 
 | Member | Description |
 | --- | --- |
-| [`public int MaxFps { get; set; }`](#p-electron2d-engine-maxfps) | Maximum cadence for Run. |
+| [`public int MaxFPS { get; set; }`](#p-electron2d-engine-maxfps) | Maximum cadence for Run. |
 | [`public static Engine Instance { get; }`](#p-electron2d-engine-instance) | Gets the process-wide engine instance. |
 | [`public int PhysicsTicksPerSecond { get; set; }`](#p-electron2d-engine-physicstickspersecond) | Gets or sets the fixed-step callback frequency. |
 | [`public int MaxPhysicsStepsPerFrame { get; set; }`](#p-electron2d-engine-maxphysicsstepsperframe) | Gets or sets the maximum number of fixed-step callbacks run during one process frame. |
@@ -77,7 +77,7 @@ int exitCode = Engine.Instance.Run(window);
 ## Property Descriptions
 
 <a id="p-electron2d-engine-maxfps"></a>
-### `public int MaxFps { get; set; }`
+### `public int MaxFPS { get; set; }`
 
 Maximum cadence for Run. Zero (default) is unlimited; negative values throw ArgumentOutOfRangeException. Atomic reads/writes are allowed from any thread; this runtime value is not persisted in ProjectSettings. Waiting measures unscaled monotonic time and pumps events in intervals of at most 10 ms. Manual AdvanceFrame does not wait.
 
