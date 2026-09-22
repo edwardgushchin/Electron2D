@@ -407,7 +407,7 @@ The migration preserves ADR 0001 through ADR 0029 as complete records, adds this
 
 
 <a id="adr-0045"></a>
-## ADR 0045: Keep acronyms uppercase in function and method names
+## ADR 0045: Keep acronyms uppercase in function, method and property names
 
 Last updated: 2026-09-22
 
@@ -417,15 +417,15 @@ Accepted. Existing names require migration; this decision does not assert reposi
 
 ### Decision
 
-Every acronym in an Electron2D-owned function or method name is written entirely in uppercase, regardless of its length or position in the identifier. This includes public, protected, internal and private methods, and local functions. Ordinary words retain the surrounding C# casing convention.
+Every acronym in an Electron2D-owned function, method or property name is written entirely in uppercase, regardless of its length or position in the identifier. This includes public, protected, internal and private methods, local functions and properties. Ordinary words retain the surrounding C# casing convention.
 
-Examples: `LoadPNGFromBuffer`, `LoadJPGFromBuffer`, `LoadBMPFromBuffer`, `LoadTGAFromBuffer`, `SavePNG`, `SaveJPGToBuffer`, `GetGLVersion`, `CompileHLSL`, `CompileGLSL`, `GetGPUInfo`, `GetInstanceID` and `ReadUTF8`. These illustrate spelling; they do not introduce or claim implementation of those APIs. The rule also applies to other acronyms; this list is not exhaustive.
+Examples: `LoadPNGFromBuffer`, `LoadJPGFromBuffer`, `LoadBMPFromBuffer`, `LoadTGAFromBuffer`, `SavePNG`, `SaveJPGToBuffer`, `GetGLVersion`, `CompileHLSL`, `CompileGLSL`, `GetGPUInfo`, `GetInstanceID`, `ReadUTF8` and `GetFPS`; a property uses `MaxFPS`. `FPS` follows the same uppercase rule as the other acronyms. These illustrate spelling; they do not introduce or claim implementation of those APIs. The rule also applies to other acronyms; this list is not exhaustive.
 
-Do not turn acronyms into title-case words such as `Png`, `Jpg`, `Gl`, `Gpu` or `Utf8`. Compound names retain ordinary words while capitalizing their acronym parts: `WebP` and `OpenGL`; `SPIR-V` is written `SPIRV` inside an identifier, where a hyphen cannot be used.
+Do not turn acronyms into title-case words such as `Png`, `Jpg`, `Gl`, `Gpu`, `Utf8` or `Fps`. Compound names retain ordinary words while capitalizing their acronym parts: `WebP` and `OpenGL`; `SPIR-V` is written `SPIRV` inside an identifier, where a hyphen cannot be used.
 
-Apply the rule to new functions immediately. Existing nonconforming names are migration work, not a second accepted convention. A rename updates every affected call site, source XML, current class/component documentation and bidirectional coverage mapping in the same change. Preserve behavior while changing spelling. Do not add aliases solely to retain the rejected casing.
+Apply the rule to new functions, methods and properties immediately. Existing nonconforming names are migration work, not a second accepted convention. A rename updates every affected call site, source XML, current class/component documentation and bidirectional coverage mapping in the same change. Preserve behavior while changing spelling. Do not add aliases solely to retain the rejected casing.
 
-Externally prescribed override/interface member names and vendored upstream declarations retain the spelling required by their defining contract. Electron2D-owned wrapper methods follow this rule. This decision concerns function and method names; it does not impose an unrelated rename of types, properties, fields, file extensions, serialized keys or shader entry points.
+Externally prescribed override/interface member names and vendored upstream declarations retain the spelling required by their defining contract. Electron2D-owned wrapper methods and properties follow this rule. This decision concerns function, method and property names; it does not impose an unrelated rename of types, fields, file extensions, serialized keys or shader entry points.
 
 ### Rationale and consequences
 
