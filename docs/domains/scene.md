@@ -24,7 +24,7 @@ Production types include [`Node`](../classes/Node.md), [`CanvasItem`](../classes
 ## Public surface
 
 - `Node`: neutral ordered hierarchy, lifecycle, paths/groups, processing/input, packed ownership and deletion.
-- `CanvasItem : Node`: abstract retained drawing, visibility, materials, modulation, Z and shared transform queries.
+- `CanvasItem : Node`: abstract retained drawing, visibility, materials, modulation, Z, shared transform queries and local geometry notifications through ItemRectChanged.
 - `Entity : CanvasItem`: spatial position, rotation, scale, skew and helpers; Sprite derives from it.
 - `Sprite`: borrowed texture drawing, sheet frames, atlas regions, local bounds/opacity, change notifications and typed PackedScene state.
 - `NodeProcessMode`: inherited, pausable, paused-only, always, and disabled process policies.

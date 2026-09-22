@@ -11,9 +11,9 @@ Last updated: 2026-09-23
 
 Displays a borrowed [Texture](Texture.md), a selected sheet frame or a rectangular texture region. It inherits hierarchy/lifecycle from Node, drawing/visibility/Z/modulation/materials from CanvasItem, and spatial transforms from Entity. Engine.Run renders its retained commands through the active canvas backend. Sprite does not own a timer: change Frame directly, through a Tween or from scene processing.
 
-The node owns its subscription to Texture.Changed and releases that subscription on replacement/disposal. It never disposes an ordinary borrowed texture. PackedScene separately owns any resource it duplicates for an instance through ResourceLocalToScene. Texture content changes request redraw without emitting TextureChanged; replacing the reference emits TextureChanged once. A resource notification from a worker thread only atomically requests redraw; drawing stays on the scene owner thread.
+The node owns its subscription to Texture.Changed and releases that subscription on replacement/disposal. It never disposes an ordinary borrowed texture. PackedScene separately owns any resource it duplicates for an instance through ResourceLocalToScene. Texture content changes request redraw without emitting TextureChanged or ItemRectChanged; replacing the reference emits TextureChanged, then inherited ItemRectChanged. A resource notification from a worker thread only atomically requests redraw; drawing stays on the scene owner thread.
 
-All properties and queries reject a disposed Sprite. Setters also reject scene capture and mutation off the attached tree's owner thread. Detached nodes require caller coordination. Synchronous event handlers observe committed state; a throwing handler stops later subscribers and propagates, leaving the new value and pending redraw intact. Resource.Changed retains its own documented delivery behavior, including failures in earlier subscribers.
+All properties and queries reject a disposed Sprite. Setters also reject scene capture and mutation off the attached tree's owner thread. Detached nodes require caller coordination. Synchronous event handlers observe committed state; a throwing handler stops later subscribers and subsequent event stages for that mutation, leaving the new value and pending redraw intact. Disposal from a handler suppresses subsequent stages. Resource.Changed retains its own documented delivery behavior, including failures in earlier subscribers.
 
 ## Example
 
@@ -64,6 +64,7 @@ The texture must outlive its use by the scene. `Engine.Instance.Run(window)` own
 | `public bool IsPixelOpaque(Vector2 position)` | [Source opacity](#ispixelopaque) |
 | `public event Action? FrameChanged` | [Frame event](#framechanged) |
 | `public event Action? TextureChanged` | [Texture event](#texturechanged) |
+| Inherited `public event Action<CanvasItem>? ItemRectChanged` | [Local geometry event](#itemrectchanged) |
 
 ## Property descriptions
 
@@ -93,11 +94,11 @@ When RegionEnabled is true, limits UV sampling to texel centers in the selected 
 
 ### HFrames and VFrames
 
-Positive columns/rows. Their product must fit Int32.MaxValue, avoiding arithmetic overflow in frame addressing. Invalid changes throw ArgumentOutOfRangeException before mutation. Grid changes preserve the selected column and row when they still exist; otherwise Frame becomes zero. Such implicit adjustments do not emit FrameChanged. A changed grid requests redraw and raises inherited PropertyListChanged after committing its state.
+Positive columns/rows. Their product must fit Int32.MaxValue, avoiding arithmetic overflow in frame addressing. Invalid changes throw ArgumentOutOfRangeException before mutation. Grid changes preserve the selected column and row when they still exist; otherwise Frame becomes zero. Such implicit adjustments do not emit FrameChanged. A changed grid requests redraw, emits inherited ItemRectChanged, then raises PropertyListChanged after committing its state.
 
 ### Frame
 
-Zero-based row-major index in `[0, HFrames * VFrames)`. Invalid values throw ArgumentOutOfRangeException. Reassignment to the current index is a no-op. A changed explicit assignment requests redraw and emits FrameChanged.
+Zero-based row-major index in `[0, HFrames * VFrames)`. Invalid values throw ArgumentOutOfRangeException. Reassignment to the current index is a no-op. A changed explicit assignment requests redraw, emits ItemRectChanged, then FrameChanged.
 
 ### FrameCoords
 
@@ -127,6 +128,18 @@ Emitted synchronously after an explicit Frame or FrameCoords assignment changes 
 
 Emitted synchronously after changing the reference, including clearing it. Content changes within the same texture do not emit this event. Neither event is serialized by PackedScene; disposal clears subscribers.
 
+### ItemRectChanged
+
+Inherited from [CanvasItem](CanvasItem.md#e-electron2d-canvasitem-itemrectchanged), with the sprite as sender. Delivery is synchronous after committing geometry, including while hidden, detached or processing-disabled; children do not receive it. An actual change emits it for:
+
+- Texture: after TextureChanged, including assignment to null.
+- Centered and Offset: after requesting redraw.
+- RegionRect: only while RegionEnabled is true.
+- Frame and FrameCoords: before FrameChanged, even when numeric bounds stay equal.
+- HFrames and VFrames: before PropertyListChanged, including an implicit frame reset.
+
+Unchanged assignments and rejected values emit nothing. RegionEnabled, flips, RegionFilterClipEnabled and Entity transforms do not emit it. Changes to the contents/size of the same texture only request redraw; they do not run scene callbacks on resource workers. Reentrant setters deliver their own synchronous events. Exceptions stop subsequent subscribers/event stages with state and redraw committed; disposal from a handler skips the remaining stages.
+
 ## Protected integration
 
 | Declaration | Contract |
@@ -138,7 +151,7 @@ Emitted synchronously after changing the reference, including clearing it. Conte
 
 ## Verification and limits
 
-[SpriteTests](../../tests/Electron2D.Tests/SpriteTests.cs) covers defaults, event/no-op ordering, grid resizing, invalid-state rollback, opacity, fractional/zero/signed bounds, resource subscriptions, event failures, owner-thread enforcement and PackedScene reconstruction with shared and scene-local textures. It checks a worker notification during OnDraw is retained for the next frame and zero allocations for unchanged preparation. A custom Texture verifies virtual region drawing, invalid dimensions and disposal, and derived-coordinate overflow is rejected.
+[SpriteTests](../../tests/Electron2D.Tests/SpriteTests.cs) covers defaults, event/no-op ordering, grid resizing, invalid-state rollback, opacity, fractional/zero/signed bounds, resource subscriptions, event failures, owner-thread enforcement and PackedScene reconstruction with shared and scene-local textures. It also checks ItemRectChanged order/triggers, committed geometry, no-ops, hidden/detached/disabled delivery, redraw options, callback reentry and disposal. It checks a worker notification during OnDraw is retained for the next frame and zero allocations for unchanged preparation. A custom Texture verifies virtual region drawing, invalid dimensions and disposal, and derived-coordinate overflow is rejected.
 
 [SpriteRenderingTests](../../tests/Electron2D.Tests/SpriteRenderingTests.cs) checks twelve successive frames: ordinary output, both flips, sheet coordinates, region selection/clipping, worker size/pixel changes, replacement, hidden redraw and clearing. It runs with GPU and compatibility, plus a custom GLSL material on GPU. Exact current native evidence and limits are recorded in the [canvas component](../components/canvas-rendering.md#verification).
 

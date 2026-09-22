@@ -78,6 +78,7 @@ internal static class SpriteTests
         sprite.Texture = texture;
         VerifyPacking(texture);
         VerifyRedraw(texture, replacement);
+        VerifyRectChanges(texture, replacement);
         VerifyCustomTexture();
         sprite.Dispose();
         texture.EmitChanged();
@@ -145,7 +146,117 @@ internal static class SpriteTests
     {
         internal int Draws;
         internal Action? DuringDraw;
+        internal void ReportRectChange(bool sizeChanged = true) => NotifyItemRectChanged(sizeChanged);
         protected override void OnDraw() { Draws++; DuringDraw?.Invoke(); base.OnDraw(); }
+    }
+
+    private static void VerifyRectChanges(ImageTexture texture, ImageTexture replacement)
+    {
+        using var sprite = new CountedSprite();
+        var trace = new List<string>();
+        Rect observed = default;
+        sprite.ItemRectChanged += sender =>
+        {
+            Check(ReferenceEquals(sender, sprite), "Rectangle event sender.");
+            observed = sprite.GetRect(); trace.Add("rect");
+        };
+        sprite.TextureChanged += () => trace.Add("texture");
+        sprite.FrameChanged += () => trace.Add("frame");
+        sprite.PropertyListChanged += _ => trace.Add("list");
+        void Expect(Action change, string expected)
+        {
+            trace.Clear(); change();
+            Check(string.Join(',', trace) == expected, "Rectangle event sequence: " + expected);
+            if (trace.Contains("rect")) Check(observed == sprite.GetRect(), "Rectangle callbacks observe committed geometry.");
+        }
+        Expect(() => sprite.Texture = texture, "texture,rect");
+        Expect(() => sprite.Texture = texture, "");
+        Expect(() => sprite.Centered = false, "rect");
+        Expect(() => sprite.Centered = false, "");
+        Expect(() => sprite.Offset = new(3, 4), "rect");
+        Expect(() => sprite.Offset = new(3, 4), "");
+        Expect(() => sprite.RegionRect = new(1, 0, 8, 6), "");
+        Expect(() => sprite.RegionEnabled = true, "");
+        Expect(() => sprite.RegionRect = new(0, 0, 8, 6), "rect");
+        Expect(() => sprite.RegionRect = sprite.RegionRect, "");
+        Expect(() => sprite.HFrames = 2, "rect,list");
+        Expect(() => sprite.VFrames = 3, "rect,list");
+        Expect(() => { sprite.HFrames = 2; sprite.VFrames = 3; }, "");
+        Expect(() => sprite.Frame = 5, "rect,frame");
+        Expect(() => sprite.FrameCoords = new(0, 1), "rect,frame");
+        Expect(() => { sprite.Frame = 2; sprite.FrameCoords = new(0, 1); }, "");
+        Expect(() => sprite.VFrames = 1, "rect,list");
+        Check(sprite.Frame == 0, "Implicit frame adjustment commits before rectangle notification.");
+        Expect(() => { sprite.FlipH = true; sprite.FlipV = true; sprite.RegionFilterClipEnabled = true; }, "");
+        Expect(() => { sprite.Position = new(5, 6); sprite.Rotation = 1; sprite.Scale = new(2, 3); sprite.Skew = 0.2f; }, "");
+        Expect(() => sprite.Texture = replacement, "texture,rect");
+        Expect(() => Task.Run(() => { texture.EmitChanged(); replacement.SetSizeOverride(new(3, 3)); }).GetAwaiter().GetResult(), "");
+        Expect(() => sprite.Texture = null, "texture,rect");
+        Expect(() => sprite.Centered = true, "rect");
+        Expect(() =>
+        {
+            Reject<ArgumentException>(() => sprite.Offset = new(float.NaN, 0));
+            Reject<ArgumentException>(() => sprite.RegionRect = new(0, 0, float.NaN, 1));
+            Reject<ArgumentOutOfRangeException>(() => sprite.Frame = 2);
+            Reject<ArgumentOutOfRangeException>(() => sprite.HFrames = 0);
+        }, "");
+
+        sprite.PrepareCanvas(); var detachedDraws = sprite.Draws;
+        Expect(() => sprite.ReportRectChange(), "rect");
+        sprite.PrepareCanvas(); Check(sprite.Draws == detachedDraws, "Detached rectangle reports deliver without queueing redraw.");
+        var childEvents = 0;
+        sprite.AddChild(new Sprite());
+        ((Sprite)sprite.Children[0]).ItemRectChanged += _ => childEvents++;
+        using (var tree = new SceneTree(sprite))
+        {
+            sprite.PrepareCanvas(); var draws = sprite.Draws;
+            Expect(() => sprite.ReportRectChange(false), "rect");
+            sprite.PrepareCanvas(); Check(sprite.Draws == draws, "Position-only rectangle reports do not request redraw.");
+            Expect(() => sprite.ReportRectChange(), "rect");
+            sprite.PrepareCanvas(); Check(sprite.Draws == draws + 1, "Size rectangle reports request redraw.");
+            Expect(() =>
+            {
+                sprite.Visible = false; sprite.ProcessMode = NodeProcessMode.Disabled;
+                sprite.Offset = new(8, 9);
+            }, "rect");
+            Check(childEvents == 0, "Rectangle events stay local, even while hidden or not processing.");
+            Expect(() =>
+            {
+                Reject<InvalidOperationException>(() => Task.Run(() => sprite.ReportRectChange(false)).GetAwaiter().GetResult());
+                Reject<InvalidOperationException>(() => Task.Run(() => sprite.Centered = false).GetAwaiter().GetResult());
+            }, "");
+
+            Action<CanvasItem> failRect = _ => throw new ApplicationException("rectangle handler");
+            sprite.ItemRectChanged += failRect;
+            Expect(() => Reject<ApplicationException>(() => sprite.Frame = 1), "rect");
+            Check(sprite.Frame == 1, "Failed rectangle callback retains frame and skips later frame event.");
+            Expect(() => Reject<ApplicationException>(() => sprite.HFrames = 1), "rect");
+            Check(sprite.HFrames == 1 && sprite.Frame == 0, "Failed rectangle callback retains grid and skips property-list event.");
+            sprite.ItemRectChanged -= failRect;
+            Action failTexture = () => throw new ApplicationException("texture handler");
+            sprite.TextureChanged += failTexture;
+            Expect(() => Reject<ApplicationException>(() => sprite.Texture = texture), "texture");
+            sprite.TextureChanged -= failTexture;
+            Check(ReferenceEquals(sprite.Texture, texture), "Texture failure commits state and skips rectangle notification.");
+            sprite.PrepareCanvas(); Check(sprite.Draws == draws + 2, "Callback failures retain pending redraw.");
+        }
+        Reject<ObjectDisposedException>(() => sprite.ReportRectChange());
+        replacement.SetSizeOverride(new(2, 2));
+
+        using var reentrant = new Sprite();
+        var nestedEvents = 0;
+        reentrant.ItemRectChanged += _ => { nestedEvents++; if (nestedEvents == 1) reentrant.Offset = Vector2.One; };
+        reentrant.Centered = false;
+        Check(nestedEvents == 2 && reentrant.Offset == Vector2.One, "Reentrant geometry changes each deliver once.");
+        using var disposeFromTexture = new Sprite();
+        disposeFromTexture.TextureChanged += disposeFromTexture.Dispose;
+        disposeFromTexture.ItemRectChanged += _ => throw new InvalidOperationException("Disposed rectangle event.");
+        disposeFromTexture.Texture = texture;
+        using var disposeFromRect = new Sprite { HFrames = 2 };
+        disposeFromRect.ItemRectChanged += item => item.Dispose();
+        disposeFromRect.FrameChanged += () => throw new InvalidOperationException("Disposed frame event.");
+        disposeFromRect.Frame = 1;
+        Check(disposeFromTexture.IsDisposed && disposeFromRect.IsDisposed && !texture.IsDisposed, "Callback disposal ends remaining events without releasing borrowed texture.");
     }
 
     private static void VerifyCustomTexture()

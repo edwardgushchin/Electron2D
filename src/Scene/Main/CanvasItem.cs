@@ -23,6 +23,20 @@ public abstract partial class CanvasItem : Node
 
     internal CanvasItem? GetParentItem() => TopLevel ? null : Parent as CanvasItem;
 
+    /// <summary>Reports a change that may affect this item's local drawing bounds.</summary>
+    /// <param name="sizeChanged">Whether to request redraw before delivering the event; defaults to true.</param>
+    /// <remarks>Commit the geometry first. Delivery is synchronous, including while hidden or detached, and does not
+    /// propagate to children. Redraw follows QueueRedraw rules. A throwing subscriber stops later subscribers.</remarks>
+    /// <exception cref="InvalidOperationException">The caller is not the scene owner or a capture is active.</exception>
+    /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
+    /// <exception cref="Exception">An ItemRectChanged subscriber throws.</exception>
+    protected void NotifyItemRectChanged(bool sizeChanged = true)
+    {
+        EnsureMutable();
+        if (sizeChanged) QueueRedraw();
+        ItemRectChanged?.Invoke(this);
+    }
+
     /// <summary>Delivers enabled transform notifications after a derived placement model changes.</summary>
     /// <remarks>The local transform must be committed first. Descendant delivery stops at neutral nodes and
     /// top-level canvas items. All affected items are attempted before callback failures are aggregated.</remarks>
@@ -113,7 +127,7 @@ public abstract partial class CanvasItem : Node
             if (disposing)
             {
                 _canvasCommands?.Clear(); _material = null;
-                VisibilityChanged = null; Hidden = null; Draw = null; LocalTransformChanged = null; TransformChanged = null;
+                VisibilityChanged = null; Hidden = null; Draw = null; ItemRectChanged = null; LocalTransformChanged = null; TransformChanged = null;
             }
         }
     }
@@ -366,6 +380,11 @@ public abstract partial class CanvasItem : Node
     /// <summary>Occurs after visibility delivery when this item becomes hidden in its tree.</summary>
     /// <remarks>Explicit changes below a hidden parent and tree exit do not raise this event. Delivery is synchronous.</remarks>
     public event Action<CanvasItem>? Hidden;
+
+    /// <summary>Occurs when an operation may change this item's local drawing bounds.</summary>
+    /// <remarks>Derived geometry setters report this independently of transform notifications. Delivery is synchronous
+    /// on the mutating thread, restricted to the scene owner while attached, including while hidden.</remarks>
+    public event Action<CanvasItem>? ItemRectChanged;
 
     /// <summary>Occurs after this node's local transform actually changes.</summary>
     /// <remarks>The event is always enabled; numeric local-transform notification delivery is separately configurable.</remarks>

@@ -13,7 +13,7 @@ Rendering turns retained scene commands and typed resources into frames for the 
 | [Canvas rendering](../components/canvas-rendering.md) | [RenderingServer](../classes/RenderingServer.md), CanvasItem drawing, [Sprite](../classes/Sprite.md) nodes and Texture drawing | Executable rectangle/line/texture path; full API incomplete |
 | [Shader materials](../components/shader-materials.md) | Shader, ShaderMaterial, Material, Texture and ImageTexture, owned by Resources | Executable HLSL/GLSL import, typed uniforms and sampled textures; broader language profile incomplete |
 
-Games use Sprite for texture, sheet-frame and region drawing, or record custom commands from CanvasItem.OnDraw through CanvasItem and Texture. RenderingServer provides the active method/driver, frame events and clear/submission controls. Engine.Run starts and closes the renderer.
+Games use Sprite for texture, sheet-frame and region drawing, or record custom commands from CanvasItem.OnDraw through CanvasItem and Texture. RenderingServer provides the active method/driver, frame events and clear/submission controls. Engine.Run starts and closes the renderer. CanvasItem.ItemRectChanged reports local geometry changes synchronously; Sprite integrates the event with its setters while resource worker notifications remain atomic redraw requests.
 
 ## Dependencies and invariants
 

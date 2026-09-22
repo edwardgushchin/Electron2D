@@ -22,7 +22,7 @@ Texture drawing stretches, repeats or selects a source region. Negative destinat
 
 GPU consumes vertex position/color/UV and the imported fragment interface. Built-in TEXTURE is supplied per command, using white for untextured geometry. Compatibility rejects arbitrary shaders, uploads the base mip level and checks unsupported high-precision formats and repeat capabilities. The software driver receives textured triangles separately because SDL 3.4.16's rectangle shortcut loses transposed and constant UVs; native vendored code remains unchanged.
 
-Sprite borrows its texture, records through the texture's virtual region draw method and rebuilds on frame, region, layout or texture changes. Its resource notification callback only marks an atomic redraw request; it cannot run scene code on a worker. CanvasItem consumes that request atomically before OnDraw, retaining notifications that arrive during recording for the next frame.
+Sprite borrows its texture, records through the texture's virtual region draw method and rebuilds on frame, region, layout or texture changes. Its resource notification callback only marks an atomic redraw request; it cannot run scene code on a worker. CanvasItem consumes that request atomically before OnDraw, retaining notifications that arrive during recording for the next frame. ItemRectChanged is a separate synchronous geometry event: Sprite delivers it after texture identity/centering/offset/active-region/frame/grid changes, with the exact order in its [class contract](../classes/Sprite.md#itemrectchanged). Resource content notifications and Entity transforms do not emit it. Hidden and detached items still deliver; callback failures retain committed geometry and redraw.
 
 ## Canvas lifecycle
 
@@ -39,6 +39,8 @@ Nodes borrow materials and textures; native texture caches belong to the backend
 Current framebuffer and blending precision is RGBA8. GPU samples byte and supported floating-point images, including stored mips. Compatibility support depends on the native driver; the tested drivers reject float textures explicitly. The component has no lights, clipping hierarchy, polygon/mesh API, public offscreen targets, GUI drawing, independent window renderers or device-loss recovery. Other targets remain unverified under [ADR 0021](../decisions/product.md#adr-0021).
 
 ## Verification
+
+The ItemRectChanged integration passes managed Sprite event checks. Its full Wayland rendering run passed on an unchanged retry after the first run failed while Vulkan queried surface formats for a new window during the allocation check. This records a native initialization failure, not an event-test failure; the passing retry does not prove initialization is free of intermittent failures.
 
 [CanvasLifecycleTests](../../tests/Electron2D.Tests/CanvasLifecycleTests.cs) checks activation, reattachment, TopLevel rebinding, visibility propagation, Hidden, manual notifications, callback failure continuation and recording recovery. Native six-frame readback sequences verify drawing in the notification, event and override, redraw on showing/rebinding/reattachment and coalescing inside Draw. The suite passes on Wayland GPU/compatibility and dummy/software.
 

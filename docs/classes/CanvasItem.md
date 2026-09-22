@@ -20,6 +20,8 @@ Canvas attachment is part of actual SceneTree membership. Entry delivers Notific
 
 Local Visible changes notify the item, including while detached or below a hidden parent. Effective changes propagate only through locally visible direct canvas children; Hidden follows visibility delivery when becoming hidden in the tree. Tree exit does not emit Hidden. Visible entry and showing schedule redraw. A visibility notification delivered with Notify raises VisibilityChanged through the base handler without changing state.
 
+ItemRectChanged reports local geometry changes independently of transform notifications. Derived geometry models call NotifyItemRectChanged after committing state; events remain synchronous while hidden or detached. See [Sprite](Sprite.md#itemrectchanged) for its exact triggers.
+
 ## Examples
 
 The snippet uses the Electron2D namespace; attach the hierarchy to a SceneTree or an Engine.Run window to activate it.
@@ -72,6 +74,7 @@ class PaintedNode : Entity
 | [`public abstract Transform GetTransform()`](#m-electron2d-canvasitem-gettransform) | Returns the local transform supplied by this item's placement model. |
 | [`public void Hide()`](#m-electron2d-canvasitem-hide) | Sets `CanvasItem.Visible` to `false`. |
 | [`public void MoveToFront()`](#m-electron2d-canvasitem-movetofront) | Moves this node to the last position among its siblings. |
+| [`protected void NotifyItemRectChanged(bool sizeChanged = true)`](#m-electron2d-canvasitem-notifyitemrectchanged-system-boolean) | Reports a possible local-bounds change, optionally requesting redraw first. |
 | [`protected void NotifyLocalTransformChanged()`](#m-electron2d-canvasitem-notifylocaltransformchanged) | Delivers enabled transform notifications after a derived placement model changes. |
 | [`protected virtual void OnDraw()`](#m-electron2d-canvasitem-ondraw) | Records this node's retained canvas commands before its first visible frame and after QueueRedraw. |
 | [`protected override void OnNotification(int what)`](#m-electron2d-canvasitem-onnotification-system-int32) | Preserves inherited lifecycle dispatch, projects NotificationVisibilityChanged to its typed event and propagates transform changes at parent boundaries. Actual canvas attachment is owned by SceneTree membership, independently of manually dispatched tree notifications. |
@@ -84,6 +87,7 @@ class PaintedNode : Entity
 | --- | --- |
 | [`public event Action<CanvasItem>? Draw`](#e-electron2d-canvasitem-draw) | Synchronous recording event between NotificationDraw and OnDraw. |
 | [`public event Action<CanvasItem>? Hidden`](#e-electron2d-canvasitem-hidden) | Effective transition to hidden, after visibility delivery. |
+| [`public event Action<CanvasItem>? ItemRectChanged`](#e-electron2d-canvasitem-itemrectchanged) | Synchronous local geometry notification; does not propagate to children. |
 | [`public event Action<CanvasItem>? LocalTransformChanged`](#e-electron2d-canvasitem-localtransformchanged) | Occurs after this node's local transform actually changes. |
 | [`public event Action<CanvasItem>? TransformChanged`](#e-electron2d-canvasitem-transformchanged) | Occurs when this node's global transform is affected by a local or ancestor change. |
 | [`public event Action<CanvasItem>? VisibilityChanged`](#e-electron2d-canvasitem-visibilitychanged) | Occurs after local or inherited logical visibility is propagated to this node. |
@@ -458,6 +462,13 @@ Moves this node to the last position among its siblings.
 
 **System.AggregateException:** One or more child-order or tree-change callbacks fail after the order changes.
 
+<a id="m-electron2d-canvasitem-notifyitemrectchanged-system-boolean"></a>
+### `protected void NotifyItemRectChanged(bool sizeChanged = true)`
+
+Reports that an operation may affect local drawing bounds. Derived types commit their geometry before calling it; identical numeric bounds need not suppress an operation's event. When `sizeChanged` is true, calls QueueRedraw before delivery, with its detached, hidden and recording/coalescing rules. False delivers the event without requesting redraw.
+
+Delivery is synchronous on the caller's thread, restricted to the scene owner while attached. Hidden, detached and processing-disabled items still deliver. The event is local and does not propagate to children. InvalidOperationException rejects off-owner or capture-time calls before delivery; ObjectDisposedException rejects disposed items. Subscriber exceptions propagate immediately, stopping later subscribers while retaining committed state and pending redraw.
+
 <a id="m-electron2d-canvasitem-notifylocaltransformchanged"></a>
 ### `protected void NotifyLocalTransformChanged()`
 
@@ -516,6 +527,11 @@ Synchronous owner-thread event after NotificationDraw and before OnDraw. The arg
 ### `public event Action<CanvasItem>? Hidden`
 
 Synchronous event after visibility notification/event delivery when this item becomes hidden in its tree. The argument is the affected item. Direct visible descendants participate, including TopLevel items; locally hidden branches stop propagation. Local changes below a hidden parent and tree exit do not emit Hidden. Callback failures are reported after remaining affected children are attempted.
+
+<a id="e-electron2d-canvasitem-itemrectchanged"></a>
+### `public event Action<CanvasItem>? ItemRectChanged`
+
+Reports a possible local drawing-bounds change, with this item as sender. Derived geometry operations call NotifyItemRectChanged; Entity transforms do not emit it. The event is independent of visibility and processing. The owning node clears subscriptions on disposal. See [Sprite](Sprite.md#itemrectchanged) for event order, no-ops and resource notification behavior.
 
 <a id="e-electron2d-canvasitem-localtransformchanged"></a>
 ### `public event Action<CanvasItem>? LocalTransformChanged`
@@ -587,6 +603,8 @@ The parent owns its children; SceneTree owns the active root. PackedScene captur
 Drawing commands retain borrowed resources and are valid during NotificationDraw, synchronous Draw handlers and OnDraw. Deferred handlers execute outside the recording scope and cannot draw. QueueRedraw coalesces requests; resource-thread notifications only set an atomic flag, and recording runs on the owner thread. Global transform notifications stop at neutral and TopLevel children. Failed transform/visibility delivery does not skip later direct canvas siblings.
 
 ## Verification and limits
+
+[SpriteTests](../../tests/Electron2D.Tests/SpriteTests.cs) checks rectangle-event triggers/order, committed bounds, no-ops, invalid changes, hidden/detached/disabled delivery, local-only propagation, redraw options, worker guards, reentry, callback failures and disposal.
 
 [SceneHierarchyTests](../../tests/Electron2D.Tests/SceneHierarchyTests.cs) verifies inheritance, neutral API boundaries, direct custom CanvasItem transforms, mixed parenting, notifications, timer/tween scheduling, packed factories/state, deletion and failure continuation. Existing [runtime checks](../../tests/Electron2D.Tests/Program.cs) retain lifecycle, input, math and ownership coverage. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) verifies mixed-tree pixels and a direct CanvasItem drawing texture through both GPU and compatibility backends on Linux Wayland. This does not establish visual owner acceptance or other platforms.
 

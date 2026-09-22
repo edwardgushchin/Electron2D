@@ -1325,6 +1325,12 @@
       "godot": "CanvasItem::property:top_level",
       "state": "Partial",
       "reason": "Default false; toggling preserves local transform and ends transform/material/modulation/Z inheritance, while visibility follows direct canvas parents. SceneHierarchyTests verifies the transform boundary. CanvasOrderingTests verifies independent canvas-root subtree order, later-root order and Z precedence on Wayland GPU/compatibility and dummy/software. CanvasLifecycleTests now verifies canvas exit/entry notification ordering, redraw, failure continuation and reattachment. Remaining gap: interpolation reset on toggling; trigger: physics-interpolation integration under ADRs 0008/0028."
+    },
+    {
+      "electron2d": "event:Electron2D.CanvasItem.ItemRectChanged()",
+      "godot": "CanvasItem::signal:item_rect_changed()",
+      "state": "Implemented",
+      "reason": "Typed CanvasItem.ItemRectChanged projects item_rect_changed with publisher identity under ADR 0009. SpriteTests audits pinned canvas_item.h/.cpp and sprite_2d.cpp behavior: synchronous detached/hidden/local delivery, committed geometry, exact setter order/no-ops, sizeChanged redraw option, owner-thread guards, callback failures/reentry/disposal. Entity transforms and Sprite texture-content notifications do not emit it; resource workers only invalidate redraw. Control and other absent subclasses must connect their geometry in their first slices (ADR 0008)."
     }
   ],
   "extras": [
@@ -2013,6 +2019,11 @@
       "electron2d": "method:Electron2D.Entity.GetPropertyDescriptors()",
       "reason": "Typed stored descriptors for spatial properties, extending the canvas and neutral tree descriptor layers.",
       "adr": "ADR 0008; ADR 0005; ADR 0023"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasItem.NotifyItemRectChanged(System.Boolean)",
+      "reason": "Protected typed projection of CanvasItem::item_rect_changed(bool size_changed = true), the native geometry notification helper. The class XML binds only the signal; custom canvas subclasses need the same protected hook to commit geometry and optionally queue redraw before delivery.",
+      "adr": "ADR 0004; ADR 0008; ADR 0009"
     }
   ],
   "statusGroups": [
@@ -2565,6 +2576,13 @@
       "reason": "Detached calls do nothing. Attached owner-thread requests coalesce before recording and during the active notification/Draw/OnDraw scope. Hidden items retain pending work; internal resource invalidations during recording survive for the next frame. CanvasLifecycleTests, SpriteTests and native readback verify these cases. Public mutation honors the accepted scene owner-thread and capture guards under ADRs 0008/0011/0023; internal resource invalidation remains thread-safe.",
       "godot": [
         "CanvasItem::method:queue_redraw()"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Typed CanvasItem.ItemRectChanged projects item_rect_changed with publisher identity under ADR 0009. SpriteTests audits pinned canvas_item.h/.cpp and sprite_2d.cpp behavior: synchronous detached/hidden/local delivery, committed geometry, exact setter order/no-ops, sizeChanged redraw option, owner-thread guards, callback failures/reentry/disposal. Entity transforms and Sprite texture-content notifications do not emit it; resource workers only invalidate redraw. Control and other absent subclasses must connect their geometry in their first slices (ADR 0008).",
+      "godot": [
+        "CanvasItem::signal:item_rect_changed()"
       ]
     }
   ]

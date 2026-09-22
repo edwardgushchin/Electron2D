@@ -5,7 +5,7 @@ Last updated: 2026-09-22
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
 1. Review 1679 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 1294 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [AtlasTexture](classes/AtlasTexture.md), [BitMap](classes/BitMap.md), [Curve](classes/Curve.md), [Curve2D](classes/Curve2D.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [SpriteFrames](classes/SpriteFrames.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
+2. Complete 1293 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [AtlasTexture](classes/AtlasTexture.md), [BitMap](classes/BitMap.md), [Curve](classes/Curve.md), [Curve2D](classes/Curve2D.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [SpriteFrames](classes/SpriteFrames.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
 3. Implement the remaining domains in dependency order: SDL3 GPU 2D rendering with the accepted SDL_Renderer fallback; GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable fallback slice must audit each of the five blocked GL/EGL/GLX `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -19,7 +19,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [Input](classes/Input.md) | 61 | 26 |
 | [Window](classes/Window.md) | 44 | 34 |
 | [Object](classes/Object.md) | 34 | 22 |
-| [CanvasItem](classes/CanvasItem.md) | 30 | 22 |
+| [CanvasItem](classes/CanvasItem.md) | 29 | 22 |
 | [TranslationServer](classes/TranslationServer.md) | 27 | 6 |
 | [ProjectSettings](classes/ProjectSettings.md) | 22 | 27 |
 | [SceneTree](classes/SceneTree.md) | 19 | 21 |

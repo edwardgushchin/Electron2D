@@ -3,7 +3,9 @@ namespace Electron2D;
 /// <summary>Displays a texture, a sheet frame or an atlas region as a scene node.</summary>
 /// <remarks>Textures are borrowed. Mutations use the scene owner thread while attached. Texture change notifications
 /// request a later redraw without running scene work on the notifying thread. Rendering inherits Entity transforms,
-/// visibility, modulation and materials. There is no animation clock; change Frame directly or through a Tween.</remarks>
+/// visibility, modulation and materials. There is no animation clock; change Frame directly or through a Tween.
+/// Geometry changes raise inherited ItemRectChanged synchronously. Exceptions stop subsequent callbacks for that
+/// mutation; state and redraw remain committed. Disposal from a callback suppresses subsequent event stages.</remarks>
 public class Sprite : Entity
 {
     private static readonly PropertyDescriptor[] SpriteProperties =
@@ -34,11 +36,11 @@ public class Sprite : Entity
 
     /// <summary>Gets or sets the borrowed texture to display.</summary>
     /// <value>Null by default. Reassigning the same resource does nothing.</value>
-    /// <remarks>Replacement unsubscribes from the old resource, requests redraw and then emits TextureChanged.
-    /// Pixel or size changes to the same resource request redraw without emitting TextureChanged.</remarks>
+    /// <remarks>Replacement unsubscribes from the old resource, requests redraw, emits TextureChanged, then ItemRectChanged.
+    /// Pixel or size changes to the same resource request redraw without emitting either event.</remarks>
     /// <exception cref="ObjectDisposedException">The sprite or assigned texture is disposed.</exception>
     /// <exception cref="InvalidOperationException">Scene mutation is unavailable on this thread or during capture.</exception>
-    /// <exception cref="Exception">A TextureChanged subscriber throws after the new value is committed.</exception>
+    /// <exception cref="Exception">A TextureChanged or ItemRectChanged subscriber throws after the new value is committed.</exception>
     public Texture? Texture
     {
         get { ThrowIfDisposed(); return _texture; }
@@ -52,21 +54,26 @@ public class Sprite : Entity
             if (_texture is not null) _texture.Changed += TextureContentChanged;
             InvalidateCanvas();
             TextureChanged?.Invoke();
+            if (!IsDisposed) NotifyItemRectChanged();
         }
     }
 
     /// <summary>Gets or sets whether the frame is centered around Offset.</summary>
     /// <value>True by default; otherwise Offset is its top-left corner.</value>
+    /// <remarks>An actual change requests redraw and emits ItemRectChanged.</remarks>
+    /// <exception cref="Exception">An ItemRectChanged subscriber throws after the change is committed.</exception>
     /// <exception cref="InvalidOperationException">Scene mutation is unavailable on this thread or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The sprite is disposed.</exception>
     public bool Centered
     {
         get { ThrowIfDisposed(); return _centered; }
-        set { EnsureMutable(); if (_centered == value) return; _centered = value; InvalidateCanvas(); }
+        set { EnsureMutable(); if (_centered == value) return; _centered = value; InvalidateCanvas(); NotifyItemRectChanged(); }
     }
 
     /// <summary>Gets or sets the finite local drawing offset.</summary>
     /// <value>Zero by default; positive Y points down.</value>
+    /// <remarks>An actual change requests redraw and emits ItemRectChanged.</remarks>
+    /// <exception cref="Exception">An ItemRectChanged subscriber throws after the change is committed.</exception>
     /// <exception cref="ArgumentException">The offset is not finite.</exception>
     /// <exception cref="InvalidOperationException">Scene mutation is unavailable on this thread or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The sprite is disposed.</exception>
@@ -78,7 +85,7 @@ public class Sprite : Entity
             EnsureMutable();
             if (!value.IsFinite()) throw new ArgumentException("A sprite offset must be finite.", nameof(value));
             if (_offset == value) return;
-            _offset = value; InvalidateCanvas();
+            _offset = value; InvalidateCanvas(); NotifyItemRectChanged();
         }
     }
 
@@ -114,7 +121,9 @@ public class Sprite : Entity
 
     /// <summary>Gets or sets the source region in logical texture pixels.</summary>
     /// <value>A zero rectangle by default. It is divided by HFrames and VFrames when enabled.</value>
-    /// <remarks>Zero-area regions draw nothing. Negative sizes follow the texture drawing flip contract.</remarks>
+    /// <remarks>Zero-area regions draw nothing. Negative sizes follow the texture drawing flip contract.
+    /// An actual change requests redraw and emits ItemRectChanged only while RegionEnabled is true.</remarks>
+    /// <exception cref="Exception">An ItemRectChanged subscriber throws after the change is committed.</exception>
     /// <exception cref="ArgumentException">The rectangle is not finite.</exception>
     /// <exception cref="InvalidOperationException">Scene mutation is unavailable on this thread or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The sprite is disposed.</exception>
@@ -127,7 +136,7 @@ public class Sprite : Entity
             if (!value.IsFinite()) throw new ArgumentException("A sprite region must be finite.", nameof(value));
             if (_regionRect == value) return;
             _regionRect = value;
-            if (_regionEnabled) InvalidateCanvas();
+            if (_regionEnabled) { InvalidateCanvas(); NotifyItemRectChanged(); }
         }
     }
 
@@ -144,7 +153,8 @@ public class Sprite : Entity
     /// <summary>Gets or sets the number of sheet columns.</summary>
     /// <value>One by default; always positive.</value>
     /// <remarks>Preserves the selected column and row when possible, otherwise resets Frame to zero.
-    /// Grid changes notify the property list but do not emit FrameChanged for this implicit adjustment.</remarks>
+    /// Grid changes request redraw, emit ItemRectChanged, then notify the property list, without FrameChanged for this implicit adjustment.</remarks>
+    /// <exception cref="Exception">An ItemRectChanged or PropertyListChanged subscriber throws after the change is committed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The count is not positive or the grid exceeds Int32.MaxValue frames.</exception>
     /// <exception cref="InvalidOperationException">Scene mutation is unavailable on this thread or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The sprite is disposed.</exception>
@@ -157,7 +167,8 @@ public class Sprite : Entity
     /// <summary>Gets or sets the number of sheet rows.</summary>
     /// <value>One by default; always positive.</value>
     /// <remarks>Preserves the selected column and row when possible, otherwise resets Frame to zero.
-    /// Grid changes notify the property list but do not emit FrameChanged for this implicit adjustment.</remarks>
+    /// Grid changes request redraw, emit ItemRectChanged, then notify the property list, without FrameChanged for this implicit adjustment.</remarks>
+    /// <exception cref="Exception">An ItemRectChanged or PropertyListChanged subscriber throws after the change is committed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The count is not positive or the grid exceeds Int32.MaxValue frames.</exception>
     /// <exception cref="InvalidOperationException">Scene mutation is unavailable on this thread or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The sprite is disposed.</exception>
@@ -169,8 +180,9 @@ public class Sprite : Entity
 
     /// <summary>Gets or sets the zero-based sheet frame, ordered by column then row.</summary>
     /// <value>Zero by default; less than HFrames multiplied by VFrames.</value>
+    /// <remarks>An actual change requests redraw and emits ItemRectChanged before FrameChanged, even if bounds stay equal.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the current grid.</exception>
-    /// <exception cref="Exception">A FrameChanged subscriber throws after the change is committed.</exception>
+    /// <exception cref="Exception">An ItemRectChanged or FrameChanged subscriber throws after the change is committed.</exception>
     /// <exception cref="InvalidOperationException">Scene mutation is unavailable on this thread or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The sprite is disposed.</exception>
     public int Frame
@@ -181,12 +193,15 @@ public class Sprite : Entity
             EnsureMutable();
             if ((uint)value >= (uint)(_hframes * _vframes)) throw new ArgumentOutOfRangeException(nameof(value));
             if (_frame == value) return;
-            _frame = value; InvalidateCanvas(); FrameChanged?.Invoke();
+            _frame = value; InvalidateCanvas(); NotifyItemRectChanged();
+            if (!IsDisposed) FrameChanged?.Invoke();
         }
     }
 
     /// <summary>Gets or sets the selected column and row as an alias for Frame.</summary>
     /// <value>Zero by default.</value>
+    /// <remarks>Shares Frame's redraw and ItemRectChanged/FrameChanged delivery.</remarks>
+    /// <exception cref="Exception">An ItemRectChanged or FrameChanged subscriber throws after the change is committed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Either coordinate is outside the current grid.</exception>
     /// <exception cref="InvalidOperationException">Scene mutation is unavailable on this thread or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The sprite is disposed.</exception>
@@ -202,11 +217,12 @@ public class Sprite : Entity
     }
 
     /// <summary>Occurs after an explicit Frame or FrameCoords assignment changes the frame index.</summary>
-    /// <remarks>Delivery is synchronous; a throwing subscriber stops later subscribers. State and redraw remain committed.</remarks>
+    /// <remarks>Delivery follows ItemRectChanged. A throwing subscriber stops later subscribers; state and redraw remain committed.</remarks>
     public event Action? FrameChanged;
 
     /// <summary>Occurs after the texture reference changes, including assignment to null.</summary>
-    /// <remarks>Delivery is synchronous; a throwing subscriber stops later subscribers. Resource content changes do not emit this event.</remarks>
+    /// <remarks>Delivery precedes ItemRectChanged. A throwing subscriber stops later subscribers and the rectangle event.
+    /// Resource content changes do not emit either event.</remarks>
     public event Action? TextureChanged;
 
     /// <summary>Returns the frame's local bounds with integer-truncated dimensions.</summary>
@@ -295,7 +311,8 @@ public class Sprite : Entity
         var row = _frame / _hframes;
         _frame = column < columns && row < rows ? row * columns + column : 0;
         _hframes = columns; _vframes = rows;
-        InvalidateCanvas(); NotifyPropertyListChanged();
+        InvalidateCanvas(); NotifyItemRectChanged();
+        if (!IsDisposed) NotifyPropertyListChanged();
     }
 
     private Rect BaseRegion(Texture texture)
