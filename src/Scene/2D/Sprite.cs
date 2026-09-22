@@ -229,7 +229,8 @@ public class Sprite : Entity
     /// <returns>A one-by-one rectangle at zero without a texture. Otherwise the frame size and centered/offset origin;
     /// both zero dimensions become one by one after calculating the origin. Flipping does not alter these bounds.</returns>
     /// <remarks>Texture/region size is truncated before division and the result is truncated again. Drawing uses
-    /// fractional frame sizes, so these inspection bounds may omit a fractional edge. Negative region sizes stay signed.</remarks>
+    /// fractional frame sizes, so these inspection bounds may omit a fractional edge. Negative region sizes stay signed.
+    /// An attached viewport with SnapTransformsToPixel rounds the local origin using floor(value + 0.5).</remarks>
     /// <exception cref="ObjectDisposedException">The sprite or its texture is disposed.</exception>
     /// <exception cref="InvalidOperationException">Texture dimensions or derived geometry are invalid.</exception>
     public Rect GetRect()
@@ -238,7 +239,7 @@ public class Sprite : Entity
         if (_texture is null) return new(0, 0, 1, 1);
         var size = BaseRegion(_texture).Size;
         size = new(MathF.Truncate(MathF.Truncate(size.X) / _hframes), MathF.Truncate(MathF.Truncate(size.Y) / _vframes));
-        var position = _centered ? _offset - size / 2 : _offset;
+        var position = DrawingOffset(size);
         if (!position.IsFinite()) throw new InvalidOperationException("Sprite geometry overflowed finite coordinates.");
         return new(position, size == Vector2.Zero ? Vector2.One : size);
     }
@@ -248,7 +249,8 @@ public class Sprite : Entity
     /// <returns>False without a nonempty texture or outside the drawn frame; otherwise the texture's opacity result.</returns>
     /// <remarks>Uses fractional drawing bounds, frame/region offsets and flipping. Explicit or inherited canvas repeat
     /// affects addressing while attached; detached queries retain the last tree cache (initially disabled).
-    /// A viewport default is a rendering policy and does not change this local source-alpha query.
+    /// A viewport default sampler does not change this local source-alpha query.
+    /// Transform snapping rounds the attached local drawing origin; vertex snapping does not affect this query.
     /// Modulation, filtering, materials and visibility do not change source opacity.</remarks>
     /// <exception cref="ArgumentException">The point is not finite.</exception>
     /// <exception cref="ObjectDisposedException">The sprite or its texture is disposed.</exception>
@@ -339,12 +341,18 @@ public class Sprite : Entity
         return region;
     }
 
+    private Vector2 DrawingOffset(Vector2 size)
+    {
+        var offset = _centered ? _offset - size / 2 : _offset;
+        return IsInsideTree && GetViewport()?.SnapTransformsToPixel == true ? CanvasGeometry.Snap(offset) : offset;
+    }
+
     private void GetDrawRects(Texture texture, out Rect source, out Rect destination)
     {
         var area = BaseRegion(texture);
         var size = area.Size / new Vector2(_hframes, _vframes);
         source = new(area.Position + new Vector2(_frame % _hframes, _frame / _hframes) * size, size);
-        var position = _centered ? _offset - size / 2 : _offset;
+        var position = DrawingOffset(size);
         destination = new(position, new Vector2(_flipH ? -size.X : size.X, _flipV ? -size.Y : size.Y));
         if (!source.IsFinite() || !destination.IsFinite()) throw new InvalidOperationException("Sprite geometry overflowed finite coordinates.");
     }

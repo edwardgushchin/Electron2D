@@ -29,6 +29,31 @@ if (inputEvent.IsActionPressed("confirm"))
 
 This stops later scene input stages. It does not change Input polling state. `PushInput` borrows the caller's event and accepts client coordinates only.
 
+## Pixel snapping properties
+
+Implemented in [Viewport.Rendering.cs](../../src/Scene/Main/Viewport.Rendering.cs).
+
+| Declaration | Default | Contract |
+| --- | --- | --- |
+| `public bool SnapTransformsToPixel { get; set; }` | false | [Transform snapping](#snaptransformstopixel) |
+| `public bool SnapVerticesToPixel { get; set; }` | false | [Vertex snapping](#snapverticestopixel) |
+
+```csharp
+var window = new Window { SnapTransformsToPixel = true };
+```
+
+### SnapTransformsToPixel
+
+Rounds the local and accumulated parent translations using `floor(value + 0.5)` before rendering composition. Y sorting uses snapped local translations and retains the flattened group transform. Neutral nodes and TopLevel break the canvas chain. Logical Position/Transform and global queries remain unchanged. Attached Sprite bounds and opacity queries round their local drawing offset too; detached queries do not.
+
+Changes apply to the next submission but do not request redraw or emit ItemRectChanged. Sprite commands retain their previously recorded local offset until QueueRedraw or another invalidation. To update a retained Sprite offset after a live policy change, request its redraw. Both positive and negative exact halves round toward positive infinity.
+
+### SnapVerticesToPixel
+
+Rounds final primitive corners after node, drawing and framebuffer transforms. Does not affect Sprite bounds or source-opacity queries. Retained commands use the current flag at each submission. Texture clipping interpolation points remain inside the snapped triangles, preventing artificial cuts from collapsing or opening gaps. A small normalized UV offset follows the renderer precision convention. Degenerate snapped texture triangles emit no geometry.
+
+Both properties are stored by PackedScene. Defaults are false on Viewport; construction of the explicit root Window reads active project overrides before caller configuration. Off-owner/capture mutation throws InvalidOperationException; disposed access throws ObjectDisposedException. Neither setter opens native resources. Both may be enabled, although combining them can make motion less smooth. GUI control snapping is a separate absent capability.
+
 ## Sampling properties and enums
 
 Source: [Viewport.Sampling.cs](../../src/Scene/Main/Viewport.Sampling.cs).
@@ -75,7 +100,7 @@ All three properties are stored by PackedScene. Undefined/negative/Max enum writ
 
 | Member | Contract |
 | --- | --- |
-| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Adds the three stored sampling properties to neutral node descriptors. |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Adds stored sampling and pixel-snapping properties to neutral node descriptors. |
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown. |
 | [`public abstract Rect GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
 | [`public bool IsInputHandled()`](#isinputhandled) | Reports whether the current scene input event has been handled. |
@@ -92,7 +117,7 @@ All three properties are stored by PackedScene. Undefined/negative/Max enum writ
 
 `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
 
-Extends Node descriptors with the three typed stored sampling properties. Window adds its own properties through base chaining. Descriptors retain each property's validation and use the active project anisotropy default.
+Extends Node descriptors with three typed stored sampling properties and two pixel-snapping flags. Window adds its own properties through base chaining. Descriptors retain each property's validation and use the active project anisotropy default.
 
 ## Method Descriptions
 

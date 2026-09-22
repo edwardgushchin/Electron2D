@@ -127,10 +127,10 @@ internal static class CanvasLifecycleTests
             failing.Drawing = () => { if (stage == 2) record(); };
             Reject<InvalidOperationException>(failing.PrepareCanvas);
             var vertices = new List<CanvasVertex>(); var batches = new List<CanvasBatch>();
-            failing.AppendCanvas(vertices, batches, Transform.Identity);
+            failing.AppendCanvas(vertices, batches, failing.GetGlobalTransform());
             Check(vertices.Count == 0 && batches.Count == 0, "Failed recording clears partial commands.");
             Reject<InvalidOperationException>(() => failing.DrawRect(default, Colors.White));
-            fail = false; failing.PrepareCanvas(); failing.AppendCanvas(vertices, batches, Transform.Identity);
+            fail = false; failing.PrepareCanvas(); failing.AppendCanvas(vertices, batches, failing.GetGlobalTransform());
             Check(vertices.Count > 0, "A failed recording can retry with its dirty flag retained.");
             root.RemoveChild(failing); failing.Dispose();
         }

@@ -11,11 +11,12 @@ internal readonly record struct CanvasCommand(bool Line, Vector2 A, Vector2 B, C
 
 internal static class CanvasGeometry
 {
-    internal static void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation)
+    internal static void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false)
     {
+        var first = output.Count;
         var color = command.Color * modulation;
         if (!color.IsFinite()) throw new InvalidOperationException("Canvas modulation overflowed finite colors.");
-        if (command.Texture is not null) { AppendTexture(output, command, transform, color); return; }
+        if (command.Texture is not null) { AppendTexture(output, command, transform, color, snapVertices); return; }
         Span<Vector2> outer = stackalloc Vector2[4];
         Span<Vector2> inner = stackalloc Vector2[4];
         if (command.Line)
@@ -71,9 +72,14 @@ internal static class CanvasGeometry
             Offset(outer, expanded, 1f);
             Ring(output, expanded, outer, new Color(color.R, color.G, color.B, 0), color);
         }
+        if (snapVertices)
+            for (var i = first; i < output.Count; i++)
+                output[i] = output[i] with { Position = Snap(output[i].Position), UV = output[i].UV + new Vector2(0.00001f, 0.00001f) };
     }
 
-    private static void AppendTexture(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color color)
+    internal static Vector2 Snap(Vector2 point) => (point + new Vector2(0.5f, 0.5f)).Floor();
+
+    private static void AppendTexture(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color color, bool snapVertices)
     {
         var pixels = command.Texture!.CapturePixels() ?? throw new InvalidOperationException("The drawn texture has no readable image.");
         var size = command.B.Abs();
@@ -89,6 +95,11 @@ internal static class CanvasGeometry
         Span<float> ys = stackalloc float[4];
         var nx = Cuts(xs, command.ClipUV ? border.X : 0);
         var ny = Cuts(ys, command.ClipUV ? border.Y : 0);
+        if (snapVertices)
+        {
+            AppendSnappedTexture(output, command, transform, color, source, size, halfPixel, flipX, flipY, xs[..nx], ys[..ny]);
+            return;
+        }
         Span<CanvasVertex> quad = stackalloc CanvasVertex[4];
         Span<Vector2> points = stackalloc Vector2[4];
         for (var y = 0; y < ny - 1; y++)
@@ -109,6 +120,58 @@ internal static class CanvasGeometry
                 if (!ValidQuad(points)) continue;
                 output.Add(quad[0]); output.Add(quad[1]); output.Add(quad[2]);
                 output.Add(quad[0]); output.Add(quad[2]); output.Add(quad[3]);
+            }
+    }
+
+    private static void AppendSnappedTexture(List<CanvasVertex> output, CanvasCommand command, Transform transform,
+        Color color, Rect source, Vector2 size, Vector2 halfPixel, bool flipX, bool flipY, ReadOnlySpan<float> xs, ReadOnlySpan<float> ys)
+    {
+        Span<Vector2> corners = stackalloc Vector2[4];
+        for (var i = 0; i < 4; i++)
+        {
+            var u = i is 1 or 2 ? 1f : 0f; var v = i >= 2 ? 1f : 0f;
+            var point = transform * (command.A + size * new Vector2(flipX ? 1 - u : u, flipY ? 1 - v : v));
+            if (!point.IsFinite()) throw new InvalidOperationException("Canvas transforms overflowed finite coordinates.");
+            corners[i] = Snap(point);
+        }
+        Span<Vector2> cell = stackalloc Vector2[4];
+        Span<Vector2> polygon = stackalloc Vector2[5];
+        Span<CanvasVertex> vertices = stackalloc CanvasVertex[5];
+        for (var y = 0; y < ys.Length - 1; y++)
+            for (var x = 0; x < xs.Length - 1; x++)
+            {
+                cell[0] = new(xs[x], ys[y]); cell[1] = new(xs[x + 1], ys[y]);
+                cell[2] = new(xs[x + 1], ys[y + 1]); cell[3] = new(xs[x], ys[y + 1]);
+                // Clipping cuts are interpolation points, not primitive corners. Keep them on the two snapped triangles.
+                for (var side = -1; side <= 1; side += 2)
+                {
+                    var count = 0;
+                    for (var i = 0; i < 4; i++)
+                    {
+                        var a = cell[i]; var b = cell[(i + 1) % 4];
+                        var da = side * (a.X - a.Y); var db = side * (b.X - b.Y);
+                        if (da >= 0) polygon[count++] = a;
+                        if (da > 0 && db < 0 || da < 0 && db > 0) polygon[count++] = a.Lerp(b, da / (da - db));
+                    }
+                    for (var i = 0; i < count; i++)
+                    {
+                        var p = polygon[i];
+                        var position = side > 0
+                            ? corners[0] * (1 - p.X) + corners[1] * (p.X - p.Y) + corners[2] * p.Y
+                            : corners[0] * (1 - p.Y) + corners[2] * p.X + corners[3] * (p.Y - p.X);
+                        var uv = source.Position + source.Size * (command.Transpose ? new Vector2(p.Y, p.X) : p) + new Vector2(0.00001f, 0.00001f);
+                        if (command.ClipUV)
+                            uv = new(MathF.Min(MathF.Max(uv.X, source.Position.X + halfPixel.X), source.End.X - halfPixel.X),
+                                MathF.Min(MathF.Max(uv.Y, source.Position.Y + halfPixel.Y), source.End.Y - halfPixel.Y));
+                        if (!uv.IsFinite() || !position.IsFinite()) throw new InvalidOperationException("Texture coordinates overflowed.");
+                        vertices[i] = new(position, color, uv);
+                    }
+                    for (var i = 1; i + 1 < count; i++)
+                    {
+                        if (MathF.Abs((vertices[i].Position - vertices[0].Position).Cross(vertices[i + 1].Position - vertices[0].Position)) <= 0.000001f) continue;
+                        output.Add(vertices[0]); output.Add(vertices[i]); output.Add(vertices[i + 1]);
+                    }
+                }
             }
     }
 

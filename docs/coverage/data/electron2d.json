@@ -41148,6 +41148,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.SnapTransformsToPixel()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "SnapTransformsToPixel",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E SnapTransformsToPixel { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.SnapVerticesToPixel()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "SnapVerticesToPixel",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E SnapVerticesToPixel { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.UseNearestMipmapFilter()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -42276,6 +42302,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Viewport.DefaultCanvasItemTextureRepeat",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.SnapTransformsToPixel()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "SnapTransformsToPixel",
+    "signature": "public System.Boolean SnapTransformsToPixel { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.SnapVerticesToPixel()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "SnapVerticesToPixel",
+    "signature": "public System.Boolean SnapVerticesToPixel { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

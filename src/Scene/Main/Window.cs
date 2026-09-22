@@ -31,8 +31,12 @@ public partial class Window : Viewport
     private Vector2I? _screenPosition;
 
     /// <summary>Creates a detached visible window with an empty title and a 100 by 100 client area.</summary>
-    /// <remarks>No native resources are acquired until <see cref="Engine.Run"/>.</remarks>
-    public Window() { }
+    /// <remarks>Initial pixel-snapping choices read active project settings. No native resources are acquired until <see cref="Engine.Run"/>.</remarks>
+    public Window()
+    {
+        SnapTransformsToPixel = ProjectSettings.Instance.GetWithOverride(ProjectSettings.SnapTransformsToPixel);
+        SnapVerticesToPixel = ProjectSettings.Instance.GetWithOverride(ProjectSettings.SnapVerticesToPixel);
+    }
 
     /// <summary>Gets or sets the native window title.</summary>
     /// <value>An empty string by default.</value>

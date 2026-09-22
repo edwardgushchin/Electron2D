@@ -110,13 +110,13 @@ Alias for Frame, with X as the column and Y as the row. Both coordinates must be
 
 Returns local inspection bounds independently of flip, visibility, modulation and materials. Without a texture it returns `(0, 0, 1, 1)`. Otherwise texture/region dimensions are truncated toward zero, divided by the frame grid and truncated again. Offset and Centered use that resulting size. If both dimensions are zero, the returned size becomes one by one after the origin is calculated. A single zero dimension stays zero; signed region dimensions remain signed.
 
-Rendering uses fractional frame dimensions, so GetRect may omit a fractional drawing edge. This preserves the existing integer inspection contract. Invalid custom texture dimensions or overflowed bounds throw InvalidOperationException. No viewport pixel-snapping policy is implemented yet.
+Rendering uses fractional frame dimensions, so GetRect may omit a fractional drawing edge. This preserves the existing integer inspection contract. Invalid custom texture dimensions or overflowed bounds throw InvalidOperationException. When attached, Viewport.SnapTransformsToPixel rounds this local origin with floor(value + 0.5); public Entity transforms remain fractional. Vertex snapping does not affect these inspection bounds.
 
 ### IsPixelOpaque
 
 Accepts a finite point in local drawing coordinates; nonfinite input throws ArgumentException. Returns false without a nonempty texture or outside the half-open fractional drawing rectangle. Maps through the selected frame, region and flips, applies its active canvas repeat cache and delegates to Texture.IsPixelOpaque. Disabled/viewport-default cache values clamp to the full logical image edges. It measures source alpha, not final material/modulated/visible output. ImageTexture treats alpha above 0.1 as opaque.
 
-Negative region sizes use the same combined source/destination flipping as actual drawing. Canvas repeat follows the source-index query contract: ordinary repeat uses signed remainder; mirror additionally reflects odd positive tile indices as `size - remainder - 1`, then truncates to an integer index. Negative indices remain outside the image, and fractional mirrored queries can differ from the GPU's continuous addressing. This query does not apply filtering or the viewport's final default sampler. Detached queries retain the last active canvas cache (initially disabled); property writes take effect on entry. Viewport snapping remains absent. Custom Texture opacity overrides remain authoritative.
+Negative region sizes use the same combined source/destination flipping as actual drawing. Canvas repeat follows the source-index query contract: ordinary repeat uses signed remainder; mirror additionally reflects odd positive tile indices as `size - remainder - 1`, then truncates to an integer index. Negative indices remain outside the image, and fractional mirrored queries can differ from the GPU's continuous addressing. This query does not apply filtering or the viewport's final default sampler. Detached queries retain the last active canvas cache (initially disabled); property writes take effect on entry. Attached transform snapping applies to the fractional drawing origin used by this query; vertex snapping does not. Queries read the live viewport policy even when retained drawing still uses an older offset until QueueRedraw. Custom Texture opacity overrides remain authoritative.
 
 ## Event descriptions
 
@@ -138,7 +138,7 @@ Inherited from [CanvasItem](CanvasItem.md#e-electron2d-canvasitem-itemrectchange
 - Frame and FrameCoords: before FrameChanged, even when numeric bounds stay equal.
 - HFrames and VFrames: before PropertyListChanged, including an implicit frame reset.
 
-Unchanged assignments and rejected values emit nothing. RegionEnabled, flips, RegionFilterClipEnabled and Entity transforms do not emit it. Changes to the contents/size of the same texture only request redraw; they do not run scene callbacks on resource workers. Reentrant setters deliver their own synchronous events. Exceptions stop subsequent subscribers/event stages with state and redraw committed; disposal from a handler skips the remaining stages.
+Viewport snapping changes do not emit this event or automatically redraw the sprite. Unchanged assignments and rejected values emit nothing. RegionEnabled, flips, RegionFilterClipEnabled and Entity transforms do not emit it. Changes to the contents/size of the same texture only request redraw; they do not run scene callbacks on resource workers. Reentrant setters deliver their own synchronous events. Exceptions stop subsequent subscribers/event stages with state and redraw committed; disposal from a handler skips the remaining stages.
 
 ## Protected integration
 

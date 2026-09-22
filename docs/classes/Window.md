@@ -27,7 +27,7 @@ Engine.Instance.MaxFPS = 60;
 int exitCode = Engine.Instance.Run(window);
 ```
 
-Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested code and consumes the supplied window hierarchy. The native window and RenderingServer are open and Engine.MainLoop exposes the tree before OnReady.
+Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested code and consumes the supplied window hierarchy. The native window and RenderingServer are open and Engine.MainLoop exposes the tree before OnReady. Window construction initializes SnapTransformsToPixel and SnapVerticesToPixel from active project-setting overrides. Load project settings before constructing the window; later explicit property assignments take precedence and Engine.Run does not overwrite them.
 
 ## Constructors
 

@@ -54,6 +54,8 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<double> PhysicsJitterFix { get; }`](#p-electron2d-projectsettings-physicsjitterfix) | Defines the finite non-negative fixed-step boundary tolerance. |
 | [`public static ProjectSetting<string> RenderingMethod { get; }`](#p-electron2d-projectsettings-renderingmethod) | Selects `gpu` or `compatibility` at renderer startup. |
 | [`public static ProjectSetting<bool> RenderingFallback { get; }`](#p-electron2d-projectsettings-renderingfallback) | Allows compatibility rendering if GPU initialization fails. |
+| [`public static ProjectSetting<bool> SnapTransformsToPixel { get; }`](#snaptransformstopixel) | Initial transform snapping for a new root Window; false. |
+| [`public static ProjectSetting<bool> SnapVerticesToPixel { get; }`](#snapverticestopixel) | Initial vertex snapping for a new root Window; false. |
 | [`public static ProjectSetting<bool> UseNearestMipmapFilter { get; }`](#usenearestmipmapfilter) | Selects canvas mip interpolation at GPU startup; false by default. |
 | [`public static ProjectSetting<int> AnisotropicFilteringLevel { get; }`](#anisotropicfilteringlevel) | Initializes new viewports; exponent 0..4, default 2. |
 | [`public static ProjectSetting<Color> DefaultClearColor { get; }`](#p-electron2d-projectsettings-defaultclearcolor) | Defines the initial root-framebuffer clear color. |
@@ -192,6 +194,18 @@ Defines `rendering/renderer/rendering_method`, default `gpu`. Only `gpu` and `co
 ### `public static ProjectSetting<bool> RenderingFallback { get; }`
 
 Defines `rendering/rendering_device/fallback_to_opengl3`, default `true`. This key controls startup fallback from SDL GPU to SDL_Renderer; the compatibility driver may use a different graphics API. Set `false` to require GPU initialization. Shader materials reject compatibility rendering even if fallback was allowed. This setting provides no live device-loss recovery.
+
+### SnapTransformsToPixel
+
+`public static ProjectSetting<bool> SnapTransformsToPixel { get; }`
+
+Defines `rendering/2d/snap/snap_2d_transforms_to_pixel`, default false. New Window construction reads the active feature override. Load project settings before creating the explicit root window. Existing viewports retain their own value; use Viewport.SnapTransformsToPixel to change them. This is initialization for the typed window host, not a continuously applied global override.
+
+### SnapVerticesToPixel
+
+`public static ProjectSetting<bool> SnapVerticesToPixel { get; }`
+
+Defines `rendering/2d/snap/snap_2d_vertices_to_pixel`, default false. Construction and override timing match SnapTransformsToPixel. Controls final primitive vertices independently of transform rounding.
 
 ### UseNearestMipmapFilter
 

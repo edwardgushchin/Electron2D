@@ -1541,6 +1541,36 @@
       "electron2d": "property:Electron2D.ProjectSettings.AnisotropicFilteringLevel()",
       "godot": "ProjectSettings::property:rendering/textures/default_filters/anisotropic_filtering_level",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
+    },
+    {
+      "electron2d": "property:Electron2D.Viewport.SnapTransformsToPixel()",
+      "godot": "Viewport::property:snap_2d_transforms_to_pixel",
+      "reason": "Executable typed viewport pixel-snapping contract: false defaults, stored flags, guards, retained replay and independent transform/vertex policies. Explicit root Window construction samples active typed project defaults under the host lifecycle (ADRs 0015/0028); caller configuration takes precedence. Transform rounding applies before hierarchy composition and Y sorting; vertex rounding follows node/draw/framebuffer transforms and preserves clipped texture interpolation. CanvasPixelSnapTests and native CanvasPixelSnapRenderingTests cover negative ties, Sprite queries/retained offsets, neutral/TopLevel boundaries, scaled/nested Y groups, both flags, HLSL/GLSL and warmed allocations. Linux Wayland GPU/compatibility and dummy/software are checked; software truncation of remaining fractional vertices is an explicit ADR 0028 precision limit. Typed Viewport ownership replaces low-level RID setters; nested/offscreen viewports remain separately blocked."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.SnapTransformsToPixel()",
+      "godot": "ProjectSettings::property:rendering/2d/snap/snap_2d_transforms_to_pixel",
+      "reason": "Executable typed viewport pixel-snapping contract: false defaults, stored flags, guards, retained replay and independent transform/vertex policies. Explicit root Window construction samples active typed project defaults under the host lifecycle (ADRs 0015/0028); caller configuration takes precedence. Transform rounding applies before hierarchy composition and Y sorting; vertex rounding follows node/draw/framebuffer transforms and preserves clipped texture interpolation. CanvasPixelSnapTests and native CanvasPixelSnapRenderingTests cover negative ties, Sprite queries/retained offsets, neutral/TopLevel boundaries, scaled/nested Y groups, both flags, HLSL/GLSL and warmed allocations. Linux Wayland GPU/compatibility and dummy/software are checked; software truncation of remaining fractional vertices is an explicit ADR 0028 precision limit. Typed Viewport ownership replaces low-level RID setters; nested/offscreen viewports remain separately blocked."
+    },
+    {
+      "electron2d": "property:Electron2D.Viewport.SnapTransformsToPixel()",
+      "godot": "RenderingServer::method:viewport_set_snap_2d_transforms_to_pixel(RID:,bool:)",
+      "reason": "Executable typed viewport pixel-snapping contract: false defaults, stored flags, guards, retained replay and independent transform/vertex policies. Explicit root Window construction samples active typed project defaults under the host lifecycle (ADRs 0015/0028); caller configuration takes precedence. Transform rounding applies before hierarchy composition and Y sorting; vertex rounding follows node/draw/framebuffer transforms and preserves clipped texture interpolation. CanvasPixelSnapTests and native CanvasPixelSnapRenderingTests cover negative ties, Sprite queries/retained offsets, neutral/TopLevel boundaries, scaled/nested Y groups, both flags, HLSL/GLSL and warmed allocations. Linux Wayland GPU/compatibility and dummy/software are checked; software truncation of remaining fractional vertices is an explicit ADR 0028 precision limit. Typed Viewport ownership replaces low-level RID setters; nested/offscreen viewports remain separately blocked."
+    },
+    {
+      "electron2d": "property:Electron2D.Viewport.SnapVerticesToPixel()",
+      "godot": "Viewport::property:snap_2d_vertices_to_pixel",
+      "reason": "Executable typed viewport pixel-snapping contract: false defaults, stored flags, guards, retained replay and independent transform/vertex policies. Explicit root Window construction samples active typed project defaults under the host lifecycle (ADRs 0015/0028); caller configuration takes precedence. Transform rounding applies before hierarchy composition and Y sorting; vertex rounding follows node/draw/framebuffer transforms and preserves clipped texture interpolation. CanvasPixelSnapTests and native CanvasPixelSnapRenderingTests cover negative ties, Sprite queries/retained offsets, neutral/TopLevel boundaries, scaled/nested Y groups, both flags, HLSL/GLSL and warmed allocations. Linux Wayland GPU/compatibility and dummy/software are checked; software truncation of remaining fractional vertices is an explicit ADR 0028 precision limit. Typed Viewport ownership replaces low-level RID setters; nested/offscreen viewports remain separately blocked."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.SnapVerticesToPixel()",
+      "godot": "ProjectSettings::property:rendering/2d/snap/snap_2d_vertices_to_pixel",
+      "reason": "Executable typed viewport pixel-snapping contract: false defaults, stored flags, guards, retained replay and independent transform/vertex policies. Explicit root Window construction samples active typed project defaults under the host lifecycle (ADRs 0015/0028); caller configuration takes precedence. Transform rounding applies before hierarchy composition and Y sorting; vertex rounding follows node/draw/framebuffer transforms and preserves clipped texture interpolation. CanvasPixelSnapTests and native CanvasPixelSnapRenderingTests cover negative ties, Sprite queries/retained offsets, neutral/TopLevel boundaries, scaled/nested Y groups, both flags, HLSL/GLSL and warmed allocations. Linux Wayland GPU/compatibility and dummy/software are checked; software truncation of remaining fractional vertices is an explicit ADR 0028 precision limit. Typed Viewport ownership replaces low-level RID setters; nested/offscreen viewports remain separately blocked."
+    },
+    {
+      "electron2d": "property:Electron2D.Viewport.SnapVerticesToPixel()",
+      "godot": "RenderingServer::method:viewport_set_snap_2d_vertices_to_pixel(RID:,bool:)",
+      "reason": "Executable typed viewport pixel-snapping contract: false defaults, stored flags, guards, retained replay and independent transform/vertex policies. Explicit root Window construction samples active typed project defaults under the host lifecycle (ADRs 0015/0028); caller configuration takes precedence. Transform rounding applies before hierarchy composition and Y sorting; vertex rounding follows node/draw/framebuffer transforms and preserves clipped texture interpolation. CanvasPixelSnapTests and native CanvasPixelSnapRenderingTests cover negative ties, Sprite queries/retained offsets, neutral/TopLevel boundaries, scaled/nested Y groups, both flags, HLSL/GLSL and warmed allocations. Linux Wayland GPU/compatibility and dummy/software are checked; software truncation of remaining fractional vertices is an explicit ADR 0028 precision limit. Typed Viewport ownership replaces low-level RID setters; nested/offscreen viewports remain separately blocked."
     }
   ],
   "extras": [
@@ -2237,7 +2267,7 @@
     },
     {
       "electron2d": "method:Electron2D.Viewport.GetPropertyDescriptors()",
-      "reason": "Protected typed property discovery override for the three stored viewport sampling settings; projects existing properties into the descriptor and PackedScene contracts (ADRs 0005/0023), verified by CanvasSamplingTests."
+      "reason": "Protected typed discovery for stored viewport sampling and pixel-snapping properties; projects existing properties into the descriptor and PackedScene contracts (ADRs 0005/0023), verified by CanvasSamplingTests and CanvasPixelSnapTests."
     }
   ],
   "statusGroups": [
@@ -2378,8 +2408,6 @@
         "Viewport::property:screen_space_aa",
         "Viewport::property:sdf_oversize",
         "Viewport::property:sdf_scale",
-        "Viewport::property:snap_2d_transforms_to_pixel",
-        "Viewport::property:snap_2d_vertices_to_pixel",
         "Viewport::property:texture_mipmap_bias",
         "Viewport::property:transparent_bg",
         "Viewport::property:use_debanding",
@@ -2822,6 +2850,18 @@
         "Viewport::property:anisotropic_filtering_level",
         "Viewport::property:canvas_item_default_texture_filter",
         "Viewport::property:canvas_item_default_texture_repeat"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Executable typed viewport pixel-snapping contract: false defaults, stored flags, guards, retained replay and independent transform/vertex policies. Explicit root Window construction samples active typed project defaults under the host lifecycle (ADRs 0015/0028); caller configuration takes precedence. Transform rounding applies before hierarchy composition and Y sorting; vertex rounding follows node/draw/framebuffer transforms and preserves clipped texture interpolation. CanvasPixelSnapTests and native CanvasPixelSnapRenderingTests cover negative ties, Sprite queries/retained offsets, neutral/TopLevel boundaries, scaled/nested Y groups, both flags, HLSL/GLSL and warmed allocations. Linux Wayland GPU/compatibility and dummy/software are checked; software truncation of remaining fractional vertices is an explicit ADR 0028 precision limit. Typed Viewport ownership replaces low-level RID setters; nested/offscreen viewports remain separately blocked.",
+      "godot": [
+        "ProjectSettings::property:rendering/2d/snap/snap_2d_transforms_to_pixel",
+        "ProjectSettings::property:rendering/2d/snap/snap_2d_vertices_to_pixel",
+        "RenderingServer::method:viewport_set_snap_2d_transforms_to_pixel(RID:,bool:)",
+        "RenderingServer::method:viewport_set_snap_2d_vertices_to_pixel(RID:,bool:)",
+        "Viewport::property:snap_2d_transforms_to_pixel",
+        "Viewport::property:snap_2d_vertices_to_pixel"
       ]
     }
   ]

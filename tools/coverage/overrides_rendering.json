@@ -248,7 +248,7 @@
     {
       "godot": "Sprite2D::method:get_rect()",
       "electron2d": "method:Electron2D.Sprite.GetRect()",
-      "reason": "Local inspection bounds remain a method; Sprite currently derives from Entity; the accepted Node/CanvasItem/Entity inheritance is implemented (ADR 0008). Pixel snapping is still a documented dependency."
+      "reason": "Local inspection bounds remain a typed method on Sprite : Entity. Signed dimensions and two-stage integer truncation are preserved; attached viewport transform snapping rounds the local offset (ADRs 0008/0028)."
     }
   ],
   "statusGroups": [
@@ -514,7 +514,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Sprite maps Sprite2D onto Entity and now inherits through CanvasItem and Node under ADR 0008. Texture/frame/region rendering, typed events, bounds, opacity and PackedScene state are executable in SpriteTests and SpriteRenderingTests on Linux Wayland GPU/compatibility. Inherited sampler repeat/filter now execute through CanvasItem; viewport snapping, editor and accessibility integration remain incomplete; platform evidence follows ADR 0021.",
+      "reason": "Sprite maps Sprite2D onto Entity and now inherits through CanvasItem and Node under ADR 0008. Texture/frame/region rendering, typed events, bounds, opacity and PackedScene state are executable in SpriteTests and SpriteRenderingTests on Linux Wayland GPU/compatibility. Inherited sampler repeat/filter now execute through CanvasItem; viewport transform snapping is verified by CanvasPixelSnapTests; editor and accessibility integration remain incomplete; platform evidence follows ADR 0021.",
       "godot": [
         "class:Sprite2D"
       ]
@@ -540,15 +540,15 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "GetRect verifies signed dimensions, two-stage integer truncation, centering/offset and the empty one-by-one fallback in SpriteTests. Finite derived geometry is enforced. Trigger: the first viewport pixel-snapping policy slice must apply its offset adjustment here; this inherited behavior is not available yet (ADR 0028).",
+      "state": "Implemented",
+      "reason": "SpriteTests and CanvasPixelSnapTests verify signed dimensions, two-stage integer truncation, centering/offset, empty one-by-one fallback and attached viewport transform snapping (floor(value + 0.5), including negative ties). Detached and vertex-only policies leave inspection bounds fractional. Finite derived geometry is enforced; rendering uses its separate fractional frame size under the pinned contract.",
       "godot": [
         "Sprite2D::method:get_rect()"
       ]
     },
     {
-      "state": "Partial",
-      "reason": "IsPixelOpaque verifies fractional half-open bounds, source alpha, sheet/region selection, custom Texture dispatch and direct-canvas repeat/mirror caches. CanvasSamplingTests covers detached/reattached cache behavior, signed remainder and integer mirror addressing from the pinned native implementation, including fractional mirror query differences from GPU sampling. Viewport sampler defaults do not enter this CPU query. Signed regions retain the accepted drawing flip adaptation. Viewport pixel snapping remains pending (ADR 0028).",
+      "state": "Implemented",
+      "reason": "IsPixelOpaque verifies fractional half-open bounds, source alpha, sheet/region selection, custom Texture dispatch and direct-canvas repeat/mirror caches. CanvasSamplingTests covers detached/reattached cache behavior, signed remainder and integer mirror addressing from the pinned native implementation, including fractional mirror query differences from GPU sampling. Viewport sampler defaults do not enter this CPU query. Signed regions retain the accepted drawing flip adaptation. CanvasPixelSnapTests verifies attached viewport transform snapping of the fractional local offset, live query versus retained-command behavior and detached/vertex-only cases. This completes the local source-alpha contract under the existing typed and signed-region adaptations (ADR 0028).",
       "godot": [
         "Sprite2D::method:is_pixel_opaque(Vector2:)"
       ]

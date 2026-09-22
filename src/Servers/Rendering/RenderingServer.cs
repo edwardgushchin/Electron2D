@@ -133,10 +133,10 @@ public sealed class RenderingServer : ElectronObject
             Capture(tree.Root);
             foreach (var node in _nodes)
                 if (node.GetParentItem() is null)
-                    OrderCanvas(node);
+                    OrderCanvas(node, viewportTransform);
             _order.Sort(static (x, y) => { var z = x.Z.CompareTo(y.Z); return z != 0 ? z : x.Order.CompareTo(y.Order); });
             foreach (var item in _order)
-                item.Node.AppendCanvas(_vertices, _batches, viewportTransform);
+                item.Node.AppendCanvas(_vertices, _batches, item.Transform);
             foreach (var batch in _batches)
                 if (batch.Material is not null && _backend.Method != "gpu")
                     throw new NotSupportedException("A shader material requires GPU rendering; compatibility fallback cannot draw it.");
@@ -152,37 +152,47 @@ public sealed class RenderingServer : ElectronObject
         for (var i = 0; i < node.ChildCount; i++) Capture(node.GetChild(i));
     }
 
-    private void OrderCanvas(CanvasItem item, bool alreadyYSorted = false)
+    private void OrderCanvas(CanvasItem item, Transform transform, bool alreadyYSorted = false)
     {
         if (!item.IsVisibleInTree) return;
+        if (!alreadyYSorted)
+        {
+            var local = item.GetTransform();
+            if (_window.SnapTransformsToPixel)
+            {
+                transform.Origin = CanvasGeometry.Snap(transform.Origin);
+                local.Origin = CanvasGeometry.Snap(local.Origin);
+            }
+            transform *= local;
+        }
         if (item.YSortEnabled)
         {
             if (alreadyYSorted)
             {
-                _order.Add(new(item, item.EffectiveZIndex, _order.Count));
+                _order.Add(new(item, item.EffectiveZIndex, _order.Count, transform));
                 return;
             }
             var first = _ySort.Count;
-            _ySort.Add(new(item, 0, first));
+            _ySort.Add(new(item, Transform.Identity, first));
             CollectYSort(item, Transform.Identity);
             var count = _ySort.Count - first;
             CollectionsMarshal.AsSpan(_ySort).Slice(first, count).Sort(static (left, right) =>
-                Mathf.IsEqualApprox(left.Y, right.Y) ? left.Order.CompareTo(right.Order) : left.Y.CompareTo(right.Y));
+                Mathf.IsEqualApprox(left.Transform.Origin.Y, right.Transform.Origin.Y) ? left.Order.CompareTo(right.Order) : left.Transform.Origin.Y.CompareTo(right.Transform.Origin.Y));
             for (var index = first; index < first + count; index++)
-                OrderCanvas(_ySort[index].Node, alreadyYSorted: true);
+                OrderCanvas(_ySort[index].Node, transform * _ySort[index].Transform, alreadyYSorted: true);
             _ySort.RemoveRange(first, count);
             return;
         }
-        OrderChildren(item, behind: true);
-        _order.Add(new(item, item.EffectiveZIndex, _order.Count));
-        OrderChildren(item, behind: false);
+        OrderChildren(item, transform, behind: true);
+        _order.Add(new(item, item.EffectiveZIndex, _order.Count, transform));
+        OrderChildren(item, transform, behind: false);
     }
 
-    private void OrderChildren(CanvasItem item, bool behind)
+    private void OrderChildren(CanvasItem item, Transform transform, bool behind)
     {
         for (var index = 0; index < item.ChildCount; index++)
             if (item.GetChild(index) is CanvasItem { TopLevel: false } child && child.ShowBehindParent == behind)
-                OrderCanvas(child);
+                OrderCanvas(child, transform);
     }
 
     private void CollectYSort(CanvasItem parent, Transform parentTransform)
@@ -190,8 +200,10 @@ public sealed class RenderingServer : ElectronObject
         for (var index = 0; index < parent.ChildCount; index++)
         {
             if (parent.GetChild(index) is not CanvasItem { TopLevel: false } child || !child.Visible) continue;
-            var transform = parentTransform * child.GetTransform();
-            _ySort.Add(new(child, transform.Origin.Y, _ySort.Count));
+            var local = child.GetTransform();
+            if (_window.SnapTransformsToPixel) local.Origin = CanvasGeometry.Snap(local.Origin);
+            var transform = parentTransform * local;
+            _ySort.Add(new(child, transform, _ySort.Count));
             if (child.YSortEnabled) CollectYSort(child, transform);
         }
     }
@@ -229,6 +241,6 @@ public sealed class RenderingServer : ElectronObject
         if (_ownerThread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("Rendering requires the scene owner thread.");
     }
 
-    private readonly record struct RenderEntry(CanvasItem Node, int Z, int Order);
-    private readonly record struct YSortEntry(CanvasItem Node, float Y, int Order);
+    private readonly record struct RenderEntry(CanvasItem Node, int Z, int Order, Transform Transform);
+    private readonly record struct YSortEntry(CanvasItem Node, Transform Transform, int Order);
 }

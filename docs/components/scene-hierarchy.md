@@ -55,3 +55,5 @@ This migration preserves and separates the executable surface; it does not finis
 - [0023: Typed packed scenes](../decisions/scene.md#adr-0023)
 - [0028: Rendering](../decisions/rendering.md#adr-0028)
 - [0031: Scene composition](../decisions/scene.md#adr-0031)
+
+Pixel-snapping integration is described by [the canvas component](canvas-rendering.md#pixel-snapping). Viewport owns independent transform/vertex policies; rendering preserves logical node transforms, while Sprite local queries honor attached transform snapping. Project defaults initialize the explicit root Window at construction.

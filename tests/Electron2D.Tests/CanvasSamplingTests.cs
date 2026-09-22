@@ -27,7 +27,7 @@ internal static class CanvasSamplingTests
             var vertices = new List<CanvasVertex>(); var batches = new List<CanvasBatch>();
             CanvasBatch Batch(Probe item)
             {
-                item.PrepareCanvas(); vertices.Clear(); batches.Clear(); item.AppendCanvas(vertices, batches, Transform.Identity);
+                item.PrepareCanvas(); vertices.Clear(); batches.Clear(); item.AppendCanvas(vertices, batches, item.GetGlobalTransform());
                 Check(batches.Count == 1, "One probe batch."); return batches[0];
             }
             Check(Batch(child).Filter == Filter.Linear && Batch(top).Filter == Filter.Linear && Batch(independent).Filter == Filter.Linear, "Viewport default resolves canvas boundaries.");
@@ -70,9 +70,9 @@ internal static class CanvasSamplingTests
             root.CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.ParentNode;
             root.CanvasItemDefaultTextureRepeat = Viewport.DefaultCanvasItemTextureRepeat.ParentNode;
             Check(Batch(child).Filter == Filter.Linear && Batch(child).Repeat == Repeat.Disabled, "Root inherited viewport defaults fall back to linear/clamp.");
-            for (var i = 0; i < 1000; i++) { vertices.Clear(); batches.Clear(); child.AppendCanvas(vertices, batches, Transform.Identity); }
+            for (var i = 0; i < 1000; i++) { vertices.Clear(); batches.Clear(); child.AppendCanvas(vertices, batches, child.GetGlobalTransform()); }
             var before = GC.GetAllocatedBytesForCurrentThread();
-            for (var i = 0; i < 1000; i++) { vertices.Clear(); batches.Clear(); child.AppendCanvas(vertices, batches, Transform.Identity); }
+            for (var i = 0; i < 1000; i++) { vertices.Clear(); batches.Clear(); child.AppendCanvas(vertices, batches, child.GetGlobalTransform()); }
             Check(GC.GetAllocatedBytesForCurrentThread() == before, "Sampling resolution and batch keys allocate nothing after warmup.");
         }
         Reject<ObjectDisposedException>(() => parent.TextureRepeat = Repeat.Disabled);

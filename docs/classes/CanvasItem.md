@@ -645,3 +645,7 @@ The hierarchy is implemented; complete reference API parity is not claimed. Miss
 - [0004: Product scope and API correspondence](../decisions/product.md#adr-0004)
 - [0023: Typed packed scenes](../decisions/scene.md#adr-0023)
 - [0028: Rendering](../decisions/rendering.md#adr-0028)
+
+## Viewport pixel snapping
+
+[Viewport](Viewport.md#pixel-snapping-properties) controls render-only transform and vertex rounding. GetTransform/GetGlobalTransform remain logical queries. Transform snapping participates in Y sorting; vertex snapping applies after DrawSetTransform and framebuffer scaling. Retained recording is not invalidated merely by changing these flags. See [the canvas contract](../components/canvas-rendering.md#pixel-snapping) for Sprite offsets and texture clipping.

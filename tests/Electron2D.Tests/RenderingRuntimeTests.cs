@@ -24,11 +24,13 @@ internal static partial class RenderingRuntimeTests
                 settings.Set(ProjectSettings.RenderingMethod, backend);
                 var software = VerifyCanvasSampling(backend);
                 VerifySamplingCapabilities(backend, software);
+                VerifyCanvasPixelSnap(backend);
                 VerifySceneHierarchy(backend);
                 VerifyCanvasOrdering(backend);
                 VerifyCanvasLifecycle(backend);
                 VerifyFrame(backend);
                 VerifyFrameAllocations(backend);
+                VerifyFrameAllocations(backend, snapPixels: true);
                 VerifyCanvasTexture(backend);
                 VerifySprite(backend);
                 VerifyCanvasTextureFailures();
@@ -39,6 +41,8 @@ internal static partial class RenderingRuntimeTests
                 {
                     VerifyCanvasSampling(backend, "CanvasHLSL");
                     VerifyCanvasSampling(backend, "CanvasGLSL");
+                    VerifyCanvasPixelSnap(backend, "CanvasHLSL");
+                    VerifyCanvasPixelSnap(backend, "CanvasGLSL");
                     VerifyMaterialFrame("MaterialHlsl");
                     VerifyMaterialFrame("MaterialGlsl");
                     VerifyTextureFrame("TextureHlsl");
@@ -182,7 +186,7 @@ internal static partial class RenderingRuntimeTests
         finally { first?.Dispose(); }
     }
 
-    private static void VerifyFrameAllocations(string backend)
+    private static void VerifyFrameAllocations(string backend, bool snapPixels = false)
     {
         using var image = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8);
         image.Fill(Colors.White);
@@ -197,7 +201,7 @@ internal static partial class RenderingRuntimeTests
             material.SetShaderParameter("detailMap", texture);
             material.SetShaderParameter("tint", Colors.White);
         }
-        var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2I(96, 80) };
+        var window = new Window { SnapTransformsToPixel = snapPixels, SnapVerticesToPixel = snapPixels, CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2I(96, 80) };
         var sorted = new Entity { YSortEnabled = true };
         var island = new Entity();
         var nested = new Entity { YSortEnabled = true };

@@ -237,10 +237,9 @@ public abstract partial class CanvasItem
     internal Material? CanvasMaterial => _useParentMaterial ? GetParentItem()?.CanvasMaterial : _material;
     private Color InheritedModulate => GetParentItem() is not { } parent ? _modulate : parent.InheritedModulate * _modulate;
 
-    internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform viewportTransform)
+    internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform)
     {
         if (_canvasCommands is null) return;
-        var transform = viewportTransform * GetGlobalTransform();
         var color = InheritedModulate * _selfModulate;
         var viewport = GetViewport();
         var filter = TextureFilterInTree;
@@ -254,7 +253,7 @@ public abstract partial class CanvasItem
         foreach (var command in _canvasCommands)
         {
             var first = vertices.Count;
-            CanvasGeometry.Append(vertices, command, transform * command.Transform, color);
+            CanvasGeometry.Append(vertices, command, transform * command.Transform, color, viewport?.SnapVerticesToPixel == true);
             var count = vertices.Count - first;
             if (count == 0) continue;
             if (!capturedMaterial) { material = CanvasMaterial?.GetCanvasState(); capturedMaterial = true; }

@@ -154,6 +154,16 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<bool> RenderingFallback { get; } =
         new("rendering/rendering_device/fallback_to_opengl3", true);
 
+    /// <summary>Defines the initial canvas transform snapping choice for newly constructed windows.</summary>
+    /// <remarks>False by default. Active feature overrides apply; existing windows keep their own property value.</remarks>
+    public static ProjectSetting<bool> SnapTransformsToPixel { get; } =
+        new("rendering/2d/snap/snap_2d_transforms_to_pixel", false);
+
+    /// <summary>Defines the initial canvas vertex snapping choice for newly constructed windows.</summary>
+    /// <remarks>False by default. Active feature overrides apply; existing windows keep their own property value.</remarks>
+    public static ProjectSetting<bool> SnapVerticesToPixel { get; } =
+        new("rendering/2d/snap/snap_2d_vertices_to_pixel", false);
+
     /// <summary>Selects nearest rather than linear interpolation between canvas mip levels.</summary>
     /// <remarks>False by default. Sampled when the GPU renderer opens.</remarks>
     public static ProjectSetting<bool> UseNearestMipmapFilter { get; } =
@@ -221,6 +231,8 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(PhysicsJitterFix, isBasic: false);
         RegisterInternal(RenderingMethod, isBasic: true);
         RegisterInternal(RenderingFallback, isBasic: false);
+        RegisterInternal(SnapTransformsToPixel, isBasic: false);
+        RegisterInternal(SnapVerticesToPixel, isBasic: false);
         RegisterInternal(UseNearestMipmapFilter, isBasic: false);
         RegisterInternal(AnisotropicFilteringLevel, isBasic: false);
         RegisterInternal(DefaultClearColor, isBasic: true);
@@ -1511,6 +1523,8 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, PhysicsJitterFix) ||
         ReferenceEquals(setting, RenderingMethod) ||
         ReferenceEquals(setting, RenderingFallback) ||
+        ReferenceEquals(setting, SnapTransformsToPixel) ||
+        ReferenceEquals(setting, SnapVerticesToPixel) ||
         ReferenceEquals(setting, UseNearestMipmapFilter) ||
         ReferenceEquals(setting, AnisotropicFilteringLevel) ||
         ReferenceEquals(setting, DefaultClearColor);

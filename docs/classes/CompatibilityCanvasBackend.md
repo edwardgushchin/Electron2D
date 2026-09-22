@@ -87,3 +87,5 @@ Clears exposed identities and releases texture cache, target and renderer. SafeH
 ## Verification and limits
 
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs) and [CanvasTextureTests](../../tests/Electron2D.Tests/CanvasTextureTests.cs) exercise this path through retained drawing and native readback on Linux Wayland and dummy/software. Pixel and allocation checks cover the documented baseline; they do not establish other platforms or frame-time guarantees. [RenderingNativeHandleTests](../../tests/Electron2D.Tests/RenderingNativeHandleTests.cs) verifies identities and foreign-context isolation on Wayland and XWayland; other platforms remain unverified.
+
+The software driver truncates fractional vertex positions before rasterization. Transform snapping does not eliminate every fraction introduced by scale/rotation; final vertex snapping rounds primitive corners in shared geometry before SDL receives them. Edge precision remains backend-specific; see [pixel snapping](../components/canvas-rendering.md#pixel-snapping).

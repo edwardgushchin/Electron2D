@@ -170,9 +170,9 @@ internal static partial class RenderingRuntimeTests
         var vertices = new List<CanvasVertex>();
         var batches = new List<CanvasBatch>();
         node.PrepareCanvas();
-        for (var i = 0; i < 1000; i++) { vertices.Clear(); batches.Clear(); node.AppendCanvas(vertices, batches, Transform.Identity); }
+        for (var i = 0; i < 1000; i++) { vertices.Clear(); batches.Clear(); node.AppendCanvas(vertices, batches, node.GetGlobalTransform()); }
         var before = GC.GetAllocatedBytesForCurrentThread();
-        for (var i = 0; i < 1000; i++) { vertices.Clear(); batches.Clear(); node.AppendCanvas(vertices, batches, Transform.Identity); }
+        for (var i = 0; i < 1000; i++) { vertices.Clear(); batches.Clear(); node.AppendCanvas(vertices, batches, node.GetGlobalTransform()); }
         Check(GC.GetAllocatedBytesForCurrentThread() == before && node.Draws == 1, "Retained texture geometry allocates no managed memory after warmup.");
     }
 
