@@ -108,6 +108,7 @@ Implementation scope includes foreseeable members of the same public type family
 Every completed implementation must end with one task-scoped atomic local commit after code, tests, XML documentation, living documentation, ADRs, the post-implementation audit, and all required checks are complete.
 
 - The commit message must follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/): `<type>[optional scope][!]: <description>`. Use an appropriate type such as `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `build`, `ci`, or `chore`; record breaking changes with `!` and/or a `BREAKING CHANGE:` footer.
+- Never mention Godot in a commit message, regardless of case. This applies to the subject, body, footers, and trailers; describe the Electron2D change itself.
 - Stage only the implementation's cohesive code, tests, documentation, and repository metadata. Do not include unrelated user changes, generated output, local work logs, or temporary files.
 - Do not create intermediate implementation commits. If verification or the post-implementation audit finds a defect, fix it before creating the single final commit.
 - Do not declare an implementation complete until that commit exists and the implementation's tracked working tree is clean. Report its hash and subject in the completion response.
