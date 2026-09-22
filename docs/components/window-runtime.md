@@ -6,6 +6,8 @@ Last updated: 2026-09-22
 
 [Window](../classes/Window.md) derives from [Viewport](../classes/Viewport.md), which derives from the unified Node. Window owns the [ModeEnum](../classes/Window.ModeEnum.md) and [Flags](../classes/Window.Flags.md) identifiers. A consumer configures a root Window, adds scene children, and calls Engine.Run. This component has no renderer. It provides an executable native window and scene input boundary, not a completed rendering or GUI API.
 
+[ADR 0028](../decisions/rendering.md#adr-0028) selects HLSL source and compatible SPIR-V bytecode through SDL3-CS/SDL_shadercross for future GPU shader support. Window currently has no executable shader or material integration; the SDL_Renderer fallback contract continues to exclude arbitrary shaders.
+
 ## Runtime flow
 
 Engine reserves its idle state, opens the native window through DisplayServer, creates and publishes SceneTree before ready, and drives the native event pump before fixed/process frames. MaxFps uses unscaled monotonic time; native events continue during bounded waits. SceneTree.Quit requests exit and returns its code from Run. Window.CloseRequested precedes the default AutoAcceptQuit decision.
