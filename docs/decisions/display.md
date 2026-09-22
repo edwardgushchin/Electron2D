@@ -49,7 +49,7 @@ Electron2D previously had no native display host. Engine accepted elapsed time f
 - A visible Wayland compositor session delivered a real close request to the typed callback without destroying the window, plus native focus gain/loss and pointer enter/exit notifications. The remaining `WindowEvent` identities depend on the first popup scene host, Android host, HDR output, and macOS title-bar integration respectively; the aggregate vocabulary is blocked until those owners exist.
 - Desktop hit testing uses the main window's client rectangle on X11, excluding the native border and title bar. Other desktop drivers retain decorated-bounds approximation until native topmost hit testing exists; Wayland continues to reject unavailable global-position lookup. The SDL resizable flag is only a partial answer to whether the native window manager permits maximization; current fullscreen mode is not a permanent prohibition. A future SDL-owned Wayland capability bridge must observe xdg_toplevel wm_capabilities and integrate MaximizeDisabled.
 - Native SDL ownership uses private `SafeHandle` wrappers and deterministic disposal. SDL thread-affine handles must not be released by a finalizer thread; the owning `DisplayServer` must be explicitly disposed.
-- SDL3-CS is the first external managed host dependency. Native SDL library packaging remains a separate target-specific integration boundary under ADR 0012 and ADR 0021.
+- SDL3-CS currently enters through a managed package reference. ADR 0012 requires its source to be vendored into `Electron2D.dll` in the next SDL packaging integration. Native SDL library packaging remains a separate target-specific boundary under ADR 0021.
 - Missing renderer, native menus and advanced dialogs, accessibility, speech, mobile, theme, scene window composition, and platform-specialized controls are recorded by exact triggers in the coverage inventory; no inert public methods represent them.
 
 ### Consequences
@@ -64,7 +64,7 @@ The runtime can open a native SDL window and translate SDL keyboard, mouse, whee
 
 ### Related decisions
 
-- [0012: external runtime dependencies](product.md#adr-0012)
+- [0012: vendored SDL3-CS and Box2D.NET](product.md#adr-0012)
 - [0015 and 0016: MainLoop and Engine host boundary](core-object-runtime.md#adr-0015)
 - [0021: target platforms](product.md#adr-0021)
 - [0028: renderer boundary](rendering.md#adr-0028)

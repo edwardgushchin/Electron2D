@@ -79,10 +79,10 @@ A shorter-lived subscriber must unsubscribe from a longer-lived publisher as par
 
 Last updated: 2026-09-22
 
-- Status: Accepted; external-dependency packaging amended by [0012](product.md#adr-0012), runtime target matrix defined by [0021](product.md#adr-0021), editor/game product boundary amended by [0027](product.md#adr-0027), and rendering backend strategy defined by [0028](rendering.md#adr-0028)
+- Status: Accepted; managed-dependency packaging specified by [0012](product.md#adr-0012), runtime target matrix defined by [0021](product.md#adr-0021), editor/game product boundary amended by [0027](product.md#adr-0027), and rendering backend strategy defined by [0028](rendering.md#adr-0028)
 - Scope: Entire product architecture and packaging
 
-The one-assembly rule remains fully effective for every production runtime-engine type and domain owned by Electron2D. ADR 0012 changes the treatment of explicitly approved third-party runtime dependencies: they may ship as separate assemblies instead of being internalized into `Electron2D.dll`. ADR 0027 clarifies that separately shipped editor and game executable assemblies are runtime consumers rather than engine-domain assemblies.
+The one-assembly rule covers Electron2D-owned code and the managed source of the selected runtime dependencies under ADR 0012. SDL3-CS must migrate from its current package reference into `Electron2D.dll`; Box2D.NET joins that assembly with the physics domain. ADR 0027 clarifies that separately shipped editor and game executable assemblies are runtime consumers rather than engine-domain assemblies.
 
 ### Context
 
@@ -100,7 +100,7 @@ Electron2D is intended to provide a familiar high-level API modeled on Godot's 2
 
 ### Packaging boundary
 
-The current verified engine artifact is the managed `Electron2D.dll`. The project references the managed `SDL3-CS` binding, which ships separately from the engine assembly; no native SDL binary is packaged by the current project. This dependency does not create a second Electron2D-owned runtime assembly.
+The current verified engine artifact is the managed `Electron2D.dll`. DisplayServer currently references the separately shipped `SDL3-CS` package; it must migrate to vendored source in `Electron2D.dll` before this packaging decision is implemented. No native SDL binary is packaged by the current project, and its target-specific packaging still needs verification.
 
 Native SDL deployment is a separate unresolved platform constraint. This ADR does not claim that native SDL code has already been embedded into the managed DLL or that a physical one-file native deployment has been achieved. That decision requires an implemented and verified SDL integration.
 
@@ -110,7 +110,7 @@ Native SDL deployment is a separate unresolved platform constraint. This ADR doe
 - Domain boundaries are namespaces and documentation boundaries, not assembly boundaries.
 - Features designed only to preserve a possible future 3D path must be rejected.
 - Godot familiarity does not imply GDScript, Variant, binary, scene-format, or source compatibility where another accepted ADR explicitly differs.
-- A managed dependency that would be copied as another shipping engine DLL must be internalized, source-integrated, embedded, or rejected after a specific packaging review.
+- SDL3-CS and Box2D.NET must be source-vendored into the managed engine assembly when integrated; other managed runtime dependencies require their own decision.
 
 ### Rejected alternatives
 
@@ -119,49 +119,42 @@ Native SDL deployment is a separate unresolved platform constraint. This ADR doe
 - Claim literal single-file SDL deployment before integration: rejected because it would document an unverified state.
 
 <a id="adr-0012"></a>
-## ADR 0012: Permit external runtime dependencies and select Box2D.NET
+## ADR 0012: Vendor SDL3-CS and Box2D.NET managed source
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 - Status: Accepted
-- Scope: Product boundary, deployment packaging, and future 2D physics
-- Amends: external-dependency packaging in [0004](product.md#adr-0004); its one-assembly rule for Electron2D-owned code remains accepted
+- Scope: Managed dependency ownership, deployment packaging, and future 2D physics
+- Refines: the one-managed-assembly rule in [0004](product.md#adr-0004)
 
 ### Context
 
-All code owned by Electron2D is constrained to a single managed DLL. The original packaging decision also applied that constraint to third-party managed dependencies, which would require vendoring their source or merging their assemblies. Vendoring would transfer upstream synchronization and local-fork maintenance to Electron2D, while assembly merging would add build and diagnostics complexity without improving the public API.
+Electron2D distributes one managed runtime assembly and exposes one engine-owned public API. SDL3-CS is the selected managed SDL binding; Box2D.NET is the selected managed 2D physics backend. Keeping either as a separate package would add a managed assembly to the application deployment. Source vendoring keeps the managed dependency graph inside `Electron2D.dll`, with upstream updates and local patches owned by Electron2D maintainers.
 
-The engine remains exclusively 2D and should continue exposing one coherent public API from `Electron2D.dll`. Physical deployment, however, may contain separately maintained runtime dependencies when an explicit architectural decision accepts them.
-
-`Box2D.NET` is a pure managed C# port suitable for the intended .NET 8 physics domain. The dependency has been selected, but no package reference or physics implementation exists in the current build.
+SDL3-CS is currently integrated through a package reference for DisplayServer, while Box2D.NET and the physics domain are absent. Native SDL is a separate platform-specific library: copying its C# binding into the engine does not include native SDL code or prove native packaging.
 
 ### Decision
 
-- Electron2D remains a 2D-only engine. Three-dimensional types, behavior, and speculative shared 2D/3D abstractions remain outside scope.
-- Every Electron2D-owned production domain and public or internal production type compiles into `Electron2D.csproj` and `Electron2D.dll`. Electron2D code must never be split into additional assemblies.
-- Explicitly approved third-party runtime dependencies may ship as separate assemblies because they are not Electron2D-owned code. A physical one-DLL deployment of the complete dependency graph is not required.
-- The future 2D collision and rigid-body domain will use the pure managed `Box2D.NET` package maintained at `ikpil/Box2D.NET` as an external runtime dependency.
-- `Box2D.NET` source must not be vendored, copied into, or merged with `Electron2D.dll`. The exact package version will be pinned when the physics vertical slice is implemented.
-- Electron2D's public API must not expose dependency-owned types. Physics nodes, resources, queries, contacts, and errors will use Electron2D types, with dependency translation kept behind the physics-domain boundary.
-- Dependency upgrades are explicit changes requiring license review, release-note review, compatibility tests, regression tests, and physics benchmarks appropriate to the affected behavior.
-- The package must not be added before executable physics behavior uses it. Selection is an accepted design decision, not an implemented physics feature.
-- ADR 0028 selects the future SDL GPU and SDL_Renderer roles. SDL3-CS now supplies the DisplayServer managed binding; native SDL deployment and renderer integration remain unresolved and require executable packaging and rendering slices.
+- Keep all Electron2D runtime code and the managed source of SDL3-CS and Box2D.NET in `Electron2D.csproj`, producing only `Electron2D.dll` as the managed engine artifact. Do not ship either dependency as a separate managed runtime assembly or depend on its NuGet package in a completed integration.
+- Replace DisplayServer's current SDL3-CS package reference with vendored source under `src/` in the next SDL packaging integration. Vendor the managed source of `ikpil/Box2D.NET` under `src/` in the first executable 2D physics slice; do not add it as unused source before then.
+- Pin each vendored source to an upstream release and commit, retain its required license notices, record local patches, and make upgrades explicit reviewable changes. Verify the compiled assembly, dependent behavior, and target-specific packaging after each update.
+- Keep vendored types behind internal implementation boundaries. The public and protected Electron2D API must not expose SDL3-CS or Box2D.NET types; verify the exported assembly surface when integrating either source tree. Physics nodes, resources, queries, contacts, and errors will use Electron2D types.
+- Native SDL remains a target-specific deployment dependency. Its binary packaging, host lifecycle, and native verification belong to the SDL integration and platform slices under ADR 0021. Vendor source does not imply a single physical deployment file.
+- ADR 0028 selects the future SDL GPU and SDL_Renderer roles; this decision does not implement either renderer or the physics domain.
 
 ### Consequences
 
-- The one-DLL rule remains an invariant for Electron2D-owned code. Once physics is integrated, applications will deploy that one `Electron2D.dll` together with the selected external `Box2D.NET` runtime assembly and any later explicitly approved platform dependencies.
-- Upstream physics fixes can be consumed through package upgrades instead of maintaining an Electron2D source fork.
-- Consumers see Electron2D-owned physics APIs and are insulated from ordinary dependency upgrades, subject to Electron2D's documented compatibility policy.
-- Electron2D must preserve the dependency's license notice in distributions as required by its license.
-- The current build remains unchanged and still produces only `Electron2D.dll`; no claim of implemented physics or dependency packaging is made until the physics vertical slice lands.
+- SDL3-CS and Box2D.NET become maintained vendored source rather than separate managed packages. Upstream fixes require an explicit source refresh and regression checks.
+- Applications deploy `Electron2D.dll` plus any required target-specific native SDL library and application host files. One managed engine DLL is not a claim of single-file native deployment.
+- The current build is unchanged: DisplayServer uses a separate managed SDL3-CS package; Box2D.NET, physics, vendored source, and native SDL packaging remain absent.
 
 ### Rejected alternatives
 
-- Vendor the dependency source: rejected because it makes upstream synchronization and local modifications an Electron2D maintenance responsibility.
-- Merge the dependency assembly into `Electron2D.dll`: rejected because it complicates builds, symbols, diagnostics, licensing audits, trimming, and upgrades solely to preserve a physical-file constraint.
+- Ship SDL3-CS or Box2D.NET as separate managed packages: rejected because the selected managed dependencies belong in the one engine assembly.
+- Merge prebuilt dependency assemblies into `Electron2D.dll`: rejected because source vendoring keeps provenance, patches, and build behavior reviewable.
 - Use the native upstream library: rejected for the current design because it adds platform-specific native binaries and interop ownership when a managed backend is available.
 - Implement a new rigid-body solver: rejected because physics-engine development is not Electron2D's differentiating scope.
-- Add the selected package immediately without a physics implementation: rejected as an unused runtime dependency.
+- Add Box2D.NET source immediately without physics behavior: rejected as unused code.
 
 <a id="adr-0017"></a>
 ## ADR 0017: Source-tree module layout
@@ -243,7 +236,7 @@ Target intent, implemented code, successful compilation, host integration, appli
 
 For the current development and release-readiness stage, Linux under Wayland is the only required platform for executable native behavior, application-host packaging, and release verification. X11, Windows, macOS, Android, iOS, and Web remain product targets, but their host integration and native or browser checks do not block completion at this stage. Each additional platform becomes a release gate when its integration is explicitly taken into scope. A Linux/Wayland result must be reported as such, never as verification of X11 or the full target matrix.
 
-The one-assembly rule continues to cover Electron2D-owned runtime code. Native libraries, approved external managed dependencies, platform application hosts, signing, and store packaging remain deployment concerns and are not implied to be contained in `Electron2D.dll`.
+The one-assembly rule covers Electron2D-owned runtime code and the selected vendored managed dependencies. Native libraries, platform application hosts, signing, and store packaging remain deployment concerns and are not implied to be contained in `Electron2D.dll`.
 
 The editor targets the three desktop operating systems and both Linux display protocols. This narrower boundary cannot leak a desktop-only requirement into the game runtime or its public data model. Its source and dependency direction follow ADR 0027.
 
@@ -278,7 +271,7 @@ ADR 0028 selects a capability-driven GPU-primary and SDL_Renderer-fallback archi
 ### Related decisions
 
 - [0004: 2D API in one Electron2D-owned assembly](product.md#adr-0004)
-- [0012: External runtime dependencies and Box2D.NET](product.md#adr-0012)
+- [0012: Vendored SDL3-CS and Box2D.NET](product.md#adr-0012)
 - [0014: Managed Resource lifetime and realtime allocation](resources.md#adr-0014)
 - [0015: Main-loop lifecycle and host boundary](core-object-runtime.md#adr-0015)
 - [0016: Process-wide Engine runtime and host-driven scheduling](core-object-runtime.md#adr-0016)
