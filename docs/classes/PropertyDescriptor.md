@@ -26,8 +26,8 @@ operations but deliberately exposes no Variant-like untyped getter or setter.
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-PropertyDescriptor descriptor = new PropertyDescriptor<SceneNode, string>(
-    nameof(SceneNode.Name), node => node.Name, (node, value) => node.Name = value, _ => "SceneNode");
+PropertyDescriptor descriptor = new PropertyDescriptor<Node, string>(
+    nameof(Node.Name), node => node.Name, (node, value) => node.Name = value, _ => "Node");
 ```
 
 ## Constructors

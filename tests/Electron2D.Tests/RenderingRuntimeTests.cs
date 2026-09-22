@@ -97,10 +97,10 @@ internal static partial class RenderingRuntimeTests
         Check(duplicate.Shader is not null && !ReferenceEquals(duplicate.Shader, shader) && duplicate.Shader.GetSPIRV().SequenceEqual(code),
             "Material duplication honors the resource graph policy.");
         duplicate.Shader!.Dispose();
-        using var root = new Node { Material = material, Modulate = new Color(0.5f, 1, 1), SelfModulate = new Color(1, 0.5f, 1), UseParentMaterial = false };
+        using var root = new Entity { Material = material, Modulate = new Color(0.5f, 1, 1), SelfModulate = new Color(1, 0.5f, 1), UseParentMaterial = false };
         using var packed = new PackedScene();
         packed.Pack(root);
-        using var copy = (Node)packed.Instantiate();
+        using var copy = (Entity)packed.Instantiate();
         Check(copy.Material == material && copy.Modulate == root.Modulate && copy.SelfModulate == root.SelfModulate,
             "PackedScene stores canvas properties and borrows nonlocal materials.");
         Reject<InvalidOperationException>(() => root.DrawRect(new Rect(0, 0, 8, 8), Colors.White));
@@ -398,7 +398,7 @@ internal static partial class RenderingRuntimeTests
         try { action(); } catch (T) { return; }
         throw new InvalidOperationException("Expected " + typeof(T).Name);
     }
-    private sealed class CanvasNode : Node
+    private sealed class CanvasNode : Entity
     {
         internal Action<CanvasNode>? ReadyAction;
         internal Action<CanvasNode>? DrawAction;

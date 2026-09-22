@@ -16,9 +16,9 @@ Last updated: 2026-09-23
 
 Sequences typed property interpolation, method interpolation, callbacks, waits, and nested tweens.
 
-`Tween` owns an ordered list of parallel step groups and coordinates interpolation, callbacks, event waits, nested tweens, looping, and completion. It is constructed only by `SceneTree.CreateTween()` or `SceneNode.CreateTween()`. The SceneTree processes valid top-level tweens; a parent Tween processes a detached subtween. The object remains inspectable after invalidation until explicitly disposed, while its managed memory remains runtime-owned.
+`Tween` owns an ordered list of parallel step groups and coordinates interpolation, callbacks, event waits, nested tweens, looping, and completion. It is constructed only by `SceneTree.CreateTween()` or `Node.CreateTween()`. The SceneTree processes valid top-level tweens; a parent Tween processes a detached subtween. The object remains inspectable after invalidation until explicitly disposed, while its managed memory remains runtime-owned.
 
-A tween is created by [`SceneTree.CreateTween`](SceneTree.md#m-electron2d-scenetree-createtween) or [`SceneNode.CreateTween`](SceneNode.md#m-electron2d-scenenode-createtween) and is processed by
+A tween is created by [`SceneTree.CreateTween`](SceneTree.md#m-electron2d-scenetree-createtween) or [`Node.CreateTween`](Node.md#m-electron2d-node-createtween) and is processed by
 that tree after node callbacks and lightweight timers in the selected frame lane. Tweeners are sequential unless
 [`Tween.Parallel`](Tween.md#m-electron2d-tween-parallel) or [`Tween.SetParallel(Boolean)`](Tween.md#m-electron2d-tween-setparallel-system-boolean) groups them. A completed or killed tween is invalid and cannot
 accept new tweeners. Tween mutation and processing use the creating tree's owner thread.
@@ -36,7 +36,7 @@ tween.TweenProperty(node, target => target.Position, (target, value) => target.P
 
 | Member | Description |
 | --- | --- |
-| [`public Tween BindNode(SceneNode node)`](#m-electron2d-tween-bindnode-electron2d-node) | Binds processing and lifetime to a node. |
+| [`public Tween BindNode(Node node)`](#m-electron2d-tween-bindnode-electron2d-node) | Binds processing and lifetime to a node. |
 | [`public Tween Chain()`](#m-electron2d-tween-chain) | Makes the next appended tweener begin a new sequential step. |
 | [`public bool CustomStep(double delta)`](#m-electron2d-tween-customstep-system-double) | Advances the tween manually by an elapsed duration. |
 | [`public int GetLoopsLeft()`](#m-electron2d-tween-getloopsleft) | Gets the number of remaining sequence executions. |
@@ -89,7 +89,7 @@ tween.TweenProperty(node, target => target.Position, (target, value) => target.P
 ## Method Descriptions
 
 <a id="m-electron2d-tween-bindnode-electron2d-node"></a>
-### `public Tween BindNode(SceneNode node)`
+### `public Tween BindNode(Node node)`
 
 Binds processing and lifetime to a node.
 
@@ -685,4 +685,4 @@ All public mutation, processing, and disposal are owner-thread operations. Typed
 
 ## Dependencies, verification, and limitations
 
-Depends on [`SceneTree`](SceneTree.md), [`SceneNode`](SceneNode.md), [`Tweener`](Tweener.md), Core math types, and `EventConnection`. The executable tests cover the behavior listed in the [Tweening component](../components/tweening.md). No string property path, dynamic value, reflection callable, independent clock/thread, editor serialization, or visual acceptance exists.
+Depends on [`SceneTree`](SceneTree.md), [`Node`](Node.md), [`Tweener`](Tweener.md), Core math types, and `EventConnection`. The executable tests cover the behavior listed in the [Tweening component](../components/tweening.md). No string property path, dynamic value, reflection callable, independent clock/thread, editor serialization, or visual acceptance exists.

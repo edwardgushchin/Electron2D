@@ -29,7 +29,7 @@ An earlier statement that a missing feature was merely "deferred" was not suffic
 - Registered binding changes use an internal invalidation channel before public `Resource.Changed` delivery, so a throwing user handler cannot preserve stale action contributions. Disposing a registered binding removes it from every affected action before public disposal observers. Motion accumulation commits all fields atomically before its single public change notification.
 - Positional transforms require finite inputs. They transform local position and applicable local motion; pan gesture delta remains the host-reported value while only its position changes.
 - `SceneTree` dispatches a captured hierarchy in reverse depth-first order through `OnInput`, then keyboard-only `OnUnhandledKeyInput`, then `OnUnhandledInput`. `SetInputAsHandled` stops the current and later stages. Removed/disposed nodes are skipped; callback failures are aggregated after eligible delivery continues.
-- SceneNode input participation is explicit and pause-aware through `InputEnabled`, `UnhandledKeyInputEnabled`, `UnhandledInputEnabled`, and `CanProcess()`.
+- Node input participation is explicit and pause-aware through `InputEnabled`, `UnhandledKeyInputEnabled`, `UnhandledInputEnabled`, and `CanProcess()`.
 - Process and physics just-pressed/just-released windows are independent. Each lane clears its own transition state in `MainLoop` `finally`, including failed callbacks. Warmed non-emulated event matching and scene traversal reuse buffers and allocate no managed memory; generated pointer events allocate short-lived resources.
 - Typed C# exceptions replace numeric error codes. Dynamic `Variant` event payloads, string-based calls, and untyped metadata are permanently excluded by ADR 0001.
 

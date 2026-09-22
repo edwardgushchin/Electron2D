@@ -91,7 +91,7 @@ Last updated: 2026-09-23
 
 ### Context
 
-ADR 0003 publishes `IsDisposed` as soon as disposal starts so concurrent callers cannot continue using an object. The same guard originally rejected the thread that had just won disposal. That made pre-delete notifications and derived teardown callbacks unable to read ordinary guarded state; an attached `SceneNode` exit callback could fail merely by reading `Name` while direct disposal detached it.
+ADR 0003 publishes `IsDisposed` as soon as disposal starts so concurrent callers cannot continue using an object. The same guard originally rejected the thread that had just won disposal. That made pre-delete notifications and derived teardown callbacks unable to read ordinary guarded state; an attached `Node` exit callback could fail merely by reading `Name` while direct disposal detached it.
 
 ### Decision
 
@@ -145,7 +145,7 @@ These capabilities are useful independently of scripting and serialization. They
 - One connection token owns one wrapper and gives subscribers an explicit lifecycle boundary.
 - The scheduler determines delivery thread, safe point, ordering, and exception aggregation.
 - Failed custom event removal can leave an inert wrapper in the publisher; the terminal token prevents further user-handler calls.
-- Existing child-related `SceneNode` events now pass the publishing parent first and the affected child second.
+- Existing child-related `Node` events now pass the publishing parent first and the affected child second.
 - There is still no `Connect`, `Disconnect`, event-name lookup, callable rebinding, or flags enum.
 
 ### Rejected alternatives

@@ -173,7 +173,7 @@
     {
       "godot": "CanvasItem::method:_draw()",
       "electron2d": "method:Electron2D.CanvasItem.OnDraw()",
-      "reason": "Node.OnDraw is the protected C# virtual callback for retained drawing in the unified scene type. It records commands during owner-thread canvas preparation and redraw requests are coalesced. Native frame and callback-failure checks cover the initial rectangle/line/texture profile. Clipping, further drawing commands and complete canvas lifecycle integration remain pending (ADRs 0023/0028)."
+      "reason": "Entity.OnDraw is the protected C# virtual callback for retained drawing in the unified scene type. It records commands during owner-thread canvas preparation and redraw requests are coalesced. Native frame and callback-failure checks cover the initial rectangle/line/texture profile. Clipping, further drawing commands and complete canvas lifecycle integration remain pending (ADRs 0023/0028)."
     },
     {
       "godot": "RenderingServer::method:get_current_rendering_method()",
@@ -248,7 +248,7 @@
     {
       "godot": "Sprite2D::method:get_rect()",
       "electron2d": "method:Electron2D.Sprite.GetRect()",
-      "reason": "Local inspection bounds remain a method; Sprite currently derives from Node; the accepted SceneNode/CanvasItem/Node inheritance is implemented (ADR 0008). Pixel snapping is still a documented dependency."
+      "reason": "Local inspection bounds remain a method; Sprite currently derives from Entity; the accepted Node/CanvasItem/Entity inheritance is implemented (ADR 0008). Pixel snapping is still a documented dependency."
     }
   ],
   "statusGroups": [
@@ -371,7 +371,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Node.OnDraw is the protected C# virtual callback for retained drawing in the unified scene type. It records commands during owner-thread canvas preparation and redraw requests are coalesced. Native frame and callback-failure checks cover the initial rectangle/line/texture profile. Clipping, further drawing commands and complete canvas lifecycle integration remain pending (ADRs 0023/0028).",
+      "reason": "Entity.OnDraw is the protected C# virtual callback for retained drawing in the unified scene type. It records commands during owner-thread canvas preparation and redraw requests are coalesced. Native frame and callback-failure checks cover the initial rectangle/line/texture profile. Clipping, further drawing commands and complete canvas lifecycle integration remain pending (ADRs 0023/0028).",
       "godot": [
         "CanvasItem::method:_draw()"
       ]
@@ -514,7 +514,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Sprite maps Sprite2D onto Node and now inherits through CanvasItem and SceneNode under ADR 0008. Texture/frame/region rendering, typed events, bounds, opacity and PackedScene state are executable in SpriteTests and SpriteRenderingTests on Linux Wayland GPU/compatibility. Inherited sampler repeat/filter, viewport snapping, editor and accessibility integration remain incomplete; platform evidence follows ADR 0021.",
+      "reason": "Sprite maps Sprite2D onto Entity and now inherits through CanvasItem and Node under ADR 0008. Texture/frame/region rendering, typed events, bounds, opacity and PackedScene state are executable in SpriteTests and SpriteRenderingTests on Linux Wayland GPU/compatibility. Inherited sampler repeat/filter, viewport snapping, editor and accessibility integration remain incomplete; platform evidence follows ADR 0021.",
       "godot": [
         "class:Sprite2D"
       ]
@@ -724,7 +724,7 @@
     },
     {
       "electron2d": "constructor:Electron2D.Sprite..ctor()",
-      "reason": "Default construction of the existing image-drawing scene-node concept with a borrowed optional Texture; the Sprite name follows the strict 2D naming rule, while its spatial Node base inherits CanvasItem and SceneNode according to ADR 0008.",
+      "reason": "Default construction of the existing image-drawing scene-node concept with a borrowed optional Texture; the Sprite name follows the strict 2D naming rule, while its spatial Entity base inherits CanvasItem and Node according to ADR 0008.",
       "adr": "ADR 0004"
     },
     {
@@ -744,7 +744,7 @@
     },
     {
       "electron2d": "method:Electron2D.Sprite.Dispose(System.Boolean)",
-      "reason": "Protected managed lifetime hook disconnects the borrowed texture and clears typed events before inherited Node cleanup; ordinary borrowed resources are not disposed.",
+      "reason": "Protected managed lifetime hook disconnects the borrowed texture and clears typed events before inherited Entity cleanup; ordinary borrowed resources are not disposed.",
       "adr": "ADRs 0003/0006"
     }
   ]

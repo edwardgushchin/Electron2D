@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Provides the root window's client rectangle and scene input boundary.</summary>
 /// <remarks>Only a root <see cref="Window"/> is currently supported. Render targets, canvas drawing,
 /// content scaling, and embedded viewports are not implemented. Input coordinates use the client area.</remarks>
-public abstract class Viewport : SceneNode
+public abstract class Viewport : Node
 {
     private protected Viewport() { }
 

@@ -29,7 +29,7 @@ application. The class does not create a thread, clock, window, renderer, input 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-using MainLoop loop = new SceneTree(new SceneNode { Name = "Root" });
+using MainLoop loop = new SceneTree(new Node { Name = "Root" });
 loop.Process(1.0 / 60.0);
 ```
 
@@ -377,11 +377,11 @@ The constructing thread is the owner. Initialization, both frame lanes, permissi
 
 ## Verification and known limitations
 
-`tests/Electron2D.Tests/Program.cs` verifies one-shot initialization/finalization, both callback lanes and stop results, delta validation, re-entry rejection, callback failure recovery, initialization/finalization failure states, automatic disposal finalization, disposal before/after failed initialization, owner-thread enforcement, pre-mutation wrong-thread/nested-frame input rejection, typed permission delivery and validation, notification IDs and dispatch, `SceneNode` aliases, `SceneTree` inheritance/propagation/input delivery/explicit finalization, original-delta delivery at zero time scale, independent Input transition clearing, and zero steady-state allocation for warmed `SceneTree` frame paths.
+`tests/Electron2D.Tests/Program.cs` verifies one-shot initialization/finalization, both callback lanes and stop results, delta validation, re-entry rejection, callback failure recovery, initialization/finalization failure states, automatic disposal finalization, disposal before/after failed initialization, owner-thread enforcement, pre-mutation wrong-thread/nested-frame input rejection, typed permission delivery and validation, notification IDs and dispatch, `Node` aliases, `SceneTree` inheritance/propagation/input delivery/explicit finalization, original-delta delivery at zero time scale, independent Input transition clearing, and zero steady-state allocation for warmed `SceneTree` frame paths.
 
 The class itself has no timing source or scheduler. [`Engine`](Engine.md) now provides host-driven fixed-step scheduling and time scaling, but there is still no SDL event pump, native permission request API, automatic clock, frame pacing/waiting, exit-code owner, crash handler, input-focus state update, renderer, or collision-physics integration. MainLoop does not claim real-time or platform behavior by itself.
 
 ## Related decision
 
-- [0036: Reusable SceneNode timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)

@@ -11,7 +11,7 @@ internal static partial class RenderingRuntimeTests
         using var shader = fixture is null ? null : LoadShader(fixture);
         using var material = shader is null ? null : new ShaderMaterial { Shader = shader };
         using var custom = new DrawOverrideTexture();
-        using var caller = new Node();
+        using var caller = new Entity();
         Reject<InvalidOperationException>(() => caller.DrawTexture(texture, Vector2.Zero));
         Reject<InvalidOperationException>(() => texture.Draw(caller, Vector2.Zero));
         Reject<ArgumentNullException>(() => texture.Draw(null!, Vector2.Zero));

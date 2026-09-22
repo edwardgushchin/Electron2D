@@ -59,4 +59,4 @@ Executable checks cover both numeric identities, default value, invalid-value re
 
 ## Relevant decision
 
-- [0036: Reusable SceneNode timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)

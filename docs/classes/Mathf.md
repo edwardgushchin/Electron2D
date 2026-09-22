@@ -1,6 +1,6 @@
 # Mathf
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 **Inherits:** —
 
@@ -1835,7 +1835,7 @@ Normal nonthrowing calls allocate zero managed memory after JIT warmup; thrown m
 
 ## Dependencies and interactions
 
-Implementation uses only .NET scalar mathematics and decimal bit access. [`Vector2`](Vector2.md), [`Vector4`](Vector4.md), their integer counterparts, [`Color`](Color.md), [`Rect`](Rect.md), [`Transform`](Transform.md), and [`Node`](Node.md) route matching scalar operations through `Mathf`. Internal color math continues to call the BCL directly only for cube root because no audited `Mathf` member exists for it.
+Implementation uses only .NET scalar mathematics and decimal bit access. [`Vector2`](Vector2.md), [`Vector4`](Vector4.md), their integer counterparts, [`Color`](Color.md), [`Rect`](Rect.md), [`Transform`](Transform.md), and [`Entity`](Entity.md) route matching scalar operations through `Mathf`. Internal color math continues to call the BCL directly only for cube root because no audited `Mathf` member exists for it.
 
 The migration intentionally corrected the former `1e-5f` component-comparison tolerance to the canonical `Mathf.Epsilon` contract. Electron2D has no released compatibility baseline, so known incorrect pre-release behavior is corrected rather than preserved behind a second tolerance or compatibility path.
 

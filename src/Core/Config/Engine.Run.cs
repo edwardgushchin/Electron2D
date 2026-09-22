@@ -41,7 +41,7 @@ public sealed partial class Engine
     {
         ArgumentNullException.ThrowIfNull(window);
         ObjectDisposedException.ThrowIf(window.IsDisposed, window);
-        SceneNode.EnsureSceneFactoryComplete();
+        Node.EnsureSceneFactoryComplete();
         window.EnsureSceneActivationAvailable();
         if (window.Parent is not null || window.Tree is not null || window.IsQueuedForDeletion)
             throw new InvalidOperationException("Run requires a detached window that is not queued for deletion.");

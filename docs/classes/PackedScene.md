@@ -16,9 +16,9 @@ Last updated: 2026-09-23
 
 Stores a reusable in-memory node hierarchy and creates independent runtime instances from it.
 
-`PackedScene` is the reuse boundary for Electron2D's SceneNode-based game objects. It stores an in-memory, typed snapshot of one SceneNode hierarchy and constructs independent detached runtime instances from it. The hierarchy may represent one composed game object, a reusable subsystem, or a complete level; these cases use the same capture and instantiation contract. It is a managed [`Resource`](Resource.md) in `Electron2D.dll`; it is not a text/binary scene file, loader, saver, import artifact, or editor document.
+`PackedScene` is the reuse boundary for Electron2D's Node-based game objects. It stores an in-memory, typed snapshot of one Node hierarchy and constructs independent detached runtime instances from it. The hierarchy may represent one composed game object, a reusable subsystem, or a complete level; these cases use the same capture and instantiation contract. It is a managed [`Resource`](Resource.md) in `Electron2D.dll`; it is not a text/binary scene file, loader, saver, import artifact, or editor document.
 
-The snapshot owns no source [`SceneNode`](SceneNode.md). It retains source-independent static node factories, immutable node metadata, typed stored-property values, and references to resources used by those values. Shared source resources remain caller-owned. During instantiation, the returned root owns all created child nodes and every duplicated scene resource; disposing that root disposes the complete hierarchy and those duplicates.
+The snapshot owns no source [`Node`](Node.md). It retains source-independent static node factories, immutable node metadata, typed stored-property values, and references to resources used by those values. Shared source resources remain caller-owned. During instantiation, the returned root owns all created child nodes and every duplicated scene resource; disposing that root disposes the complete hierarchy and those duplicates.
 
 Runtime packing is typed and uses storage-enabled [`PropertyDescriptor`](PropertyDescriptor.md) instances. Text and binary scene
 files, editor metadata, inheritance authoring, placeholders, and persistent event endpoints belong to later domains.
@@ -28,10 +28,10 @@ files, editor metadata, inheritance authoring, placeholders, and persistent even
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-using var source = new SceneNode { Name = "Enemy" };
+using var source = new Node { Name = "Enemy" };
 using var scene = new PackedScene();
 scene.Pack(source);
-using SceneNode instance = scene.Instantiate();
+using Node instance = scene.Instantiate();
 ```
 
 ## Constructors
@@ -46,8 +46,8 @@ using SceneNode instance = scene.Instantiate();
 | --- | --- |
 | [`public bool CanInstantiate()`](#m-electron2d-packedscene-caninstantiate) | Gets whether this resource contains a scene that can be instantiated. |
 | [`public SceneState GetState()`](#m-electron2d-packedscene-getstate) | Gets the live read-only metadata object for this resource. |
-| [`public SceneNode Instantiate(PackedSceneEditState editState = PackedSceneEditState.Disabled)`](#m-electron2d-packedscene-instantiate-electron2d-packedsceneeditstate) | Creates an independent detached node hierarchy from the stored scene. |
-| [`public void Pack(SceneNode root)`](#m-electron2d-packedscene-pack-electron2d-node) | Replaces this resource's contents with a typed snapshot of a node hierarchy. |
+| [`public Node Instantiate(PackedSceneEditState editState = PackedSceneEditState.Disabled)`](#m-electron2d-packedscene-instantiate-electron2d-packedsceneeditstate) | Creates an independent detached node hierarchy from the stored scene. |
+| [`public void Pack(Node root)`](#m-electron2d-packedscene-pack-electron2d-node) | Replaces this resource's contents with a typed snapshot of a node hierarchy. |
 | [`protected override Resource CreateDuplicateInstance()`](#m-electron2d-packedscene-createduplicateinstance) | Creates a fresh default instance used as the target of duplication. |
 | [`protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource, Resource> duplicateSubresource, Func<Resource, Resource> forceDuplicateSubresource)`](#m-electron2d-packedscene-copycustomstateto-electron2d-resource-system-boolean-electron2d-deepduplicatemode-system-func-electron2d-resource-electron2d-resource-system-func-electron2d-resource-electron2d-resource) | Copies derived stored state into a duplicate or copy target. |
 | [`protected override void OnResetState()`](#m-electron2d-packedscene-onresetstate) | Clears non-stored state when [`Resource.ResetState`](Resource.md#m-electron2d-resource-resetstate) or [`Resource.CopyFromResource(Resource)`](Resource.md#m-electron2d-resource-copyfromresource-electron2d-resource) requests it. |
@@ -87,7 +87,7 @@ Gets the live read-only metadata object for this resource.
 **Remarks:** If a caller disposes a previously returned state, the next call creates a replacement.
 
 <a id="m-electron2d-packedscene-instantiate-electron2d-packedsceneeditstate"></a>
-### `public SceneNode Instantiate(PackedSceneEditState editState = PackedSceneEditState.Disabled)`
+### `public Node Instantiate(PackedSceneEditState editState = PackedSceneEditState.Disabled)`
 
 Creates an independent detached node hierarchy from the stored scene.
 
@@ -107,10 +107,10 @@ Creates an independent detached node hierarchy from the stored scene.
 
 **Remarks:** Nodes are constructed parent-first. Stored properties and persistent groups are restored before parenting;
 owners and scene-local resources are assigned after the hierarchy is complete. Only the root receives
-[`SceneNode.NotificationSceneInstantiated`](SceneNode.md#f-electron2d-scenenode-notificationsceneinstantiated).
+[`Node.NotificationSceneInstantiated`](Node.md#f-electron2d-node-notificationsceneinstantiated).
 
 <a id="m-electron2d-packedscene-pack-electron2d-node"></a>
-### `public void Pack(SceneNode root)`
+### `public void Pack(Node root)`
 
 Replaces this resource's contents with a typed snapshot of a node hierarchy.
 
@@ -210,7 +210,7 @@ Supported stored values are strings, `Resource` subtypes, and value types that c
 4. Nodes are parented in captured order, then `Owner` references are assigned.
 5. Scene-local resource graphs are duplicated with alias/cycle preservation. Their owning root is assigned before setup callbacks, and each local duplicate is set up once.
 6. The root adopts every created resource. An external packed-scene path is copied only to the root's `SceneFilePath`; built-in paths remain empty.
-7. The complete hierarchy is revalidated, the root alone receives `SceneNode.NotificationSceneInstantiated`, and topology is revalidated again before return.
+7. The complete hierarchy is revalidated, the root alone receives `Node.NotificationSceneInstantiated`, and topology is revalidated again before return.
 
 The returned root has no parent and belongs to no `SceneTree`. Enter/ready lifecycle starts only when the caller later installs or attaches it. Source event subscribers and [`EventConnection`](EventConnection.md) tokens are not copied; persistent typed event endpoints have no schema yet.
 
@@ -226,7 +226,7 @@ The state is a view, not an ownership transfer. A resource value returned throug
 
 Packed data access, capture replacement, state replacement, and path propagation are serialized by an internal lock. Concurrent instantiations use the immutable data snapshot observed when each call begins. Factory issuance and `SceneState` reads are safe for concurrent calls. A concurrent state disposal is recovered by replacing the cached state.
 
-Callbacks execute synchronously on the caller's thread. Packing an attached hierarchy therefore requires its `SceneTree` owner thread; detached custom node/resource state has no automatic synchronization. Capture marks the complete source hierarchy so node setters, structural mutation, disposal, deletion requests, and inherited mutable object state are rejected until capture ends. Derived stored-property setters must honor `SceneNode.EnsureMutable()`.
+Callbacks execute synchronously on the caller's thread. Packing an attached hierarchy therefore requires its `SceneTree` owner thread; detached custom node/resource state has no automatic synchronization. Capture marks the complete source hierarchy so node setters, structural mutation, disposal, deletion requests, and inherited mutable object state are rejected until capture ends. Derived stored-property setters must honor `Node.EnsureMutable()`.
 
 No hard real-time or allocation-free guarantee is made for packing or instantiation. Factories, descriptors, resource duplication, validation, and callbacks allocate managed objects and may run arbitrary user code.
 
@@ -242,7 +242,7 @@ No hard real-time or allocation-free guarantee is made for packing or instantiat
 
 ## Dependencies and interactions
 
-`PackedScene` depends on `Resource`, `SceneNode`, `PropertyDescriptor`, `SceneState`, `PackedSceneEditState`, standard collections, weak identity tracking, and deterministic disposal. It uses `Resource`'s internal graph duplication machinery for local resources. It does not depend on SDL3-CS, rendering, input, audio, physics, a filesystem scene format, an asset loader/saver, scripting, networking, or an editor.
+`PackedScene` depends on `Resource`, `Node`, `PropertyDescriptor`, `SceneState`, `PackedSceneEditState`, standard collections, weak identity tracking, and deterministic disposal. It uses `Resource`'s internal graph duplication machinery for local resources. It does not depend on SDL3-CS, rendering, input, audio, physics, a filesystem scene format, an asset loader/saver, scripting, networking, or an editor.
 
 ## Verification and limitations
 
@@ -258,4 +258,4 @@ The current contract is runtime-only and in-memory. It has no `.tscn`/binary loa
 - [0035: Foreseeable public type-family completeness](../decisions/core-math.md#adr-0035)
 - [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
-- [0031: SceneNode trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)
+- [0031: Node trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)

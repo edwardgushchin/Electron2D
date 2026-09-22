@@ -2,16 +2,16 @@ namespace Electron2D;
 
 /// <summary>A spatial canvas node with position, rotation, scale and skew.</summary>
 /// <remarks>Use this node as an empty spatial parent or derive a drawable game object from it.</remarks>
-public class Node : CanvasItem
+public class Entity : CanvasItem
 {
     /// <summary>Creates a detached spatial node with an identity transform.</summary>
-    public Node() { }
+    public Entity() { }
 
     /// <inheritdoc />
     public override Transform GetTransform() => Transform;
 
     /// <inheritdoc />
-    public override void Reparent(SceneNode newParent, bool keepGlobalTransform = true)
+    public override void Reparent(Node newParent, bool keepGlobalTransform = true)
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(newParent);
@@ -34,35 +34,35 @@ public class Node : CanvasItem
         base.GetPropertyDescriptors().Concat(NodeProperties);
 
     /// <inheritdoc />
-    protected override Func<SceneNode> CreateSceneInstanceFactory() => GetType() == typeof(Node)
+    protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Entity)
         ? CreateDefaultNode : base.CreateSceneInstanceFactory();
 
-    private static SceneNode CreateDefaultNode() => new Node();
+    private static Node CreateDefaultNode() => new Entity();
 
     private static readonly PropertyDescriptor[] NodeProperties =
     [
-        new PropertyDescriptor<Node, Vector2>(
+        new PropertyDescriptor<Entity, Vector2>(
             nameof(Position),
             node => node.Position,
             (node, value) => node.Position = value,
             _ => Vector2.Zero,
             (_, value) => IsFinite(value),
             stored: true),
-        new PropertyDescriptor<Node, float>(
+        new PropertyDescriptor<Entity, float>(
             nameof(RotationDegrees),
             node => node.RotationDegrees,
             (node, value) => node.RotationDegrees = value,
             _ => 0f,
             (_, value) => Mathf.IsFinite(value),
             stored: true),
-        new PropertyDescriptor<Node, Vector2>(
+        new PropertyDescriptor<Entity, Vector2>(
             nameof(Scale),
             node => node.Scale,
             (node, value) => node.Scale = value,
             _ => Vector2.One,
             (_, value) => IsFinite(value),
             stored: true),
-        new PropertyDescriptor<Node, float>(
+        new PropertyDescriptor<Entity, float>(
             nameof(Skew),
             node => node.Skew,
             (node, value) => node.Skew = value,
@@ -426,7 +426,7 @@ public class Node : CanvasItem
     /// <exception cref="ObjectDisposedException">
     /// This node, <paramref name="parent"/>, or a queried ancestor is disposing on another thread or has finished disposing.
     /// </exception>
-    public Transform GetRelativeTransformToParent(SceneNode parent)
+    public Transform GetRelativeTransformToParent(Node parent)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parent);
@@ -434,7 +434,7 @@ public class Node : CanvasItem
         if (ReferenceEquals(parent, this))
             return Transform.Identity;
 
-        if (Parent is not Node spatialParent)
+        if (Parent is not Entity spatialParent)
             throw new ArgumentException("The supplied ancestor must be connected by spatial nodes.", nameof(parent));
         return ReferenceEquals(parent, spatialParent)
             ? Transform
@@ -461,7 +461,7 @@ public class Node : CanvasItem
             throw new ArgumentOutOfRangeException(parameterName, value, "Every transform component must be finite.");
     }
 
-    private static Transform ToLocalTransform(Transform global, SceneNode? parent, bool topLevel)
+    private static Transform ToLocalTransform(Transform global, Node? parent, bool topLevel)
     {
         if (parent is not CanvasItem canvas || topLevel)
             return global;

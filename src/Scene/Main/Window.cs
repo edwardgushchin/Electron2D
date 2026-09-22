@@ -207,10 +207,10 @@ public partial class Window : Viewport
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(WindowProperties);
 
     /// <inheritdoc />
-    protected override Func<SceneNode> CreateSceneInstanceFactory() => GetType() == typeof(Window)
+    protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Window)
         ? CreateDefaultWindow : base.CreateSceneInstanceFactory();
 
-    private static SceneNode CreateDefaultWindow() => new Window();
+    private static Node CreateDefaultWindow() => new Window();
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

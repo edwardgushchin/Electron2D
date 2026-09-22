@@ -2,24 +2,24 @@
 
 Last updated: 2026-09-23
 
-**Inherits:** [SceneNode](SceneNode.md)
+**Inherits:** [Node](Node.md)
 
-**Inherited By:** [Node](Node.md)
+**Inherited By:** [Entity](Entity.md)
 
 - **Source:** [CanvasItem.cs](../../src/Scene/Main/CanvasItem.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public abstract partial class CanvasItem : SceneNode`
+- **Declaration:** `public abstract partial class CanvasItem : Node`
 
 ## Description
 
-The abstract canvas base. Owns visibility, Z order, modulation, materials, retained drawing and transform queries/notifications. Node supplies a concrete spatial placement model. A direct CanvasItem subclass can provide its own model through GetTransform and notify changes with NotifyLocalTransformChanged. The Control/UI branch is not yet implemented. Only direct canvas parents contribute transforms, modulation and materials; a neutral SceneNode breaks those chains. TopLevel preserves the local transform while ending transform/material/modulation/Z inheritance. Visibility follows direct canvas parents, including TopLevel items, and the containing window.
+The abstract canvas base. Owns visibility, Z order, modulation, materials, retained drawing and transform queries/notifications. Entity supplies a concrete spatial placement model. A direct CanvasItem subclass can provide its own model through GetTransform and notify changes with NotifyLocalTransformChanged. The Control/UI branch is not yet implemented. Only direct canvas parents contribute transforms, modulation and materials; a neutral Node breaks those chains. TopLevel preserves the local transform while ending transform/material/modulation/Z inheritance. Visibility follows direct canvas parents, including TopLevel items, and the containing window.
 
 ## Examples
 
 The snippet uses the Electron2D namespace; attach the hierarchy to a SceneTree or an Engine.Run window to activate it.
 
 ```csharp
-class PaintedNode : Node
+class PaintedNode : Entity
 {
     protected override void OnDraw() => DrawRect(new Rect(0, 0, 32, 16), Colors.Cyan);
 }
@@ -528,7 +528,7 @@ Identifies the notification propagated after local or inherited visibility chang
 
 ## Ownership, errors and dependencies
 
-The parent owns its children; SceneTree owns the active root. PackedScene capture uses explicit stored descriptors and static exact-type factories. Scene-local resources belong to the instantiated root; externally supplied textures/materials are borrowed. Mutations honor scene capture, lifetime and owner-thread guards. Callback failures are reported after the documented committed state; cleanup attempts every owned stage. See [SceneNode](SceneNode.md) for inherited lifecycle and [the scene hierarchy component](../components/scene-hierarchy.md) for cross-layer flow.
+The parent owns its children; SceneTree owns the active root. PackedScene capture uses explicit stored descriptors and static exact-type factories. Scene-local resources belong to the instantiated root; externally supplied textures/materials are borrowed. Mutations honor scene capture, lifetime and owner-thread guards. Callback failures are reported after the documented committed state; cleanup attempts every owned stage. See [Node](Node.md) for inherited lifecycle and [the scene hierarchy component](../components/scene-hierarchy.md) for cross-layer flow.
 
 Drawing commands are valid only during OnDraw and retain borrowed resources. QueueRedraw coalesces requests; resource-thread notifications only set an atomic flag, and recording runs on the owner thread. Global transform notifications stop at neutral and TopLevel children. Failed transform/visibility delivery does not skip later direct canvas siblings.
 
@@ -540,7 +540,7 @@ The hierarchy is implemented; complete reference API parity is not claimed. Miss
 
 ## Relevant decisions
 
-- [0008: SceneNode, CanvasItem and Node](../decisions/scene.md#adr-0008)
+- [0008: Node, CanvasItem and Entity](../decisions/scene.md#adr-0008)
 - [0004: Product scope and API correspondence](../decisions/product.md#adr-0004)
 - [0023: Typed packed scenes](../decisions/scene.md#adr-0023)
 - [0028: Rendering](../decisions/rendering.md#adr-0028)

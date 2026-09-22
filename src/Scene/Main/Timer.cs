@@ -5,7 +5,7 @@ namespace Electron2D;
 /// The timer advances at most once in its selected frame lane, emits <see cref="Timeout"/> when its remaining time
 /// reaches zero, and either stops or reloads according to <see cref="OneShot"/>. It has no clock or background thread.
 /// </remarks>
-public class Timer : SceneNode
+public class Timer : Node
 {
     private static readonly IReadOnlyList<PropertyDescriptor> TimerProperties = Array.AsReadOnly<PropertyDescriptor>(
     [
@@ -155,7 +155,7 @@ public class Timer : SceneNode
     /// <value><see langword="false"/> by default.</value>
     /// <remarks>
     /// Pausing preserves the remaining time. Starting a paused timer resets its countdown but does not resume it.
-    /// Scene-tree pause policy remains independently controlled by <see cref="SceneNode.ProcessMode"/>.
+    /// Scene-tree pause policy remains independently controlled by <see cref="Node.ProcessMode"/>.
     /// </remarks>
     /// <exception cref="InvalidOperationException">An attached timer is mutated off its tree's owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The timer is disposing on another thread or has finished disposing.</exception>
@@ -278,7 +278,7 @@ public class Timer : SceneNode
 
     /// <inheritdoc />
     /// <remarks>Returns a static factory for exact <see cref="Timer"/> instances.</remarks>
-    protected override Func<SceneNode> CreateSceneInstanceFactory()
+    protected override Func<Node> CreateSceneInstanceFactory()
     {
         if (GetType() != typeof(Timer))
             return base.CreateSceneInstanceFactory();
@@ -320,7 +320,7 @@ public class Timer : SceneNode
         base.Dispose(disposing);
     }
 
-    private static SceneNode CreateTimerNode() => new Timer();
+    private static Node CreateTimerNode() => new Timer();
 
     private static void ValidateWaitTime(double value, string parameterName)
     {

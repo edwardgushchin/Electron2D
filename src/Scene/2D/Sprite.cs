@@ -2,9 +2,9 @@ namespace Electron2D;
 
 /// <summary>Displays a texture, a sheet frame or an atlas region as a scene node.</summary>
 /// <remarks>Textures are borrowed. Mutations use the scene owner thread while attached. Texture change notifications
-/// request a later redraw without running scene work on the notifying thread. Rendering inherits Node transforms,
+/// request a later redraw without running scene work on the notifying thread. Rendering inherits Entity transforms,
 /// visibility, modulation and materials. There is no animation clock; change Frame directly or through a Tween.</remarks>
-public class Sprite : Node
+public class Sprite : Entity
 {
     private static readonly PropertyDescriptor[] SpriteProperties =
     [
@@ -228,7 +228,7 @@ public class Sprite : Node
     }
 
     /// <summary>Tests source alpha at a finite point in the sprite's local drawing coordinates.</summary>
-    /// <param name="position">The local point, before Node transforms.</param>
+    /// <param name="position">The local point, before Entity transforms.</param>
     /// <returns>False without a nonempty texture or outside the drawn frame; otherwise the texture's opacity result.</returns>
     /// <remarks>Uses fractional drawing bounds, frame/region offsets and flipping. Sampling clamps to texture edges.
     /// Modulation, materials and visibility do not change source opacity. Shared sampler repeat policies are not implemented.</remarks>
@@ -268,9 +268,9 @@ public class Sprite : Node
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(SpriteProperties);
 
     /// <inheritdoc />
-    protected override Func<SceneNode> CreateSceneInstanceFactory() => GetType() == typeof(Sprite) ? CreateSpriteNode : base.CreateSceneInstanceFactory();
+    protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Sprite) ? CreateSpriteNode : base.CreateSceneInstanceFactory();
 
-    private static Node CreateSpriteNode() => new Sprite();
+    private static Entity CreateSpriteNode() => new Sprite();
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

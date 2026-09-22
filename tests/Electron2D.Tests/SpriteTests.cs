@@ -81,7 +81,7 @@ internal static class SpriteTests
         VerifyCustomTexture();
         sprite.Dispose();
         texture.EmitChanged();
-        Check(!texture.IsDisposed && !replacement.IsDisposed, "Node disposal does not dispose borrowed textures.");
+        Check(!texture.IsDisposed && !replacement.IsDisposed, "Entity disposal does not dispose borrowed textures.");
         Reject<ObjectDisposedException>(() => sprite.GetRect());
         Reject<ObjectDisposedException>(() => sprite.Frame = 0);
         Console.WriteLine("Sprite managed checks passed.");

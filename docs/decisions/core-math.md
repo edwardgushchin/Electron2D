@@ -96,7 +96,7 @@ The following contracts are fixed:
 - numeric formatting is invariant-culture;
 - `ConfigFile` accepts only finite rectangles and persists exactly nested `Position.X/Y` and `Size.X/Y` fields, rejecting missing, duplicate, unknown, nonnumeric, or non-finite input;
 - typed property descriptors and packed scenes store/copy `Rect2` directly because it contains no managed references;
-- a `Rect2I` constructor is deferred until that complete engine type exists; transform multiplication remains deferred to the explicit Node/Rect2 migration recorded by ADR 0026 and ADR 0029;
+- a `Rect2I` constructor is deferred until that complete engine type exists; transform multiplication remains deferred to the explicit Entity/Rect2 migration recorded by ADR 0026 and ADR 0029;
 - language-specific boolean truth conversion is permanently excluded.
 
 No renderer, UI, physics, or platform abstraction is created by this decision.
@@ -141,13 +141,13 @@ Last updated: 2026-09-23
 
 ### Decision
 
-Electron2D provides the engine-owned `Transform` value with Vector2 basis/origin storage, composition, forward/inverse transformation, finite checks and approximate comparison. Node.Transform and Node.GlobalTransform use this value; Rect transformation and typed packed/property/config storage are implemented under ADRs 0029 and 0033. No Matrix3x2 wrapper or public external numerics dependency substitutes for this contract.
+Electron2D provides the engine-owned `Transform` value with Vector2 basis/origin storage, composition, forward/inverse transformation, finite checks and approximate comparison. Entity.Transform and Entity.GlobalTransform use this value; Rect transformation and typed packed/property/config storage are implemented under ADRs 0029 and 0033. No Matrix3x2 wrapper or public external numerics dependency substitutes for this contract.
 
-This value-type decision does not combine scene responsibilities. [ADR 0008](scene.md#adr-0008) separately requires SceneNode for the neutral tree, CanvasItem for drawing/shared transform queries and Node for the concrete spatial model. Timer and Viewport remain neutral. No 3D or speculative dimension-neutral transform family is authorized.
+This value-type decision does not combine scene responsibilities. [ADR 0008](scene.md#adr-0008) separately requires Node for the neutral tree, CanvasItem for drawing/shared transform queries and Entity for the concrete spatial model. Timer and Viewport remain neutral. No 3D or speculative dimension-neutral transform family is authorized.
 
 ### Consequences and verification
 
-The spatial surface uses one engine-owned affine vocabulary and documented canonical decomposition. Source XML, class/component/domain pages, inventory and coverage accompany any changes. Managed geometry, scene and persistence checks cover this integration; native mixed-tree canvas checks exercise Node/CanvasItem composition on Wayland. Those checks do not imply complete rendering, UI or other-platform acceptance.
+The spatial surface uses one engine-owned affine vocabulary and documented canonical decomposition. Source XML, class/component/domain pages, inventory and coverage accompany any changes. Managed geometry, scene and persistence checks cover this integration; native mixed-tree canvas checks exercise Entity/CanvasItem composition on Wayland. Those checks do not imply complete rendering, UI or other-platform acceptance.
 
 ### Rejected alternatives
 
@@ -168,7 +168,7 @@ Last updated: 2026-09-22
 
 ### Status
 
-Accepted for affine semantics. This decision fulfills ADR 0026's standalone value requirement. ADRs 0032 and 0033 supersede the old type name and external vector dependency; the complete `Vector2`/`Rect`/`Transform`/`Node` migration is now implemented. ADR 0034 supersedes the historical `0.00001` approximate-comparison tolerance.
+Accepted for affine semantics. This decision fulfills ADR 0026's standalone value requirement. ADRs 0032 and 0033 supersede the old type name and external vector dependency; the complete `Vector2`/`Rect`/`Transform`/`Entity` migration is now implemented. ADR 0034 supersedes the historical `0.00001` approximate-comparison tolerance.
 
 ### Context
 
@@ -198,9 +198,9 @@ The following contracts are fixed:
 - array operations allocate a new result and never mutate their source; warmed scalar math remains allocation-free;
 - redundant integer scalar overloads use normal C# numeric conversion, copy construction uses value assignment, and boolean truth conversion is excluded.
 
-No implicit or explicit `Matrix3x2` conversion is added. The two types use compatible scalar storage but opposite multiplication conventions because `Matrix3x2` follows row-vector composition. Conversions will be considered only with the explicit `Node` migration and its source-compatibility decision.
+No implicit or explicit `Matrix3x2` conversion is added. The two types use compatible scalar storage but opposite multiplication conventions because `Matrix3x2` follows row-vector composition. Entity uses the engine-owned Transform directly under ADR 0033; no external-matrix compatibility shim is part of that integration.
 
-`Transform2D`/`Rect2` operators and migration of `Node.Transform`/`GlobalTransform` remain a separate atomic slice under ADR 0026. This standalone change deliberately does not alter either existing public type.
+The final Transform/Rect operators and Entity.Transform/GlobalTransform integration are implemented under ADRs 0026 and 0033. Scene naming and inheritance follow ADR 0008.
 
 ### Consequences
 
@@ -208,8 +208,7 @@ No implicit or explicit `Matrix3x2` conversion is added. The two types use compa
 - Callers can perform complete transform math without allocating or depending on SDL.
 - Zero initialization remains honest C# storage rather than silently becoming identity; consumers must request `Identity` when that semantic is required.
 - Configuration persistence rejects non-finite transforms even though ordinary runtime math retains IEEE values.
-- The current `Node` API temporarily continues to expose `Matrix3x2`; the existence of `Transform2D` alone does not claim that migration is complete.
-- Rectangle transformation is still absent and must not be inferred from the standalone type.
+- Entity local/global transforms use Transform; Rect transformation is implemented under ADR 0033. The standalone value and its scene integration remain distinct responsibilities.
 
 ### Rejected alternatives
 
@@ -218,13 +217,12 @@ No implicit or explicit `Matrix3x2` conversion is added. The two types use compa
 - **Copy the typed binding's local-scale implementation:** rejected because it conflicts with the documented global/local distinction and native column semantics for rotated bases.
 - **Validate every orthonormal shortcut:** rejected because validation would add hot-path work and change the explicit precondition into a different failure contract; the general affine path is already available.
 - **Add a transform interface or abstract backend:** rejected because a pure value has no polymorphic behavior or backend ownership.
-- **Migrate `Node` and `Rect2` in the same commit:** rejected by ADR 0026's staged migration boundary and because those source-breaking API changes require their own tests and compatibility audit.
 
 ### Verification
 
 The executable harness covers every implemented member family, matrix/composition order, reflection/skew decomposition, singular and malformed failures, config and packed-scene integration, IEEE boundaries, and warmed allocation behavior. Release compilation also emits XML documentation with warnings treated as errors.
 
-Verification is Linux/.NET 8 only. No renderer, native backend, visual output, six-target build, `Node` migration, `Rect2` transformation, or user acceptance is established by these checks.
+Value-math verification is Linux/.NET 8. ADR 0033 and the current geometry/scene documents cover Rect transformation and Entity integration. Value checks do not establish native rendering, cross-platform builds or visual user acceptance.
 
 ### Related decisions
 
@@ -247,7 +245,7 @@ Partially superseded by [ADR 0033](core-math.md#adr-0033). Engine ownership, the
 
 ### Context
 
-Electron2D is exclusively two-dimensional. The existing public geometry surface nevertheless mixes engine-owned `Rect2` and `Transform2D` values with `System.Numerics.Vector2`, while `Node` additionally exposes `Matrix3x2`. That makes an external numerics library part of the engine contract, prevents Electron2D from defining one complete vector API and its exact numeric semantics, and leaves dimensions encoded redundantly in names even though no three-dimensional family exists.
+Electron2D is exclusively two-dimensional. The existing public geometry surface nevertheless mixes engine-owned `Rect2` and `Transform2D` values with `System.Numerics.Vector2`, while `Entity` additionally exposes `Matrix3x2`. That makes an external numerics library part of the engine contract, prevents Electron2D from defining one complete vector API and its exact numeric semantics, and leaves dimensions encoded redundantly in names even though no three-dimensional family exists.
 
 The engine needs one coherent math vocabulary shared by scene state, rendering, input, physics, UI, resources, serialization, editor tooling, and games. Introducing only a renamed rectangle or transform while retaining `Vector2` would preserve the largest external public dependency and force another source-breaking migration later.
 
@@ -257,7 +255,7 @@ Electron2D will own three canonical single-precision 2D value types named `Vecto
 
 - `Vector` will be a complete production type rather than a naming wrapper. Its implementation must audit the applicable reference vector contract, define sequential two-float storage, arithmetic and geometric operations, exact and approximate comparison, normalization and zero-length behavior, finite checks, formatting, persistence, packed-scene storage, XML documentation, and allocation-free hot paths.
 - Every Electron2D domain must use `Vector` for engine-owned 2D coordinates, sizes, directions, velocities, axes, offsets, input values, render geometry, physics values, and public/protected parameters, properties, fields, and return values.
-- `Rect` and `Transform` must use `Vector` for all stored components and API. `Node` transform and spatial members must use `Transform` and `Vector`.
+- `Rect` and `Transform` must use `Vector` for all stored components and API. `Entity` transform and spatial members must use `Transform` and `Vector`.
 - `System.Numerics.Vector2` and `Matrix3x2` may exist only inside narrow internal adapters at an external package, native API, or host boundary. They must not become engine-owned state or cross a public/protected Electron2D API boundary.
 - Old `Vector2`, `Rect2`, and `Transform2D` compatibility aliases, duplicate wrappers, and implicit dual APIs will not be shipped. The project is pre-release, so the migration favors one canonical contract over compatibility debt.
 - No three-dimensional vector, rectangle, transform, overload, adapter, or reserved abstraction is introduced.
@@ -282,7 +280,7 @@ The migration is one production vertical slice: implement `Vector`; migrate exis
 
 ### Verification boundary
 
-This ADR records the required architecture only. It does not make `Vector` a production type, does not complete the pending `Rect`/`Transform`/`Node` migration, and does not verify performance or any target platform. Those claims require the full implementation, XML and living documentation, positive/negative/boundary/allocation tests, post-implementation audit, full repository checks, and an atomic implementation commit.
+This ADR records the required architecture only. It does not make `Vector` a production type, does not complete the pending `Rect`/`Transform`/`Entity` migration, and does not verify performance or any target platform. Those claims require the full implementation, XML and living documentation, positive/negative/boundary/allocation tests, post-implementation audit, full repository checks, and an atomic implementation commit.
 
 ### Related decisions
 
@@ -313,7 +311,7 @@ Electron2D owns four canonical vector values: `Vector2`, `Vector2I`, `Vector4`, 
 
 - `Vector2` is the engine's single-precision 2D spatial and numeric pair. `Vector2I` is its 32-bit integer counterpart for pixels, grids, tiles, dimensions, and integer pairs.
 - `Vector4` and `Vector4I` are four-component numeric tuples. Their existence does not create 3D or 4D scene geometry, transforms, cameras, physics, rendering paths, or assets.
-- `Rect`, `Transform`, and `Node` use `Electron2D.Vector2` throughout their public/protected API and engine-owned state.
+- `Rect`, `Transform`, and `Entity` use `Electron2D.Vector2` throughout their public/protected API and engine-owned state.
 - The previously accepted `Vector` name and the temporary `VectorI` name do not ship. No aliases, forwarding wrappers, duplicate overloads, or compatibility conversions are provided.
 - `Vector3` and `Vector3I` are absent because the engine has no three-dimensional spatial domain and no implemented subsystem currently requires three generic components.
 - External numerics types may appear only inside future localized integration adapters. They do not cross a public/protected Electron2D boundary.
@@ -375,7 +373,7 @@ Earlier Electron2D values used a `0.00001f` component tolerance. The audited cur
 - It implements the complete audited typed surface: `Tau`, `Pi`, `Inf`, `NaN`, `E`, `Sqrt2`, `Epsilon`, and 127 integer/float/double/decimal method overloads.
 - Single precision remains the engine's primary scalar. The public epsilon is exactly `1e-6f`; double approximate operations use `1e-14` internally.
 - API behavior follows typed C# and .NET semantics explicitly: radians by default, midpoint-to-even `Round`, unchecked integer-returning float conversion, managed exceptions for invalid integer operations, and ordinary IEEE NaN/infinity propagation.
-- Matching formulas in `Vector2`, `Vector4`, `Rect`, `Transform`, `Color`, their integer snapping paths, internal color math, and `Node` degree conversion route through `Mathf`. Operations without an audited member, such as cube root and IEEE remainder normalization, continue to use the BCL directly.
+- Matching formulas in `Vector2`, `Vector4`, `Rect`, `Transform`, `Color`, their integer snapping paths, internal color math, and `Entity` degree conversion route through `Mathf`. Operations without an audited member, such as cube root and IEEE remainder normalization, continue to use the BCL directly.
 - The old component tolerance is corrected rather than preserved. Geometry and color approximate predicates now share `Mathf.Epsilon`; strict threshold behavior is verified directly.
 - Before Electron2D's first public release, known incorrect behavior is not retained solely for compatibility. An audited correction replaces it, updates tests/XML/living documents in the same change, and is recorded in the appropriate ADR. This does not authorize unrelated source breakage or silent semantic changes.
 - No generic numeric facade, injectable math provider, compatibility switch, second epsilon, vector overload layer, SIMD abstraction, or dependency is introduced.

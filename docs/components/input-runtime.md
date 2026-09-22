@@ -23,7 +23,7 @@ This component converts caller-supplied typed events into raw device state, name
 
 ## Dependencies and interactions
 
-The component uses `Resource` for event duplication/change reporting, `PropertyDescriptor` for inherited stored event fields, `ElectronObject` for singleton lifecycle/property discovery, `Vector2`/`Transform`/`Mathf` for value operations, Engine/MainLoop for host integration, and SceneNode/SceneTree for dispatch. There is no native backend dependency.
+The component uses `Resource` for event duplication/change reporting, `PropertyDescriptor` for inherited stored event fields, `ElectronObject` for singleton lifecycle/property discovery, `Vector2`/`Transform`/`Mathf` for value operations, Engine/MainLoop for host integration, and Node/SceneTree for dispatch. There is no native backend dependency.
 
 ## Invariants
 
@@ -36,14 +36,14 @@ The component uses `Resource` for event duplication/change reporting, `PropertyD
 - Disposing a registered binding outside matching removes it from every affected action and clears its contributions before public disposal observers run.
 - Exact matching filters extra modifiers and analog direction; releases remove their mapped source.
 - Synthetic action descriptions skip synthetic bindings during lookup and fall back to the action name, so cyclic description lookup cannot recurse.
-- SceneNode ordering and handled semantics are deterministic; callback exceptions are aggregated.
+- Node ordering and handled semantics are deterministic; callback exceptions are aggregated.
 - Event resources remain caller-owned. Input neither disposes nor stores submitted event objects after transition identity expires.
 - Every event value has a validated stored typed property descriptor, and constructor-specific device defaults are the corresponding revert values.
 - Warmed non-emulated matching and traversal reuse bounded collections. An emulated event is a short-lived owned resource and allocates.
 
 ## Current implementation status and exclusions
 
-Keyboard, mouse buttons/motion, touch/drag, magnify/pan gestures, controller buttons/axes, direct action events, action maps, raw key/mouse/controller and action queries, vector composition, transition latches, release-all, and SceneNode propagation are implemented.
+Keyboard, mouse buttons/motion, touch/drag, magnify/pan gestures, controller buttons/axes, direct action events, action maps, raw key/mouse/controller and action queries, vector composition, transition latches, release-all, and Node propagation are implemented.
 
 The separate [Display server](display-server.md) now supplies native keyboard, mouse, wheel, and touch input and basic cursor/window control through this component's typed event surface. Mouse-motion accumulation, explicit flush, mouse/touch emulation, and SDL-origin duplicate filtering are implemented. Controller discovery/effects, sensors, MIDI, shortcuts, persistence, and GUI routing retain their separate prerequisites under [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers). No missing service is represented by a stub.
 

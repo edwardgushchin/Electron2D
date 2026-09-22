@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 ## Responsibility
 
-The Resources domain defines reusable typed data and portable CPU image buffers used by textures, atlases, importers, and other assets across the runtime targets. It contains the common resource contract, managed `Image`, and the partial shader/material integration described below. Texture resources, ordinary SceneNode/Texture drawing and sampled shader bindings are executable; PNG/JPEG/WebP/BMP/TGA file/buffer decoding and PNG/JPEG saving are executable, while general asset loading remains absent. SDL_image is an approved internal dependency for the codec integration.
+The Resources domain defines reusable typed data and portable CPU image buffers used by textures, atlases, importers, and other assets across the runtime targets. It contains the common resource contract, managed `Image`, and the partial shader/material integration described below. Texture resources, ordinary Node/Texture drawing and sampled shader bindings are executable; PNG/JPEG/WebP/BMP/TGA file/buffer decoding and PNG/JPEG saving are executable, while general asset loading remains absent. SDL_image is an approved internal dependency for the codec integration.
 
 Resource base and image sources live under `src/Core/IO/`; shader/material/texture resources live under `src/Scene/Resources/`. The public namespace remains `Electron2D`.
 
@@ -24,7 +24,7 @@ Shader resources add copied binary loading and reflected typed parameter discove
 
 ## Dependency direction
 
-Resources depends on Core and, narrowly, Scene's `SceneNode` type for `Resource.GetLocalScene()`. Image processing uses Core `Color`, `Vector2I`, and `RectI`. Scene's packed-scene component in turn depends on Resources for typed resource duplication, so ADR 0023 accepts a contained Resources↔Scene type cycle inside the single `Electron2D.dll`. Resource base and managed Image processing remain independent of rendering/importing/editor. Image file/buffer codecs use internal SDL3-CS and FileAccess without exposing native handles.
+Resources depends on Core and, narrowly, Scene's `Node` type for `Resource.GetLocalScene()`. Image processing uses Core `Color`, `Vector2I`, and `RectI`. Scene's packed-scene component in turn depends on Resources for typed resource duplication, so ADR 0023 accepts a contained Resources↔Scene type cycle inside the single `Electron2D.dll`. Resource base and managed Image processing remain independent of rendering/importing/editor. Image file/buffer codecs use internal SDL3-CS and FileAccess without exposing native handles.
 
 Concrete Shader/ShaderMaterial resources use the internal rendering reflection and uniform-upload path. SDL3-CS and the already packaged SPIRV-Cross native library remain internal; public material APIs expose engine value types and typed descriptors. Resource base and Image retain their independent managed behavior.
 

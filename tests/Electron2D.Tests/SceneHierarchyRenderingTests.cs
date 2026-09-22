@@ -8,8 +8,8 @@ internal static partial class RenderingRuntimeTests
         pixels.Fill(Colors.White);
         using var texture = ImageTexture.CreateFromImage(pixels);
         var window = new Window { Size = new(96, 96) };
-        var parent = new Node { Position = new(24, 0), Modulate = Colors.Red };
-        var bridge = new SceneNode();
+        var parent = new Entity { Position = new(24, 0), Modulate = Colors.Red };
+        var bridge = new Node();
         var direct = new Sprite { Name = "direct", Texture = texture, Centered = false, Position = new(8, 8), Scale = new(8, 8) };
         var separate = new Sprite { Texture = texture, Centered = false, Position = new(8, 8), Scale = new(8, 8) };
         var canvas = new DirectCanvas(texture);

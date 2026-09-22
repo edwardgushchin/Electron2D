@@ -145,7 +145,7 @@ public sealed class RenderingServer : ElectronObject
         finally { _nodes.Clear(); _order.Clear(); _rendering = false; }
     }
 
-    private void Capture(SceneNode node)
+    private void Capture(Node node)
     {
         if (node is CanvasItem item) _nodes.Add(item);
         for (var i = 0; i < node.ChildCount; i++) Capture(node.GetChild(i));

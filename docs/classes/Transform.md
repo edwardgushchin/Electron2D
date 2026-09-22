@@ -1,6 +1,6 @@
 # Transform
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 **Inherits:** —
 
@@ -645,7 +645,7 @@ Tests whether any matrix component differs under exact equality.
 - Columns are laid out as `X=(xx,xy)`, `Y=(yx,yy)`, and `Origin=(ox,oy)`. On paper, the affine matrix is `[xx yx ox; xy yy oy]`.
 - A point becomes `(xx*x + yx*y + ox, xy*x + yy*y + oy)`.
 - Positive angles turn positive X toward positive Y, which appears clockwise in the engine's screen coordinate convention.
-- `left * right` applies `right` first. This is the parent/child order used by [`Node`](Node.md).
+- `left * right` applies `right` first. This is the parent/child order used by [`Entity`](Entity.md).
 - `Scaled` scales matrix rows and Origin componentwise. `ScaledLocal` scales the X and Y columns by `scale.X` and `scale.Y` respectively and preserves Origin.
 - `Scale` places a negative-determinant reflection sign on Y. A zero or unordered determinant produces a zero reported Y scale.
 - `Inverse`, `BasisXformInv`, and the reverse vector/array operators assume an orthonormal basis and intentionally do not validate it. `AffineInverse` is the general path.
@@ -671,7 +671,7 @@ Constructors, scalar math, decomposition, composition, point transformation, inv
 
 The public type depends on canonical scalar [`Mathf`](Mathf.md), [`Vector2`](Vector2.md), [`Rect`](Rect.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores finite transforms using exact nested `X.X/Y`, `Y.X/Y`, and `Origin.X/Y` fields. Typed property descriptors and [`PackedScene`](PackedScene.md) preserve the reference-free value directly.
 
-`Node.Transform`, `Node.GlobalTransform`, point conversion, reparenting, and relative transforms use this value directly. There is no public implicit or explicit conversion to another numerics library; native or package adapters must remain localized at their future integration boundary.
+`Entity.Transform`, `Entity.GlobalTransform`, point conversion, reparenting, and relative transforms use this value directly. There is no public implicit or explicit conversion to another numerics library; native or package adapters must remain localized at their future integration boundary.
 
 ## Verification and known limitations
 

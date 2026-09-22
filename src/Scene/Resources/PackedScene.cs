@@ -53,14 +53,14 @@ public sealed class PackedScene : Resource
     /// <remarks>
     /// Nodes are constructed parent-first. Stored properties and persistent groups are restored before parenting;
     /// owners and scene-local resources are assigned after the hierarchy is complete. Only the root receives
-    /// <see cref="SceneNode.NotificationSceneInstantiated"/>.
+    /// <see cref="Node.NotificationSceneInstantiated"/>.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="editState"/> is not defined.</exception>
     /// <exception cref="NotSupportedException"><paramref name="editState"/> requests editor-only behavior.</exception>
     /// <exception cref="InvalidOperationException">The scene is empty or stored node schema cannot be reconstructed safely.</exception>
     /// <exception cref="ObjectDisposedException">The resource or a referenced stored resource is disposing or disposed.</exception>
     /// <exception cref="Exception">A factory, property setter, setup callback, notification, or cleanup operation fails.</exception>
-    public SceneNode Instantiate(PackedSceneEditState editState = PackedSceneEditState.Disabled)
+    public Node Instantiate(PackedSceneEditState editState = PackedSceneEditState.Disabled)
     {
         ThrowIfDisposed();
 
@@ -82,7 +82,7 @@ public sealed class PackedScene : Resource
             resourcePath = ResourcePath;
         }
 
-        var nodes = new SceneNode[data.Nodes.Length];
+        var nodes = new Node[data.Nodes.Length];
         var createdCount = 0;
         var resources = CreateSceneDuplicationScope();
 
@@ -122,7 +122,7 @@ public sealed class PackedScene : Resource
             resources.SetupLocalResources();
             root.AdoptSceneResources(resources.ReleaseCreated());
             ValidateInstantiatedHierarchy(data, nodes);
-            root.Notify(SceneNode.NotificationSceneInstantiated);
+            root.Notify(Node.NotificationSceneInstantiated);
             ValidateInstantiatedHierarchy(data, nodes);
             EndSceneInstantiation(nodes, createdCount);
             return root;
@@ -152,7 +152,7 @@ public sealed class PackedScene : Resource
     /// <exception cref="NotSupportedException">A stored property uses an unsupported typed representation.</exception>
     /// <exception cref="ObjectDisposedException">This resource, a captured node, or a captured resource is disposing or disposed.</exception>
     /// <exception cref="Exception">Property discovery, capture, change notification, or cleanup fails.</exception>
-    public void Pack(SceneNode root)
+    public void Pack(Node root)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(root);
@@ -168,7 +168,7 @@ public sealed class PackedScene : Resource
 
             _packing = true;
             ReplaceDataUnderLock(PackedSceneData.Empty);
-            SceneNode[]? captured = null;
+            Node[]? captured = null;
 
             try
             {
@@ -182,7 +182,7 @@ public sealed class PackedScene : Resource
             finally
             {
                 if (captured is not null)
-                    SceneNode.EndSceneCapture(captured);
+                    Node.EndSceneCapture(captured);
                 _packing = false;
             }
         }
@@ -270,11 +270,11 @@ public sealed class PackedScene : Resource
         }
     }
 
-    private static PackedSceneData Capture(SceneNode root)
+    private static PackedSceneData Capture(Node root)
     {
-        var selected = new List<SceneNode> { root };
+        var selected = new List<Node> { root };
         AddOwnedChildren(root, root, selected);
-        var indices = new Dictionary<SceneNode, int>(ReferenceEqualityComparer.Instance);
+        var indices = new Dictionary<Node, int>(ReferenceEqualityComparer.Instance);
         for (var index = 0; index < selected.Count; index++)
             indices.Add(selected[index], index);
         var nodes = new SceneNodeData[selected.Count];
@@ -294,7 +294,7 @@ public sealed class PackedScene : Resource
             var parentPath = parentIndex < 0 ? "." : nodes[parentIndex].Path;
             var ownerPath = ownerIndex < 0 ? string.Empty : ownerIndex == 0 ? "." : nodes[ownerIndex].Path;
             var properties = node.GetPropertyList()
-                .Where(property => property.IsStored && property.Name != nameof(SceneNode.Name))
+                .Where(property => property.IsStored && property.Name != nameof(Node.Name))
                 .Select(property => new ScenePropertyData(property.Name, property.CaptureStoredValue(node)))
                 .ToArray();
 
@@ -316,7 +316,7 @@ public sealed class PackedScene : Resource
         return new PackedSceneData(nodes);
     }
 
-    private static void AddOwnedChildren(SceneNode parent, SceneNode root, List<SceneNode> selected)
+    private static void AddOwnedChildren(Node parent, Node root, List<Node> selected)
     {
         foreach (var child in parent.Children)
         {
@@ -331,7 +331,7 @@ public sealed class PackedScene : Resource
     private static bool IsBuiltInPath(string path) =>
         path.Length == 0 || path.Contains("::", StringComparison.Ordinal) || path.StartsWith("local://", StringComparison.Ordinal);
 
-    private static void ValidateFactoryResult(SceneNodeData stored, SceneNode? node)
+    private static void ValidateFactoryResult(SceneNodeData stored, Node? node)
     {
         if (node is null)
             throw new InvalidOperationException($"Factory for {stored.Factory.RuntimeType.Name} returned null.");
@@ -347,7 +347,7 @@ public sealed class PackedScene : Resource
     }
 
     private static void RestoreProperties(
-        SceneNode node,
+        Node node,
         SceneNodeData stored,
         Resource.SceneDuplicationScope resources)
     {
@@ -366,12 +366,12 @@ public sealed class PackedScene : Resource
     }
 
     private static List<Exception> CleanupFailedInstance(
-        SceneNode[] nodes,
+        Node[] nodes,
         int createdCount,
         Resource.SceneDuplicationScope resources)
     {
         var errors = resources.DisposeCreated();
-        var created = new HashSet<SceneNode>(ReferenceEqualityComparer.Instance);
+        var created = new HashSet<Node>(ReferenceEqualityComparer.Instance);
         for (var index = 0; index < createdCount; index++)
         {
             if (nodes[index] is not null)
@@ -415,7 +415,7 @@ public sealed class PackedScene : Resource
         return errors;
     }
 
-    private static void ValidateInstantiatedHierarchy(PackedSceneData data, SceneNode[] nodes)
+    private static void ValidateInstantiatedHierarchy(PackedSceneData data, Node[] nodes)
     {
         var childCursors = new int[nodes.Length];
 
@@ -449,7 +449,7 @@ public sealed class PackedScene : Resource
         }
     }
 
-    private static void EndSceneInstantiation(SceneNode[] nodes, int createdCount)
+    private static void EndSceneInstantiation(Node[] nodes, int createdCount)
     {
         for (var index = 0; index < createdCount; index++)
             nodes[index]?.EndSceneInstantiation();

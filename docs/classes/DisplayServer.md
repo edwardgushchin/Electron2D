@@ -36,7 +36,7 @@ The active server is a process singleton, not an `Engine` owned object. `Electro
 using Electron2D;
 
 using var display = DisplayServer.Open("My game", new Vector2I(800, 600));
-using var tree = new SceneTree(new SceneNode());
+using var tree = new SceneTree(new Node());
 Engine.Instance.Start(tree);
 try
 {

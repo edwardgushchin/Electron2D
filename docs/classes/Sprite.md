@@ -2,14 +2,14 @@
 
 Last updated: 2026-09-23
 
-- Declaration: `public class Sprite : Node`
+- Declaration: `public class Sprite : Entity`
 - Source: [Sprite.cs](../../src/Scene/2D/Sprite.cs)
-- Inherits: [Node](Node.md)
+- Inherits: [Entity](Entity.md)
 - Component: [Canvas rendering](../components/canvas-rendering.md)
 
 ## Description
 
-Displays a borrowed [Texture](Texture.md), a selected sheet frame or a rectangular texture region. It inherits hierarchy/lifecycle from SceneNode, drawing/visibility/Z/modulation/materials from CanvasItem, and spatial transforms from Node. Engine.Run renders its retained commands through the active canvas backend. Sprite does not own a timer: change Frame directly, through a Tween or from scene processing.
+Displays a borrowed [Texture](Texture.md), a selected sheet frame or a rectangular texture region. It inherits hierarchy/lifecycle from Node, drawing/visibility/Z/modulation/materials from CanvasItem, and spatial transforms from Entity. Engine.Run renders its retained commands through the active canvas backend. Sprite does not own a timer: change Frame directly, through a Tween or from scene processing.
 
 The node owns its subscription to Texture.Changed and releases that subscription on replacement/disposal. It never disposes an ordinary borrowed texture. PackedScene separately owns any resource it duplicates for an instance through ResourceLocalToScene. Texture content changes request redraw without emitting TextureChanged; replacing the reference emits TextureChanged once. A resource notification from a worker thread only atomically requests redraw; drawing stays on the scene owner thread.
 
@@ -77,7 +77,7 @@ Subtracts half the selected frame size from Offset when true. Changing it reques
 
 ### Offset
 
-Finite local coordinates, independent of Node.Position. Positive Y is down. Invalid values throw ArgumentException without mutation.
+Finite local coordinates, independent of Entity.Position. Positive Y is down. Invalid values throw ArgumentException without mutation.
 
 ### FlipH and FlipV
 
@@ -133,8 +133,8 @@ Emitted synchronously after changing the reference, including clearing it. Conte
 | --- | --- |
 | `protected override void OnDraw()` | Records the frame through Texture.DrawRectRegion. Derived overrides call base.OnDraw to retain the image. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Adds typed properties; dimensions precede Frame in storage order. |
-| `protected override Func<SceneNode> CreateSceneInstanceFactory()` | Static factory for exact Sprite instances. Derived types retain Node's explicit factory contract. |
-| `protected override void Dispose(bool disposing)` | Disconnects the borrowed texture and clears events, then releases inherited Node state. |
+| `protected override Func<Node> CreateSceneInstanceFactory()` | Static factory for exact Sprite instances. Derived types retain Entity's explicit factory contract. |
+| `protected override void Dispose(bool disposing)` | Disconnects the borrowed texture and clears events, then releases inherited Entity state. |
 
 ## Verification and limits
 

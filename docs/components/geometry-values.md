@@ -1,6 +1,6 @@
 # Geometry values component
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ## Scope
 
@@ -25,13 +25,13 @@ This Core component owns the engine's backend-independent value mathematics: two
 2. Vector operations route shared scalar formulas through [`Mathf`](../classes/Mathf.md) and return results without global state or steady-state allocation.
 3. Floating-point and integer rectangle operations preserve stored position/size and normalize negative sizes only when `Abs()` is called explicitly.
 4. Transform operations use X/Y basis columns plus Origin; callers choose general affine or orthonormal inverse behavior explicitly.
-5. `Transform` composes `Node` local/global state and transforms `Rect` corners into axis-aligned bounds.
+5. `Transform` composes `Entity` local/global state and transforms `Rect` corners into axis-aligned bounds.
 6. Typed persistence accepts only finite floating-point vectors, rectangles, and transforms; integer vectors and rectangles retain all `int` values. Packed scenes copy every value directly.
 
 ## Dependencies
 
 - Canonical scalar [`Mathf`](../classes/Mathf.md), plus .NET globalization, serialization, and interop-layout primitives.
-- Existing typed `ConfigFile`, property descriptor, packed-scene, and `Node` integration boundaries.
+- Existing typed `ConfigFile`, property descriptor, packed-scene, and `Entity` integration boundaries.
 - No public external numerics dependency and no external package or native library.
 
 ## Invariants
@@ -50,7 +50,7 @@ This Core component owns the engine's backend-independent value mathematics: two
 
 ## Current implementation status
 
-Implemented and verified. `Rect`, `Transform`, and `Node` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `Mathf`. `Vector2I`, `Vector4`, `Vector4I`, and `RectI` provide their complete currently implementable value contracts, including typed conversions within vector and rectangle dimensional pairs. Strict configuration schemas and direct packed-scene storage exist for all four vectors, both rectangles, and transforms.
+Implemented and verified. `Rect`, `Transform`, and `Entity` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `Mathf`. `Vector2I`, `Vector4`, `Vector4I`, and `RectI` provide their complete currently implementable value contracts, including typed conversions within vector and rectangle dimensional pairs. Strict configuration schemas and direct packed-scene storage exist for all four vectors, both rectangles, and transforms.
 
 ## Exclusions and limitations
 
@@ -62,7 +62,7 @@ Implemented and verified. `Rect`, `Transform`, and `Node` use the engine-owned `
 
 ## Verification
 
-The executable harness covers every method/operator family, layouts and constants, index failures, interpolation, the strict internal tolerance migration boundaries, NaN/infinity/signed-zero behavior, integer wrap/overflow/zero division, widened integer norms and their checked limits, conversion boundaries, axis ties, floating-point and integer rectangle boundaries, affine order/inversion/decomposition, Node integration, strict malformed persistence, packed-scene value copying, invariant formatting, and warmed allocation behavior.
+The executable harness covers every method/operator family, layouts and constants, index failures, interpolation, the strict internal tolerance migration boundaries, NaN/infinity/signed-zero behavior, integer wrap/overflow/zero division, widened integer norms and their checked limits, conversion boundaries, axis ties, floating-point and integer rectangle boundaries, affine order/inversion/decomposition, Entity integration, strict malformed persistence, packed-scene value copying, invariant formatting, and warmed allocation behavior.
 
 Execution is verified on Linux/.NET 8 only. Native ABI and the Windows/macOS/Linux (X11/Wayland)/Android/iOS/Web build and host matrix remain unverified.
 

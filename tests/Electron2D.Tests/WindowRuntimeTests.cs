@@ -14,7 +14,7 @@ internal static class WindowRuntimeTests
         try
         {
             CheckNativeControls();
-            using (var manualTree = new SceneTree(new Node()))
+            using (var manualTree = new SceneTree(new Entity()))
             {
                 manualTree.Quit(1);
                 manualTree.Quit(2);
@@ -34,7 +34,7 @@ internal static class WindowRuntimeTests
                 Reject<InvalidOperationException>(() => detached.IsInputHandled());
                 Reject<InvalidOperationException>(() => new SceneTree(detached));
                 Check(!detached.IsDisposed && detached.Tree is null, "Rejected manual activation keeps caller ownership.");
-                using var parent = new Node();
+                using var parent = new Entity();
                 Reject<NotSupportedException>(() => parent.AddChild(detached));
                 Check(parent.ChildCount == 0 && detached.Parent is null, "Unsupported child viewport rejects before mutation.");
                 var captured = detached.BeginSceneCapture();
@@ -44,7 +44,7 @@ internal static class WindowRuntimeTests
                     Check(!detached.IsDisposed && DisplayServer.Instance is null && engine.MainLoop is null,
                         "Capture rejects activation before native acquisition or ownership transfer.");
                 }
-                finally { Node.EndSceneCapture(captured); }
+                finally { Entity.EndSceneCapture(captured); }
                 detached.MinSize = new Vector2I(70, 60);
                 Reject<ArgumentOutOfRangeException>(() => detached.MaxSize = new Vector2I(69, 80));
                 Check(detached.MaxSize == Vector2I.Zero, "Rejected constraints preserve state.");
@@ -386,7 +386,7 @@ internal static class WindowRuntimeTests
     }
 
     private static void Fail(string phase) => throw new InvalidOperationException("injected " + phase);
-    private static void AssertReleased(Window window, SceneNode? child = null) => Check(window.IsDisposed &&
+    private static void AssertReleased(Window window, Node? child = null) => Check(window.IsDisposed &&
         (child is null || child.IsDisposed) && Engine.Instance.MainLoop is null && DisplayServer.Instance is null &&
         !Input.Instance.IsKeyPressed(Key.A), "Run releases scene, window, loop attachment, and native input state.");
     private static nint NativeWindow()
@@ -412,7 +412,7 @@ internal static class WindowRuntimeTests
         catch (T) { return; }
         throw new InvalidOperationException("Expected " + typeof(T).Name);
     }
-    private sealed class Probe : Node
+    private sealed class Probe : Entity
     {
         public Action<Probe>? ReadyAction;
         public Action<Probe, InputEvent>? InputAction;

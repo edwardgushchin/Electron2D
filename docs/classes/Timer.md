@@ -2,13 +2,13 @@
 
 Last updated: 2026-09-23
 
-**Inherits:** [SceneNode](SceneNode.md)
+**Inherits:** [Node](Node.md)
 
 **Inherited By:** —
 
 - **Source:** [`src/Scene/Main/Timer.cs`](../../src/Scene/Main/Timer.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public class Timer : SceneNode`
+- **Declaration:** `public class Timer : Node`
 
 > Provides a reusable scene-node countdown timer.
 
@@ -16,9 +16,9 @@ Last updated: 2026-09-23
 
 Provides a reusable scene-node countdown timer.
 
-`Timer` is a reusable SceneNode-based countdown. It advances in one selected `SceneTree` frame lane, emits a typed timeout event when its remaining time reaches zero, and either stops or reloads. The parent SceneNode or active tree owns it through ordinary hierarchy lifetime; the timer owns no thread, clock, task, or native handle.
+`Timer` is a reusable Node-based countdown. It advances in one selected `SceneTree` frame lane, emits a typed timeout event when its remaining time reaches zero, and either stops or reloads. The parent Node or active tree owns it through ordinary hierarchy lifetime; the timer owns no thread, clock, task, or native handle.
 
-Use [`SceneTreeTimer`](SceneTreeTimer.md) instead for a lightweight tree-owned one-shot delay that is not part of the SceneNode hierarchy.
+Use [`SceneTreeTimer`](SceneTreeTimer.md) instead for a lightweight tree-owned one-shot delay that is not part of the Node hierarchy.
 
 The timer advances at most once in its selected frame lane, emits [`Timer.Timeout`](Timer.md#e-electron2d-timer-timeout) when its remaining time
 reaches zero, and either stops or reloads according to [`Timer.OneShot`](Timer.md#p-electron2d-timer-oneshot). It has no clock or background thread.
@@ -60,7 +60,7 @@ timer.Start();
 | [`public void Start(double timeSeconds)`](#m-electron2d-timer-start-system-double) | Sets a new wait duration and starts or resets the timer. |
 | [`public void Stop()`](#m-electron2d-timer-stop) | Stops the timer without emitting [`Timer.Timeout`](Timer.md#e-electron2d-timer-timeout). |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-timer-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
-| [`protected override Func<SceneNode> CreateSceneInstanceFactory()`](#m-electron2d-timer-createsceneinstancefactory) | Creates a reusable factory for packed-scene instances of this exact runtime node type. |
+| [`protected override Func<Node> CreateSceneInstanceFactory()`](#m-electron2d-timer-createsceneinstancefactory) | Creates a reusable factory for packed-scene instances of this exact runtime node type. |
 | [`protected override void OnNotification(int what)`](#m-electron2d-timer-onnotification-system-int32) | Handles an engine notification delivered to this object. |
 | [`protected override void Dispose(bool disposing)`](#m-electron2d-timer-dispose-system-boolean) | Releases resources owned by a derived class. |
 
@@ -149,7 +149,7 @@ Gets or sets whether this timer's own countdown is paused.
 - `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
 
 **Remarks:** Pausing preserves the remaining time. Starting a paused timer resets its countdown but does not resume it.
-Scene-tree pause policy remains independently controlled by [`SceneNode.ProcessMode`](SceneNode.md#p-electron2d-scenenode-processmode).
+Scene-tree pause policy remains independently controlled by [`Node.ProcessMode`](Node.md#p-electron2d-node-processmode).
 
 <a id="p-electron2d-timer-ignoretimescale"></a>
 ### `public bool IgnoreTimeScale { get; set; }`
@@ -246,7 +246,7 @@ Appends countdown configuration, runtime pause, remaining-time, and frame-lane d
 remaining time are not stored by packed scenes.
 
 <a id="m-electron2d-timer-createsceneinstancefactory"></a>
-### `protected override Func<SceneNode> CreateSceneInstanceFactory()`
+### `protected override Func<Node> CreateSceneInstanceFactory()`
 
 Creates a reusable factory for packed-scene instances of this exact runtime node type.
 
@@ -256,7 +256,7 @@ Creates a reusable factory for packed-scene instances of this exact runtime node
 
 - `NotSupportedException`: A derived node has not explicitly supplied an instancing factory.
 
-**Remarks:** The base implementation supports only an exact [`SceneNode`](SceneNode.md). Derived node types that can be packed must
+**Remarks:** The base implementation supports only an exact [`Node`](Node.md). Derived node types that can be packed must
 return a static, non-capturing factory that remains valid after the source node is disposed and creates a live,
 detached, parentless, childless, unowned, and non-queued instance. Stored writable property descriptors restore
 the instance state.
@@ -302,7 +302,7 @@ after the remaining callback phases are attempted.
 
 ## Inherited API
 
-Public and protected members inherited from [SceneNode](SceneNode.md). Their lifecycle and error contracts remain applicable unless this page states an override.
+Public and protected members inherited from [Node](Node.md). Their lifecycle and error contracts remain applicable unless this page states an override.
 
 ## Complete protected API
 
@@ -311,15 +311,15 @@ Public and protected members inherited from [SceneNode](SceneNode.md). Their lif
 | `GetPropertyDescriptors()` | Appends all seven countdown descriptors with the storage policy above |
 | `CreateSceneInstanceFactory()` | Makes exact `Timer` instances packable; a derived runtime type must provide its own static exact-type factory |
 | `OnNotification(int what)` | Calls inherited handling, starts on ready when requested, and consumes internal process notifications |
-| `Dispose(bool disposing)` | Clears timeout subscribers and active timer state before inherited SceneNode teardown |
+| `Dispose(bool disposing)` | Clears timeout subscribers and active timer state before inherited Node teardown |
 
 ## Lifecycle and ordering
 
-The timer begins stopped. `Start` requires membership in an active `SceneTree`, resets `TimeLeft`, and enables only the selected internal frame lane unless locally paused. `Stop` disables both internal lanes. Detaching does not destroy configured or countdown state; ordinary SceneNode reattachment/lifetime rules apply.
+The timer begins stopped. `Start` requires membership in an active `SceneTree`, resets `TimeLeft`, and enables only the selected internal frame lane unless locally paused. `Stop` disables both internal lanes. Detaching does not destroy configured or countdown state; ordinary Node reattachment/lifetime rules apply.
 
 Ready delivery starts an autostart timer after inherited ready handling and clears `Autostart`. Setting `Autostart` after ready has no immediate effect. `RequestReady()` followed by a later attachment can provide another ready cycle.
 
-On a matching eligible frame, the timer subtracts either the scaled SceneNode delta or Engine's original delta. A direct `SceneTree.Process`/`PhysicsProcess` call has no separate time-scale source, so both values equal the supplied delta. At zero or below, a one-shot timer stops before `Timeout`; a repeating timer adds the current `WaitTime` before `Timeout`. At most one event is emitted per frame, even when one delta spans several periods. Overshoot is retained internally, so later frames catch up one event at a time and public `TimeLeft` remains clamped to zero while the internal residual is non-positive.
+On a matching eligible frame, the timer subtracts either the scaled Node delta or Engine's original delta. A direct `SceneTree.Process`/`PhysicsProcess` call has no separate time-scale source, so both values equal the supplied delta. At zero or below, a one-shot timer stops before `Timeout`; a repeating timer adds the current `WaitTime` before `Timeout`. At most one event is emitted per frame, even when one delta spans several periods. Overshoot is retained internally, so later frames catch up one event at a time and public `TimeLeft` remains clamped to zero while the internal residual is non-positive.
 
 Internal timer processing precedes the same node's public `OnProcess`/`OnPhysicsProcess`. A timeout exception is retained while the public callback and later scheduled nodes are attempted. If the timeout handler disables that public lane, disposes, or detaches the timer, its public callback is skipped; enabling a previously disabled public lane does not inject a callback into the already captured turn. Frame-level failures are reported by `SceneTree` as an aggregate.
 
@@ -329,17 +329,17 @@ Internal timer processing precedes the same node's public `OnProcess`/`OnPhysics
 - `ProcessCallback` accepts only defined enum values. Rejection is non-mutating.
 - `Start` while detached throws `InvalidOperationException`; `Stop` remains valid while detached.
 - Starting while paused resets the countdown without resuming it.
-- Tree pause eligibility still follows inherited `SceneNode.ProcessMode`; `Paused` is an additional local gate.
+- Tree pause eligibility still follows inherited `Node.ProcessMode`; `Paused` is an additional local gate.
 - The timer emits no event from `Stop`, disposal, detachment, or a nonmatching frame.
 - Very short waits remain frame-quantized; no wall-clock or sub-frame delivery is promised.
 
 ## Threading guarantees and non-guarantees
 
-Attached mutation, start/stop, ready handling, countdown advance, timeout delivery, and disposal use the owning `SceneTree` thread. Detached configuration has the same unsynchronized caller-owned semantics as `SceneNode`. Event subscription and reads do not become thread-safe. No worker, task, synchronization context, sleep, or native timer exists.
+Attached mutation, start/stop, ready handling, countdown advance, timeout delivery, and disposal use the owning `SceneTree` thread. Detached configuration has the same unsynchronized caller-owned semantics as `Node`. Event subscription and reads do not become thread-safe. No worker, task, synchronization context, sleep, or native timer exists.
 
 ## Dependencies and interactions
 
-`Timer` depends on `SceneNode` internal frame lanes, `SceneTree` scheduling and pause eligibility, `MainLoop`'s current original delta, and `Engine` dual scaled/original delivery. `PackedScene` consumes its storage-enabled typed descriptors. It does not depend on SDL3-CS, rendering, input, audio, collision physics, scripting, file scene serialization, or editor code.
+`Timer` depends on `Node` internal frame lanes, `SceneTree` scheduling and pause eligibility, `MainLoop`'s current original delta, and `Engine` dual scaled/original delivery. `PackedScene` consumes its storage-enabled typed descriptors. It does not depend on SDL3-CS, rendering, input, audio, collision physics, scripting, file scene serialization, or editor code.
 
 ## Verification and known limitations
 
@@ -353,4 +353,4 @@ Verification uses deterministic supplied deltas on Linux. It does not establish 
 - [0008: Scene inheritance](../decisions/scene.md#adr-0008)
 - [0014: Realtime allocation](../decisions/resources.md#adr-0014)
 - [0016: Engine scheduling](../decisions/core-object-runtime.md#adr-0016)
-- [0036: Reusable SceneNode timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)

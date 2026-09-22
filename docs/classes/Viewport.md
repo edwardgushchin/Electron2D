@@ -2,13 +2,13 @@
 
 Last updated: 2026-09-23
 
-**Inherits:** [SceneNode](SceneNode.md)
+**Inherits:** [Node](Node.md)
 
 **Inherited By:** [Window](Window.md)
 
 - **Source:** [`src/Scene/Main/Viewport.cs`](../../src/Scene/Main/Viewport.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public abstract class Viewport : SceneNode`
+- **Declaration:** `public abstract class Viewport : Node`
 
 ## Description
 
@@ -16,11 +16,11 @@ Provides the root window's client rectangle and scene input boundary.
 
 Only a root `Window` is currently supported. Render targets, canvas drawing, content scaling, and embedded viewports are not implemented. Input coordinates use the client area.
 
-Native lifetime belongs to Engine.Run. Viewport inherits the neutral SceneNode; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
+Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
 
 ## Examples
 
-Inside a SceneNode input callback (surrounding callback/event variables are supplied by the scene):
+Inside a Node input callback (surrounding callback/event variables are supplied by the scene):
 
 ```csharp
 if (inputEvent.IsActionPressed("confirm"))

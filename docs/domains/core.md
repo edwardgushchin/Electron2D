@@ -68,7 +68,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - Scalar math depends only on .NET numeric primitives and has no mutable state, native backend, or higher-domain dependency.
 - Color math depends on `Mathf`, .NET primitives, and the bundled MIT-licensed managed OKHSL formulas; it has no native or rendering dependency. `ConfigFile` provides its strict finite JSON schema, while typed scene property storage consumes the reference-free value without a dependency back from Core Math to Scene.
 - Vector, rectangle, and transform math depends on `Mathf` plus .NET layout/formatting primitives. `ConfigFile` provides strict vector, `Position`/`Size`, and `X`/`Y`/`Origin` schemas, while typed scene storage consumes reference-free values without a dependency back from Core Math to Scene.
-- `Rect`, `Transform`, and Scene's `Node` use `Electron2D.Vector2`; public external numerics types and old compatibility names are absent.
+- `Rect`, `Transform`, and Scene's `Entity` use `Electron2D.Vector2`; public external numerics types and old compatibility names are absent.
 - Future engine domains may depend on Core.
 - Core must not acquire dependencies on scene, rendering, or other higher-level domains. The accepted MainLoop/Engine-to-Input integration is the narrow exception recorded by ADR 0038; native backends still depend inward rather than reversing ownership.
 - Core must not introduce 3D concepts or require a second production assembly.
@@ -109,7 +109,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` verifies concurrent identity allocation, notifications, the `ElectronObject` lifetime contract, typed property discovery/access/validation/revert, property-list/script-change events, event-connection lifecycle/concurrency, the exact `Mathf` constant/overload surface and numeric boundaries, complete color behavior, all four vector surfaces and numeric boundaries, floating-point and integer rectangle layout/geometry/conversions/boundaries, transform decomposition/composition/inversion/interpolation/rectangle operations, Node vector/transform integration, strict persistence, packed-scene storage, allocation behavior, configuration parsing/encoding/persistence/encryption/concurrency, file and directory access, MainLoop state/error/thread/Input-transition behavior, and Engine scaled/original scheduling/service-registry integration. SDL dummy-driver checks belong to the separate Display domain; this Core verification does not prove renderer or native-host behavior.
+`tests/Electron2D.Tests/Program.cs` verifies concurrent identity allocation, notifications, the `ElectronObject` lifetime contract, typed property discovery/access/validation/revert, property-list/script-change events, event-connection lifecycle/concurrency, the exact `Mathf` constant/overload surface and numeric boundaries, complete color behavior, all four vector surfaces and numeric boundaries, floating-point and integer rectangle layout/geometry/conversions/boundaries, transform decomposition/composition/inversion/interpolation/rectangle operations, Entity vector/transform integration, strict persistence, packed-scene storage, allocation behavior, configuration parsing/encoding/persistence/encryption/concurrency, file and directory access, MainLoop state/error/thread/Input-transition behavior, and Engine scaled/original scheduling/service-registry integration. SDL dummy-driver checks belong to the separate Display domain; this Core verification does not prove renderer or native-host behavior.
 
 The same harness verifies project-setting registration, value snapshots, validators, metadata, overrides, changes/events, persistence, virtual paths, transaction rollback, concurrency, disposal, and Engine integration.
 
@@ -139,7 +139,7 @@ The same harness verifies project-setting registration, value snapshots, validat
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
 - [0035: Foreseeable public type-family completeness](../decisions/core-math.md#adr-0035)
-- [0036: Reusable SceneNode timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
 
 ## Windowed lifecycle

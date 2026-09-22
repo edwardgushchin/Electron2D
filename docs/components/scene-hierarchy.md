@@ -4,35 +4,35 @@ Last updated: 2026-09-23
 
 ## Scope and owned types
 
-The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr-0008). One ordered SceneNode tree hosts neutral logic, canvas objects and spatial gameplay objects.
+The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr-0008). One ordered Node tree hosts neutral logic, canvas objects and spatial gameplay objects.
 
 | Type | Base | Responsibility |
 | --- | --- | --- |
-| [SceneNode](../classes/SceneNode.md) | ElectronObject | Hierarchy, lifecycle, paths/groups, process/input callbacks, ownership and deletion. |
-| [CanvasItem](../classes/CanvasItem.md) | SceneNode | Abstract drawing base, visibility, Z, modulation/materials and transform queries/notifications. |
-| [Node](../classes/Node.md) | CanvasItem | Concrete position, rotation, scale, skew and spatial helpers. |
-| [NodeProcessMode](../classes/NodeProcessMode.md) | enum | Pause-aware processing policy on SceneNode. |
+| [Node](../classes/Node.md) | ElectronObject | Hierarchy, lifecycle, paths/groups, process/input callbacks, ownership and deletion. |
+| [CanvasItem](../classes/CanvasItem.md) | Node | Abstract drawing base, visibility, Z, modulation/materials and transform queries/notifications. |
+| [Entity](../classes/Entity.md) | CanvasItem | Concrete position, rotation, scale, skew and spatial helpers. |
+| [NodeProcessMode](../classes/NodeProcessMode.md) | enum | Pause-aware processing policy on Node. |
 
-[Sprite](../classes/Sprite.md) derives from Node. [Timer](../classes/Timer.md) and [Viewport](../classes/Viewport.md) derive from SceneNode; [Window](../classes/Window.md) derives from Viewport. Control is the accepted future CanvasItem UI branch and is not implemented yet.
+[Sprite](../classes/Sprite.md) derives from Entity. [Timer](../classes/Timer.md) and [Viewport](../classes/Viewport.md) derive from Node; [Window](../classes/Window.md) derives from Viewport. Camera and CollisionShape belong to the future Entity branch. Control is the future CanvasItem UI branch, with Button reached through BaseButton. These future types are not implemented yet.
 
 ## Runtime flow
 
-SceneNode owns ordered children of any SceneNode subtype. SceneTree activates the tree parent-first, delivers ready child-first and exits child-first. Paths, groups, Owner metadata, process/input settings, typed child events and factories use SceneNode. Engine supplies scaled/original deltas; Timer and Tween reuse these scheduling lanes. Frame/input/lifecycle mutation guards and failure-continuing cleanup remain in the neutral layer.
+Node owns ordered children of any Node subtype. SceneTree activates the tree parent-first, delivers ready child-first and exits child-first. Paths, groups, Owner metadata, process/input settings, typed child events and factories use Node. Engine supplies scaled/original deltas; Timer and Tween reuse these scheduling lanes. Frame/input/lifecycle mutation guards and failure-continuing cleanup remain in the neutral layer.
 
-CanvasItem adds retained drawing and canvas state. A direct canvas parent contributes transform, modulation and material; a neutral SceneNode breaks those chains. Global transform and Z accumulation stop at TopLevel. Toggling TopLevel preserves local state and recomputes global coordinates. Visibility follows direct canvas parents, including TopLevel, and the containing window. Window owns native visibility independently; its changes notify canvas roots, including roots below neutral nodes.
+CanvasItem adds retained drawing and canvas state. A direct canvas parent contributes transform, modulation and material; a neutral Node breaks those chains. Global transform and Z accumulation stop at TopLevel. Toggling TopLevel preserves local state and recomputes global coordinates. Visibility follows direct canvas parents, including TopLevel, and the containing window. Window owns native visibility independently; its changes notify canvas roots, including roots below neutral nodes.
 
-CanvasItem.GetTransform is abstract. Node implements it with an engine-owned Transform and adds the writable spatial properties. Direct CanvasItem subclasses can supply a different placement model; a Node child consumes that parent's transform without requiring the parent to be a spatial Node. Transform notifications stop at neutral and top-level children. Notification failures are collected while other direct canvas siblings are attempted.
+CanvasItem.GetTransform is abstract. Entity implements it with an engine-owned Transform and adds the writable spatial properties. Direct CanvasItem subclasses can supply a different placement model; a Entity child consumes that parent's transform without requiring the parent to be a spatial Entity. Transform notifications stop at neutral and top-level children. Notification failures are collected while other direct canvas siblings are attempted.
 
-Node.Reparent overrides the neutral operation. It validates a destination inverse before mutation when retaining global state, preserves structural lifecycle checks, then restores its local transform after attachment. A neutral reparent has no spatial state to preserve. GetRelativeTransformToParent separately multiplies local transforms along an uninterrupted spatial-node chain. Translate adds in parent space; MoveLocalX/Y move along the current local basis.
+Entity.Reparent overrides the neutral operation. It validates a destination inverse before mutation when retaining global state, preserves structural lifecycle checks, then restores its local transform after attachment. A neutral reparent has no spatial state to preserve. GetRelativeTransformToParent separately multiplies local transforms along an uninterrupted spatial-node chain. Translate adds in parent space; MoveLocalX/Y move along the current local basis.
 
-RenderingServer traverses all SceneNodes and records only CanvasItems. OnDraw/QueueRedraw and rectangle/line/texture methods belong to CanvasItem; Texture draw methods accept that base. Retained resource notifications atomically schedule owner-thread recording. Commands borrow Texture and Material; renderer backends own native caches.
+RenderingServer traverses all Nodes and records only CanvasItems. OnDraw/QueueRedraw and rectangle/line/texture methods belong to CanvasItem; Texture draw methods accept that base. Retained resource notifications atomically schedule owner-thread recording. Commands borrow Texture and Material; renderer backends own native caches.
 
-PackedScene captures any SceneNode root. Each inheritance layer contributes only its own stored descriptors. Neutral and spatial nodes have separate default factories; derived types still supply an explicit static exact-type factory. Reconstruction is detached, shared resources remain borrowed, and the root owns scene-local duplicates.
+PackedScene captures any Node root. Each inheritance layer contributes only its own stored descriptors. Neutral and spatial nodes have separate default factories; derived types still supply an explicit static exact-type factory. Reconstruction is detached, shared resources remain borrowed, and the root owns scene-local duplicates.
 
 ## Dependencies and invariants
 
-- All types remain in Electron2D.dll. SceneNode depends on Core object lifetime, descriptors, input values, SceneTree scheduling and the narrow scene-local Resource contract. CanvasItem adds math and retained graphics; Node adds concrete spatial state.
-- No transform, visibility, material or drawing declarations are added to SceneNode or Timer.
+- All types remain in Electron2D.dll. Node depends on Core object lifetime, descriptors, input values, SceneTree scheduling and the narrow scene-local Resource contract. CanvasItem adds math and retained graphics; Entity adds concrete spatial state.
+- No transform, visibility, material or drawing declarations are added to Node or Timer.
 - Attached mutation uses the scene owner thread. Packed capture/instantiation and disposal retain the existing barriers; invalid lifecycle mutation is rejected before state changes.
 - Children have one parent and unique nonempty names. Parenting rejects cycles. Owner is null or a strict ancestor. Scene roots own descendant disposal; callback failures do not stop remaining cleanup stages.
 - Geometry/transform inputs are finite; inverse-dependent operations reject singular transforms. ZIndex is bounded by -4096..4096.

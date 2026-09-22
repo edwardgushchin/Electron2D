@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 ## Scope and types
 
-[Window](../classes/Window.md) derives from [Viewport](../classes/Viewport.md), which derives from the neutral SceneNode. Window owns the [ModeEnum](../classes/Window.ModeEnum.md) and [Flags](../classes/Window.Flags.md) identifiers. A consumer configures a root Window, adds scene children, and calls Engine.Run. The root window connects scene processing and retained canvas drawing through [RenderingServer](../classes/RenderingServer.md). Broader rendering and GUI APIs remain incomplete.
+[Window](../classes/Window.md) derives from [Viewport](../classes/Viewport.md), which derives from the neutral Node. Window owns the [ModeEnum](../classes/Window.ModeEnum.md) and [Flags](../classes/Window.Flags.md) identifiers. A consumer configures a root Window, adds scene children, and calls Engine.Run. The root window connects scene processing and retained canvas drawing through [RenderingServer](../classes/RenderingServer.md). Broader rendering and GUI APIs remain incomplete.
 
 [ADR 0028](../decisions/rendering.md#adr-0028) selects HLSL and GLSL compilation at project import/build, followed by one SPIR-V validation, reflection and GPU-program path through SDL3-CS/SDL_shadercross. Compatible SPIR-V from third-party compilers uses the same path. Direct language support also requires diagnostics, material parameters, textures, consistent bindings and backend checks. The current [shader/material integration](shader-materials.md) executes typed fragment uniforms and sampled textures on Linux Wayland/Vulkan. The SDL_Renderer fallback rejects arbitrary shaders explicitly.
 
@@ -26,7 +26,7 @@ Viewport shares SceneTree's current handled-input flag. PushInput borrows a clie
 - Native services opened directly through DisplayServer must finish before shutdown. Pending asynchronous file dialogs can reject native disposal under the existing DisplayServer contract; Run reports the cleanup failure and DisplayServer.Instance remains available for completion/release. Window exposes no asynchronous dialog API yet.
 - Engine remains reserved throughout scene exit, disposal and native cleanup. Manual frame/stop/tree-disposal interference is rejected. All owned cleanup stages are attempted and failures remain observable.
 - Validation/busy-engine rejection preserves caller ownership. After reservation, failed startup also disposes the transferred root. A later run uses a new Window.
-- PackedScene stores the title and size/limit configuration plus inherited stored SceneNode properties. Position is an optional platform startup request, not stored scene data. CurrentScreen follows the same optional-request rule. Mode and the four supported policies are stored; unset/default policies do not issue unsupported startup requests.
+- PackedScene stores the title and size/limit configuration plus inherited stored Node properties. Position is an optional platform startup request, not stored scene data. CurrentScreen follows the same optional-request rule. Mode and the four supported policies are stored; unset/default policies do not issue unsupported startup requests.
 
 ## Verification and limits
 

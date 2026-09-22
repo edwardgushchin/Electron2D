@@ -25,7 +25,7 @@ Use an explicit `—` when either side has no counterpart. Type and member links
 
 ## Scene type mapping
 
-The accepted target under [ADR 0008](../decisions/scene.md#adr-0008) is Godot `Node` → Electron2D `SceneNode`, Godot `CanvasItem` → Electron2D `CanvasItem`, and Godot `Node2D` → Electron2D `Node`, preserving each applicable API, behavior and inheritance role. The pinned source identities remain unchanged. The compiled mappings now use the three distinct declaring types. SceneHierarchyTests and mixed-tree pixel checks verify the split; remaining per-member gaps stay partial, unimplemented or blocked. Renaming a type does not establish semantic parity or permit dropping reference members.
+The accepted target under [ADR 0008](../decisions/scene.md#adr-0008) is Godot `Node` → Electron2D `Node`, Godot `CanvasItem` → Electron2D `CanvasItem`, and Godot `Node2D` → Electron2D `Entity`, preserving each applicable API, behavior and inheritance role. The pinned source identities remain unchanged. The compiled mappings now use the three distinct declaring types. SceneHierarchyTests and mixed-tree pixel checks verify the split; remaining per-member gaps stay partial, unimplemented or blocked. Renaming a type does not establish semantic parity or permit dropping reference members.
 
 ## State vocabulary
 

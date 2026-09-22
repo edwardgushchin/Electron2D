@@ -104,7 +104,7 @@ internal static class DisplayServerPointerPixelNativeTests
             throw new InvalidOperationException(message);
     }
 
-    private sealed class PointerProbe : Node
+    private sealed class PointerProbe : Entity
     {
         public List<InputEvent> Events { get; } = [];
 

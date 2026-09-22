@@ -5,7 +5,7 @@ window.AddChild(new ExampleRoot());
 Engine.Instance.MaxFPS = 60;
 return Engine.Instance.Run(window);
 
-sealed class ExampleRoot : Node
+sealed class ExampleRoot : Entity
 {
     private double _reportTime;
 

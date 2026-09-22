@@ -5317,7 +5317,7 @@ static void VerifyEngine()
     engine.PhysicsJitterFix = 0.5d;
     engine.TimeScale = 1d;
 
-    var root = new Node();
+    var root = new Entity();
     var tree = new SceneTree(root);
     engine.Start(tree);
     engine.AdvanceFrame(0d);
@@ -5483,18 +5483,18 @@ static void VerifyMainLoop()
             MainLoop.NotificationApplicationFocusOut == 2017 && MainLoop.NotificationTextServerChanged == 2018 &&
             MainLoop.NotificationApplicationPipModeEntered == 2019 && MainLoop.NotificationApplicationPipModeExited == 2020,
         "MainLoop system notification identifiers must retain their stable values.");
-    Require(Node.NotificationOsMemoryWarning == MainLoop.NotificationOsMemoryWarning &&
-            Node.NotificationTranslationChanged == MainLoop.NotificationTranslationChanged &&
-            Node.NotificationWmAbout == MainLoop.NotificationWmAbout && Node.NotificationCrash == MainLoop.NotificationCrash &&
-            Node.NotificationOsImeUpdate == MainLoop.NotificationOsImeUpdate &&
-            Node.NotificationApplicationResumed == MainLoop.NotificationApplicationResumed &&
-            Node.NotificationApplicationPaused == MainLoop.NotificationApplicationPaused &&
-            Node.NotificationApplicationFocusIn == MainLoop.NotificationApplicationFocusIn &&
-            Node.NotificationApplicationFocusOut == MainLoop.NotificationApplicationFocusOut &&
-            Node.NotificationTextServerChanged == MainLoop.NotificationTextServerChanged &&
-            Node.NotificationApplicationPipModeEntered == MainLoop.NotificationApplicationPipModeEntered &&
-            Node.NotificationApplicationPipModeExited == MainLoop.NotificationApplicationPipModeExited,
-        "Node system notification aliases must match MainLoop.");
+    Require(Entity.NotificationOsMemoryWarning == MainLoop.NotificationOsMemoryWarning &&
+            Entity.NotificationTranslationChanged == MainLoop.NotificationTranslationChanged &&
+            Entity.NotificationWmAbout == MainLoop.NotificationWmAbout && Entity.NotificationCrash == MainLoop.NotificationCrash &&
+            Entity.NotificationOsImeUpdate == MainLoop.NotificationOsImeUpdate &&
+            Entity.NotificationApplicationResumed == MainLoop.NotificationApplicationResumed &&
+            Entity.NotificationApplicationPaused == MainLoop.NotificationApplicationPaused &&
+            Entity.NotificationApplicationFocusIn == MainLoop.NotificationApplicationFocusIn &&
+            Entity.NotificationApplicationFocusOut == MainLoop.NotificationApplicationFocusOut &&
+            Entity.NotificationTextServerChanged == MainLoop.NotificationTextServerChanged &&
+            Entity.NotificationApplicationPipModeEntered == MainLoop.NotificationApplicationPipModeEntered &&
+            Entity.NotificationApplicationPipModeExited == MainLoop.NotificationApplicationPipModeExited,
+        "Entity system notification aliases must match MainLoop.");
 
     var notificationLog = new List<string>();
     var notificationRoot = new SystemNotificationNode("root", notificationLog);
@@ -5528,7 +5528,7 @@ static void VerifyMainLoop()
         tree.Process(0d);
     }
 
-    var finalizedRoot = new Node();
+    var finalizedRoot = new Entity();
     var finalizedTree = new SceneTree(finalizedRoot);
     var finalizedTimer = finalizedTree.CreateTimer(1d);
     finalizedTree.FinalizeLoop();
@@ -5540,7 +5540,7 @@ static void VerifyMainLoop()
         "An explicitly finalized SceneTree must reject new deferred work.");
     finalizedTree.Dispose();
 
-    using var allocationTree = new SceneTree(new Node());
+    using var allocationTree = new SceneTree(new Entity());
     for (var index = 0; index < 16; index++)
         allocationTree.Process(0d);
     var allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
@@ -5717,7 +5717,7 @@ static void VerifyEventConnections()
     Require(concurrentCalls == 1 && !concurrentOneShot.IsConnected,
         "Concurrent emissions must consume a one-shot connection exactly once.");
 
-    var root = new Node { Name = "event-root" };
+    var root = new Entity { Name = "event-root" };
     using var tree = new SceneTree(root);
     var deferredSource = new EventSource();
     var deferredValues = new List<int>();
@@ -5924,7 +5924,7 @@ static void VerifyNodeHierarchyAndTransforms()
     var second = new TransformNode { Name = "second", Position = new Vector2(-3f, 1f) };
     var mover = new TransformNode { Name = "mover", Position = new Vector2(4f, 2f) };
 
-    var addedChildren = new List<(SceneNode Source, SceneNode Child)>();
+    var addedChildren = new List<(Node Source, Node Child)>();
     root.ChildAdded += (source, child) => addedChildren.Add((source, child));
 
     root.AddChild(first);
@@ -5934,7 +5934,7 @@ static void VerifyNodeHierarchyAndTransforms()
     Require(addedChildren.SequenceEqual([(root, first), (root, second)]),
         "ChildAdded must provide the publishing parent before the added child.");
 
-    var enteredChildren = new List<(SceneNode Source, SceneNode Child)>();
+    var enteredChildren = new List<(Node Source, Node Child)>();
     root.ChildEnteredTree += (source, child) => enteredChildren.Add((source, child));
 
     using var tree = new SceneTree(root);
@@ -5964,15 +5964,15 @@ static void VerifyNodeHierarchyAndTransforms()
     first.Notifications.Clear();
     mover.Notifications.Clear();
     first.Position += Vector2.One;
-    Require(first.Notifications.Contains(Node.NotificationLocalTransformChanged) &&
-            first.Notifications.Contains(Node.NotificationTransformChanged) &&
-            mover.Notifications.Contains(Node.NotificationTransformChanged),
+    Require(first.Notifications.Contains(Entity.NotificationLocalTransformChanged) &&
+            first.Notifications.Contains(Entity.NotificationTransformChanged) &&
+            mover.Notifications.Contains(Entity.NotificationTransformChanged),
         "A local transform change must notify the node and affected descendants.");
 
     mover.TopLevel = true;
     mover.Notifications.Clear();
     first.Position += Vector2.One;
-    Require(!mover.Notifications.Contains(Node.NotificationTransformChanged),
+    Require(!mover.Notifications.Contains(Entity.NotificationTransformChanged),
         "A top-level node must ignore ancestor transform changes.");
     mover.TopLevel = false;
 
@@ -5982,7 +5982,7 @@ static void VerifyNodeHierarchyAndTransforms()
     Require(root.GetNode("second/mover") == mover && root.GetNode("/root/second/mover") == mover,
         "Relative and absolute paths must resolve the same node.");
     Require(root.GetPathTo(mover) == "second/mover" && mover.GetPath() == "/root/second/mover",
-        "Node paths must describe the hierarchy.");
+        "Entity paths must describe the hierarchy.");
     Require(root.FindChild("MOV*") == mover && mover.FindParent("SEC*") == second,
         "Wildcard hierarchy search must find descendants and parents case-insensitively.");
 
@@ -5991,13 +5991,13 @@ static void VerifyNodeHierarchyAndTransforms()
         "SceneTree group queries must return members in tree order.");
     Require(mover.RemoveFromGroup("actors") && !mover.IsInGroup("actors"), "Group removal must update membership.");
 
-    var third = new Node { Name = "third" };
+    var third = new Entity { Name = "third" };
     second.AddSibling(third);
     root.MoveChild(third, 0);
     Require(root.GetChild(0) == third && third.GetIndex() == 0, "Sibling insertion and child reordering must be observable.");
 
-    (SceneNode Source, SceneNode Child)? exitingChild = null;
-    (SceneNode Source, SceneNode Child)? removedChild = null;
+    (Node Source, Node Child)? exitingChild = null;
+    (Node Source, Node Child)? removedChild = null;
     root.ChildExitingTree += (source, child) => exitingChild = (source, child);
     root.ChildRemoved += (source, child) => removedChild = (source, child);
     Require(root.RemoveChild(third), "A direct child must be removable for event verification.");
@@ -6005,7 +6005,7 @@ static void VerifyNodeHierarchyAndTransforms()
         "Child exit and removal events must provide the publishing parent before the affected child.");
     root.AddChild(third);
 
-    using var duplicate = new Node { Name = "first" };
+    using var duplicate = new Entity { Name = "first" };
     Expect<InvalidOperationException>(() => root.AddChild(duplicate), "Sibling names must be unique.");
 
     var visibilityEvents = 0;
@@ -6021,9 +6021,9 @@ static void VerifyNodeHierarchyAndTransforms()
     Require(mover.EffectiveZIndex == 6, "Relative Z indices must accumulate through the hierarchy.");
     mover.ZAsRelative = false;
     Require(mover.EffectiveZIndex == 1, "An absolute Z index must ignore ancestors.");
-    Expect<ArgumentOutOfRangeException>(() => mover.ZIndex = Node.MaximumZIndex + 1, "ZIndex must enforce its documented range.");
+    Expect<ArgumentOutOfRangeException>(() => mover.ZIndex = Entity.MaximumZIndex + 1, "ZIndex must enforce its documented range.");
 
-    var motion = new Node { Name = "motion" };
+    var motion = new Entity { Name = "motion" };
     motion.MoveLocalX(3f);
     motion.Rotate(MathF.PI / 2f);
     motion.Translate(Vector2.Right);
@@ -6036,8 +6036,8 @@ static void VerifyNodeHierarchyAndTransforms()
     Expect<InvalidOperationException>(() => motion.ToLocal(Vector2.Zero), "A singular transform cannot convert a global point to local space.");
     motion.Dispose();
 
-    using var singularParent = new Node { Scale = new Vector2(0f, 1f) };
-    var singularChild = new Node { Position = new Vector2(2f, 3f) };
+    using var singularParent = new Entity { Scale = new Vector2(0f, 1f) };
+    var singularChild = new Entity { Position = new Vector2(2f, 3f) };
     singularParent.AddChild(singularChild);
     var originalLocalTransform = singularChild.Transform;
     Expect<InvalidOperationException>(() => singularChild.GlobalTransform = Transform.Identity,
@@ -6049,7 +6049,7 @@ static void VerifyNodeHierarchyAndTransforms()
 static void VerifyProcessing()
 {
     var log = new List<string>();
-    var root = new Node { Name = "root" };
+    var root = new Entity { Name = "root" };
     var early = new ProcessingNode("early", log)
     {
         ProcessEnabled = true,
@@ -6097,10 +6097,10 @@ static void VerifyProcessing()
 
     inheritedMode.Notifications.Clear();
     root.ProcessMode = NodeProcessMode.Disabled;
-    Require(inheritedMode.Notifications.Contains(Node.NotificationDisabled) && !inheritedMode.CanProcess(),
+    Require(inheritedMode.Notifications.Contains(Entity.NotificationDisabled) && !inheritedMode.CanProcess(),
         "Disabling an inherited process mode must notify and disable affected descendants.");
     root.ProcessMode = NodeProcessMode.Inherit;
-    Require(inheritedMode.Notifications.Contains(Node.NotificationEnabled),
+    Require(inheritedMode.Notifications.Contains(Entity.NotificationEnabled),
         "Restoring an inherited process mode must notify affected descendants.");
 }
 
@@ -6108,14 +6108,14 @@ static void VerifySceneTree()
 {
     var manualLifecycle = new List<string>();
     var manuallyNotifiedRoot = new RecordingNode("manual", manualLifecycle);
-    manuallyNotifiedRoot.Notify(Node.NotificationReady);
+    manuallyNotifiedRoot.Notify(Entity.NotificationReady);
     using (var manuallyNotifiedTree = new SceneTree(manuallyNotifiedRoot))
     {
         Require(manualLifecycle.Count(item => item == "ready:manual") == 2,
             "Manual lifecycle notification must not consume SceneTree's one-shot ready state.");
     }
 
-    var queuedRoot = new Node();
+    var queuedRoot = new Entity();
     queuedRoot.QueueFree();
     Expect<ArgumentException>(
         () => new SceneTree(queuedRoot),
@@ -6140,7 +6140,7 @@ static void VerifySceneTree()
     Expect<InvalidOperationException>(root.Dispose, "An active SceneTree root must be disposed through its owning tree.");
     Require(!root.IsDisposed && ReferenceEquals(tree.Root, root), "Rejected root disposal must leave tree ownership intact.");
 
-    using (var otherTree = new SceneTree(new Node { Name = "other-root" }))
+    using (var otherTree = new SceneTree(new Entity { Name = "other-root" }))
     {
         Expect<InvalidOperationException>(
             () => root.AddChild(otherTree.Root),
@@ -6199,7 +6199,7 @@ static void VerifySceneTree()
 
     var wrongThreadNodeDispose = Task.Run(() => Capture(child.Dispose)).GetAwaiter().GetResult();
     Require(wrongThreadNodeDispose is InvalidOperationException && !child.IsDisposed,
-        "Attached Node disposal must reject a non-owner thread before disposal starts.");
+        "Attached Entity disposal must reject a non-owner thread before disposal starts.");
 
     var directLifecycle = new List<string>();
     var directRoot = new RecordingNode("direct-root", directLifecycle);
@@ -6262,7 +6262,7 @@ static void VerifySceneTreeGroupsEventsAndTimers()
         "Group notifications must use hierarchy order.");
 
     groupLog.Clear();
-    Action<SceneNode> uniqueCall = node => groupLog.Add($"unique:{node.Name}");
+    Action<Node> uniqueCall = node => groupLog.Add($"unique:{node.Name}");
     var uniqueFlags = GroupCallFlags.Deferred | GroupCallFlags.Unique;
     tree.CallGroup("actors", uniqueCall, uniqueFlags);
     tree.CallGroup("actors", uniqueCall, uniqueFlags);
@@ -6280,8 +6280,8 @@ static void VerifySceneTreeGroupsEventsAndTimers()
     tree.NodeRenamed += (_, node) => nodeEvents.Add($"renamed:{node.Name}");
     tree.TreeChanged += _ => treeChanges++;
 
-    var added = new Node { Name = "added" };
-    var addedChild = new Node { Name = "added-child" };
+    var added = new Entity { Name = "added" };
+    var addedChild = new Entity { Name = "added-child" };
     added.AddChild(addedChild);
     root.AddChild(added);
     added.Name = "renamed";
@@ -6350,8 +6350,8 @@ static void VerifySceneTreeGroupsEventsAndTimers()
 static void VerifyTimers()
 {
     Require((int)TimerProcessCallback.Physics == 0 && (int)TimerProcessCallback.Idle == 1 &&
-            Node.NotificationInternalProcess == 25 && Node.NotificationInternalPhysicsProcess == 26,
-        "Timer process lanes and internal Node notifications must retain their stable identities.");
+            Entity.NotificationInternalProcess == 25 && Entity.NotificationInternalPhysicsProcess == 26,
+        "Timer process lanes and internal Entity notifications must retain their stable identities.");
 
     using (var detached = new EngineTimer())
     {
@@ -6391,7 +6391,7 @@ static void VerifyTimers()
             "Rejected Timer configuration must preserve prior state.");
     }
 
-    var root = new Node { Name = "timer-root" };
+    var root = new Entity { Name = "timer-root" };
     var timer = new EngineTimer { Name = "timer", WaitTime = 0.5d };
     root.AddChild(timer);
     using (var tree = new SceneTree(root))
@@ -6486,7 +6486,7 @@ static void VerifyTimers()
             "Attached Timer mutation must retain scene-tree owner-thread affinity.");
     }
 
-    var autostartRoot = new Node { Name = "autostart-root" };
+    var autostartRoot = new Entity { Name = "autostart-root" };
     using (var autostartTree = new SceneTree(autostartRoot))
     {
         var autostartTimer = new EngineTimer
@@ -6508,7 +6508,7 @@ static void VerifyTimers()
     }
 
     var order = new List<string>();
-    var orderRoot = new Node { Name = "order-root" };
+    var orderRoot = new Entity { Name = "order-root" };
     var orderingTimer = new ProcessingTimer(order)
     {
         Name = "ordering-timer",
@@ -6534,7 +6534,7 @@ static void VerifyTimers()
     }
 
     var disableLog = new List<string>();
-    var disableRoot = new Node();
+    var disableRoot = new Entity();
     var disablingTimer = new ProcessingTimer(disableLog)
     {
         OneShot = true,
@@ -6552,7 +6552,7 @@ static void VerifyTimers()
     }
 
     var removalLog = new List<string>();
-    var removalRoot = new Node();
+    var removalRoot = new Entity();
     var removedTimer = new ProcessingTimer(removalLog)
     {
         OneShot = true,
@@ -6593,7 +6593,7 @@ static void VerifyTimers()
 
     var engine = Engine.Instance;
     var previousTimeScale = engine.TimeScale;
-    var scaledRoot = new Node { Name = "scaled-timer-root" };
+    var scaledRoot = new Entity { Name = "scaled-timer-root" };
     var scaledTimer = new EngineTimer { Name = "scaled", Autostart = true, OneShot = true, WaitTime = 0.1d };
     var unscaledTimer = new EngineTimer
     {
@@ -6638,7 +6638,7 @@ static void VerifyTimers()
         }
     }
 
-    var allocationRoot = new Node();
+    var allocationRoot = new Entity();
     var allocationTimer = new EngineTimer { WaitTime = 100d };
     allocationRoot.AddChild(allocationTimer);
     using (var allocationTree = new SceneTree(allocationRoot))
@@ -6648,7 +6648,7 @@ static void VerifyTimers()
             allocationTree.ProcessFrame(0d);
         var beforeNotify = GC.GetAllocatedBytesForCurrentThread();
         for (var index = 0; index < 128; index++)
-            allocationTimer.Notify(Node.NotificationInternalProcess);
+            allocationTimer.Notify(Entity.NotificationInternalProcess);
         var notifyAllocated = GC.GetAllocatedBytesForCurrentThread() - beforeNotify;
         allocationTimer.Stop();
         var beforeStopped = GC.GetAllocatedBytesForCurrentThread();
@@ -6712,11 +6712,11 @@ static void VerifyTweens()
             Tween.TransitionType.Linear, Tween.EaseType.In),
         "Manual interpolation must reject non-finite elapsed time.");
 
-    using (var detached = new Node())
+    using (var detached = new Entity())
         Expect<InvalidOperationException>(() => _ = detached.CreateTween(), "A detached node must not create a tween.");
 
-    var root = new Node { Name = "tween-root" };
-    var target = new Node { Name = "target" };
+    var root = new Entity { Name = "tween-root" };
+    var target = new Entity { Name = "target" };
     root.AddChild(target);
     using var tree = new SceneTree(root);
 
@@ -6843,7 +6843,7 @@ static void VerifyTweens()
     Require(DoubleNearlyEqual(physicsValue, 0.5d), "A physics tween must advance after physics callbacks.");
     physics.Kill();
 
-    var bound = new Node { Name = "bound" };
+    var bound = new Entity { Name = "bound" };
     root.AddChild(bound);
     var boundFinished = false;
     var boundTween = bound.CreateTween();
@@ -6854,7 +6854,7 @@ static void VerifyTweens()
     Require(!boundTween.IsValid() && !boundFinished,
         "Disposing a bound node must kill the tween without reporting ordinary completion.");
 
-    using (var foreignTree = new SceneTree(new Node()))
+    using (var foreignTree = new SceneTree(new Entity()))
     {
         var crossTree = tree.CreateTween();
         Expect<ArgumentException>(() => crossTree.BindNode(foreignTree.Root),
@@ -7036,7 +7036,7 @@ static void VerifyTweens()
 
     var engine = Engine.Instance;
     var previousTimeScale = engine.TimeScale;
-    using (var scaleTree = new SceneTree(new Node()))
+    using (var scaleTree = new SceneTree(new Entity()))
     {
         var scaledValue = 0d;
         var originalValue = 0d;
@@ -7058,7 +7058,7 @@ static void VerifyTweens()
         }
     }
 
-    var finalizedTree = new SceneTree(new Node());
+    var finalizedTree = new SceneTree(new Entity());
     var finalizedTween = finalizedTree.CreateTween();
     finalizedTween.TweenInterval(1d);
     finalizedTree.FinalizeLoop();
@@ -7066,7 +7066,7 @@ static void VerifyTweens()
         "Scene-tree finalization must invalidate active tweens and reject new ones.");
     finalizedTree.Dispose();
 
-    using var allocationTree = new SceneTree(new Node());
+    using var allocationTree = new SceneTree(new Entity());
     using var holder = new TweenValueHolder();
     var allocationTween = allocationTree.CreateTween();
     allocationTween.TweenMethod(value => holder.Value = value, 0d, 1d, 1_000d);
@@ -7090,7 +7090,7 @@ static void VerifySceneTreeFailureSafety()
         CreateTweenOnEnter = true,
         ThrowOnEnter = true
     };
-    var enterChild = new Node { Name = "enter-child" };
+    var enterChild = new Entity { Name = "enter-child" };
     enterRoot.AddChild(enterChild);
     Require(Capture(() => new SceneTree(enterRoot)) is AggregateException,
         "A failing enter callback must fail construction with aggregated context.");
@@ -7111,7 +7111,7 @@ static void VerifySceneTreeFailureSafety()
     enterRoot.Dispose();
 
     var readyRoot = new FailingLifecycleNode { Name = "ready-root", AddChildOnReady = true, ThrowOnReady = true };
-    var readyChild = new Node { Name = "ready-child" };
+    var readyChild = new Entity { Name = "ready-child" };
     readyRoot.AddChild(readyChild);
     Require(Capture(() => new SceneTree(readyRoot)) is AggregateException,
         "A failing ready callback must fail construction.");
@@ -7122,7 +7122,7 @@ static void VerifySceneTreeFailureSafety()
 
     var disposeRoot = new FailingLifecycleNode { Name = "dispose-root", ThrowOnExit = true };
     var failingChild = new FailingLifecycleNode { Name = "failing-child", ThrowOnDispose = true };
-    var laterChild = new Node { Name = "later-child" };
+    var laterChild = new Entity { Name = "later-child" };
     disposeRoot.AddChild(failingChild);
     disposeRoot.AddChild(laterChild);
     var failingTree = new SceneTree(disposeRoot);
@@ -7139,8 +7139,8 @@ static void VerifySceneTreeFailureSafety()
             !teardownTree.HasDeferredWork,
         "Work and pause mutation during teardown must be rejected instead of touching partial state.");
 
-    var mutationRoot = new Node { Name = "mutation-root" };
-    var exitingChild = new Node { Name = "exiting-child" };
+    var mutationRoot = new Entity { Name = "mutation-root" };
+    var exitingChild = new Entity { Name = "exiting-child" };
     mutationRoot.AddChild(exitingChild);
     using (var mutationTree = new SceneTree(mutationRoot))
     {
@@ -7162,7 +7162,7 @@ static void VerifySceneTreeFailureSafety()
         exitingChild.Dispose();
     }
 
-    var reattachRoot = new Node { Name = "reattach-root" };
+    var reattachRoot = new Entity { Name = "reattach-root" };
     var reattachTree = new SceneTree(reattachRoot);
     Exception? reattachError = null;
     reattachRoot.TreeExited += node => reattachError = Capture(() => new SceneTree(node));
@@ -7170,9 +7170,9 @@ static void VerifySceneTreeFailureSafety()
     Require(reattachError is AggregateException && reattachRoot.IsDisposed && reattachRoot.Tree is null,
         "A node must not re-enter another tree from its in-progress exit callback.");
 
-    var enteringRoot = new Node { Name = "entering-root" };
-    var enteringFirst = new Node { Name = "entering-first" };
-    var enteringSecond = new Node { Name = "entering-second" };
+    var enteringRoot = new Entity { Name = "entering-root" };
+    var enteringFirst = new Entity { Name = "entering-first" };
+    var enteringSecond = new Entity { Name = "entering-second" };
     enteringRoot.AddChild(enteringFirst);
     enteringRoot.AddChild(enteringSecond);
     Exception? enteringRemovalError = null;
@@ -7186,9 +7186,9 @@ static void VerifySceneTreeFailureSafety()
     }
     enteringSecond.Dispose();
 
-    var readySnapshotRoot = new Node { Name = "ready-snapshot-root" };
-    var readyFirst = new Node { Name = "ready-first" };
-    var readySecond = new Node { Name = "ready-second" };
+    var readySnapshotRoot = new Entity { Name = "ready-snapshot-root" };
+    var readyFirst = new Entity { Name = "ready-first" };
+    var readySecond = new Entity { Name = "ready-second" };
     readySnapshotRoot.AddChild(readyFirst);
     readySnapshotRoot.AddChild(readySecond);
     readyFirst.Ready += _ => readySnapshotRoot.RemoveChild(readySecond);
@@ -7199,9 +7199,9 @@ static void VerifySceneTreeFailureSafety()
     }
     readySecond.Dispose();
 
-    var nestedReadyRoot = new Node { Name = "nested-ready-root" };
-    var nestedReadyParent = new Node { Name = "nested-ready-parent" };
-    var nestedReadyChild = new Node { Name = "nested-ready-child" };
+    var nestedReadyRoot = new Entity { Name = "nested-ready-root" };
+    var nestedReadyParent = new Entity { Name = "nested-ready-parent" };
+    var nestedReadyChild = new Entity { Name = "nested-ready-child" };
     Exception? readyParentRemovalError = null;
     Exception? readyParentDisposalError = null;
     nestedReadyParent.AddChild(nestedReadyChild);
@@ -7219,9 +7219,9 @@ static void VerifySceneTreeFailureSafety()
             "A descendant ready callback must not remove or dispose its subtree root during ready delivery.");
     }
 
-    var deletionRoot = new Node { Name = "deletion-root" };
-    var queueFreeFailure = new Node { Name = "queue-free-failure" };
-    var queueDeleteFailure = new Node { Name = "queue-delete-failure" };
+    var deletionRoot = new Entity { Name = "deletion-root" };
+    var queueFreeFailure = new Entity { Name = "queue-free-failure" };
+    var queueDeleteFailure = new Entity { Name = "queue-delete-failure" };
     deletionRoot.AddChild(queueFreeFailure);
     deletionRoot.AddChild(queueDeleteFailure);
     using (var deletionTree = new SceneTree(deletionRoot))
@@ -7235,9 +7235,9 @@ static void VerifySceneTreeFailureSafety()
             "Queued deletion must finish disposal after detach callbacks fail.");
     }
 
-    var oldRoot = new Node { Name = "old-root" };
-    var newRoot = new Node { Name = "new-root" };
-    var transferred = new Node { Name = "transferred" };
+    var oldRoot = new Entity { Name = "old-root" };
+    var newRoot = new Entity { Name = "new-root" };
+    var transferred = new Entity { Name = "transferred" };
     oldRoot.AddChild(transferred);
     using (var oldTree = new SceneTree(oldRoot))
     using (var newTree = new SceneTree(newRoot))
@@ -7252,9 +7252,9 @@ static void VerifySceneTreeFailureSafety()
             "The destination tree must execute a transferred queued deletion.");
     }
 
-    var disposingParent = new Node { Name = "disposing-parent" };
-    var disposingChild = new Node { Name = "disposing-child" };
-    var lateChild = new Node { Name = "late-child" };
+    var disposingParent = new Entity { Name = "disposing-parent" };
+    var disposingChild = new Entity { Name = "disposing-child" };
+    var lateChild = new Entity { Name = "late-child" };
     Exception? disposalMutationError = null;
     disposingParent.AddChild(disposingChild);
     disposingChild.Disposed += _ => disposalMutationError = Capture(() => disposingParent.AddChild(lateChild));
@@ -7264,10 +7264,10 @@ static void VerifySceneTreeFailureSafety()
         "A disposing parent must reject re-entrant child insertion and leave the candidate detached.");
     lateChild.Dispose();
 
-    var transferParent = new Node { Name = "transfer-parent" };
-    var transferTrigger = new Node { Name = "transfer-trigger" };
-    var transferCandidate = new Node { Name = "transfer-candidate" };
-    var transferDestination = new Node { Name = "transfer-destination" };
+    var transferParent = new Entity { Name = "transfer-parent" };
+    var transferTrigger = new Entity { Name = "transfer-trigger" };
+    var transferCandidate = new Entity { Name = "transfer-candidate" };
+    var transferDestination = new Entity { Name = "transfer-destination" };
     Exception? disposalTransferError = null;
     transferParent.AddChild(transferTrigger);
     transferParent.AddChild(transferCandidate);
@@ -7279,8 +7279,8 @@ static void VerifySceneTreeFailureSafety()
     transferDestination.Dispose();
 
     var preDeleteParent = new PreDeleteReparentNode { Name = "pre-delete-parent" };
-    var preDeleteChild = new Node { Name = "pre-delete-child" };
-    var preDeleteDestination = new Node { Name = "pre-delete-destination" };
+    var preDeleteChild = new Entity { Name = "pre-delete-child" };
+    var preDeleteDestination = new Entity { Name = "pre-delete-destination" };
     preDeleteParent.Target = preDeleteChild;
     preDeleteParent.Destination = preDeleteDestination;
     preDeleteParent.AddChild(preDeleteChild);
@@ -7290,10 +7290,10 @@ static void VerifySceneTreeFailureSafety()
         "Pre-delete callbacks must not transfer children out of the disposal ownership snapshot.");
     preDeleteDestination.Dispose();
 
-    var exitOwnershipRoot = new Node { Name = "exit-ownership-root" };
+    var exitOwnershipRoot = new Entity { Name = "exit-ownership-root" };
     var exitMutator = new ExitSiblingMutationNode { Name = "exit-mutator" };
-    var exitOwnedSibling = new Node { Name = "exit-owned-sibling" };
-    var exitDestination = new Node { Name = "exit-destination" };
+    var exitOwnedSibling = new Entity { Name = "exit-owned-sibling" };
+    var exitDestination = new Entity { Name = "exit-destination" };
     exitMutator.Sibling = exitOwnedSibling;
     exitMutator.Destination = exitDestination;
     exitOwnershipRoot.AddChild(exitMutator);
@@ -7306,10 +7306,10 @@ static void VerifySceneTreeFailureSafety()
         "Exit callbacks must not remove sibling nodes from the hierarchy owned by tree disposal.");
     exitDestination.Dispose();
 
-    var lifecycleRoot = new Node { Name = "lifecycle-root" };
+    var lifecycleRoot = new Entity { Name = "lifecycle-root" };
     using (var lifecycleTree = new SceneTree(lifecycleRoot))
     {
-        var enteringNode = new Node { Name = "runtime-entering" };
+        var enteringNode = new Entity { Name = "runtime-entering" };
         Exception? enterFlushError = null;
         Exception? enterDisposeError = null;
         enteringNode.TreeEntered += node =>
@@ -7325,7 +7325,7 @@ static void VerifySceneTreeFailureSafety()
         lifecycleTree.FlushDeferred();
         Require(enteringNode.IsDisposed, "Queued deletion from runtime entry must execute at the next safe point.");
 
-        var exitingNode = new Node { Name = "runtime-exiting" };
+        var exitingNode = new Entity { Name = "runtime-exiting" };
         Exception? exitFlushError = null;
         lifecycleRoot.AddChild(exitingNode);
         exitingNode.TreeExiting += node =>
@@ -7348,7 +7348,7 @@ static void VerifySceneTreeFailureSafety()
             "An opposite pause transition must be rejected during pause notification without corrupting final state.");
     }
 
-    var pauseMutationRoot = new Node { Name = "pause-mutation-root" };
+    var pauseMutationRoot = new Entity { Name = "pause-mutation-root" };
     var pauseMutator = new PauseMutationNode { Name = "pause-mutator" };
     var pauseRemoved = new PauseMutationNode { Name = "pause-removed" };
     pauseMutator.Target = pauseRemoved;
@@ -7361,10 +7361,10 @@ static void VerifySceneTreeFailureSafety()
             "Pause traversal must skip a captured node removed and disposed by an earlier notification.");
     }
 
-    var pauseReparentRoot = new Node { Name = "pause-reparent-root" };
+    var pauseReparentRoot = new Entity { Name = "pause-reparent-root" };
     var pauseReparenter = new PauseReparentNode { Name = "pause-reparenter" };
     var pauseMoved = new PauseMutationNode { Name = "pause-moved" };
-    var pauseDestination = new Node { Name = "pause-destination" };
+    var pauseDestination = new Entity { Name = "pause-destination" };
     pauseReparenter.Target = pauseMoved;
     pauseReparenter.Destination = pauseDestination;
     pauseReparentRoot.AddChild(pauseReparenter);
@@ -7388,8 +7388,8 @@ static void VerifySceneTreeFailureSafety()
 
     for (var iteration = 0; iteration < 256; iteration++)
     {
-        var queueRaceRoot = new Node { Name = $"queue-race-root-{iteration}" };
-        var queueRaceChild = new Node { Name = "queue-race-child" };
+        var queueRaceRoot = new Entity { Name = $"queue-race-root-{iteration}" };
+        var queueRaceChild = new Entity { Name = "queue-race-child" };
         queueRaceRoot.AddChild(queueRaceChild);
         using var queueRaceTree = new SceneTree(queueRaceRoot);
         using var queueRaceStart = new ManualResetEventSlim();
@@ -7408,7 +7408,7 @@ static void VerifySceneTreeFailureSafety()
 
     for (var iteration = 0; iteration < 64; iteration++)
     {
-        var raceTree = new SceneTree(new Node { Name = $"race-{iteration}" });
+        var raceTree = new SceneTree(new Entity { Name = $"race-{iteration}" });
         using var start = new ManualResetEventSlim();
         var workers = Enumerable.Range(0, 8).Select(_ => Task.Run(() =>
         {
@@ -7831,7 +7831,7 @@ static void VerifyPackedScenes()
     unsupportedRoot.Dispose();
 
     var movingRoot = new MovingCaptureNode { Name = "Moving" };
-    using var destination = new Node { Name = "Destination" };
+    using var destination = new Entity { Name = "Destination" };
     MovingCaptureNode.Destination = destination;
     Expect<InvalidOperationException>(() => scene.Pack(movingRoot),
         "A stored-property getter must not move a captured node through another parent.");
@@ -7861,7 +7861,7 @@ static void VerifyPackedScenes()
     activeFactorySource.Dispose();
     ActiveFactoryPackedNode.ActivationError = null;
     ActiveFactoryPackedNode.ExistingTreeActivationError = null;
-    var activeFactoryDestination = new Node { Name = "ActiveFactoryDestination" };
+    var activeFactoryDestination = new Entity { Name = "ActiveFactoryDestination" };
     using (var activeFactoryTree = new SceneTree(activeFactoryDestination))
     {
         ActiveFactoryPackedNode.Destination = activeFactoryDestination;
@@ -7876,7 +7876,7 @@ static void VerifyPackedScenes()
     }
 
     var escapingSource = new EscapingPackedNode { Name = "Escaping" };
-    using var escapeDestination = new Node { Name = "EscapeDestination" };
+    using var escapeDestination = new Entity { Name = "EscapeDestination" };
     scene.Pack(escapingSource);
     escapingSource.Dispose();
     EscapingPackedNode.Destination = escapeDestination;
@@ -7899,7 +7899,7 @@ static void VerifyPackedScenes()
     var activeEscapeSource = new ActiveTreeEscapingPackedNode { Name = "ActiveTreeEscaping" };
     scene.Pack(activeEscapeSource);
     activeEscapeSource.Dispose();
-    var activeEscapeRoot = new Node { Name = "ActiveEscapeDestination" };
+    var activeEscapeRoot = new Entity { Name = "ActiveEscapeDestination" };
     using (var activeEscapeTree = new SceneTree(activeEscapeRoot))
     {
         ActiveTreeEscapingPackedNode.Destination = activeEscapeRoot;
@@ -8013,7 +8013,7 @@ static class TestNativeLinks
         [MarshalAs(UnmanagedType.LPUTF8Str)] string newPath);
 }
 
-sealed class ColorPackedNode : Node
+sealed class ColorPackedNode : Entity
 {
     private static readonly PropertyDescriptor<ColorPackedNode, Color> TintProperty = new(
         nameof(Tint),
@@ -8153,7 +8153,7 @@ sealed class ColorPackedNode : Node
         }
     }
 
-    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
 
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
         base.GetPropertyDescriptors()
@@ -8166,10 +8166,10 @@ sealed class ColorPackedNode : Node
             .Append(Vector4Property)
             .Append(Vector4IProperty);
 
-    private static Node CreateNode() => new ColorPackedNode();
+    private static Entity CreateNode() => new ColorPackedNode();
 }
 
-sealed class PackedTestNode : Node
+sealed class PackedTestNode : Entity
 {
     private static readonly PropertyDescriptor<PackedTestNode, int> ValueProperty = new(
         nameof(Value),
@@ -8209,7 +8209,7 @@ sealed class PackedTestNode : Node
 
     public int SceneNotifications { get; private set; }
 
-    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
 
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
         base.GetPropertyDescriptors().Append(ValueProperty).Append(DataProperty);
@@ -8222,7 +8222,7 @@ sealed class PackedTestNode : Node
         base.OnNotification(what);
     }
 
-    private static Node CreateNode() => new PackedTestNode();
+    private static Entity CreateNode() => new PackedTestNode();
 }
 
 sealed class PackedTestResource : Resource
@@ -8265,11 +8265,11 @@ sealed class PackedTestResource : Resource
     }
 }
 
-sealed class UnsupportedPackedNode : Node
+sealed class UnsupportedPackedNode : Entity
 {
 }
 
-sealed class MovingCaptureNode : Node
+sealed class MovingCaptureNode : Entity
 {
     private static readonly PropertyDescriptor<MovingCaptureNode, int> MovingProperty = new(
         "MovingValue",
@@ -8278,9 +8278,9 @@ sealed class MovingCaptureNode : Node
         _ => 0,
         stored: true);
 
-    public static Node? Destination { get; set; }
+    public static Entity? Destination { get; set; }
 
-    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
 
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
         base.GetPropertyDescriptors().Append(MovingProperty);
@@ -8291,37 +8291,37 @@ sealed class MovingCaptureNode : Node
         return 0;
     }
 
-    private static Node CreateNode() => new MovingCaptureNode();
+    private static Entity CreateNode() => new MovingCaptureNode();
 }
 
-sealed class WrongPackedFactoryNode : Node
+sealed class WrongPackedFactoryNode : Entity
 {
-    public static Node? LastCreated { get; set; }
+    public static Entity? LastCreated { get; set; }
 
-    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
 
-    private static Node CreateNode() => LastCreated = new Node();
+    private static Entity CreateNode() => LastCreated = new Entity();
 }
 
-sealed class CapturingPackedFactoryNode : Node
+sealed class CapturingPackedFactoryNode : Entity
 {
-    protected override Func<SceneNode> CreateSceneInstanceFactory() =>
+    protected override Func<Node> CreateSceneInstanceFactory() =>
         () => new CapturingPackedFactoryNode { Name = Name };
 }
 
-sealed class ActiveFactoryPackedNode : Node
+sealed class ActiveFactoryPackedNode : Entity
 {
     public static Exception? ActivationError { get; set; }
 
-    public static Node? Destination { get; set; }
+    public static Entity? Destination { get; set; }
 
     public static Exception? ExistingTreeActivationError { get; set; }
 
     public int EnterCount { get; private set; }
 
-    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
 
-    private static Node CreateNode()
+    private static Entity CreateNode()
     {
         var node = new ActiveFactoryPackedNode();
         ActivationError = Capture(() => _ = new SceneTree(node));
@@ -8346,13 +8346,13 @@ sealed class ActiveFactoryPackedNode : Node
     }
 }
 
-sealed class EscapingPackedNode : Node
+sealed class EscapingPackedNode : Entity
 {
-    public static Node? Destination { get; set; }
+    public static Entity? Destination { get; set; }
 
     public static EscapingPackedNode? LastCreated { get; set; }
 
-    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
 
     protected override void OnNotification(int what)
     {
@@ -8362,23 +8362,23 @@ sealed class EscapingPackedNode : Node
         base.OnNotification(what);
     }
 
-    private static Node CreateNode() => LastCreated = new EscapingPackedNode();
+    private static Entity CreateNode() => LastCreated = new EscapingPackedNode();
 }
 
-sealed class SourceReturningPackedNode : Node
+sealed class SourceReturningPackedNode : Entity
 {
     public static SourceReturningPackedNode? Source { get; set; }
 
-    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
 
-    private static Node CreateNode() => Source!;
+    private static Entity CreateNode() => Source!;
 }
 
-sealed class TreeEscapingPackedNode : Node
+sealed class TreeEscapingPackedNode : Entity
 {
     public static TreeEscapingPackedNode? LastCreated { get; set; }
 
-    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
 
     protected override void OnNotification(int what)
     {
@@ -8388,18 +8388,18 @@ sealed class TreeEscapingPackedNode : Node
         base.OnNotification(what);
     }
 
-    private static Node CreateNode() => LastCreated = new TreeEscapingPackedNode();
+    private static Entity CreateNode() => LastCreated = new TreeEscapingPackedNode();
 }
 
-sealed class ActiveTreeEscapingPackedNode : Node
+sealed class ActiveTreeEscapingPackedNode : Entity
 {
-    public static Node? Destination { get; set; }
+    public static Entity? Destination { get; set; }
 
     public static ActiveTreeEscapingPackedNode? LastCreated { get; set; }
 
     public int EnterCount { get; private set; }
 
-    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
 
     protected override void OnNotification(int what)
     {
@@ -8411,16 +8411,16 @@ sealed class ActiveTreeEscapingPackedNode : Node
 
     protected override void OnEnterTree() => EnterCount++;
 
-    private static Node CreateNode() => LastCreated = new ActiveTreeEscapingPackedNode();
+    private static Entity CreateNode() => LastCreated = new ActiveTreeEscapingPackedNode();
 }
 
-sealed class SingletonPackedNode : Node
+sealed class SingletonPackedNode : Entity
 {
     public static SingletonPackedNode? Cached { get; set; }
 
-    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
 
-    private static Node CreateNode() => Cached ??= new SingletonPackedNode();
+    private static Entity CreateNode() => Cached ??= new SingletonPackedNode();
 }
 
 sealed class TestResource : Resource
@@ -8855,7 +8855,7 @@ sealed class EngineProbeMainLoop : MainLoop
     }
 }
 
-sealed class SystemNotificationNode : Node
+sealed class SystemNotificationNode : Entity
 {
     private readonly List<string> _log;
 
@@ -8881,7 +8881,7 @@ sealed class SystemNotificationNode : Node
     }
 }
 
-sealed class FinalizeOnEnterNode : Node
+sealed class FinalizeOnEnterNode : Entity
 {
     public Exception? FinalizeError { get; private set; }
 
@@ -8950,7 +8950,7 @@ sealed class TestObject : ElectronObject
     }
 }
 
-sealed class RecordingNode : Node
+sealed class RecordingNode : Entity
 {
     private readonly List<string> _lifecycle;
 
@@ -8975,7 +8975,7 @@ sealed class DuplicatePropertyObject : ElectronObject
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Append(First).Append(Second);
 }
 
-sealed class TransformNode : Node
+sealed class TransformNode : Entity
 {
     public List<int> Notifications { get; } = [];
 
@@ -8986,7 +8986,7 @@ sealed class TransformNode : Node
     }
 }
 
-sealed class ProcessingNode : Node
+sealed class ProcessingNode : Entity
 {
     private readonly List<string> _log;
 
@@ -9006,7 +9006,7 @@ sealed class ProcessingTimer(List<string> log) : EngineTimer
     protected override void OnProcess(double delta) => log.Add($"process:timer:{delta}");
 }
 
-sealed class GroupNode : Node
+sealed class GroupNode : Entity
 {
     private readonly List<string> _log;
 
@@ -9025,7 +9025,7 @@ sealed class GroupNode : Node
     }
 }
 
-sealed class FailingLifecycleNode : Node
+sealed class FailingLifecycleNode : Entity
 {
     public bool AddChildOnEnter { get; init; }
 
@@ -9043,7 +9043,7 @@ sealed class FailingLifecycleNode : Node
 
     public bool ThrowOnDispose { get; init; }
 
-    public Node? AddedChild { get; private set; }
+    public Entity? AddedChild { get; private set; }
 
     public SceneTreeTimer? CreatedTimer { get; private set; }
 
@@ -9071,7 +9071,7 @@ sealed class FailingLifecycleNode : Node
 
         if (AddChildOnEnter)
         {
-            AddedChild = new Node { Name = "added-during-enter" };
+            AddedChild = new Entity { Name = "added-during-enter" };
             AddChild(AddedChild);
         }
 
@@ -9096,7 +9096,7 @@ sealed class FailingLifecycleNode : Node
     {
         if (AddChildOnReady)
         {
-            AddedChild = new Node { Name = "added-during-ready" };
+            AddedChild = new Entity { Name = "added-during-ready" };
             AddChild(AddedChild);
         }
 
@@ -9119,7 +9119,7 @@ sealed class FailingLifecycleNode : Node
     }
 }
 
-sealed class TeardownQueueNode : Node
+sealed class TeardownQueueNode : Entity
 {
     public bool QueueWasRejected { get; private set; }
 
@@ -9147,7 +9147,7 @@ sealed class TeardownQueueNode : Node
     }
 }
 
-sealed class ReentrantPauseNode : Node
+sealed class ReentrantPauseNode : Entity
 {
     public Exception? ReentryError { get; private set; }
 
@@ -9170,9 +9170,9 @@ sealed class ReentrantPauseNode : Node
     }
 }
 
-sealed class PauseMutationNode : Node
+sealed class PauseMutationNode : Entity
 {
-    public Node? Target { get; set; }
+    public Entity? Target { get; set; }
 
     public int PauseNotifications { get; private set; }
 
@@ -9188,11 +9188,11 @@ sealed class PauseMutationNode : Node
     }
 }
 
-sealed class PauseReparentNode : Node
+sealed class PauseReparentNode : Entity
 {
-    public Node? Target { get; set; }
+    public Entity? Target { get; set; }
 
-    public Node? Destination { get; set; }
+    public Entity? Destination { get; set; }
 
     protected override void OnNotification(int what)
     {
@@ -9203,7 +9203,7 @@ sealed class PauseReparentNode : Node
     }
 }
 
-sealed class PauseBarrierNode : Node
+sealed class PauseBarrierNode : Entity
 {
     public Exception? FlushError { get; private set; }
 
@@ -9234,7 +9234,7 @@ sealed class PauseBarrierNode : Node
     }
 }
 
-sealed class InputEmulationProbeNode : Node
+sealed class InputEmulationProbeNode : Entity
 {
     public List<InputEvent> Events { get; } = [];
 
@@ -9279,7 +9279,7 @@ sealed class InputEmulationProbeNode : Node
     }
 }
 
-sealed class InputProbeNode(string id, List<string> log) : Node
+sealed class InputProbeNode(string id, List<string> log) : Entity
 {
     public string ObservedAction { get; set; } = string.Empty;
 
@@ -9367,11 +9367,11 @@ sealed class TweenValueHolder : ElectronObject
     public double Value { get; set; }
 }
 
-sealed class PreDeleteReparentNode : Node
+sealed class PreDeleteReparentNode : Entity
 {
-    public Node? Target { get; set; }
+    public Entity? Target { get; set; }
 
-    public Node? Destination { get; set; }
+    public Entity? Destination { get; set; }
 
     public Exception? ReparentError { get; private set; }
 
@@ -9393,11 +9393,11 @@ sealed class PreDeleteReparentNode : Node
     }
 }
 
-sealed class ExitSiblingMutationNode : Node
+sealed class ExitSiblingMutationNode : Entity
 {
-    public Node? Sibling { get; set; }
+    public Entity? Sibling { get; set; }
 
-    public Node? Destination { get; set; }
+    public Entity? Destination { get; set; }
 
     public Exception? RemoveError { get; private set; }
 

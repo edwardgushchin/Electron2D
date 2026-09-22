@@ -4,32 +4,32 @@ using System.Threading;
 namespace Electron2D;
 
 /// <summary>Provides tree membership, ownership, lifecycle, processing and input for scene objects.</summary>
-/// <remarks>Children may be any SceneNode subtype. Spatial and drawing behavior belongs to CanvasItem and Node.</remarks>
-public class SceneNode : ElectronObject
+/// <remarks>Children may be any Node subtype. Spatial and drawing behavior belongs to CanvasItem and Entity.</remarks>
+public class Node : ElectronObject
 {
     private static readonly PropertyDescriptor[] SceneNodeProperties =
     [
-        new PropertyDescriptor<SceneNode, string>(
+        new PropertyDescriptor<Node, string>(
             nameof(Name),
             node => node.Name,
             (node, value) => node.Name = value,
             node => node.ClassName,
             (_, value) => IsValidNodeName(value),
             stored: true),
-        new PropertyDescriptor<SceneNode, NodeProcessMode>(
+        new PropertyDescriptor<Node, NodeProcessMode>(
             nameof(ProcessMode),
             node => node.ProcessMode,
             (node, value) => node.ProcessMode = value,
             _ => NodeProcessMode.Inherit,
             (_, value) => Enum.IsDefined(value),
             stored: true),
-        new PropertyDescriptor<SceneNode, bool>(nameof(ProcessEnabled), node => node.ProcessEnabled, (node, value) => node.ProcessEnabled = value, _ => false, stored: true),
-        new PropertyDescriptor<SceneNode, bool>(nameof(PhysicsProcessEnabled), node => node.PhysicsProcessEnabled, (node, value) => node.PhysicsProcessEnabled = value, _ => false, stored: true),
-        new PropertyDescriptor<SceneNode, bool>(nameof(InputEnabled), node => node.InputEnabled, (node, value) => node.InputEnabled = value, _ => false, stored: true),
-        new PropertyDescriptor<SceneNode, bool>(nameof(UnhandledInputEnabled), node => node.UnhandledInputEnabled, (node, value) => node.UnhandledInputEnabled = value, _ => false, stored: true),
-        new PropertyDescriptor<SceneNode, bool>(nameof(UnhandledKeyInputEnabled), node => node.UnhandledKeyInputEnabled, (node, value) => node.UnhandledKeyInputEnabled = value, _ => false, stored: true),
-        new PropertyDescriptor<SceneNode, int>(nameof(ProcessPriority), node => node.ProcessPriority, (node, value) => node.ProcessPriority = value, _ => 0, stored: true),
-        new PropertyDescriptor<SceneNode, int>(nameof(PhysicsProcessPriority), node => node.PhysicsProcessPriority, (node, value) => node.PhysicsProcessPriority = value, _ => 0, stored: true)
+        new PropertyDescriptor<Node, bool>(nameof(ProcessEnabled), node => node.ProcessEnabled, (node, value) => node.ProcessEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<Node, bool>(nameof(PhysicsProcessEnabled), node => node.PhysicsProcessEnabled, (node, value) => node.PhysicsProcessEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<Node, bool>(nameof(InputEnabled), node => node.InputEnabled, (node, value) => node.InputEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<Node, bool>(nameof(UnhandledInputEnabled), node => node.UnhandledInputEnabled, (node, value) => node.UnhandledInputEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<Node, bool>(nameof(UnhandledKeyInputEnabled), node => node.UnhandledKeyInputEnabled, (node, value) => node.UnhandledKeyInputEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<Node, int>(nameof(ProcessPriority), node => node.ProcessPriority, (node, value) => node.ProcessPriority = value, _ => 0, stored: true),
+        new PropertyDescriptor<Node, int>(nameof(PhysicsProcessPriority), node => node.PhysicsProcessPriority, (node, value) => node.PhysicsProcessPriority = value, _ => 0, stored: true)
     ];
 
     /// <summary>Identifies the notification sent when a node enters an active <see cref="SceneTree"/>.</summary>
@@ -123,9 +123,9 @@ public class SceneNode : ElectronObject
 
     private static readonly AsyncLocal<int> SceneFactoryDepth = new();
 
-    private readonly List<SceneNode> _children = [];
+    private readonly List<Node> _children = [];
 
-    private readonly IReadOnlyList<SceneNode> _childrenView;
+    private readonly IReadOnlyList<Node> _childrenView;
 
     private readonly Dictionary<string, bool> _groups = new(StringComparer.Ordinal);
 
@@ -133,7 +133,7 @@ public class SceneNode : ElectronObject
 
     private string _sceneFilePath = string.Empty;
 
-    private SceneNode? _owner;
+    private Node? _owner;
 
     private List<Resource>? _ownedSceneResources;
 
@@ -176,7 +176,7 @@ public class SceneNode : ElectronObject
     private double _unscaledPhysicsProcessDeltaTime;
 
     /// <summary>Initializes a detached node with its runtime class name and no parent.</summary>
-    public SceneNode()
+    public Node()
     {
         _name = ClassName;
         _childrenView = _children.AsReadOnly();
@@ -251,7 +251,7 @@ public class SceneNode : ElectronObject
 
     /// <summary>Gets the direct parent.</summary>
     /// <value>The owning parent, or <see langword="null"/> while detached.</value>
-    public SceneNode? Parent { get; private set; }
+    public Node? Parent { get; private set; }
 
     /// <summary>Gets the external resource path from which this scene root was instantiated.</summary>
     /// <value>The packed-scene path for an instantiated external scene root; otherwise an empty string.</value>
@@ -274,7 +274,7 @@ public class SceneNode : ElectronObject
     /// <exception cref="ArgumentException">The assigned node is this node or is not an ancestor.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the tree owner thread or scene capture is active.</exception>
     /// <exception cref="ObjectDisposedException">This node or the assigned owner is disposing or disposed.</exception>
-    public SceneNode? Owner
+    public Node? Owner
     {
         get
         {
@@ -304,7 +304,7 @@ public class SceneNode : ElectronObject
 
     /// <summary>Gets a live read-only view of the ordered direct children.</summary>
     /// <value>A view backed by this node's child list; later hierarchy changes are visible through it.</value>
-    public IReadOnlyList<SceneNode> Children => _childrenView;
+    public IReadOnlyList<Node> Children => _childrenView;
 
     /// <summary>Gets the number of direct children.</summary>
     /// <value>The current child count.</value>
@@ -341,7 +341,7 @@ public class SceneNode : ElectronObject
     public Viewport? GetViewport()
     {
         ThrowIfDisposed();
-        for (SceneNode? node = this; node is not null; node = node.Parent)
+        for (Node? node = this; node is not null; node = node.Parent)
             if (node is Viewport viewport)
                 return viewport;
         return null;
@@ -534,52 +534,52 @@ public class SceneNode : ElectronObject
     /// The first argument is the publishing parent and the second is the child. Delivery is synchronous and precedes
     /// active-tree attachment of the child's subtree.
     /// </remarks>
-    public event Action<SceneNode, SceneNode>? ChildAdded;
+    public event Action<Node, Node>? ChildAdded;
 
     /// <summary>Occurs on the former parent after a direct child is detached and child order is reported.</summary>
     /// <remarks>
     /// The first argument is the publishing former parent and the second is the removed child. Delivery is synchronous,
     /// and structural changes are not rolled back if a handler throws.
     /// </remarks>
-    public event Action<SceneNode, SceneNode>? ChildRemoved;
+    public event Action<Node, Node>? ChildRemoved;
 
     /// <summary>Occurs on the direct parent when a child enters the active tree.</summary>
     /// <remarks>
     /// The first argument is the publishing parent and the second is the entering child. Delivery follows that child's
     /// enter notification and event.
     /// </remarks>
-    public event Action<SceneNode, SceneNode>? ChildEnteredTree;
+    public event Action<Node, Node>? ChildEnteredTree;
 
     /// <summary>Occurs on the direct parent while a child is exiting the active tree.</summary>
     /// <remarks>
     /// The first argument is the publishing parent and the second is the exiting child. Descendants have already exited,
     /// and the child's <see cref="Tree"/> is still set.
     /// </remarks>
-    public event Action<SceneNode, SceneNode>? ChildExitingTree;
+    public event Action<Node, Node>? ChildExitingTree;
 
     /// <summary>Occurs after the order or membership of direct children changes.</summary>
     /// <remarks>The argument is this parent node. Delivery is synchronous after <see cref="NotificationChildOrderChanged"/>.</remarks>
-    public event Action<SceneNode>? ChildOrderChanged;
+    public event Action<Node>? ChildOrderChanged;
 
     /// <summary>Occurs after an active node's own name changes and path notifications propagate.</summary>
     /// <remarks>The argument is this node. Detached-node renames do not raise the event.</remarks>
-    public event Action<SceneNode>? Renamed;
+    public event Action<Node>? Renamed;
 
     /// <summary>Occurs when this node enters an active scene tree.</summary>
     /// <remarks>Delivery follows <see cref="NotificationEnterTree"/> and precedes descendant entry.</remarks>
-    public event Action<SceneNode>? TreeEntered;
+    public event Action<Node>? TreeEntered;
 
     /// <summary>Occurs while this node is exiting its active scene tree.</summary>
     /// <remarks>Descendants have exited, <see cref="NotificationExitTree"/> has run, and <see cref="Tree"/> remains available.</remarks>
-    public event Action<SceneNode>? TreeExiting;
+    public event Action<Node>? TreeExiting;
 
     /// <summary>Occurs after this node has left its scene tree.</summary>
     /// <remarks><see cref="Tree"/> is already <see langword="null"/> when handlers run.</remarks>
-    public event Action<SceneNode>? TreeExited;
+    public event Action<Node>? TreeExited;
 
     /// <summary>Occurs after child-first ready notification delivery.</summary>
     /// <remarks>SceneTree-managed delivery occurs once until <see cref="RequestReady"/> resets the ready state.</remarks>
-    public event Action<SceneNode>? Ready;
+    public event Action<Node>? Ready;
 
     /// <summary>Appends a detached node as the last direct child.</summary>
     /// <param name="child">The live node to adopt.</param>
@@ -594,7 +594,7 @@ public class SceneNode : ElectronObject
     /// This node is disposing on another thread or has finished disposing, or disposal of <paramref name="child"/> has started.
     /// </exception>
     /// <exception cref="AggregateException">One or more structural, lifecycle, notification, or event callbacks fail after insertion begins.</exception>
-    public void AddChild(SceneNode child) => InsertChild(child, _children.Count);
+    public void AddChild(Node child) => InsertChild(child, _children.Count);
 
     /// <summary>Inserts a detached node immediately after this node in its parent's child order.</summary>
     /// <param name="sibling">The live node to insert.</param>
@@ -609,7 +609,7 @@ public class SceneNode : ElectronObject
     /// <paramref name="sibling"/> has started.
     /// </exception>
     /// <exception cref="AggregateException">One or more structural, lifecycle, notification, or event callbacks fail after insertion begins.</exception>
-    public void AddSibling(SceneNode sibling)
+    public void AddSibling(Node sibling)
     {
         ThrowIfDisposed();
 
@@ -627,7 +627,7 @@ public class SceneNode : ElectronObject
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread, this parent is exiting, or the child is in tree lifecycle delivery.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="AggregateException">One or more lifecycle, notification, or event callbacks fail after removal begins.</exception>
-    public bool RemoveChild(SceneNode child)
+    public bool RemoveChild(Node child)
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(child);
@@ -643,7 +643,7 @@ public class SceneNode : ElectronObject
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="AggregateException">One or more child-order or tree-change callbacks fail after the order changes.</exception>
-    public void MoveChild(SceneNode child, int index)
+    public void MoveChild(Node child, int index)
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(child);
@@ -693,7 +693,7 @@ public class SceneNode : ElectronObject
     /// </exception>
     /// <exception cref="ObjectDisposedException">This node or <paramref name="newParent"/> is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="AggregateException">One or more structural, lifecycle, notification, or event callbacks fail after reparenting begins.</exception>
-    public virtual void Reparent(SceneNode newParent, bool keepGlobalTransform = true)
+    public virtual void Reparent(Node newParent, bool keepGlobalTransform = true)
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(newParent);
@@ -710,7 +710,7 @@ public class SceneNode : ElectronObject
         newParent.ValidateChildForInsertion(this, allowExistingParent: true);
         var retainedOwners = EnumerateDepthFirst()
             .Where(node => node._owner is not null)
-            .Select(node => (SceneNode: node, Owner: node._owner!))
+            .Select(node => (Node: node, Owner: node._owner!))
             .ToArray();
 
         var oldParent = Parent;
@@ -738,7 +738,7 @@ public class SceneNode : ElectronObject
     /// <returns>The selected direct child.</returns>
     /// <exception cref="ArgumentOutOfRangeException">This node has no children or <paramref name="index"/> is outside the valid range.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public SceneNode GetChild(int index)
+    public Node GetChild(int index)
     {
         ThrowIfDisposed();
         index = NormalizeChildIndex(index, _children.Count);
@@ -759,7 +759,7 @@ public class SceneNode : ElectronObject
     /// <returns><see langword="true"/> when this node appears in the parent chain; otherwise <see langword="false"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public bool IsAncestorOf(SceneNode node)
+    public bool IsAncestorOf(Node node)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(node);
@@ -780,7 +780,7 @@ public class SceneNode : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node or a recursively searched node is disposing on another thread, or has finished disposing.</exception>
-    public SceneNode? FindChild(string pattern, bool recursive = true) => FindChild<SceneNode>(pattern, recursive);
+    public Node? FindChild(string pattern, bool recursive = true) => FindChild<Node>(pattern, recursive);
 
     /// <summary>Finds the first descendant of a requested type whose name matches a wildcard pattern.</summary>
     /// <typeparam name="TNode">The required node subtype.</typeparam>
@@ -791,7 +791,7 @@ public class SceneNode : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node or a recursively searched node is disposing on another thread, or has finished disposing.</exception>
     public TNode? FindChild<TNode>(string pattern = "*", bool recursive = true)
-        where TNode : SceneNode
+        where TNode : Node
     {
         ThrowIfDisposed();
         ArgumentException.ThrowIfNullOrWhiteSpace(pattern);
@@ -815,7 +815,7 @@ public class SceneNode : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public IReadOnlyList<SceneNode> FindChildren(string pattern, bool recursive = true) => FindChildren<SceneNode>(pattern, recursive);
+    public IReadOnlyList<Node> FindChildren(string pattern, bool recursive = true) => FindChildren<Node>(pattern, recursive);
 
     /// <summary>Finds all descendants of a requested type whose names match a wildcard pattern.</summary>
     /// <typeparam name="TNode">The required node subtype.</typeparam>
@@ -826,7 +826,7 @@ public class SceneNode : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public IReadOnlyList<TNode> FindChildren<TNode>(string pattern = "*", bool recursive = true)
-        where TNode : SceneNode
+        where TNode : Node
     {
         ThrowIfDisposed();
         ArgumentException.ThrowIfNullOrWhiteSpace(pattern);
@@ -842,7 +842,7 @@ public class SceneNode : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public SceneNode? FindParent(string pattern)
+    public Node? FindParent(string pattern)
     {
         ThrowIfDisposed();
         ArgumentException.ThrowIfNullOrWhiteSpace(pattern);
@@ -875,7 +875,7 @@ public class SceneNode : ElectronObject
     /// <exception cref="ObjectDisposedException">
     /// This node is disposing on another thread or has finished disposing, or disposal of <paramref name="node"/> has started.
     /// </exception>
-    public string GetPathTo(SceneNode node)
+    public string GetPathTo(Node node)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(node);
@@ -906,7 +906,7 @@ public class SceneNode : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException">No node exists at the requested path.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public SceneNode GetNode(string path) => GetNodeOrNull(path) ?? throw new KeyNotFoundException($"SceneNode path '{path}' was not found from '{GetPath()}'.");
+    public Node GetNode(string path) => GetNodeOrNull(path) ?? throw new KeyNotFoundException($"Node path '{path}' was not found from '{GetPath()}'.");
 
     /// <summary>Resolves a required relative or absolute path to a requested node type.</summary>
     /// <typeparam name="TNode">The required node subtype.</typeparam>
@@ -918,7 +918,7 @@ public class SceneNode : ElectronObject
     /// <exception cref="KeyNotFoundException">No node exists at the requested path.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public TNode GetNode<TNode>(string path)
-        where TNode : SceneNode => GetNode(path) as TNode ?? throw new InvalidCastException($"SceneNode at '{path}' is not a {typeof(TNode).Name}.");
+        where TNode : Node => GetNode(path) as TNode ?? throw new InvalidCastException($"Node at '{path}' is not a {typeof(TNode).Name}.");
 
     /// <summary>Attempts to resolve a relative or absolute node path.</summary>
     /// <param name="path">A nonblank slash-separated path supporting <c>.</c>, <c>..</c>, and an optional absolute root-name segment.</param>
@@ -927,7 +927,7 @@ public class SceneNode : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public SceneNode? GetNodeOrNull(string path)
+    public Node? GetNodeOrNull(string path)
     {
         ThrowIfDisposed();
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
@@ -1119,15 +1119,15 @@ public class SceneNode : ElectronObject
     /// <summary>Creates a reusable factory for packed-scene instances of this exact runtime node type.</summary>
     /// <returns>A non-null factory that creates a fresh node of the exact same runtime type.</returns>
     /// <remarks>
-    /// The base implementation supports only an exact <see cref="SceneNode"/>. Derived node types that can be packed must
+    /// The base implementation supports only an exact <see cref="Node"/>. Derived node types that can be packed must
     /// return a static, non-capturing factory that remains valid after the source node is disposed and creates a live,
     /// detached, parentless, childless, unowned, and non-queued instance. Stored writable property descriptors restore
     /// the instance state.
     /// </remarks>
     /// <exception cref="NotSupportedException">A derived node has not explicitly supplied an instancing factory.</exception>
-    protected virtual Func<SceneNode> CreateSceneInstanceFactory()
+    protected virtual Func<Node> CreateSceneInstanceFactory()
     {
-        if (GetType() != typeof(SceneNode))
+        if (GetType() != typeof(Node))
             throw new NotSupportedException($"{GetType().Name} must override {nameof(CreateSceneInstanceFactory)} to support packed scenes.");
 
         return CreateDefaultSceneNode;
@@ -1359,7 +1359,7 @@ public class SceneNode : ElectronObject
 
     internal bool TryConsumeQueuedDeletion() => Interlocked.CompareExchange(ref _queuedForDeletion, 0, 2) == 2;
 
-    internal Func<SceneNode> CaptureSceneInstanceFactory()
+    internal Func<Node> CaptureSceneInstanceFactory()
     {
         ThrowIfDisposed();
         var factory = CreateSceneInstanceFactory() ??
@@ -1371,7 +1371,7 @@ public class SceneNode : ElectronObject
         return factory;
     }
 
-    internal SceneNode[] BeginSceneCapture()
+    internal Node[] BeginSceneCapture()
     {
         EnsureMutable();
         var nodes = EnumerateDepthFirst().ToArray();
@@ -1396,7 +1396,7 @@ public class SceneNode : ElectronObject
         }
     }
 
-    internal static void EndSceneCapture(IEnumerable<SceneNode> nodes)
+    internal static void EndSceneCapture(IEnumerable<Node> nodes)
     {
         foreach (var node in nodes)
             Volatile.Write(ref node._sceneCaptureDepth, 0);
@@ -1447,7 +1447,7 @@ public class SceneNode : ElectronObject
             throw new InvalidOperationException("A node cannot become a scene-tree root before packed-scene instantiation completes.");
     }
 
-    internal static SceneNode InvokeSceneInstanceFactory(Func<SceneNode> factory)
+    internal static Node InvokeSceneInstanceFactory(Func<Node> factory)
     {
         ArgumentNullException.ThrowIfNull(factory);
         SceneFactoryDepth.Value++;
@@ -1480,7 +1480,7 @@ public class SceneNode : ElectronObject
         }
     }
 
-    internal IEnumerable<SceneNode> EnumerateDepthFirst()
+    internal IEnumerable<Node> EnumerateDepthFirst()
     {
         yield return this;
 
@@ -1557,10 +1557,10 @@ public class SceneNode : ElectronObject
         EnsureSceneActivationAvailable();
 
         if (_isEnteringTree || _isExitingTree)
-            throw new InvalidOperationException($"SceneNode '{Name}' cannot re-enter a SceneTree from an in-progress lifecycle callback.");
+            throw new InvalidOperationException($"Node '{Name}' cannot re-enter a SceneTree from an in-progress lifecycle callback.");
 
         if (Tree is not null)
-            throw new InvalidOperationException($"SceneNode '{Name}' is already inside a SceneTree.");
+            throw new InvalidOperationException($"Node '{Name}' is already inside a SceneTree.");
 
         _isEnteringTree = true;
 
@@ -1663,10 +1663,10 @@ public class SceneNode : ElectronObject
         ThrowCollected("One or more enter-tree callbacks failed.", errors);
     }
 
-    internal void MakeReady(List<SceneNode>? readied = null)
+    internal void MakeReady(List<Node>? readied = null)
     {
         if (_isMakingReady)
-            throw new InvalidOperationException($"SceneNode '{Name}' cannot re-enter ready delivery.");
+            throw new InvalidOperationException($"Node '{Name}' cannot re-enter ready delivery.");
 
         var expectedTree = Tree;
         if (expectedTree is null || IsDisposed)
@@ -1684,7 +1684,7 @@ public class SceneNode : ElectronObject
         }
     }
 
-    private void MakeReadyCore(SceneTree expectedTree, List<SceneNode>? readied)
+    private void MakeReadyCore(SceneTree expectedTree, List<Node>? readied)
     {
         List<Exception>? errors = null;
 
@@ -1742,7 +1742,7 @@ public class SceneNode : ElectronObject
     internal void ExitTree(SceneTree tree)
     {
         if (_isEnteringTree)
-            throw new InvalidOperationException($"SceneNode '{Name}' cannot exit a SceneTree while it is still entering.");
+            throw new InvalidOperationException($"Node '{Name}' cannot exit a SceneTree while it is still entering.");
 
         if (!ReferenceEquals(Tree, tree) || _isExitingTree)
             return;
@@ -1835,7 +1835,7 @@ public class SceneNode : ElectronObject
     private static bool IsValidNodeName(string? value) =>
         !string.IsNullOrWhiteSpace(value) && value is not "." and not ".." && !value.Contains('/');
 
-    private static SceneNode CreateDefaultSceneNode() => new();
+    private static Node CreateDefaultSceneNode() => new();
 
     private static int NormalizeChildIndex(int index, int count)
     {
@@ -1883,7 +1883,7 @@ public class SceneNode : ElectronObject
             child.PropagatePathRenamed();
     }
 
-    private void InsertChild(SceneNode child, int index)
+    private void InsertChild(Node child, int index)
     {
         EnsureMutable();
         ValidateChildForInsertion(child, allowExistingParent: false);
@@ -1947,7 +1947,7 @@ public class SceneNode : ElectronObject
         ThrowCollected("One or more child-insertion callbacks failed.", errors);
     }
 
-    private void ValidateChildForInsertion(SceneNode child, bool allowExistingParent)
+    private void ValidateChildForInsertion(Node child, bool allowExistingParent)
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(child);
@@ -1960,15 +1960,15 @@ public class SceneNode : ElectronObject
             throw new ArgumentException("A node cannot be its own child.", nameof(child));
 
         if (!allowExistingParent && child.Parent is not null)
-            throw new InvalidOperationException($"SceneNode '{child.Name}' already has a parent.");
+            throw new InvalidOperationException($"Node '{child.Name}' already has a parent.");
 
         if (!allowExistingParent && child.Tree is not null)
-            throw new InvalidOperationException($"SceneNode '{child.Name}' already belongs to a SceneTree.");
+            throw new InvalidOperationException($"Node '{child.Name}' already belongs to a SceneTree.");
 
         if (_isExitingTree)
             throw new InvalidOperationException("A child cannot be added while its parent is exiting a SceneTree.");
 
-        for (SceneNode? ancestor = this; ancestor is not null; ancestor = ancestor.Parent)
+        for (Node? ancestor = this; ancestor is not null; ancestor = ancestor.Parent)
         {
             if (ReferenceEquals(ancestor, child))
                 throw new InvalidOperationException("Adding this child would create a node cycle.");
@@ -1977,13 +1977,13 @@ public class SceneNode : ElectronObject
         EnsureChildNameAvailable(child.Name, child);
     }
 
-    private void EnsureChildNameAvailable(string name, SceneNode? except)
+    private void EnsureChildNameAvailable(string name, Node? except)
     {
         if (_children.Any(child => !ReferenceEquals(child, except) && StringComparer.Ordinal.Equals(child.Name, name)))
             throw new InvalidOperationException($"A child named '{name}' already exists under '{Name}'.");
     }
 
-    private bool RemoveChildCore(SceneNode child)
+    private bool RemoveChildCore(Node child)
     {
         if (!ReferenceEquals(child.Parent, this))
             return false;
@@ -2066,7 +2066,7 @@ public class SceneNode : ElectronObject
     }
 
     private void FindChildrenCore<TNode>(string pattern, bool recursive, List<TNode> result)
-        where TNode : SceneNode
+        where TNode : Node
     {
         foreach (var child in _children)
         {
@@ -2078,18 +2078,18 @@ public class SceneNode : ElectronObject
         }
     }
 
-    private List<SceneNode> GetAncestry()
+    private List<Node> GetAncestry()
     {
-        var result = new List<SceneNode>();
+        var result = new List<Node>();
 
-        for (SceneNode? current = this; current is not null; current = current.Parent)
+        for (Node? current = this; current is not null; current = current.Parent)
             result.Add(current);
 
         result.Reverse();
         return result;
     }
 
-    private SceneNode GetHierarchyRoot()
+    private Node GetHierarchyRoot()
     {
         var root = this;
         while (root.Parent is not null)

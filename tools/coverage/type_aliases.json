@@ -1,7 +1,7 @@
 {
   "classes": {
     "CanvasItem": "CanvasItem",
-    "Node2D": "Node",
+    "Node2D": "Entity",
     "Object": "ElectronObject",
     "Rect2": "Rect",
     "Rect2i": "RectI",
@@ -12,7 +12,7 @@
     "MethodTweener": "MethodTweener<TValue>",
     "PropertyTweener": "PropertyTweener<TValue>",
     "Sprite2D": "Sprite",
-    "Node": "SceneNode"
+    "Node": "Node"
   },
   "enums": {
     "@GlobalScope.ClockDirection": "ClockDirection",

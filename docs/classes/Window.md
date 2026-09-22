@@ -16,13 +16,13 @@ A configurable native root window that owns scene children.
 
 Pass a detached window to `Engine.Run(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels on Wayland and native window units elsewhere. The root canvas renders after scene processing; embedded windows are not implemented.
 
-Native lifetime belongs to Engine.Run. Viewport inherits the neutral SceneNode; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Offscreen and multiwindow rendering remain incomplete; see the [coverage page](../coverage/classes/Window.md).
+Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Offscreen and multiwindow rendering remain incomplete; see the [coverage page](../coverage/classes/Window.md).
 
 ## Examples
 
 ```csharp
 var window = new Window { Title = "Game", Size = new Vector2I(960, 540) };
-window.AddChild(scene); // caller-created SceneNode
+window.AddChild(scene); // caller-created Node
 Engine.Instance.MaxFPS = 60;
 int exitCode = Engine.Instance.Run(window);
 ```
@@ -58,9 +58,9 @@ Window owns `Show()` and `Hide()`; both assign Visible and preserve native failu
 
 | Member | Contract |
 | --- | --- |
-| [`protected override Func<SceneNode> CreateSceneInstanceFactory()`](#createsceneinstancefactory) | Returns a static factory for an exact Window. Derived types must supply their own factory. PackedScene stores title, size, size limits, mode, supported policies and inherited stored SceneNode properties; Position and CurrentScreen are not stored. |
+| [`protected override Func<Node> CreateSceneInstanceFactory()`](#createsceneinstancefactory) | Returns a static factory for an exact Window. Derived types must supply their own factory. PackedScene stores title, size, size limits, mode, supported policies and inherited stored Node properties; Position and CurrentScreen are not stored. |
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown. |
-| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Appends typed title, size, minimum/maximum size, mode and supported policy descriptors to inherited SceneNode descriptors. |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Appends typed title, size, minimum/maximum size, mode and supported policy descriptors to inherited Node descriptors. |
 | [`public override Rect GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
 | [`public void Show()`](#show) | Shows this window; detached use only configures startup visibility. |
 | [`public void Hide()`](#hide) | Hides this window without disposing it or its scene. |
@@ -189,7 +189,7 @@ Gets or sets the root window's native visibility.
 
 `true` by default. Before Engine.Run this only configures startup visibility.
 
-An active Window shows or hides its native surface before committing managed visibility; native failure leaves managed state unchanged. A committed change raises VisibilityChanged, then notifies each canvas root beneath the window, including roots separated by neutral SceneNode objects. Each canvas root propagates to direct canvas descendants.
+An active Window shows or hides its native surface before committing managed visibility; native failure leaves managed state unchanged. A committed change raises VisibilityChanged, then notifies each canvas root beneath the window, including roots separated by neutral Node objects. Each canvas root propagates to direct canvas descendants.
 
 **InvalidOperationException:** Mutation occurs off the owner thread or a native request fails.
 
@@ -280,9 +280,9 @@ Assigns Visible to true. No native resources are acquired while detached. See [V
 Assigns Visible to false without disposing the window or its children. See [Visible](#visible) for owner-thread, native failure and callback exception behavior.
 
 <a id="createsceneinstancefactory"></a>
-### `protected override Func<SceneNode> CreateSceneInstanceFactory()`
+### `protected override Func<Node> CreateSceneInstanceFactory()`
 
-Returns a static factory for an exact Window. Derived types must supply their own factory. PackedScene stores title, size, size limits, mode, supported policies and inherited stored SceneNode properties; Position and CurrentScreen are not stored.
+Returns a static factory for an exact Window. Derived types must supply their own factory. PackedScene stores title, size, size limits, mode, supported policies and inherited stored Node properties; Position and CurrentScreen are not stored.
 
 <a id="dispose"></a>
 ### `protected override void Dispose(bool disposing)`
@@ -292,7 +292,7 @@ Clears this class's subscribers, then disposes inherited state. Overrides must c
 <a id="getpropertydescriptors"></a>
 ### `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
 
-Appends typed title, size, minimum/maximum size, mode and supported policy descriptors to inherited SceneNode descriptors.
+Appends typed title, size, minimum/maximum size, mode and supported policy descriptors to inherited Node descriptors.
 
 <a id="getvisiblerect"></a>
 ### `public override Rect GetVisibleRect()`

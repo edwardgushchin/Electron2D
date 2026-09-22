@@ -16,7 +16,7 @@ Last updated: 2026-09-23
 
 Owns one active node hierarchy and coordinates its lifecycle, input, frames, groups, timers, tweens, and deferred work.
 
-`SceneTree` is the concrete [`MainLoop`](MainLoop.md) that owns one active root [`SceneNode`](SceneNode.md) hierarchy. It establishes lifecycle and owner-thread boundaries, accepts direct frame calls or scheduling through [`Engine`](Engine.md), propagates typed input and system notifications, manages pause state, reusable SceneNode [`Timer`](Timer.md) scheduling, lightweight tree timers, [`Tween`](Tween.md) sequences, typed group operations, deferred actions, and queued deletion, and finalizes the complete hierarchy.
+`SceneTree` is the concrete [`MainLoop`](MainLoop.md) that owns one active root [`Node`](Node.md) hierarchy. It establishes lifecycle and owner-thread boundaries, accepts direct frame calls or scheduling through [`Engine`](Engine.md), propagates typed input and system notifications, manages pause state, reusable Node [`Timer`](Timer.md) scheduling, lightweight tree timers, [`Tween`](Tween.md) sequences, typed group operations, deferred actions, and queued deletion, and finalizes the complete hierarchy.
 
 The creating thread becomes the owner thread for scene mutation, frame execution, flushing, and disposal.
 Electron2D does not create a frame-pump thread. A host can drive the loop through [`Engine.AdvanceFrame(Double)`](Engine.md#m-electron2d-engine-advanceframe-system-double),
@@ -27,7 +27,7 @@ call [`MainLoop.Process(Double)`](MainLoop.md#m-electron2d-mainloop-process-syst
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-using var root = new SceneNode { Name = "Root" };
+using var root = new Node { Name = "Root" };
 using var tree = new SceneTree(root);
 tree.ProcessFrame(1.0 / 60.0);
 ```
@@ -36,14 +36,14 @@ tree.ProcessFrame(1.0 / 60.0);
 
 | Member | Description |
 | --- | --- |
-| [`public SceneTree(SceneNode root)`](#m-electron2d-scenetree-ctor-electron2d-node) | Creates and immediately activates a scene tree rooted at `root`. |
+| [`public SceneTree(Node root)`](#m-electron2d-scenetree-ctor-electron2d-node) | Creates and immediately activates a scene tree rooted at `root`. |
 
 ## Properties
 
 | Member | Description |
 | --- | --- |
 | [`public bool AutoAcceptQuit { get; set; }`](#p-electron2d-scenetree-autoacceptquit) | True by default. |
-| [`public SceneNode Root { get; }`](#p-electron2d-scenetree-root) | Gets the root node owned by this tree. |
+| [`public Node Root { get; }`](#p-electron2d-scenetree-root) | Gets the root node owned by this tree. |
 | [`public int NodeCount { get; }`](#p-electron2d-scenetree-nodecount) | Gets the number of nodes currently inside this tree. |
 | [`public bool Paused { get; set; }`](#p-electron2d-scenetree-paused) | Gets or sets whether pause-aware processing and timers are paused. |
 
@@ -61,12 +61,12 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public void PhysicsFrame(double delta)`](#m-electron2d-scenetree-physicsframe-system-double) | Runs one host-driven physics-process frame, physics timers, physics tweens, and one deferred safe point. |
 | [`public void SetInputAsHandled()`](#m-electron2d-scenetree-setinputashandled) | Marks the input event currently being dispatched as handled. |
 | [`public bool IsInputHandled()`](#m-electron2d-scenetree-isinputhandled) | Gets whether the input event currently being dispatched has been handled. |
-| [`public IReadOnlyList<SceneNode> GetNodesInGroup(string group)`](#m-electron2d-scenetree-getnodesingroup-system-string) | Returns every current node in a group in depth-first pre-order. |
-| [`public SceneNode GetFirstNodeInGroup(string group)`](#m-electron2d-scenetree-getfirstnodeingroup-system-string) | Returns the first current node in a group using depth-first pre-order. |
+| [`public IReadOnlyList<Node> GetNodesInGroup(string group)`](#m-electron2d-scenetree-getnodesingroup-system-string) | Returns every current node in a group in depth-first pre-order. |
+| [`public Node GetFirstNodeInGroup(string group)`](#m-electron2d-scenetree-getfirstnodeingroup-system-string) | Returns the first current node in a group using depth-first pre-order. |
 | [`public int GetNodeCountInGroup(string group)`](#m-electron2d-scenetree-getnodecountingroup-system-string) | Gets the number of current nodes in a group. |
 | [`public bool HasGroup(string group)`](#m-electron2d-scenetree-hasgroup-system-string) | Determines whether this tree currently contains a node in a group. |
-| [`public void CallGroup(string group, Action<SceneNode> action, GroupCallFlags flags = GroupCallFlags.Default)`](#m-electron2d-scenetree-callgroup-system-string-system-action-electron2d-node-electron2d-groupcallflags) | Invokes a typed action for each current node in a group. |
-| [`public void SetGroup<T>(string group, Action<SceneNode, T> setter, T value, GroupCallFlags flags = GroupCallFlags.Default)`](#m-electron2d-scenetree-setgroup-1-system-string-system-action-electron2d-node-0-0-electron2d-groupcallflags) | Applies a typed value through a setter for each current node in a group. |
+| [`public void CallGroup(string group, Action<Node> action, GroupCallFlags flags = GroupCallFlags.Default)`](#m-electron2d-scenetree-callgroup-system-string-system-action-electron2d-entity-electron2d-groupcallflags) | Invokes a typed action for each current node in a group. |
+| [`public void SetGroup<T>(string group, Action<Node, T> setter, T value, GroupCallFlags flags = GroupCallFlags.Default)`](#m-electron2d-scenetree-setgroup-1-system-string-system-action-electron2d-entity-0-0-electron2d-groupcallflags) | Applies a typed value through a setter for each current node in a group. |
 | [`public void NotifyGroup(string group, int notification, GroupCallFlags flags = GroupCallFlags.Default)`](#m-electron2d-scenetree-notifygroup-system-string-system-int32-electron2d-groupcallflags) | Delivers a numeric notification to each current node in a group. |
 | [`public void QueueDelete(ElectronObject instance)`](#m-electron2d-scenetree-queuedelete-electron2d-electronobject) | Thread-safely queues an engine object for deterministic disposal at a future deletion phase. |
 | [`public void FlushDeferred()`](#m-electron2d-scenetree-flushdeferred) | Executes one captured deferred-action batch followed by one captured deletion batch. |
@@ -82,9 +82,9 @@ tree.ProcessFrame(1.0 / 60.0);
 
 | Member | Description |
 | --- | --- |
-| [`public event Action<SceneTree, SceneNode> NodeAdded`](#e-electron2d-scenetree-nodeadded) | Occurs after a node enters this tree. |
-| [`public event Action<SceneTree, SceneNode> NodeRemoved`](#e-electron2d-scenetree-noderemoved) | Occurs after a node exits this tree. |
-| [`public event Action<SceneTree, SceneNode> NodeRenamed`](#e-electron2d-scenetree-noderenamed) | Occurs after an active node is renamed. |
+| [`public event Action<SceneTree, Node> NodeAdded`](#e-electron2d-scenetree-nodeadded) | Occurs after a node enters this tree. |
+| [`public event Action<SceneTree, Node> NodeRemoved`](#e-electron2d-scenetree-noderemoved) | Occurs after a node exits this tree. |
+| [`public event Action<SceneTree, Node> NodeRenamed`](#e-electron2d-scenetree-noderenamed) | Occurs after an active node is renamed. |
 | [`public event Action<SceneTree> ProcessFrameStarted`](#e-electron2d-scenetree-processframestarted) | Occurs immediately before eligible node process callbacks are captured and invoked. |
 | [`public event Action<SceneTree> PhysicsFrameStarted`](#e-electron2d-scenetree-physicsframestarted) | Occurs immediately before eligible node physics-process callbacks are captured and invoked. |
 | [`public event Action<SceneTree> TreeChanged`](#e-electron2d-scenetree-treechanged) | Occurs after the active hierarchy is structurally changed or an active node is renamed. |
@@ -92,7 +92,7 @@ tree.ProcessFrame(1.0 / 60.0);
 ## Constructor Descriptions
 
 <a id="m-electron2d-scenetree-ctor-electron2d-node"></a>
-### `public SceneTree(SceneNode root)`
+### `public SceneTree(Node root)`
 
 Creates and immediately activates a scene tree rooted at `root`.
 
@@ -123,7 +123,7 @@ a terminal disposed tree.
 True by default. The root Window raises CloseRequested, then requests quit if this property remains true and quit is not already requested. A handler may disable it or request its own exit code. Read/write requires the owner thread and a live tree; closed trees throw ObjectDisposedException.
 
 <a id="p-electron2d-scenetree-root"></a>
-### `public SceneNode Root { get; }`
+### `public Node Root { get; }`
 
 Gets the root node owned by this tree.
 
@@ -319,7 +319,7 @@ Gets whether the input event currently being dispatched has been handled.
 - `ObjectDisposedException`: The tree has been finalized, or disposal has started or finished.
 
 <a id="m-electron2d-scenetree-getnodesingroup-system-string"></a>
-### `public IReadOnlyList<SceneNode> GetNodesInGroup(string group)`
+### `public IReadOnlyList<Node> GetNodesInGroup(string group)`
 
 Returns every current node in a group in depth-first pre-order.
 
@@ -337,7 +337,7 @@ Returns every current node in a group in depth-first pre-order.
 - `ObjectDisposedException`: The tree has been finalized, or disposal has started or finished.
 
 <a id="m-electron2d-scenetree-getfirstnodeingroup-system-string"></a>
-### `public SceneNode GetFirstNodeInGroup(string group)`
+### `public Node GetFirstNodeInGroup(string group)`
 
 Returns the first current node in a group using depth-first pre-order.
 
@@ -390,8 +390,8 @@ Determines whether this tree currently contains a node in a group.
 - `InvalidOperationException`: The method is called from a thread other than the owner thread.
 - `ObjectDisposedException`: The tree has been finalized, or disposal has started or finished.
 
-<a id="m-electron2d-scenetree-callgroup-system-string-system-action-electron2d-node-electron2d-groupcallflags"></a>
-### `public void CallGroup(string group, Action<SceneNode> action, GroupCallFlags flags = GroupCallFlags.Default)`
+<a id="m-electron2d-scenetree-callgroup-system-string-system-action-electron2d-entity-electron2d-groupcallflags"></a>
+### `public void CallGroup(string group, Action<Node> action, GroupCallFlags flags = GroupCallFlags.Default)`
 
 Invokes a typed action for each current node in a group.
 
@@ -414,8 +414,8 @@ during a future flush. The selected nodes are captured when the operation execut
 invocation. All selected callbacks are attempted before failures are reported. Deferred callback failures are
 reported by the future flush or frame, not by this scheduling call.
 
-<a id="m-electron2d-scenetree-setgroup-1-system-string-system-action-electron2d-node-0-0-electron2d-groupcallflags"></a>
-### `public void SetGroup<T>(string group, Action<SceneNode, T> setter, T value, GroupCallFlags flags = GroupCallFlags.Default)`
+<a id="m-electron2d-scenetree-setgroup-1-system-string-system-action-electron2d-entity-0-0-electron2d-groupcallflags"></a>
+### `public void SetGroup<T>(string group, Action<Node, T> setter, T value, GroupCallFlags flags = GroupCallFlags.Default)`
 
 Applies a typed value through a setter for each current node in a group.
 
@@ -484,7 +484,7 @@ Thread-safely queues an engine object for deterministic disposal at a future del
 - `ObjectDisposedException`: The tree has been finalized, tree disposal has started or finished, or object disposal has started or finished.
 
 **Remarks:** A node attached to this tree is detached before disposal. Detached objects are allowed. This method does not
-provide cancellation; use [`SceneNode.QueueFree`](SceneNode.md#m-electron2d-scenenode-queuefree) and [`SceneNode.CancelFree`](SceneNode.md#m-electron2d-scenenode-cancelfree) for cancellable node
+provide cancellation; use [`Node.QueueFree`](Node.md#m-electron2d-node-queuefree) and [`Node.CancelFree`](Node.md#m-electron2d-node-cancelfree) for cancellable node
 deletion.
 
 <a id="m-electron2d-scenetree-flushdeferred"></a>
@@ -598,7 +598,7 @@ active tweens, clears event subscribers, and attempts every teardown stage befor
 ## Event Descriptions
 
 <a id="e-electron2d-scenetree-nodeadded"></a>
-### `public event Action<SceneTree, SceneNode> NodeAdded`
+### `public event Action<SceneTree, Node> NodeAdded`
 
 Occurs after a node enters this tree.
 
@@ -607,16 +607,16 @@ own enter event and before descendant entry. A throwing subscriber stops later s
 invocation, but the failure is aggregated after remaining lifecycle work.
 
 <a id="e-electron2d-scenetree-noderemoved"></a>
-### `public event Action<SceneTree, SceneNode> NodeRemoved`
+### `public event Action<SceneTree, Node> NodeRemoved`
 
 Occurs after a node exits this tree.
 
-**Remarks:** The node's [`SceneNode.Tree`](SceneNode.md#p-electron2d-scenenode-tree) is already `null` when handlers run. Delivery is child-first;
+**Remarks:** The node's [`Node.Tree`](Node.md#p-electron2d-node-tree) is already `null` when handlers run. Delivery is child-first;
 a throwing subscriber stops later subscribers of this event invocation, but the failure is aggregated after
 remaining exit work.
 
 <a id="e-electron2d-scenetree-noderenamed"></a>
-### `public event Action<SceneTree, SceneNode> NodeRenamed`
+### `public event Action<SceneTree, Node> NodeRenamed`
 
 Occurs after an active node is renamed.
 
@@ -672,7 +672,7 @@ Frame and flush execution cannot be re-entered and cannot begin during node life
 
 ## Input propagation
 
-`Input.ParseInputEvent` first asks the active SceneTree to validate its owner thread and execution barrier, commits raw/action state only after that succeeds, and then dispatches through MainLoop's internal boundary. The tree captures pre-order once and visits the snapshot in reverse. It runs `SceneNode.OnInput`, then for key events `SceneNode.OnUnhandledKeyInput`, then `SceneNode.OnUnhandledInput`. Each stage requires its matching enable flag and current `CanProcess()` eligibility. `SetInputAsHandled()` stops immediately. Removed, moved-to-another-tree, disposed, disabled, or newly added candidates are handled by snapshot revalidation. User callback failures are aggregated after other eligible callbacks run; committed Input state is not rolled back. Dispatch is owner-thread and non-reentrant and reuses buffers after warmup.
+`Input.ParseInputEvent` first asks the active SceneTree to validate its owner thread and execution barrier, commits raw/action state only after that succeeds, and then dispatches through MainLoop's internal boundary. The tree captures pre-order once and visits the snapshot in reverse. It runs `Node.OnInput`, then for key events `Node.OnUnhandledKeyInput`, then `Node.OnUnhandledInput`. Each stage requires its matching enable flag and current `CanProcess()` eligibility. `SetInputAsHandled()` stops immediately. Removed, moved-to-another-tree, disposed, disabled, or newly added candidates are handled by snapshot revalidation. User callback failures are aggregated after other eligible callbacks run; committed Input state is not rolled back. Dispatch is owner-thread and non-reentrant and reuses buffers after warmup.
 
 ## Lifecycle and failure safety
 
@@ -690,11 +690,11 @@ Group names are nonblank and ordinal case-sensitive. Immediate group operations 
 
 ## Threading guarantees and non-guarantees
 
-The creating thread owns lifecycle, hierarchy reads and mutation, input dispatch/handled state, pause mutation, immediate group operations, timer/tween creation, mutation and disposal, frames, flushes, and tree disposal. `Defer`, `SetDeferred`, deferred group operations, `QueueDelete`, and `SceneNode.QueueFree` are cross-thread request boundaries. Typed event receipt by `AwaitTweener` may also originate elsewhere, but continuation occurs on the owner thread. Their acceptance is serialized with disposal. User game state, event subscription, timer/tween reads, and node reads are not made thread-safe by the tree.
+The creating thread owns lifecycle, hierarchy reads and mutation, input dispatch/handled state, pause mutation, immediate group operations, timer/tween creation, mutation and disposal, frames, flushes, and tree disposal. `Defer`, `SetDeferred`, deferred group operations, `QueueDelete`, and `Node.QueueFree` are cross-thread request boundaries. Typed event receipt by `AwaitTweener` may also originate elsewhere, but continuation occurs on the owner thread. Their acceptance is serialized with disposal. User game state, event subscription, timer/tween reads, and node reads are not made thread-safe by the tree.
 
 ## Dependencies and interactions
 
-The class depends on [`MainLoop`](MainLoop.md), typed [`InputEvent`](InputEvent.md) values, `SceneNode`, `NodeProcessMode`, [`Timer`](Timer.md), [`SceneTreeTimer`](SceneTreeTimer.md), [`Tween`](Tween.md), [`GroupCallFlags`](GroupCallFlags.md), reusable scheduler/input/timer/tween lists, concurrent queues, and a single queue-lifetime lock. `SceneNode` supplies input/internal lanes plus the construction/factory barriers that keep [`PackedScene`](PackedScene.md) reconstruction detached. Core's [`Engine`](Engine.md) can drive the tree through the base contract, and [`EventConnection`](EventConnection.md) supports deferred delivery and typed tween waits. There is no SDL3-CS, native input backend, renderer, audio, collision-physics, asset loader/serializer, networking, or editor dependency.
+The class depends on [`MainLoop`](MainLoop.md), typed [`InputEvent`](InputEvent.md) values, `Node`, `NodeProcessMode`, [`Timer`](Timer.md), [`SceneTreeTimer`](SceneTreeTimer.md), [`Tween`](Tween.md), [`GroupCallFlags`](GroupCallFlags.md), reusable scheduler/input/timer/tween lists, concurrent queues, and a single queue-lifetime lock. `Node` supplies input/internal lanes plus the construction/factory barriers that keep [`PackedScene`](PackedScene.md) reconstruction detached. Core's [`Engine`](Engine.md) can drive the tree through the base contract, and [`EventConnection`](EventConnection.md) supports deferred delivery and typed tween waits. There is no SDL3-CS, native input backend, renderer, audio, collision-physics, asset loader/serializer, networking, or editor dependency.
 
 ## Verification and remaining limits
 

@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Provides shared canvas drawing, visibility, materials and transform queries.</summary>
 /// <remarks>Only direct canvas children inherit canvas state. Derived types define their own local transform model.</remarks>
-public abstract partial class CanvasItem : SceneNode
+public abstract partial class CanvasItem : Node
 {
     /// <summary>Initializes a detached canvas item with visibility enabled, white modulation and no material.</summary>
     protected CanvasItem() { }

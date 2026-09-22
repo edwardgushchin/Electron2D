@@ -1,6 +1,6 @@
 # Scalar math component
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ## Scope
 
@@ -36,7 +36,7 @@ This Core component owns backend-independent scalar mathematics shared by engine
 
 ## Current implementation status
 
-Implemented and verified. The complete audited 4.7.2 stable typed scalar surface is present as seven constants and 127 method overloads. Matching scalar formulas formerly duplicated by vectors and transforms now route through `Mathf`; color, rectangle, transform, vector, integer-vector snapping, and Node degree conversion use the shared contract. The former `1e-5f` component approximation was corrected to `1e-6f`.
+Implemented and verified. The complete audited 4.7.2 stable typed scalar surface is present as seven constants and 127 method overloads. Matching scalar formulas formerly duplicated by vectors and transforms now route through `Mathf`; color, rectangle, transform, vector, integer-vector snapping, and Entity degree conversion use the shared contract. The former `1e-5f` component approximation was corrected to `1e-6f`.
 
 ## Exclusions and limitations
 

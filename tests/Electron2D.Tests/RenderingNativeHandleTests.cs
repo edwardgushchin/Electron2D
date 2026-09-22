@@ -33,7 +33,7 @@ internal static class RenderingNativeHandleTests
         finally { settings.Set(ProjectSettings.RenderingMethod, previous); settings.Set(ProjectSettings.RenderingFallback, fallback); }
     }
 
-    private sealed class Probe : Node
+    private sealed class Probe : Entity
     {
         internal DisplayServer? Display;
         internal int Frames;

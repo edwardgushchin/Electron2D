@@ -16,7 +16,7 @@ Electron2D follows the current official Godot API for implemented 2D concepts wh
 
 ## Reference API correspondence
 
-The accepted target preserves the complete applicable Godot API and behavior under all existing decisions, including the typed C#, strictly 2D and naming adaptations. [ADR 0008](decisions/scene.md#adr-0008) maps Godot `Node` to `SceneNode` and `Node2D` to `Node`, with the same applicable API. Keep `CanvasItem` and the separate spatial/UI branches. Audit each member at its proper declaring layer and propagate the renamed types through every API position. Any further divergence needs an accepted decision; missing implementation remains a gap.
+The accepted target preserves the complete applicable Godot API and behavior under all existing decisions, including the typed C#, strictly 2D and naming adaptations. [ADR 0008](decisions/scene.md#adr-0008) maps Godot `Node` to `Node` and `Node2D` to `Entity`, with the same applicable API. Keep `CanvasItem` and the separate spatial/UI branches. Audit each member at its proper declaring layer and propagate the renamed types through every API position. Any further divergence needs an accepted decision; missing implementation remains a gap.
 
 ## Complete implementation slice
 

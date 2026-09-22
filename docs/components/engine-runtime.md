@@ -52,5 +52,5 @@ Executable checks cover success, invalid values/order, wrong threads, lifecycle 
 - [0015: Main-loop lifecycle and host boundary](../decisions/core-object-runtime.md#adr-0015)
 - [0014: Managed Resource lifetime and realtime allocation](../decisions/resources.md#adr-0014)
 - [0019: Typed project settings and directory-backed virtual paths](../decisions/core-data-io.md#adr-0019)
-- [0036: Reusable SceneNode timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)

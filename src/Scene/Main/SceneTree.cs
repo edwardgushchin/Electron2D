@@ -15,7 +15,7 @@ public sealed class SceneTree : MainLoop
 
     private static readonly IReadOnlyList<PropertyDescriptor> SceneTreeProperties = Array.AsReadOnly<PropertyDescriptor>(
     [
-        new PropertyDescriptor<SceneTree, SceneNode>(nameof(Root), tree => tree.Root),
+        new PropertyDescriptor<SceneTree, Node>(nameof(Root), tree => tree.Root),
         new PropertyDescriptor<SceneTree, bool>(nameof(AutoAcceptQuit), tree => tree.AutoAcceptQuit, (tree, value) => tree.AutoAcceptQuit = value, _ => true),
         new PropertyDescriptor<SceneTree, bool>(nameof(HasDeferredWork), tree => tree.HasDeferredWork),
         new PropertyDescriptor<SceneTree, ulong>(nameof(ProcessFrameCount), tree => tree.ProcessFrameCount),
@@ -27,8 +27,8 @@ public sealed class SceneTree : MainLoop
     private readonly object _workGate = new();
     private readonly int _ownerThreadId = Environment.CurrentManagedThreadId;
     private readonly HashSet<GroupOperationKey> _uniqueGroupOperations = [];
-    private readonly List<SceneNode> _scheduleTraversal = [];
-    private readonly List<SceneNode> _inputTraversal = [];
+    private readonly List<Node> _scheduleTraversal = [];
+    private readonly List<Node> _inputTraversal = [];
     private readonly List<ScheduledNode> _scheduledNodes = [];
     private readonly List<SceneTreeTimer> _timerSnapshot = [];
     private readonly List<SceneTreeTimer> _timers = [];
@@ -36,7 +36,7 @@ public sealed class SceneTree : MainLoop
     private readonly List<Tween> _tweens = [];
     private ConcurrentQueue<Action> _deferred = new();
     private ConcurrentQueue<DeletionRequest> _deletions = new();
-    private List<SceneNode>? _activationReadied;
+    private List<Node>? _activationReadied;
     private bool _acceptingWork = true;
     private bool _constructionComplete;
     private bool _isChangingPause;
@@ -66,12 +66,12 @@ public sealed class SceneTree : MainLoop
     /// <exception cref="InvalidOperationException">Construction is attempted from a scene factory, the root is being captured or instantiated, or an inactive Window is supplied.</exception>
     /// <exception cref="ObjectDisposedException">Disposal of <paramref name="root"/> has started.</exception>
     /// <exception cref="AggregateException">Activation or rollback callbacks fail.</exception>
-    public SceneTree(SceneNode root) : this(root, attachToEngine: false) { }
+    public SceneTree(Node root) : this(root, attachToEngine: false) { }
 
-    internal SceneTree(SceneNode root, bool attachToEngine)
+    internal SceneTree(Node root, bool attachToEngine)
     {
         ArgumentNullException.ThrowIfNull(root);
-        SceneNode.EnsureSceneFactoryComplete();
+        Node.EnsureSceneFactoryComplete();
         ObjectDisposedException.ThrowIf(root.IsDisposed, root);
         root.EnsureSceneActivationAvailable();
         if (root is Window window)
@@ -87,7 +87,7 @@ public sealed class SceneTree : MainLoop
             throw new ArgumentException("A SceneTree root cannot be queued for deletion.", nameof(root));
 
         Root = root;
-        var readied = new List<SceneNode>();
+        var readied = new List<Node>();
         _activationReadied = readied;
         _activeExecution = 1;
 
@@ -163,7 +163,7 @@ public sealed class SceneTree : MainLoop
 
     /// <summary>Gets the root node owned by this tree.</summary>
     /// <value>The immutable root reference. Tree finalization exits and recursively disposes this hierarchy.</value>
-    public SceneNode Root { get; }
+    public Node Root { get; }
 
     /// <summary>Gets an advisory snapshot indicating whether deferred actions or deletions are queued.</summary>
     /// <value><see langword="true"/> when either concurrent queue is currently nonempty.</value>
@@ -245,7 +245,7 @@ public sealed class SceneTree : MainLoop
             try
             {
                 _paused = value;
-                var notified = new HashSet<SceneNode>();
+                var notified = new HashSet<Node>();
 
                 foreach (var node in Root.EnumerateDepthFirst())
                 {
@@ -254,7 +254,7 @@ public sealed class SceneTree : MainLoop
 
                     try
                     {
-                        node.DispatchNotification(value ? SceneNode.NotificationPaused : SceneNode.NotificationUnpaused);
+                        node.DispatchNotification(value ? Node.NotificationPaused : Node.NotificationUnpaused);
                     }
                     catch (Exception error)
                     {
@@ -277,15 +277,15 @@ public sealed class SceneTree : MainLoop
     /// own enter event and before descendant entry. A throwing subscriber stops later subscribers of this event
     /// invocation, but the failure is aggregated after remaining lifecycle work.
     /// </remarks>
-    public event Action<SceneTree, SceneNode>? NodeAdded;
+    public event Action<SceneTree, Node>? NodeAdded;
 
     /// <summary>Occurs after a node exits this tree.</summary>
     /// <remarks>
-    /// The node's <see cref="SceneNode.Tree"/> is already <see langword="null"/> when handlers run. Delivery is child-first;
+    /// The node's <see cref="Node.Tree"/> is already <see langword="null"/> when handlers run. Delivery is child-first;
     /// a throwing subscriber stops later subscribers of this event invocation, but the failure is aggregated after
     /// remaining exit work.
     /// </remarks>
-    public event Action<SceneTree, SceneNode>? NodeRemoved;
+    public event Action<SceneTree, Node>? NodeRemoved;
 
     /// <summary>Occurs after an active node is renamed.</summary>
     /// <remarks>
@@ -293,7 +293,7 @@ public sealed class SceneTree : MainLoop
     /// attempted when this event invocation fails, and both failures are aggregated. A throwing subscriber prevents
     /// later subscribers of this event invocation from running.
     /// </remarks>
-    public event Action<SceneTree, SceneNode>? NodeRenamed;
+    public event Action<SceneTree, Node>? NodeRenamed;
 
     /// <summary>Occurs immediately before eligible node process callbacks are captured and invoked.</summary>
     /// <remarks>A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.</remarks>
@@ -488,7 +488,7 @@ public sealed class SceneTree : MainLoop
     /// <exception cref="ArgumentNullException"><paramref name="group"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">The method is called from a thread other than the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
-    public IReadOnlyList<SceneNode> GetNodesInGroup(string group)
+    public IReadOnlyList<Node> GetNodesInGroup(string group)
     {
         ThrowIfDisposed();
         EnsureOwnerThread();
@@ -503,7 +503,7 @@ public sealed class SceneTree : MainLoop
     /// <exception cref="ArgumentNullException"><paramref name="group"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">The method is called from a thread other than the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
-    public SceneNode? GetFirstNodeInGroup(string group)
+    public Node? GetFirstNodeInGroup(string group)
     {
         ThrowIfDisposed();
         EnsureOwnerThread();
@@ -544,7 +544,7 @@ public sealed class SceneTree : MainLoop
     /// <exception cref="InvalidOperationException">An immediate operation is called off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
     /// <exception cref="AggregateException">One or more node callbacks fail during execution.</exception>
-    public void CallGroup(string group, Action<SceneNode> action, GroupCallFlags flags = GroupCallFlags.Default)
+    public void CallGroup(string group, Action<Node> action, GroupCallFlags flags = GroupCallFlags.Default)
     {
         ValidateGroup(group);
         ArgumentNullException.ThrowIfNull(action);
@@ -572,7 +572,7 @@ public sealed class SceneTree : MainLoop
     /// <exception cref="InvalidOperationException">An immediate operation is called off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
     /// <exception cref="AggregateException">One or more setter calls fail during execution.</exception>
-    public void SetGroup<T>(string group, Action<SceneNode, T> setter, T value, GroupCallFlags flags = GroupCallFlags.Default)
+    public void SetGroup<T>(string group, Action<Node, T> setter, T value, GroupCallFlags flags = GroupCallFlags.Default)
     {
         ValidateGroup(group);
         ArgumentNullException.ThrowIfNull(setter);
@@ -612,7 +612,7 @@ public sealed class SceneTree : MainLoop
     /// <param name="instance">The live object to dispose.</param>
     /// <remarks>
     /// A node attached to this tree is detached before disposal. Detached objects are allowed. This method does not
-    /// provide cancellation; use <see cref="SceneNode.QueueFree"/> and <see cref="SceneNode.CancelFree"/> for cancellable node
+    /// provide cancellation; use <see cref="Node.QueueFree"/> and <see cref="Node.CancelFree"/> for cancellable node
     /// deletion.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="instance"/> is <see langword="null"/>.</exception>
@@ -627,7 +627,7 @@ public sealed class SceneTree : MainLoop
         if (ReferenceEquals(instance, this))
             throw new ArgumentException("A SceneTree cannot queue itself for deletion.", nameof(instance));
 
-        if (instance is SceneNode node)
+        if (instance is Node node)
         {
             if (ReferenceEquals(node, Root))
                 throw new InvalidOperationException("The SceneTree root cannot be queued for deletion.");
@@ -885,9 +885,9 @@ public sealed class SceneTree : MainLoop
         ThrowCollected("One or more SceneTree teardown operations failed.", errors);
     }
 
-    internal bool IsRoot(SceneNode node) => ReferenceEquals(Root, node);
+    internal bool IsRoot(Node node) => ReferenceEquals(Root, node);
 
-    internal void QueueForDeletion(SceneNode node)
+    internal void QueueForDeletion(Node node)
     {
         lock (_workGate)
         {
@@ -898,7 +898,7 @@ public sealed class SceneTree : MainLoop
         }
     }
 
-    internal void AttachSubtree(SceneNode node)
+    internal void AttachSubtree(Node node)
     {
         EnsureOwnerThread();
         _lifecycleExecutionDepth++;
@@ -916,7 +916,7 @@ public sealed class SceneTree : MainLoop
         }
     }
 
-    internal void DetachSubtree(SceneNode node)
+    internal void DetachSubtree(Node node)
     {
         EnsureOwnerThread();
         _lifecycleExecutionDepth++;
@@ -963,11 +963,11 @@ public sealed class SceneTree : MainLoop
         tween.InvalidateFromTree();
     }
 
-    internal void NotifyNodeAdded(SceneNode node) => NodeAdded?.Invoke(this, node);
+    internal void NotifyNodeAdded(Node node) => NodeAdded?.Invoke(this, node);
 
-    internal void NotifyNodeRemoved(SceneNode node) => NodeRemoved?.Invoke(this, node);
+    internal void NotifyNodeRemoved(Node node) => NodeRemoved?.Invoke(this, node);
 
-    internal void NotifyNodeRenamed(SceneNode node)
+    internal void NotifyNodeRenamed(Node node)
     {
         List<Exception>? errors = null;
 
@@ -1031,7 +1031,7 @@ public sealed class SceneTree : MainLoop
 
             foreach (var item in _scheduledNodes)
             {
-                var node = item.SceneNode;
+                var node = item.Node;
                 if (node.IsDisposed || !ReferenceEquals(node.Tree, this) || !node.CanProcess())
                     continue;
 
@@ -1271,7 +1271,7 @@ public sealed class SceneTree : MainLoop
         if (request.Instance.IsDisposed)
             return;
 
-        if (request.Instance is not SceneNode node)
+        if (request.Instance is not Node node)
         {
             request.Instance.Dispose();
             return;
@@ -1320,7 +1320,7 @@ public sealed class SceneTree : MainLoop
         ThrowCollected("One or more queued node-deletion operations failed.", errors);
     }
 
-    private void ExecuteGroup(string group, GroupCallFlags flags, Action<SceneNode> operation)
+    private void ExecuteGroup(string group, GroupCallFlags flags, Action<Node> operation)
     {
         EnsureOwnerThread();
         var nodes = GetNodesInGroupCore(group);
@@ -1456,7 +1456,7 @@ public sealed class SceneTree : MainLoop
         TreeChanged = null;
     }
 
-    private SceneNode[] GetNodesInGroupCore(string group) =>
+    private Node[] GetNodesInGroupCore(string group) =>
         Root.EnumerateDepthFirst().Where(node => node.IsInGroup(group)).ToArray();
 
     private static void ValidateGroup(string group) => ArgumentException.ThrowIfNullOrWhiteSpace(group);
@@ -1504,7 +1504,7 @@ public sealed class SceneTree : MainLoop
             throw new AggregateException(message, errors);
     }
 
-    private readonly record struct ScheduledNode(SceneNode SceneNode, int Priority, int Order) : IComparable<ScheduledNode>
+    private readonly record struct ScheduledNode(Node Node, int Priority, int Order) : IComparable<ScheduledNode>
     {
         public int CompareTo(ScheduledNode other)
         {
