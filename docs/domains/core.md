@@ -119,7 +119,7 @@ The same harness verifies project-setting registration, value snapshots, validat
 - [0002: C# events for signals](../decisions/product.md#adr-0002)
 - [0003: ElectronObject lifetime](../decisions/core-object-runtime.md#adr-0003)
 - [0004: 2D scene-oriented API in one Electron2D-owned assembly](../decisions/product.md#adr-0004)
-- [0012: External runtime dependencies and Box2D.NET](../decisions/product.md#adr-0012)
+- [0012: Vendored SDL3-CS and Box2D.NET](../decisions/product.md#adr-0012)
 - [0005: Notifications and typed editor properties](../decisions/core-object-runtime.md#adr-0005)
 - [0009: Disposal-thread callback access](../decisions/core-object-runtime.md#adr-0009)
 - [0010: Typed event connections](../decisions/core-object-runtime.md#adr-0010)

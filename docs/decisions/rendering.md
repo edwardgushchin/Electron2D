@@ -25,7 +25,7 @@ SDL3-CS now supplies managed bindings to the DisplayServer. Native SDL packaging
 
 ### Decision
 
-- The primary Electron2D rendering backend will use the SDL3 GPU API through the installed SDL3-CS binding when the rendering domain is implemented.
+- The primary Electron2D rendering backend will use the SDL3 GPU API through the vendored SDL3-CS binding when the rendering domain is implemented.
 - Electron2D will support engine-provided and user-authored graphics shaders for 2D rendering on the GPU backend. Three-dimensional pipelines and shader functionality are outside the product boundary.
 - SDL_Renderer will be the fallback backend for the portable baseline of simple 2D drawing when the GPU backend is unavailable, cannot be initialized, or a host explicitly selects fallback mode.
 - The SDL_Renderer fallback may select an OpenGL or OpenGL ES driver. This does not itself expose a window-associated GL/EGL/GLX context through the public API; the first executable fallback slice must audit those identities individually under [ADR 0042](display.md#adr-0042).
@@ -41,7 +41,7 @@ SDL3-CS now supplies managed bindings to the DisplayServer. Native SDL packaging
 - The GPU path is the normal rendering path and the only path that guarantees programmable shader behavior.
 - The fallback keeps basic 2D games and editor recovery UI possible on systems where the GPU path cannot start, while its reduced capability remains visible to callers.
 - Games that use custom shaders must declare or check that requirement instead of assuming fallback visual equivalence.
-- Rendering code and resources belong to `Electron2D.dll`; SDL3-CS and native SDL remain deployment dependencies whose exact packaging is unresolved.
+- Rendering code and vendored SDL3-CS managed bindings belong to `Electron2D.dll`; native SDL packaging remains a separate platform-specific integration boundary.
 - Every implemented rendering feature must be tested against each backend that claims it. Shader compilation and visual correctness additionally require backend- and platform-specific executable or image-based verification.
 
 ### Rejected alternatives
@@ -62,7 +62,7 @@ The Web target has no browser graphics host or verified mapping to these SDL bac
 ### Related decisions
 
 - [0004: 2D API in one Electron2D-owned assembly](product.md#adr-0004)
-- [0012: External runtime dependencies and Box2D.NET](product.md#adr-0012)
+- [0012: Vendored SDL3-CS and Box2D.NET](product.md#adr-0012)
 - [0014: Managed Resource lifetime and realtime allocation](resources.md#adr-0014)
 - [0015: Main-loop lifecycle and host boundary](core-object-runtime.md#adr-0015)
 - [0016: Process-wide Engine runtime and host-driven scheduling](core-object-runtime.md#adr-0016)

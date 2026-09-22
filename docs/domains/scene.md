@@ -84,7 +84,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 
 - [0002: C# events for signals](../decisions/product.md#adr-0002)
 - [0004: 2D scene-oriented API in one Electron2D-owned assembly](../decisions/product.md#adr-0004)
-- [0012: External runtime dependencies and Box2D.NET](../decisions/product.md#adr-0012)
+- [0012: Vendored SDL3-CS and Box2D.NET](../decisions/product.md#adr-0012)
 - [0005: Notifications and typed editor properties](../decisions/core-object-runtime.md#adr-0005)
 - [0006: Scene-tree deferred work and queued deletion](../decisions/scene.md#adr-0006)
 - [0008: Unified Node combines Node and Node2D](../decisions/scene.md#adr-0008)

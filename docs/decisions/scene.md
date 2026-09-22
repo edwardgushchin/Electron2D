@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 This bounded log owns the complete architectural records for scene. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -84,7 +84,7 @@ Godot separates non-spatial hierarchy/lifecycle behavior (`Node`) from 2D spatia
 <a id="adr-0011"></a>
 ## ADR 0011: Exception-safe SceneTree lifecycle, typed groups, and frame timers
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 - Status: Accepted; timer scheduling extended by [0036](scene.md#adr-0036), the original tween absence superseded by [0037](scene.md#adr-0037), and input execution barriers extended by [0038](input.md#adr-0038)
 - Scope: `SceneTree`, `SceneTreeTimer`, `GroupCallFlags`, and their `Node` lifecycle integration
@@ -94,7 +94,7 @@ Last updated: 2026-09-21
 
 The first `SceneTree` version owned a hierarchy and offered frames, deferred actions, and queued node deletion, but constructor callback failures could leave partial membership, teardown failures could strand a live root behind a disposed tree, and cross-thread enqueue could race the one-time disposal clear. The stable reference surface also contains group operations, frame/tree signals, counts, generic queued deletion, and lightweight timers that do not require SDL, rendering, assets, networking, or an editor.
 
-Electron2D must keep typed C# calls, deterministic ownership, Electron2D-owned code in its single public engine assembly, and explicit host-driven frame boundaries. It must not introduce string method/property dispatch or placeholder APIs for missing domains. ADR 0012 permits approved third-party dependencies to remain separate assemblies; it does not relax the one-assembly rule for Electron2D-owned code or change the `SceneTree` contract.
+Electron2D must keep typed C# calls, deterministic ownership, its managed runtime in a single public engine assembly, and explicit host-driven frame boundaries. It must not introduce string method/property dispatch or placeholder APIs for missing domains. ADR 0012 vendors the selected managed dependencies into that assembly without changing the `SceneTree` contract.
 
 ### Decision
 
