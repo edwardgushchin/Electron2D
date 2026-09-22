@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ## Responsibility
 
@@ -10,10 +10,10 @@ Rendering turns retained scene commands and typed resources into frames for the 
 
 | Component | Public types and integration | State |
 | --- | --- | --- |
-| [Canvas rendering](../components/canvas-rendering.md) | [RenderingServer](../classes/RenderingServer.md), Node drawing, [Sprite](../classes/Sprite.md) nodes and Texture drawing | Executable rectangle/line/texture path; full API incomplete |
+| [Canvas rendering](../components/canvas-rendering.md) | [RenderingServer](../classes/RenderingServer.md), CanvasItem drawing, [Sprite](../classes/Sprite.md) nodes and Texture drawing | Executable rectangle/line/texture path; full API incomplete |
 | [Shader materials](../components/shader-materials.md) | Shader, ShaderMaterial, Material, Texture and ImageTexture, owned by Resources | Executable HLSL/GLSL import, typed uniforms and sampled textures; broader language profile incomplete |
 
-Games use Sprite for texture, sheet-frame and region drawing, or record custom commands from Node.OnDraw through Node and Texture. RenderingServer provides the active method/driver, frame events and clear/submission controls. Engine.Run starts and closes the renderer.
+Games use Sprite for texture, sheet-frame and region drawing, or record custom commands from CanvasItem.OnDraw through CanvasItem and Texture. RenderingServer provides the active method/driver, frame events and clear/submission controls. Engine.Run starts and closes the renderer.
 
 ## Dependencies and invariants
 

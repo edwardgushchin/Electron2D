@@ -2,11 +2,9 @@
 
 Last updated: 2026-09-23
 
-Scene inheritance migration: [ADR 0008](../decisions/scene.md#adr-0008) assigns the neutral tree API to `SceneNode`, canvas behavior to `CanvasItem`, and the spatial API to `Node`. Signatures on this page describe the existing runtime until that migration is implemented.
-
 **Inherits:** —
 
-**Inherited By:** [ConfigFile](ConfigFile.md), [DirAccess](DirAccess.md), [DisplayServer](DisplayServer.md), [Engine](Engine.md), [FileAccess](FileAccess.md), [Input](Input.md), [InputMap](InputMap.md), [MainLoop](MainLoop.md), [Node](Node.md), [ProjectSettings](ProjectSettings.md), [Resource](Resource.md), [SceneState](SceneState.md), [SceneTreeTimer](SceneTreeTimer.md), [Tween](Tween.md), [Tweener](Tweener.md)
+**Inherited By:** [ConfigFile](ConfigFile.md), [DirAccess](DirAccess.md), [DisplayServer](DisplayServer.md), [Engine](Engine.md), [FileAccess](FileAccess.md), [Input](Input.md), [InputMap](InputMap.md), [MainLoop](MainLoop.md), [SceneNode](SceneNode.md), [ProjectSettings](ProjectSettings.md), [Resource](Resource.md), [SceneState](SceneState.md), [SceneTreeTimer](SceneTreeTimer.md), [Tween](Tween.md), [Tweener](Tweener.md)
 
 - **Source:** [`src/Core/Object/ElectronObject.cs`](../../src/Core/Object/ElectronObject.cs)
 - **Namespace:** `Electron2D`
@@ -28,7 +26,7 @@ registration, and script storage. Instances have deterministic `IDisposable` lif
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-using var node = new Node();
+using var node = new SceneNode();
 ElectronObject value = node;
 Console.WriteLine(value.InstanceID);
 ```
@@ -445,7 +443,7 @@ protected override void Dispose(bool disposing)
 - Disposal entry and disposed-state publication are thread-safe and cleanup runs at most once.
 - The disposing-thread exception is scoped to `ThrowIfDisposed`; it is not a general synchronization guarantee and does not make re-entrant mutation during teardown safe.
 - `ValidateDisposal()` may run concurrently in more than one caller and may race with another caller beginning disposal; overrides must be side-effect-free and tolerate that race. A validation failure prevents its own caller from starting disposal but cannot prevent another valid caller.
-- Translation configuration and property events have their documented member-level synchronization only; derived mutable state is not made thread-safe. `Node` overrides mutation validation so inherited translation setters cannot change a hierarchy during packed capture.
+- Translation configuration and property events have their documented member-level synchronization only; derived mutable state is not made thread-safe. `SceneNode` overrides mutation validation so inherited translation setters cannot change a hierarchy during packed capture.
 - Reference equality remains standard .NET reference equality.
 
 ## Native resources
@@ -458,7 +456,7 @@ The class has no finalizer. Derived SDL resource types must put native handles i
 - No metadata bag, script attachment, script runtime, or generic signal registry. `ScriptChanged` is the typed notification contract reserved for the confirmed future scripting component; nothing raises it automatically yet.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers because a typed stable endpoint schema does not yet exist.
 - No global registry or lookup by `InstanceID`.
-- No queued deletion; that behavior belongs to [`Node`](Node.md) and [`SceneTree`](SceneTree.md).
+- No queued deletion; that behavior belongs to [`SceneNode`](SceneNode.md) and [`SceneTree`](SceneTree.md).
 
 ## Verification
 

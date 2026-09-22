@@ -182,7 +182,7 @@ internal static class SpriteTests
         internal bool Clip;
         public override int Width => LogicalWidth;
         public override int Height => 2;
-        public override void DrawRectRegion(Node canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
+        public override void DrawRectRegion(CanvasItem canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
         {
             Destination = rect; Source = sourceRect; Clip = clipUV;
             canvasItem.DrawRect(rect, Colors.Magenta);

@@ -2,18 +2,16 @@
 
 Last updated: 2026-09-23
 
-Scene inheritance migration: [ADR 0008](../decisions/scene.md#adr-0008) assigns the neutral tree API to `SceneNode`, canvas behavior to `CanvasItem`, and the spatial API to `Node`. Signatures on this page describe the existing runtime until that migration is implemented.
-
 ## Scope
 
-This Scene component provides the concrete [Main loop](main-loop.md), owns one active hierarchy, propagates typed input and system notifications, delivers lifecycle and pause changes, accepts direct or [Engine](engine-runtime.md)-scheduled process/physics frame boundaries, frame counters and events, tree-change events, reusable Node timers, lightweight one-shot timers, frame-driven [tweening](tweening.md), typed group operations, deferred work, and queued deletion. Per-node hierarchy and 2D state belong to the [Unified 2D node component](unified-node.md).
+This Scene component provides the concrete [Main loop](main-loop.md), owns one active hierarchy, propagates typed input and system notifications, delivers lifecycle and pause changes, accepts direct or [Engine](engine-runtime.md)-scheduled process/physics frame boundaries, frame counters and events, tree-change events, reusable SceneNode timers, lightweight one-shot timers, frame-driven [tweening](tweening.md), typed group operations, deferred work, and queued deletion. Per-node hierarchy and 2D state belong to the [Scene hierarchy component](scene-hierarchy.md).
 
 ## Owned types
 
 | Type | Role |
 | --- | --- |
 | [`SceneTree`](../classes/SceneTree.md) | Concrete `MainLoop`, hierarchy owner, frame/system-notification dispatcher, group service, timer owner, deferred scheduler, and deletion queue |
-| [`Timer`](../classes/Timer.md) | Reusable Node countdown with process/physics, pause, repeat, autostart, time-scale, event, and packed-configuration behavior |
+| [`Timer`](../classes/Timer.md) | Reusable SceneNode countdown with process/physics, pause, repeat, autostart, time-scale, event, and packed-configuration behavior |
 | [`TimerProcessCallback`](../classes/TimerProcessCallback.md) | Stable choice between physics and process countdown lanes |
 | [`SceneTreeTimer`](../classes/SceneTreeTimer.md) | Auto-disposed one-shot timer advanced by a selected tree frame lane |
 | [`GroupCallFlags`](../classes/GroupCallFlags.md) | Order, deferral, and uniqueness policy for typed group operations |
@@ -38,7 +36,7 @@ Window-driven frames invoke the internal RenderingServer under the scene executi
 
 ## Dependencies
 
-The component depends on Core's `MainLoop` and `EventConnection`, typed Input events, the unified `Node` including its input/internal lanes and packed-scene construction barriers, `Timer`, the [Tweening component](tweening.md), reusable lists, concurrent queues, and ordinary .NET synchronization. Core `Engine` may drive it through `MainLoop` and supplies scaled/original deltas. It has no SDL3-CS, clock, native input backend, audio, collision-physics, asset loader/serializer, networking, or editor dependency.
+The component depends on Core's `MainLoop` and `EventConnection`, typed Input events, the neutral `SceneNode` including its input/internal lanes and packed-scene construction barriers, `Timer`, the [Tweening component](tweening.md), reusable lists, concurrent queues, and ordinary .NET synchronization. Core `Engine` may drive it through `MainLoop` and supplies scaled/original deltas. It has no SDL3-CS, clock, native input backend, audio, collision-physics, asset loader/serializer, networking, or editor dependency.
 
 ## Invariants
 
@@ -52,7 +50,7 @@ The component depends on Core's `MainLoop` and `EventConnection`, typed Input ev
 - Lifecycle snapshots revalidate current parent/tree membership; a node in enter/ready/exit delivery cannot be removed, reparented, or disposed re-entrantly.
 - Pause traversal revalidates lifetime/membership and visits each node at most once; opposite or teardown-time transitions are rejected.
 - One action batch is captured per flush; deletion is captured afterward, so deletion requested by a captured action runs in that flush while nested deferred actions wait.
-- Reusable `Timer` nodes run through internal Node processing before their own public callbacks; lightweight tree timers run after nodes and before deferred actions. Expired tree timers are disposed even if timeout handlers fail.
+- Reusable `Timer` nodes run through internal SceneNode processing before their own public callbacks; lightweight tree timers run after nodes and before deferred actions. Expired tree timers are disposed even if timeout handlers fail.
 - Matching valid tweens run after lightweight timers and before deferred actions. Tween processing uses a captured list, so tween-created tweens wait for the next frame; failed tweens are invalidated while later tweens and phases continue.
 - Queued node deletion reaches disposal even when detach callbacks fail or the node became detached; an old tree does not consume a request owned by a new tree.
 - Tree events reflect completed lifecycle/structural stages; callback failures do not roll completed state back.
@@ -75,10 +73,10 @@ Tests cover valid and failing activation, packed-factory/unfinished-node activat
 - [0011: Exception-safe lifecycle, typed groups, and timers](../decisions/scene.md#adr-0011)
 - [0015: Main-loop lifecycle and host boundary](../decisions/core-object-runtime.md#adr-0015)
 - [0016: Process-wide Engine runtime and host-driven scheduling](../decisions/core-object-runtime.md#adr-0016)
-- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0036: Reusable SceneNode timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0037: Typed SceneTree tween scheduling](../decisions/scene.md#adr-0037)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
 
 ## Windowed lifecycle
 
-SceneTree.Quit requests exit and supplies Engine.Run's return code; AutoAcceptQuit defaults to true and is evaluated after Window.CloseRequested. Both Process and PhysicsProcess report pending quit after completing their frame lane. Engine.Run publishes the tree before ready and reserves its finalization/disposal until runtime teardown. Ordinary Node roots still support manual/headless embedding.
+SceneTree.Quit requests exit and supplies Engine.Run's return code; AutoAcceptQuit defaults to true and is evaluated after Window.CloseRequested. Both Process and PhysicsProcess report pending quit after completing their frame lane. Engine.Run publishes the tree before ready and reserves its finalization/disposal until runtime teardown. Ordinary SceneNode roots still support manual/headless embedding.

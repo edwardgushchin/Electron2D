@@ -1,6 +1,6 @@
 # CanvasCommand
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Declaration: `internal readonly record struct CanvasCommand`
 - Source: [CanvasGeometry.cs](../../src/Servers/Rendering/CanvasGeometry.cs)
@@ -9,7 +9,7 @@ Last updated: 2026-09-22
 
 ## Description
 
-A retained local drawing operation recorded only during Node.OnDraw. Node owns its list, clears it before redraw, and releases references on disposal. Material selection is captured later by Node.AppendCanvas; commands borrow their Texture and never dispose it. Pixel updates are consumed on replay without recording new commands.
+A retained local drawing operation recorded only during CanvasItem.OnDraw. CanvasItem owns its list, clears it before redraw, and releases references on disposal. Material selection is captured later by CanvasItem.AppendCanvas; commands borrow their Texture and never dispose it. Pixel updates are consumed on replay without recording new commands.
 
 ## Member summary
 

@@ -78,7 +78,7 @@ Accepted for rectangle semantics. The old `Rect2` name and external vector depen
 
 Electron2D needs a foundational floating-point rectangle before rendering, UI, culling, images, collision, and navigation are designed. The official 4.7.2 stable `Rect2` contract and typed C# implementation were audited together with the native `rect2.h` behavior and global `Side` values. The relevant surface includes mutable position/size/end, signed area, normalization, containment, intersection, enclosure, growth, support mapping, merge, finite and approximate checks, formatting, four edge identities, an integer-rectangle conversion, transform multiplication, and a language-specific boolean conversion.
 
-The repository already uses `System.Numerics.Vector2` throughout unified 2D nodes. Adding a second vector type solely for rectangle parity would duplicate arithmetic and introduce conversion noise. Conversely, substituting `System.Drawing.RectangleF` would bring an unsuitable framework identity and different semantics.
+The initial rectangle slice used System.Numerics.Vector2; ADR 0033 now requires engine-owned Vector2 throughout geometry and spatial nodes. Adding a second vector type solely for rectangle parity would duplicate arithmetic and introduce conversion noise. Conversely, substituting `System.Drawing.RectangleF` would bring an unsuitable framework identity and different semantics.
 
 ### Decision
 
@@ -132,59 +132,34 @@ Verification is currently Linux/.NET 8. ADR 0029 has since delivered transform m
 - [0035: Foreseeable public type-family completeness](core-math.md#adr-0035)
 
 <a id="adr-0026"></a>
-## ADR 0026: Separate Transform2D foundational type
+## ADR 0026: Separate foundational Transform value
 
 Last updated: 2026-09-23
 
-### Status
-
-Accepted and fulfilled for affine semantics by ADR 0029. This decision partially supersedes ADR 0008 only where that ADR rejected a separate engine-owned transform type. ADRs 0032 and 0033 complete the rename to `Transform`, its `Vector2` storage, and the `Node`/rectangle migration; scene inheritance is independently defined by the accepted `SceneNode → CanvasItem → Node` hierarchy in ADR 0008; this math decision does not authorize combining those classes.
-
-### Context
-
-ADR 0008 chose `System.Numerics.Matrix3x2` directly for the first complete unified `Node` implementation and explicitly avoided a speculative transform wrapper. That kept the initial scene slice executable, but it does not express the final engine API direction: Electron2D requires a dedicated 2D transform value with a stable engine-owned contract and direct integration with geometry types such as `Rect2`.
-
-At the time of this decision, the requirement was architectural rather than a claim that the type already existed. ADR 0029 has since delivered the standalone production type. `Node.Transform` and `Node.GlobalTransform` still remain `Matrix3x2` values.
+- Status: Accepted and implemented; affine semantics are defined in ADR 0029 and final names/integration in ADRs 0032 and 0033.
+- Scope: Engine-owned 2D affine values and their scene/geometry integration.
 
 ### Decision
 
-Electron2D provides a separate public foundational value type named `Transform2D`. ADR 0029 records its audited public surface, XML/living documentation, error/threading/allocation contracts, persistence, executable tests, and post-implementation audit.
+Electron2D provides the engine-owned `Transform` value with Vector2 basis/origin storage, composition, forward/inverse transformation, finite checks and approximate comparison. Node.Transform and Node.GlobalTransform use this value; Rect transformation and typed packed/property/config storage are implemented under ADRs 0029 and 0033. No Matrix3x2 wrapper or public external numerics dependency substitutes for this contract.
 
-The type owns the engine-facing 2D affine-transform vocabulary, including basis/origin representation, composition, forward and inverse point/vector transformation, affine inversion, and finite/approximate checks. Rectangle transformation belongs to the pending integration slice because it changes `Rect2`; its absence does not make the standalone transform a placeholder.
+This value-type decision does not combine scene responsibilities. [ADR 0008](scene.md#adr-0008) separately requires SceneNode for the neutral tree, CanvasItem for drawing/shared transform queries and Node for the concrete spatial model. Timer and Viewport remain neutral. No 3D or speculative dimension-neutral transform family is authorized.
 
-Until the migration slice is complete:
+### Consequences and verification
 
-- `Matrix3x2` remains the truthful current `Node` API and implementation;
-- `Rect2` transform multiplication remains explicitly dependency-blocked;
-- no implicit compatibility shim or misleading operator is added;
-- current behavior must not be documented as already migrated.
-
-The separate migration must update `Node`, `Rect2`, tests, XML documentation, class/component/domain documents, inventory, and the ADR chain atomically. Packed-scene/property/config persistence for standalone `Transform2D` values is already implemented and verified by ADR 0029.
-
-Electron2D remains 2D-only. No generic 3D-capable `Transform` or `Transform3D` type is authorized by this decision.
-
-### Consequences
-
-- The final public geometry vocabulary will not expose `Matrix3x2` as the permanent engine abstraction.
-- Current code stays complete and honest while the remaining migration is tracked explicitly rather than represented by a shim.
-- `Rect2` ships all independent geometry and can add transform operators in the deliberate migration now that both operand contracts exist.
-- The future migration may be source-breaking for current `Node` transform consumers and therefore requires an explicit compatibility and release decision during implementation.
-- Standard-library numerics may still be used internally or through explicit conversions, but they do not replace the required engine-owned type.
+The spatial surface uses one engine-owned affine vocabulary and documented canonical decomposition. Source XML, class/component/domain pages, inventory and coverage accompany any changes. Managed geometry, scene and persistence checks cover this integration; native mixed-tree canvas checks exercise Node/CanvasItem composition on Wayland. Those checks do not imply complete rendering, UI or other-platform acceptance.
 
 ### Rejected alternatives
 
-- **Keep `Matrix3x2` permanently:** rejected by the required engine API direction and missing direct geometry contract.
-- **Add an empty wrapper now:** rejected because it would be a misleading compatibility stub and violate the definition of done.
-- **Implement `Transform2D` inside the `Rect2` task:** rejected because it is an independent foundational type with a substantial API, invariants, and migration impact that required its own complete vertical slice, now recorded by ADR 0029.
-- **Add a generic or 3D transform family:** rejected because Electron2D is exclusively 2D.
+- Expose Matrix3x2 as the permanent scene API: it lacks the required engine-owned contract.
+- Add an empty wrapper or speculative 3D family: it violates the complete-slice and strictly 2D boundaries.
+- Treat removal of a dimensional suffix as permission to merge scene base classes: contradicted by ADR 0008.
 
-### Verification boundary
+### Related decisions
 
-ADR 0029 fulfills and verifies the standalone value requirement. Current tests verify that value independently alongside `Node`'s existing `Matrix3x2` contract and `Rect2`'s transform-independent geometry. They do not claim that Node migration or rectangle transformation is complete.
-
-### Related decision
-
-- [0029: Typed Transform2D value and affine semantics](core-math.md#adr-0029)
+- [0029: Affine value semantics](#adr-0029)
+- [0033: Engine-owned vector integration](#adr-0033)
+- [0008: Scene inheritance](scene.md#adr-0008)
 
 <a id="adr-0029"></a>
 ## ADR 0029: Typed Transform2D value and affine semantics

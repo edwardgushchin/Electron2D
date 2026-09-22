@@ -1,6 +1,6 @@
 # Shader materials
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ## Scope and implementation state
 
@@ -48,7 +48,7 @@ The [SDL uniform upload contract](https://wiki.libsdl.org/SDL3/SDL_PushGPUFragme
 
 ## Ordinary texture drawing
 
-Texture.Draw, DrawRect and DrawRectRegion, and the corresponding Node methods, record borrowed resources during OnDraw. Both backends support nearest sampling, source-alpha modulation, stretching, repeat, logical-size overrides, source regions, reflection and transpose. Source clipping preserves interior UV interpolation and clamps the half-texel borders. Geometry uses per-command texture batches in scene order. Texture updates and replacement are visible without QueueRedraw; a disposed or unreadable drawn texture aborts the frame.
+Texture.Draw, DrawRect and DrawRectRegion, and the corresponding CanvasItem methods, record borrowed resources during OnDraw. Both backends support nearest sampling, source-alpha modulation, stretching, repeat, logical-size overrides, source regions, reflection and transpose. Source clipping preserves interior UV interpolation and clamps the half-texel borders. Geometry uses per-command texture batches in scene order. Texture updates and replacement are visible without QueueRedraw; a disposed or unreadable drawn texture aborts the frame.
 
 The built-in fragment shader multiplies the command sample by drawing color. User shaders may declare `TEXTURE` at descriptor set 2, binding 0; the renderer supplies the command texture or an opaque white pixel for untextured geometry. This reserved binding is excluded from material descriptors and setters. Additional named texture parameters follow the same contiguous binding rules. User fragment programs decide how to combine the sample and color; incoming color is the drawing/modulation product.
 

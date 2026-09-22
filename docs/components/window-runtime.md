@@ -2,11 +2,9 @@
 
 Last updated: 2026-09-23
 
-Scene inheritance migration: [ADR 0008](../decisions/scene.md#adr-0008) assigns the neutral tree API to `SceneNode`, canvas behavior to `CanvasItem`, and the spatial API to `Node`. Signatures on this page describe the existing runtime until that migration is implemented.
-
 ## Scope and types
 
-[Window](../classes/Window.md) derives from [Viewport](../classes/Viewport.md), which derives from the unified Node. Window owns the [ModeEnum](../classes/Window.ModeEnum.md) and [Flags](../classes/Window.Flags.md) identifiers. A consumer configures a root Window, adds scene children, and calls Engine.Run. The root window connects scene processing and retained canvas drawing through [RenderingServer](../classes/RenderingServer.md). Broader rendering and GUI APIs remain incomplete.
+[Window](../classes/Window.md) derives from [Viewport](../classes/Viewport.md), which derives from the neutral SceneNode. Window owns the [ModeEnum](../classes/Window.ModeEnum.md) and [Flags](../classes/Window.Flags.md) identifiers. A consumer configures a root Window, adds scene children, and calls Engine.Run. The root window connects scene processing and retained canvas drawing through [RenderingServer](../classes/RenderingServer.md). Broader rendering and GUI APIs remain incomplete.
 
 [ADR 0028](../decisions/rendering.md#adr-0028) selects HLSL and GLSL compilation at project import/build, followed by one SPIR-V validation, reflection and GPU-program path through SDL3-CS/SDL_shadercross. Compatible SPIR-V from third-party compilers uses the same path. Direct language support also requires diagnostics, material parameters, textures, consistent bindings and backend checks. The current [shader/material integration](shader-materials.md) executes typed fragment uniforms and sampled textures on Linux Wayland/Vulkan. The SDL_Renderer fallback rejects arbitrary shaders explicitly.
 
@@ -14,7 +12,7 @@ Scene inheritance migration: [ADR 0008](../decisions/scene.md#adr-0008) assigns 
 
 Engine reserves its idle state, opens the native window through DisplayServer and initializes RenderingServer before creating SceneTree. It publishes the tree before ready, drives the native event pump before fixed/process frames, and submits the canvas after scene processing. Cleanup disposes the scene, rendering resources and display in that order. MaxFPS uses unscaled monotonic time; native events continue during bounded waits. SceneTree.Quit requests exit and returns its code from Run. Window.CloseRequested precedes the default AutoAcceptQuit decision.
 
-Window properties configure title, positive client size, minimum/maximum constraints, optional desktop position and screen, mode, four executable policies and visibility. Mode queries report observed native state; flag queries retain accepted configuration and are stored in PackedScene. Unsupported policies reject use, and platform refusal does not commit a requested flag. Native calls inherit DisplayServer platform capability failures. Inherited Node.Position remains a scene transform; ScreenPosition is the native desktop position and is rejected on Wayland. Node.Show/Hide dispatch the Window visibility override even through a Node reference. GetVisibleRect uses a zero client origin. SizeChanged follows client-size updates, never mere desktop movement.
+Window properties configure title, positive client size, minimum/maximum constraints, optional desktop position and screen, mode, four executable policies and visibility. Mode queries report observed native state; flag queries retain accepted configuration and are stored in PackedScene. Unsupported policies reject use, and platform refusal does not commit a requested flag. Native calls inherit DisplayServer platform capability failures. Window.Position is the native desktop position and is rejected on Wayland. Window declares its own Visible, Show/Hide and VisibilityChanged API; it has no canvas transform or drawing surface. GetVisibleRect uses a zero client origin. SizeChanged follows client-size updates, never mere desktop movement.
 
 Window also forwards effective mouse entry/exit, content-scale changes and completed file-drop snapshots before frame callbacks. Native IME activation/caret placement, taskbar progress requests, decorated geometry, maximization capability and centering are available on Window with the existing platform limits. Signal failures remain visible after the native queue drains; scene and native cleanup still run.
 
@@ -28,7 +26,7 @@ Viewport shares SceneTree's current handled-input flag. PushInput borrows a clie
 - Native services opened directly through DisplayServer must finish before shutdown. Pending asynchronous file dialogs can reject native disposal under the existing DisplayServer contract; Run reports the cleanup failure and DisplayServer.Instance remains available for completion/release. Window exposes no asynchronous dialog API yet.
 - Engine remains reserved throughout scene exit, disposal and native cleanup. Manual frame/stop/tree-disposal interference is rejected. All owned cleanup stages are attempted and failures remain observable.
 - Validation/busy-engine rejection preserves caller ownership. After reservation, failed startup also disposes the transferred root. A later run uses a new Window.
-- PackedScene stores the title and size/limit configuration plus inherited stored Node properties. ScreenPosition is an optional platform startup request, not stored scene data. CurrentScreen follows the same optional-request rule. Mode and the four supported policies are stored; unset/default policies do not issue unsupported startup requests.
+- PackedScene stores the title and size/limit configuration plus inherited stored SceneNode properties. Position is an optional platform startup request, not stored scene data. CurrentScreen follows the same optional-request rule. Mode and the four supported policies are stored; unset/default policies do not issue unsupported startup requests.
 
 ## Verification and limits
 

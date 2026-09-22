@@ -2,15 +2,13 @@
 
 Last updated: 2026-09-23
 
-Scene inheritance migration: [ADR 0008](../decisions/scene.md#adr-0008) assigns the neutral tree API to `SceneNode`, canvas behavior to `CanvasItem`, and the spatial API to `Node`. Signatures on this page describe the existing runtime until that migration is implemented.
-
-**Inherits:** [Node](Node.md)
+**Inherits:** [SceneNode](SceneNode.md)
 
 **Inherited By:** [Window](Window.md)
 
 - **Source:** [`src/Scene/Main/Viewport.cs`](../../src/Scene/Main/Viewport.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public abstract class Viewport : Node`
+- **Declaration:** `public abstract class Viewport : SceneNode`
 
 ## Description
 
@@ -18,11 +16,11 @@ Provides the root window's client rectangle and scene input boundary.
 
 Only a root `Window` is currently supported. Render targets, canvas drawing, content scaling, and embedded viewports are not implemented. Input coordinates use the client area.
 
-Native lifetime belongs to Engine.Run. Children retain the unified Node transform and visibility rules. Desktop ScreenPosition is separate from scene Position. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
+Native lifetime belongs to Engine.Run. Viewport inherits the neutral SceneNode; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
 
 ## Examples
 
-Inside a Node input callback (surrounding callback/event variables are supplied by the scene):
+Inside a SceneNode input callback (surrounding callback/event variables are supplied by the scene):
 
 ```csharp
 if (inputEvent.IsActionPressed("confirm"))
@@ -113,6 +111,6 @@ Subscribers run synchronously on the scene owner thread. Desktop movement does n
 
 ## Lifecycle, verification and limits
 
-See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. Physical-input/visual acceptance of this new API, other platforms, rendering, content scaling, offscreen targets, GUI and nested windows remain unverified or absent. Native Wayland rejects ScreenPosition and may constrain geometry; focus requests obey compositor policy.
+See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. Physical-input/visual acceptance of this new API, other platforms, rendering, content scaling, offscreen targets, GUI and nested windows remain unverified or absent. Native Wayland rejects Position and may constrain geometry; focus requests obey compositor policy.
 
 Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028).

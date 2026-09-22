@@ -1,6 +1,6 @@
 # PropertyDescriptor\<TOwner, TValue\>
 
-Last updated: 2026-09-21
+Last updated: 2026-09-23
 
 **Inherits:** [PropertyDescriptor](PropertyDescriptor.md)
 
@@ -26,11 +26,11 @@ follows that owner's threading rules.
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-var descriptor = new PropertyDescriptor<Node, string>(
-    nameof(Node.Name),
+var descriptor = new PropertyDescriptor<SceneNode, string>(
+    nameof(SceneNode.Name),
     node => node.Name,
     (node, value) => node.Name = value,
-    _ => "Node");
+    _ => "SceneNode");
 ```
 
 ## Constructors

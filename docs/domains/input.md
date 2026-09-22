@@ -1,6 +1,6 @@
 # Input domain
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ## Responsibility
 
@@ -20,7 +20,7 @@ Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/Inp
 - `InputMap`: action registration, deadzones, binding management, matching, and descriptions.
 - `InputEvent` hierarchy: typed stored property discovery, action matching, text, duplication, accumulation, coordinate transforms, device/window/modifier data, and concrete keyboard, pointer, touch, gesture, controller, and direct-action payloads.
 - Input enums: complete key identifiers/modifier masks, key location, mouse buttons/mask, and standardized/raw controller axes/buttons.
-- `Node`/`SceneTree` integration: explicit opt-in callbacks and handled propagation.
+- `SceneNode`/`SceneTree` integration: explicit opt-in callbacks and handled propagation.
 
 ## Dependency direction
 

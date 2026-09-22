@@ -1,6 +1,6 @@
 # DisplayServer
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -36,7 +36,7 @@ The active server is a process singleton, not an `Engine` owned object. `Electro
 using Electron2D;
 
 using var display = DisplayServer.Open("My game", new Vector2I(800, 600));
-using var tree = new SceneTree(new Node());
+using var tree = new SceneTree(new SceneNode());
 Engine.Instance.Start(tree);
 try
 {

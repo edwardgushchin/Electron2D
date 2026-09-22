@@ -268,7 +268,7 @@ public class Sprite : Node
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(SpriteProperties);
 
     /// <inheritdoc />
-    protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Sprite) ? CreateSpriteNode : base.CreateSceneInstanceFactory();
+    protected override Func<SceneNode> CreateSceneInstanceFactory() => GetType() == typeof(Sprite) ? CreateSpriteNode : base.CreateSceneInstanceFactory();
 
     private static Node CreateSpriteNode() => new Sprite();
 

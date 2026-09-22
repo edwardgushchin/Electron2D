@@ -48,7 +48,7 @@ public abstract class Texture : Resource
     /// <exception cref="ArgumentNullException">The target node is null.</exception>
     /// <exception cref="InvalidOperationException">The target is not recording OnDraw on its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The texture or target node is disposed.</exception>
-    public virtual void Draw(Node canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)
+    public virtual void Draw(CanvasItem canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)
     {
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(canvasItem);
         canvasItem.RecordTexture(this, new Rect(position, Size), null, modulate ?? Colors.White, false, transpose, false);
@@ -66,7 +66,7 @@ public abstract class Texture : Resource
     /// <exception cref="ArgumentNullException">The target node is null.</exception>
     /// <exception cref="InvalidOperationException">The target is not recording OnDraw on its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The texture or target node is disposed.</exception>
-    public virtual void DrawRect(Node canvasItem, Rect rect, bool tile, Color? modulate = null, bool transpose = false)
+    public virtual void DrawRect(CanvasItem canvasItem, Rect rect, bool tile, Color? modulate = null, bool transpose = false)
     {
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(canvasItem);
         canvasItem.RecordTexture(this, rect, null, modulate ?? Colors.White, tile, transpose, false);
@@ -84,7 +84,7 @@ public abstract class Texture : Resource
     /// <exception cref="ArgumentNullException">The target node is null.</exception>
     /// <exception cref="InvalidOperationException">The target is not recording OnDraw on its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The texture or target node is disposed.</exception>
-    public virtual void DrawRectRegion(Node canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
+    public virtual void DrawRectRegion(CanvasItem canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
     {
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(canvasItem);
         canvasItem.RecordTexture(this, rect, sourceRect, modulate ?? Colors.White, false, transpose, clipUV);

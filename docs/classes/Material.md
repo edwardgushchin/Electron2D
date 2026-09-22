@@ -1,6 +1,6 @@
 # Material
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Declaration: `public abstract class Material : Resource`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -10,7 +10,7 @@ Last updated: 2026-09-22
 
 ## Description and API
 
-The base resource for selecting canvas shading. Its `private protected Material()` constructor restricts executable material implementations to the runtime assembly. There is no added public state or consumer extension hook. Use `new ShaderMaterial { Shader = shader }` and assign it to `Node.Material`.
+The base resource for selecting canvas shading. Its `private protected Material()` constructor restricts executable material implementations to the runtime assembly. There is no added public state or consumer extension hook. Use `new ShaderMaterial { Shader = shader }` and assign it to `CanvasItem.Material`.
 
 Nodes borrow materials. Their disposal does not dispose a shared material. Resource identity, synchronous `Changed`, graph copying and logical disposal follow the inherited Resource contract. The internal render state contains shader code/layout and uniform buffers, without exposing SDL handles to consumers.
 

@@ -12,7 +12,7 @@ public sealed class RenderingServer : ElectronObject
     private readonly CanvasBackend _backend;
     private readonly Window _window;
     private readonly int _ownerThread = Environment.CurrentManagedThreadId;
-    private readonly List<Node> _nodes = [];
+    private readonly List<CanvasItem> _nodes = [];
     private readonly List<CanvasVertex> _vertices = [];
     private readonly List<CanvasBatch> _batches = [];
     private readonly List<RenderEntry> _order = [];
@@ -145,9 +145,9 @@ public sealed class RenderingServer : ElectronObject
         finally { _nodes.Clear(); _order.Clear(); _rendering = false; }
     }
 
-    private void Capture(Node node)
+    private void Capture(SceneNode node)
     {
-        _nodes.Add(node);
+        if (node is CanvasItem item) _nodes.Add(item);
         for (var i = 0; i < node.ChildCount; i++) Capture(node.GetChild(i));
     }
 
@@ -184,5 +184,5 @@ public sealed class RenderingServer : ElectronObject
         if (_ownerThread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("Rendering requires the scene owner thread.");
     }
 
-    private readonly record struct RenderEntry(Node Node, int Z, int Order);
+    private readonly record struct RenderEntry(CanvasItem Node, int Z, int Order);
 }

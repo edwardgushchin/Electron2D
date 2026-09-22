@@ -2,11 +2,9 @@
 
 Last updated: 2026-09-23
 
-Scene inheritance migration: [ADR 0008](../decisions/scene.md#adr-0008) assigns the neutral tree API to `SceneNode`, canvas behavior to `CanvasItem`, and the spatial API to `Node`. Signatures on this page describe the existing runtime until that migration is implemented.
-
 ## Scope and owned types
 
-The component owns [RenderingServer](../classes/RenderingServer.md) and its internal GPU and compatibility backends. [Node](../classes/Node.md) records rectangle, line and texture commands; [Sprite](../classes/Sprite.md) supplies the ready-to-use texture/frame/region node; [Texture](../classes/Texture.md) and [shader materials](shader-materials.md) provide borrowed resources. Engine.Run owns the root Window and the renderer lifetime. This is an executable part of the rendering vertical slice, with broader API coverage still incomplete.
+The component owns [RenderingServer](../classes/RenderingServer.md) and its internal GPU and compatibility backends. [CanvasItem](../classes/CanvasItem.md) records rectangle, line and texture commands; [Sprite](../classes/Sprite.md) supplies the ready-to-use texture/frame/region node; [Texture](../classes/Texture.md) and [shader materials](shader-materials.md) provide borrowed resources. Engine.Run owns the root Window and the renderer lifetime. This is an executable part of the rendering vertical slice, with broader API coverage still incomplete.
 
 ## Runtime flow
 
@@ -24,11 +22,11 @@ Texture drawing stretches, repeats or selects a source region. Negative destinat
 
 GPU consumes vertex position/color/UV and the imported fragment interface. Built-in TEXTURE is supplied per command, using white for untextured geometry. Compatibility rejects arbitrary shaders, uploads the base mip level and checks unsupported high-precision formats and repeat capabilities. The software driver receives textured triangles separately because SDL 3.4.16's rectangle shortcut loses transposed and constant UVs; native vendored code remains unchanged.
 
-Sprite borrows its texture, records through the texture's virtual region draw method and rebuilds on frame, region, layout or texture changes. Its resource notification callback only marks an atomic redraw request; it cannot run scene code on a worker. Node consumes that request atomically before OnDraw, retaining notifications that arrive during recording for the next frame.
+Sprite borrows its texture, records through the texture's virtual region draw method and rebuilds on frame, region, layout or texture changes. Its resource notification callback only marks an atomic redraw request; it cannot run scene code on a worker. CanvasItem consumes that request atomically before OnDraw, retaining notifications that arrive during recording for the next frame.
 
 ## Ownership and limits
 
-Nodes borrow materials and textures; native texture caches belong to the backend. Updates reuse compatible allocations; replacement recreates them. Unused cached resources are released, and shutdown releases all backend state. A disposed or unreadable texture fails when its retained drawing is consumed. A custom Texture may override drawing with ordinary Node geometry instead of providing an image.
+Nodes borrow materials and textures; native texture caches belong to the backend. Updates reuse compatible allocations; replacement recreates them. Unused cached resources are released, and shutdown releases all backend state. A disposed or unreadable texture fails when its retained drawing is consumed. A custom Texture may override drawing with ordinary CanvasItem geometry instead of providing an image.
 
 Current framebuffer and blending precision is RGBA8. GPU samples byte and supported floating-point images, including stored mips. Compatibility support depends on the native driver; the tested drivers reject float textures explicitly. The component has no lights, clipping hierarchy, polygon/mesh API, public offscreen targets, GUI drawing, independent window renderers or device-loss recovery. Other targets remain unverified under [ADR 0021](../decisions/product.md#adr-0021).
 

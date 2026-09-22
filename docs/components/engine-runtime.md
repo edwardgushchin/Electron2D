@@ -1,6 +1,6 @@
 # Engine runtime component
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ## Scope
 
@@ -40,7 +40,7 @@ The component depends on Core object lifecycle, MainLoop, ProjectSettings, and t
 
 ## Current implementation status and exclusions
 
-Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. Engine.Run now supplies the monotonic clock, event pumping through Window, MaxFPS waiting and complete scene/window lifetime. Rendering/draw counts, logging flags, generated attribution/license data, script debugging/languages, movie writing, and editor hints remain absent. Their exact reference-API disposition is in the [`Engine` class inventory](../classes/Engine.md#official-reference-coverage-inventory).
+Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. Engine.Run now supplies the monotonic clock, event pumping through Window, MaxFPS waiting and complete scene/window lifetime. Rendering/draw counts, logging flags, generated attribution/license data, script debugging/languages, movie writing, and editor hints remain absent. Their exact reference-API disposition is in the [`Engine` class inventory](../coverage/classes/Engine.md).
 
 ## Verification
 
@@ -52,5 +52,5 @@ Executable checks cover success, invalid values/order, wrong threads, lifecycle 
 - [0015: Main-loop lifecycle and host boundary](../decisions/core-object-runtime.md#adr-0015)
 - [0014: Managed Resource lifetime and realtime allocation](../decisions/resources.md#adr-0014)
 - [0019: Typed project settings and directory-backed virtual paths](../decisions/core-data-io.md#adr-0019)
-- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0036: Reusable SceneNode timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)

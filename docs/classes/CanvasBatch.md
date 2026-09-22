@@ -1,6 +1,6 @@
 # CanvasBatch
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Declaration: `internal readonly record struct CanvasBatch`
 - Source: [CanvasBackend.cs](../../src/Servers/Rendering/CanvasBackend.cs)
@@ -9,7 +9,7 @@ Last updated: 2026-09-22
 
 ## Description
 
-A contiguous vertex range with one borrowed material state, command texture and addressing mode. Node.AppendCanvas coalesces adjacent ranges only when those values match, preserving draw order. Backend caches own native resources; this record owns none.
+A contiguous vertex range with one borrowed material state, command texture and addressing mode. CanvasItem.AppendCanvas coalesces adjacent ranges only when those values match, preserving draw order. Backend caches own native resources; this record owns none.
 
 ## Member summary
 

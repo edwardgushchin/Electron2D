@@ -1,6 +1,6 @@
 # NodeProcessMode
 
-Last updated: 2026-09-21
+Last updated: 2026-09-23
 
 **Inherits:** —
 
@@ -16,7 +16,7 @@ Last updated: 2026-09-21
 
 Controls when a node receives process and physics-process callbacks.
 
-`NodeProcessMode` is the typed pause policy stored by each [`Node`](Node.md). It owns no resources and has no lifecycle. [`SceneTree`](SceneTree.md) resolves it before each process, physics-process, or scene-input callback.
+`NodeProcessMode` is the typed pause policy stored by each [`SceneNode`](SceneNode.md). It owns no resources and has no lifecycle. [`SceneTree`](SceneTree.md) resolves it before each process, physics-process, or scene-input callback.
 
 The values affect Electron2D's explicitly enabled host-driven process, physics-process, and scene-input callback
 lanes. They do not control rendering, audio, or a physics server.
@@ -68,11 +68,11 @@ Never runs and disables descendants that inherit this mode.
 
 ## Invariants and errors
 
-`Node.ProcessMode` rejects undefined enum values with `ArgumentOutOfRangeException`. Effective transitions into or out of `Disabled` synchronously deliver `NotificationDisabled` or `NotificationEnabled` to the affected node and inheriting descendants.
+`SceneNode.ProcessMode` rejects undefined enum values with `ArgumentOutOfRangeException`. Effective transitions into or out of `Disabled` synchronously deliver `NotificationDisabled` or `NotificationEnabled` to the affected node and inheriting descendants.
 
 ## Threading and interactions
 
-Changing the mode of an attached node is an owner-thread mutation. Detached nodes have no tree pause state, but `CanProcess()` still returns `false` until attachment. The enum depends on no other production type; `Node` and `SceneTree` interpret it.
+Changing the mode of an attached node is an owner-thread mutation. Detached nodes have no tree pause state, but `CanProcess()` still returns `false` until attachment. The enum depends on no other production type; `SceneNode` and `SceneTree` interpret it.
 
 ## Verification and limitations
 

@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Declaration: `public sealed class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -9,7 +9,7 @@ Last updated: 2026-09-22
 
 ## Description
 
-Renders the active root Window's retained Node commands. Engine.Run creates the service after acquiring the native window, drives it on the scene owner thread and closes it during cleanup. There is no public constructor or independent lifetime. Consumers draw through Node and Texture; owned SDL handles remain internal. DisplayServer exposes supported borrowed native context identities under ADR 0042.
+Renders the active root Window's retained CanvasItem commands. Engine.Run creates the service after acquiring the native window, drives it on the scene owner thread and closes it during cleanup. There is no public constructor or independent lifetime. Consumers draw through CanvasItem and Texture; owned SDL handles remain internal. DisplayServer exposes supported borrowed native context identities under ADR 0042.
 
 The service supports rectangles, lines and textures using source-alpha blending into an RGBA8 framebuffer. Shader materials require GPU rendering. Startup settings select `gpu` or `compatibility` and whether GPU initialization may fall back. This does not implement live device migration or recovery.
 
@@ -74,14 +74,14 @@ Runs synchronously after submission. Submission does not prove GPU completion or
 
 ## Internal frame records
 
-The private readonly `RenderEntry(Node Node, int Z, int Order)` record borrows a captured Node, its effective Z index and traversal order. Entries live in a reused list. Sorting compares Z first and traversal order second, preserving scene order for equal Z without allocating a comparer per frame. Clearing the list releases its borrowed Node references; it never disposes nodes.
+The private readonly `RenderEntry(CanvasItem Node, int Z, int Order)` record borrows a captured CanvasItem, its effective Z index and traversal order. Entries live in a reused list. Sorting compares Z first and traversal order second, preserving scene order for equal Z without allocating a comparer per frame. Clearing the list releases its borrowed CanvasItem references; it never disposes nodes.
 
 ## Lifecycle, errors and dependencies
 
-Capture follows scene order. Effective Z sorting is stable; invisible or detached nodes are rechecked before use. Node transforms and modulation apply to retained local commands each frame. Shader capabilities, texture availability and backend format requirements are checked before drawing. Geometry and material resources remain borrowed.
+Capture follows scene order. Effective Z sorting is stable; invisible or detached nodes are rechecked before use. CanvasItem transforms and modulation apply to retained local commands each frame. Shader capabilities, texture availability and backend format requirements are checked before drawing. Geometry and material resources remain borrowed.
 
 Public instance methods and RenderLoopEnabled reject calls off the owner thread with InvalidOperationException. Calling inherited Dispose directly is rejected because Engine.Run owns teardown. The protected disposal overrides implement internal shutdown only; the sealed type has no user extension point. Native handles, buffers, textures and programs are released before detaching the service.
 
 RenderingRuntimeTests measures zero managed allocation from FramePreDraw through FramePostDraw over twenty warmed frames with mixed geometry, textures and GPU HLSL/GLSL materials on native Wayland and dummy/software. The check includes capture and stable sorting; it excludes the host event loop, resource construction, readback and arbitrary user callbacks. It is not a frame-time bound.
 
-Depends on Window, SceneTree, Node, typed material/texture resources and the internal SDL3-CS backends. [Canvas rendering](../components/canvas-rendering.md) records native verification and current limits. Lights, clipping, polygons, public offscreen targets, multiwindow rendering, device recovery and the full rendering API remain unfinished.
+Depends on Window, SceneTree, SceneNode, CanvasItem, typed material/texture resources and the internal SDL3-CS backends. [Canvas rendering](../components/canvas-rendering.md) records native verification and current limits. Lights, clipping, polygons, public offscreen targets, multiwindow rendering, device recovery and the full rendering API remain unfinished.

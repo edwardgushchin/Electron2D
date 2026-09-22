@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Sequences typed property interpolation, method interpolation, callbacks, waits, and nested tweens.</summary>
 /// <remarks>
-/// A tween is created by <see cref="SceneTree.CreateTween"/> or <see cref="Node.CreateTween"/> and is processed by
+/// A tween is created by <see cref="SceneTree.CreateTween"/> or <see cref="SceneNode.CreateTween"/> and is processed by
 /// that tree after node callbacks and lightweight timers in the selected frame lane. Tweeners are sequential unless
 /// <see cref="Parallel"/> or <see cref="SetParallel"/> groups them. A completed or killed tween is invalid and cannot
 /// accept new tweeners. Tween mutation and processing use the creating tree's owner thread.
@@ -91,7 +91,7 @@ public sealed class Tween : ElectronObject
     private readonly List<List<Tweener>> _steps = [];
     private readonly int _ownerThreadId;
     private SceneTree? _tree;
-    private Node? _boundNode;
+    private SceneNode? _boundNode;
     private int _appendStep = -1;
     private int _currentStep = -1;
     private int _loops = 1;
@@ -137,7 +137,7 @@ public sealed class Tween : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="node"/> is currently owned by another scene tree.</exception>
     /// <exception cref="ObjectDisposedException">The tween or node is disposing or disposed.</exception>
     /// <exception cref="InvalidOperationException">The call is off the owner thread or the tween is invalid.</exception>
-    public Tween BindNode(Node node)
+    public Tween BindNode(SceneNode node)
     {
         ArgumentNullException.ThrowIfNull(node);
         ObjectDisposedException.ThrowIf(node.IsDisposed, node);

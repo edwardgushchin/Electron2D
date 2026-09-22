@@ -2,8 +2,6 @@
 
 Last updated: 2026-09-23
 
-Scene inheritance migration: [ADR 0008](../decisions/scene.md#adr-0008) assigns the neutral tree API to `SceneNode`, canvas behavior to `CanvasItem`, and the spatial API to `Node`. Signatures on this page describe the existing runtime until that migration is implemented.
-
 **Inherits:** [ElectronObject](ElectronObject.md)
 
 **Inherited By:** [Image](Image.md), [InputEvent](InputEvent.md), [PackedScene](PackedScene.md)
@@ -55,7 +53,7 @@ resource.Changed += _ => Console.WriteLine("Changed");
 
 | Member | Description |
 | --- | --- |
-| [`public Node GetLocalScene()`](#m-electron2d-resource-getlocalscene) | Gets the root node whose scene instance owns this scene-local resource. |
+| [`public SceneNode GetLocalScene()`](#m-electron2d-resource-getlocalscene) | Gets the root node whose scene instance owns this scene-local resource. |
 | [`public void CopyFromResource(Resource source)`](#m-electron2d-resource-copyfromresource-electron2d-resource) | Copies stored data from another resource of the exact same runtime type while preserving this resource's path and scene ID. |
 | [`public Resource Duplicate(bool deep = false)`](#m-electron2d-resource-duplicate-system-boolean) | Creates a shallow or internally deep duplicate of this resource. |
 | [`public Resource DuplicateDeep(DeepDuplicateMode subresourceMode = DeepDuplicateMode.Internal)`](#m-electron2d-resource-duplicatedeep-electron2d-deepduplicatemode) | Creates a deep duplicate with explicit nested-resource policy. |
@@ -166,7 +164,7 @@ local-resource prefix; otherwise `false`.
 ## Method Descriptions
 
 <a id="m-electron2d-resource-getlocalscene"></a>
-### `public Node GetLocalScene()`
+### `public SceneNode GetLocalScene()`
 
 Gets the root node whose scene instance owns this scene-local resource.
 
@@ -490,7 +488,7 @@ No placeholder members are exposed for deferred domains.
 
 ## Dependencies and interactions
 
-`Resource` depends on `ElectronObject`, `PropertyDescriptor`, `DeepDuplicateMode`, Scene's `Node` type for local-scene association, cryptographic random generation, weak references, and standard collections. Scene's packed-scene component reciprocally consumes Resource duplication; ADR 0023 records this narrow in-assembly cycle. [`Image`](Image.md) derives from `Resource` and supplies its own managed pixel-state synchronization and duplication. `Resource` has no dependency on `PackedScene`, `SceneTree`, SDL, renderer, native handle, physics, file serializer, editor, or scripting.
+`Resource` depends on `ElectronObject`, `PropertyDescriptor`, `DeepDuplicateMode`, Scene's `SceneNode` type for local-scene association, cryptographic random generation, weak references, and standard collections. Scene's packed-scene component reciprocally consumes Resource duplication; ADR 0023 records this narrow in-assembly cycle. [`Image`](Image.md) derives from `Resource` and supplies its own managed pixel-state synchronization and duplication. `Resource` has no dependency on `PackedScene`, `SceneTree`, SDL, renderer, native handle, physics, file serializer, editor, or scripting.
 
 Pure managed `Resource` instances are reclaimed by the runtime. `Dispose` performs deterministic logical teardown; future derived resources that own native handles must release them deterministically through safe-handle wrappers. No allocation-free or hard real-time guarantee is claimed for arbitrary resource construction, copying, or user callbacks.
 

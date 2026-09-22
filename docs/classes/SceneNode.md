@@ -1,0 +1,1181 @@
+# SceneNode
+
+Last updated: 2026-09-23
+
+**Inherits:** [ElectronObject](ElectronObject.md)
+
+**Inherited By:** [CanvasItem](CanvasItem.md), [Timer](Timer.md), [Viewport](Viewport.md)
+
+- **Source:** [SceneNode.cs](../../src/Scene/Main/SceneNode.cs)
+- **Namespace:** `Electron2D`
+- **Declaration:** `public class SceneNode : ElectronObject`
+
+## Description
+
+The neutral base of every object in a scene tree. Owns ordered children, paths, groups, lifecycle, process/input participation, queued deletion and packed-scene ownership. It has no transform, visibility, material or drawing API. Parent/child relationships and callbacks accept SceneNode, so timers and spatial objects share one tree. Attached mutation runs on the tree owner thread; frame callbacks remain explicitly enabled. Tree entry is parent-first, readiness is child-first, and teardown continues through callback failures.
+
+## Examples
+
+The snippet uses the Electron2D namespace; attach the hierarchy to a SceneTree or an Engine.Run window to activate it.
+
+```csharp
+using var root = new SceneNode { Name = "World" };
+root.AddChild(new Electron2D.Timer { Name = "Cooldown" });
+root.AddChild(new Node { Name = "Player", Position = new Vector2(32, 16) });
+```
+
+## Constructors
+
+| Member | Contract |
+| --- | --- |
+| [`public SceneNode()`](#m-electron2d-scenenode-ctor) | Initializes a detached node with its runtime class name and no parent. |
+
+## Properties
+
+| Member | Contract |
+| --- | --- |
+| [`public int ChildCount { get; }`](#p-electron2d-scenenode-childcount) | Gets the number of direct children. |
+| [`public IReadOnlyList<SceneNode> Children { get; }`](#p-electron2d-scenenode-children) | Gets a live read-only view of the ordered direct children. |
+| [`public bool InputEnabled { get; set; }`](#p-electron2d-scenenode-inputenabled) | Gets or sets whether this node receives the first input-propagation stage. |
+| [`public bool IsInsideTree { get; }`](#p-electron2d-scenenode-isinsidetree) | Gets whether this node currently belongs to a scene tree. |
+| [`public bool IsNodeReady { get; }`](#p-electron2d-scenenode-isnodeready) | Gets whether SceneTree-managed ready delivery has occurred since construction or the last ready reset. |
+| [`public bool IsQueuedForDeletion { get; }`](#p-electron2d-scenenode-isqueuedfordeletion) | Gets whether deletion has been requested through `SceneNode.QueueFree`. |
+| [`public string Name { get; set; }`](#p-electron2d-scenenode-name) | Gets or sets the node name used in sibling lookup and paths. |
+| [`public SceneNode? Owner { get; set; }`](#p-electron2d-scenenode-owner) | Gets or sets the ancestor that owns this node for packed-scene storage. |
+| [`public SceneNode? Parent { get; }`](#p-electron2d-scenenode-parent) | Gets the direct parent. |
+| [`public double PhysicsProcessDeltaTime { get; }`](#p-electron2d-scenenode-physicsprocessdeltatime) | Gets the delta from the most recent SceneTree-managed physics-process frame delivered to this node. |
+| [`public bool PhysicsProcessEnabled { get; set; }`](#p-electron2d-scenenode-physicsprocessenabled) | Gets or sets whether this node participates in host-driven physics-process frames. |
+| [`public int PhysicsProcessPriority { get; set; }`](#p-electron2d-scenenode-physicsprocesspriority) | Gets or sets this node's ascending physics-process order key. |
+| [`public double ProcessDeltaTime { get; }`](#p-electron2d-scenenode-processdeltatime) | Gets the delta from the most recent SceneTree-managed process frame delivered to this node. |
+| [`public bool ProcessEnabled { get; set; }`](#p-electron2d-scenenode-processenabled) | Gets or sets whether this node participates in host-driven process frames. |
+| [`public NodeProcessMode ProcessMode { get; set; }`](#p-electron2d-scenenode-processmode) | Gets or sets the pause policy used by both process callback lanes. |
+| [`public int ProcessPriority { get; set; }`](#p-electron2d-scenenode-processpriority) | Gets or sets this node's ascending process-frame order key. |
+| [`public string SceneFilePath { get; }`](#p-electron2d-scenenode-scenefilepath) | Gets the external resource path from which this scene root was instantiated. |
+| [`public SceneTree? Tree { get; }`](#p-electron2d-scenenode-tree) | Gets the active scene tree containing this node. |
+| [`public bool UnhandledInputEnabled { get; set; }`](#p-electron2d-scenenode-unhandledinputenabled) | Gets or sets whether this node receives input left unhandled by earlier stages. |
+| [`public bool UnhandledKeyInputEnabled { get; set; }`](#p-electron2d-scenenode-unhandledkeyinputenabled) | Gets or sets whether this node receives unhandled keyboard events before general unhandled input. |
+
+## Methods and extension points
+
+| Member | Contract |
+| --- | --- |
+| [`public void AddChild(SceneNode child)`](#m-electron2d-scenenode-addchild-electron2d-scenenode) | Appends a detached node as the last direct child. |
+| [`public void AddSibling(SceneNode sibling)`](#m-electron2d-scenenode-addsibling-electron2d-scenenode) | Inserts a detached node immediately after this node in its parent's child order. |
+| [`public void AddToGroup(string group, bool persistent = false)`](#m-electron2d-scenenode-addtogroup-system-string-system-boolean) | Adds this node to a case-sensitive group. |
+| [`public bool CanProcess()`](#m-electron2d-scenenode-canprocess) | Determines whether the resolved process mode allows callbacks in the current tree pause state. |
+| [`public bool CancelFree()`](#m-electron2d-scenenode-cancelfree) | Atomically cancels a pending deletion request. |
+| [`protected virtual Func<SceneNode> CreateSceneInstanceFactory()`](#m-electron2d-scenenode-createsceneinstancefactory) | Creates a reusable factory for packed-scene instances of this exact runtime node type. |
+| [`public Tween CreateTween()`](#m-electron2d-scenenode-createtween) | Creates a tween in this node's scene tree and binds it to this node. |
+| [`protected override void Dispose(bool disposing)`](#m-electron2d-scenenode-dispose-system-boolean) | Releases resources owned by a derived class. |
+| [`protected void EnsureMutable()`](#m-electron2d-scenenode-ensuremutable) | Validates that this node may be mutated at the current lifecycle point. |
+| [`public SceneNode FindChild(string pattern, bool recursive = true)`](#m-electron2d-scenenode-findchild-system-string-system-boolean) | Finds the first descendant whose name matches a wildcard pattern. |
+| [`public TNode FindChild<TNode>(string pattern = "*", bool recursive = true)`](#m-electron2d-scenenode-findchild-1-system-string-system-boolean) | Finds the first descendant of a requested type whose name matches a wildcard pattern. |
+| [`public IReadOnlyList<SceneNode> FindChildren(string pattern, bool recursive = true)`](#m-electron2d-scenenode-findchildren-system-string-system-boolean) | Finds all descendants whose names match a wildcard pattern. |
+| [`public IReadOnlyList<TNode> FindChildren<TNode>(string pattern = "*", bool recursive = true)`](#m-electron2d-scenenode-findchildren-1-system-string-system-boolean) | Finds all descendants of a requested type whose names match a wildcard pattern. |
+| [`public SceneNode FindParent(string pattern)`](#m-electron2d-scenenode-findparent-system-string) | Finds the nearest ancestor whose name matches a wildcard pattern. |
+| [`public SceneNode GetChild(int index)`](#m-electron2d-scenenode-getchild-system-int32) | Gets a direct child by index. |
+| [`public IReadOnlyList<string> GetGroups()`](#m-electron2d-scenenode-getgroups) | Returns this node's group memberships. |
+| [`public int GetIndex()`](#m-electron2d-scenenode-getindex) | Gets this node's index in its parent's ordered child list. |
+| [`public SceneNode GetNode(string path)`](#m-electron2d-scenenode-getnode-system-string) | Resolves a required relative or absolute node path. |
+| [`public SceneNode GetNodeOrNull(string path)`](#m-electron2d-scenenode-getnodeornull-system-string) | Attempts to resolve a relative or absolute node path. |
+| [`public TNode GetNode<TNode>(string path)`](#m-electron2d-scenenode-getnode-1-system-string) | Resolves a required relative or absolute path to a requested node type. |
+| [`public string GetPath()`](#m-electron2d-scenenode-getpath) | Builds this node's absolute path from the root of its current hierarchy. |
+| [`public string GetPathTo(SceneNode node)`](#m-electron2d-scenenode-getpathto-electron2d-scenenode) | Builds a relative path from this node to another node in the same hierarchy. |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-scenenode-getpropertydescriptors) | Extends base typed descriptors with neutral name, process and input state for inspection and packed scenes. |
+| [`public Viewport GetViewport()`](#m-electron2d-scenenode-getviewport) | Finds this node's nearest viewport, including itself. |
+| [`public Window GetWindow()`](#m-electron2d-scenenode-getwindow) | Finds this node's containing window, including itself. |
+| [`public bool IsAncestorOf(SceneNode node)`](#m-electron2d-scenenode-isancestorof-electron2d-scenenode) | Determines whether this node is a strict ancestor of another node. |
+| [`public bool IsInGroup(string group)`](#m-electron2d-scenenode-isingroup-system-string) | Determines whether this node belongs to a case-sensitive group. |
+| [`public void MoveChild(SceneNode child, int index)`](#m-electron2d-scenenode-movechild-electron2d-scenenode-system-int32) | Moves a direct child to another sibling index. |
+| [`protected virtual void OnEnterTree()`](#m-electron2d-scenenode-onentertree) | Called synchronously when this node enters an active scene tree. |
+| [`protected virtual void OnExitTree()`](#m-electron2d-scenenode-onexittree) | Called synchronously when this node exits an active scene tree. |
+| [`protected virtual void OnInput(InputEvent event)`](#m-electron2d-scenenode-oninput-electron2d-inputevent) | Receives an input event during the first scene-input propagation stage. |
+| [`protected override void OnNotification(int what)`](#m-electron2d-scenenode-onnotification-system-int32) | Handles an engine notification delivered to this object. |
+| [`protected virtual void OnPhysicsProcess(double delta)`](#m-electron2d-scenenode-onphysicsprocess-system-double) | Called during an eligible host-driven physics-process frame. |
+| [`protected virtual void OnProcess(double delta)`](#m-electron2d-scenenode-onprocess-system-double) | Called during an eligible host-driven process frame. |
+| [`protected virtual void OnReady()`](#m-electron2d-scenenode-onready) | Called synchronously when this node receives SceneTree-managed ready delivery. |
+| [`protected virtual void OnUnhandledInput(InputEvent event)`](#m-electron2d-scenenode-onunhandledinput-electron2d-inputevent) | Receives an event that remains unhandled after earlier scene-input stages. |
+| [`protected virtual void OnUnhandledKeyInput(InputEventKey event)`](#m-electron2d-scenenode-onunhandledkeyinput-electron2d-inputeventkey) | Receives a keyboard event that remains unhandled after the first input stage. |
+| [`public void QueueFree()`](#m-electron2d-scenenode-queuefree) | Atomically requests this node's deferred disposal at a future scene-tree safe point. |
+| [`public bool RemoveChild(SceneNode child)`](#m-electron2d-scenenode-removechild-electron2d-scenenode) | Removes a direct child without disposing it. |
+| [`public bool RemoveFromGroup(string group)`](#m-electron2d-scenenode-removefromgroup-system-string) | Removes this node from a case-sensitive group. |
+| [`public virtual void Reparent(SceneNode newParent, bool keepGlobalTransform = true)`](#m-electron2d-scenenode-reparent-electron2d-scenenode-system-boolean) | Moves this non-root node under a new parent. |
+| [`public void RequestReady()`](#m-electron2d-scenenode-requestready) | Requests ready delivery the next time SceneTree attachment reaches the ready phase. |
+| [`protected override void ValidateDisposal()`](#m-electron2d-scenenode-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
+| [`protected override void ValidateMutation()`](#m-electron2d-scenenode-validatemutation) | Validates that mutable base state may change at the current lifecycle point. |
+
+## Events
+
+| Member | Contract |
+| --- | --- |
+| [`public event Action<SceneNode, SceneNode>? ChildAdded`](#e-electron2d-scenenode-childadded) | Occurs on the parent after a direct child is structurally attached and child order is reported. |
+| [`public event Action<SceneNode, SceneNode>? ChildEnteredTree`](#e-electron2d-scenenode-childenteredtree) | Occurs on the direct parent when a child enters the active tree. |
+| [`public event Action<SceneNode, SceneNode>? ChildExitingTree`](#e-electron2d-scenenode-childexitingtree) | Occurs on the direct parent while a child is exiting the active tree. |
+| [`public event Action<SceneNode>? ChildOrderChanged`](#e-electron2d-scenenode-childorderchanged) | Occurs after the order or membership of direct children changes. |
+| [`public event Action<SceneNode, SceneNode>? ChildRemoved`](#e-electron2d-scenenode-childremoved) | Occurs on the former parent after a direct child is detached and child order is reported. |
+| [`public event Action<SceneNode>? Ready`](#e-electron2d-scenenode-ready) | Occurs after child-first ready notification delivery. |
+| [`public event Action<SceneNode>? Renamed`](#e-electron2d-scenenode-renamed) | Occurs after an active node's own name changes and path notifications propagate. |
+| [`public event Action<SceneNode>? TreeEntered`](#e-electron2d-scenenode-treeentered) | Occurs when this node enters an active scene tree. |
+| [`public event Action<SceneNode>? TreeExited`](#e-electron2d-scenenode-treeexited) | Occurs after this node has left its scene tree. |
+| [`public event Action<SceneNode>? TreeExiting`](#e-electron2d-scenenode-treeexiting) | Occurs while this node is exiting its active scene tree. |
+
+## Constants
+
+| Member | Contract |
+| --- | --- |
+| [`public const int NotificationApplicationFocusIn = 2016`](#f-electron2d-scenenode-notificationapplicationfocusin) | Identifies that the application received keyboard focus. |
+| [`public const int NotificationApplicationFocusOut = 2017`](#f-electron2d-scenenode-notificationapplicationfocusout) | Identifies that the application lost keyboard focus. |
+| [`public const int NotificationApplicationPaused = 2015`](#f-electron2d-scenenode-notificationapplicationpaused) | Identifies that the application is about to be suspended. |
+| [`public const int NotificationApplicationPipModeEntered = 2019`](#f-electron2d-scenenode-notificationapplicationpipmodeentered) | Identifies that the application entered picture-in-picture mode. |
+| [`public const int NotificationApplicationPipModeExited = 2020`](#f-electron2d-scenenode-notificationapplicationpipmodeexited) | Identifies that the application exited picture-in-picture mode. |
+| [`public const int NotificationApplicationResumed = 2014`](#f-electron2d-scenenode-notificationapplicationresumed) | Identifies that the application resumed after suspension. |
+| [`public const int NotificationChildOrderChanged = 24`](#f-electron2d-scenenode-notificationchildorderchanged) | Identifies the notification sent after the direct child order changes. |
+| [`public const int NotificationCrash = 2012`](#f-electron2d-scenenode-notificationcrash) | Identifies a notification delivered immediately before an unrecoverable crash. |
+| [`public const int NotificationDisabled = 28`](#f-electron2d-scenenode-notificationdisabled) | Identifies the notification sent when the effective process mode becomes disabled. |
+| [`public const int NotificationEnabled = 29`](#f-electron2d-scenenode-notificationenabled) | Identifies the notification sent when the effective process mode stops being disabled. |
+| [`public const int NotificationEnterTree = 10`](#f-electron2d-scenenode-notificationentertree) | Identifies the notification sent when a node enters an active `SceneTree`. |
+| [`public const int NotificationExitTree = 11`](#f-electron2d-scenenode-notificationexittree) | Identifies the notification sent after descendants exit and before this node leaves its tree. |
+| [`public const int NotificationInternalPhysicsProcess = 26`](#f-electron2d-scenenode-notificationinternalphysicsprocess) | Identifies an engine-internal physics-process callback notification. |
+| [`public const int NotificationInternalProcess = 25`](#f-electron2d-scenenode-notificationinternalprocess) | Identifies an engine-internal process callback notification. |
+| [`public const int NotificationOsImeUpdate = 2013`](#f-electron2d-scenenode-notificationosimeupdate) | Identifies an input-method composition update supplied by the operating system. |
+| [`public const int NotificationOsMemoryWarning = 2009`](#f-electron2d-scenenode-notificationosmemorywarning) | Identifies an operating-system low-memory warning propagated by the active scene tree. |
+| [`public const int NotificationParented = 18`](#f-electron2d-scenenode-notificationparented) | Identifies the notification sent after a parent reference is assigned. |
+| [`public const int NotificationPathRenamed = 23`](#f-electron2d-scenenode-notificationpathrenamed) | Identifies the notification propagated when this node's path changes. |
+| [`public const int NotificationPaused = 14`](#f-electron2d-scenenode-notificationpaused) | Identifies the notification sent when the owning tree becomes paused. |
+| [`public const int NotificationPhysicsProcess = 16`](#f-electron2d-scenenode-notificationphysicsprocess) | Identifies a physics-process callback notification. |
+| [`public const int NotificationPostEnterTree = 27`](#f-electron2d-scenenode-notificationpostentertree) | Identifies the notification sent after this node and its descendants finish entering a tree. |
+| [`public const int NotificationProcess = 17`](#f-electron2d-scenenode-notificationprocess) | Identifies a process callback notification. |
+| [`public const int NotificationReady = 13`](#f-electron2d-scenenode-notificationready) | Identifies the child-first notification sent when a node becomes ready. |
+| [`public const int NotificationSceneInstantiated = 20`](#f-electron2d-scenenode-notificationsceneinstantiated) | Identifies the notification sent to the root after a packed scene is completely instantiated. |
+| [`public const int NotificationTextServerChanged = 2018`](#f-electron2d-scenenode-notificationtextserverchanged) | Identifies that the active text service changed. |
+| [`public const int NotificationTranslationChanged = 2010`](#f-electron2d-scenenode-notificationtranslationchanged) | Identifies a notification that translated messages may have changed. |
+| [`public const int NotificationUnparented = 19`](#f-electron2d-scenenode-notificationunparented) | Identifies the notification sent after a parent reference is cleared. |
+| [`public const int NotificationUnpaused = 15`](#f-electron2d-scenenode-notificationunpaused) | Identifies the notification sent when the owning tree resumes from pause. |
+| [`public const int NotificationWmAbout = 2011`](#f-electron2d-scenenode-notificationwmabout) | Identifies an operating-system request to show application information. |
+
+## Constructor Descriptions
+
+<a id="m-electron2d-scenenode-ctor"></a>
+### `public SceneNode()`
+
+Initializes a detached node with its runtime class name and no parent.
+
+## Property Descriptions
+
+<a id="p-electron2d-scenenode-childcount"></a>
+### `public int ChildCount { get; }`
+
+Gets the number of direct children.
+
+**Value:** The current child count.
+
+**System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-scenenode-children"></a>
+### `public IReadOnlyList<SceneNode> Children { get; }`
+
+Gets a live read-only view of the ordered direct children.
+
+**Value:** A view backed by this node's child list; later hierarchy changes are visible through it.
+
+<a id="p-electron2d-scenenode-inputenabled"></a>
+### `public bool InputEnabled { get; set; }`
+
+Gets or sets whether this node receives the first input-propagation stage.
+
+**Value:** `false` by default.
+
+**Remarks:** Eligible nodes are visited in reverse depth-first order before unhandled-input stages.
+
+**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+
+**System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-scenenode-isinsidetree"></a>
+### `public bool IsInsideTree { get; }`
+
+Gets whether this node currently belongs to a scene tree.
+
+**Value:** `true` when `SceneNode.Tree` is non-null.
+
+<a id="p-electron2d-scenenode-isnodeready"></a>
+### `public bool IsNodeReady { get; }`
+
+Gets whether SceneTree-managed ready delivery has occurred since construction or the last ready reset.
+
+**Value:** The stored ready state. It remains true after detachment until `SceneNode.RequestReady` is called.
+
+**Remarks:** Manual `ElectronObject.Notify(int)` delivery of `SceneNode.NotificationReady` does not change this value.
+
+<a id="p-electron2d-scenenode-isqueuedfordeletion"></a>
+### `public bool IsQueuedForDeletion { get; }`
+
+Gets whether deletion has been requested through `SceneNode.QueueFree`.
+
+**Value:** An atomic snapshot of the deletion-request flag.
+
+<a id="p-electron2d-scenenode-name"></a>
+### `public string Name { get; set; }`
+
+Gets or sets the node name used in sibling lookup and paths.
+
+**Value:** The nonblank name, initialized to `ElectronObject.ClassName`.
+
+**Remarks:** Names use ordinal equality among siblings and cannot be ., .., or contain /. Renaming an active node propagates `SceneNode.NotificationPathRenamed` through its subtree and then raises `SceneNode.Renamed` on this node.
+
+**System.ArgumentException:** The assigned name is invalid.
+
+**System.InvalidOperationException:** A sibling already has the assigned name, or an attached node is mutated off the owner thread.
+
+**System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
+
+**System.AggregateException:** One or more path, node-renamed, or tree-renamed callbacks fail after the name changes.
+
+<a id="p-electron2d-scenenode-owner"></a>
+### `public SceneNode? Owner { get; set; }`
+
+Gets or sets the ancestor that owns this node for packed-scene storage.
+
+**Value:** An ancestor node, or `null` when this node is not stored by an ancestor scene root.
+
+**Remarks:** A scene root does not own itself. Removing or reparenting a subtree automatically clears owner references that no longer point to an ancestor.
+
+**System.ArgumentException:** The assigned node is this node or is not an ancestor.
+
+**System.InvalidOperationException:** An attached node is mutated off the tree owner thread or scene capture is active.
+
+**System.ObjectDisposedException:** This node or the assigned owner is disposing or disposed.
+
+<a id="p-electron2d-scenenode-parent"></a>
+### `public SceneNode? Parent { get; }`
+
+Gets the direct parent.
+
+**Value:** The owning parent, or `null` while detached.
+
+<a id="p-electron2d-scenenode-physicsprocessdeltatime"></a>
+### `public double PhysicsProcessDeltaTime { get; }`
+
+Gets the delta from the most recent SceneTree-managed physics-process frame delivered to this node.
+
+**Value:** The last delivered physics-process delta in seconds, or zero before the first managed delivery.
+
+**Remarks:** `Engine` applies `Engine.TimeScale` before an Engine-driven delivery.
+
+**Remarks:** Manual `ElectronObject.Notify(int)` delivery does not update this value.
+
+<a id="p-electron2d-scenenode-physicsprocessenabled"></a>
+### `public bool PhysicsProcessEnabled { get; set; }`
+
+Gets or sets whether this node participates in host-driven physics-process frames.
+
+**Value:** `false` by default.
+
+**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+
+**System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-scenenode-physicsprocesspriority"></a>
+### `public int PhysicsProcessPriority { get; set; }`
+
+Gets or sets this node's ascending physics-process order key.
+
+**Value:** Any integer; the default is zero. Equal priorities retain captured tree order.
+
+**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+
+**System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-scenenode-processdeltatime"></a>
+### `public double ProcessDeltaTime { get; }`
+
+Gets the delta from the most recent SceneTree-managed process frame delivered to this node.
+
+**Value:** The last delivered process delta in seconds, or zero before the first managed delivery.
+
+**Remarks:** `Engine` applies `Engine.TimeScale` before an Engine-driven delivery.
+
+**Remarks:** Manual `ElectronObject.Notify(int)` delivery does not update this value.
+
+<a id="p-electron2d-scenenode-processenabled"></a>
+### `public bool ProcessEnabled { get; set; }`
+
+Gets or sets whether this node participates in host-driven process frames.
+
+**Value:** `false` by default.
+
+**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+
+**System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-scenenode-processmode"></a>
+### `public NodeProcessMode ProcessMode { get; set; }`
+
+Gets or sets the pause policy used by both process callback lanes.
+
+**Value:** `NodeProcessMode.Inherit` by default.
+
+**Remarks:** Crossing the effective disabled boundary synchronously notifies this node and affected inheriting descendants.
+
+**System.ArgumentOutOfRangeException:** The assigned enum value is undefined.
+
+**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+
+**System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
+
+**System.Exception:** An enabled or disabled notification callback throws after the mode changes.
+
+<a id="p-electron2d-scenenode-processpriority"></a>
+### `public int ProcessPriority { get; set; }`
+
+Gets or sets this node's ascending process-frame order key.
+
+**Value:** Any integer; the default is zero. Equal priorities retain captured tree order.
+
+**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+
+**System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-scenenode-scenefilepath"></a>
+### `public string SceneFilePath { get; }`
+
+Gets the external resource path from which this scene root was instantiated.
+
+**Value:** The packed-scene path for an instantiated external scene root; otherwise an empty string.
+
+**Remarks:** The value is assigned by packed-scene instantiation and is not inherited by descendants.
+
+<a id="p-electron2d-scenenode-tree"></a>
+### `public SceneTree? Tree { get; }`
+
+Gets the active scene tree containing this node.
+
+**Value:** The owning tree, or `null` while detached.
+
+<a id="p-electron2d-scenenode-unhandledinputenabled"></a>
+### `public bool UnhandledInputEnabled { get; set; }`
+
+Gets or sets whether this node receives input left unhandled by earlier stages.
+
+**Value:** `false` by default.
+
+**Remarks:** This final stage runs for every event that remains unhandled.
+
+**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+
+**System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
+
+<a id="p-electron2d-scenenode-unhandledkeyinputenabled"></a>
+### `public bool UnhandledKeyInputEnabled { get; set; }`
+
+Gets or sets whether this node receives unhandled keyboard events before general unhandled input.
+
+**Value:** `false` by default.
+
+**Remarks:** The stage is skipped for non-keyboard events and after `SceneTree.SetInputAsHandled`.
+
+**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+
+**System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
+
+## Method Descriptions
+
+<a id="m-electron2d-scenenode-addchild-electron2d-scenenode"></a>
+### `public void AddChild(SceneNode child)`
+
+Appends a detached node as the last direct child.
+
+**Parameter `child`:** The live node to adopt.
+
+**Remarks:** If this node is active, the child's subtree enters immediately and receives ready where eligible.
+
+**System.ArgumentNullException:** `child` is `null`.
+
+**System.ArgumentException:** `child` is this node.
+
+**System.InvalidOperationException:** The operation would create a cycle, the child already has a parent or tree, a sibling name conflicts, or mutation occurs off the owner thread.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing, or disposal of `child` has started.
+
+**System.AggregateException:** One or more structural, lifecycle, notification, or event callbacks fail after insertion begins.
+
+<a id="m-electron2d-scenenode-addsibling-electron2d-scenenode"></a>
+### `public void AddSibling(SceneNode sibling)`
+
+Inserts a detached node immediately after this node in its parent's child order.
+
+**Parameter `sibling`:** The live node to insert.
+
+**System.ArgumentNullException:** `sibling` is `null`.
+
+**System.ArgumentException:** `sibling` is the destination parent.
+
+**System.InvalidOperationException:** This node has no parent, insertion would create a cycle, the sibling is already attached, a name conflicts, or mutation occurs off the owner thread.
+
+**System.ObjectDisposedException:** This node or its parent is disposing on another thread or has finished disposing, or disposal of `sibling` has started.
+
+**System.AggregateException:** One or more structural, lifecycle, notification, or event callbacks fail after insertion begins.
+
+<a id="m-electron2d-scenenode-addtogroup-system-string-system-boolean"></a>
+### `public void AddToGroup(string group, bool persistent = false)`
+
+Adds this node to a case-sensitive group.
+
+**Parameter `group`:** The nonblank group name.
+
+**Parameter `persistent`:** Whether packed scenes containing this node should retain the membership.
+
+**Remarks:** Adding an existing membership keeps it persistent once persistence has been requested.
+
+**System.ArgumentException:** `group` is empty or whitespace.
+
+**System.ArgumentNullException:** `group` is `null`.
+
+**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-canprocess"></a>
+### `public bool CanProcess()`
+
+Determines whether the resolved process mode allows callbacks in the current tree pause state.
+
+**Returns:** `false` while detached or disabled; otherwise the result of the resolved pause policy.
+
+**System.InvalidOperationException:** An invalid inherited process mode cannot be resolved.
+
+**System.ObjectDisposedException:** This node or its tree is disposing on another thread, or has finished disposing.
+
+<a id="m-electron2d-scenenode-cancelfree"></a>
+### `public bool CancelFree()`
+
+Atomically cancels a pending deletion request.
+
+**Returns:** `true` when a request was pending; otherwise `false`.
+
+**Remarks:** A stale queue entry may remain, but the tree ignores it when flushing.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-createsceneinstancefactory"></a>
+### `protected virtual Func<SceneNode> CreateSceneInstanceFactory()`
+
+Creates a reusable factory for packed-scene instances of this exact runtime node type.
+
+**Returns:** A non-null factory that creates a fresh node of the exact same runtime type.
+
+**Remarks:** The base implementation supports only an exact `SceneNode`. Derived node types that can be packed must return a static, non-capturing factory that remains valid after the source node is disposed and creates a live, detached, parentless, childless, unowned, and non-queued instance. Stored writable property descriptors restore the instance state.
+
+**System.NotSupportedException:** A derived node has not explicitly supplied an instancing factory.
+
+<a id="m-electron2d-scenenode-createtween"></a>
+### `public Tween CreateTween()`
+
+Creates a tween in this node's scene tree and binds it to this node.
+
+**Returns:** A running empty tween that halts while this node is detached and is killed when this node is disposed.
+
+**Remarks:** The caller must append at least one tweener before the next matching frame, including a zero-delta frame.
+
+**System.InvalidOperationException:** The node is detached or the call is made off the tree owner thread.
+
+**System.ObjectDisposedException:** The node or its tree is disposing or disposed.
+
+<a id="m-electron2d-scenenode-dispose-system-boolean"></a>
+### `protected override void Dispose(bool disposing)`
+
+Releases resources owned by a derived class.
+
+**Remarks:** Cancels queued deletion, detaches this node, recursively disposes every owned child, clears groups and event subscribers, and then calls the base implementation. Every teardown stage is attempted before failures are reported together.
+
+<a id="m-electron2d-scenenode-ensuremutable"></a>
+### `protected void EnsureMutable()`
+
+Validates that this node may be mutated at the current lifecycle point.
+
+**Remarks:** Derived node property setters should call this before changing state that can be stored in a packed scene.
+
+**System.InvalidOperationException:** Scene capture is active or an attached node is accessed off the tree owner thread.
+
+**System.ObjectDisposedException:** Disposal has started.
+
+<a id="m-electron2d-scenenode-findchild-system-string-system-boolean"></a>
+### `public SceneNode FindChild(string pattern, bool recursive = true)`
+
+Finds the first descendant whose name matches a wildcard pattern.
+
+**Parameter `pattern`:** A nonblank simple expression using * and ?; matching is case-insensitive.
+
+**Parameter `recursive`:** Whether descendants below direct children are searched.
+
+**Returns:** The first matching node in depth-first pre-order, or `null`.
+
+**System.ArgumentException:** `pattern` is empty or whitespace.
+
+**System.ArgumentNullException:** `pattern` is `null`.
+
+**System.ObjectDisposedException:** This node or a recursively searched node is disposing on another thread, or has finished disposing.
+
+<a id="m-electron2d-scenenode-findchild-1-system-string-system-boolean"></a>
+### `public TNode FindChild<TNode>(string pattern = "*", bool recursive = true)`
+
+Finds the first descendant of a requested type whose name matches a wildcard pattern.
+
+**Type parameter `TNode`:** The required node subtype.
+
+**Parameter `pattern`:** A nonblank simple expression using * and ?; matching is case-insensitive.
+
+**Parameter `recursive`:** Whether descendants below direct children are searched.
+
+**Returns:** The first typed match in depth-first pre-order, or `null`.
+
+**System.ArgumentException:** `pattern` is empty or whitespace.
+
+**System.ArgumentNullException:** `pattern` is `null`.
+
+**System.ObjectDisposedException:** This node or a recursively searched node is disposing on another thread, or has finished disposing.
+
+<a id="m-electron2d-scenenode-findchildren-system-string-system-boolean"></a>
+### `public IReadOnlyList<SceneNode> FindChildren(string pattern, bool recursive = true)`
+
+Finds all descendants whose names match a wildcard pattern.
+
+**Parameter `pattern`:** A nonblank simple expression using * and ?; matching is case-insensitive.
+
+**Parameter `recursive`:** Whether descendants below direct children are searched.
+
+**Returns:** A read-only snapshot in depth-first pre-order.
+
+**System.ArgumentException:** `pattern` is empty or whitespace.
+
+**System.ArgumentNullException:** `pattern` is `null`.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-findchildren-1-system-string-system-boolean"></a>
+### `public IReadOnlyList<TNode> FindChildren<TNode>(string pattern = "*", bool recursive = true)`
+
+Finds all descendants of a requested type whose names match a wildcard pattern.
+
+**Type parameter `TNode`:** The required node subtype.
+
+**Parameter `pattern`:** A nonblank simple expression using * and ?; matching is case-insensitive.
+
+**Parameter `recursive`:** Whether descendants below direct children are searched.
+
+**Returns:** A read-only typed snapshot in depth-first pre-order.
+
+**System.ArgumentException:** `pattern` is empty or whitespace.
+
+**System.ArgumentNullException:** `pattern` is `null`.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-findparent-system-string"></a>
+### `public SceneNode FindParent(string pattern)`
+
+Finds the nearest ancestor whose name matches a wildcard pattern.
+
+**Parameter `pattern`:** A nonblank simple expression using * and ?; matching is case-insensitive.
+
+**Returns:** The nearest matching ancestor, or `null`.
+
+**System.ArgumentException:** `pattern` is empty or whitespace.
+
+**System.ArgumentNullException:** `pattern` is `null`.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-getchild-system-int32"></a>
+### `public SceneNode GetChild(int index)`
+
+Gets a direct child by index.
+
+**Parameter `index`:** The child index; negative values count from the end.
+
+**Returns:** The selected direct child.
+
+**System.ArgumentOutOfRangeException:** This node has no children or `index` is outside the valid range.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-getgroups"></a>
+### `public IReadOnlyList<string> GetGroups()`
+
+Returns this node's group memberships.
+
+**Returns:** A read-only snapshot sorted using ordinal string order.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-getindex"></a>
+### `public int GetIndex()`
+
+Gets this node's index in its parent's ordered child list.
+
+**Returns:** The zero-based sibling index, or -1 when this node has no parent.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-getnode-system-string"></a>
+### `public SceneNode GetNode(string path)`
+
+Resolves a required relative or absolute node path.
+
+**Parameter `path`:** A nonblank slash-separated path supporting ., .., and an optional absolute root-name segment.
+
+**Returns:** The resolved node.
+
+**Remarks:** Absolute paths are resolved from the hierarchy root even when the hierarchy is detached.
+
+**System.ArgumentException:** `path` is empty or whitespace.
+
+**System.ArgumentNullException:** `path` is `null`.
+
+**KeyNotFoundException:** No node exists at the requested path.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-getnodeornull-system-string"></a>
+### `public SceneNode GetNodeOrNull(string path)`
+
+Attempts to resolve a relative or absolute node path.
+
+**Parameter `path`:** A nonblank slash-separated path supporting ., .., and an optional absolute root-name segment.
+
+**Returns:** The resolved node, or `null` when traversal cannot continue.
+
+**Remarks:** Absolute paths are resolved from the hierarchy root even when the hierarchy is detached.
+
+**System.ArgumentException:** `path` is empty or whitespace.
+
+**System.ArgumentNullException:** `path` is `null`.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-getnode-1-system-string"></a>
+### `public TNode GetNode<TNode>(string path)`
+
+Resolves a required relative or absolute path to a requested node type.
+
+**Type parameter `TNode`:** The required node subtype.
+
+**Parameter `path`:** A nonblank slash-separated node path.
+
+**Returns:** The resolved node cast to `TNode`.
+
+**System.ArgumentException:** `path` is empty or whitespace.
+
+**System.ArgumentNullException:** `path` is `null`.
+
+**System.InvalidCastException:** The resolved node is not a `TNode`.
+
+**KeyNotFoundException:** No node exists at the requested path.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-getpath"></a>
+### `public string GetPath()`
+
+Builds this node's absolute path from the root of its current hierarchy.
+
+**Returns:** A slash-prefixed path that includes the hierarchy root name.
+
+**Remarks:** The path is available for both attached and detached hierarchies.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-getpathto-electron2d-scenenode"></a>
+### `public string GetPathTo(SceneNode node)`
+
+Builds a relative path from this node to another node in the same hierarchy.
+
+**Parameter `node`:** The destination node.
+
+**Returns:** . for this node, otherwise a slash-separated sequence of .. and child names.
+
+**System.ArgumentNullException:** `node` is `null`.
+
+**System.InvalidOperationException:** The nodes do not share a hierarchy root.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing, or disposal of `node` has started.
+
+<a id="m-electron2d-scenenode-getpropertydescriptors"></a>
+### `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
+
+Extends base typed descriptors with neutral name, process and input state for inspection and packed scenes.
+
+**Remarks:** Appends this class's typed hierarchy, spatial, visibility, and processing descriptors to the inherited descriptors.
+
+<a id="m-electron2d-scenenode-getviewport"></a>
+### `public Viewport GetViewport()`
+
+Finds this node's nearest viewport, including itself.
+
+**Returns:** The nearest viewport ancestor, or null in a hierarchy without a viewport.
+
+**System.ObjectDisposedException:** The node is disposed.
+
+<a id="m-electron2d-scenenode-getwindow"></a>
+### `public Window GetWindow()`
+
+Finds this node's containing window, including itself.
+
+**Returns:** The nearest window ancestor, or null in a hierarchy without a window.
+
+**System.ObjectDisposedException:** The node is disposed.
+
+<a id="m-electron2d-scenenode-isancestorof-electron2d-scenenode"></a>
+### `public bool IsAncestorOf(SceneNode node)`
+
+Determines whether this node is a strict ancestor of another node.
+
+**Parameter `node`:** The node whose parent chain is inspected.
+
+**Returns:** `true` when this node appears in the parent chain; otherwise `false`.
+
+**System.ArgumentNullException:** `node` is `null`.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-isingroup-system-string"></a>
+### `public bool IsInGroup(string group)`
+
+Determines whether this node belongs to a case-sensitive group.
+
+**Parameter `group`:** The nonblank group name.
+
+**Returns:** `true` when this node is a member; otherwise `false`.
+
+**System.ArgumentException:** `group` is empty or whitespace.
+
+**System.ArgumentNullException:** `group` is `null`.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-movechild-electron2d-scenenode-system-int32"></a>
+### `public void MoveChild(SceneNode child, int index)`
+
+Moves a direct child to another sibling index.
+
+**Parameter `child`:** The direct child to reorder.
+
+**Parameter `index`:** The destination index; negative values count from the end, with -1 selecting the last position.
+
+**System.ArgumentNullException:** `child` is `null`.
+
+**System.ArgumentException:** `child` is not a direct child.
+
+**System.ArgumentOutOfRangeException:** `index` does not resolve to an existing child position.
+
+**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+**System.AggregateException:** One or more child-order or tree-change callbacks fail after the order changes.
+
+<a id="m-electron2d-scenenode-onentertree"></a>
+### `protected virtual void OnEnterTree()`
+
+Called synchronously when this node enters an active scene tree.
+
+**Remarks:** `SceneNode.Tree` is already assigned. The callback runs parent-first, before `SceneNode.TreeEntered`, before descendants enter, and on the tree owner thread during SceneTree-managed lifecycle.
+
+<a id="m-electron2d-scenenode-onexittree"></a>
+### `protected virtual void OnExitTree()`
+
+Called synchronously when this node exits an active scene tree.
+
+**Remarks:** Descendants have already exited and `SceneNode.Tree` remains assigned. The callback precedes `SceneNode.TreeExiting` and runs on the tree owner thread during SceneTree-managed lifecycle.
+
+<a id="m-electron2d-scenenode-oninput-electron2d-inputevent"></a>
+### `protected virtual void OnInput(InputEvent event)`
+
+Receives an input event during the first scene-input propagation stage.
+
+**Parameter `event`:** The live caller-owned event being dispatched.
+
+**Remarks:** The callback runs synchronously on the scene-tree owner thread when `SceneNode.InputEnabled` is true and `SceneNode.CanProcess` allows the node. Call `SceneTree.SetInputAsHandled` to stop later stages.
+
+<a id="m-electron2d-scenenode-onnotification-system-int32"></a>
+### `protected override void OnNotification(int what)`
+
+Handles an engine notification delivered to this object.
+
+**Remarks:** Calls the base implementation, then maps enter, exit, ready, process, and physics-process notification IDs to the corresponding typed virtual callbacks. Manual `ElectronObject.Notify(int)` calls invoke those callbacks but do not mutate tree membership, ready state, or delta values.
+
+<a id="m-electron2d-scenenode-onphysicsprocess-system-double"></a>
+### `protected virtual void OnPhysicsProcess(double delta)`
+
+Called during an eligible host-driven physics-process frame.
+
+**Parameter `delta`:** The finite non-negative physics-step delta in seconds.
+
+**Remarks:** The callback is not auto-enabled by overriding it; `SceneNode.PhysicsProcessEnabled` must be true. It executes on the tree owner thread after `SceneNode.PhysicsProcessDeltaTime` is updated and does not perform simulation.
+
+<a id="m-electron2d-scenenode-onprocess-system-double"></a>
+### `protected virtual void OnProcess(double delta)`
+
+Called during an eligible host-driven process frame.
+
+**Parameter `delta`:** The finite non-negative frame delta in seconds.
+
+**Remarks:** The callback is not auto-enabled by overriding it; `SceneNode.ProcessEnabled` must be true. It executes on the tree owner thread after `SceneNode.ProcessDeltaTime` is updated.
+
+<a id="m-electron2d-scenenode-onready"></a>
+### `protected virtual void OnReady()`
+
+Called synchronously when this node receives SceneTree-managed ready delivery.
+
+**Remarks:** Children are ready first. The callback precedes `SceneNode.Ready`, is one-shot until `SceneNode.RequestReady`, and runs on the owner thread during SceneTree-managed delivery. Manual notification runs on its caller's thread.
+
+<a id="m-electron2d-scenenode-onunhandledinput-electron2d-inputevent"></a>
+### `protected virtual void OnUnhandledInput(InputEvent event)`
+
+Receives an event that remains unhandled after earlier scene-input stages.
+
+**Parameter `event`:** The live caller-owned event being dispatched.
+
+**Remarks:** The callback runs synchronously on the scene-tree owner thread when `SceneNode.UnhandledInputEnabled` is true and `SceneNode.CanProcess` allows the node.
+
+<a id="m-electron2d-scenenode-onunhandledkeyinput-electron2d-inputeventkey"></a>
+### `protected virtual void OnUnhandledKeyInput(InputEventKey event)`
+
+Receives a keyboard event that remains unhandled after the first input stage.
+
+**Parameter `event`:** The live caller-owned keyboard event being dispatched.
+
+**Remarks:** The callback runs synchronously on the scene-tree owner thread when `SceneNode.UnhandledKeyInputEnabled` is true and `SceneNode.CanProcess` allows the node.
+
+<a id="m-electron2d-scenenode-queuefree"></a>
+### `public void QueueFree()`
+
+Atomically requests this node's deferred disposal at a future scene-tree safe point.
+
+**Remarks:** A request made while already detached is queued if the node later enters a tree. Removing the node before its current tree flushes does not cancel deletion: that tree disposes the detached node at its safe point. If the node has entered another tree first, the old entry leaves the request intact for the new tree. Repeated calls are idempotent. The method may be called from a non-owner thread.
+
+**System.InvalidOperationException:** This node is the active scene-tree root.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-removechild-electron2d-scenenode"></a>
+### `public bool RemoveChild(SceneNode child)`
+
+Removes a direct child without disposing it.
+
+**Parameter `child`:** The node to detach.
+
+**Returns:** `true` when the node was a direct child and was detached; otherwise `false`.
+
+**Remarks:** An active subtree exits its tree child-first before the parent reference is cleared.
+
+**System.ArgumentNullException:** `child` is `null`.
+
+**System.InvalidOperationException:** An attached node is mutated off the owner thread, this parent is exiting, or the child is in tree lifecycle delivery.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+**System.AggregateException:** One or more lifecycle, notification, or event callbacks fail after removal begins.
+
+<a id="m-electron2d-scenenode-removefromgroup-system-string"></a>
+### `public bool RemoveFromGroup(string group)`
+
+Removes this node from a case-sensitive group.
+
+**Parameter `group`:** The nonblank group name.
+
+**Returns:** `true` when membership existed and was removed; otherwise `false`.
+
+**System.ArgumentException:** `group` is empty or whitespace.
+
+**System.ArgumentNullException:** `group` is `null`.
+
+**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-reparent-electron2d-scenenode-system-boolean"></a>
+### `public virtual void Reparent(SceneNode newParent, bool keepGlobalTransform = true)`
+
+Moves this non-root node under a new parent.
+
+**Parameter `newParent`:** The live destination parent.
+
+**Parameter `keepGlobalTransform`:** Whether a derived placement model preserves its global transform. The neutral base has no transform. The default is true.
+
+**Remarks:** The operation detaches first and then appends to `newParent`; callback failures are not rolled back.
+
+**System.ArgumentNullException:** `newParent` is `null`.
+
+**System.ArgumentException:** The destination validation rejects this node as its own child.
+
+**System.InvalidOperationException:** This node has no parent, the move creates a cycle, a destination child name conflicts, either attached hierarchy is accessed off its owner thread, this node or its current parent is in protected tree lifecycle delivery, or a derived placement model rejects its destination.
+
+**System.ObjectDisposedException:** This node or `newParent` is disposing on another thread or has finished disposing.
+
+**System.AggregateException:** One or more structural, lifecycle, notification, or event callbacks fail after reparenting begins.
+
+<a id="m-electron2d-scenenode-requestready"></a>
+### `public void RequestReady()`
+
+Requests ready delivery the next time SceneTree attachment reaches the ready phase.
+
+**Remarks:** The method only resets stored ready state; it never delivers ready immediately.
+
+**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+
+**System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+<a id="m-electron2d-scenenode-validatedisposal"></a>
+### `protected override void ValidateDisposal()`
+
+Validates caller-specific disposal preconditions before this caller attempts the disposal transition.
+
+**Remarks:** Rejects disposal during tree lifecycle delivery or of an active tree root, and requires the owner thread for an attached node.
+
+**System.InvalidOperationException:** This node is in lifecycle delivery, its parent is exiting, it is an active tree root, or disposal is attempted off the owner thread.
+
+<a id="m-electron2d-scenenode-validatemutation"></a>
+### `protected override void ValidateMutation()`
+
+Validates that mutable base state may change at the current lifecycle point.
+
+## Event Descriptions
+
+<a id="e-electron2d-scenenode-childadded"></a>
+### `public event Action<SceneNode, SceneNode>? ChildAdded`
+
+Occurs on the parent after a direct child is structurally attached and child order is reported.
+
+**Remarks:** The first argument is the publishing parent and the second is the child. Delivery is synchronous and precedes active-tree attachment of the child's subtree.
+
+<a id="e-electron2d-scenenode-childenteredtree"></a>
+### `public event Action<SceneNode, SceneNode>? ChildEnteredTree`
+
+Occurs on the direct parent when a child enters the active tree.
+
+**Remarks:** The first argument is the publishing parent and the second is the entering child. Delivery follows that child's enter notification and event.
+
+<a id="e-electron2d-scenenode-childexitingtree"></a>
+### `public event Action<SceneNode, SceneNode>? ChildExitingTree`
+
+Occurs on the direct parent while a child is exiting the active tree.
+
+**Remarks:** The first argument is the publishing parent and the second is the exiting child. Descendants have already exited, and the child's `SceneNode.Tree` is still set.
+
+<a id="e-electron2d-scenenode-childorderchanged"></a>
+### `public event Action<SceneNode>? ChildOrderChanged`
+
+Occurs after the order or membership of direct children changes.
+
+**Remarks:** The argument is this parent node. Delivery is synchronous after `SceneNode.NotificationChildOrderChanged`.
+
+<a id="e-electron2d-scenenode-childremoved"></a>
+### `public event Action<SceneNode, SceneNode>? ChildRemoved`
+
+Occurs on the former parent after a direct child is detached and child order is reported.
+
+**Remarks:** The first argument is the publishing former parent and the second is the removed child. Delivery is synchronous, and structural changes are not rolled back if a handler throws.
+
+<a id="e-electron2d-scenenode-ready"></a>
+### `public event Action<SceneNode>? Ready`
+
+Occurs after child-first ready notification delivery.
+
+**Remarks:** SceneTree-managed delivery occurs once until `SceneNode.RequestReady` resets the ready state.
+
+<a id="e-electron2d-scenenode-renamed"></a>
+### `public event Action<SceneNode>? Renamed`
+
+Occurs after an active node's own name changes and path notifications propagate.
+
+**Remarks:** The argument is this node. Detached-node renames do not raise the event.
+
+<a id="e-electron2d-scenenode-treeentered"></a>
+### `public event Action<SceneNode>? TreeEntered`
+
+Occurs when this node enters an active scene tree.
+
+**Remarks:** Delivery follows `SceneNode.NotificationEnterTree` and precedes descendant entry.
+
+<a id="e-electron2d-scenenode-treeexited"></a>
+### `public event Action<SceneNode>? TreeExited`
+
+Occurs after this node has left its scene tree.
+
+**Remarks:** `SceneNode.Tree` is already `null` when handlers run.
+
+<a id="e-electron2d-scenenode-treeexiting"></a>
+### `public event Action<SceneNode>? TreeExiting`
+
+Occurs while this node is exiting its active scene tree.
+
+**Remarks:** Descendants have exited, `SceneNode.NotificationExitTree` has run, and `SceneNode.Tree` remains available.
+
+## Constant Descriptions
+
+<a id="f-electron2d-scenenode-notificationapplicationfocusin"></a>
+### `public const int NotificationApplicationFocusIn = 2016`
+
+Identifies that the application received keyboard focus.
+
+<a id="f-electron2d-scenenode-notificationapplicationfocusout"></a>
+### `public const int NotificationApplicationFocusOut = 2017`
+
+Identifies that the application lost keyboard focus.
+
+<a id="f-electron2d-scenenode-notificationapplicationpaused"></a>
+### `public const int NotificationApplicationPaused = 2015`
+
+Identifies that the application is about to be suspended.
+
+<a id="f-electron2d-scenenode-notificationapplicationpipmodeentered"></a>
+### `public const int NotificationApplicationPipModeEntered = 2019`
+
+Identifies that the application entered picture-in-picture mode.
+
+<a id="f-electron2d-scenenode-notificationapplicationpipmodeexited"></a>
+### `public const int NotificationApplicationPipModeExited = 2020`
+
+Identifies that the application exited picture-in-picture mode.
+
+<a id="f-electron2d-scenenode-notificationapplicationresumed"></a>
+### `public const int NotificationApplicationResumed = 2014`
+
+Identifies that the application resumed after suspension.
+
+<a id="f-electron2d-scenenode-notificationchildorderchanged"></a>
+### `public const int NotificationChildOrderChanged = 24`
+
+Identifies the notification sent after the direct child order changes.
+
+<a id="f-electron2d-scenenode-notificationcrash"></a>
+### `public const int NotificationCrash = 2012`
+
+Identifies a notification delivered immediately before an unrecoverable crash.
+
+<a id="f-electron2d-scenenode-notificationdisabled"></a>
+### `public const int NotificationDisabled = 28`
+
+Identifies the notification sent when the effective process mode becomes disabled.
+
+<a id="f-electron2d-scenenode-notificationenabled"></a>
+### `public const int NotificationEnabled = 29`
+
+Identifies the notification sent when the effective process mode stops being disabled.
+
+<a id="f-electron2d-scenenode-notificationentertree"></a>
+### `public const int NotificationEnterTree = 10`
+
+Identifies the notification sent when a node enters an active `SceneTree`.
+
+<a id="f-electron2d-scenenode-notificationexittree"></a>
+### `public const int NotificationExitTree = 11`
+
+Identifies the notification sent after descendants exit and before this node leaves its tree.
+
+<a id="f-electron2d-scenenode-notificationinternalphysicsprocess"></a>
+### `public const int NotificationInternalPhysicsProcess = 26`
+
+Identifies an engine-internal physics-process callback notification.
+
+**Remarks:** Built-in node logic uses this lane independently of `SceneNode.PhysicsProcessEnabled`.
+
+<a id="f-electron2d-scenenode-notificationinternalprocess"></a>
+### `public const int NotificationInternalProcess = 25`
+
+Identifies an engine-internal process callback notification.
+
+**Remarks:** Built-in node logic uses this lane independently of `SceneNode.ProcessEnabled`.
+
+<a id="f-electron2d-scenenode-notificationosimeupdate"></a>
+### `public const int NotificationOsImeUpdate = 2013`
+
+Identifies an input-method composition update supplied by the operating system.
+
+<a id="f-electron2d-scenenode-notificationosmemorywarning"></a>
+### `public const int NotificationOsMemoryWarning = 2009`
+
+Identifies an operating-system low-memory warning propagated by the active scene tree.
+
+<a id="f-electron2d-scenenode-notificationparented"></a>
+### `public const int NotificationParented = 18`
+
+Identifies the notification sent after a parent reference is assigned.
+
+<a id="f-electron2d-scenenode-notificationpathrenamed"></a>
+### `public const int NotificationPathRenamed = 23`
+
+Identifies the notification propagated when this node's path changes.
+
+<a id="f-electron2d-scenenode-notificationpaused"></a>
+### `public const int NotificationPaused = 14`
+
+Identifies the notification sent when the owning tree becomes paused.
+
+<a id="f-electron2d-scenenode-notificationphysicsprocess"></a>
+### `public const int NotificationPhysicsProcess = 16`
+
+Identifies a physics-process callback notification.
+
+<a id="f-electron2d-scenenode-notificationpostentertree"></a>
+### `public const int NotificationPostEnterTree = 27`
+
+Identifies the notification sent after this node and its descendants finish entering a tree.
+
+<a id="f-electron2d-scenenode-notificationprocess"></a>
+### `public const int NotificationProcess = 17`
+
+Identifies a process callback notification.
+
+<a id="f-electron2d-scenenode-notificationready"></a>
+### `public const int NotificationReady = 13`
+
+Identifies the child-first notification sent when a node becomes ready.
+
+<a id="f-electron2d-scenenode-notificationsceneinstantiated"></a>
+### `public const int NotificationSceneInstantiated = 20`
+
+Identifies the notification sent to the root after a packed scene is completely instantiated.
+
+<a id="f-electron2d-scenenode-notificationtextserverchanged"></a>
+### `public const int NotificationTextServerChanged = 2018`
+
+Identifies that the active text service changed.
+
+<a id="f-electron2d-scenenode-notificationtranslationchanged"></a>
+### `public const int NotificationTranslationChanged = 2010`
+
+Identifies a notification that translated messages may have changed.
+
+<a id="f-electron2d-scenenode-notificationunparented"></a>
+### `public const int NotificationUnparented = 19`
+
+Identifies the notification sent after a parent reference is cleared.
+
+<a id="f-electron2d-scenenode-notificationunpaused"></a>
+### `public const int NotificationUnpaused = 15`
+
+Identifies the notification sent when the owning tree resumes from pause.
+
+<a id="f-electron2d-scenenode-notificationwmabout"></a>
+### `public const int NotificationWmAbout = 2011`
+
+Identifies an operating-system request to show application information.
+
+## Ownership, errors and dependencies
+
+The parent owns its children; SceneTree owns the active root. PackedScene capture uses explicit stored descriptors and static exact-type factories. Scene-local resources belong to the instantiated root; externally supplied textures/materials are borrowed. Mutations honor scene capture, lifetime and owner-thread guards. Callback failures are reported after the documented committed state; cleanup attempts every owned stage. See [SceneNode](SceneNode.md) for inherited lifecycle and [the scene hierarchy component](../components/scene-hierarchy.md) for cross-layer flow.
+
+## Verification and limits
+
+[SceneHierarchyTests](../../tests/Electron2D.Tests/SceneHierarchyTests.cs) verifies inheritance, neutral API boundaries, direct custom CanvasItem transforms, mixed parenting, notifications, timer/tween scheduling, packed factories/state, deletion and failure continuation. Existing [runtime checks](../../tests/Electron2D.Tests/Program.cs) retain lifecycle, input, math and ownership coverage. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) verifies mixed-tree pixels and a direct CanvasItem drawing texture through both GPU and compatibility backends on Linux Wayland. This does not establish visual owner acceptance or other platforms.
+
+The hierarchy is implemented; complete reference API parity is not claimed. Missing GUI, canvas policies, rendering primitives, interpolation, scene-file authoring and other capabilities remain classified per member in [coverage](../coverage/index.md). No inert compatibility members are added.
+
+## Relevant decisions
+
+- [0008: SceneNode, CanvasItem and Node](../decisions/scene.md#adr-0008)
+- [0004: Product scope and API correspondence](../decisions/product.md#adr-0004)
+- [0023: Typed packed scenes](../decisions/scene.md#adr-0023)
+- [0028: Rendering](../decisions/rendering.md#adr-0028)

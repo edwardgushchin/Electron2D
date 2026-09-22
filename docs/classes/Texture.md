@@ -2,8 +2,6 @@
 
 Last updated: 2026-09-23
 
-Scene inheritance migration: [ADR 0008](../decisions/scene.md#adr-0008) assigns the neutral tree API to `SceneNode`, canvas behavior to `CanvasItem`, and the spatial API to `Node`. Signatures on this page describe the existing runtime until that migration is implemented.
-
 - Declaration: `public abstract class Texture : Resource`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
 - Inherits: [Resource](Resource.md)
@@ -40,9 +38,9 @@ DisplayServer.CursorSetCustomImage also accepts this resource through its Resour
 | `virtual bool HasMipmaps { get; }` | Original pixels contain a complete mip chain. |
 | `virtual int MipmapCount { get; }` | Number of levels after the base level; zero when absent. |
 | `virtual Image? GetImage()` | Independent caller-owned pixels, or null when unreadable/uninitialized. |
-| `virtual void Draw(Node canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)` | Draws at logical size during the target node's OnDraw. |
-| `virtual void DrawRect(Node canvasItem, Rect rect, bool tile, Color? modulate = null, bool transpose = false)` | Stretches or repeats over a local rectangle. |
-| `virtual void DrawRectRegion(Node canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)` | Draws a source region in logical texture pixels. |
+| `virtual void Draw(CanvasItem canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)` | Draws at logical size during the target node's OnDraw. |
+| `virtual void DrawRect(CanvasItem canvasItem, Rect rect, bool tile, Color? modulate = null, bool transpose = false)` | Stretches or repeats over a local rectangle. |
+| `virtual void DrawRectRegion(CanvasItem canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)` | Draws a source region in logical texture pixels. |
 | `virtual bool IsPixelOpaque(int x, int y)` | Tests alpha above 0.1 at clamped logical coordinates. |
 
 ## Property descriptions
@@ -89,7 +87,7 @@ The destination origin is unchanged by negative dimensions: each negative axis r
 
 Source positions and sizes use logical pixels, accounting for ImageTexture size overrides. Negative source dimensions toggle the corresponding destination reflection without moving the source origin. `clipUV` constrains sampling to texel centers within the source region while retaining interior interpolation; disabling it leaves that restriction off. Coordinates outside the full image still clamp to image edges. Transpose, modulation, zero-area behavior and errors follow DrawRect.
 
-All three methods are virtual. Node.DrawTexture, DrawTextureRect and DrawTextureRectRegion invoke them so a custom texture can draw its own geometry. Default implementations retain resource references, normalized source coordinates, destination geometry and draw transform. Update and SetImage affect later frames without rerunning OnDraw; changing the destination or recorded logical scale requires QueueRedraw. Disposal before a retained command is consumed fails the frame. Commands do not transfer resource ownership.
+All three methods are virtual. CanvasItem.DrawTexture, DrawTextureRect and DrawTextureRectRegion invoke them so a custom texture can draw its own geometry. Default implementations retain resource references, normalized source coordinates, destination geometry and draw transform. Update and SetImage affect later frames without rerunning OnDraw; changing the destination or recorded logical scale requires QueueRedraw. Disposal before a retained command is consumed fails the frame. Commands do not transfer resource ownership.
 
 ### GetImage
 

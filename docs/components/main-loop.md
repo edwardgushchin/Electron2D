@@ -1,6 +1,6 @@
 # Main loop component
 
-Last updated: 2026-09-21
+Last updated: 2026-09-23
 
 ## Scope
 
@@ -48,5 +48,5 @@ Executable checks cover success, invalid order, delta boundaries, wrong-thread c
 - [0016: Process-wide Engine runtime and host-driven scheduling](../decisions/core-object-runtime.md#adr-0016)
 - [0002: C# events for signals](../decisions/product.md#adr-0002)
 - [0014: Managed Resource lifetime and realtime allocation](../decisions/resources.md#adr-0014)
-- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0036: Reusable SceneNode timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)

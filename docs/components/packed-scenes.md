@@ -2,11 +2,9 @@
 
 Last updated: 2026-09-23
 
-Scene inheritance migration: [ADR 0008](../decisions/scene.md#adr-0008) assigns the neutral tree API to `SceneNode`, canvas behavior to `CanvasItem`, and the spatial API to `Node`. Signatures on this page describe the existing runtime until that migration is implemented.
-
 ## Scope
 
-This Scene component provides the common reuse boundary for Electron2D's Node-based game objects. It performs typed, runtime-only, in-memory capture and reconstruction of detached 2D Node hierarchies; the same representation covers a reusable object or subsystem and a complete level. It connects the [Unified 2D node](unified-node.md), [Typed editor properties](editor-properties.md), and [Resource base](resources.md) components without adding a dynamic value system, reflection-driven invocation, filesystem scene format, editor runtime, or second assembly.
+This Scene component provides the common reuse boundary for Electron2D's SceneNode-based game objects. It performs typed, runtime-only, in-memory capture and reconstruction of detached 2D SceneNode hierarchies; the same representation covers a reusable object or subsystem and a complete level. It connects the [Scene hierarchy](scene-hierarchy.md), [Typed editor properties](editor-properties.md), and [Resource base](resources.md) components without adding a dynamic value system, reflection-driven invocation, filesystem scene format, editor runtime, or second assembly.
 
 ## Owned types
 
@@ -29,10 +27,10 @@ All three types ship in `Electron2D.dll`. Production sources live in `src/Scene/
 
 ## Dependencies
 
-- [`Node`](../classes/Node.md) supplies `Owner`, persistent group metadata, stored 2D/runtime descriptors, the static exact-type factory hook, source capture barriers, `SceneFilePath`, and notification `20`.
+- [`SceneNode`](../classes/SceneNode.md) supplies `Owner`, persistent group metadata, stored 2D/runtime descriptors, the static exact-type factory hook, source capture barriers, `SceneFilePath`, and notification `20`.
 - [`PropertyDescriptor`](../classes/PropertyDescriptor.md) supplies explicit `IsStored` metadata and typed capture/restore.
 - [`Resource`](../classes/Resource.md) supplies identity, changed state, duplication hooks, local-to-scene policy, local-scene association, setup callbacks, and graph-preserving duplication.
-- Normal instantiation creates no [`SceneTree`](../classes/SceneTree.md). `SceneTree` construction and existing-tree entry consult the Node factory/instantiation barriers so callbacks cannot start lifecycle before the detached result is complete.
+- Normal instantiation creates no [`SceneTree`](../classes/SceneTree.md). `SceneTree` construction and existing-tree entry consult the SceneNode factory/instantiation barriers so callbacks cannot start lifecycle before the detached result is complete.
 - Core typed events remain ordinary C# events. [`EventConnection`](../classes/EventConnection.md) subscribers are not discoverable or serialized.
 
 The component has no SDL3-CS, renderer, input, audio, physics, native handle, loader/saver, import, scripting, networking, or editor dependency.
@@ -43,7 +41,7 @@ The component has no SDL3-CS, renderer, input, audio, physics, native handle, lo
 - Factories must be static and source-independent and must create a fresh default node of the exact captured type. Their execution context cannot construct a new `SceneTree` or enter an existing one; source and previously issued identities are rejected.
 - Only root-owned descendant branches are present. Parent order, sibling order, owner paths, persistent groups, and typed stored values are deterministic.
 - Reference-free values such as [`Color`](../classes/Color.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), [`Transform`](../classes/Transform.md), and [`TimerProcessCallback`](../classes/TimerProcessCallback.md) are captured and restored directly, including HDR, negative, integer, affine, or enum components, without conversion to strings or a universal container.
-- Capture blocks node mutation/disposal/deletion for the complete source hierarchy. Derived stored-property setters must call `Node.EnsureMutable()`.
+- Capture blocks node mutation/disposal/deletion for the complete source hierarchy. Derived stored-property setters must call `SceneNode.EnsureMutable()`.
 - Instance reconstruction starts and ends detached. An unfinished node cannot be disposed or enter a `SceneTree`, either as its root or as a child of an active node. Linear-time topology validation detects attachment to an unrelated detached hierarchy, and rollback removes the escaped node.
 - Scene-local duplication preserves graph identity. External non-local resources remain shared; created duplicates are owned and disposed by the returned root.
 - Null pack input preserves old data. A failure after capture begins leaves data empty. Instantiation failure never returns a partial hierarchy; rollback cleanup itself may fail and is then reported in the aggregate.
@@ -59,7 +57,7 @@ User factories, descriptor delegates, resource copy/setup callbacks, node notifi
 
 Implemented and covered locally: in-memory owned-branch capture, storage-enabled typed properties, derived node factories, persistent groups, owner/path metadata, live typed state inspection, independent detached instantiation, root-only scene notification, scene-local resource duplication/setup/ownership, packed-resource duplication/reset/copy behavior, capture and instantiation barriers, factory identity checks, callback topology validation, and failure rollback.
 
-The implemented runtime treats any valid owned hierarchy uniformly: callers can pack and repeatedly instantiate a small composed game object or a complete level. Composition currently uses ordinary Node parenting before packing; no nested-scene authoring metadata or editor workflow is implied.
+The implemented runtime treats any valid owned hierarchy uniformly: callers can pack and repeatedly instantiate a small composed game object or a complete level. Composition currently uses ordinary SceneNode parenting before packing; no nested-scene authoring metadata or editor workflow is implied.
 
 ## Exclusions
 
@@ -80,4 +78,4 @@ The implemented runtime treats any valid owned hierarchy uniformly: callers can 
 - [0025: Typed axis-aligned rectangle geometry](../decisions/core-math.md#adr-0025)
 - [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
-- [0031: Node trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)
+- [0031: SceneNode trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)

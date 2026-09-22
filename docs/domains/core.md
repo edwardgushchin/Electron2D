@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ## Responsibility
 
@@ -139,7 +139,7 @@ The same harness verifies project-setting registration, value snapshots, validat
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
 - [0035: Foreseeable public type-family completeness](../decisions/core-math.md#adr-0035)
-- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0036: Reusable SceneNode timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
 
 ## Windowed lifecycle

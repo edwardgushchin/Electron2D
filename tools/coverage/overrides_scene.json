@@ -1,16 +1,16 @@
 {
   "mappings": [
     {
-      "electron2d": "constant:Electron2D.Node.MaximumZIndex()",
+      "electron2d": "constant:Electron2D.CanvasItem.MaximumZIndex()",
       "godot": "RenderingServer::constant:CANVAS_ITEM_Z_MAX",
       "state": "Partial",
-      "reason": "Numeric mismatch: Electron2D MaximumZIndex is 4095 while Godot CANVAS_ITEM_Z_MAX is 4096. Trigger: correct the Node maximum to 4096, update XML and living documents, and add boundary tests under ADR 0008."
+      "reason": "CanvasItem.MaximumZIndex is 4096 and matches the reference canvas bound. The scene checks cover the endpoint and rejection above it; inherited rendering policies remain separately classified."
     },
     {
-      "electron2d": "constant:Electron2D.Node.MinimumZIndex()",
+      "electron2d": "constant:Electron2D.CanvasItem.MinimumZIndex()",
       "godot": "RenderingServer::constant:CANVAS_ITEM_Z_MIN",
       "state": "Partial",
-      "reason": "Equivalent lower bound (-4096) but exposed on unified Node rather than RenderingServer; complete scene/rendering behavior awaits the first rendering vertical slice under ADR 0008 and ADR 0028."
+      "reason": "Equivalent lower bound (-4096) but exposed on CanvasItem for validating its ZIndex property; numeric boundaries are covered by the scene checks (ADRs 0008 and 0028)."
     },
     {
       "electron2d": "enumValue:Electron2D.FileCompressionMode.Zstandard()",
@@ -535,139 +535,139 @@
       "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.AddChild(Electron2D.Node)",
+      "electron2d": "method:Electron2D.SceneNode.AddChild(Electron2D.SceneNode)",
       "godot": "Node::method:add_child(Node:,bool:,int:Node.InternalMode)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.AddSibling(Electron2D.Node)",
+      "electron2d": "method:Electron2D.SceneNode.AddSibling(Electron2D.SceneNode)",
       "godot": "Node::method:add_sibling(Node:,bool:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.CancelFree()",
+      "electron2d": "method:Electron2D.SceneNode.CancelFree()",
       "godot": "Object::method:cancel_free()",
       "state": "Partial",
       "reason": "Deletion cancellation under ADR 0006; verify atomicity."
     },
     {
-      "electron2d": "method:Electron2D.Node.FindChild(System.String,System.Boolean)",
+      "electron2d": "method:Electron2D.SceneNode.FindChild(System.String,System.Boolean)",
       "godot": "Node::method:find_child(String:,bool:,bool:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.FindChild`1(System.String,System.Boolean)",
+      "electron2d": "method:Electron2D.SceneNode.FindChild`1(System.String,System.Boolean)",
       "godot": "Node::method:find_child(String:,bool:,bool:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.FindChildren(System.String,System.Boolean)",
+      "electron2d": "method:Electron2D.SceneNode.FindChildren(System.String,System.Boolean)",
       "godot": "Node::method:find_children(String:,String:,bool:,bool:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.FindChildren`1(System.String,System.Boolean)",
+      "electron2d": "method:Electron2D.SceneNode.FindChildren`1(System.String,System.Boolean)",
       "godot": "Node::method:find_children(String:,String:,bool:,bool:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.GetChild(System.Int32)",
+      "electron2d": "method:Electron2D.SceneNode.GetChild(System.Int32)",
       "godot": "Node::method:get_child(int:,bool:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.GetGroups()",
+      "electron2d": "method:Electron2D.SceneNode.GetGroups()",
       "godot": "Node::method:get_groups()",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.GetIndex()",
+      "electron2d": "method:Electron2D.SceneNode.GetIndex()",
       "godot": "Node::method:get_index(bool:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.GetNode(System.String)",
+      "electron2d": "method:Electron2D.SceneNode.GetNode(System.String)",
       "godot": "Node::method:get_node(NodePath:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.GetNode`1(System.String)",
+      "electron2d": "method:Electron2D.SceneNode.GetNode`1(System.String)",
       "godot": "Node::method:get_node(NodePath:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.GetPath()",
+      "electron2d": "method:Electron2D.SceneNode.GetPath()",
       "godot": "Node::method:get_path()",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.GetPathTo(Electron2D.Node)",
+      "electron2d": "method:Electron2D.SceneNode.GetPathTo(Electron2D.SceneNode)",
       "godot": "Node::method:get_path_to(Node:,bool:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.OnEnterTree()",
+      "electron2d": "method:Electron2D.SceneNode.OnEnterTree()",
       "godot": "Node::method:_enter_tree()",
       "state": "Partial",
       "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "method:Electron2D.Node.OnExitTree()",
+      "electron2d": "method:Electron2D.SceneNode.OnExitTree()",
       "godot": "Node::method:_exit_tree()",
       "state": "Partial",
       "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "method:Electron2D.Node.OnInput(Electron2D.InputEvent)",
+      "electron2d": "method:Electron2D.SceneNode.OnInput(Electron2D.InputEvent)",
       "godot": "Node::method:_input(InputEvent:)",
       "state": "Partial",
       "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "method:Electron2D.Node.OnNotification(System.Int32)",
+      "electron2d": "method:Electron2D.SceneNode.OnNotification(System.Int32)",
       "godot": "Object::method:_notification(int:)",
       "state": "Partial",
       "reason": "Numeric notification callback under ADR 0005."
     },
     {
-      "electron2d": "method:Electron2D.Node.OnPhysicsProcess(System.Double)",
+      "electron2d": "method:Electron2D.SceneNode.OnPhysicsProcess(System.Double)",
       "godot": "Node::method:_physics_process(float:)",
       "state": "Partial",
       "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "method:Electron2D.Node.OnProcess(System.Double)",
+      "electron2d": "method:Electron2D.SceneNode.OnProcess(System.Double)",
       "godot": "Node::method:_process(float:)",
       "state": "Partial",
       "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "method:Electron2D.Node.OnReady()",
+      "electron2d": "method:Electron2D.SceneNode.OnReady()",
       "godot": "Node::method:_ready()",
       "state": "Partial",
       "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "method:Electron2D.Node.OnUnhandledInput(Electron2D.InputEvent)",
+      "electron2d": "method:Electron2D.SceneNode.OnUnhandledInput(Electron2D.InputEvent)",
       "godot": "Node::method:_unhandled_input(InputEvent:)",
       "state": "Partial",
       "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "method:Electron2D.Node.OnUnhandledKeyInput(Electron2D.InputEventKey)",
+      "electron2d": "method:Electron2D.SceneNode.OnUnhandledKeyInput(Electron2D.InputEventKey)",
       "godot": "Node::method:_unhandled_key_input(InputEvent:)",
       "state": "Partial",
       "reason": "Protected typed callback for upstream Node callback; ADRs 0008 and 0038."
@@ -703,7 +703,7 @@
       "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
     },
     {
-      "electron2d": "method:Electron2D.SceneTree.CallGroup(System.String,System.Action<Electron2D.Node>,Electron2D.GroupCallFlags)",
+      "electron2d": "method:Electron2D.SceneTree.CallGroup(System.String,System.Action<Electron2D.SceneNode>,Electron2D.GroupCallFlags)",
       "godot": "SceneTree::method:call_group(StringName:,StringName:)",
       "state": "Partial",
       "reason": "Typed delegate replaces string method dispatch; ADRs 0001/0006."
@@ -769,7 +769,7 @@
       "reason": "Typed setter delegate replaces StringName/Variant target; ADRs 0001/0006."
     },
     {
-      "electron2d": "method:Electron2D.SceneTree.SetGroup`1(System.String,Action<Electron2D.Node, T>,T,Electron2D.GroupCallFlags)",
+      "electron2d": "method:Electron2D.SceneTree.SetGroup`1(System.String,Action<Electron2D.SceneNode, T>,T,Electron2D.GroupCallFlags)",
       "godot": "SceneTree::method:set_group(StringName:,String:,Variant:)",
       "state": "Partial",
       "reason": "Typed setter delegate replaces Variant/string path; ADRs 0001/0006."
@@ -865,139 +865,139 @@
       "reason": "Spelled-out C# control modifier corresponds to ctrl_pressed; ADR 0038."
     },
     {
-      "electron2d": "property:Electron2D.Node.ChildCount()",
+      "electron2d": "property:Electron2D.SceneNode.ChildCount()",
       "godot": "Node::method:get_child_count(bool:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "property:Electron2D.Node.Children()",
+      "electron2d": "property:Electron2D.SceneNode.Children()",
       "godot": "Node::method:get_children(bool:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "property:Electron2D.Node.InputEnabled()",
+      "electron2d": "property:Electron2D.SceneNode.InputEnabled()",
       "godot": "Node::method:is_processing_input()",
       "state": "Partial",
       "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "property:Electron2D.Node.InputEnabled()",
+      "electron2d": "property:Electron2D.SceneNode.InputEnabled()",
       "godot": "Node::method:set_process_input(bool:)",
       "state": "Partial",
       "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "property:Electron2D.Node.IsInsideTree()",
+      "electron2d": "property:Electron2D.SceneNode.IsInsideTree()",
       "godot": "Node::method:is_inside_tree()",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "property:Electron2D.Node.IsNodeReady()",
+      "electron2d": "property:Electron2D.SceneNode.IsNodeReady()",
       "godot": "Node::method:is_node_ready()",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "property:Electron2D.Node.IsQueuedForDeletion()",
+      "electron2d": "property:Electron2D.SceneNode.IsQueuedForDeletion()",
       "godot": "Object::method:is_queued_for_deletion()",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "property:Electron2D.Node.IsVisibleInTree()",
+      "electron2d": "property:Electron2D.CanvasItem.IsVisibleInTree()",
       "godot": "CanvasItem::method:is_visible_in_tree()",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "property:Electron2D.Node.NotifyLocalTransformChanges()",
+      "electron2d": "property:Electron2D.CanvasItem.NotifyLocalTransformChanges()",
       "godot": "CanvasItem::method:is_local_transform_notification_enabled()",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "property:Electron2D.Node.NotifyLocalTransformChanges()",
+      "electron2d": "property:Electron2D.CanvasItem.NotifyLocalTransformChanges()",
       "godot": "CanvasItem::method:set_notify_local_transform(bool:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "property:Electron2D.Node.NotifyTransformChanges()",
+      "electron2d": "property:Electron2D.CanvasItem.NotifyTransformChanges()",
       "godot": "CanvasItem::method:is_transform_notification_enabled()",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "property:Electron2D.Node.NotifyTransformChanges()",
+      "electron2d": "property:Electron2D.CanvasItem.NotifyTransformChanges()",
       "godot": "CanvasItem::method:set_notify_transform(bool:)",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "property:Electron2D.Node.PhysicsProcessEnabled()",
+      "electron2d": "property:Electron2D.SceneNode.PhysicsProcessEnabled()",
       "godot": "Node::method:is_physics_processing()",
       "state": "Partial",
       "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "property:Electron2D.Node.PhysicsProcessEnabled()",
+      "electron2d": "property:Electron2D.SceneNode.PhysicsProcessEnabled()",
       "godot": "Node::method:set_physics_process(bool:)",
       "state": "Partial",
       "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "property:Electron2D.Node.PhysicsProcessPriority()",
+      "electron2d": "property:Electron2D.SceneNode.PhysicsProcessPriority()",
       "godot": "Node::property:process_physics_priority",
       "state": "Partial",
-      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "The declaring layer follows the accepted SceneNode/CanvasItem/Node hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "property:Electron2D.Node.ProcessEnabled()",
+      "electron2d": "property:Electron2D.SceneNode.ProcessEnabled()",
       "godot": "Node::method:is_processing()",
       "state": "Partial",
       "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "property:Electron2D.Node.ProcessEnabled()",
+      "electron2d": "property:Electron2D.SceneNode.ProcessEnabled()",
       "godot": "Node::method:set_process(bool:)",
       "state": "Partial",
       "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "property:Electron2D.Node.UnhandledInputEnabled()",
+      "electron2d": "property:Electron2D.SceneNode.UnhandledInputEnabled()",
       "godot": "Node::method:is_processing_unhandled_input()",
       "state": "Partial",
       "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "property:Electron2D.Node.UnhandledInputEnabled()",
+      "electron2d": "property:Electron2D.SceneNode.UnhandledInputEnabled()",
       "godot": "Node::method:set_process_unhandled_input(bool:)",
       "state": "Partial",
       "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "property:Electron2D.Node.UnhandledKeyInputEnabled()",
+      "electron2d": "property:Electron2D.SceneNode.UnhandledKeyInputEnabled()",
       "godot": "Node::method:is_processing_unhandled_key_input()",
       "state": "Partial",
       "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "property:Electron2D.Node.UnhandledKeyInputEnabled()",
+      "electron2d": "property:Electron2D.SceneNode.UnhandledKeyInputEnabled()",
       "godot": "Node::method:set_process_unhandled_key_input(bool:)",
       "state": "Partial",
       "reason": "One C# property supplies upstream query and setter; ADRs 0008 and 0038."
     },
     {
-      "electron2d": "method:Electron2D.Node.GetViewport()",
+      "electron2d": "method:Electron2D.SceneNode.GetViewport()",
       "godot": "Node::method:get_viewport()",
       "state": "Partial",
       "reason": "Root-window native/input projection under ADRs 0004 and 0008; tests cover the supported window lifecycle. Nested viewport, rendering, content scaling and multiwindow behavior remain absent."
     },
     {
-      "electron2d": "method:Electron2D.Node.GetWindow()",
+      "electron2d": "method:Electron2D.SceneNode.GetWindow()",
       "godot": "Node::method:get_window()",
       "state": "Partial",
       "reason": "Root-window native/input projection under ADRs 0004 and 0008; tests cover the supported window lifecycle. Nested viewport, rendering, content scaling and multiwindow behavior remain absent."
@@ -1039,7 +1039,7 @@
       "reason": "Root-window native/input projection under ADRs 0004 and 0008; tests cover the supported window lifecycle. Nested viewport, rendering, content scaling and multiwindow behavior remain absent."
     },
     {
-      "electron2d": "property:Electron2D.Window.ScreenPosition()",
+      "electron2d": "property:Electron2D.Window.Position()",
       "godot": "Window::property:position",
       "state": "Partial",
       "reason": "Renamed to ScreenPosition because the unified Node retains scene Position (ADR 0008). Native desktop coordinates; Wayland rejects queries/requests explicitly, including preconfigured startup requests."
@@ -1289,6 +1289,42 @@
       "godot": "Window::property:unresizable",
       "state": "Partial",
       "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasItem.GetTransform()",
+      "godot": "CanvasItem::method:get_transform()",
+      "state": "Partial",
+      "reason": "Abstract local transform query owned by CanvasItem; SceneHierarchyTests exercises a direct CanvasItem subtype and a Node child."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.GetTransform()",
+      "godot": "CanvasItem::method:get_transform()",
+      "state": "Partial",
+      "reason": "Node supplies the concrete spatial transform for the inherited CanvasItem query."
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasItem.GetGlobalTransform()",
+      "godot": "CanvasItem::method:get_global_transform()",
+      "state": "Partial",
+      "reason": "Composes only direct canvas parents; neutral parents and TopLevel end the chain. SceneHierarchyTests and native mixed-tree pixels verify both canvas branches."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.Reparent(Electron2D.SceneNode,System.Boolean)",
+      "godot": "Node::method:reparent(Node:,bool:)",
+      "state": "Partial",
+      "reason": "Spatial override of SceneNode reparenting preserves the global transform through the new canvas parent. Invalid inverses reject before mutation; lifecycle guards and callback failure paths remain active."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneNode.Reparent(Electron2D.SceneNode,System.Boolean)",
+      "godot": "Node::method:reparent(Node:,bool:)",
+      "state": "Partial",
+      "reason": "Neutral hierarchy operation accepts any SceneNode; spatial preservation dispatches through the Node override. Mixed-tree tests cover neutral parents, lifecycle rejection and callback cleanup. Broader hierarchy defaults remain under audit."
+    },
+    {
+      "electron2d": "property:Electron2D.CanvasItem.TopLevel()",
+      "godot": "CanvasItem::property:top_level",
+      "state": "Partial",
+      "reason": "The default is false; toggling preserves the local transform and ends canvas transform/material/modulation/Z inheritance. Visibility still follows direct canvas parents. SceneHierarchyTests covers the transform boundary. Special top-level draw ordering remains unimplemented; trigger: the next canvas ordering slice under ADR 0028."
     }
   ],
   "extras": [
@@ -1373,7 +1409,7 @@
       "adr": "docs/decisions/core-object-runtime.md#adr-0015"
     },
     {
-      "electron2d": "constructor:Electron2D.Node..ctor()",
+      "electron2d": "constructor:Electron2D.SceneNode..ctor()",
       "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
       "adr": "docs/decisions/product.md#adr-0001"
     },
@@ -1383,7 +1419,7 @@
       "adr": "docs/decisions/product.md#adr-0001"
     },
     {
-      "electron2d": "constructor:Electron2D.SceneTree..ctor(Electron2D.Node)",
+      "electron2d": "constructor:Electron2D.SceneTree..ctor(Electron2D.SceneNode)",
       "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",
       "adr": "docs/decisions/product.md#adr-0001"
     },
@@ -1403,22 +1439,22 @@
       "adr": "docs/decisions/core-data-io.md#adr-0020"
     },
     {
-      "electron2d": "event:Electron2D.Node.ChildAdded()",
+      "electron2d": "event:Electron2D.SceneNode.ChildAdded()",
       "reason": "Local child-mutation event differs in timing from child_entered_tree.",
       "adr": "docs/decisions/product.md#adr-0002"
     },
     {
-      "electron2d": "event:Electron2D.Node.ChildRemoved()",
+      "electron2d": "event:Electron2D.SceneNode.ChildRemoved()",
       "reason": "Local child-mutation event differs in timing from child_exiting_tree.",
       "adr": "docs/decisions/product.md#adr-0002"
     },
     {
-      "electron2d": "event:Electron2D.Node.LocalTransformChanged()",
+      "electron2d": "event:Electron2D.CanvasItem.LocalTransformChanged()",
       "reason": "Typed local-transform notification; CanvasItem uses notification IDs.",
       "adr": "docs/decisions/scene.md#adr-0008"
     },
     {
-      "electron2d": "event:Electron2D.Node.TransformChanged()",
+      "electron2d": "event:Electron2D.CanvasItem.TransformChanged()",
       "reason": "Typed global-transform notification; CanvasItem uses notification IDs.",
       "adr": "docs/decisions/scene.md#adr-0008"
     },
@@ -1748,32 +1784,32 @@
       "adr": "docs/decisions/core-object-runtime.md#adr-0015"
     },
     {
-      "electron2d": "method:Electron2D.Node.CreateSceneInstanceFactory()",
+      "electron2d": "method:Electron2D.SceneNode.CreateSceneInstanceFactory()",
       "reason": "Source-independent factory hook for detached scene instancing.",
       "adr": "docs/decisions/scene.md#adr-0023"
     },
     {
-      "electron2d": "method:Electron2D.Node.Dispose(System.Boolean)",
+      "electron2d": "method:Electron2D.SceneNode.Dispose(System.Boolean)",
       "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
       "adr": "docs/decisions/core-object-runtime.md#adr-0003"
     },
     {
-      "electron2d": "method:Electron2D.Node.EnsureMutable()",
+      "electron2d": "method:Electron2D.SceneNode.EnsureMutable()",
       "reason": "Managed scene-mutation guard for lifecycle/reentrancy safety.",
       "adr": "docs/decisions/scene.md#adr-0011"
     },
     {
-      "electron2d": "method:Electron2D.Node.GetPropertyDescriptors()",
+      "electron2d": "method:Electron2D.SceneNode.GetPropertyDescriptors()",
       "reason": "Typed property-descriptor extension point replaces Variant property dictionaries.",
       "adr": "docs/decisions/core-object-runtime.md#adr-0005"
     },
     {
-      "electron2d": "method:Electron2D.Node.ValidateDisposal()",
+      "electron2d": "method:Electron2D.SceneNode.ValidateDisposal()",
       "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
       "adr": "docs/decisions/core-object-runtime.md#adr-0003"
     },
     {
-      "electron2d": "method:Electron2D.Node.ValidateMutation()",
+      "electron2d": "method:Electron2D.SceneNode.ValidateMutation()",
       "reason": "Protected owner-thread/lifecycle validation hook for managed scene loop.",
       "adr": "docs/decisions/scene.md#adr-0011"
     },
@@ -1937,6 +1973,46 @@
       "state": "Implemented",
       "reason": "Deterministic typed lifecycle override clears the viewport size subscriber list.",
       "adr": "docs/decisions/core-object-runtime.md#adr-0003"
+    },
+    {
+      "electron2d": "constructor:Electron2D.CanvasItem..ctor()",
+      "reason": "Protected initialization of the abstract canvas base; no new game-facing capability.",
+      "adr": "ADR 0008; ADR 0005; ADR 0023"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Node..ctor()",
+      "reason": "Default construction of the spatial node under ADR 0008; identity transform and inherited canvas defaults.",
+      "adr": "ADR 0008; ADR 0005; ADR 0023"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasItem.Dispose(System.Boolean)",
+      "reason": "Managed override releases retained canvas commands and its own event subscriptions after scene teardown, without disposing borrowed resources.",
+      "adr": "ADR 0008; ADR 0005; ADR 0023"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasItem.GetPropertyDescriptors()",
+      "reason": "Typed stored descriptors for the reference canvas properties, extending the neutral tree descriptors.",
+      "adr": "ADR 0008; ADR 0005; ADR 0023"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasItem.NotifyLocalTransformChanged()",
+      "reason": "Protected typed projection of local/global transform notifications for a derived canvas placement model; supports the same transform-change capability as the canvas base.",
+      "adr": "ADR 0008; ADR 0005; ADR 0023"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasItem.OnNotification(System.Int32)",
+      "reason": "Managed notification override maintains canvas state at parenting boundaries while preserving scene lifecycle dispatch.",
+      "adr": "ADR 0008; ADR 0005; ADR 0023"
+    },
+    {
+      "electron2d": "method:Electron2D.Node.CreateSceneInstanceFactory()",
+      "reason": "Typed packed-scene factory reconstructs the concrete spatial node; derived types retain explicit factory requirements.",
+      "adr": "ADR 0008; ADR 0005; ADR 0023"
+    },
+    {
+      "electron2d": "method:Electron2D.Node.GetPropertyDescriptors()",
+      "reason": "Typed stored descriptors for spatial properties, extending the canvas and neutral tree descriptor layers.",
+      "adr": "ADR 0008; ADR 0005; ADR 0023"
     }
   ],
   "statusGroups": [

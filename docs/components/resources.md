@@ -1,6 +1,6 @@
 # Resource base component
 
-Last updated: 2026-09-21
+Last updated: 2026-09-23
 
 ## Scope
 
@@ -25,7 +25,7 @@ Both types are production members of `Electron2D.dll`.
 
 ## Dependencies
 
-The component depends on Core object lifetime and typed property descriptors plus .NET collections, weak references, locking, and cryptographic random generation. `Resource.GetLocalScene()` introduces one narrow dependency on Scene's [`Node`](../classes/Node.md), while the [Packed scenes](packed-scenes.md) component consumes Resource duplication. ADR 0023 records this intentional in-assembly cycle.
+The component depends on Core object lifetime and typed property descriptors plus .NET collections, weak references, locking, and cryptographic random generation. `Resource.GetLocalScene()` introduces one narrow dependency on Scene's [`SceneNode`](../classes/SceneNode.md), while the [Packed scenes](packed-scenes.md) component consumes Resource duplication. ADR 0023 records this intentional in-assembly cycle.
 
 The managed [Images](images.md) component derives from this base and implements concrete CPU buffer duplication without changing base lifetime. Future asset serialization, rendering handles, and editor/import metadata may consume this component but are not implemented dependencies today. The base still has no dependency on `PackedScene`, `SceneTree`, or file formats.
 

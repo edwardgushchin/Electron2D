@@ -70,14 +70,13 @@ internal static class WindowRuntimeTests
                     window.Title = "Live title";
                     Check(window.Title == "Live title", "Title round trips through the native backend.");
                     var native = NativeWindow();
-                    ((Node)window).Hide();
+                    window.Hide();
                     Check(!window.Visible && (SDL.GetWindowFlags(native) & SDL.WindowFlags.Hidden) != 0,
-                        "Visibility through Node hides the native window.");
-                    ((Node)window).Show();
+                        "Window visibility hides the native window.");
+                    window.Show();
                     Check(window.Visible && (SDL.GetWindowFlags(native) & SDL.WindowFlags.Hidden) == 0,
-                        "Visibility through Node shows the native window.");
-                    window.Position = new Vector2(9, 11);
-                    Check(window.GetVisibleRect().Position == Vector2.Zero, "Viewport client origin is independent of Node.Position.");
+                        "Window visibility shows the native window.");
+                    Check(window.GetVisibleRect().Position == Vector2.Zero, "Viewport client origin is zero.");
                     Reject<InvalidOperationException>(() => engine.AdvanceFrame(0));
                     Reject<InvalidOperationException>(engine.Stop);
                     using var other = new Window();
@@ -200,7 +199,7 @@ internal static class WindowRuntimeTests
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland")
             {
                 window = NewWindow();
-                window.ScreenPosition = Vector2I.Zero;
+                window.Position = Vector2I.Zero;
                 Reject<NotSupportedException>(() => engine.Run(window));
                 AssertReleased(window);
             }
@@ -387,7 +386,7 @@ internal static class WindowRuntimeTests
     }
 
     private static void Fail(string phase) => throw new InvalidOperationException("injected " + phase);
-    private static void AssertReleased(Window window, Node? child = null) => Check(window.IsDisposed &&
+    private static void AssertReleased(Window window, SceneNode? child = null) => Check(window.IsDisposed &&
         (child is null || child.IsDisposed) && Engine.Instance.MainLoop is null && DisplayServer.Instance is null &&
         !Input.Instance.IsKeyPressed(Key.A), "Run releases scene, window, loop attachment, and native input state.");
     private static nint NativeWindow()

@@ -2,8 +2,6 @@
 
 Last updated: 2026-09-23
 
-The accepted target is `SceneNode → CanvasItem → Node`, with `Sprite : Node`, `Timer : SceneNode`, `Viewport : SceneNode` and `Control : CanvasItem`, under [ADR 0008](../decisions/scene.md#adr-0008). The current runtime still combines these responsibilities in Node and requires migration. The API below describes existing code; acceptance of the target does not claim it is implemented.
-
 - Declaration: `public class Sprite : Node`
 - Source: [Sprite.cs](../../src/Scene/2D/Sprite.cs)
 - Inherits: [Node](Node.md)
@@ -11,7 +9,7 @@ The accepted target is `SceneNode → CanvasItem → Node`, with `Sprite : Node`
 
 ## Description
 
-Displays a borrowed [Texture](Texture.md), a selected sheet frame or a rectangular texture region. It inherits the unified Node hierarchy, transforms, visibility, Z order, modulation and materials. Engine.Run renders its retained commands through the active canvas backend. Sprite does not own a timer: change Frame directly, through a Tween or from scene processing.
+Displays a borrowed [Texture](Texture.md), a selected sheet frame or a rectangular texture region. It inherits hierarchy/lifecycle from SceneNode, drawing/visibility/Z/modulation/materials from CanvasItem, and spatial transforms from Node. Engine.Run renders its retained commands through the active canvas backend. Sprite does not own a timer: change Frame directly, through a Tween or from scene processing.
 
 The node owns its subscription to Texture.Changed and releases that subscription on replacement/disposal. It never disposes an ordinary borrowed texture. PackedScene separately owns any resource it duplicates for an instance through ResourceLocalToScene. Texture content changes request redraw without emitting TextureChanged; replacing the reference emits TextureChanged once. A resource notification from a worker thread only atomically requests redraw; drawing stays on the scene owner thread.
 
@@ -135,7 +133,7 @@ Emitted synchronously after changing the reference, including clearing it. Conte
 | --- | --- |
 | `protected override void OnDraw()` | Records the frame through Texture.DrawRectRegion. Derived overrides call base.OnDraw to retain the image. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Adds typed properties; dimensions precede Frame in storage order. |
-| `protected override Func<Node> CreateSceneInstanceFactory()` | Static factory for exact Sprite instances. Derived types retain Node's explicit factory contract. |
+| `protected override Func<SceneNode> CreateSceneInstanceFactory()` | Static factory for exact Sprite instances. Derived types retain Node's explicit factory contract. |
 | `protected override void Dispose(bool disposing)` | Disconnects the borrowed texture and clears events, then releases inherited Node state. |
 
 ## Verification and limits

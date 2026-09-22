@@ -1,6 +1,6 @@
 # Engine
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -33,7 +33,7 @@ The following focused snippet uses the current public API. Names not declared in
 
 ```csharp
 var window = new Window { Title = "Game", Size = new Vector2I(960, 540) };
-window.AddChild(scene); // a caller-created Node hierarchy
+window.AddChild(scene); // a caller-created SceneNode hierarchy
 Engine.Instance.MaxFPS = 60;
 int exitCode = Engine.Instance.Run(window);
 ```
@@ -443,5 +443,5 @@ The original scheduling checks use deterministic supplied deltas. WindowRuntimeT
 
 ## Related scene decision
 
-- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0036: Reusable SceneNode timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)

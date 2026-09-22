@@ -48,7 +48,7 @@ public class Resource : ElectronObject
     private string _resourceName = string.Empty;
     private string _resourcePath = string.Empty;
     private string _sceneUniqueId = string.Empty;
-    private Node? _localScene;
+    private SceneNode? _localScene;
     private bool _localToScene;
     private bool _pathIsRegistered;
     private int _changeBlockDepth;
@@ -192,7 +192,7 @@ public class Resource : ElectronObject
     /// <returns>The owning scene root after scene instantiation, or <see langword="null"/> for other resources.</returns>
     /// <remarks>The association is assigned before <see cref="OnSetupLocalToScene"/> runs and remains until disposal.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
-    public Node? GetLocalScene()
+    public SceneNode? GetLocalScene()
     {
         ThrowIfDisposed();
         lock (_stateGate)
@@ -816,7 +816,7 @@ public class Resource : ElectronObject
                 throw new AggregateException("One or more scene-local resource setup callbacks failed.", errors);
         }
 
-        internal void AssignLocalScene(Node root)
+        internal void AssignLocalScene(SceneNode root)
         {
             ArgumentNullException.ThrowIfNull(root);
             ObjectDisposedException.ThrowIf(root.IsDisposed, root);
@@ -830,7 +830,7 @@ public class Resource : ElectronObject
         internal List<Exception> DisposeCreated() => _session.DisposeCreated();
     }
 
-    private void AssignLocalScene(Node root)
+    private void AssignLocalScene(SceneNode root)
     {
         ThrowIfDisposed();
         lock (_stateGate)

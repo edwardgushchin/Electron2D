@@ -159,12 +159,12 @@ public partial class Window
     public bool IsMaximizeAllowed() { ThrowIfDisposed(); return _display?.WindowIsMaximizeAllowed() ?? !Unresizable; }
 
     /// <summary>Gets the outer window origin, including native borders when visible and active.</summary>
-    /// <returns>Desktop coordinates; ScreenPosition while hidden or detached.</returns>
+    /// <returns>Desktop coordinates; Position while hidden or detached.</returns>
     /// <exception cref="NotSupportedException">The active Wayland compositor does not disclose global positions.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or native geometry is unavailable.</exception>
     /// <exception cref="OverflowException">The outer position exceeds integer coordinates.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public Vector2I GetPositionWithDecorations() => _display is null || !Visible ? ScreenPosition : GetDisplay().WindowGetPositionWithDecorations();
+    public Vector2I GetPositionWithDecorations() => _display is null || !Visible ? Position : GetDisplay().WindowGetPositionWithDecorations();
 
     /// <summary>Gets the outer window size, including native borders when visible and active.</summary>
     /// <returns>Native window units; on Wayland, client pixels because decoration extents are unavailable.
@@ -185,7 +185,7 @@ public partial class Window
         EnsureMutable();
         var area = GetDisplay().ScreenGetUsableRect(CurrentScreen);
         var size = Size;
-        ScreenPosition = new Vector2I(checked((int)((long)area.Position.X + ((long)area.Size.X - size.X) / 2)),
+        Position = new Vector2I(checked((int)((long)area.Position.X + ((long)area.Size.X - size.X) / 2)),
             checked((int)((long)area.Position.Y + ((long)area.Size.Y - size.Y) / 2)));
     }
 

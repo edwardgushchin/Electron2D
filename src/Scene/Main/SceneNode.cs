@@ -3,14 +3,35 @@ using System.Threading;
 
 namespace Electron2D;
 
-/// <summary>Provides Electron2D's unified hierarchical, input-aware game object and 2D transform type.</summary>
-/// <remarks>
-/// The type combines ordered child ownership, tree lifecycle, paths, groups, processing, typed input callbacks, queued
-/// deletion, visibility, Z ordering, and 2D spatial state. During Engine.Run, retained rectangle, line and texture
-/// commands render with the node's transforms, visibility, modulation and material.
-/// </remarks>
-public partial class Node : ElectronObject
+/// <summary>Provides tree membership, ownership, lifecycle, processing and input for scene objects.</summary>
+/// <remarks>Children may be any SceneNode subtype. Spatial and drawing behavior belongs to CanvasItem and Node.</remarks>
+public class SceneNode : ElectronObject
 {
+    private static readonly PropertyDescriptor[] SceneNodeProperties =
+    [
+        new PropertyDescriptor<SceneNode, string>(
+            nameof(Name),
+            node => node.Name,
+            (node, value) => node.Name = value,
+            node => node.ClassName,
+            (_, value) => IsValidNodeName(value),
+            stored: true),
+        new PropertyDescriptor<SceneNode, NodeProcessMode>(
+            nameof(ProcessMode),
+            node => node.ProcessMode,
+            (node, value) => node.ProcessMode = value,
+            _ => NodeProcessMode.Inherit,
+            (_, value) => Enum.IsDefined(value),
+            stored: true),
+        new PropertyDescriptor<SceneNode, bool>(nameof(ProcessEnabled), node => node.ProcessEnabled, (node, value) => node.ProcessEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<SceneNode, bool>(nameof(PhysicsProcessEnabled), node => node.PhysicsProcessEnabled, (node, value) => node.PhysicsProcessEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<SceneNode, bool>(nameof(InputEnabled), node => node.InputEnabled, (node, value) => node.InputEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<SceneNode, bool>(nameof(UnhandledInputEnabled), node => node.UnhandledInputEnabled, (node, value) => node.UnhandledInputEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<SceneNode, bool>(nameof(UnhandledKeyInputEnabled), node => node.UnhandledKeyInputEnabled, (node, value) => node.UnhandledKeyInputEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<SceneNode, int>(nameof(ProcessPriority), node => node.ProcessPriority, (node, value) => node.ProcessPriority = value, _ => 0, stored: true),
+        new PropertyDescriptor<SceneNode, int>(nameof(PhysicsProcessPriority), node => node.PhysicsProcessPriority, (node, value) => node.PhysicsProcessPriority = value, _ => 0, stored: true)
+    ];
+
     /// <summary>Identifies the notification sent when a node enters an active <see cref="SceneTree"/>.</summary>
     public const int NotificationEnterTree = 10;
 
@@ -64,15 +85,6 @@ public partial class Node : ElectronObject
     /// <summary>Identifies the notification sent when the effective process mode stops being disabled.</summary>
     public const int NotificationEnabled = 29;
 
-    /// <summary>Identifies the notification propagated after local or inherited visibility changes.</summary>
-    public const int NotificationVisibilityChanged = 31;
-
-    /// <summary>Identifies a local-transform change notification when local notification delivery is enabled.</summary>
-    public const int NotificationLocalTransformChanged = 35;
-
-    /// <summary>Identifies a global-transform change notification when global notification delivery is enabled.</summary>
-    public const int NotificationTransformChanged = 2000;
-
     /// <summary>Identifies an operating-system low-memory warning propagated by the active scene tree.</summary>
     public const int NotificationOsMemoryWarning = MainLoop.NotificationOsMemoryWarning;
 
@@ -109,115 +121,62 @@ public partial class Node : ElectronObject
     /// <summary>Identifies that the application exited picture-in-picture mode.</summary>
     public const int NotificationApplicationPipModeExited = MainLoop.NotificationApplicationPipModeExited;
 
-    /// <summary>Specifies the smallest supported local or effective Z index.</summary>
-    public const int MinimumZIndex = -4096;
-
-    /// <summary>Specifies the largest supported local or effective Z index.</summary>
-    public const int MaximumZIndex = 4096;
-
-    private const float TransformEpsilon = 0.000001f;
-
     private static readonly AsyncLocal<int> SceneFactoryDepth = new();
 
-    private static readonly IReadOnlyList<PropertyDescriptor> NodeProperties = Array.AsReadOnly<PropertyDescriptor>(
-    [
-        new PropertyDescriptor<Node, string>(
-            nameof(Name),
-            node => node.Name,
-            (node, value) => node.Name = value,
-            node => node.ClassName,
-            (_, value) => IsValidNodeName(value),
-            stored: true),
-        new PropertyDescriptor<Node, Vector2>(
-            nameof(Position),
-            node => node.Position,
-            (node, value) => node.Position = value,
-            _ => Vector2.Zero,
-            (_, value) => IsFinite(value),
-            stored: true),
-        new PropertyDescriptor<Node, float>(
-            nameof(RotationDegrees),
-            node => node.RotationDegrees,
-            (node, value) => node.RotationDegrees = value,
-            _ => 0f,
-            (_, value) => Mathf.IsFinite(value),
-            stored: true),
-        new PropertyDescriptor<Node, Vector2>(
-            nameof(Scale),
-            node => node.Scale,
-            (node, value) => node.Scale = value,
-            _ => Vector2.One,
-            (_, value) => IsFinite(value),
-            stored: true),
-        new PropertyDescriptor<Node, float>(
-            nameof(Skew),
-            node => node.Skew,
-            (node, value) => node.Skew = value,
-            _ => 0f,
-            (_, value) => Mathf.IsFinite(value),
-            stored: true),
-        new PropertyDescriptor<Node, bool>(nameof(Visible), node => node.Visible, (node, value) => node.Visible = value, _ => true, stored: true),
-        new PropertyDescriptor<Node, int>(
-            nameof(ZIndex),
-            node => node.ZIndex,
-            (node, value) => node.ZIndex = value,
-            _ => 0,
-            (_, value) => value is >= MinimumZIndex and <= MaximumZIndex,
-            stored: true),
-        new PropertyDescriptor<Node, bool>(nameof(ZAsRelative), node => node.ZAsRelative, (node, value) => node.ZAsRelative = value, _ => true, stored: true),
-        new PropertyDescriptor<Node, bool>(nameof(TopLevel), node => node.TopLevel, (node, value) => node.TopLevel = value, _ => false, stored: true),
-        new PropertyDescriptor<Node, NodeProcessMode>(
-            nameof(ProcessMode),
-            node => node.ProcessMode,
-            (node, value) => node.ProcessMode = value,
-            _ => NodeProcessMode.Inherit,
-            (_, value) => Enum.IsDefined(value),
-            stored: true),
-        new PropertyDescriptor<Node, bool>(nameof(ProcessEnabled), node => node.ProcessEnabled, (node, value) => node.ProcessEnabled = value, _ => false, stored: true),
-        new PropertyDescriptor<Node, bool>(nameof(PhysicsProcessEnabled), node => node.PhysicsProcessEnabled, (node, value) => node.PhysicsProcessEnabled = value, _ => false, stored: true),
-        new PropertyDescriptor<Node, bool>(nameof(InputEnabled), node => node.InputEnabled, (node, value) => node.InputEnabled = value, _ => false, stored: true),
-        new PropertyDescriptor<Node, bool>(nameof(UnhandledInputEnabled), node => node.UnhandledInputEnabled, (node, value) => node.UnhandledInputEnabled = value, _ => false, stored: true),
-        new PropertyDescriptor<Node, bool>(nameof(UnhandledKeyInputEnabled), node => node.UnhandledKeyInputEnabled, (node, value) => node.UnhandledKeyInputEnabled = value, _ => false, stored: true),
-        new PropertyDescriptor<Node, int>(nameof(ProcessPriority), node => node.ProcessPriority, (node, value) => node.ProcessPriority = value, _ => 0, stored: true),
-        new PropertyDescriptor<Node, int>(nameof(PhysicsProcessPriority), node => node.PhysicsProcessPriority, (node, value) => node.PhysicsProcessPriority = value, _ => 0, stored: true)
-    ]);
+    private readonly List<SceneNode> _children = [];
 
-    private readonly List<Node> _children = [];
-    private readonly IReadOnlyList<Node> _childrenView;
+    private readonly IReadOnlyList<SceneNode> _childrenView;
+
     private readonly Dictionary<string, bool> _groups = new(StringComparer.Ordinal);
-    private Transform _transform = Transform.Identity;
+
     private string _name;
+
     private string _sceneFilePath = string.Empty;
-    private Node? _owner;
+
+    private SceneNode? _owner;
+
     private List<Resource>? _ownedSceneResources;
+
     private int _queuedForDeletion;
+
     private int _sceneCaptureDepth;
+
     private int _sceneInstantiationDepth;
+
     private bool _readyCalled;
+
     private bool _isEnteringTree;
+
     private bool _isMakingReady;
+
     private bool _isExitingTree;
-    private bool _visible = true;
-    private bool _zAsRelative = true;
-    private bool _topLevel;
-    private bool _notifyLocalTransformChanges;
-    private bool _notifyTransformChanges;
-    private int _zIndex;
+
     private int _processPriority;
+
     private int _physicsProcessPriority;
+
     private NodeProcessMode _processMode;
+
     private bool _processEnabled;
+
     private bool _physicsProcessEnabled;
+
     private bool _inputEnabled;
+
     private bool _unhandledInputEnabled;
+
     private bool _unhandledKeyInputEnabled;
+
     private bool _internalProcessEnabled;
+
     private bool _internalPhysicsProcessEnabled;
+
     private double _unscaledProcessDeltaTime;
+
     private double _unscaledPhysicsProcessDeltaTime;
 
-    /// <summary>Initializes a detached node with its runtime class name and an identity transform.</summary>
-    public Node()
+    /// <summary>Initializes a detached node with its runtime class name and no parent.</summary>
+    public SceneNode()
     {
         _name = ClassName;
         _childrenView = _children.AsReadOnly();
@@ -292,7 +251,7 @@ public partial class Node : ElectronObject
 
     /// <summary>Gets the direct parent.</summary>
     /// <value>The owning parent, or <see langword="null"/> while detached.</value>
-    public Node? Parent { get; private set; }
+    public SceneNode? Parent { get; private set; }
 
     /// <summary>Gets the external resource path from which this scene root was instantiated.</summary>
     /// <value>The packed-scene path for an instantiated external scene root; otherwise an empty string.</value>
@@ -315,7 +274,7 @@ public partial class Node : ElectronObject
     /// <exception cref="ArgumentException">The assigned node is this node or is not an ancestor.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the tree owner thread or scene capture is active.</exception>
     /// <exception cref="ObjectDisposedException">This node or the assigned owner is disposing or disposed.</exception>
-    public Node? Owner
+    public SceneNode? Owner
     {
         get
         {
@@ -345,7 +304,7 @@ public partial class Node : ElectronObject
 
     /// <summary>Gets a live read-only view of the ordered direct children.</summary>
     /// <value>A view backed by this node's child list; later hierarchy changes are visible through it.</value>
-    public IReadOnlyList<Node> Children => _childrenView;
+    public IReadOnlyList<SceneNode> Children => _childrenView;
 
     /// <summary>Gets the number of direct children.</summary>
     /// <value>The current child count.</value>
@@ -376,289 +335,13 @@ public partial class Node : ElectronObject
     /// <value>An atomic snapshot of the deletion-request flag.</value>
     public bool IsQueuedForDeletion => Volatile.Read(ref _queuedForDeletion) != 0;
 
-    /// <summary>Gets or sets the affine transform relative to the parent.</summary>
-    /// <value>A finite <see cref="Electron2D.Transform"/>; the default is <see cref="Electron2D.Transform.Identity"/>.</value>
-    /// <exception cref="ArgumentOutOfRangeException">An assigned transform component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated from a thread other than the tree owner.</exception>
-    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the transform changes.</exception>
-    public Transform Transform
-    {
-        get
-        {
-            ThrowIfDisposed();
-            return _transform;
-        }
-        set
-        {
-            EnsureMutable();
-            SetTransform(value);
-        }
-    }
-
-    /// <summary>Gets or sets the affine transform in hierarchy-global coordinates.</summary>
-    /// <value>The local transform composed with non-top-level ancestors.</value>
-    /// <exception cref="ArgumentOutOfRangeException">An assigned transform component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the transform changes.</exception>
-    public Transform GlobalTransform
-    {
-        get
-        {
-            ThrowIfDisposed();
-            return Parent is null || TopLevel ? _transform : Parent.GlobalTransform * _transform;
-        }
-        set
-        {
-            EnsureMutable();
-            EnsureFinite(value, nameof(value));
-            SetTransform(ToLocalTransform(value, Parent, TopLevel));
-        }
-    }
-
-    /// <summary>Gets or sets local translation in pixels or other host-defined 2D units.</summary>
-    /// <value>The translation component of <see cref="Transform"/>.</value>
-    /// <exception cref="ArgumentOutOfRangeException">An assigned component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the position changes.</exception>
-    public Vector2 Position
-    {
-        get
-        {
-            ThrowIfDisposed();
-            return _transform.Origin;
-        }
-        set
-        {
-            EnsureMutable();
-            EnsureFinite(value, nameof(value));
-
-            var transform = _transform;
-            transform.Origin = value;
-            SetTransform(transform);
-        }
-    }
-
-    /// <summary>Gets or sets translation in hierarchy-global coordinates.</summary>
-    /// <value>The translation component of <see cref="GlobalTransform"/>.</value>
-    /// <exception cref="ArgumentOutOfRangeException">An assigned component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the position changes.</exception>
-    public Vector2 GlobalPosition
-    {
-        get => GlobalTransform.Origin;
-        set
-        {
-            EnsureMutable();
-            EnsureFinite(value, nameof(value));
-
-            var transform = GlobalTransform;
-            transform.Origin = value;
-            GlobalTransform = transform;
-        }
-    }
-
-    /// <summary>Gets or sets local rotation in radians.</summary>
-    /// <value>The canonical rotation decomposed from <see cref="Transform"/>.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned angle is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the rotation changes.</exception>
-    public float Rotation
-    {
-        get => Transform.Rotation;
-        set
-        {
-            EnsureMutable();
-            EnsureFinite(value, nameof(value));
-            SetTransform(new Transform(value, _transform.Scale, _transform.Skew, _transform.Origin));
-        }
-    }
-
-    /// <summary>Gets or sets local rotation in degrees.</summary>
-    /// <value><see cref="Rotation"/> converted between radians and degrees.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned angle is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the rotation changes.</exception>
-    public float RotationDegrees
-    {
-        get => Mathf.RadToDeg(Rotation);
-        set
-        {
-            EnsureFinite(value, "degrees");
-            Rotation = Mathf.DegToRad(value);
-        }
-    }
-
-    /// <summary>Gets or sets hierarchy-global rotation in radians.</summary>
-    /// <value>The canonical rotation decomposed from <see cref="GlobalTransform"/>.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned angle is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the rotation changes.</exception>
-    public float GlobalRotation
-    {
-        get => GlobalTransform.Rotation;
-        set
-        {
-            EnsureMutable();
-            EnsureFinite(value, nameof(value));
-            var transform = GlobalTransform;
-            GlobalTransform = new Transform(value, transform.Scale, transform.Skew, transform.Origin);
-        }
-    }
-
-    /// <summary>Gets or sets hierarchy-global rotation in degrees.</summary>
-    /// <value><see cref="GlobalRotation"/> converted between radians and degrees.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned angle is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the rotation changes.</exception>
-    public float GlobalRotationDegrees
-    {
-        get => Mathf.RadToDeg(GlobalRotation);
-        set
-        {
-            EnsureFinite(value, "degrees");
-            GlobalRotation = Mathf.DegToRad(value);
-        }
-    }
-
-    /// <summary>Gets or sets local scale.</summary>
-    /// <value>The canonical scale decomposed from <see cref="Transform"/>.</value>
-    /// <remarks>Equivalent reflected matrices can decompose to a different but equivalent rotation, scale, and skew tuple.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">An assigned component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the scale changes.</exception>
-    public Vector2 Scale
-    {
-        get => Transform.Scale;
-        set
-        {
-            EnsureMutable();
-            EnsureFinite(value, nameof(value));
-            SetTransform(new Transform(_transform.Rotation, value, _transform.Skew, _transform.Origin));
-        }
-    }
-
-    /// <summary>Gets or sets hierarchy-global scale.</summary>
-    /// <value>The canonical scale decomposed from <see cref="GlobalTransform"/>.</value>
-    /// <remarks>Equivalent reflected matrices can decompose to a different but equivalent rotation, scale, and skew tuple.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">An assigned component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the scale changes.</exception>
-    public Vector2 GlobalScale
-    {
-        get => GlobalTransform.Scale;
-        set
-        {
-            EnsureMutable();
-            EnsureFinite(value, nameof(value));
-            var transform = GlobalTransform;
-            GlobalTransform = new Transform(transform.Rotation, value, transform.Skew, transform.Origin);
-        }
-    }
-
-    /// <summary>Gets or sets the local skew angle in radians.</summary>
-    /// <value>The canonical angle between the transformed basis axes relative to an unskewed basis.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned angle is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the skew changes.</exception>
-    public float Skew
-    {
-        get => Transform.Skew;
-        set
-        {
-            EnsureMutable();
-            EnsureFinite(value, nameof(value));
-            SetTransform(new Transform(_transform.Rotation, _transform.Scale, value, _transform.Origin));
-        }
-    }
-
-    /// <summary>Gets or sets the hierarchy-global skew angle in radians.</summary>
-    /// <value>The canonical skew decomposed from <see cref="GlobalTransform"/>.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned angle is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the skew changes.</exception>
-    public float GlobalSkew
-    {
-        get => GlobalTransform.Skew;
-        set
-        {
-            EnsureMutable();
-            EnsureFinite(value, nameof(value));
-            var transform = GlobalTransform;
-            GlobalTransform = new Transform(transform.Rotation, transform.Scale, value, transform.Origin);
-        }
-    }
-
-    /// <summary>Gets or sets whether this node ignores its parent's transform.</summary>
-    /// <value><see langword="false"/> by default.</value>
-    /// <remarks>The current global transform is preserved when the mode changes.</remarks>
-    /// <exception cref="InvalidOperationException">The parent transform is singular when disabling top-level mode, or mutation occurs off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the mode changes.</exception>
-    public bool TopLevel
-    {
-        get
-        {
-            ThrowIfDisposed();
-            return _topLevel;
-        }
-        set
-        {
-            EnsureMutable();
-
-            if (_topLevel == value)
-                return;
-
-            var global = GlobalTransform;
-            var local = ToLocalTransform(global, Parent, value);
-            _topLevel = value;
-            SetTransform(local);
-        }
-    }
-
-    /// <summary>Gets or sets this node's local logical visibility.</summary>
-    /// <value><see langword="true"/> by default.</value>
-    /// <remarks>An actual change synchronously propagates visibility notifications and events through all descendants.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A visibility notification or event handler throws after visibility changes.</exception>
-    public virtual bool Visible
-    {
-        get
-        {
-            ThrowIfDisposed();
-            return _visible;
-        }
-        set
-        {
-            EnsureMutable();
-
-            if (_visible == value)
-                return;
-
-            _visible = value;
-            PropagateVisibilityChanged();
-        }
-    }
-
     /// <summary>Finds this node's nearest viewport, including itself.</summary>
     /// <returns>The nearest viewport ancestor, or null in a hierarchy without a viewport.</returns>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public Viewport? GetViewport()
     {
         ThrowIfDisposed();
-        for (Node? node = this; node is not null; node = node.Parent)
+        for (SceneNode? node = this; node is not null; node = node.Parent)
             if (node is Viewport viewport)
                 return viewport;
         return null;
@@ -668,95 +351,6 @@ public partial class Node : ElectronObject
     /// <returns>The nearest window ancestor, or null in a hierarchy without a window.</returns>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public Window? GetWindow() => GetViewport() as Window;
-
-    /// <summary>Gets whether this node is active and locally visible through its complete ancestor chain.</summary>
-    /// <value><see langword="true"/> only inside a tree when this node and every ancestor are visible.</value>
-    /// <exception cref="ObjectDisposedException">This node or a queried ancestor is disposing on another thread, or has finished disposing.</exception>
-    public bool IsVisibleInTree => IsInsideTree && Visible && (Parent?.IsVisibleInTree ?? true);
-
-    /// <summary>Gets or sets this node's local Z-order value.</summary>
-    /// <value>An integer from <see cref="MinimumZIndex"/> through <see cref="MaximumZIndex"/>; the default is zero.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned value is outside the supported range.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    public int ZIndex
-    {
-        get
-        {
-            ThrowIfDisposed();
-            return _zIndex;
-        }
-        set
-        {
-            EnsureMutable();
-
-            if (value is < MinimumZIndex or > MaximumZIndex)
-                throw new ArgumentOutOfRangeException(nameof(value), value, $"Z index must be between {MinimumZIndex} and {MaximumZIndex}.");
-
-            _zIndex = value;
-        }
-    }
-
-    /// <summary>Gets or sets whether effective Z order accumulates ancestor Z values.</summary>
-    /// <value><see langword="true"/> by default.</value>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    public bool ZAsRelative
-    {
-        get
-        {
-            ThrowIfDisposed();
-            return _zAsRelative;
-        }
-        set
-        {
-            EnsureMutable();
-            _zAsRelative = value;
-        }
-    }
-
-    /// <summary>Gets the Z order after optional ancestor accumulation.</summary>
-    /// <value>The accumulated or absolute value, clamped to the supported Z range.</value>
-    /// <exception cref="ObjectDisposedException">This node or a queried ancestor is disposing on another thread, or has finished disposing.</exception>
-    internal int EffectiveZIndex => ZAsRelative && Parent is not null
-        ? Mathf.Clamp(Parent.EffectiveZIndex + ZIndex, MinimumZIndex, MaximumZIndex)
-        : ZIndex;
-
-    /// <summary>Gets or sets whether local transform changes dispatch <see cref="NotificationLocalTransformChanged"/>.</summary>
-    /// <value><see langword="false"/> by default. <see cref="LocalTransformChanged"/> is raised regardless.</value>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    public bool NotifyLocalTransformChanges
-    {
-        get
-        {
-            ThrowIfDisposed();
-            return _notifyLocalTransformChanges;
-        }
-        set
-        {
-            EnsureMutable();
-            _notifyLocalTransformChanges = value;
-        }
-    }
-
-    /// <summary>Gets or sets whether global transform changes dispatch <see cref="NotificationTransformChanged"/>.</summary>
-    /// <value><see langword="false"/> by default. <see cref="TransformChanged"/> is raised regardless.</value>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    public bool NotifyTransformChanges
-    {
-        get
-        {
-            ThrowIfDisposed();
-            return _notifyTransformChanges;
-        }
-        set
-        {
-            EnsureMutable();
-            _notifyTransformChanges = value;
-        }
-    }
 
     /// <summary>Gets or sets the pause policy used by both process callback lanes.</summary>
     /// <value><see cref="NodeProcessMode.Inherit"/> by default.</value>
@@ -940,64 +534,52 @@ public partial class Node : ElectronObject
     /// The first argument is the publishing parent and the second is the child. Delivery is synchronous and precedes
     /// active-tree attachment of the child's subtree.
     /// </remarks>
-    public event Action<Node, Node>? ChildAdded;
+    public event Action<SceneNode, SceneNode>? ChildAdded;
 
     /// <summary>Occurs on the former parent after a direct child is detached and child order is reported.</summary>
     /// <remarks>
     /// The first argument is the publishing former parent and the second is the removed child. Delivery is synchronous,
     /// and structural changes are not rolled back if a handler throws.
     /// </remarks>
-    public event Action<Node, Node>? ChildRemoved;
+    public event Action<SceneNode, SceneNode>? ChildRemoved;
 
     /// <summary>Occurs on the direct parent when a child enters the active tree.</summary>
     /// <remarks>
     /// The first argument is the publishing parent and the second is the entering child. Delivery follows that child's
     /// enter notification and event.
     /// </remarks>
-    public event Action<Node, Node>? ChildEnteredTree;
+    public event Action<SceneNode, SceneNode>? ChildEnteredTree;
 
     /// <summary>Occurs on the direct parent while a child is exiting the active tree.</summary>
     /// <remarks>
     /// The first argument is the publishing parent and the second is the exiting child. Descendants have already exited,
     /// and the child's <see cref="Tree"/> is still set.
     /// </remarks>
-    public event Action<Node, Node>? ChildExitingTree;
+    public event Action<SceneNode, SceneNode>? ChildExitingTree;
 
     /// <summary>Occurs after the order or membership of direct children changes.</summary>
     /// <remarks>The argument is this parent node. Delivery is synchronous after <see cref="NotificationChildOrderChanged"/>.</remarks>
-    public event Action<Node>? ChildOrderChanged;
+    public event Action<SceneNode>? ChildOrderChanged;
 
     /// <summary>Occurs after an active node's own name changes and path notifications propagate.</summary>
     /// <remarks>The argument is this node. Detached-node renames do not raise the event.</remarks>
-    public event Action<Node>? Renamed;
+    public event Action<SceneNode>? Renamed;
 
     /// <summary>Occurs when this node enters an active scene tree.</summary>
     /// <remarks>Delivery follows <see cref="NotificationEnterTree"/> and precedes descendant entry.</remarks>
-    public event Action<Node>? TreeEntered;
+    public event Action<SceneNode>? TreeEntered;
 
     /// <summary>Occurs while this node is exiting its active scene tree.</summary>
     /// <remarks>Descendants have exited, <see cref="NotificationExitTree"/> has run, and <see cref="Tree"/> remains available.</remarks>
-    public event Action<Node>? TreeExiting;
+    public event Action<SceneNode>? TreeExiting;
 
     /// <summary>Occurs after this node has left its scene tree.</summary>
     /// <remarks><see cref="Tree"/> is already <see langword="null"/> when handlers run.</remarks>
-    public event Action<Node>? TreeExited;
+    public event Action<SceneNode>? TreeExited;
 
     /// <summary>Occurs after child-first ready notification delivery.</summary>
     /// <remarks>SceneTree-managed delivery occurs once until <see cref="RequestReady"/> resets the ready state.</remarks>
-    public event Action<Node>? Ready;
-
-    /// <summary>Occurs after local or inherited logical visibility is propagated to this node.</summary>
-    /// <remarks>Delivery follows <see cref="NotificationVisibilityChanged"/> and continues through descendants.</remarks>
-    public event Action<Node>? VisibilityChanged;
-
-    /// <summary>Occurs after this node's local transform actually changes.</summary>
-    /// <remarks>The event is always enabled; numeric local-transform notification delivery is separately configurable.</remarks>
-    public event Action<Node>? LocalTransformChanged;
-
-    /// <summary>Occurs when this node's global transform is affected by a local or ancestor change.</summary>
-    /// <remarks>Propagation stops at top-level descendants. The event is independent of numeric transform notifications.</remarks>
-    public event Action<Node>? TransformChanged;
+    public event Action<SceneNode>? Ready;
 
     /// <summary>Appends a detached node as the last direct child.</summary>
     /// <param name="child">The live node to adopt.</param>
@@ -1012,7 +594,7 @@ public partial class Node : ElectronObject
     /// This node is disposing on another thread or has finished disposing, or disposal of <paramref name="child"/> has started.
     /// </exception>
     /// <exception cref="AggregateException">One or more structural, lifecycle, notification, or event callbacks fail after insertion begins.</exception>
-    public void AddChild(Node child) => InsertChild(child, _children.Count);
+    public void AddChild(SceneNode child) => InsertChild(child, _children.Count);
 
     /// <summary>Inserts a detached node immediately after this node in its parent's child order.</summary>
     /// <param name="sibling">The live node to insert.</param>
@@ -1027,7 +609,7 @@ public partial class Node : ElectronObject
     /// <paramref name="sibling"/> has started.
     /// </exception>
     /// <exception cref="AggregateException">One or more structural, lifecycle, notification, or event callbacks fail after insertion begins.</exception>
-    public void AddSibling(Node sibling)
+    public void AddSibling(SceneNode sibling)
     {
         ThrowIfDisposed();
 
@@ -1045,7 +627,7 @@ public partial class Node : ElectronObject
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread, this parent is exiting, or the child is in tree lifecycle delivery.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="AggregateException">One or more lifecycle, notification, or event callbacks fail after removal begins.</exception>
-    public bool RemoveChild(Node child)
+    public bool RemoveChild(SceneNode child)
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(child);
@@ -1061,7 +643,7 @@ public partial class Node : ElectronObject
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="AggregateException">One or more child-order or tree-change callbacks fail after the order changes.</exception>
-    public void MoveChild(Node child, int index)
+    public void MoveChild(SceneNode child, int index)
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(child);
@@ -1099,31 +681,19 @@ public partial class Node : ElectronObject
         ThrowCollected("One or more child-order callbacks failed.", errors);
     }
 
-    /// <summary>Moves this node to the last position among its siblings.</summary>
-    /// <remarks>A detached or hierarchy-root node is left unchanged.</remarks>
-    /// <exception cref="InvalidOperationException">An attached parent is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node or its parent is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="AggregateException">One or more child-order or tree-change callbacks fail after the order changes.</exception>
-    public void MoveToFront()
-    {
-        ThrowIfDisposed();
-        Parent?.MoveChild(this, -1);
-    }
-
     /// <summary>Moves this non-root node under a new parent.</summary>
     /// <param name="newParent">The live destination parent.</param>
-    /// <param name="keepGlobalTransform">Whether to preserve the complete current global transform. The default is <see langword="true"/>.</param>
+    /// <param name="keepGlobalTransform">Whether a derived placement model preserves its global transform. The neutral base has no transform. The default is true.</param>
     /// <remarks>The operation detaches first and then appends to <paramref name="newParent"/>; callback failures are not rolled back.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="newParent"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The destination validation rejects this node as its own child.</exception>
     /// <exception cref="InvalidOperationException">
     /// This node has no parent, the move creates a cycle, a destination child name conflicts, either attached hierarchy
-    /// is accessed off its owner thread, this node or its current parent is in protected tree lifecycle delivery, or the destination parent transform is singular while
-    /// <paramref name="keepGlobalTransform"/> is true.
+    /// is accessed off its owner thread, this node or its current parent is in protected tree lifecycle delivery, or a derived placement model rejects its destination.
     /// </exception>
     /// <exception cref="ObjectDisposedException">This node or <paramref name="newParent"/> is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="AggregateException">One or more structural, lifecycle, notification, or event callbacks fail after reparenting begins.</exception>
-    public void Reparent(Node newParent, bool keepGlobalTransform = true)
+    public virtual void Reparent(SceneNode newParent, bool keepGlobalTransform = true)
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(newParent);
@@ -1138,18 +708,14 @@ public partial class Node : ElectronObject
             return;
 
         newParent.ValidateChildForInsertion(this, allowExistingParent: true);
-        var localTransform = keepGlobalTransform
-            ? ToLocalTransform(GlobalTransform, newParent, TopLevel)
-            : _transform;
         var retainedOwners = EnumerateDepthFirst()
             .Where(node => node._owner is not null)
-            .Select(node => (Node: node, Owner: node._owner!))
+            .Select(node => (SceneNode: node, Owner: node._owner!))
             .ToArray();
 
         var oldParent = Parent;
         oldParent.EnsureMutable();
         oldParent.RemoveChildCore(this);
-        _transform = localTransform;
         try
         {
             newParent.InsertChild(this, newParent._children.Count);
@@ -1172,7 +738,7 @@ public partial class Node : ElectronObject
     /// <returns>The selected direct child.</returns>
     /// <exception cref="ArgumentOutOfRangeException">This node has no children or <paramref name="index"/> is outside the valid range.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public Node GetChild(int index)
+    public SceneNode GetChild(int index)
     {
         ThrowIfDisposed();
         index = NormalizeChildIndex(index, _children.Count);
@@ -1193,7 +759,7 @@ public partial class Node : ElectronObject
     /// <returns><see langword="true"/> when this node appears in the parent chain; otherwise <see langword="false"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public bool IsAncestorOf(Node node)
+    public bool IsAncestorOf(SceneNode node)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(node);
@@ -1214,7 +780,7 @@ public partial class Node : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node or a recursively searched node is disposing on another thread, or has finished disposing.</exception>
-    public Node? FindChild(string pattern, bool recursive = true) => FindChild<Node>(pattern, recursive);
+    public SceneNode? FindChild(string pattern, bool recursive = true) => FindChild<SceneNode>(pattern, recursive);
 
     /// <summary>Finds the first descendant of a requested type whose name matches a wildcard pattern.</summary>
     /// <typeparam name="TNode">The required node subtype.</typeparam>
@@ -1225,7 +791,7 @@ public partial class Node : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node or a recursively searched node is disposing on another thread, or has finished disposing.</exception>
     public TNode? FindChild<TNode>(string pattern = "*", bool recursive = true)
-        where TNode : Node
+        where TNode : SceneNode
     {
         ThrowIfDisposed();
         ArgumentException.ThrowIfNullOrWhiteSpace(pattern);
@@ -1249,7 +815,7 @@ public partial class Node : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public IReadOnlyList<Node> FindChildren(string pattern, bool recursive = true) => FindChildren<Node>(pattern, recursive);
+    public IReadOnlyList<SceneNode> FindChildren(string pattern, bool recursive = true) => FindChildren<SceneNode>(pattern, recursive);
 
     /// <summary>Finds all descendants of a requested type whose names match a wildcard pattern.</summary>
     /// <typeparam name="TNode">The required node subtype.</typeparam>
@@ -1260,7 +826,7 @@ public partial class Node : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public IReadOnlyList<TNode> FindChildren<TNode>(string pattern = "*", bool recursive = true)
-        where TNode : Node
+        where TNode : SceneNode
     {
         ThrowIfDisposed();
         ArgumentException.ThrowIfNullOrWhiteSpace(pattern);
@@ -1276,7 +842,7 @@ public partial class Node : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="pattern"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public Node? FindParent(string pattern)
+    public SceneNode? FindParent(string pattern)
     {
         ThrowIfDisposed();
         ArgumentException.ThrowIfNullOrWhiteSpace(pattern);
@@ -1309,7 +875,7 @@ public partial class Node : ElectronObject
     /// <exception cref="ObjectDisposedException">
     /// This node is disposing on another thread or has finished disposing, or disposal of <paramref name="node"/> has started.
     /// </exception>
-    public string GetPathTo(Node node)
+    public string GetPathTo(SceneNode node)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(node);
@@ -1340,7 +906,7 @@ public partial class Node : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException">No node exists at the requested path.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public Node GetNode(string path) => GetNodeOrNull(path) ?? throw new KeyNotFoundException($"Node path '{path}' was not found from '{GetPath()}'.");
+    public SceneNode GetNode(string path) => GetNodeOrNull(path) ?? throw new KeyNotFoundException($"SceneNode path '{path}' was not found from '{GetPath()}'.");
 
     /// <summary>Resolves a required relative or absolute path to a requested node type.</summary>
     /// <typeparam name="TNode">The required node subtype.</typeparam>
@@ -1352,7 +918,7 @@ public partial class Node : ElectronObject
     /// <exception cref="KeyNotFoundException">No node exists at the requested path.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public TNode GetNode<TNode>(string path)
-        where TNode : Node => GetNode(path) as TNode ?? throw new InvalidCastException($"Node at '{path}' is not a {typeof(TNode).Name}.");
+        where TNode : SceneNode => GetNode(path) as TNode ?? throw new InvalidCastException($"SceneNode at '{path}' is not a {typeof(TNode).Name}.");
 
     /// <summary>Attempts to resolve a relative or absolute node path.</summary>
     /// <param name="path">A nonblank slash-separated path supporting <c>.</c>, <c>..</c>, and an optional absolute root-name segment.</param>
@@ -1361,7 +927,7 @@ public partial class Node : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public Node? GetNodeOrNull(string path)
+    public SceneNode? GetNodeOrNull(string path)
     {
         ThrowIfDisposed();
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
@@ -1550,172 +1116,18 @@ public partial class Node : ElectronObject
         return Interlocked.Exchange(ref _queuedForDeletion, 0) != 0;
     }
 
-    /// <summary>Sets <see cref="Visible"/> to <see langword="true"/>.</summary>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A visibility notification or event handler throws after visibility changes.</exception>
-    public void Show() => Visible = true;
-
-    /// <summary>Sets <see cref="Visible"/> to <see langword="false"/>.</summary>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A visibility notification or event handler throws after visibility changes.</exception>
-    public void Hide() => Visible = false;
-
-    /// <summary>Component-multiplies the local scale by a ratio.</summary>
-    /// <param name="ratio">The finite X and Y scale ratios.</param>
-    /// <exception cref="ArgumentOutOfRangeException">A ratio component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the scale changes.</exception>
-    public void ApplyScale(Vector2 ratio)
-    {
-        EnsureFinite(ratio, nameof(ratio));
-        Scale *= ratio;
-    }
-
-    /// <summary>Adds an angle to the local rotation.</summary>
-    /// <param name="radians">The finite angle in radians.</param>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="radians"/> is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the rotation changes.</exception>
-    public void Rotate(float radians)
-    {
-        EnsureFinite(radians, nameof(radians));
-        Rotation += radians;
-    }
-
-    /// <summary>Moves this node by an offset rotated by its local rotation.</summary>
-    /// <param name="offset">The finite local-space offset.</param>
-    /// <remarks>Scale and skew do not affect the offset.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">An offset component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the position changes.</exception>
-    public void Translate(Vector2 offset)
-    {
-        EnsureFinite(offset, nameof(offset));
-        Position += new Transform(Rotation, Vector2.Zero).BasisXform(offset);
-    }
-
-    /// <summary>Moves this node by a hierarchy-global offset.</summary>
-    /// <param name="offset">The finite global-space offset.</param>
-    /// <exception cref="ArgumentOutOfRangeException">An offset component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or mutation occurs off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the position changes.</exception>
-    public void GlobalTranslate(Vector2 offset)
-    {
-        EnsureFinite(offset, nameof(offset));
-        GlobalPosition += offset;
-    }
-
-    /// <summary>Moves this node along its local X basis axis.</summary>
-    /// <param name="delta">The finite signed distance.</param>
-    /// <param name="scaled">Whether scale magnitude is retained. By default the axis is normalized.</param>
-    /// <remarks>A near-zero normalized axis causes no movement.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="delta"/> is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the position changes.</exception>
-    public void MoveLocalX(float delta, bool scaled = false) => MoveLocal(delta, useXAxis: true, scaled);
-
-    /// <summary>Moves this node along its local Y basis axis.</summary>
-    /// <param name="delta">The finite signed distance.</param>
-    /// <param name="scaled">Whether scale magnitude is retained. By default the axis is normalized.</param>
-    /// <remarks>A near-zero normalized axis causes no movement.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="delta"/> is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the position changes.</exception>
-    public void MoveLocalY(float delta, bool scaled = false) => MoveLocal(delta, useXAxis: false, scaled);
-
-    /// <summary>Computes the signed angle from this node's global positive X direction to a global point.</summary>
-    /// <param name="globalPoint">The finite point in hierarchy-global coordinates.</param>
-    /// <returns>A normalized angle in radians, or zero when the point equals <see cref="GlobalPosition"/>.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">A point component is NaN or infinite.</exception>
-    /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    public float GetAngleTo(Vector2 globalPoint)
-    {
-        EnsureFinite(globalPoint, nameof(globalPoint));
-        var direction = globalPoint - GlobalPosition;
-        return direction == Vector2.Zero ? 0f : NormalizeAngle(Mathf.Atan2(direction.Y, direction.X) - GlobalRotation);
-    }
-
-    /// <summary>Rotates this node so its positive local X direction points at a global point.</summary>
-    /// <param name="globalPoint">The finite target point in hierarchy-global coordinates.</param>
-    /// <remarks>A target equal to <see cref="GlobalPosition"/> leaves rotation unchanged.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">A point component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or mutation occurs off the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the rotation changes.</exception>
-    public void LookAt(Vector2 globalPoint)
-    {
-        EnsureFinite(globalPoint, nameof(globalPoint));
-
-        if (globalPoint != GlobalPosition)
-            GlobalRotation += GetAngleTo(globalPoint);
-    }
-
-    /// <summary>Transforms a point from this node's local coordinates to hierarchy-global coordinates.</summary>
-    /// <param name="localPoint">The finite local point.</param>
-    /// <returns>The point transformed by <see cref="GlobalTransform"/>.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">A point component is NaN or infinite.</exception>
-    /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    public Vector2 ToGlobal(Vector2 localPoint)
-    {
-        EnsureFinite(localPoint, nameof(localPoint));
-        return GlobalTransform * localPoint;
-    }
-
-    /// <summary>Transforms a point from hierarchy-global coordinates to this node's local coordinates.</summary>
-    /// <param name="globalPoint">The finite global point.</param>
-    /// <returns>The point transformed by the inverse global transform.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">A point component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The global transform is singular.</exception>
-    /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    public Vector2 ToLocal(Vector2 globalPoint)
-    {
-        EnsureFinite(globalPoint, nameof(globalPoint));
-        return GlobalTransform.AffineInverse() * globalPoint;
-    }
-
-    /// <summary>Returns this node's transform relative to an ancestor.</summary>
-    /// <param name="parent">This node itself or a strict ancestor.</param>
-    /// <returns>Identity for this node; otherwise the global transform expressed relative to <paramref name="parent"/>.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="parent"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="parent"/> is not an ancestor of this node.</exception>
-    /// <exception cref="InvalidOperationException">The ancestor's global transform is singular.</exception>
-    /// <exception cref="ObjectDisposedException">
-    /// This node, <paramref name="parent"/>, or a queried ancestor is disposing on another thread or has finished disposing.
-    /// </exception>
-    public Transform GetRelativeTransformToParent(Node parent)
-    {
-        ThrowIfDisposed();
-        ArgumentNullException.ThrowIfNull(parent);
-
-        if (ReferenceEquals(parent, this))
-            return Transform.Identity;
-
-        if (!parent.IsAncestorOf(this))
-            throw new ArgumentException("The supplied node is not an ancestor of this node.", nameof(parent));
-
-        return parent.GlobalTransform.AffineInverse() * GlobalTransform;
-    }
-
     /// <summary>Creates a reusable factory for packed-scene instances of this exact runtime node type.</summary>
     /// <returns>A non-null factory that creates a fresh node of the exact same runtime type.</returns>
     /// <remarks>
-    /// The base implementation supports only an exact <see cref="Node"/>. Derived node types that can be packed must
+    /// The base implementation supports only an exact <see cref="SceneNode"/>. Derived node types that can be packed must
     /// return a static, non-capturing factory that remains valid after the source node is disposed and creates a live,
     /// detached, parentless, childless, unowned, and non-queued instance. Stored writable property descriptors restore
     /// the instance state.
     /// </remarks>
     /// <exception cref="NotSupportedException">A derived node has not explicitly supplied an instancing factory.</exception>
-    protected virtual Func<Node> CreateSceneInstanceFactory()
+    protected virtual Func<SceneNode> CreateSceneInstanceFactory()
     {
-        if (GetType() != typeof(Node))
+        if (GetType() != typeof(SceneNode))
             throw new NotSupportedException($"{GetType().Name} must override {nameof(CreateSceneInstanceFactory)} to support packed scenes.");
 
         return CreateDefaultSceneNode;
@@ -1837,7 +1249,7 @@ public partial class Node : ElectronObject
 
     /// <inheritdoc />
     /// <remarks>Appends this class's typed hierarchy, spatial, visibility, and processing descriptors to the inherited descriptors.</remarks>
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(NodeProperties).Concat(DrawingProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(SceneNodeProperties);
 
     /// <inheritdoc />
     /// <remarks>Rejects disposal during tree lifecycle delivery or of an active tree root, and requires the owner thread for an attached node.</remarks>
@@ -1902,8 +1314,6 @@ public partial class Node : ElectronObject
             }
 
             _children.Clear();
-            _canvasCommands?.Clear();
-            _material = null;
             _groups.Clear();
             _owner = null;
 
@@ -1933,9 +1343,6 @@ public partial class Node : ElectronObject
             TreeExiting = null;
             TreeExited = null;
             Ready = null;
-            VisibilityChanged = null;
-            LocalTransformChanged = null;
-            TransformChanged = null;
         }
 
         try
@@ -1952,7 +1359,7 @@ public partial class Node : ElectronObject
 
     internal bool TryConsumeQueuedDeletion() => Interlocked.CompareExchange(ref _queuedForDeletion, 0, 2) == 2;
 
-    internal Func<Node> CaptureSceneInstanceFactory()
+    internal Func<SceneNode> CaptureSceneInstanceFactory()
     {
         ThrowIfDisposed();
         var factory = CreateSceneInstanceFactory() ??
@@ -1964,7 +1371,7 @@ public partial class Node : ElectronObject
         return factory;
     }
 
-    internal Node[] BeginSceneCapture()
+    internal SceneNode[] BeginSceneCapture()
     {
         EnsureMutable();
         var nodes = EnumerateDepthFirst().ToArray();
@@ -1989,7 +1396,7 @@ public partial class Node : ElectronObject
         }
     }
 
-    internal static void EndSceneCapture(IEnumerable<Node> nodes)
+    internal static void EndSceneCapture(IEnumerable<SceneNode> nodes)
     {
         foreach (var node in nodes)
             Volatile.Write(ref node._sceneCaptureDepth, 0);
@@ -2040,7 +1447,7 @@ public partial class Node : ElectronObject
             throw new InvalidOperationException("A node cannot become a scene-tree root before packed-scene instantiation completes.");
     }
 
-    internal static Node InvokeSceneInstanceFactory(Func<Node> factory)
+    internal static SceneNode InvokeSceneInstanceFactory(Func<SceneNode> factory)
     {
         ArgumentNullException.ThrowIfNull(factory);
         SceneFactoryDepth.Value++;
@@ -2073,7 +1480,7 @@ public partial class Node : ElectronObject
         }
     }
 
-    internal IEnumerable<Node> EnumerateDepthFirst()
+    internal IEnumerable<SceneNode> EnumerateDepthFirst()
     {
         yield return this;
 
@@ -2150,10 +1557,10 @@ public partial class Node : ElectronObject
         EnsureSceneActivationAvailable();
 
         if (_isEnteringTree || _isExitingTree)
-            throw new InvalidOperationException($"Node '{Name}' cannot re-enter a SceneTree from an in-progress lifecycle callback.");
+            throw new InvalidOperationException($"SceneNode '{Name}' cannot re-enter a SceneTree from an in-progress lifecycle callback.");
 
         if (Tree is not null)
-            throw new InvalidOperationException($"Node '{Name}' is already inside a SceneTree.");
+            throw new InvalidOperationException($"SceneNode '{Name}' is already inside a SceneTree.");
 
         _isEnteringTree = true;
 
@@ -2256,10 +1663,10 @@ public partial class Node : ElectronObject
         ThrowCollected("One or more enter-tree callbacks failed.", errors);
     }
 
-    internal void MakeReady(List<Node>? readied = null)
+    internal void MakeReady(List<SceneNode>? readied = null)
     {
         if (_isMakingReady)
-            throw new InvalidOperationException($"Node '{Name}' cannot re-enter ready delivery.");
+            throw new InvalidOperationException($"SceneNode '{Name}' cannot re-enter ready delivery.");
 
         var expectedTree = Tree;
         if (expectedTree is null || IsDisposed)
@@ -2277,7 +1684,7 @@ public partial class Node : ElectronObject
         }
     }
 
-    private void MakeReadyCore(SceneTree expectedTree, List<Node>? readied)
+    private void MakeReadyCore(SceneTree expectedTree, List<SceneNode>? readied)
     {
         List<Exception>? errors = null;
 
@@ -2335,7 +1742,7 @@ public partial class Node : ElectronObject
     internal void ExitTree(SceneTree tree)
     {
         if (_isEnteringTree)
-            throw new InvalidOperationException($"Node '{Name}' cannot exit a SceneTree while it is still entering.");
+            throw new InvalidOperationException($"SceneNode '{Name}' cannot exit a SceneTree while it is still entering.");
 
         if (!ReferenceEquals(Tree, tree) || _isExitingTree)
             return;
@@ -2428,27 +1835,7 @@ public partial class Node : ElectronObject
     private static bool IsValidNodeName(string? value) =>
         !string.IsNullOrWhiteSpace(value) && value is not "." and not ".." && !value.Contains('/');
 
-    private static Node CreateDefaultSceneNode() => new();
-
-    private static bool IsFinite(Vector2 value) => Mathf.IsFinite(value.X) && Mathf.IsFinite(value.Y);
-
-    private static void EnsureFinite(float value, string parameterName)
-    {
-        if (!Mathf.IsFinite(value))
-            throw new ArgumentOutOfRangeException(parameterName, value, "The value must be finite.");
-    }
-
-    private static void EnsureFinite(Vector2 value, string parameterName)
-    {
-        if (!IsFinite(value))
-            throw new ArgumentOutOfRangeException(parameterName, value, "Both vector components must be finite.");
-    }
-
-    private static void EnsureFinite(Transform value, string parameterName)
-    {
-        if (!value.IsFinite())
-            throw new ArgumentOutOfRangeException(parameterName, value, "Every transform component must be finite.");
-    }
+    private static SceneNode CreateDefaultSceneNode() => new();
 
     private static int NormalizeChildIndex(int index, int count)
     {
@@ -2462,16 +1849,6 @@ public partial class Node : ElectronObject
             throw new ArgumentOutOfRangeException(nameof(index), index, "Child index is outside the valid range.");
 
         return index;
-    }
-
-    private static float NormalizeAngle(float angle) => MathF.IEEERemainder(angle, Mathf.Tau);
-
-    private static Transform ToLocalTransform(Transform global, Node? parent, bool topLevel)
-    {
-        if (parent is null || topLevel)
-            return global;
-
-        return parent.GlobalTransform.AffineInverse() * global;
     }
 
     /// <summary>Validates that this node may be mutated at the current lifecycle point.</summary>
@@ -2498,45 +1875,6 @@ public partial class Node : ElectronObject
             throw new InvalidOperationException("A node cannot be mutated while a packed-scene capture is active.");
     }
 
-    private void SetTransform(Transform transform)
-    {
-        EnsureFinite(transform, nameof(transform));
-
-        if (_transform.Equals(transform))
-            return;
-
-        _transform = transform;
-
-        if (_notifyLocalTransformChanges)
-            DispatchNotification(NotificationLocalTransformChanged);
-
-        LocalTransformChanged?.Invoke(this);
-        PropagateGlobalTransformChanged();
-    }
-
-    private void PropagateGlobalTransformChanged()
-    {
-        if (_notifyTransformChanges)
-            DispatchNotification(NotificationTransformChanged);
-
-        TransformChanged?.Invoke(this);
-
-        foreach (var child in _children.ToArray())
-        {
-            if (!child._topLevel)
-                child.PropagateGlobalTransformChanged();
-        }
-    }
-
-    private void PropagateVisibilityChanged()
-    {
-        DispatchNotification(NotificationVisibilityChanged);
-        VisibilityChanged?.Invoke(this);
-
-        foreach (var child in _children.ToArray())
-            child.PropagateVisibilityChanged();
-    }
-
     private void PropagatePathRenamed()
     {
         DispatchNotification(NotificationPathRenamed);
@@ -2545,7 +1883,7 @@ public partial class Node : ElectronObject
             child.PropagatePathRenamed();
     }
 
-    private void InsertChild(Node child, int index)
+    private void InsertChild(SceneNode child, int index)
     {
         EnsureMutable();
         ValidateChildForInsertion(child, allowExistingParent: false);
@@ -2561,15 +1899,6 @@ public partial class Node : ElectronObject
         try
         {
             child.DispatchNotification(NotificationParented);
-        }
-        catch (Exception error)
-        {
-            CollectException(ref errors, error);
-        }
-
-        try
-        {
-            child.PropagateGlobalTransformChanged();
         }
         catch (Exception error)
         {
@@ -2618,7 +1947,7 @@ public partial class Node : ElectronObject
         ThrowCollected("One or more child-insertion callbacks failed.", errors);
     }
 
-    private void ValidateChildForInsertion(Node child, bool allowExistingParent)
+    private void ValidateChildForInsertion(SceneNode child, bool allowExistingParent)
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(child);
@@ -2631,15 +1960,15 @@ public partial class Node : ElectronObject
             throw new ArgumentException("A node cannot be its own child.", nameof(child));
 
         if (!allowExistingParent && child.Parent is not null)
-            throw new InvalidOperationException($"Node '{child.Name}' already has a parent.");
+            throw new InvalidOperationException($"SceneNode '{child.Name}' already has a parent.");
 
         if (!allowExistingParent && child.Tree is not null)
-            throw new InvalidOperationException($"Node '{child.Name}' already belongs to a SceneTree.");
+            throw new InvalidOperationException($"SceneNode '{child.Name}' already belongs to a SceneTree.");
 
         if (_isExitingTree)
             throw new InvalidOperationException("A child cannot be added while its parent is exiting a SceneTree.");
 
-        for (Node? ancestor = this; ancestor is not null; ancestor = ancestor.Parent)
+        for (SceneNode? ancestor = this; ancestor is not null; ancestor = ancestor.Parent)
         {
             if (ReferenceEquals(ancestor, child))
                 throw new InvalidOperationException("Adding this child would create a node cycle.");
@@ -2648,13 +1977,13 @@ public partial class Node : ElectronObject
         EnsureChildNameAvailable(child.Name, child);
     }
 
-    private void EnsureChildNameAvailable(string name, Node? except)
+    private void EnsureChildNameAvailable(string name, SceneNode? except)
     {
         if (_children.Any(child => !ReferenceEquals(child, except) && StringComparer.Ordinal.Equals(child.Name, name)))
             throw new InvalidOperationException($"A child named '{name}' already exists under '{Name}'.");
     }
 
-    private bool RemoveChildCore(Node child)
+    private bool RemoveChildCore(SceneNode child)
     {
         if (!ReferenceEquals(child.Parent, this))
             return false;
@@ -2684,15 +2013,6 @@ public partial class Node : ElectronObject
         try
         {
             child.DispatchNotification(NotificationUnparented);
-        }
-        catch (Exception error)
-        {
-            CollectException(ref errors, error);
-        }
-
-        try
-        {
-            child.PropagateGlobalTransformChanged();
         }
         catch (Exception error)
         {
@@ -2746,7 +2066,7 @@ public partial class Node : ElectronObject
     }
 
     private void FindChildrenCore<TNode>(string pattern, bool recursive, List<TNode> result)
-        where TNode : Node
+        where TNode : SceneNode
     {
         foreach (var child in _children)
         {
@@ -2758,18 +2078,18 @@ public partial class Node : ElectronObject
         }
     }
 
-    private List<Node> GetAncestry()
+    private List<SceneNode> GetAncestry()
     {
-        var result = new List<Node>();
+        var result = new List<SceneNode>();
 
-        for (Node? current = this; current is not null; current = current.Parent)
+        for (SceneNode? current = this; current is not null; current = current.Parent)
             result.Add(current);
 
         result.Reverse();
         return result;
     }
 
-    private Node GetHierarchyRoot()
+    private SceneNode GetHierarchyRoot()
     {
         var root = this;
         while (root.Parent is not null)
@@ -2786,25 +2106,7 @@ public partial class Node : ElectronObject
         return Parent?.ResolveProcessMode() ?? NodeProcessMode.Pausable;
     }
 
-    private void MoveLocal(float delta, bool useXAxis, bool scaled)
-    {
-        EnsureFinite(delta, nameof(delta));
-        EnsureMutable();
-
-        var axis = useXAxis ? _transform.X : _transform.Y;
-
-        if (!scaled)
-        {
-            if (axis.LengthSquared() <= TransformEpsilon * TransformEpsilon)
-                return;
-
-            axis = axis.Normalized();
-        }
-
-        Position += axis * delta;
-    }
-
-    private static void CollectException(ref List<Exception>? errors, Exception error)
+    internal static void CollectException(ref List<Exception>? errors, Exception error)
     {
         errors ??= [];
 
@@ -2814,7 +2116,7 @@ public partial class Node : ElectronObject
             errors.Add(error);
     }
 
-    private static void ThrowCollected(string message, List<Exception>? errors)
+    internal static void ThrowCollected(string message, List<Exception>? errors)
     {
         if (errors is not null)
             throw new AggregateException(message, errors);

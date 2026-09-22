@@ -2,48 +2,48 @@
   "mappings": [
     {
       "godot": "CanvasItem::method:draw_texture(Texture2D:,Vector2:,Color:)",
-      "electron2d": "method:Electron2D.Node.DrawTexture(Electron2D.Texture,Electron2D.Vector2,System.Nullable<Electron2D.Color>)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "electron2d": "method:Electron2D.CanvasItem.DrawTexture(Electron2D.Texture,Electron2D.Vector2,System.Nullable<Electron2D.Color>)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "CanvasItem::method:draw_texture_rect(Texture2D:,Rect2:,bool:,Color:,bool:)",
-      "electron2d": "method:Electron2D.Node.DrawTextureRect(Electron2D.Texture,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "electron2d": "method:Electron2D.CanvasItem.DrawTextureRect(Electron2D.Texture,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "CanvasItem::method:draw_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:,bool:,bool:)",
-      "electron2d": "method:Electron2D.Node.DrawTextureRectRegion(Electron2D.Texture,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "electron2d": "method:Electron2D.CanvasItem.DrawTextureRectRegion(Electron2D.Texture,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:_draw(RID:,Vector2:,Color:,bool:)",
-      "electron2d": "method:Electron2D.Texture.Draw(Electron2D.Node,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "electron2d": "method:Electron2D.Texture.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:_draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
-      "electron2d": "method:Electron2D.Texture.DrawRect(Electron2D.Node,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "electron2d": "method:Electron2D.Texture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:_draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
-      "electron2d": "method:Electron2D.Texture.DrawRectRegion(Electron2D.Node,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "electron2d": "method:Electron2D.Texture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:draw(RID:,Vector2:,Color:,bool:)",
-      "electron2d": "method:Electron2D.Texture.Draw(Electron2D.Node,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "electron2d": "method:Electron2D.Texture.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
-      "electron2d": "method:Electron2D.Texture.DrawRect(Electron2D.Node,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "electron2d": "method:Electron2D.Texture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
-      "electron2d": "method:Electron2D.Texture.DrawRectRegion(Electron2D.Node,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "electron2d": "method:Electron2D.Texture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:get_width()",
@@ -172,7 +172,7 @@
     },
     {
       "godot": "CanvasItem::method:_draw()",
-      "electron2d": "method:Electron2D.Node.OnDraw()",
+      "electron2d": "method:Electron2D.CanvasItem.OnDraw()",
       "reason": "Node.OnDraw is the protected C# virtual callback for retained drawing in the unified scene type. It records commands during owner-thread canvas preparation and redraw requests are coalesced. Native frame and callback-failure checks cover the initial rectangle/line/texture profile. Clipping, further drawing commands and complete canvas lifecycle integration remain pending (ADRs 0023/0028)."
     },
     {
@@ -248,13 +248,13 @@
     {
       "godot": "Sprite2D::method:get_rect()",
       "electron2d": "method:Electron2D.Sprite.GetRect()",
-      "reason": "Local inspection bounds remain a method; Sprite currently derives from Node; the accepted SceneNode/CanvasItem/Node inheritance migration is pending (ADR 0008). Pixel snapping is still a documented dependency."
+      "reason": "Local inspection bounds remain a method; Sprite currently derives from Node; the accepted SceneNode/CanvasItem/Node inheritance is implemented (ADR 0008). Pixel snapping is still a documented dependency."
     }
   ],
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. Node replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028.",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028.",
       "godot": [
         "CanvasItem::method:draw_texture(Texture2D:,Vector2:,Color:)",
         "CanvasItem::method:draw_texture_rect(Texture2D:,Rect2:,bool:,Color:,bool:)",
@@ -514,14 +514,14 @@
     },
     {
       "state": "Partial",
-      "reason": "Sprite currently maps Sprite2D onto Node; the accepted SceneNode/CanvasItem/Node hierarchy and corresponding APIs still require migration under ADR 0008. Texture/frame/region rendering, typed events, bounds, opacity and PackedScene state are executable in SpriteTests and SpriteRenderingTests on Linux Wayland GPU/compatibility. Inherited sampler repeat/filter, viewport snapping, editor and accessibility integration remain incomplete; platform evidence follows ADR 0021.",
+      "reason": "Sprite maps Sprite2D onto Node and now inherits through CanvasItem and SceneNode under ADR 0008. Texture/frame/region rendering, typed events, bounds, opacity and PackedScene state are executable in SpriteTests and SpriteRenderingTests on Linux Wayland GPU/compatibility. Inherited sampler repeat/filter, viewport snapping, editor and accessibility integration remain incomplete; platform evidence follows ADR 0021.",
       "godot": [
         "class:Sprite2D"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "SpriteTests and SpriteRenderingTests verify defaults, local geometry, sheet indexing, regions/flips, retained redraw, resource ownership and notifications, owner-thread guards, callback failures and PackedScene reconstruction. Positive grids must fit Int32.MaxValue; invalid arguments throw before mutation. Grid resizing preserves valid coordinates or silently resets Frame; only explicit Frame/FrameCoords changes emit FrameChanged. Texture reference changes emit TextureChanged; resource content changes only request redraw. Typed events/properties follow ADRs 0004/0005; the accepted inheritance migration remains pending under ADR 0008. Native pixel verification covers Wayland GPU/compatibility; wider inherited canvas policies are recorded separately.",
+      "reason": "SpriteTests and SpriteRenderingTests verify defaults, local geometry, sheet indexing, regions/flips, retained redraw, resource ownership and notifications, owner-thread guards, callback failures and PackedScene reconstruction. Positive grids must fit Int32.MaxValue; invalid arguments throw before mutation. Grid resizing preserves valid coordinates or silently resets Frame; only explicit Frame/FrameCoords changes emit FrameChanged. Texture reference changes emit TextureChanged; resource content changes only request redraw. Typed events/properties follow ADRs 0004/0005; the accepted inheritance is checked by SceneHierarchyTests under ADR 0008. Native pixel verification covers Wayland GPU/compatibility; wider inherited canvas policies are recorded separately.",
       "godot": [
         "Sprite2D::property:centered",
         "Sprite2D::property:flip_h",
@@ -724,7 +724,7 @@
     },
     {
       "electron2d": "constructor:Electron2D.Sprite..ctor()",
-      "reason": "Default construction of the existing image-drawing scene-node concept with a borrowed optional Texture; the Sprite name follows the strict 2D naming rule, while its current combined Node base must be split according to ADR 0008.",
+      "reason": "Default construction of the existing image-drawing scene-node concept with a borrowed optional Texture; the Sprite name follows the strict 2D naming rule, while its spatial Node base inherits CanvasItem and SceneNode according to ADR 0008.",
       "adr": "ADR 0004"
     },
     {

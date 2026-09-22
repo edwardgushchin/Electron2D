@@ -205,7 +205,7 @@ public sealed class SceneState : ElectronObject
     private SceneNodeData ReadNode(int nodeIndex) => Read(
         data => (uint)nodeIndex < (uint)data.Nodes.Length
             ? data.Nodes[nodeIndex]
-            : throw new ArgumentOutOfRangeException(nameof(nodeIndex), nodeIndex, "Node index is outside the scene state."));
+            : throw new ArgumentOutOfRangeException(nameof(nodeIndex), nodeIndex, "SceneNode index is outside the scene state."));
 
     private ScenePropertyData ReadProperty(int nodeIndex, int propertyIndex)
     {
@@ -250,15 +250,15 @@ internal sealed record SceneNodeData(
 
 internal sealed record ScenePropertyData(string Name, StoredPropertyValue Value);
 
-internal sealed class SceneFactoryData(Func<Node> create, Type runtimeType, ulong sourceInstanceId)
+internal sealed class SceneFactoryData(Func<SceneNode> create, Type runtimeType, ulong sourceInstanceId)
 {
-    private readonly ConditionalWeakTable<Node, object> _issued = new();
+    private readonly ConditionalWeakTable<SceneNode, object> _issued = new();
 
     internal Type RuntimeType { get; } = runtimeType;
 
-    internal Node Create()
+    internal SceneNode Create()
     {
-        var node = Node.InvokeSceneInstanceFactory(create) ??
+        var node = SceneNode.InvokeSceneInstanceFactory(create) ??
                    throw new InvalidOperationException("A scene instance factory returned null.");
 
         if (node.InstanceID == sourceInstanceId || !_issued.TryAdd(node, new object()))

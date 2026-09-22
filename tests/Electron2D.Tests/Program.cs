@@ -103,6 +103,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW") == "1")
     return;
 }
 
+SceneHierarchyTests.Run();
 VerifyInstanceIds();
 VerifyLifetime();
 VerifyNotificationsAndProperties();
@@ -5923,7 +5924,7 @@ static void VerifyNodeHierarchyAndTransforms()
     var second = new TransformNode { Name = "second", Position = new Vector2(-3f, 1f) };
     var mover = new TransformNode { Name = "mover", Position = new Vector2(4f, 2f) };
 
-    var addedChildren = new List<(Node Source, Node Child)>();
+    var addedChildren = new List<(SceneNode Source, SceneNode Child)>();
     root.ChildAdded += (source, child) => addedChildren.Add((source, child));
 
     root.AddChild(first);
@@ -5933,7 +5934,7 @@ static void VerifyNodeHierarchyAndTransforms()
     Require(addedChildren.SequenceEqual([(root, first), (root, second)]),
         "ChildAdded must provide the publishing parent before the added child.");
 
-    var enteredChildren = new List<(Node Source, Node Child)>();
+    var enteredChildren = new List<(SceneNode Source, SceneNode Child)>();
     root.ChildEnteredTree += (source, child) => enteredChildren.Add((source, child));
 
     using var tree = new SceneTree(root);
@@ -5995,8 +5996,8 @@ static void VerifyNodeHierarchyAndTransforms()
     root.MoveChild(third, 0);
     Require(root.GetChild(0) == third && third.GetIndex() == 0, "Sibling insertion and child reordering must be observable.");
 
-    (Node Source, Node Child)? exitingChild = null;
-    (Node Source, Node Child)? removedChild = null;
+    (SceneNode Source, SceneNode Child)? exitingChild = null;
+    (SceneNode Source, SceneNode Child)? removedChild = null;
     root.ChildExitingTree += (source, child) => exitingChild = (source, child);
     root.ChildRemoved += (source, child) => removedChild = (source, child);
     Require(root.RemoveChild(third), "A direct child must be removable for event verification.");
@@ -6027,9 +6028,9 @@ static void VerifyNodeHierarchyAndTransforms()
     motion.Rotate(MathF.PI / 2f);
     motion.Translate(Vector2.Right);
     motion.ApplyScale(new Vector2(2f, 4f));
-    Require(VectorNearlyEqual(motion.Position, new Vector2(3f, 1f)) && VectorNearlyEqual(motion.Scale, new Vector2(2f, 4f)),
+    Require(VectorNearlyEqual(motion.Position, new Vector2(4f, 0f)) && VectorNearlyEqual(motion.Scale, new Vector2(2f, 4f)),
         "Local movement, rotation, translation, and scaling helpers must compose.");
-    motion.LookAt(new Vector2(3f, 11f));
+    motion.LookAt(new Vector2(4f, 11f));
     Require(NearlyEqual(motion.GlobalRotation, MathF.PI / 2f), "LookAt must point the local +X axis at a global point.");
     motion.Scale = new Vector2(0f, 1f);
     Expect<InvalidOperationException>(() => motion.ToLocal(Vector2.Zero), "A singular transform cannot convert a global point to local space.");
@@ -6252,8 +6253,8 @@ static void VerifySceneTreeGroupsEventsAndTimers()
     Require(groupLog.SequenceEqual(["reverse:grandchild", "reverse:child", "reverse:root"]),
         "Reverse group calls must visit descendants before ancestors.");
 
-    tree.SetGroup("actors", static (node, visible) => node.Visible = visible, false);
-    Require(tree.GetNodesInGroup("actors").All(node => !node.Visible),
+    tree.SetGroup("actors", static (node, visible) => ((CanvasItem)node).Visible = visible, false);
+    Require(tree.GetNodesInGroup("actors").All(node => !((CanvasItem)node).Visible),
         "Typed group setters must apply the captured value to every current member.");
 
     tree.NotifyGroup("actors", 9_001);
@@ -6261,7 +6262,7 @@ static void VerifySceneTreeGroupsEventsAndTimers()
         "Group notifications must use hierarchy order.");
 
     groupLog.Clear();
-    Action<Node> uniqueCall = node => groupLog.Add($"unique:{node.Name}");
+    Action<SceneNode> uniqueCall = node => groupLog.Add($"unique:{node.Name}");
     var uniqueFlags = GroupCallFlags.Deferred | GroupCallFlags.Unique;
     tree.CallGroup("actors", uniqueCall, uniqueFlags);
     tree.CallGroup("actors", uniqueCall, uniqueFlags);
@@ -8152,7 +8153,7 @@ sealed class ColorPackedNode : Node
         }
     }
 
-    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
 
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
         base.GetPropertyDescriptors()
@@ -8208,7 +8209,7 @@ sealed class PackedTestNode : Node
 
     public int SceneNotifications { get; private set; }
 
-    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
 
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
         base.GetPropertyDescriptors().Append(ValueProperty).Append(DataProperty);
@@ -8279,7 +8280,7 @@ sealed class MovingCaptureNode : Node
 
     public static Node? Destination { get; set; }
 
-    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
 
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
         base.GetPropertyDescriptors().Append(MovingProperty);
@@ -8297,14 +8298,14 @@ sealed class WrongPackedFactoryNode : Node
 {
     public static Node? LastCreated { get; set; }
 
-    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
 
     private static Node CreateNode() => LastCreated = new Node();
 }
 
 sealed class CapturingPackedFactoryNode : Node
 {
-    protected override Func<Node> CreateSceneInstanceFactory() =>
+    protected override Func<SceneNode> CreateSceneInstanceFactory() =>
         () => new CapturingPackedFactoryNode { Name = Name };
 }
 
@@ -8318,7 +8319,7 @@ sealed class ActiveFactoryPackedNode : Node
 
     public int EnterCount { get; private set; }
 
-    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
 
     private static Node CreateNode()
     {
@@ -8351,7 +8352,7 @@ sealed class EscapingPackedNode : Node
 
     public static EscapingPackedNode? LastCreated { get; set; }
 
-    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
 
     protected override void OnNotification(int what)
     {
@@ -8368,7 +8369,7 @@ sealed class SourceReturningPackedNode : Node
 {
     public static SourceReturningPackedNode? Source { get; set; }
 
-    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
 
     private static Node CreateNode() => Source!;
 }
@@ -8377,7 +8378,7 @@ sealed class TreeEscapingPackedNode : Node
 {
     public static TreeEscapingPackedNode? LastCreated { get; set; }
 
-    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
 
     protected override void OnNotification(int what)
     {
@@ -8398,7 +8399,7 @@ sealed class ActiveTreeEscapingPackedNode : Node
 
     public int EnterCount { get; private set; }
 
-    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
 
     protected override void OnNotification(int what)
     {
@@ -8417,7 +8418,7 @@ sealed class SingletonPackedNode : Node
 {
     public static SingletonPackedNode? Cached { get; set; }
 
-    protected override Func<Node> CreateSceneInstanceFactory() => CreateNode;
+    protected override Func<SceneNode> CreateSceneInstanceFactory() => CreateNode;
 
     private static Node CreateNode() => Cached ??= new SingletonPackedNode();
 }

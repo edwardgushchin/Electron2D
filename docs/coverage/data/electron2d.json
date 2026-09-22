@@ -30,6 +30,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CanvasItem",
+    "kind": "type",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "CanvasItem",
+    "signature": "public abstract class Electron2D.CanvasItem",
+    "visibility": "public",
+    "baseType": "Electron2D.SceneNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ClockDirection",
     "kind": "type",
     "declaringType": "Electron2D.ClockDirection",
@@ -1054,7 +1069,7 @@
     "name": "Node",
     "signature": "public class Electron2D.Node",
     "visibility": "public",
-    "baseType": "Electron2D.ElectronObject",
+    "baseType": "Electron2D.CanvasItem",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -1243,6 +1258,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SceneNode",
+    "kind": "type",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "SceneNode",
+    "signature": "public class Electron2D.SceneNode",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SceneState",
     "kind": "type",
     "declaringType": "Electron2D.SceneState",
@@ -1405,7 +1435,7 @@
     "name": "Timer",
     "signature": "public class Electron2D.Timer",
     "visibility": "public",
-    "baseType": "Electron2D.Node",
+    "baseType": "Electron2D.SceneNode",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -1718,7 +1748,7 @@
     "name": "Viewport",
     "signature": "public abstract class Electron2D.Viewport",
     "visibility": "public",
-    "baseType": "Electron2D.Node",
+    "baseType": "Electron2D.SceneNode",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -1776,6 +1806,71 @@
     "parameters": null,
     "returnType": null,
     "value": null
+  },
+  {
+    "id": "constant:Electron2D.CanvasItem.MaximumZIndex()",
+    "kind": "constant",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "MaximumZIndex",
+    "signature": "public const System.Int32 MaximumZIndex = 4096",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "4096"
+  },
+  {
+    "id": "constant:Electron2D.CanvasItem.MinimumZIndex()",
+    "kind": "constant",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "MinimumZIndex",
+    "signature": "public const System.Int32 MinimumZIndex = -4096",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "-4096"
+  },
+  {
+    "id": "constant:Electron2D.CanvasItem.NotificationLocalTransformChanged()",
+    "kind": "constant",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "NotificationLocalTransformChanged",
+    "signature": "public const System.Int32 NotificationLocalTransformChanged = 35",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "35"
+  },
+  {
+    "id": "constant:Electron2D.CanvasItem.NotificationTransformChanged()",
+    "kind": "constant",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "NotificationTransformChanged",
+    "signature": "public const System.Int32 NotificationTransformChanged = 2000",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2000"
+  },
+  {
+    "id": "constant:Electron2D.CanvasItem.NotificationVisibilityChanged()",
+    "kind": "constant",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "NotificationVisibilityChanged",
+    "signature": "public const System.Int32 NotificationVisibilityChanged = 31",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "31"
   },
   {
     "id": "constant:Electron2D.DisplayServer.InvalidScreen()",
@@ -2207,448 +2302,6 @@
     "value": "6.2831855f"
   },
   {
-    "id": "constant:Electron2D.Node.MaximumZIndex()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "MaximumZIndex",
-    "signature": "public const System.Int32 MaximumZIndex = 4096",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "4096"
-  },
-  {
-    "id": "constant:Electron2D.Node.MinimumZIndex()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "MinimumZIndex",
-    "signature": "public const System.Int32 MinimumZIndex = -4096",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "-4096"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationApplicationFocusIn()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationApplicationFocusIn",
-    "signature": "public const System.Int32 NotificationApplicationFocusIn = 2016",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "2016"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationApplicationFocusOut()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationApplicationFocusOut",
-    "signature": "public const System.Int32 NotificationApplicationFocusOut = 2017",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "2017"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationApplicationPaused()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationApplicationPaused",
-    "signature": "public const System.Int32 NotificationApplicationPaused = 2015",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "2015"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationApplicationPipModeEntered()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationApplicationPipModeEntered",
-    "signature": "public const System.Int32 NotificationApplicationPipModeEntered = 2019",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "2019"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationApplicationPipModeExited()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationApplicationPipModeExited",
-    "signature": "public const System.Int32 NotificationApplicationPipModeExited = 2020",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "2020"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationApplicationResumed()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationApplicationResumed",
-    "signature": "public const System.Int32 NotificationApplicationResumed = 2014",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "2014"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationChildOrderChanged()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationChildOrderChanged",
-    "signature": "public const System.Int32 NotificationChildOrderChanged = 24",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "24"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationCrash()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationCrash",
-    "signature": "public const System.Int32 NotificationCrash = 2012",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "2012"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationDisabled()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationDisabled",
-    "signature": "public const System.Int32 NotificationDisabled = 28",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "28"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationEnabled()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationEnabled",
-    "signature": "public const System.Int32 NotificationEnabled = 29",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "29"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationEnterTree()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationEnterTree",
-    "signature": "public const System.Int32 NotificationEnterTree = 10",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "10"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationExitTree()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationExitTree",
-    "signature": "public const System.Int32 NotificationExitTree = 11",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "11"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationInternalPhysicsProcess()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationInternalPhysicsProcess",
-    "signature": "public const System.Int32 NotificationInternalPhysicsProcess = 26",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "26"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationInternalProcess()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationInternalProcess",
-    "signature": "public const System.Int32 NotificationInternalProcess = 25",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "25"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationLocalTransformChanged()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationLocalTransformChanged",
-    "signature": "public const System.Int32 NotificationLocalTransformChanged = 35",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "35"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationOsImeUpdate()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationOsImeUpdate",
-    "signature": "public const System.Int32 NotificationOsImeUpdate = 2013",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "2013"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationOsMemoryWarning()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationOsMemoryWarning",
-    "signature": "public const System.Int32 NotificationOsMemoryWarning = 2009",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "2009"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationParented()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationParented",
-    "signature": "public const System.Int32 NotificationParented = 18",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "18"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationPathRenamed()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationPathRenamed",
-    "signature": "public const System.Int32 NotificationPathRenamed = 23",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "23"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationPaused()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationPaused",
-    "signature": "public const System.Int32 NotificationPaused = 14",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "14"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationPhysicsProcess()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationPhysicsProcess",
-    "signature": "public const System.Int32 NotificationPhysicsProcess = 16",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "16"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationPostEnterTree()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationPostEnterTree",
-    "signature": "public const System.Int32 NotificationPostEnterTree = 27",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "27"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationProcess()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationProcess",
-    "signature": "public const System.Int32 NotificationProcess = 17",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "17"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationReady()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationReady",
-    "signature": "public const System.Int32 NotificationReady = 13",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "13"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationSceneInstantiated()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationSceneInstantiated",
-    "signature": "public const System.Int32 NotificationSceneInstantiated = 20",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "20"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationTextServerChanged()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationTextServerChanged",
-    "signature": "public const System.Int32 NotificationTextServerChanged = 2018",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "2018"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationTransformChanged()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationTransformChanged",
-    "signature": "public const System.Int32 NotificationTransformChanged = 2000",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "2000"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationTranslationChanged()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationTranslationChanged",
-    "signature": "public const System.Int32 NotificationTranslationChanged = 2010",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "2010"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationUnparented()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationUnparented",
-    "signature": "public const System.Int32 NotificationUnparented = 19",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "19"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationUnpaused()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationUnpaused",
-    "signature": "public const System.Int32 NotificationUnpaused = 15",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "15"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationVisibilityChanged()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationVisibilityChanged",
-    "signature": "public const System.Int32 NotificationVisibilityChanged = 31",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "31"
-  },
-  {
-    "id": "constant:Electron2D.Node.NotificationWmAbout()",
-    "kind": "constant",
-    "declaringType": "Electron2D.Node",
-    "name": "NotificationWmAbout",
-    "signature": "public const System.Int32 NotificationWmAbout = 2011",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": "2011"
-  },
-  {
     "id": "constant:Electron2D.ProjectSettings.OverrideFileName()",
     "kind": "constant",
     "declaringType": "Electron2D.ProjectSettings",
@@ -2686,6 +2339,396 @@
     "parameters": [],
     "returnType": "System.String",
     "value": "\u0022project.e2d\u0022"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationApplicationFocusIn()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationApplicationFocusIn",
+    "signature": "public const System.Int32 NotificationApplicationFocusIn = 2016",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2016"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationApplicationFocusOut()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationApplicationFocusOut",
+    "signature": "public const System.Int32 NotificationApplicationFocusOut = 2017",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2017"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationApplicationPaused()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationApplicationPaused",
+    "signature": "public const System.Int32 NotificationApplicationPaused = 2015",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2015"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationApplicationPipModeEntered()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationApplicationPipModeEntered",
+    "signature": "public const System.Int32 NotificationApplicationPipModeEntered = 2019",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2019"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationApplicationPipModeExited()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationApplicationPipModeExited",
+    "signature": "public const System.Int32 NotificationApplicationPipModeExited = 2020",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2020"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationApplicationResumed()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationApplicationResumed",
+    "signature": "public const System.Int32 NotificationApplicationResumed = 2014",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2014"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationChildOrderChanged()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationChildOrderChanged",
+    "signature": "public const System.Int32 NotificationChildOrderChanged = 24",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "24"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationCrash()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationCrash",
+    "signature": "public const System.Int32 NotificationCrash = 2012",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2012"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationDisabled()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationDisabled",
+    "signature": "public const System.Int32 NotificationDisabled = 28",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "28"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationEnabled()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationEnabled",
+    "signature": "public const System.Int32 NotificationEnabled = 29",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "29"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationEnterTree()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationEnterTree",
+    "signature": "public const System.Int32 NotificationEnterTree = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "10"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationExitTree()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationExitTree",
+    "signature": "public const System.Int32 NotificationExitTree = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "11"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationInternalPhysicsProcess()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationInternalPhysicsProcess",
+    "signature": "public const System.Int32 NotificationInternalPhysicsProcess = 26",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "26"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationInternalProcess()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationInternalProcess",
+    "signature": "public const System.Int32 NotificationInternalProcess = 25",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "25"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationOsImeUpdate()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationOsImeUpdate",
+    "signature": "public const System.Int32 NotificationOsImeUpdate = 2013",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2013"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationOsMemoryWarning()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationOsMemoryWarning",
+    "signature": "public const System.Int32 NotificationOsMemoryWarning = 2009",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2009"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationParented()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationParented",
+    "signature": "public const System.Int32 NotificationParented = 18",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "18"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationPathRenamed()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationPathRenamed",
+    "signature": "public const System.Int32 NotificationPathRenamed = 23",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "23"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationPaused()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationPaused",
+    "signature": "public const System.Int32 NotificationPaused = 14",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "14"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationPhysicsProcess()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationPhysicsProcess",
+    "signature": "public const System.Int32 NotificationPhysicsProcess = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "16"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationPostEnterTree()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationPostEnterTree",
+    "signature": "public const System.Int32 NotificationPostEnterTree = 27",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "27"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationProcess()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationProcess",
+    "signature": "public const System.Int32 NotificationProcess = 17",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "17"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationReady()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationReady",
+    "signature": "public const System.Int32 NotificationReady = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "13"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationSceneInstantiated()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationSceneInstantiated",
+    "signature": "public const System.Int32 NotificationSceneInstantiated = 20",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "20"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationTextServerChanged()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationTextServerChanged",
+    "signature": "public const System.Int32 NotificationTextServerChanged = 2018",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2018"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationTranslationChanged()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationTranslationChanged",
+    "signature": "public const System.Int32 NotificationTranslationChanged = 2010",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2010"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationUnparented()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationUnparented",
+    "signature": "public const System.Int32 NotificationUnparented = 19",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "19"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationUnpaused()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationUnpaused",
+    "signature": "public const System.Int32 NotificationUnpaused = 15",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "15"
+  },
+  {
+    "id": "constant:Electron2D.SceneNode.NotificationWmAbout()",
+    "kind": "constant",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "NotificationWmAbout",
+    "signature": "public const System.Int32 NotificationWmAbout = 2011",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2011"
+  },
+  {
+    "id": "constructor:Electron2D.CanvasItem..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": ".ctor",
+    "signature": "protected CanvasItem()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
   },
   {
     "id": "constructor:Electron2D.Color..ctor(Electron2D.Color,System.Single)",
@@ -3576,18 +3619,31 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.SceneTree..ctor(Electron2D.Node)",
+    "id": "constructor:Electron2D.SceneNode..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SceneNode",
+    "name": ".ctor",
+    "signature": "public SceneNode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SceneTree..ctor(Electron2D.SceneNode)",
     "kind": "constructor",
     "declaringType": "Electron2D.SceneTree",
     "name": ".ctor",
-    "signature": "public SceneTree(Electron2D.Node root)",
+    "signature": "public SceneTree(Electron2D.SceneNode root)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "root",
-        "type": "Electron2D.Node",
+        "type": "Electron2D.SceneNode",
         "default": null
       }
     ],
@@ -10834,6 +10890,45 @@
     "value": "0"
   },
   {
+    "id": "event:Electron2D.CanvasItem.LocalTransformChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "LocalTransformChanged",
+    "signature": "public event System.Action\u003CElectron2D.CanvasItem\u003E LocalTransformChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.CanvasItem\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CanvasItem.TransformChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "TransformChanged",
+    "signature": "public event System.Action\u003CElectron2D.CanvasItem\u003E TransformChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.CanvasItem\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CanvasItem.VisibilityChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "VisibilityChanged",
+    "signature": "public event System.Action\u003CElectron2D.CanvasItem\u003E VisibilityChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.CanvasItem\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.DisplayServer.CloseRequested()",
     "kind": "event",
     "declaringType": "Electron2D.DisplayServer",
@@ -11029,175 +11124,6 @@
     "value": null
   },
   {
-    "id": "event:Electron2D.Node.ChildAdded()",
-    "kind": "event",
-    "declaringType": "Electron2D.Node",
-    "name": "ChildAdded",
-    "signature": "public event System.Action\u003CElectron2D.Node, Electron2D.Node\u003E ChildAdded",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Node, Electron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "event:Electron2D.Node.ChildEnteredTree()",
-    "kind": "event",
-    "declaringType": "Electron2D.Node",
-    "name": "ChildEnteredTree",
-    "signature": "public event System.Action\u003CElectron2D.Node, Electron2D.Node\u003E ChildEnteredTree",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Node, Electron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "event:Electron2D.Node.ChildExitingTree()",
-    "kind": "event",
-    "declaringType": "Electron2D.Node",
-    "name": "ChildExitingTree",
-    "signature": "public event System.Action\u003CElectron2D.Node, Electron2D.Node\u003E ChildExitingTree",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Node, Electron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "event:Electron2D.Node.ChildOrderChanged()",
-    "kind": "event",
-    "declaringType": "Electron2D.Node",
-    "name": "ChildOrderChanged",
-    "signature": "public event System.Action\u003CElectron2D.Node\u003E ChildOrderChanged",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "event:Electron2D.Node.ChildRemoved()",
-    "kind": "event",
-    "declaringType": "Electron2D.Node",
-    "name": "ChildRemoved",
-    "signature": "public event System.Action\u003CElectron2D.Node, Electron2D.Node\u003E ChildRemoved",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Node, Electron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "event:Electron2D.Node.LocalTransformChanged()",
-    "kind": "event",
-    "declaringType": "Electron2D.Node",
-    "name": "LocalTransformChanged",
-    "signature": "public event System.Action\u003CElectron2D.Node\u003E LocalTransformChanged",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "event:Electron2D.Node.Ready()",
-    "kind": "event",
-    "declaringType": "Electron2D.Node",
-    "name": "Ready",
-    "signature": "public event System.Action\u003CElectron2D.Node\u003E Ready",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "event:Electron2D.Node.Renamed()",
-    "kind": "event",
-    "declaringType": "Electron2D.Node",
-    "name": "Renamed",
-    "signature": "public event System.Action\u003CElectron2D.Node\u003E Renamed",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "event:Electron2D.Node.TransformChanged()",
-    "kind": "event",
-    "declaringType": "Electron2D.Node",
-    "name": "TransformChanged",
-    "signature": "public event System.Action\u003CElectron2D.Node\u003E TransformChanged",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "event:Electron2D.Node.TreeEntered()",
-    "kind": "event",
-    "declaringType": "Electron2D.Node",
-    "name": "TreeEntered",
-    "signature": "public event System.Action\u003CElectron2D.Node\u003E TreeEntered",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "event:Electron2D.Node.TreeExited()",
-    "kind": "event",
-    "declaringType": "Electron2D.Node",
-    "name": "TreeExited",
-    "signature": "public event System.Action\u003CElectron2D.Node\u003E TreeExited",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "event:Electron2D.Node.TreeExiting()",
-    "kind": "event",
-    "declaringType": "Electron2D.Node",
-    "name": "TreeExiting",
-    "signature": "public event System.Action\u003CElectron2D.Node\u003E TreeExiting",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "event:Electron2D.Node.VisibilityChanged()",
-    "kind": "event",
-    "declaringType": "Electron2D.Node",
-    "name": "VisibilityChanged",
-    "signature": "public event System.Action\u003CElectron2D.Node\u003E VisibilityChanged",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Node\u003E",
-    "value": null
-  },
-  {
     "id": "event:Electron2D.ProjectSettings.SettingsChanged()",
     "kind": "event",
     "declaringType": "Electron2D.ProjectSettings",
@@ -11263,16 +11189,146 @@
     "value": null
   },
   {
-    "id": "event:Electron2D.SceneTree.NodeAdded()",
+    "id": "event:Electron2D.SceneNode.ChildAdded()",
     "kind": "event",
-    "declaringType": "Electron2D.SceneTree",
-    "name": "NodeAdded",
-    "signature": "public event System.Action\u003CElectron2D.SceneTree, Electron2D.Node\u003E NodeAdded",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "ChildAdded",
+    "signature": "public event System.Action\u003CElectron2D.SceneNode, Electron2D.SceneNode\u003E ChildAdded",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.SceneTree, Electron2D.Node\u003E",
+    "returnType": "System.Action\u003CElectron2D.SceneNode, Electron2D.SceneNode\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SceneNode.ChildEnteredTree()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "ChildEnteredTree",
+    "signature": "public event System.Action\u003CElectron2D.SceneNode, Electron2D.SceneNode\u003E ChildEnteredTree",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.SceneNode, Electron2D.SceneNode\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SceneNode.ChildExitingTree()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "ChildExitingTree",
+    "signature": "public event System.Action\u003CElectron2D.SceneNode, Electron2D.SceneNode\u003E ChildExitingTree",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.SceneNode, Electron2D.SceneNode\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SceneNode.ChildOrderChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "ChildOrderChanged",
+    "signature": "public event System.Action\u003CElectron2D.SceneNode\u003E ChildOrderChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.SceneNode\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SceneNode.ChildRemoved()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "ChildRemoved",
+    "signature": "public event System.Action\u003CElectron2D.SceneNode, Electron2D.SceneNode\u003E ChildRemoved",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.SceneNode, Electron2D.SceneNode\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SceneNode.Ready()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "Ready",
+    "signature": "public event System.Action\u003CElectron2D.SceneNode\u003E Ready",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.SceneNode\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SceneNode.Renamed()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "Renamed",
+    "signature": "public event System.Action\u003CElectron2D.SceneNode\u003E Renamed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.SceneNode\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SceneNode.TreeEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "TreeEntered",
+    "signature": "public event System.Action\u003CElectron2D.SceneNode\u003E TreeEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.SceneNode\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SceneNode.TreeExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "TreeExited",
+    "signature": "public event System.Action\u003CElectron2D.SceneNode\u003E TreeExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.SceneNode\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SceneNode.TreeExiting()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "TreeExiting",
+    "signature": "public event System.Action\u003CElectron2D.SceneNode\u003E TreeExiting",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.SceneNode\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SceneTree.NodeAdded()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "NodeAdded",
+    "signature": "public event System.Action\u003CElectron2D.SceneTree, Electron2D.SceneNode\u003E NodeAdded",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.SceneTree, Electron2D.SceneNode\u003E",
     "value": null
   },
   {
@@ -11280,12 +11336,12 @@
     "kind": "event",
     "declaringType": "Electron2D.SceneTree",
     "name": "NodeRemoved",
-    "signature": "public event System.Action\u003CElectron2D.SceneTree, Electron2D.Node\u003E NodeRemoved",
+    "signature": "public event System.Action\u003CElectron2D.SceneTree, Electron2D.SceneNode\u003E NodeRemoved",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.SceneTree, Electron2D.Node\u003E",
+    "returnType": "System.Action\u003CElectron2D.SceneTree, Electron2D.SceneNode\u003E",
     "value": null
   },
   {
@@ -11293,12 +11349,12 @@
     "kind": "event",
     "declaringType": "Electron2D.SceneTree",
     "name": "NodeRenamed",
-    "signature": "public event System.Action\u003CElectron2D.SceneTree, Electron2D.Node\u003E NodeRenamed",
+    "signature": "public event System.Action\u003CElectron2D.SceneTree, Electron2D.SceneNode\u003E NodeRenamed",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.SceneTree, Electron2D.Node\u003E",
+    "returnType": "System.Action\u003CElectron2D.SceneTree, Electron2D.SceneNode\u003E",
     "value": null
   },
   {
@@ -11554,6 +11610,19 @@
     "declaringType": "Electron2D.Window",
     "name": "TitleChanged",
     "signature": "public event System.Action TitleChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Window.VisibilityChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Window",
+    "name": "VisibilityChanged",
+    "signature": "public event System.Action VisibilityChanged",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -11982,6 +12051,399 @@
       }
     ],
     "returnType": "Electron2D.CallbackTweener",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawLine(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Color,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawLine",
+    "signature": "public System.Void DrawLine(Electron2D.Vector2 from, Electron2D.Vector2 to, Electron2D.Color color, System.Single width = -1f, System.Boolean antialiased = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "antialiased",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawRect(Electron2D.Rect,Electron2D.Color,System.Boolean,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawRect",
+    "signature": "public System.Void DrawRect(Electron2D.Rect rect, Electron2D.Color color, System.Boolean filled = true, System.Single width = -1f, System.Boolean antialiased = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "filled",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "antialiased",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawSetTransform(Electron2D.Vector2,System.Single,System.Nullable\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawSetTransform",
+    "signature": "public System.Void DrawSetTransform(Electron2D.Vector2 position, System.Single rotation = 0f, System.Nullable\u003CElectron2D.Vector2\u003E scale = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "rotation",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "scale",
+        "type": "System.Nullable\u003CElectron2D.Vector2\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawSetTransformMatrix(Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawSetTransformMatrix",
+    "signature": "public System.Void DrawSetTransformMatrix(Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawTexture(Electron2D.Texture,Electron2D.Vector2,System.Nullable\u003CElectron2D.Color\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawTexture",
+    "signature": "public System.Void DrawTexture(Electron2D.Texture texture, Electron2D.Vector2 position, System.Nullable\u003CElectron2D.Color\u003E modulate = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawTextureRect(Electron2D.Texture,Electron2D.Rect,System.Boolean,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawTextureRect",
+    "signature": "public System.Void DrawTextureRect(Electron2D.Texture texture, Electron2D.Rect rect, System.Boolean tile, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect",
+        "default": null
+      },
+      {
+        "name": "tile",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "transpose",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawTextureRectRegion(Electron2D.Texture,Electron2D.Rect,Electron2D.Rect,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawTextureRectRegion",
+    "signature": "public System.Void DrawTextureRectRegion(Electron2D.Texture texture, Electron2D.Rect rect, Electron2D.Rect sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false, System.Boolean clipUV = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect",
+        "default": null
+      },
+      {
+        "name": "sourceRect",
+        "type": "Electron2D.Rect",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "transpose",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "clipUV",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.GetGlobalTransform()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetGlobalTransform",
+    "signature": "public Electron2D.Transform GetGlobalTransform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.GetTransform()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetTransform",
+    "signature": "public abstract Electron2D.Transform GetTransform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.Hide()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "Hide",
+    "signature": "public System.Void Hide()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.MoveToFront()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "MoveToFront",
+    "signature": "public System.Void MoveToFront()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.NotifyLocalTransformChanged()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "NotifyLocalTransformChanged",
+    "signature": "protected System.Void NotifyLocalTransformChanged()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.OnDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "OnDraw",
+    "signature": "protected virtual System.Void OnDraw()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.QueueRedraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "QueueRedraw",
+    "signature": "public System.Void QueueRedraw()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.Show()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "Show",
+    "signature": "public System.Void Show()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -23969,68 +24431,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.AddChild(Electron2D.Node)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "AddChild",
-    "signature": "public System.Void AddChild(Electron2D.Node child)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "child",
-        "type": "Electron2D.Node",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.AddSibling(Electron2D.Node)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "AddSibling",
-    "signature": "public System.Void AddSibling(Electron2D.Node sibling)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "sibling",
-        "type": "Electron2D.Node",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.AddToGroup(System.String,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "AddToGroup",
-    "signature": "public System.Void AddToGroup(System.String group, System.Boolean persistent = false)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "group",
-        "type": "System.String",
-        "default": null
-      },
-      {
-        "name": "persistent",
-        "type": "System.Boolean",
-        "default": "false"
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.Node.ApplyScale(Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -24050,440 +24450,16 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.CanProcess()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "CanProcess",
-    "signature": "public System.Boolean CanProcess()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.CancelFree()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "CancelFree",
-    "signature": "public System.Boolean CancelFree()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.Node.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Node",
     "name": "CreateSceneInstanceFactory",
-    "signature": "protected virtual System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "signature": "protected override System.Func\u003CElectron2D.SceneNode\u003E CreateSceneInstanceFactory()",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "System.Func\u003CElectron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.CreateTween()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "CreateTween",
-    "signature": "public Electron2D.Tween CreateTween()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Tween",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.Dispose(System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "Dispose",
-    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "disposing",
-        "type": "System.Boolean",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.DrawLine(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Color,System.Single,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "DrawLine",
-    "signature": "public System.Void DrawLine(Electron2D.Vector2 from, Electron2D.Vector2 to, Electron2D.Color color, System.Single width = -1f, System.Boolean antialiased = false)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "from",
-        "type": "Electron2D.Vector2",
-        "default": null
-      },
-      {
-        "name": "to",
-        "type": "Electron2D.Vector2",
-        "default": null
-      },
-      {
-        "name": "color",
-        "type": "Electron2D.Color",
-        "default": null
-      },
-      {
-        "name": "width",
-        "type": "System.Single",
-        "default": "-1f"
-      },
-      {
-        "name": "antialiased",
-        "type": "System.Boolean",
-        "default": "false"
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.DrawRect(Electron2D.Rect,Electron2D.Color,System.Boolean,System.Single,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "DrawRect",
-    "signature": "public System.Void DrawRect(Electron2D.Rect rect, Electron2D.Color color, System.Boolean filled = true, System.Single width = -1f, System.Boolean antialiased = false)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "rect",
-        "type": "Electron2D.Rect",
-        "default": null
-      },
-      {
-        "name": "color",
-        "type": "Electron2D.Color",
-        "default": null
-      },
-      {
-        "name": "filled",
-        "type": "System.Boolean",
-        "default": "true"
-      },
-      {
-        "name": "width",
-        "type": "System.Single",
-        "default": "-1f"
-      },
-      {
-        "name": "antialiased",
-        "type": "System.Boolean",
-        "default": "false"
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.DrawSetTransform(Electron2D.Vector2,System.Single,System.Nullable\u003CElectron2D.Vector2\u003E)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "DrawSetTransform",
-    "signature": "public System.Void DrawSetTransform(Electron2D.Vector2 position, System.Single rotation = 0f, System.Nullable\u003CElectron2D.Vector2\u003E scale = null)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "position",
-        "type": "Electron2D.Vector2",
-        "default": null
-      },
-      {
-        "name": "rotation",
-        "type": "System.Single",
-        "default": "0f"
-      },
-      {
-        "name": "scale",
-        "type": "System.Nullable\u003CElectron2D.Vector2\u003E",
-        "default": "null"
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.DrawSetTransformMatrix(Electron2D.Transform)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "DrawSetTransformMatrix",
-    "signature": "public System.Void DrawSetTransformMatrix(Electron2D.Transform transform)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "transform",
-        "type": "Electron2D.Transform",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.DrawTexture(Electron2D.Texture,Electron2D.Vector2,System.Nullable\u003CElectron2D.Color\u003E)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "DrawTexture",
-    "signature": "public System.Void DrawTexture(Electron2D.Texture texture, Electron2D.Vector2 position, System.Nullable\u003CElectron2D.Color\u003E modulate = null)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "texture",
-        "type": "Electron2D.Texture",
-        "default": null
-      },
-      {
-        "name": "position",
-        "type": "Electron2D.Vector2",
-        "default": null
-      },
-      {
-        "name": "modulate",
-        "type": "System.Nullable\u003CElectron2D.Color\u003E",
-        "default": "null"
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.DrawTextureRect(Electron2D.Texture,Electron2D.Rect,System.Boolean,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "DrawTextureRect",
-    "signature": "public System.Void DrawTextureRect(Electron2D.Texture texture, Electron2D.Rect rect, System.Boolean tile, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "texture",
-        "type": "Electron2D.Texture",
-        "default": null
-      },
-      {
-        "name": "rect",
-        "type": "Electron2D.Rect",
-        "default": null
-      },
-      {
-        "name": "tile",
-        "type": "System.Boolean",
-        "default": null
-      },
-      {
-        "name": "modulate",
-        "type": "System.Nullable\u003CElectron2D.Color\u003E",
-        "default": "null"
-      },
-      {
-        "name": "transpose",
-        "type": "System.Boolean",
-        "default": "false"
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.DrawTextureRectRegion(Electron2D.Texture,Electron2D.Rect,Electron2D.Rect,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "DrawTextureRectRegion",
-    "signature": "public System.Void DrawTextureRectRegion(Electron2D.Texture texture, Electron2D.Rect rect, Electron2D.Rect sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false, System.Boolean clipUV = true)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "texture",
-        "type": "Electron2D.Texture",
-        "default": null
-      },
-      {
-        "name": "rect",
-        "type": "Electron2D.Rect",
-        "default": null
-      },
-      {
-        "name": "sourceRect",
-        "type": "Electron2D.Rect",
-        "default": null
-      },
-      {
-        "name": "modulate",
-        "type": "System.Nullable\u003CElectron2D.Color\u003E",
-        "default": "null"
-      },
-      {
-        "name": "transpose",
-        "type": "System.Boolean",
-        "default": "false"
-      },
-      {
-        "name": "clipUV",
-        "type": "System.Boolean",
-        "default": "true"
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.EnsureMutable()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "EnsureMutable",
-    "signature": "protected System.Void EnsureMutable()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.FindChild(System.String,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "FindChild",
-    "signature": "public Electron2D.Node FindChild(System.String pattern, System.Boolean recursive = true)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "pattern",
-        "type": "System.String",
-        "default": null
-      },
-      {
-        "name": "recursive",
-        "type": "System.Boolean",
-        "default": "true"
-      }
-    ],
-    "returnType": "Electron2D.Node",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.FindChild\u00601(System.String,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "FindChild",
-    "signature": "public TNode FindChild\u003CTNode\u003E(System.String pattern = \u0022*\u0022, System.Boolean recursive = true)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "pattern",
-        "type": "System.String",
-        "default": "\u0022*\u0022"
-      },
-      {
-        "name": "recursive",
-        "type": "System.Boolean",
-        "default": "true"
-      }
-    ],
-    "returnType": "TNode",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.FindChildren(System.String,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "FindChildren",
-    "signature": "public System.Collections.Generic.IReadOnlyList\u003CElectron2D.Node\u003E FindChildren(System.String pattern, System.Boolean recursive = true)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "pattern",
-        "type": "System.String",
-        "default": null
-      },
-      {
-        "name": "recursive",
-        "type": "System.Boolean",
-        "default": "true"
-      }
-    ],
-    "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.FindChildren\u00601(System.String,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "FindChildren",
-    "signature": "public IReadOnlyList\u003CTNode\u003E FindChildren\u003CTNode\u003E(System.String pattern = \u0022*\u0022, System.Boolean recursive = true)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "pattern",
-        "type": "System.String",
-        "default": "\u0022*\u0022"
-      },
-      {
-        "name": "recursive",
-        "type": "System.Boolean",
-        "default": "true"
-      }
-    ],
-    "returnType": "IReadOnlyList\u003CTNode\u003E",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.FindParent(System.String)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "FindParent",
-    "signature": "public Electron2D.Node FindParent(System.String pattern)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "pattern",
-        "type": "System.String",
-        "default": null
-      }
-    ],
-    "returnType": "Electron2D.Node",
+    "returnType": "System.Func\u003CElectron2D.SceneNode\u003E",
     "value": null
   },
   {
@@ -24506,140 +24482,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.GetChild(System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "GetChild",
-    "signature": "public Electron2D.Node GetChild(System.Int32 index)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "index",
-        "type": "System.Int32",
-        "default": null
-      }
-    ],
-    "returnType": "Electron2D.Node",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.GetGroups()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "GetGroups",
-    "signature": "public System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E GetGroups()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.GetIndex()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "GetIndex",
-    "signature": "public System.Int32 GetIndex()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.GetNode(System.String)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "GetNode",
-    "signature": "public Electron2D.Node GetNode(System.String path)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "path",
-        "type": "System.String",
-        "default": null
-      }
-    ],
-    "returnType": "Electron2D.Node",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.GetNodeOrNull(System.String)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "GetNodeOrNull",
-    "signature": "public Electron2D.Node GetNodeOrNull(System.String path)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "path",
-        "type": "System.String",
-        "default": null
-      }
-    ],
-    "returnType": "Electron2D.Node",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.GetNode\u00601(System.String)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "GetNode",
-    "signature": "public TNode GetNode\u003CTNode\u003E(System.String path)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "path",
-        "type": "System.String",
-        "default": null
-      }
-    ],
-    "returnType": "TNode",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.GetPath()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "GetPath",
-    "signature": "public System.String GetPath()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.String",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.GetPathTo(Electron2D.Node)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "GetPathTo",
-    "signature": "public System.String GetPathTo(Electron2D.Node node)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "node",
-        "type": "Electron2D.Node",
-        "default": null
-      }
-    ],
-    "returnType": "System.String",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.Node.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -24653,18 +24495,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.GetRelativeTransformToParent(Electron2D.Node)",
+    "id": "method:Electron2D.Node.GetRelativeTransformToParent(Electron2D.SceneNode)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
     "name": "GetRelativeTransformToParent",
-    "signature": "public Electron2D.Transform GetRelativeTransformToParent(Electron2D.Node parent)",
+    "signature": "public Electron2D.Transform GetRelativeTransformToParent(Electron2D.SceneNode parent)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "parent",
-        "type": "Electron2D.Node",
+        "type": "Electron2D.SceneNode",
         "default": null
       }
     ],
@@ -24672,29 +24514,16 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.GetViewport()",
+    "id": "method:Electron2D.Node.GetTransform()",
     "kind": "method",
     "declaringType": "Electron2D.Node",
-    "name": "GetViewport",
-    "signature": "public Electron2D.Viewport GetViewport()",
+    "name": "GetTransform",
+    "signature": "public override Electron2D.Transform GetTransform()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Viewport",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.GetWindow()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "GetWindow",
-    "signature": "public Electron2D.Window GetWindow()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Window",
+    "returnType": "Electron2D.Transform",
     "value": null
   },
   {
@@ -24717,57 +24546,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.Hide()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "Hide",
-    "signature": "public System.Void Hide()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.IsAncestorOf(Electron2D.Node)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "IsAncestorOf",
-    "signature": "public System.Boolean IsAncestorOf(Electron2D.Node node)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "node",
-        "type": "Electron2D.Node",
-        "default": null
-      }
-    ],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.IsInGroup(System.String)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "IsInGroup",
-    "signature": "public System.Boolean IsInGroup(System.String group)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "group",
-        "type": "System.String",
-        "default": null
-      }
-    ],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.Node.LookAt(Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -24780,30 +24558,6 @@
       {
         "name": "globalPoint",
         "type": "Electron2D.Vector2",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.MoveChild(Electron2D.Node,System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "MoveChild",
-    "signature": "public System.Void MoveChild(Electron2D.Node child, System.Int32 index)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "child",
-        "type": "Electron2D.Node",
-        "default": null
-      },
-      {
-        "name": "index",
-        "type": "System.Int32",
         "default": null
       }
     ],
@@ -24859,261 +24613,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.MoveToFront()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "MoveToFront",
-    "signature": "public System.Void MoveToFront()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.OnDraw()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "OnDraw",
-    "signature": "protected virtual System.Void OnDraw()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.OnEnterTree()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "OnEnterTree",
-    "signature": "protected virtual System.Void OnEnterTree()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.OnExitTree()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "OnExitTree",
-    "signature": "protected virtual System.Void OnExitTree()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.OnInput(Electron2D.InputEvent)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "OnInput",
-    "signature": "protected virtual System.Void OnInput(Electron2D.InputEvent event)",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "event",
-        "type": "Electron2D.InputEvent",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.OnNotification(System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "OnNotification",
-    "signature": "protected override System.Void OnNotification(System.Int32 what)",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "what",
-        "type": "System.Int32",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.OnPhysicsProcess(System.Double)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "OnPhysicsProcess",
-    "signature": "protected virtual System.Void OnPhysicsProcess(System.Double delta)",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "delta",
-        "type": "System.Double",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.OnProcess(System.Double)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "OnProcess",
-    "signature": "protected virtual System.Void OnProcess(System.Double delta)",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "delta",
-        "type": "System.Double",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.OnReady()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "OnReady",
-    "signature": "protected virtual System.Void OnReady()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.OnUnhandledInput(Electron2D.InputEvent)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "OnUnhandledInput",
-    "signature": "protected virtual System.Void OnUnhandledInput(Electron2D.InputEvent event)",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "event",
-        "type": "Electron2D.InputEvent",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.OnUnhandledKeyInput(Electron2D.InputEventKey)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "OnUnhandledKeyInput",
-    "signature": "protected virtual System.Void OnUnhandledKeyInput(Electron2D.InputEventKey event)",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "event",
-        "type": "Electron2D.InputEventKey",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.QueueFree()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "QueueFree",
-    "signature": "public System.Void QueueFree()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.QueueRedraw()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "QueueRedraw",
-    "signature": "public System.Void QueueRedraw()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.RemoveChild(Electron2D.Node)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "RemoveChild",
-    "signature": "public System.Boolean RemoveChild(Electron2D.Node child)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "child",
-        "type": "Electron2D.Node",
-        "default": null
-      }
-    ],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.RemoveFromGroup(System.String)",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "RemoveFromGroup",
-    "signature": "public System.Boolean RemoveFromGroup(System.String group)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "group",
-        "type": "System.String",
-        "default": null
-      }
-    ],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.Reparent(Electron2D.Node,System.Boolean)",
+    "id": "method:Electron2D.Node.Reparent(Electron2D.SceneNode,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
     "name": "Reparent",
-    "signature": "public System.Void Reparent(Electron2D.Node newParent, System.Boolean keepGlobalTransform = true)",
+    "signature": "public override System.Void Reparent(Electron2D.SceneNode newParent, System.Boolean keepGlobalTransform = true)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "newParent",
-        "type": "Electron2D.Node",
+        "type": "Electron2D.SceneNode",
         "default": null
       },
       {
@@ -25122,19 +24633,6 @@
         "default": "true"
       }
     ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.RequestReady()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "RequestReady",
-    "signature": "public System.Void RequestReady()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -25154,19 +24652,6 @@
         "default": null
       }
     ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.Show()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "Show",
-    "signature": "public System.Void Show()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -25224,32 +24709,6 @@
         "default": null
       }
     ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.ValidateDisposal()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "ValidateDisposal",
-    "signature": "protected override System.Void ValidateDisposal()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Node.ValidateMutation()",
-    "kind": "method",
-    "declaringType": "Electron2D.Node",
-    "name": "ValidateMutation",
-    "signature": "protected override System.Void ValidateMutation()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -25336,7 +24795,7 @@
     "kind": "method",
     "declaringType": "Electron2D.PackedScene",
     "name": "Instantiate",
-    "signature": "public Electron2D.Node Instantiate(Electron2D.PackedSceneEditState editState = Disabled)",
+    "signature": "public Electron2D.SceneNode Instantiate(Electron2D.PackedSceneEditState editState = Disabled)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -25347,7 +24806,7 @@
         "default": "Disabled"
       }
     ],
-    "returnType": "Electron2D.Node",
+    "returnType": "Electron2D.SceneNode",
     "value": null
   },
   {
@@ -25383,18 +24842,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PackedScene.Pack(Electron2D.Node)",
+    "id": "method:Electron2D.PackedScene.Pack(Electron2D.SceneNode)",
     "kind": "method",
     "declaringType": "Electron2D.PackedScene",
     "name": "Pack",
-    "signature": "public System.Void Pack(Electron2D.Node root)",
+    "signature": "public System.Void Pack(Electron2D.SceneNode root)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "root",
-        "type": "Electron2D.Node",
+        "type": "Electron2D.SceneNode",
         "default": null
       }
     ],
@@ -27350,12 +26809,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Resource",
     "name": "GetLocalScene",
-    "signature": "public Electron2D.Node GetLocalScene()",
+    "signature": "public Electron2D.SceneNode GetLocalScene()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Node",
+    "returnType": "Electron2D.SceneNode",
     "value": null
   },
   {
@@ -27510,6 +26969,769 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.AddChild(Electron2D.SceneNode)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "AddChild",
+    "signature": "public System.Void AddChild(Electron2D.SceneNode child)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "child",
+        "type": "Electron2D.SceneNode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.AddSibling(Electron2D.SceneNode)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "AddSibling",
+    "signature": "public System.Void AddSibling(Electron2D.SceneNode sibling)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sibling",
+        "type": "Electron2D.SceneNode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.AddToGroup(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "AddToGroup",
+    "signature": "public System.Void AddToGroup(System.String group, System.Boolean persistent = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "group",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "persistent",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.CanProcess()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "CanProcess",
+    "signature": "public System.Boolean CanProcess()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.CancelFree()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "CancelFree",
+    "signature": "public System.Boolean CancelFree()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected virtual System.Func\u003CElectron2D.SceneNode\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.SceneNode\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.CreateTween()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "CreateTween",
+    "signature": "public Electron2D.Tween CreateTween()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Tween",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.EnsureMutable()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "EnsureMutable",
+    "signature": "protected System.Void EnsureMutable()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.FindChild(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "FindChild",
+    "signature": "public Electron2D.SceneNode FindChild(System.String pattern, System.Boolean recursive = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pattern",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "recursive",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "Electron2D.SceneNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.FindChild\u00601(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "FindChild",
+    "signature": "public TNode FindChild\u003CTNode\u003E(System.String pattern = \u0022*\u0022, System.Boolean recursive = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pattern",
+        "type": "System.String",
+        "default": "\u0022*\u0022"
+      },
+      {
+        "name": "recursive",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "TNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.FindChildren(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "FindChildren",
+    "signature": "public System.Collections.Generic.IReadOnlyList\u003CElectron2D.SceneNode\u003E FindChildren(System.String pattern, System.Boolean recursive = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pattern",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "recursive",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.SceneNode\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.FindChildren\u00601(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "FindChildren",
+    "signature": "public IReadOnlyList\u003CTNode\u003E FindChildren\u003CTNode\u003E(System.String pattern = \u0022*\u0022, System.Boolean recursive = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pattern",
+        "type": "System.String",
+        "default": "\u0022*\u0022"
+      },
+      {
+        "name": "recursive",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "IReadOnlyList\u003CTNode\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.FindParent(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "FindParent",
+    "signature": "public Electron2D.SceneNode FindParent(System.String pattern)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pattern",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.SceneNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.GetChild(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "GetChild",
+    "signature": "public Electron2D.SceneNode GetChild(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.SceneNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.GetGroups()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "GetGroups",
+    "signature": "public System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E GetGroups()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.GetIndex()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "GetIndex",
+    "signature": "public System.Int32 GetIndex()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.GetNode(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "GetNode",
+    "signature": "public Electron2D.SceneNode GetNode(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.SceneNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.GetNodeOrNull(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "GetNodeOrNull",
+    "signature": "public Electron2D.SceneNode GetNodeOrNull(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.SceneNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.GetNode\u00601(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "GetNode",
+    "signature": "public TNode GetNode\u003CTNode\u003E(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "TNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.GetPath()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "GetPath",
+    "signature": "public System.String GetPath()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.GetPathTo(Electron2D.SceneNode)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "GetPathTo",
+    "signature": "public System.String GetPathTo(Electron2D.SceneNode node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.SceneNode",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.GetViewport()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "GetViewport",
+    "signature": "public Electron2D.Viewport GetViewport()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Viewport",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.GetWindow()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "GetWindow",
+    "signature": "public Electron2D.Window GetWindow()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.IsAncestorOf(Electron2D.SceneNode)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "IsAncestorOf",
+    "signature": "public System.Boolean IsAncestorOf(Electron2D.SceneNode node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.SceneNode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.IsInGroup(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "IsInGroup",
+    "signature": "public System.Boolean IsInGroup(System.String group)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "group",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.MoveChild(Electron2D.SceneNode,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "MoveChild",
+    "signature": "public System.Void MoveChild(Electron2D.SceneNode child, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "child",
+        "type": "Electron2D.SceneNode",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.OnEnterTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "OnEnterTree",
+    "signature": "protected virtual System.Void OnEnterTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.OnExitTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "OnExitTree",
+    "signature": "protected virtual System.Void OnExitTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.OnInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "OnInput",
+    "signature": "protected virtual System.Void OnInput(Electron2D.InputEvent event)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "event",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.OnPhysicsProcess(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "OnPhysicsProcess",
+    "signature": "protected virtual System.Void OnPhysicsProcess(System.Double delta)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.OnProcess(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "OnProcess",
+    "signature": "protected virtual System.Void OnProcess(System.Double delta)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.OnReady()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "OnReady",
+    "signature": "protected virtual System.Void OnReady()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.OnUnhandledInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "OnUnhandledInput",
+    "signature": "protected virtual System.Void OnUnhandledInput(Electron2D.InputEvent event)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "event",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.OnUnhandledKeyInput(Electron2D.InputEventKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "OnUnhandledKeyInput",
+    "signature": "protected virtual System.Void OnUnhandledKeyInput(Electron2D.InputEventKey event)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "event",
+        "type": "Electron2D.InputEventKey",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.QueueFree()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "QueueFree",
+    "signature": "public System.Void QueueFree()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.RemoveChild(Electron2D.SceneNode)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "RemoveChild",
+    "signature": "public System.Boolean RemoveChild(Electron2D.SceneNode child)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "child",
+        "type": "Electron2D.SceneNode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.RemoveFromGroup(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "RemoveFromGroup",
+    "signature": "public System.Boolean RemoveFromGroup(System.String group)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "group",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.Reparent(Electron2D.SceneNode,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "Reparent",
+    "signature": "public virtual System.Void Reparent(Electron2D.SceneNode newParent, System.Boolean keepGlobalTransform = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "newParent",
+        "type": "Electron2D.SceneNode",
+        "default": null
+      },
+      {
+        "name": "keepGlobalTransform",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.RequestReady()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "RequestReady",
+    "signature": "public System.Void RequestReady()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneNode.ValidateMutation()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "ValidateMutation",
+    "signature": "protected override System.Void ValidateMutation()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -27808,11 +28030,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.SceneTree.CallGroup(System.String,System.Action\u003CElectron2D.Node\u003E,Electron2D.GroupCallFlags)",
+    "id": "method:Electron2D.SceneTree.CallGroup(System.String,System.Action\u003CElectron2D.SceneNode\u003E,Electron2D.GroupCallFlags)",
     "kind": "method",
     "declaringType": "Electron2D.SceneTree",
     "name": "CallGroup",
-    "signature": "public System.Void CallGroup(System.String group, System.Action\u003CElectron2D.Node\u003E action, Electron2D.GroupCallFlags flags = Default)",
+    "signature": "public System.Void CallGroup(System.String group, System.Action\u003CElectron2D.SceneNode\u003E action, Electron2D.GroupCallFlags flags = Default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27824,7 +28046,7 @@
       },
       {
         "name": "action",
-        "type": "System.Action\u003CElectron2D.Node\u003E",
+        "type": "System.Action\u003CElectron2D.SceneNode\u003E",
         "default": null
       },
       {
@@ -27915,7 +28137,7 @@
     "kind": "method",
     "declaringType": "Electron2D.SceneTree",
     "name": "GetFirstNodeInGroup",
-    "signature": "public Electron2D.Node GetFirstNodeInGroup(System.String group)",
+    "signature": "public Electron2D.SceneNode GetFirstNodeInGroup(System.String group)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27926,7 +28148,7 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Node",
+    "returnType": "Electron2D.SceneNode",
     "value": null
   },
   {
@@ -27953,7 +28175,7 @@
     "kind": "method",
     "declaringType": "Electron2D.SceneTree",
     "name": "GetNodesInGroup",
-    "signature": "public System.Collections.Generic.IReadOnlyList\u003CElectron2D.Node\u003E GetNodesInGroup(System.String group)",
+    "signature": "public System.Collections.Generic.IReadOnlyList\u003CElectron2D.SceneNode\u003E GetNodesInGroup(System.String group)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27964,7 +28186,7 @@
         "default": null
       }
     ],
-    "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.Node\u003E",
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.SceneNode\u003E",
     "value": null
   },
   {
@@ -28225,11 +28447,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.SceneTree.SetGroup\u00601(System.String,Action\u003CElectron2D.Node, T\u003E,T,Electron2D.GroupCallFlags)",
+    "id": "method:Electron2D.SceneTree.SetGroup\u00601(System.String,Action\u003CElectron2D.SceneNode, T\u003E,T,Electron2D.GroupCallFlags)",
     "kind": "method",
     "declaringType": "Electron2D.SceneTree",
     "name": "SetGroup",
-    "signature": "public System.Void SetGroup\u003CT\u003E(System.String group, Action\u003CElectron2D.Node, T\u003E setter, T value, Electron2D.GroupCallFlags flags = Default)",
+    "signature": "public System.Void SetGroup\u003CT\u003E(System.String group, Action\u003CElectron2D.SceneNode, T\u003E setter, T value, Electron2D.GroupCallFlags flags = Default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -28241,7 +28463,7 @@
       },
       {
         "name": "setter",
-        "type": "Action\u003CElectron2D.Node, T\u003E",
+        "type": "Action\u003CElectron2D.SceneNode, T\u003E",
         "default": null
       },
       {
@@ -28761,12 +28983,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Sprite",
     "name": "CreateSceneInstanceFactory",
-    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "signature": "protected override System.Func\u003CElectron2D.SceneNode\u003E CreateSceneInstanceFactory()",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "returnType": "System.Func\u003CElectron2D.SceneNode\u003E",
     "value": null
   },
   {
@@ -28885,18 +29107,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Texture.Draw(Electron2D.Node,Electron2D.Vector2,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
+    "id": "method:Electron2D.Texture.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Texture",
     "name": "Draw",
-    "signature": "public virtual System.Void Draw(Electron2D.Node canvasItem, Electron2D.Vector2 position, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
+    "signature": "public virtual System.Void Draw(Electron2D.CanvasItem canvasItem, Electron2D.Vector2 position, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "canvasItem",
-        "type": "Electron2D.Node",
+        "type": "Electron2D.CanvasItem",
         "default": null
       },
       {
@@ -28919,18 +29141,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Texture.DrawRect(Electron2D.Node,Electron2D.Rect,System.Boolean,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
+    "id": "method:Electron2D.Texture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Texture",
     "name": "DrawRect",
-    "signature": "public virtual System.Void DrawRect(Electron2D.Node canvasItem, Electron2D.Rect rect, System.Boolean tile, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
+    "signature": "public virtual System.Void DrawRect(Electron2D.CanvasItem canvasItem, Electron2D.Rect rect, System.Boolean tile, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "canvasItem",
-        "type": "Electron2D.Node",
+        "type": "Electron2D.CanvasItem",
         "default": null
       },
       {
@@ -28958,18 +29180,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Texture.DrawRectRegion(Electron2D.Node,Electron2D.Rect,Electron2D.Rect,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean,System.Boolean)",
+    "id": "method:Electron2D.Texture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Texture",
     "name": "DrawRectRegion",
-    "signature": "public virtual System.Void DrawRectRegion(Electron2D.Node canvasItem, Electron2D.Rect rect, Electron2D.Rect sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false, System.Boolean clipUV = true)",
+    "signature": "public virtual System.Void DrawRectRegion(Electron2D.CanvasItem canvasItem, Electron2D.Rect rect, Electron2D.Rect sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false, System.Boolean clipUV = true)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "canvasItem",
-        "type": "Electron2D.Node",
+        "type": "Electron2D.CanvasItem",
         "default": null
       },
       {
@@ -29056,12 +29278,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Timer",
     "name": "CreateSceneInstanceFactory",
-    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "signature": "protected override System.Func\u003CElectron2D.SceneNode\u003E CreateSceneInstanceFactory()",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "returnType": "System.Func\u003CElectron2D.SceneNode\u003E",
     "value": null
   },
   {
@@ -29713,18 +29935,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Tween.BindNode(Electron2D.Node)",
+    "id": "method:Electron2D.Tween.BindNode(Electron2D.SceneNode)",
     "kind": "method",
     "declaringType": "Electron2D.Tween",
     "name": "BindNode",
-    "signature": "public Electron2D.Tween BindNode(Electron2D.Node node)",
+    "signature": "public Electron2D.Tween BindNode(Electron2D.SceneNode node)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "node",
-        "type": "Electron2D.Node",
+        "type": "Electron2D.SceneNode",
         "default": null
       }
     ],
@@ -32992,12 +33214,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Window",
     "name": "CreateSceneInstanceFactory",
-    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "signature": "protected override System.Func\u003CElectron2D.SceneNode\u003E CreateSceneInstanceFactory()",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "returnType": "System.Func\u003CElectron2D.SceneNode\u003E",
     "value": null
   },
   {
@@ -33127,6 +33349,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.Hide()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "Hide",
+    "signature": "public System.Void Hide()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -33265,6 +33500,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.Show()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "Show",
+    "signature": "public System.Void Show()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -35874,6 +36122,149 @@
       }
     ],
     "returnType": "Electron2D.Vector4I",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.IsVisibleInTree()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "IsVisibleInTree",
+    "signature": "public System.Boolean IsVisibleInTree { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.Material()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "Material",
+    "signature": "public Electron2D.Material Material { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Material",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.Modulate()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "Modulate",
+    "signature": "public Electron2D.Color Modulate { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.NotifyLocalTransformChanges()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "NotifyLocalTransformChanges",
+    "signature": "public System.Boolean NotifyLocalTransformChanges { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.NotifyTransformChanges()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "NotifyTransformChanges",
+    "signature": "public System.Boolean NotifyTransformChanges { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.SelfModulate()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "SelfModulate",
+    "signature": "public Electron2D.Color SelfModulate { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.TopLevel()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "TopLevel",
+    "signature": "public System.Boolean TopLevel { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.UseParentMaterial()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "UseParentMaterial",
+    "signature": "public System.Boolean UseParentMaterial { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.Visible()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "Visible",
+    "signature": "public System.Boolean Visible { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.ZAsRelative()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "ZAsRelative",
+    "signature": "public System.Boolean ZAsRelative { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.ZIndex()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "ZIndex",
+    "signature": "public System.Int32 ZIndex { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -39478,32 +39869,6 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Node.ChildCount()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "ChildCount",
-    "signature": "public System.Int32 ChildCount { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.Children()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "Children",
-    "signature": "public System.Collections.Generic.IReadOnlyList\u003CElectron2D.Node\u003E Children { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.Node\u003E",
-    "value": null
-  },
-  {
     "id": "property:Electron2D.Node.GlobalPosition()",
     "kind": "property",
     "declaringType": "Electron2D.Node",
@@ -39582,201 +39947,6 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Node.InputEnabled()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "InputEnabled",
-    "signature": "public System.Boolean InputEnabled { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.IsInsideTree()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "IsInsideTree",
-    "signature": "public System.Boolean IsInsideTree { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.IsNodeReady()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "IsNodeReady",
-    "signature": "public System.Boolean IsNodeReady { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.IsQueuedForDeletion()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "IsQueuedForDeletion",
-    "signature": "public System.Boolean IsQueuedForDeletion { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.IsVisibleInTree()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "IsVisibleInTree",
-    "signature": "public System.Boolean IsVisibleInTree { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.Material()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "Material",
-    "signature": "public Electron2D.Material Material { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Material",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.Modulate()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "Modulate",
-    "signature": "public Electron2D.Color Modulate { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Color",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.Name()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "Name",
-    "signature": "public System.String Name { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.String",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.NotifyLocalTransformChanges()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "NotifyLocalTransformChanges",
-    "signature": "public System.Boolean NotifyLocalTransformChanges { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.NotifyTransformChanges()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "NotifyTransformChanges",
-    "signature": "public System.Boolean NotifyTransformChanges { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.Owner()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "Owner",
-    "signature": "public Electron2D.Node Owner { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Node",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.Parent()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "Parent",
-    "signature": "public Electron2D.Node Parent { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Node",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.PhysicsProcessDeltaTime()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "PhysicsProcessDeltaTime",
-    "signature": "public System.Double PhysicsProcessDeltaTime { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Double",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.PhysicsProcessEnabled()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "PhysicsProcessEnabled",
-    "signature": "public System.Boolean PhysicsProcessEnabled { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.PhysicsProcessPriority()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "PhysicsProcessPriority",
-    "signature": "public System.Int32 PhysicsProcessPriority { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": null
-  },
-  {
     "id": "property:Electron2D.Node.Position()",
     "kind": "property",
     "declaringType": "Electron2D.Node",
@@ -39787,58 +39957,6 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.ProcessDeltaTime()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "ProcessDeltaTime",
-    "signature": "public System.Double ProcessDeltaTime { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Double",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.ProcessEnabled()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "ProcessEnabled",
-    "signature": "public System.Boolean ProcessEnabled { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.ProcessMode()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "ProcessMode",
-    "signature": "public Electron2D.NodeProcessMode ProcessMode { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.NodeProcessMode",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.ProcessPriority()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "ProcessPriority",
-    "signature": "public System.Int32 ProcessPriority { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -39881,32 +39999,6 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Node.SceneFilePath()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "SceneFilePath",
-    "signature": "public System.String SceneFilePath { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.String",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.SelfModulate()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "SelfModulate",
-    "signature": "public Electron2D.Color SelfModulate { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Color",
-    "value": null
-  },
-  {
     "id": "property:Electron2D.Node.Skew()",
     "kind": "property",
     "declaringType": "Electron2D.Node",
@@ -39920,19 +40012,6 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Node.TopLevel()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "TopLevel",
-    "signature": "public System.Boolean TopLevel { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
     "id": "property:Electron2D.Node.Transform()",
     "kind": "property",
     "declaringType": "Electron2D.Node",
@@ -39943,97 +40022,6 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Transform",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.Tree()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "Tree",
-    "signature": "public Electron2D.SceneTree Tree { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.SceneTree",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.UnhandledInputEnabled()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "UnhandledInputEnabled",
-    "signature": "public System.Boolean UnhandledInputEnabled { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.UnhandledKeyInputEnabled()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "UnhandledKeyInputEnabled",
-    "signature": "public System.Boolean UnhandledKeyInputEnabled { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.UseParentMaterial()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "UseParentMaterial",
-    "signature": "public System.Boolean UseParentMaterial { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.Visible()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "Visible",
-    "signature": "public System.Boolean Visible { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.ZAsRelative()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "ZAsRelative",
-    "signature": "public System.Boolean ZAsRelative { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Node.ZIndex()",
-    "kind": "property",
-    "declaringType": "Electron2D.Node",
-    "name": "ZIndex",
-    "signature": "public System.Int32 ZIndex { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -40531,6 +40519,266 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.SceneNode.ChildCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "ChildCount",
+    "signature": "public System.Int32 ChildCount { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.Children()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "Children",
+    "signature": "public System.Collections.Generic.IReadOnlyList\u003CElectron2D.SceneNode\u003E Children { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.SceneNode\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.InputEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "InputEnabled",
+    "signature": "public System.Boolean InputEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.IsInsideTree()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "IsInsideTree",
+    "signature": "public System.Boolean IsInsideTree { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.IsNodeReady()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "IsNodeReady",
+    "signature": "public System.Boolean IsNodeReady { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.IsQueuedForDeletion()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "IsQueuedForDeletion",
+    "signature": "public System.Boolean IsQueuedForDeletion { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.Name()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "Name",
+    "signature": "public System.String Name { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.Owner()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "Owner",
+    "signature": "public Electron2D.SceneNode Owner { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SceneNode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.Parent()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "Parent",
+    "signature": "public Electron2D.SceneNode Parent { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SceneNode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.PhysicsProcessDeltaTime()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "PhysicsProcessDeltaTime",
+    "signature": "public System.Double PhysicsProcessDeltaTime { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.PhysicsProcessEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "PhysicsProcessEnabled",
+    "signature": "public System.Boolean PhysicsProcessEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.PhysicsProcessPriority()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "PhysicsProcessPriority",
+    "signature": "public System.Int32 PhysicsProcessPriority { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.ProcessDeltaTime()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "ProcessDeltaTime",
+    "signature": "public System.Double ProcessDeltaTime { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.ProcessEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "ProcessEnabled",
+    "signature": "public System.Boolean ProcessEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.ProcessMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "ProcessMode",
+    "signature": "public Electron2D.NodeProcessMode ProcessMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NodeProcessMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.ProcessPriority()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "ProcessPriority",
+    "signature": "public System.Int32 ProcessPriority { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.SceneFilePath()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "SceneFilePath",
+    "signature": "public System.String SceneFilePath { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.Tree()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "Tree",
+    "signature": "public Electron2D.SceneTree Tree { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SceneTree",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.UnhandledInputEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "UnhandledInputEnabled",
+    "signature": "public System.Boolean UnhandledInputEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneNode.UnhandledKeyInputEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneNode",
+    "name": "UnhandledKeyInputEnabled",
+    "signature": "public System.Boolean UnhandledKeyInputEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.SceneTree.AutoAcceptQuit()",
     "kind": "property",
     "declaringType": "Electron2D.SceneTree",
@@ -40574,12 +40822,12 @@
     "kind": "property",
     "declaringType": "Electron2D.SceneTree",
     "name": "Root",
-    "signature": "public Electron2D.Node Root { get;  }",
+    "signature": "public Electron2D.SceneNode Root { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Node",
+    "returnType": "Electron2D.SceneNode",
     "value": null
   },
   {
@@ -41402,11 +41650,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Window.ScreenPosition()",
+    "id": "property:Electron2D.Window.Position()",
     "kind": "property",
     "declaringType": "Electron2D.Window",
-    "name": "ScreenPosition",
-    "signature": "public Electron2D.Vector2I ScreenPosition { get; set; }",
+    "name": "Position",
+    "signature": "public Electron2D.Vector2I Position { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

@@ -2,11 +2,9 @@
 
 Last updated: 2026-09-23
 
-The accepted target is `SceneNode → CanvasItem → Node`, with `Sprite : Node`, `Timer : SceneNode`, `Viewport : SceneNode` and `Control : CanvasItem`, under [ADR 0008](../decisions/scene.md#adr-0008). The current runtime still combines these responsibilities in Node and requires migration. The API below describes existing code; acceptance of the target does not claim it is implemented.
-
 ## Responsibility
 
-Scene owns Electron2D's primary Node-based game-object model, reusable typed in-memory scenes, and the active [`MainLoop`](../classes/MainLoop.md) implementation that delivers lifecycle, frame, pause, deferred-work, and deletion phases. A game object, composed subsystem, or complete world is represented by a Node hierarchy; the same hierarchy can be packed and instantiated for reuse. It is a 2D-only runtime domain for Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web and compiles into the single `Electron2D.dll` assembly.
+Scene owns Electron2D's primary SceneNode-based game-object model, reusable typed in-memory scenes, and the active [`MainLoop`](../classes/MainLoop.md) implementation that delivers lifecycle, frame, pause, deferred-work, and deletion phases. A game object, composed subsystem, or complete world is represented by a SceneNode hierarchy; the same hierarchy can be packed and instantiated for reuse. It is a 2D-only runtime domain for Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web and compiles into the single `Electron2D.dll` assembly.
 
 Its production sources live under `src/Scene/Main/`, `src/Scene/2D/`, `src/Scene/Animation/`, and `src/Scene/Resources/`, matching their engine-module ownership without changing the flat public `Electron2D` namespace.
 
@@ -14,18 +12,20 @@ Its production sources live under `src/Scene/Main/`, `src/Scene/2D/`, `src/Scene
 
 | Component | Responsibility | State |
 | --- | --- | --- |
-| [Canvas rendering](../components/canvas-rendering.md) | Sprite texture/frame/region nodes and retained Node drawing | Executable; inherited canvas policies incomplete |
+| [Canvas rendering](../components/canvas-rendering.md) | Sprite texture/frame/region nodes and retained CanvasItem drawing | Executable; inherited canvas policies incomplete |
 | [Window runtime](../components/window-runtime.md) | Native root window, presentation policies, platform events and client/input boundary | Implemented root slice; rendering and multiwindow incomplete |
-| [Unified 2D node](../components/unified-node.md) | Hierarchy, 2D transforms, paths, groups, visibility/Z state, process/input policy, lifecycle endpoints, and deletion requests | Implemented and verified |
-| [Scene tree](../components/scene-tree.md) | Active-root ownership, exception-safe lifecycle, pause state, frame/input dispatch, events/counts, reusable Node timers, lightweight one-shot timers, typed group operations, deferred work, and deletion execution | Implemented and verified |
+| [Scene hierarchy](../components/scene-hierarchy.md) | Hierarchy, 2D transforms, paths, groups, visibility/Z state, process/input policy, lifecycle endpoints, and deletion requests | Implemented and verified |
+| [Scene tree](../components/scene-tree.md) | Active-root ownership, exception-safe lifecycle, pause state, frame/input dispatch, events/counts, reusable scene timers, lightweight one-shot timers, typed group operations, deferred work, and deletion execution | Implemented and verified |
 | [Tweening](../components/tweening.md) | Typed property/method interpolation, sequencing, callbacks, waits, nested timelines, loops, and frame policies | Implemented and verified |
 | [Packed scenes](../components/packed-scenes.md) | Typed in-memory owned-hierarchy capture, live metadata, detached reconstruction, and per-instance local resources | Implemented and verified |
 
-Production types include [`Sprite`](../classes/Sprite.md), [`Window`](../classes/Window.md), [`Viewport`](../classes/Viewport.md), [`Node`](../classes/Node.md), [`NodeProcessMode`](../classes/NodeProcessMode.md), [`SceneTree`](../classes/SceneTree.md), [`Timer`](../classes/Timer.md), [`TimerProcessCallback`](../classes/TimerProcessCallback.md), [`SceneTreeTimer`](../classes/SceneTreeTimer.md), [`GroupCallFlags`](../classes/GroupCallFlags.md), [`Tween`](../classes/Tween.md), its four nested enum types, [`Tweener`](../classes/Tweener.md), its six concrete task types, [`PackedScene`](../classes/PackedScene.md), [`SceneState`](../classes/SceneState.md), and [`PackedSceneEditState`](../classes/PackedSceneEditState.md).
+Production types include [`SceneNode`](../classes/SceneNode.md), [`CanvasItem`](../classes/CanvasItem.md), [`Sprite`](../classes/Sprite.md), [`Window`](../classes/Window.md), [`Viewport`](../classes/Viewport.md), [`Node`](../classes/Node.md), [`NodeProcessMode`](../classes/NodeProcessMode.md), [`SceneTree`](../classes/SceneTree.md), [`Timer`](../classes/Timer.md), [`TimerProcessCallback`](../classes/TimerProcessCallback.md), [`SceneTreeTimer`](../classes/SceneTreeTimer.md), [`GroupCallFlags`](../classes/GroupCallFlags.md), [`Tween`](../classes/Tween.md), its four nested enum types, [`Tweener`](../classes/Tweener.md), its six concrete task types, [`PackedScene`](../classes/PackedScene.md), [`SceneState`](../classes/SceneState.md), and [`PackedSceneEditState`](../classes/PackedSceneEditState.md).
 
 ## Public surface
 
-- `Node`: the primary public game-object base and one combined Godot-style `Node` + `Node2D` abstraction with ordered hierarchy, lifecycle, local/global `Transform` transforms, `Vector2` spatial helpers, retained canvas drawing, paths/search/groups, processing/input configuration, and queued deletion.
+- `SceneNode`: neutral ordered hierarchy, lifecycle, paths/groups, processing/input, packed ownership and deletion.
+- `CanvasItem : SceneNode`: abstract retained drawing, visibility, materials, modulation, Z and shared transform queries.
+- `Node : CanvasItem`: spatial position, rotation, scale, skew and helpers; Sprite derives from it.
 - `Sprite`: borrowed texture drawing, sheet frames, atlas regions, local bounds/opacity, change notifications and typed PackedScene state.
 - `NodeProcessMode`: inherited, pausable, paused-only, always, and disabled process policies.
 - `SceneTree`: concrete main loop and active hierarchy owner with failure-safe lifecycle/finalization, typed input/system-notification propagation, pause state, caller-driven process/physics frames, frame/tree events and counters, typed group work, timers, deferred actions, and deletion flushing.
@@ -41,16 +41,16 @@ Production types include [`Sprite`](../classes/Sprite.md), [`Window`](../classes
 ## Dependency direction
 
 - Scene depends on Core's `Mathf`/`Vector2`/`Transform` math, Resources including `Resource`, and .NET collections and filesystem-name matching.
-- Resources has a narrow reciprocal dependency on `Node` for `Resource.GetLocalScene()` under ADR 0023. This is an intentional in-assembly type cycle, not another managed assembly.
+- Resources has a narrow reciprocal dependency on `SceneNode` for `Resource.GetLocalScene()` under ADR 0023. This is an intentional in-assembly type cycle, not another managed assembly.
 - Scene depends on the Input domain's typed event values and process-wide service boundary for propagation.
 - Window now depends on the backend-neutral DisplayServer API for its native lifetime. Scene delegates drawing to the backend-neutral RenderingServer and has no direct SDL3-CS dependency, audio, collision physics, asset loading/saving, file serialization, scripting, networking, or Localization.
 - Future gameplay, rendering, GUI input, and 2D physics types may depend on Scene.
-- Scene must not introduce 3D types. Non-spatial, canvas and spatial behavior belongs to SceneNode, CanvasItem and Node respectively under ADR 0008; the existing combined implementation must be migrated.
+- Scene must not introduce 3D types. Non-spatial, canvas and spatial behavior belongs to SceneNode, CanvasItem and Node respectively under ADR 0008; these layers are implemented.
 - Scene lifecycle and game-state semantics must not vary by target platform; native event generation remains a host boundary.
 
 ## Domain-wide invariants
 
-- `Node` hierarchies are the primary public game-object and world model. Reusable objects and complete levels use the same `PackedScene` capture and instantiation boundary; Scene does not expose a competing entity hierarchy.
+- `SceneNode` hierarchies are the primary public game-object and world model. Reusable objects and complete levels use the same `PackedScene` capture and instantiation boundary; Scene does not expose a competing entity hierarchy.
 - A node has at most one parent and one active `SceneTree`; cycles and cross-tree insertion are rejected before mutation.
 - An active root can be disposed only by its owning `SceneTree`.
 - Sibling names are ordinal-unique, and path separators/reserved path tokens cannot be names.
@@ -65,7 +65,7 @@ Production types include [`Sprite`](../classes/Sprite.md), [`Window`](../classes
 - Typed group operations run in hierarchy/reverse order, revalidate membership, and can be deferred and coalesced without reflection or untyped values.
 - Typed node events pass their publisher first when an additional payload is present; Core event connections can schedule handlers through `SceneTree.Defer`.
 - Packed-scene capture stores only root-owned branches, static exact-type factories, persistent groups, and explicitly storage-enabled typed properties. It stores no live source nodes or event subscribers.
-- Packed-scene instances are reconstructed detached. Node factories and unfinished instances cannot activate a `SceneTree`; scene-local resource graphs preserve aliases/cycles, know their new root before setup, and are disposed with that root.
+- Packed-scene instances are reconstructed detached. SceneNode factories and unfinished instances cannot activate a `SceneTree`; scene-local resource graphs preserve aliases/cycles, know their new root before setup, and are disposed with that root.
 - Capture blocks source hierarchy mutation. Failed reconstruction attempts cleanup of every returned node and resource duplicate it acquired, reports cleanup failures, and never returns a partial result.
 - `SceneTree` is initialized when construction succeeds, returns no quit request from its two inherited frame lanes, and releases all owned scene state from explicit finalization or disposal.
 - System notifications are propagated depth-first to live attached nodes; native generation and platform-specific input effects belong to the absent SDL host/backend covered by ADR 0038.
@@ -102,13 +102,13 @@ Production types include [`Sprite`](../classes/Sprite.md), [`Window`](../classes
 - [0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
 - [0026: Separate Transform foundational type](../decisions/core-math.md#adr-0026)
 - [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)
-- [0031: Node trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)
+- [0031: SceneNode trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
-- [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+- [0036: Reusable scene timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0037: Typed SceneTree tween scheduling](../decisions/scene.md#adr-0037)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
 
 ## Windowed lifecycle
 
-The [Window runtime component](../components/window-runtime.md) provides Window : Viewport : Node, root native ownership, presentation mode, four executable native policies, optional screen selection, client/decorated geometry, IME/taskbar requests, window events and scene input handling. Window.ModeEnum and Window.Flags describe the mode/policy identifiers. Capability failures stay explicit; declared policy IDs do not imply implemented native integration. Engine.Run consumes the configured window and children. The root canvas renders retained rectangles, lines, textures and GPU shader materials after scene processing. Offscreen viewports, nested windows, GUI and content scaling are still absent.
+The [Window runtime component](../components/window-runtime.md) provides Window : Viewport : SceneNode, root native ownership, presentation mode, four executable native policies, optional screen selection, client/decorated geometry, IME/taskbar requests, window events and scene input handling. Window.ModeEnum and Window.Flags describe the mode/policy identifiers. Capability failures stay explicit; declared policy IDs do not imply implemented native integration. Engine.Run consumes the configured window and children. The root canvas renders retained rectangles, lines, textures and GPU shader materials after scene processing. Offscreen viewports, nested windows, GUI and content scaling are still absent.

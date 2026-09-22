@@ -2,8 +2,6 @@
 
 Last updated: 2026-09-23
 
-Scene inheritance migration: [ADR 0008](../decisions/scene.md#adr-0008) assigns the neutral tree API to `SceneNode`, canvas behavior to `CanvasItem`, and the spatial API to `Node`. Signatures on this page describe the existing runtime until that migration is implemented.
-
 **Inherits:** [Viewport](Viewport.md)
 
 **Inherited By:** —
@@ -18,13 +16,13 @@ A configurable native root window that owns scene children.
 
 Pass a detached window to `Engine.Run(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels on Wayland and native window units elsewhere. The root canvas renders after scene processing; embedded windows are not implemented.
 
-Native lifetime belongs to Engine.Run. Children retain the unified Node transform and visibility rules. Desktop ScreenPosition is separate from scene Position. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Offscreen and multiwindow rendering remain incomplete; see the [coverage page](../coverage/classes/Window.md).
+Native lifetime belongs to Engine.Run. Viewport inherits the neutral SceneNode; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Offscreen and multiwindow rendering remain incomplete; see the [coverage page](../coverage/classes/Window.md).
 
 ## Examples
 
 ```csharp
 var window = new Window { Title = "Game", Size = new Vector2I(960, 540) };
-window.AddChild(scene); // caller-created Node
+window.AddChild(scene); // caller-created SceneNode
 Engine.Instance.MaxFPS = 60;
 int exitCode = Engine.Instance.Run(window);
 ```
@@ -43,10 +41,10 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 | --- | --- |
 | [`public Vector2I MaxSize { get; set; }`](#maxsize) | Gets or sets nonnegative maximum client dimensions; zero means no limit on that axis. |
 | [`public Vector2I MinSize { get; set; }`](#minsize) | Gets or sets nonnegative minimum client dimensions; zero means no limit on that axis. |
-| [`public Vector2I ScreenPosition { get; set; }`](#screenposition) | Gets or requests the client origin in native desktop coordinates. |
+| [`public Vector2I Position { get; set; }`](#position) | Gets or requests the client origin in native desktop coordinates. |
 | [`public Vector2I Size { get; set; }`](#size) | Gets the observed client size or requests a positive client size. |
 | [`public string Title { get; set; }`](#title) | Gets or sets the native window title. |
-| [`public override bool Visible { get; set; }`](#visible) | Gets or sets this node's local logical visibility. |
+| [`public bool Visible { get; set; }`](#visible) | Gets or sets the root window's native visibility. |
 | [`public ModeEnum Mode { get; set; }`](#mode) | Gets the observed native mode, or configures a presentation-mode request. |
 | [`public int CurrentScreen { get; set; }`](#currentscreen) | Gets the observed display index, or requests placement on a zero-based display index. |
 | [`public bool Unresizable { get; set; }`](#unresizable) | Gets or sets the policy preventing user border resizing. |
@@ -56,12 +54,16 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 
 ## Methods
 
+Window owns `Show()` and `Hide()`; both assign Visible and preserve native failure/owner-thread/lifetime checks. `event Action? VisibilityChanged` fires synchronously after a committed visibility change. Its failure is aggregated with canvas-root visibility delivery, and disposal clears subscribers. These members are declared on Window rather than inherited from a canvas base.
+
 | Member | Contract |
 | --- | --- |
-| [`protected override Func<Node> CreateSceneInstanceFactory()`](#createsceneinstancefactory) | Returns a static factory for an exact Window. Derived types must supply their own factory. PackedScene stores title, size, size limits, mode, supported policies and inherited stored Node properties; ScreenPosition and CurrentScreen are not stored. |
+| [`protected override Func<SceneNode> CreateSceneInstanceFactory()`](#createsceneinstancefactory) | Returns a static factory for an exact Window. Derived types must supply their own factory. PackedScene stores title, size, size limits, mode, supported policies and inherited stored SceneNode properties; Position and CurrentScreen are not stored. |
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown. |
-| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Appends typed title, size, minimum/maximum size, mode and supported policy descriptors to inherited Node descriptors. |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Appends typed title, size, minimum/maximum size, mode and supported policy descriptors to inherited SceneNode descriptors. |
 | [`public override Rect GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
+| [`public void Show()`](#show) | Shows this window; detached use only configures startup visibility. |
+| [`public void Hide()`](#hide) | Hides this window without disposing it or its scene. |
 | [`public int GetWindowID()`](#getwindowid) | Gets the native window identity while running. |
 | [`public void GrabFocus()`](#grabfocus) | Requests keyboard focus and foreground placement from the native system. |
 | [`public bool HasFocus()`](#hasfocus) | Reports whether the active native window has keyboard focus. |
@@ -81,6 +83,7 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 
 | Member | Contract |
 | --- | --- |
+| [`public event Action? VisibilityChanged`](#visibilitychanged) | Runs synchronously after the window visibility commits, before canvas propagation. |
 | [`public event Action? CloseRequested`](#closerequested) | Occurs when the system requests closure of this root window. |
 | [`public event Action? FocusEntered`](#focusentered) | Occurs when the window gains native keyboard focus. |
 | [`public event Action? FocusExited`](#focusexited) | Occurs when the window loses native keyboard focus, before pressed input is released. |
@@ -134,14 +137,14 @@ Zero by default.
 
 **ObjectDisposedException:** The window is disposed.
 
-<a id="screenposition"></a>
-### `public Vector2I ScreenPosition { get; set; }`
+<a id="position"></a>
+### `public Vector2I Position { get; set; }`
 
 Gets or requests the client origin in native desktop coordinates.
 
 The configured position before startup, or zero if no position was requested.
 
-This is independent of inherited `Node.Position`. Leaving it unset lets the system place the window. A preconfigured position is applied at startup and can fail on an unsupported platform.
+Window has no spatial canvas transform. Leaving Position unset lets the system place the window. A preconfigured position is applied at startup and can fail on an unsupported platform.
 
 **NotSupportedException:** The active compositor does not expose or accept global window positions, including Wayland.
 
@@ -156,7 +159,7 @@ Gets the observed client size or requests a positive client size.
 
 100 by 100 before configuration or native activation.
 
-Native changes may be asynchronous or constrained by the compositor and size limits. SizeChanged follows committed size changes; desktop position and inherited node transforms do not affect size.
+Native changes may be asynchronous or constrained by the compositor and size limits. SizeChanged follows committed size changes; desktop position and child canvas transforms do not affect size.
 
 **ArgumentOutOfRangeException:** Either component is nonpositive.
 
@@ -180,21 +183,19 @@ An empty string by default.
 **ObjectDisposedException:** The window is disposed.
 
 <a id="visible"></a>
-### `public override bool Visible { get; set; }`
+### `public bool Visible { get; set; }`
 
-Gets or sets this node's local logical visibility.
+Gets or sets the root window's native visibility.
 
-`true` by default.
+`true` by default. Before Engine.Run this only configures startup visibility.
 
-An actual change synchronously propagates visibility notifications and events through all descendants.
+An active Window shows or hides its native surface before committing managed visibility; native failure leaves managed state unchanged. A committed change raises VisibilityChanged, then notifies each canvas root beneath the window, including roots separated by neutral SceneNode objects. Each canvas root propagates to direct canvas descendants.
 
-**InvalidOperationException:** An attached node is mutated off the owner thread.
+**InvalidOperationException:** Mutation occurs off the owner thread or a native request fails.
 
-**ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
+**ObjectDisposedException:** The window is disposed.
 
-**Exception:** A visibility notification or event handler throws after visibility changes.
-
-An active Window also shows/hides its native surface before updating Node visibility. Native failure preserves managed visibility; inherited Show/Hide use this override.
+**AggregateException:** Window or canvas visibility callbacks fail after the change commits; later canvas roots are still attempted.
 
 <a id="mode"></a>
 ### `public ModeEnum Mode { get; set; }`
@@ -268,10 +269,20 @@ Uses GetFlag and SetFlag. Enabling it fails for an active Wayland top-level wind
 
 ## Method Descriptions
 
-<a id="createsceneinstancefactory"></a>
-### `protected override Func<Node> CreateSceneInstanceFactory()`
+<a id="show"></a>
+### `public void Show()`
 
-Returns a static factory for an exact Window. Derived types must supply their own factory. PackedScene stores title, size, size limits, mode, supported policies and inherited stored Node properties; ScreenPosition and CurrentScreen are not stored.
+Assigns Visible to true. No native resources are acquired while detached. See [Visible](#visible) for owner-thread, native failure and callback exception behavior.
+
+<a id="hide"></a>
+### `public void Hide()`
+
+Assigns Visible to false without disposing the window or its children. See [Visible](#visible) for owner-thread, native failure and callback exception behavior.
+
+<a id="createsceneinstancefactory"></a>
+### `protected override Func<SceneNode> CreateSceneInstanceFactory()`
+
+Returns a static factory for an exact Window. Derived types must supply their own factory. PackedScene stores title, size, size limits, mode, supported policies and inherited stored SceneNode properties; Position and CurrentScreen are not stored.
 
 <a id="dispose"></a>
 ### `protected override void Dispose(bool disposing)`
@@ -281,7 +292,7 @@ Clears this class's subscribers, then disposes inherited state. Overrides must c
 <a id="getpropertydescriptors"></a>
 ### `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
 
-Appends typed title, size, minimum/maximum size, mode and supported policy descriptors to inherited Node descriptors.
+Appends typed title, size, minimum/maximum size, mode and supported policy descriptors to inherited SceneNode descriptors.
 
 <a id="getvisiblerect"></a>
 ### `public override Rect GetVisibleRect()`
@@ -382,7 +393,7 @@ Reports whether the current resize policy permits native maximization.
 
 Gets the outer window origin, including native borders when visible and active.
 
-**Returns:** Desktop coordinates; ScreenPosition while hidden or detached.
+**Returns:** Desktop coordinates; Position while hidden or detached.
 
 **NotSupportedException:** The active Wayland compositor does not disclose global positions.
 
@@ -480,6 +491,11 @@ Requests a native taskbar progress fraction for the active window.
 
 ## Event Descriptions
 
+<a id="visibilitychanged"></a>
+### `public event Action? VisibilityChanged`
+
+Delivered on the owner thread after a committed visibility change and before canvas visibility propagation. Native failures and assigning the current value do not raise it. Subscriber failures are aggregated with canvas-root delivery failures; disposal clears subscribers.
+
 <a id="closerequested"></a>
 ### `public event Action? CloseRequested`
 
@@ -532,6 +548,6 @@ The managed snapshot remains valid after delivery. Subscribers run on the owner 
 
 ## Lifecycle, verification and limits
 
-See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. Physical-input/visual acceptance of this new API, other platforms, rendering, content scaling, offscreen targets, GUI and nested windows remain unverified or absent. Native tests also cover mode/flag application, IME enable/disable, borrowed native drop-memory lifetime, managed path retention and window-signal failure cleanup. Dummy tests do not verify native flag changes because that backend accepts setters without applying them. Wayland rejects ScreenPosition and may constrain geometry; focus requests obey compositor policy.
+See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. Physical-input/visual acceptance of this new API, other platforms, rendering, content scaling, offscreen targets, GUI and nested windows remain unverified or absent. Native tests also cover mode/flag application, IME enable/disable, borrowed native drop-memory lifetime, managed path retention and window-signal failure cleanup. Dummy tests do not verify native flag changes because that backend accepts setters without applying them. Wayland rejects Position and may constrain geometry; focus requests obey compositor policy.
 
 Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028).

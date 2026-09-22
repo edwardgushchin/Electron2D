@@ -1,6 +1,6 @@
 # Object lifecycle component
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ## Scope
 
@@ -30,7 +30,7 @@ Lifetime follows this state transition:
 Alive --Dispose()--> Disposing --Dispose(bool) succeeds--> Disposed --Disposed event--> complete
 ```
 
-Before attempting the atomic transition, each caller may run `ValidateDisposal()` so a derived type can reject that caller. `Node`, `MainLoop`, and `SceneTree` use it to enforce owner-thread or active-callback disposal rules. Concurrent callers can validate at the same time or race with another caller beginning disposal, so overrides must be side-effect-free and race-tolerant.
+Before attempting the atomic transition, each caller may run `ValidateDisposal()` so a derived type can reject that caller. `SceneNode`, `MainLoop`, and `SceneTree` use it to enforce owner-thread or active-callback disposal rules. Concurrent callers can validate at the same time or race with another caller beginning disposal, so overrides must be side-effect-free and race-tolerant.
 
 The first valid caller atomically changes the state from `Alive` to `Disposing` and records its thread. Concurrent and later `Dispose()` calls return without repeating cleanup. `IsDisposed` becomes `true` when disposal starts. Guarded state remains readable through `ThrowIfDisposed()` only on the recorded thread while it runs pre-delete and derived cleanup callbacks; other threads are rejected. The base always reaches `Disposed`, clears exactly its own `Disposed`, `PropertyListChanged`, and `ScriptChanged` subscriber lists, and suppresses finalization. `Disposed` is raised once only when both pre-delete notification and `Dispose(bool)` succeed.
 

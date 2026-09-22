@@ -202,11 +202,11 @@ internal static partial class RenderingRuntimeTests
         internal int Draws;
         public override int Width => 4;
         public override int Height => 4;
-        public override void Draw(Node canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)
+        public override void Draw(CanvasItem canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)
         { Draws++; canvasItem.DrawRect(new Rect(position, Size), Colors.Magenta); }
-        public override void DrawRect(Node canvasItem, Rect rect, bool tile, Color? modulate = null, bool transpose = false)
+        public override void DrawRect(CanvasItem canvasItem, Rect rect, bool tile, Color? modulate = null, bool transpose = false)
         { Draws++; canvasItem.DrawRect(rect, Colors.Magenta); }
-        public override void DrawRectRegion(Node canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
+        public override void DrawRectRegion(CanvasItem canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
         { Draws++; canvasItem.DrawRect(rect, Colors.Magenta); }
     }
 }

@@ -1,13 +1,13 @@
 namespace Electron2D;
 
-public partial class Node
+public abstract partial class CanvasItem
 {
     private static readonly PropertyDescriptor[] DrawingProperties =
     [
-        new PropertyDescriptor<Node, Color>(nameof(Modulate), n => n.Modulate, (n, v) => n.Modulate = v, _ => Colors.White, stored: true),
-        new PropertyDescriptor<Node, Color>(nameof(SelfModulate), n => n.SelfModulate, (n, v) => n.SelfModulate = v, _ => Colors.White, stored: true),
-        new PropertyDescriptor<Node, Material?>(nameof(Material), n => n.Material, (n, v) => n.Material = v, _ => null, stored: true),
-        new PropertyDescriptor<Node, bool>(nameof(UseParentMaterial), n => n.UseParentMaterial, (n, v) => n.UseParentMaterial = v, _ => false, stored: true),
+        new PropertyDescriptor<CanvasItem, Color>(nameof(Modulate), n => n.Modulate, (n, v) => n.Modulate = v, _ => Colors.White, stored: true),
+        new PropertyDescriptor<CanvasItem, Color>(nameof(SelfModulate), n => n.SelfModulate, (n, v) => n.SelfModulate = v, _ => Colors.White, stored: true),
+        new PropertyDescriptor<CanvasItem, Material?>(nameof(Material), n => n.Material, (n, v) => n.Material = v, _ => null, stored: true),
+        new PropertyDescriptor<CanvasItem, bool>(nameof(UseParentMaterial), n => n.UseParentMaterial, (n, v) => n.UseParentMaterial = v, _ => false, stored: true),
     ];
     private List<CanvasCommand>? _canvasCommands;
     private int _redrawPending = 1;
@@ -215,13 +215,13 @@ public partial class Node
         finally { _drawing = false; }
     }
 
-    internal Material? CanvasMaterial => _useParentMaterial ? Parent?.CanvasMaterial : _material;
-    private Color InheritedModulate => Parent is null ? _modulate : Parent.InheritedModulate * _modulate;
+    internal Material? CanvasMaterial => _useParentMaterial ? GetParentItem()?.CanvasMaterial : _material;
+    private Color InheritedModulate => GetParentItem() is not { } parent ? _modulate : parent.InheritedModulate * _modulate;
 
     internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform viewportTransform)
     {
         if (_canvasCommands is null) return;
-        var transform = viewportTransform * GlobalTransform;
+        var transform = viewportTransform * GetGlobalTransform();
         var color = InheritedModulate * _selfModulate;
         MaterialState? material = null;
         var capturedMaterial = false;

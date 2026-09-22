@@ -9,6 +9,7 @@ public partial class Window : Viewport
 {
     private static readonly PropertyDescriptor[] WindowProperties =
     [
+        new PropertyDescriptor<Window, bool>(nameof(Visible), w => w.Visible, (w, v) => w.Visible = v, _ => true, stored: true),
         new PropertyDescriptor<Window, string>(nameof(Title), w => w.Title, (w, v) => w.Title = v, _ => "", stored: true),
         new PropertyDescriptor<Window, Vector2I>(nameof(Size), w => w.Size, (w, v) => w.Size = v, _ => new(100, 100), stored: true),
         new PropertyDescriptor<Window, Vector2I>(nameof(MinSize), w => w.MinSize, (w, v) => w.MinSize = v, _ => Vector2I.Zero, stored: true),
@@ -20,6 +21,7 @@ public partial class Window : Viewport
         new PropertyDescriptor<Window, bool>(nameof(Unfocusable), w => w.Unfocusable, (w, v) => w.Unfocusable = v, _ => false, stored: true),
     ];
 
+    private bool _visible = true;
     private DisplayServer? _display;
     private RenderingServer? _renderer;
     private string _title = "";
@@ -58,7 +60,7 @@ public partial class Window : Viewport
     /// <summary>Gets the observed client size or requests a positive client size.</summary>
     /// <value>100 by 100 before configuration or native activation.</value>
     /// <remarks>Native changes may be asynchronous or constrained by the compositor and size limits.
-    /// SizeChanged follows committed size changes; desktop position and inherited node transforms do not affect size.</remarks>
+    /// SizeChanged follows committed size changes; desktop position and child canvas transforms do not affect size.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Either component is nonpositive.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
@@ -103,25 +105,59 @@ public partial class Window : Viewport
 
     /// <summary>Gets or requests the client origin in native desktop coordinates.</summary>
     /// <value>The configured position before startup, or zero if no position was requested.</value>
-    /// <remarks>This is independent of inherited <see cref="Node.Position"/>. Leaving it unset lets the system place
+    /// <remarks>Leaving it unset lets the system place
     /// the window. A preconfigured position is applied at startup and can fail on an unsupported platform.</remarks>
     /// <exception cref="NotSupportedException">The active compositor does not expose or accept global window positions, including Wayland.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public Vector2I ScreenPosition
+    public Vector2I Position
     {
         get { ThrowIfDisposed(); return _display?.WindowGetPosition() ?? _screenPosition ?? Vector2I.Zero; }
         set { EnsureMutable(); _display?.WindowSetPosition(value); _screenPosition = value; }
     }
 
-    /// <inheritdoc />
-    /// <remarks>Also shows or hides the native window when active. Calls through Node and inherited Show/Hide
-    /// use this behavior. A native failure leaves managed visibility unchanged.</remarks>
-    public override bool Visible
+    /// <summary>Gets or sets the root window's native visibility.</summary>
+    /// <value>True by default. A native failure leaves managed visibility unchanged.</value>
+    /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
+    /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
+    /// <exception cref="AggregateException">Visibility callbacks fail after the new visibility commits.</exception>
+    public bool Visible
     {
-        get => base.Visible;
-        set { EnsureMutable(); _display?.SetWindowVisible(value); base.Visible = value; }
+        get { ThrowIfDisposed(); return _visible; }
+        set
+        {
+            EnsureMutable();
+            if (_visible == value) return;
+            _display?.SetWindowVisible(value);
+            _visible = value;
+            List<Exception>? errors = null;
+            try { VisibilityChanged?.Invoke(); }
+            catch (Exception error) { CollectException(ref errors, error); }
+            foreach (var node in EnumerateDepthFirst())
+            {
+                if (node is not CanvasItem item || item.IsDisposed || item.Parent is CanvasItem) continue;
+                try { item.PropagateVisibilityChanged(); }
+                catch (Exception error) { CollectException(ref errors, error); }
+            }
+            ThrowCollected("Window visibility callbacks failed.", errors);
+        }
     }
+
+    /// <summary>Shows this window, acquiring no native resources before Engine.Run.</summary>
+    /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
+    /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
+    /// <exception cref="AggregateException">Visibility callbacks fail after the new visibility commits.</exception>
+    public void Show() => Visible = true;
+
+    /// <summary>Hides this window without disposing it or its scene.</summary>
+    /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
+    /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
+    /// <exception cref="AggregateException">Visibility callbacks fail after the new visibility commits.</exception>
+    public void Hide() => Visible = false;
+
+    /// <summary>Occurs synchronously after this window's visibility changes.</summary>
+    /// <remarks>Runs on the owner thread before canvas visibility propagation. Callback failures are aggregated after canvas roots are attempted.</remarks>
+    public event Action? VisibilityChanged;
 
     /// <summary>Occurs when the system requests closure of this root window.</summary>
     /// <remarks>Handlers may disable SceneTree.AutoAcceptQuit to keep running, or call SceneTree.Quit with an exit code.
@@ -171,10 +207,10 @@ public partial class Window : Viewport
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(WindowProperties);
 
     /// <inheritdoc />
-    protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Window)
+    protected override Func<SceneNode> CreateSceneInstanceFactory() => GetType() == typeof(Window)
         ? CreateDefaultWindow : base.CreateSceneInstanceFactory();
 
-    private static Node CreateDefaultWindow() => new Window();
+    private static SceneNode CreateDefaultWindow() => new Window();
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
@@ -182,6 +218,7 @@ public partial class Window : Viewport
         if (disposing)
         {
             CloseRequested = null;
+            VisibilityChanged = null;
             TitleChanged = null;
             FocusEntered = null;
             FocusExited = null;

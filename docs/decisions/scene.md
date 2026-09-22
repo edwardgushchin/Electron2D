@@ -77,11 +77,11 @@ Outside these renames, the entire in-scope engine API must correspond to Godot u
 
 ### Implementation and verification boundary
 
-At adoption, the runtime still has `Sprite : Node : ElectronObject`, `Timer : Node` and `Window : Viewport : Node`. This existing flattened implementation must be migrated; it is not the accepted target. `SceneNode`, `CanvasItem` and `Control` are not yet production types. Current class pages and compiled coverage continue to describe actual code until their implementation changes.
+The runtime implements `Sprite : Node : CanvasItem : SceneNode : ElectronObject`, `Timer : SceneNode` and `Window : Viewport : SceneNode`. SceneNode and CanvasItem are production types; Control remains absent. Class pages and compiled coverage describe the actual implemented surface and its remaining gaps.
 
-The next scene slice separates the existing implementation and updates every affected consumer, XML/class/component/domain document, inventory and bidirectional coverage entry together. Preserve executable lifecycle, rendering, input, packing and failure cleanup; test inheritance and behavior through neutral and canvas bases. Control's absence remains an implementation dependency, not permission to move UI layout into Node or collapse its branch.
+The hierarchy migration updates consumers, XML/class/component/domain documents, inventory and bidirectional coverage together. SceneHierarchyTests and native mixed-tree pixel checks preserve executable lifecycle, rendering, input, packing and failure cleanup through neutral and canvas bases. Control's absence remains an implementation dependency, not permission to move UI layout into Node or collapse its branch.
 
-Coverage retains the pinned Godot identities `Node` and `Node2D`, maps them to the actual production types, and records the accepted target while migration is pending. Do not mark members implemented merely because this decision has been accepted or a renamed declaration compiles. The existing runtime checks establish only the behavior they exercise; native and platform acceptance still follows ADR 0021.
+Coverage retains the pinned Godot identities `Node` and `Node2D`, maps them to the actual production types, and records remaining behavioral gaps. Do not mark members implemented merely because this decision has been accepted or a renamed declaration compiles. The existing runtime checks establish only the behavior they exercise; native and platform acceptance still follows ADR 0021.
 
 ### Rejected alternatives
 
@@ -233,14 +233,14 @@ Last updated: 2026-09-23
 
 ### Context
 
-Electron2D uses the neutral `SceneNode` as its common tree contract under ADR 0008, an active `SceneTree`, and typed in-memory `PackedScene` capture and instantiation. The current flattened implementation still requires the migration recorded there. Those decisions define the mechanics but do not yet state the product-level model strongly enough. Future gameplay, editor, serialization, rendering, and physics work needs one stable answer to what a game object is, how a running world is structured, and what may be packaged and reused.
+Electron2D uses the neutral `SceneNode` as its common tree contract under ADR 0008, an active `SceneTree`, and typed in-memory `PackedScene` capture and instantiation. The neutral, canvas and spatial layers are implemented. Those decisions define the mechanics but do not yet state the product-level model strongly enough. Future gameplay, editor, serialization, rendering, and physics work needs one stable answer to what a game object is, how a running world is structured, and what may be packaged and reused.
 
 The intended model follows the proven SceneNode-based, scene-oriented structure familiar from Godot while retaining Electron2D's typed C# contracts and explicit lifecycle boundaries. A scene must not be mistaken for only a level file, and a later subsystem must not accidentally introduce a second public entity hierarchy alongside `SceneNode`.
 
 ### Decision
 
 - Electron2D is a SceneNode-based, scene-oriented 2D engine. `SceneNode` is the primary public game-object base, and an ordered SceneNode hierarchy is the public representation of a game object, a composed subsystem, and the running game world.
-- Specialized gameplay objects derive directly or indirectly from `SceneNode` and compose behavior through child Nodes and typed `Resource` values. Non-spatial, canvas and spatial responsibilities stay separated as `SceneNode`, `CanvasItem` and `Node` under ADR 0008. The 3D hierarchy remains outside product scope.
+- Specialized gameplay objects derive directly or indirectly from `SceneNode` and compose behavior through child SceneNodes and typed `Resource` values. Non-spatial, canvas and spatial responsibilities stay separated as `SceneNode`, `CanvasItem` and `Node` under ADR 0008. The 3D hierarchy remains outside product scope.
 - `SceneTree` owns the one active root hierarchy and controls its lifecycle, frame callbacks, deferred work, and deletion. A detached hierarchy is inert until the caller explicitly attaches it to an active tree.
 - A scene is a reusable packed SceneNode hierarchy, not merely a level. Any self-contained root and its owned descendants may represent a character, projectile, controller hierarchy, reusable environment object, or complete level without changing the storage model.
 - `PackedScene` is the reuse boundary. Each instantiation creates a fresh detached SceneNode hierarchy. Scene-local resources are duplicated with graph identity preserved, while non-local resources remain shared according to the existing resource contract.
