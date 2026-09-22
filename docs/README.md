@@ -2,6 +2,8 @@
 
 Last updated: 2026-09-22
 
+The current Node inheritance consolidation is unapproved and requires resolution under [ADR 0008](decisions/scene.md#adr-0008). Describing existing code or passing its checks does not establish architectural acceptance.
+
 This directory describes the engine as it exists now. Planned features are listed only as explicit limitations or next boundaries; they are never presented as implemented.
 
 ## Current snapshot

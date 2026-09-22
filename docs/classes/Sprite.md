@@ -2,6 +2,8 @@
 
 Last updated: 2026-09-22
 
+The current consolidation of hierarchy, canvas and spatial behavior in Node has not been approved by the user; [ADR 0008](../decisions/scene.md#adr-0008) records the unresolved inheritance decision. The API below describes existing code.
+
 - Declaration: `public class Sprite : Node`
 - Source: [Sprite.cs](../../src/Scene/2D/Sprite.cs)
 - Inherits: [Node](Node.md)

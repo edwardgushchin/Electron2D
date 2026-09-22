@@ -2,6 +2,8 @@
 
 Last updated: 2026-09-22
 
+The current consolidation of hierarchy, canvas and spatial behavior in Node has not been approved by the user; [ADR 0008](../decisions/scene.md#adr-0008) records the unresolved inheritance decision. The API below describes existing code.
+
 **Inherits:** [ElectronObject](ElectronObject.md)
 
 **Inherited By:** [Sprite](Sprite.md), [Timer](Timer.md), [Viewport](Viewport.md)
@@ -1944,7 +1946,7 @@ There is no native system-event creation, GUI/viewport consumption, focus synchr
 
 ## Relevant decisions
 
-- [0008: Unified Node combines Node and Node2D](../decisions/scene.md#adr-0008)
+- [0008: Unresolved scene inheritance](../decisions/scene.md#adr-0008)
 - [0026: Separate Transform foundational type](../decisions/core-math.md#adr-0026)
 - [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)

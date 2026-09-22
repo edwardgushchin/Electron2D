@@ -2,9 +2,11 @@
 
 Last updated: 2026-09-22
 
+The current consolidation of hierarchy, canvas and spatial behavior in Node has not been approved by the user; [ADR 0008](../decisions/scene.md#adr-0008) records the unresolved inheritance decision. The API below describes existing code.
+
 ## Scope
 
-This Scene component provides Electron2D's primary and only public game-object base. A game object, composed subsystem, or complete world is an ordered hierarchy of [`Node`](../classes/Node.md) instances. `Node` deliberately combines Godot-like hierarchy/lifecycle behavior with the transform and canvas-state behavior normally associated with `Node2D`; specialized gameplay objects derive from it and may compose child Nodes and typed resources. A separate `Node2D`, `GameObject`, or public entity hierarchy does not exist.
+This Scene component provides Electron2D's currently implemented game-object base. A game object, composed subsystem, or complete world is an ordered hierarchy of [`Node`](../classes/Node.md) instances. `Node` currently combines Godot-like hierarchy/lifecycle behavior with the transform and canvas-state behavior normally associated with `Node2D`; specialized gameplay objects derive from it and may compose child Nodes and typed resources. A separate `Node2D`, `GameObject`, or public entity hierarchy does not exist.
 
 ## Owned types
 
@@ -67,7 +69,7 @@ Implemented: ordered hierarchy and reparenting, lifecycle and typed events, rela
 
 ## Decision
 
-- [0008: Unified Node combines Node and Node2D](../decisions/scene.md#adr-0008)
+- [0008: Unresolved scene inheritance](../decisions/scene.md#adr-0008)
 - [0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
 - [0026: Separate Transform foundational type](../decisions/core-math.md#adr-0026)
 - [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)

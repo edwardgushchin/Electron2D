@@ -2,6 +2,8 @@
 
 Last updated: 2026-09-22
 
+The current Node inheritance consolidation is unapproved and requires resolution under [ADR 0008](../decisions/scene.md#adr-0008). Describing existing code or passing its checks does not establish architectural acceptance.
+
 This is the entry point for the living, bidirectional comparison between the official stable Godot API and the Electron2D production API. The register accounts for upstream declarations even when they are outside Electron2D's 2D product, and for Electron2D declarations that have no upstream counterpart. It is a census and roadmap, not a claim that every listed member is implemented.
 
 The current official baseline is [Godot 4.7.2 stable](https://godotengine.org/article/maintenance-release-godot-4-7-2/), released 2026-08-18, at source commit [`ed1daf0bf001b61586d9930840f2f1394092c079`](https://github.com/godotengine/godot/tree/ed1daf0bf001b61586d9930840f2f1394092c079). Retrieved 2026-09-22. The source is the class-reference XML under `doc/classes/`, `modules/*/doc_classes/`, and `platform/*/doc_classes/`; declarations were extracted without prose descriptions. The upstream source's MIT terms are preserved in [GODOT-LICENSE.txt](GODOT-LICENSE.txt).

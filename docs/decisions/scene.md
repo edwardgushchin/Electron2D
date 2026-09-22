@@ -46,42 +46,30 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 - Use dynamic method names: rejected by ADR 0001.
 
 <a id="adr-0008"></a>
-## ADR 0008: Combine scene and 2D spatial behavior in one Node
+## ADR 0008: Scene node inheritance is unresolved
 
 Last updated: 2026-09-22
 
-- Status: Accepted; the original external-numerics transform choice is superseded by [ADR 0026](core-math.md#adr-0026), [ADR 0032](core-math.md#adr-0032), and [ADR 0033](core-math.md#adr-0033), and Node input callbacks are extended by [ADR 0038](input.md#adr-0038)
-- Scope: Scene-domain public object model
+- Status: Not accepted. The previous Accepted label for consolidating Node, CanvasItem and Node2D is withdrawn following the user's explicit clarification that this decision was not approved.
+- Scope: Separation of hierarchy/lifecycle, canvas drawing and 2D spatial behavior.
 
-### Context
+### Decision boundary
 
-Godot separates non-spatial hierarchy/lifecycle behavior (`Node`) from 2D spatial behavior (`Node2D`, through `CanvasItem`). Electron2D is exclusively a 2D engine, and its intended game-object API needs both sets of behavior on ordinary nodes. Preserving a second spatial base class would add a hierarchy choice that has no 3D counterpart or non-spatial engine requirement here.
+Godot separates these responsibilities through `Node`, `CanvasItem` and `Node2D`. Electron2D's strict 2D scope does not by itself authorize combining these classes. Node-based scene composition also does not require putting transforms and drawing on every Node. The user's naming requirements for redundant dimensional suffixes do not authorize removing inheritance layers.
 
-### Decision
+No final replacement hierarchy or names are accepted by this record. Its earlier consolidation rationale must not be used as evidence of user approval or as a requirement for subsequent API work. Resolve the public inheritance boundaries before extending the scene type hierarchy further; update implementation, class documents and coverage together when that decision is made.
 
-- Electron2D exposes one public game-object class named `Node`; it does not expose `Node2D`.
-- `Node` combines hierarchy, lifecycle, paths, groups, processing, typed input callbacks, deletion, 2D local/global transforms, visibility, and Z ordering.
-- Historical note: the initial Node transform vocabulary used external numerics directly. ADR 0026 introduced the engine-owned affine value, ADR 0029 completed its math, and ADRs 0032/0033 completed Node migration to `Electron2D.Transform` and `Vector2`.
-- Godot-like concepts keep recognizable names where they remain useful, but the API stays typed C#: strings represent paths/groups/names, delegates and virtual methods represent callbacks, and C# events represent signals.
-- Renderer-independent canvas state (`Visible`, `ZIndex`, `ZAsRelative`) belongs on `Node` now. `Window : Viewport : Node` introduces the root native window and its input boundary. The inherited `Position` continues to mean scene position; `Window.ScreenPosition` denotes the native desktop position and does not transform children. `Visible` is virtual so calls through `Node`, including `Show` and `Hide`, apply native window visibility. The window viewport rectangle starts at zero and uses the native client size. Renderer-bound drawing, materials, canvas handles, lights, clipping, input picking, and rendered viewport behavior wait for their actual domains. The first window slice supports one root viewport; adding a viewport as a child is rejected before hierarchy mutation until native multiwindow and offscreen rendering are integrated.
-- `SceneTree` is the host-driven frame boundary. It delivers explicitly enabled process and physics-process callbacks in priority/tree order and flushes deferred work afterward; it does not create a hidden thread or clock.
+### Current implementation, not an approved architecture
 
-`Engine.Run` consumes a validated detached root Window after reserving the idle engine. It opens the native window and publishes the SceneTree through Engine.MainLoop before scene entry/ready, processes native input before frames, and checks quit during the bounded frame wait. The engine remains reserved through all cleanup, including callback failures. Root close signals precede the default quit decision, allowing a handler to disable `AutoAcceptQuit`. A quit request completes the current callback/frame; it does not dispose the tree from inside user callbacks. Window rendering, SubViewport, embedded windows, GUI, and content scaling are separate unresolved dependencies; no draw or texture capability is implied by the window/input base.
+- The current runtime has `Sprite : Node : ElectronObject`, `Timer : Node` and `Window : Viewport : Node`; separate CanvasItem and Node2D types are absent.
+- Node currently combines ordered hierarchy, lifecycle, paths/groups, processing/input, deletion, local/global transforms, visibility/Z and retained canvas drawing/materials. Its `partial` declarations describe the same C# type across files and add no inheritance layer.
+- This also gives nonvisual nodes such as Timer spatial and drawing APIs. The future GUI hierarchy must account for the distinct responsibilities represented by Control and Node2D under CanvasItem in the reference model.
+- SceneTree delivers explicit process/physics callbacks and owns lifecycle/deferred work. Engine.Run owns the root Window, native frame loop and cleanup under the current [window runtime](../components/window-runtime.md). Window.ScreenPosition remains separate from the inherited scene Position in today's code; the root client viewport starts at zero. Multiwindow, offscreen viewports, content scaling and broader GUI integration remain incomplete.
+- Engine-owned Transform/Vector2 values, typed callbacks/events, deterministic lifetime, the strict 2D boundary and the single runtime assembly continue to follow their own accepted ADRs. They do not settle the inheritance question.
 
-### Consequences
+### Verification boundary
 
-- Every game object can be positioned immediately; users never choose between `Node` and `Node2D`.
-- Scene and transform lifetime share one parent tree, making global transforms, inherited visibility, Z state, paths, groups, and processing coherent.
-- The public API is intentionally similar rather than source-compatible with Godot: there is no Variant, NodePath, StringName, CanvasItem, or automatic method-name dispatch.
-- The original external-numerics dependency was later removed; the current engine-owned `Transform` preserves the documented parent/right-first composition contract.
-- ADR 0038 later added backend-neutral typed input callbacks directly to `Node`; future renderer, GUI picking, and native input work extends this model or adds purpose-specific derived types without recreating a parallel `Node2D` hierarchy.
-
-### Rejected alternatives
-
-- Keep separate `Node` and `Node2D`: rejected because the user-facing engine is 2D-only and requires spatial behavior on its single node type.
-- Put transforms in a detachable component: rejected because it makes the primary 2D object more indirect without a demonstrated non-spatial use case.
-- Create engine-specific vector/matrix values in the initial Node slice: rejected at the time because standard-library types covered that smaller surface. ADRs 0026, 0029, 0032, and 0033 later introduced and migrated the complete engine-owned values as an explicit source-breaking slice.
-- Copy all `CanvasItem` API before a renderer exists: rejected because those members would be non-functional promises rather than a completed runtime contract.
+Existing builds and runtime tests establish behavior of this implementation. They do not establish approval of its flattened hierarchy. Coverage must retain the actual type mappings while identifying the unresolved inheritance adaptation; declaration accounting is not architectural acceptance.
 
 <a id="adr-0011"></a>
 ## ADR 0011: Exception-safe SceneTree lifecycle, typed groups, and frame timers
@@ -223,18 +211,18 @@ Last updated: 2026-09-21
 
 - Status: Accepted
 - Scope: Public game-object, world-composition, and scene-reuse model
-- Builds on: [0008](scene.md#adr-0008), [0011](scene.md#adr-0011), and [0023](scene.md#adr-0023)
+- Builds on: [0011](scene.md#adr-0011) and [0023](scene.md#adr-0023). Public inheritance remains unresolved in [0008](scene.md#adr-0008).
 
 ### Context
 
 Electron2D already has a unified `Node`, an active `SceneTree`, and typed in-memory `PackedScene` capture and instantiation. Those decisions define the mechanics but do not yet state the product-level model strongly enough. Future gameplay, editor, serialization, rendering, and physics work needs one stable answer to what a game object is, how a running world is structured, and what may be packaged and reused.
 
-The intended model follows the proven Node-based, scene-oriented structure familiar from Godot while retaining Electron2D's typed C# contracts, unified 2D node, and explicit lifecycle boundaries. A scene must not be mistaken for only a level file, and a later subsystem must not accidentally introduce a second public entity hierarchy alongside `Node`.
+The intended model follows the proven Node-based, scene-oriented structure familiar from Godot while retaining Electron2D's typed C# contracts and explicit lifecycle boundaries. A scene must not be mistaken for only a level file, and a later subsystem must not accidentally introduce a second public entity hierarchy alongside `Node`.
 
 ### Decision
 
 - Electron2D is a Node-based, scene-oriented 2D engine. `Node` is the primary public game-object base, and an ordered Node hierarchy is the public representation of a game object, a composed subsystem, and the running game world.
-- Specialized gameplay objects derive from `Node` and compose behavior through child Nodes and typed `Resource` values. Electron2D keeps its single unified `Node`; it does not add `Node2D` or any 3D hierarchy.
+- Specialized gameplay objects derive directly or indirectly from `Node` and compose behavior through child Nodes and typed `Resource` values. This scene-composition decision does not approve merging the non-spatial, canvas and spatial base classes; their separation is unresolved in ADR 0008. The 3D hierarchy remains outside product scope.
 - `SceneTree` owns the one active root hierarchy and controls its lifecycle, frame callbacks, deferred work, and deletion. A detached hierarchy is inert until the caller explicitly attaches it to an active tree.
 - A scene is a reusable packed Node hierarchy, not merely a level. Any self-contained root and its owned descendants may represent a character, projectile, controller hierarchy, reusable environment object, or complete level without changing the storage model.
 - `PackedScene` is the reuse boundary. Each instantiation creates a fresh detached Node hierarchy. Scene-local resources are duplicated with graph identity preserved, while non-local resources remain shared according to the existing resource contract.
