@@ -48,6 +48,11 @@
     "Vector4.Axis": "Vector4.Axis",
     "Vector4i.Axis": "Vector4I.Axis",
     "Window.Mode": "Window.ModeEnum",
-    "Window.Flags": "Window.Flags"
+    "Window.Flags": "Window.Flags",
+    "CanvasItem.TextureFilter": "CanvasItem.TextureFilterEnum",
+    "CanvasItem.TextureRepeat": "CanvasItem.TextureRepeatEnum",
+    "Viewport.DefaultCanvasItemTextureFilter": "Viewport.DefaultCanvasItemTextureFilter",
+    "Viewport.DefaultCanvasItemTextureRepeat": "Viewport.DefaultCanvasItemTextureRepeat",
+    "Viewport.AnisotropicFiltering": "Viewport.AnisotropicFiltering"
   }
 }

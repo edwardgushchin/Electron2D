@@ -14,7 +14,7 @@ Resource base and image sources live under `src/Core/IO/`; shader/material/textu
 | --- | --- | --- |
 | [Resource base](../components/resources.md) | [`Resource`](../classes/Resource.md), [`DeepDuplicateMode`](../classes/DeepDuplicateMode.md) | Implemented and verified |
 | [Images](../components/images.md) | [`Image`](../classes/Image.md), its seven nested enums, [`ImageMetrics`](../classes/ImageMetrics.md), [`ClockDirection`](../classes/ClockDirection.md) | Managed buffer and processing contract implemented and verified; five native load formats and PNG/JPEG saving; further codec semantics pending; copied pixels feed textures |
-| [Shader materials](../components/shader-materials.md) | [`Shader`](../classes/Shader.md), [`Shader.Mode`](../classes/Shader.Mode.md), [`Material`](../classes/Material.md), [`ShaderMaterial`](../classes/ShaderMaterial.md), [`Texture`](../classes/Texture.md), [`ImageTexture`](../classes/ImageTexture.md) | SPIR-V fragment programs, typed uniform buffers and sampled textures execute on Linux Wayland/Vulkan; further mappings and ordinary texture drawing remain pending |
+| [Shader materials](../components/shader-materials.md) | [`Shader`](../classes/Shader.md), [`Shader.Mode`](../classes/Shader.Mode.md), [`Material`](../classes/Material.md), [`ShaderMaterial`](../classes/ShaderMaterial.md), [`Texture`](../classes/Texture.md), [`ImageTexture`](../classes/ImageTexture.md) | SPIR-V fragment programs, typed uniform buffers and sampled textures execute on Linux Wayland/Vulkan; ordinary texture drawing and canvas sampling policies are integrated; further mappings remain pending |
 
 ## Public surface
 

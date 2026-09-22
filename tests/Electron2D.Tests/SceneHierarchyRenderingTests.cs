@@ -7,7 +7,7 @@ internal static partial class RenderingRuntimeTests
         using var pixels = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8);
         pixels.Fill(Colors.White);
         using var texture = ImageTexture.CreateFromImage(pixels);
-        var window = new Window { Size = new(96, 96) };
+        var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new(96, 96) };
         var parent = new Entity { Position = new(24, 0), Modulate = Colors.Red };
         var bridge = new Node();
         var direct = new Sprite { Name = "direct", Texture = texture, Centered = false, Position = new(8, 8), Scale = new(8, 8) };

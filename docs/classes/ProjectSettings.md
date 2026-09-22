@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -54,6 +54,8 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<double> PhysicsJitterFix { get; }`](#p-electron2d-projectsettings-physicsjitterfix) | Defines the finite non-negative fixed-step boundary tolerance. |
 | [`public static ProjectSetting<string> RenderingMethod { get; }`](#p-electron2d-projectsettings-renderingmethod) | Selects `gpu` or `compatibility` at renderer startup. |
 | [`public static ProjectSetting<bool> RenderingFallback { get; }`](#p-electron2d-projectsettings-renderingfallback) | Allows compatibility rendering if GPU initialization fails. |
+| [`public static ProjectSetting<bool> UseNearestMipmapFilter { get; }`](#usenearestmipmapfilter) | Selects canvas mip interpolation at GPU startup; false by default. |
+| [`public static ProjectSetting<int> AnisotropicFilteringLevel { get; }`](#anisotropicfilteringlevel) | Initializes new viewports; exponent 0..4, default 2. |
 | [`public static ProjectSetting<Color> DefaultClearColor { get; }`](#p-electron2d-projectsettings-defaultclearcolor) | Defines the initial root-framebuffer clear color. |
 | [`public static ProjectSettings Instance { get; }`](#p-electron2d-projectsettings-instance) | Gets the process-wide project settings registry. |
 | [`public string ProjectRoot { get; }`](#p-electron2d-projectsettings-projectroot) | Gets the current absolute project resource directory. |
@@ -190,6 +192,18 @@ Defines `rendering/renderer/rendering_method`, default `gpu`. Only `gpu` and `co
 ### `public static ProjectSetting<bool> RenderingFallback { get; }`
 
 Defines `rendering/rendering_device/fallback_to_opengl3`, default `true`. This key controls startup fallback from SDL GPU to SDL_Renderer; the compatibility driver may use a different graphics API. Set `false` to require GPU initialization. Shader materials reject compatibility rendering even if fallback was allowed. This setting provides no live device-loss recovery.
+
+### UseNearestMipmapFilter
+
+`public static ProjectSetting<bool> UseNearestMipmapFilter { get; }`
+
+Defines `rendering/textures/default_filters/use_nearest_mipmap_filter`, default false. The GPU renderer reads the active feature override on construction: false linearly interpolates mip levels for canvas samplers, true chooses the nearest mip. Changes apply to the next renderer run. Non-mipmap filters remain restricted to level zero. Fixed named-material samplers retain their existing nearest-mip profile.
+
+### AnisotropicFilteringLevel
+
+`public static ProjectSetting<int> AnisotropicFilteringLevel { get; }`
+
+Defines `rendering/textures/default_filters/anisotropic_filtering_level`, default 2. Values 0..4 mean disabled, 2, 4, 8 or 16 samples; invalid writes throw ArgumentOutOfRangeException before mutation. New Viewports read the active feature override at construction. Change Viewport.AnisotropicFilteringLevel to update an existing viewport. Only anisotropic canvas filters use the limit.
 
 <a id="p-electron2d-projectsettings-defaultclearcolor"></a>
 ### `public static ProjectSetting<Color> DefaultClearColor { get; }`

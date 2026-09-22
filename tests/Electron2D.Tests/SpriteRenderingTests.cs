@@ -13,7 +13,7 @@ internal static partial class RenderingRuntimeTests
         using var shader = fixture is null ? null : LoadShader(fixture);
         using var material = shader is null ? null : new ShaderMaterial { Shader = shader };
         var sprite = new Sprite { Texture = texture, Centered = false, Position = new(16, 16), Scale = new(8, 8), Material = material };
-        var window = new Window { Size = new(96, 96) };
+        var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new(96, 96) };
         var observer = new CanvasNode();
         window.AddChild(sprite); window.AddChild(observer);
         var frames = 0;

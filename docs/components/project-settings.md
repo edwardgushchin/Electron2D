@@ -1,6 +1,6 @@
 # Project settings component
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ## Scope
 
@@ -27,7 +27,7 @@ Both types are implemented in [`src/Core/Config/ProjectSettings.cs`](../../src/C
 
 ## Dependencies
 
-The root renderer samples `RenderingMethod`, `RenderingFallback` and `DefaultClearColor` from the process registry during Engine.Run startup. Their feature overrides use the same typed lookup as other settings. They do not switch an active backend or continuously update its clear color. [ProjectSettings](../classes/ProjectSettings.md) documents keys, defaults and validation; [canvas rendering](canvas-rendering.md) documents startup fallback and runtime controls.
+The root renderer samples `RenderingMethod`, `RenderingFallback` and `DefaultClearColor` from the process registry during Engine.Run startup. Their feature overrides use the same typed lookup as other settings. They do not switch an active backend or continuously update its clear color. GPU canvas sampler creation uses `UseNearestMipmapFilter` sampled at backend startup; newly constructed viewports read `AnisotropicFilteringLevel` (default 4×). Both reads apply active feature overrides and do not reconfigure existing consumers when the project setting changes. [ProjectSettings](../classes/ProjectSettings.md) documents keys, defaults and validation; [canvas rendering](canvas-rendering.md) documents startup fallback and runtime controls.
 
 - Core `ElectronObject`, typed `PropertyDescriptor`, `ConfigFile`, `Engine`, `FileAccess`, and `DirAccess` integration.
 - .NET path, filesystem, runtime-platform, architecture, collection, and synchronization primitives.
@@ -55,12 +55,12 @@ Implemented and covered by the executable harness. The process singleton is regi
 - Global script-class discovery requires a scripting domain.
 - Resource pack loading, exported archive mounts, and non-directory `res://` require file-access/resource-pack domains.
 - Editor-specific hints, override layers, hidden-prefix UI, and settings dialogs require an editor.
-- Rendering registers backend selection, startup fallback and clear color with its executable canvas integration. Remaining settings enter with their owning input, audio, networking, physics or other domain capabilities; three-dimensional settings will never be added.
+- Rendering registers backend selection, startup fallback, clear color and the implemented canvas mip/anisotropy defaults with its executable canvas integration. Remaining settings enter with their owning input, audio, networking, physics or other domain capabilities; three-dimensional settings will never be added.
 - Symbolic-link resolution and hostile-filesystem confinement are outside the current lexical resolver contract.
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` verifies registration, values, snapshots, validation, metadata, feature selection, changes/events, persistence/ordering, virtual paths, root-pair consumption by directory operations, failures, concurrency, disposal, and Engine integration. Tests use temporary directory-backed projects and do not exercise resource packs, editor UI, SDL, or crash-time filesystem behavior.
+`tests/Electron2D.Tests/Program.cs` verifies registration, values, snapshots, validation, metadata, feature selection, changes/events, persistence/ordering, virtual paths, root-pair consumption by directory operations, failures, concurrency, disposal, and Engine integration. `CanvasSamplingTests` checks the new sampling keys and viewport construction; native sampling checks belong to [canvas rendering](canvas-rendering.md). Tests use temporary directory-backed projects and do not exercise resource packs, editor UI, SDL, or crash-time filesystem behavior.
 
 ## Decisions
 

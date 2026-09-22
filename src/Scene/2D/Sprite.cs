@@ -246,8 +246,10 @@ public class Sprite : Entity
     /// <summary>Tests source alpha at a finite point in the sprite's local drawing coordinates.</summary>
     /// <param name="position">The local point, before Entity transforms.</param>
     /// <returns>False without a nonempty texture or outside the drawn frame; otherwise the texture's opacity result.</returns>
-    /// <remarks>Uses fractional drawing bounds, frame/region offsets and flipping. Sampling clamps to texture edges.
-    /// Modulation, materials and visibility do not change source opacity. Shared sampler repeat policies are not implemented.</remarks>
+    /// <remarks>Uses fractional drawing bounds, frame/region offsets and flipping. Explicit or inherited canvas repeat
+    /// affects addressing while attached; detached queries retain the last tree cache (initially disabled).
+    /// A viewport default is a rendering policy and does not change this local source-alpha query.
+    /// Modulation, filtering, materials and visibility do not change source opacity.</remarks>
     /// <exception cref="ArgumentException">The point is not finite.</exception>
     /// <exception cref="ObjectDisposedException">The sprite or its texture is disposed.</exception>
     /// <exception cref="InvalidOperationException">Texture dimensions or derived geometry are invalid.</exception>
@@ -267,6 +269,11 @@ public class Sprite : Entity
         if ((destination.Size.X < 0) != (source.Size.X < 0)) point.X = 1 - point.X;
         if ((destination.Size.Y < 0) != (source.Size.Y < 0)) point.Y = 1 - point.Y;
         point = source.Position + point * source.Size.Abs();
+        if (!point.IsFinite()) throw new InvalidOperationException("Sprite opacity coordinates overflowed finite values.");
+        var repeat = TextureRepeatInTree;
+        if (repeat is TextureRepeatEnum.Enabled or TextureRepeatEnum.Mirror)
+            return texture.IsPixelOpaque(RepeatCoordinate(point.X, width, repeat == TextureRepeatEnum.Mirror),
+                RepeatCoordinate(point.Y, height, repeat == TextureRepeatEnum.Mirror));
         return texture.IsPixelOpaque((int)Math.Clamp(point.X, 0, width - 1), (int)Math.Clamp(point.Y, 0, height - 1));
     }
 
@@ -313,6 +320,14 @@ public class Sprite : Entity
         _hframes = columns; _vframes = rows;
         InvalidateCanvas(); NotifyItemRectChanged();
         if (!IsDisposed) NotifyPropertyListChanged();
+    }
+
+    private static int RepeatCoordinate(float point, int size, bool mirror)
+    {
+        var tile = Math.Truncate((double)point / size);
+        var coordinate = point % size;
+        if (mirror && tile % 2 == 1) coordinate = size - coordinate - 1;
+        return (int)coordinate;
     }
 
     private Rect BaseRegion(Texture texture)

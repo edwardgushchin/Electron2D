@@ -114,9 +114,9 @@ Rendering uses fractional frame dimensions, so GetRect may omit a fractional dra
 
 ### IsPixelOpaque
 
-Accepts a finite point in local drawing coordinates; nonfinite input throws ArgumentException. Returns false without a nonempty texture or outside the half-open fractional drawing rectangle. Maps through the selected frame, region and flips, clamps to the full texture's logical edges and delegates to Texture.IsPixelOpaque. It measures source alpha, not final material/modulated/visible output. ImageTexture treats alpha above 0.1 as opaque.
+Accepts a finite point in local drawing coordinates; nonfinite input throws ArgumentException. Returns false without a nonempty texture or outside the half-open fractional drawing rectangle. Maps through the selected frame, region and flips, applies its active canvas repeat cache and delegates to Texture.IsPixelOpaque. Disabled/viewport-default cache values clamp to the full logical image edges. It measures source alpha, not final material/modulated/visible output. ImageTexture treats alpha above 0.1 as opaque.
 
-Negative region sizes use the same combined source/destination flipping as actual drawing. Shared repeat/mirrored-repeat and viewport snapping policies remain dependencies of the wider canvas API; this path currently samples with clamp behavior. Custom Texture opacity overrides remain authoritative.
+Negative region sizes use the same combined source/destination flipping as actual drawing. Canvas repeat follows the source-index query contract: ordinary repeat uses signed remainder; mirror additionally reflects odd positive tile indices as `size - remainder - 1`, then truncates to an integer index. Negative indices remain outside the image, and fractional mirrored queries can differ from the GPU's continuous addressing. This query does not apply filtering or the viewport's final default sampler. Detached queries retain the last active canvas cache (initially disabled); property writes take effect on entry. Viewport snapping remains absent. Custom Texture opacity overrides remain authoritative.
 
 ## Event descriptions
 
@@ -155,4 +155,4 @@ Unchanged assignments and rejected values emit nothing. RegionEnabled, flips, Re
 
 [SpriteRenderingTests](../../tests/Electron2D.Tests/SpriteRenderingTests.cs) checks twelve successive frames: ordinary output, both flips, sheet coordinates, region selection/clipping, worker size/pixel changes, replacement, hidden redraw and clearing. It runs with GPU and compatibility, plus a custom GLSL material on GPU. Exact current native evidence and limits are recorded in the [canvas component](../components/canvas-rendering.md#verification).
 
-AtlasTexture, SpriteFrames and an animated sprite node are separate unfinished resources/capabilities. Inherited repeat/filter policies, viewport pixel snapping, GUI/editor/accessibility integration and other target platforms remain incomplete. [Coverage](../coverage/classes/Sprite2D.md) separates verified members from those inherited dependencies.
+AtlasTexture, SpriteFrames and an animated sprite node are separate unfinished resources/capabilities. Viewport pixel snapping, GUI/editor/accessibility integration and other target platforms remain incomplete. [Coverage](../coverage/classes/Sprite2D.md) separates verified members from those inherited dependencies.

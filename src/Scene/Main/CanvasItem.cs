@@ -103,6 +103,7 @@ public abstract partial class CanvasItem : Node
     {
         if (IsDisposed || _inCanvas || !IsInsideTree) return;
         _inCanvas = true;
+        UpdateTextureSampling(filter: true); UpdateTextureSampling(filter: false);
         InvalidateCanvas();
         DispatchNotification(NotificationEnterCanvas);
     }
@@ -116,7 +117,7 @@ public abstract partial class CanvasItem : Node
 
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
-        base.GetPropertyDescriptors().Concat(CanvasItemProperties).Concat(DrawingProperties);
+        base.GetPropertyDescriptors().Concat(CanvasItemProperties).Concat(DrawingProperties).Concat(SamplingProperties);
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

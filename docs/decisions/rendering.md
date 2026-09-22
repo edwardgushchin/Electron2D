@@ -1,6 +1,6 @@
 # Electron2D rendering decisions
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 This bounded log owns the complete architectural records for rendering. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -72,9 +72,11 @@ SDL3-CS supplies managed bindings to the DisplayServer. The self-contained Linux
 
 The initial canvas integration is executable. Engine.Run creates a renderer for the root Window; retained rectangles, lines and texture drawing use visibility, transforms, Z order and modulation. The GPU and compatibility paths have native Linux Wayland pixel checks. This is not complete rendering API coverage or cross-platform acceptance.
 
-HLSL/GLSL import/build compilation and the common SPIR-V path have an executable initial integration through the complete vendored ShaderCross module and Linux native package. Typed scalar/vector/array parameters, sampled Texture/ImageTexture resources and shader reload execute on Linux Wayland/Vulkan. [Shader materials](../components/shader-materials.md) records the exact input profile, compiler checks, ownership and tested behavior. Compressed/integer textures, sampler configuration, further uniform mappings and a shader compilation cache remain incomplete. Full language-support criteria remain accepted requirements; shader support may be reported as implemented only for the verified operations, input paths and platforms.
+HLSL/GLSL import/build compilation and the common SPIR-V path have an executable initial integration through the complete vendored ShaderCross module and Linux native package. Typed scalar/vector/array parameters, sampled Texture/ImageTexture resources and shader reload execute on Linux Wayland/Vulkan. [Shader materials](../components/shader-materials.md) records the exact input profile, compiler checks, ownership and tested behavior. Compressed/integer textures, named material sampler configuration, further uniform mappings and a shader compilation cache remain incomplete. Full language-support criteria remain accepted requirements; shader support may be reported as implemented only for the verified operations, input paths and platforms.
 
 The Linux x64 import tool packages glslang 16.4.0 and SPIRV-Tools v2026.3, built with the matching SPIRV-Headers from the source revisions and SHA-256 archive hashes in [the toolchain lock](../../tools/shaders/toolchain.lock.json). The glslang dependency revisions match its upstream [known-good manifest](https://github.com/KhronosGroup/glslang/blob/16.4.0/known_good.json). These CLI tools and their licenses belong to the separate ShaderImport publish. The runtime consumes SPIR-V through SDL3-CS/Shadercross; it does not invoke source compilers or include the import toolchain. The published importer passes its HLSL, GLSL and external-SPIR-V suite with no compiler lookup through `PATH`. Its `Electron2D.Shaders.targets` integrates those inputs with SDK C# build/publish and Clean. The initial cache/import policy reuses artifact bytes and timestamps: normal builds compile and validate every input, replacing output only when bytes change; publish with `--no-build` reuses the last build artifacts. This supplies the first-slice cache/import contract without skipping source validation. A later compilation-skipping cache must account for compiler versions/options and actual include resolution, including new shadowing files and macro-only changes; it remains a toolchain optimization, not claimed behavior of this integration. Additional build hosts remain unverified.
+
+CanvasItem/Viewport sampling policies now cover texel filtering, ordinary/mirrored repeat, uploaded mipmaps and GPU anisotropy. [Canvas rendering](../components/canvas-rendering.md#texture-sampling) records native backend restrictions; unsupported fallback modes fail explicitly under this ADR. Named material samplers retain their fixed profile.
 
 The Web target has no browser graphics host or verified mapping to these SDL backends. Its first rendering/host slice must establish that mapping and explicit capability behavior before claiming browser output.
 

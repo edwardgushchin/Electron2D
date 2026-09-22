@@ -125,9 +125,15 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         foreach (var batch in batches)
             if (batch.Texture is { } texture)
             {
+                if (Driver == "software" && batch.Filter == CanvasItem.TextureFilterEnum.Linear)
+                    throw new NotSupportedException("The software compatibility driver cannot linearly filter canvas triangles; select Nearest or a hardware renderer.");
+                if (batch.Filter >= CanvasItem.TextureFilterEnum.NearestWithMipmaps)
+                    throw new NotSupportedException("The compatibility renderer cannot sample texture mipmaps or use anisotropic filtering.");
+                if (batch.Repeat == CanvasItem.TextureRepeatEnum.Mirror)
+                    throw new NotSupportedException("The compatibility renderer cannot use mirrored texture repeat.");
                 if (_usedTextures.Add(texture)) PrepareTexture(texture);
                 var image = _textures[texture].Pixels.Source;
-                if (batch.Tile && ((image.Width & (image.Width - 1)) != 0 || (image.Height & (image.Height - 1)) != 0) &&
+                if (batch.Repeat == CanvasItem.TextureRepeatEnum.Enabled && ((image.Width & (image.Width - 1)) != 0 || (image.Height & (image.Height - 1)) != 0) &&
                     !SDL.GetBooleanProperty(SDL.GetRendererProperties(renderer), SDL.Props.RendererTextureWrappingBoolean, false))
                     throw new NotSupportedException("This compatibility driver cannot repeat textures whose dimensions are not powers of two.");
             }
@@ -161,9 +167,11 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
             }
             foreach (var batch in batches)
             {
-                var mode = batch.Tile ? SDL.TextureAddressMode.Wrap : SDL.TextureAddressMode.Clamp;
+                var mode = batch.Repeat == CanvasItem.TextureRepeatEnum.Enabled ? SDL.TextureAddressMode.Wrap : SDL.TextureAddressMode.Clamp;
                 Check(SDL.SetRenderTextureAddressMode(renderer, mode, mode), "set texture addressing");
                 var texture = batch.Texture is null ? 0 : _textures[batch.Texture].Handle.DangerousGetHandle();
+                if (texture != 0) Check(SDL.SetTextureScaleMode(texture,
+                    batch.Filter == CanvasItem.TextureFilterEnum.Linear ? SDL.ScaleMode.Linear : SDL.ScaleMode.Nearest), "set canvas texture filtering");
                 // SDL 3.4.16's software quad shortcut loses transposed/constant UVs. Separate triangles bypass it.
                 var step = Driver == "software" && texture != 0 ? 3 : batch.Count;
                 for (var first = batch.First; first < batch.First + batch.Count; first += step)
@@ -201,7 +209,6 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         try
         {
             Check(SDL.SetTextureBlendMode(handle!.DangerousGetHandle(), SDL.BlendMode.Blend), "set texture blending");
-            Check(SDL.SetTextureScaleMode(handle.DangerousGetHandle(), SDL.ScaleMode.Nearest), "set texture filtering");
             fixed (byte* data = pixels.Upload.Data)
                 Check(SDL.UpdateTexture(handle.DangerousGetHandle(), 0, (nint)data, checked(pixels.Upload.Width * pixels.BytesPerPixel)), "upload texture pixels");
         }

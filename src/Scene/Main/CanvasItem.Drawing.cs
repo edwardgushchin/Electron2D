@@ -242,6 +242,13 @@ public abstract partial class CanvasItem
         if (_canvasCommands is null) return;
         var transform = viewportTransform * GetGlobalTransform();
         var color = InheritedModulate * _selfModulate;
+        var viewport = GetViewport();
+        var filter = TextureFilterInTree;
+        if (filter == TextureFilterEnum.ParentNode) filter = viewport?.TextureFilterInTree ?? TextureFilterEnum.Linear;
+        var inheritedRepeat = TextureRepeatInTree;
+        if (inheritedRepeat == TextureRepeatEnum.ParentNode) inheritedRepeat = viewport?.TextureRepeatInTree ?? TextureRepeatEnum.Disabled;
+        var anisotropy = filter >= TextureFilterEnum.NearestWithMipmapsAnisotropic
+            ? 1 << (int)(viewport?.AnisotropicFilteringLevel ?? Viewport.AnisotropicFiltering.Anisotropy4X) : 1;
         MaterialState? material = null;
         var capturedMaterial = false;
         foreach (var command in _canvasCommands)
@@ -251,9 +258,11 @@ public abstract partial class CanvasItem
             var count = vertices.Count - first;
             if (count == 0) continue;
             if (!capturedMaterial) { material = CanvasMaterial?.GetCanvasState(); capturedMaterial = true; }
-            if (batches.Count != 0 && batches[^1] is var last && last.Material == material && last.Texture == command.Texture && last.Tile == command.Tile)
+            var repeat = command.Tile ? TextureRepeatEnum.Enabled : inheritedRepeat;
+            if (batches.Count != 0 && batches[^1] is var last && last.Material == material && last.Texture == command.Texture &&
+                last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy)
                 batches[^1] = last with { Count = last.Count + count };
-            else batches.Add(new(first, count, material, command.Texture, command.Tile));
+            else batches.Add(new(first, count, material, command.Texture, filter, repeat, anisotropy));
         }
     }
 

@@ -22,6 +22,8 @@ internal static partial class RenderingRuntimeTests
             foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
             {
                 settings.Set(ProjectSettings.RenderingMethod, backend);
+                var software = VerifyCanvasSampling(backend);
+                VerifySamplingCapabilities(backend, software);
                 VerifySceneHierarchy(backend);
                 VerifyCanvasOrdering(backend);
                 VerifyCanvasLifecycle(backend);
@@ -35,6 +37,8 @@ internal static partial class RenderingRuntimeTests
                 VerifyFailure(backend, "SwapGlsl");
                 if (backend == "gpu")
                 {
+                    VerifyCanvasSampling(backend, "CanvasHLSL");
+                    VerifyCanvasSampling(backend, "CanvasGLSL");
                     VerifyMaterialFrame("MaterialHlsl");
                     VerifyMaterialFrame("MaterialGlsl");
                     VerifyTextureFrame("TextureHlsl");
@@ -193,7 +197,7 @@ internal static partial class RenderingRuntimeTests
             material.SetShaderParameter("detailMap", texture);
             material.SetShaderParameter("tint", Colors.White);
         }
-        var window = new Window { Size = new Vector2I(96, 80) };
+        var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2I(96, 80) };
         var sorted = new Entity { YSortEnabled = true };
         var island = new Entity();
         var nested = new Entity { YSortEnabled = true };
@@ -239,7 +243,7 @@ internal static partial class RenderingRuntimeTests
         using var material = new ShaderMaterial { Shader = shader };
         using var binaryShader = Shader.CreateFromSPIRV(shader.GetSPIRV());
         material.Shader = binaryShader;
-        var window = new Window { Size = new Vector2I(96, 80) };
+        var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2I(96, 80) };
         window.AddChild(new CanvasNode
         {
             Material = material,
@@ -350,7 +354,7 @@ internal static partial class RenderingRuntimeTests
         Initialize(first, Colors.Red); Initialize(second, Colors.Green);
         first.SetShaderParameter("offset", new Vector2(10, 0));
         first.SetShaderParameter("shift", new Vector2I(2, 0));
-        var window = new Window { Size = new Vector2I(96, 80) };
+        var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2I(96, 80) };
         var frames = 0;
         var left = new CanvasNode { Name = "left", Material = first, DrawAction = n => n.DrawRect(new Rect(0, 0, 40, 48), Colors.White) };
         var right = new CanvasNode { Name = "right", Material = second, DrawAction = n => n.DrawRect(new Rect(48, 0, 40, 48), Colors.White) };

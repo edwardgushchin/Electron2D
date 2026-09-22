@@ -111,6 +111,8 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 
 `tests/Electron2D.Tests/Program.cs` verifies concurrent identity allocation, notifications, the `ElectronObject` lifetime contract, typed property discovery/access/validation/revert, property-list/script-change events, event-connection lifecycle/concurrency, the exact `Mathf` constant/overload surface and numeric boundaries, complete color behavior, all four vector surfaces and numeric boundaries, floating-point and integer rectangle layout/geometry/conversions/boundaries, transform decomposition/composition/inversion/interpolation/rectangle operations, Entity vector/transform integration, strict persistence, packed-scene storage, allocation behavior, configuration parsing/encoding/persistence/encryption/concurrency, file and directory access, MainLoop state/error/thread/Input-transition behavior, and Engine scaled/original scheduling/service-registry integration. SDL dummy-driver checks belong to the separate Display domain; this Core verification does not prove renderer or native-host behavior.
 
+Built-in rendering settings now include canvas mip interpolation and viewport anisotropy defaults; their consumption and native evidence are documented in [project settings](../components/project-settings.md) and [canvas rendering](../components/canvas-rendering.md).
+
 The same harness verifies project-setting registration, value snapshots, validators, metadata, overrides, changes/events, persistence, virtual paths, transaction rollback, concurrency, disposal, and Engine integration.
 
 ## Decisions

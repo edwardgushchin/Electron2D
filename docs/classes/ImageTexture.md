@@ -1,6 +1,6 @@
 # ImageTexture
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Declaration: `public sealed class ImageTexture : Texture`
 - Source: [ImageTexture.cs](../../src/Scene/Resources/ImageTexture.cs)
@@ -86,6 +86,6 @@ CreateDuplicateInstance creates an empty ImageTexture. CopyCustomStateTo copies 
 
 ## Formats, verification and remaining work
 
-Byte formats upload as RGBA8. Other accepted uncompressed normalized/float formats upload as RGBA32Float, retaining HDR values. Original image bytes remain available unchanged. Compressed and integer-sampled formats fail explicitly; backend support is checked before native allocation. Sampling policy is currently nearest/clamp. General canvas texture drawing and other platforms remain pending.
+Byte formats upload as RGBA8. Other accepted uncompressed normalized/float formats upload as RGBA32Float, retaining HDR values. Original image bytes remain available unchanged. Compressed and integer-sampled formats fail explicitly; backend support is checked before native allocation. Canvas sampling is selected by CanvasItem and Viewport; the resource stores no sampler state. Named material textures retain the fixed nearest/nearest-mip/clamp profile. Ordinary canvas drawing is implemented; other platforms remain unverified.
 
 [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) covers copy isolation, logical sizes, update constraints, duplication, default and override bindings, disposal, custom textures and native shader readback. This remains part of the unfinished rendering vertical, not a claim of complete texture API coverage.

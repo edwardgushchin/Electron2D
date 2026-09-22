@@ -8,13 +8,13 @@ Last updated: 2026-09-23
 
 - **Source:** [`src/Scene/Main/Viewport.cs`](../../src/Scene/Main/Viewport.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public abstract class Viewport : Node`
+- **Declaration:** `public abstract partial class Viewport : Node`
 
 ## Description
 
 Provides the root window's client rectangle and scene input boundary.
 
-Only a root `Window` is currently supported. Render targets, canvas drawing, content scaling, and embedded viewports are not implemented. Input coordinates use the client area.
+Only a root `Window` is currently supported. Offscreen render targets, content scaling, and embedded viewports are not implemented. Canvas sampling defaults are connected to the root renderer. Input coordinates use the client area.
 
 Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
 
@@ -29,10 +29,53 @@ if (inputEvent.IsActionPressed("confirm"))
 
 This stops later scene input stages. It does not change Input polling state. `PushInput` borrows the caller's event and accepts client coordinates only.
 
+## Sampling properties and enums
+
+Source: [Viewport.Sampling.cs](../../src/Scene/Main/Viewport.Sampling.cs).
+
+| Declaration | Default | Contract |
+| --- | --- | --- |
+| `public DefaultCanvasItemTextureFilter CanvasItemDefaultTextureFilter { get; set; }` | Linear | [Default filtering](#canvasitemdefaulttexturefilter) |
+| `public DefaultCanvasItemTextureRepeat CanvasItemDefaultTextureRepeat { get; set; }` | Disabled | [Default addressing](#canvasitemdefaulttexturerepeat) |
+| `public AnisotropicFiltering AnisotropicFilteringLevel { get; set; }` | Project setting, normally Anisotropy4X | [Anisotropy](#anisotropicfilteringlevel) |
+
+Enums: [DefaultCanvasItemTextureFilter](Viewport.DefaultCanvasItemTextureFilter.md), [DefaultCanvasItemTextureRepeat](Viewport.DefaultCanvasItemTextureRepeat.md), [AnisotropicFiltering](Viewport.AnisotropicFiltering.md). Their pages list all numeric values, including sentinels.
+
+Example, during detached window construction:
+
+```csharp
+var window = new Window
+{
+    CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest,
+    CanvasItemDefaultTextureRepeat = Viewport.DefaultCanvasItemTextureRepeat.Disabled,
+};
+```
+
+### CanvasItemDefaultTextureFilter
+
+`public DefaultCanvasItemTextureFilter CanvasItemDefaultTextureFilter { get; set; }`
+
+Linear by default. Chooses the final policy for canvas chains whose filter remains inherited. ParentNode resolves through a direct canvas/viewport parent, falling back to Linear. Actual changes request redraw through direct inheriting canvas children; independent canvas roots read the new viewport default at submission. Equal assignments do nothing; no PropertyListChanged is emitted here. Detached settings apply on entry. GPU supports mipmap choices; compatibility rejects them, and software triangles additionally reject Linear. Root linear/clamp defaults therefore require explicit nearest selection for software texture drawing.
+
+### CanvasItemDefaultTextureRepeat
+
+`public DefaultCanvasItemTextureRepeat CanvasItemDefaultTextureRepeat { get; set; }`
+
+Disabled by default. Enabled repeats, Mirror reflects alternate tiles; ParentNode resolves through a direct canvas/viewport parent or falls back to Disabled. Redraw, no-op and entry behavior match the filter property. Tiled draw commands force ordinary repeat. Mirror requires GPU rendering; compatibility wrapping remains subject to the driver's capability.
+
+### AnisotropicFilteringLevel
+
+`public AnisotropicFiltering AnisotropicFilteringLevel { get; set; }`
+
+Construction samples the active ProjectSettings.AnisotropicFilteringLevel override (normally 2 = Anisotropy4X). Later project changes do not mutate the viewport. Live changes affect the next submission. Only anisotropic CanvasItem filters use this limit; Disabled retains ordinary mip filtering. Supported limits are disabled, 2, 4, 8 and 16 samples. Precision depends on the GPU driver. Arbitrary material parameters retain their existing fixed sampler profile.
+
+All three properties are stored by PackedScene. Undefined/negative/Max enum writes throw ArgumentOutOfRangeException before mutation; scene capture and off-owner writes throw InvalidOperationException; disposed access throws ObjectDisposedException. They neither allocate GPU resources nor open a window until normal rendering consumes the state. Nested/offscreen viewport activation remains unsupported.
+
 ## Methods
 
 | Member | Contract |
 | --- | --- |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Adds the three stored sampling properties to neutral node descriptors. |
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown. |
 | [`public abstract Rect GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
 | [`public bool IsInputHandled()`](#isinputhandled) | Reports whether the current scene input event has been handled. |
@@ -44,6 +87,12 @@ This stops later scene input stages. It does not change Input polling state. `Pu
 | Member | Contract |
 | --- | --- |
 | [`public event Action? SizeChanged`](#sizechanged) | Occurs after the client size changes, before subsequent frame callbacks. |
+
+### GetPropertyDescriptors
+
+`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
+
+Extends Node descriptors with the three typed stored sampling properties. Window adds its own properties through base chaining. Descriptors retain each property's validation and use the active project anisotropy default.
 
 ## Method Descriptions
 
@@ -114,3 +163,5 @@ Subscribers run synchronously on the scene owner thread. Desktop movement does n
 See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. Physical-input/visual acceptance of this new API, other platforms, rendering, content scaling, offscreen targets, GUI and nested windows remain unverified or absent. Native Wayland rejects Position and may constrain geometry; focus requests obey compositor policy.
 
 Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028).
+
+Sampling verification: [managed checks](../../tests/Electron2D.Tests/CanvasSamplingTests.cs), [native readback and rejection checks](../../tests/Electron2D.Tests/CanvasSamplingRenderingTests.cs).

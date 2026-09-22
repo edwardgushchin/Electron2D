@@ -16,8 +16,8 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
     private readonly Dictionary<MaterialState, SDL.GPUTextureSamplerBinding[]> _textureBindings = [];
     private readonly HashSet<MaterialState> _usedMaterials = [];
     private readonly Texture?[] _textureScratch = new Texture?[16];
-    private RenderHandle? _sampler;
-    private RenderHandle? _repeatSampler;
+    private readonly Dictionary<(CanvasItem.TextureFilterEnum, CanvasItem.TextureRepeatEnum, int, bool), RenderHandle> _samplers = [];
+    private readonly bool _nearestMipmaps = ProjectSettings.Instance.GetWithOverride(ProjectSettings.UseNearestMipmapFilter);
     private ImageTexture? _whiteTexture;
     private RenderHandle? _target;
     private RenderHandle? _vertexBuffer;
@@ -210,22 +210,34 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         }
     }
 
-    private nint Sampler(bool repeat)
+    private nint Sampler(CanvasItem.TextureFilterEnum filter, CanvasItem.TextureRepeatEnum repeat, int anisotropy = 1, bool materialSampler = false)
     {
-        ref var sampler = ref (repeat ? ref _repeatSampler : ref _sampler);
-        if (sampler is null)
+        var anisotropic = filter >= CanvasItem.TextureFilterEnum.NearestWithMipmapsAnisotropic && anisotropy > 1;
+        var nearestMipmaps = materialSampler || _nearestMipmaps;
+        var key = (filter, repeat, anisotropic ? anisotropy : 1, nearestMipmaps);
+        if (!_samplers.TryGetValue(key, out var sampler))
         {
+            var linear = filter is CanvasItem.TextureFilterEnum.Linear or CanvasItem.TextureFilterEnum.LinearWithMipmaps or CanvasItem.TextureFilterEnum.LinearWithMipmapsAnisotropic;
+            var address = repeat switch
+            {
+                CanvasItem.TextureRepeatEnum.Enabled => SDL.GPUSamplerAddressMode.Repeat,
+                CanvasItem.TextureRepeatEnum.Mirror => SDL.GPUSamplerAddressMode.MirroredRepeat,
+                _ => SDL.GPUSamplerAddressMode.ClampToEdge,
+            };
             var info = new SDL.GPUSamplerCreateInfo
             {
-                MinFilter = SDL.GPUFilter.Nearest,
-                MagFilter = SDL.GPUFilter.Nearest,
-                MipmapMode = SDL.GPUSamplerMipmapMode.Nearest,
-                AddressModeU = repeat ? SDL.GPUSamplerAddressMode.Repeat : SDL.GPUSamplerAddressMode.ClampToEdge,
-                AddressModeV = repeat ? SDL.GPUSamplerAddressMode.Repeat : SDL.GPUSamplerAddressMode.ClampToEdge,
+                MinFilter = linear ? SDL.GPUFilter.Linear : SDL.GPUFilter.Nearest,
+                MagFilter = linear ? SDL.GPUFilter.Linear : SDL.GPUFilter.Nearest,
+                MipmapMode = nearestMipmaps ? SDL.GPUSamplerMipmapMode.Nearest : SDL.GPUSamplerMipmapMode.Linear,
+                AddressModeU = address,
+                AddressModeV = address,
                 AddressModeW = SDL.GPUSamplerAddressMode.ClampToEdge,
-                MaxLod = 1000
+                MaxLod = filter >= CanvasItem.TextureFilterEnum.NearestWithMipmaps ? 1000 : 0,
+                EnableAnisotropy = anisotropic,
+                MaxAnisotropy = anisotropic ? anisotropy : 1,
             };
             sampler = new RenderHandle(SDL.CreateGPUSampler(Device, in info), h => SDL.ReleaseGPUSampler(Device, h), _device);
+            _samplers.Add(key, sampler);
         }
         return sampler.DangerousGetHandle();
     }
@@ -246,7 +258,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
             }
             texture = _whiteTexture;
         }
-        return new() { Texture = PrepareTexture(texture), Sampler = Sampler(batch.Tile) };
+        return new() { Texture = PrepareTexture(texture), Sampler = Sampler(batch.Filter, batch.Repeat, batch.MaxAnisotropy) };
     }
 
     private nint PrepareTexture(Texture texture)
@@ -274,7 +286,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
             for (var i = 0; i < bindings.Length; i++)
             {
                 if (material.Program.Textures[i].IsCanvasTexture) continue;
-                bindings[i] = new SDL.GPUTextureSamplerBinding { Texture = PrepareTexture(_textureScratch[i]!), Sampler = Sampler(false) };
+                bindings[i] = new SDL.GPUTextureSamplerBinding { Texture = PrepareTexture(_textureScratch[i]!), Sampler = Sampler(CanvasItem.TextureFilterEnum.NearestWithMipmaps, CanvasItem.TextureRepeatEnum.Disabled, materialSampler: true) };
             }
         }
         finally { Array.Clear(_textureScratch); }
@@ -356,7 +368,8 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         foreach (var pipeline in _pipelines.Values) pipeline.Dispose();
         foreach (var texture in _textures.Values) texture.Dispose();
         _textures.Clear(); _usedTextures.Clear(); _textureBindings.Clear(); _usedMaterials.Clear();
-        _sampler?.Dispose(); _repeatSampler?.Dispose(); _whiteTexture?.Dispose();
+        foreach (var sampler in _samplers.Values) sampler.Dispose();
+        _samplers.Clear(); _whiteTexture?.Dispose();
         _pipelines.Clear(); _target?.Dispose(); _vertexBuffer?.Dispose(); _transfer?.Dispose(); _vertexShader.Dispose();
         SDL.ReleaseWindowFromGPUDevice(Device, _window);
         _device.Dispose();

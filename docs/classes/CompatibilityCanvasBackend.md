@@ -1,6 +1,6 @@
 # CompatibilityCanvasBackend
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Declaration: `internal sealed class CompatibilityCanvasBackend : CanvasBackend`
 - Source: [CompatibilityCanvasBackend.cs](../../src/Servers/Rendering/CompatibilityCanvasBackend.cs)
@@ -10,6 +10,8 @@ Last updated: 2026-09-22
 ## Description
 
 The SDL_Renderer implementation of CanvasBackend. It supports baseline geometry and textures and rejects every shader material before drawing. A retained RGBA8 target supports readback and window presentation. Native resources are owner-thread state; the renderer retains its window through RenderHandle. Unsupported float texture or repeat capabilities are rejected before drawing.
+
+Texture filtering and addressing are set per batch, so a shared texture can have distinct modes in one frame. Preflight rejects mipmaps, anisotropy and mirrored repeat; software triangles additionally reject linear filtering. Non-power-of-two repeat requires native wrapping support. Unsupported requests fail before clearing/drawing.
 
 ## Internal usage
 

@@ -254,7 +254,7 @@
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028.",
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Canvas sampling inheritance, GPU mipmaps and anisotropy are verified by CanvasSamplingRenderingTests; further texture kinds and full canvas integration remain pending under ADR 0028.",
       "godot": [
         "CanvasItem::method:draw_texture(Texture2D:,Vector2:,Color:)",
         "CanvasItem::method:draw_texture_rect(Texture2D:,Rect2:,bool:,Color:,bool:)",
@@ -514,7 +514,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Sprite maps Sprite2D onto Entity and now inherits through CanvasItem and Node under ADR 0008. Texture/frame/region rendering, typed events, bounds, opacity and PackedScene state are executable in SpriteTests and SpriteRenderingTests on Linux Wayland GPU/compatibility. Inherited sampler repeat/filter, viewport snapping, editor and accessibility integration remain incomplete; platform evidence follows ADR 0021.",
+      "reason": "Sprite maps Sprite2D onto Entity and now inherits through CanvasItem and Node under ADR 0008. Texture/frame/region rendering, typed events, bounds, opacity and PackedScene state are executable in SpriteTests and SpriteRenderingTests on Linux Wayland GPU/compatibility. Inherited sampler repeat/filter now execute through CanvasItem; viewport snapping, editor and accessibility integration remain incomplete; platform evidence follows ADR 0021.",
       "godot": [
         "class:Sprite2D"
       ]
@@ -548,7 +548,7 @@
     },
     {
       "state": "Partial",
-      "reason": "IsPixelOpaque verifies fractional half-open bounds, source alpha, sheet/region selection, custom Texture dispatch and clamp sampling. Finite input and live nonnegative texture dimensions are required. Signed regions deliberately follow the existing source/destination flip combination in Texture drawing rather than the reference opacity discrepancy. Trigger: the first shared canvas repeat/mirrored-repeat policy slice must apply wrapping here alongside rendering (ADR 0028).",
+      "reason": "IsPixelOpaque verifies fractional half-open bounds, source alpha, sheet/region selection, custom Texture dispatch and direct-canvas repeat/mirror caches. CanvasSamplingTests covers detached/reattached cache behavior, signed remainder and integer mirror addressing from the pinned native implementation, including fractional mirror query differences from GPU sampling. Viewport sampler defaults do not enter this CPU query. Signed regions retain the accepted drawing flip adaptation. Viewport pixel snapping remains pending (ADR 0028).",
       "godot": [
         "Sprite2D::method:is_pixel_opaque(Vector2:)"
       ]

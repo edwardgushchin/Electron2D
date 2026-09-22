@@ -22,6 +22,10 @@ Local Visible changes notify the item, including while detached or below a hidde
 
 ItemRectChanged reports local geometry changes independently of transform notifications. Derived geometry models call NotifyItemRectChanged after committing state; events remain synchronous while hidden or detached. See [Sprite](Sprite.md#itemrectchanged) for its exact triggers.
 
+## Sampling model
+
+The built-in texture sampler uses [TextureFilter](#texturefilter) and [TextureRepeat](#texturerepeat). Defaults inherit the direct canvas parent, stopping at neutral parents and TopLevel; unresolved values use the containing viewport (initially linear/clamp). Sampling also controls the reserved TEXTURE input of custom shaders. Named material textures retain their separate fixed profile. See the [backend matrix](../components/canvas-rendering.md#texture-sampling).
+
 ## Examples
 
 The snippet uses the Electron2D namespace; attach the hierarchy to a SceneTree or an Engine.Run window to activate it.
@@ -50,12 +54,19 @@ class PaintedNode : Entity
 | [`public bool NotifyTransformChanges { get; set; }`](#p-electron2d-canvasitem-notifytransformchanges) | Gets or sets whether global transform changes dispatch `CanvasItem.NotificationTransformChanged`. |
 | [`public Color SelfModulate { get; set; }`](#p-electron2d-canvasitem-selfmodulate) | Gets or sets the color multiplier applied only to this node's drawing. |
 | [`public bool ShowBehindParent { get; set; }`](#p-electron2d-canvasitem-showbehindparent) | Draws this canvas subtree before its parent at equal Z, unless the parent sorts it by Y. |
+| [`public TextureFilterEnum TextureFilter { get; set; }`](#texturefilter) | Selects inherited, nearest, linear or mip/anisotropic filtering. |
+| [`public TextureRepeatEnum TextureRepeat { get; set; }`](#texturerepeat) | Selects inherited, clamp, repeat or mirror addressing. |
 | [`public bool TopLevel { get; set; }`](#p-electron2d-canvasitem-toplevel) | Gets or sets whether this node ignores its parent's transform. |
 | [`public bool UseParentMaterial { get; set; }`](#p-electron2d-canvasitem-useparentmaterial) | Gets or sets whether this node uses its parent's effective material. |
 | [`public bool Visible { get; set; }`](#p-electron2d-canvasitem-visible) | Gets or sets this node's local logical visibility. |
 | [`public bool YSortEnabled { get; set; }`](#p-electron2d-canvasitem-ysortenabled) | Sorts this item and its canvas children by local Y at equal Z. |
 | [`public bool ZAsRelative { get; set; }`](#p-electron2d-canvasitem-zasrelative) | Gets or sets whether effective Z order accumulates ancestor Z values. |
 | [`public int ZIndex { get; set; }`](#p-electron2d-canvasitem-zindex) | Gets or sets this node's local Z-order value. |
+
+## Sampling enums
+
+- [TextureFilterEnum](CanvasItem.TextureFilterEnum.md): ParentNode = 0; Nearest = 1; Linear = 2; NearestWithMipmaps = 3; LinearWithMipmaps = 4; NearestWithMipmapsAnisotropic = 5; LinearWithMipmapsAnisotropic = 6; Max = 7.
+- [TextureRepeatEnum](CanvasItem.TextureRepeatEnum.md): ParentNode = 0; Disabled = 1; Enabled = 2; Mirror = 3; Max = 4.
 
 ## Methods and extension points
 
@@ -264,6 +275,20 @@ Gets or sets this node's local Z-order value.
 **System.InvalidOperationException:** An attached node is mutated off the owner thread.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
+
+### TextureFilter
+
+`public TextureFilterEnum TextureFilter { get; set; }`
+
+ParentNode by default. Actual changes refresh attached inheriting descendants, request redraw, then raise PropertyListChanged on this item. Overrides and neutral parents stop propagation. Detached changes apply at entry; TopLevel and reparenting recompute inheritance. GPU supports all concrete modes; mipmaps/anisotropy fail on compatibility, and linear fails on software triangles. Base-level modes never sample stored lower mips. Anisotropy uses the viewport limit; mip interpolation uses the project startup setting. Missing image mips are not generated implicitly.
+
+Invalid or Max values throw ArgumentOutOfRangeException before mutation. InvalidOperationException rejects off-owner/capture-time mutation; ObjectDisposedException rejects disposed access. A subscriber exception leaves the new value and pending redraw committed. Equal assignments do nothing. Stored by PackedScene.
+
+### TextureRepeat
+
+`public TextureRepeatEnum TextureRepeat { get; set; }`
+
+ParentNode by default. Disabled clamps to edges, Enabled repeats, Mirror reflects alternate tiles. GPU supports all; compatibility rejects Mirror and checks native non-power-of-two wrapping. A tiled rectangle command forces Enabled. Inheritance, redraw, PropertyListChanged, no-ops, storage and errors match TextureFilter. This setting does not change the texture resource or arbitrary material parameter samplers.
 
 ## Method Descriptions
 

@@ -154,6 +154,17 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<bool> RenderingFallback { get; } =
         new("rendering/rendering_device/fallback_to_opengl3", true);
 
+    /// <summary>Selects nearest rather than linear interpolation between canvas mip levels.</summary>
+    /// <remarks>False by default. Sampled when the GPU renderer opens.</remarks>
+    public static ProjectSetting<bool> UseNearestMipmapFilter { get; } =
+        new("rendering/textures/default_filters/use_nearest_mipmap_filter", false);
+
+    /// <summary>Defines the initial viewport anisotropy limit as a power of two.</summary>
+    /// <remarks>Zero disables anisotropy, 1..4 select 2..16 samples; default 2 selects four samples.
+    /// Sampled when a viewport is constructed. Existing viewports retain their own setting.</remarks>
+    public static ProjectSetting<int> AnisotropicFilteringLevel { get; } =
+        new("rendering/textures/default_filters/anisotropic_filtering_level", 2, value => value is >= 0 and <= 4);
+
     /// <summary>Defines the finite initial root-framebuffer clear color.</summary>
     public static ProjectSetting<Color> DefaultClearColor { get; } =
         new("rendering/environment/defaults/default_clear_color", new Color(0.3f, 0.3f, 0.3f, 1f), value => value.IsFinite());
@@ -210,6 +221,8 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(PhysicsJitterFix, isBasic: false);
         RegisterInternal(RenderingMethod, isBasic: true);
         RegisterInternal(RenderingFallback, isBasic: false);
+        RegisterInternal(UseNearestMipmapFilter, isBasic: false);
+        RegisterInternal(AnisotropicFilteringLevel, isBasic: false);
         RegisterInternal(DefaultClearColor, isBasic: true);
     }
 
@@ -1498,6 +1511,8 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, PhysicsJitterFix) ||
         ReferenceEquals(setting, RenderingMethod) ||
         ReferenceEquals(setting, RenderingFallback) ||
+        ReferenceEquals(setting, UseNearestMipmapFilter) ||
+        ReferenceEquals(setting, AnisotropicFilteringLevel) ||
         ReferenceEquals(setting, DefaultClearColor);
 
     private static string ResolveWithinRoot(string root, string relativePath)

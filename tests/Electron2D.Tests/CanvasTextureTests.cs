@@ -21,7 +21,7 @@ internal static partial class RenderingRuntimeTests
             Reject<ArgumentException>(() => shader.SetDefaultTextureParameter("TEXTURE", texture));
             Reject<ArgumentException>(() => material!.SetShaderParameter("TEXTURE", texture));
         }
-        var window = new Window { Size = new Vector2I(128, 96) };
+        var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2I(128, 96) };
         var frames = 0;
         var node = new CanvasNode
         {
@@ -118,7 +118,7 @@ internal static partial class RenderingRuntimeTests
         texture.SetSizeOverride(new Vector2I(8, 2));
         using var shader = LoadShader("CanvasUV");
         using var material = new ShaderMaterial { Shader = shader };
-        var window = new Window { Size = new Vector2I(96, 80) };
+        var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2I(96, 80) };
         window.AddChild(new CanvasNode
         {
             Material = material,
@@ -145,7 +145,7 @@ internal static partial class RenderingRuntimeTests
         using var source = Image.CreateEmpty(1, 1, false, Image.Format.Rgbaf);
         source.Fill(new Color(2, 0, 0, 1));
         using var texture = ImageTexture.CreateFromImage(source);
-        var window = new Window { Size = new Vector2I(96, 80) };
+        var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2I(96, 80) };
         window.AddChild(new CanvasNode
         {
             DrawAction = n => n.DrawTextureRect(texture, new Rect(0, 0, 16, 16), false, new Color(0.25f, 1, 1, 1)),

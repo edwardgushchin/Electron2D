@@ -11,18 +11,41 @@ The component owns [RenderingServer](../classes/RenderingServer.md) and its inte
 1. Open the backend selected by typed ProjectSettings. GPU initialization can fall back only when enabled; shader-dependent draws fail on compatibility.
 2. Deliver FramePreDraw and capture visible nodes. For pending recording, clear commands/reset the draw transform, then deliver NotificationDraw, synchronous Draw handlers and OnDraw in order. All three may draw. QueueRedraw inside this recording coalesces; internal resource changes remain pending for the next frame. Failure clears partial commands, retains the dirty flag and closes the recording scope before host cleanup.
 3. Recapture after drawing callbacks. Resolve canvas roots in scene order, behind-parent subtrees and nested local Y groups; sort globally by effective Z, preserving the resolved order at equal Z. Transform retained local geometry into framebuffer pixels. Inherited Modulate and local SelfModulate multiply command colors.
-4. Batch adjacent commands only when material, texture and repeat mode match. Resolve current immutable pixel snapshots and preflight native resources before clearing/drawing. Pixel updates do not require OnDraw.
+4. Batch adjacent commands only when material, texture, filter, repeat and anisotropy limit match. Resolve current immutable pixel snapshots and preflight native resources before clearing/drawing. Pixel updates do not require OnDraw.
 5. Upload and submit to the RGBA8 target, copy it to the native window and deliver FramePostDraw. Submission is not display completion. Callback failures trigger Engine.Run cleanup.
 
 ## Drawing contract
 
 Filled rectangles, centered outlines and flat-cap lines support local widths, one-pixel negative widths and optional one-pixel antialias fringes. Zero-area or zero-width geometry draws nothing. Nonfinite geometry, transforms or resulting colors fail explicitly.
 
-Texture drawing stretches, repeats or selects a source region. Negative destination sizes flip without relocating the origin; negative source sizes toggle the corresponding flip. Transpose exchanges UV axes and destination dimensions. Nearest sampling is fixed in this integration. Source clipping clamps half-texel borders while preserving interior interpolation. Texture size overrides affect coordinates at command recording; later pixel replacement changes the sampled image without rewriting geometry.
+Texture drawing stretches, repeats or selects a source region. Negative destination sizes flip without relocating the origin; negative source sizes toggle the corresponding flip. Transpose exchanges UV axes and destination dimensions. Canvas and viewport sampling policies select filtering and addressing as described below. Source clipping clamps half-texel borders while preserving interior interpolation. Texture size overrides affect coordinates at command recording; later pixel replacement changes the sampled image without rewriting geometry.
 
 GPU consumes vertex position/color/UV and the imported fragment interface. Built-in TEXTURE is supplied per command, using white for untextured geometry. Compatibility rejects arbitrary shaders, uploads the base mip level and checks unsupported high-precision formats and repeat capabilities. The software driver receives textured triangles separately because SDL 3.4.16's rectangle shortcut loses transposed and constant UVs; native vendored code remains unchanged.
 
 Sprite borrows its texture, records through the texture's virtual region draw method and rebuilds on frame, region, layout or texture changes. Its resource notification callback only marks an atomic redraw request; it cannot run scene code on a worker. CanvasItem consumes that request atomically before OnDraw, retaining notifications that arrive during recording for the next frame. ItemRectChanged is a separate synchronous geometry event: Sprite delivers it after texture identity/centering/offset/active-region/frame/grid changes, with the exact order in its [class contract](../classes/Sprite.md#itemrectchanged). Resource content notifications and Entity transforms do not emit it. Hidden and detached items still deliver; callback failures retain committed geometry and redraw.
+
+## Texture sampling
+
+CanvasItem.TextureFilter and TextureRepeat default to ParentNode. A direct canvas parent supplies the inherited policy; a neutral Node or TopLevel breaks that chain. At submission the containing Viewport supplies unresolved defaults (linear/clamp initially). `DrawTextureRect(..., tile: true)` always selects ordinary repeat for that command, even under a mirrored policy. Separate batches retain the resolved filter, repeat and anisotropy limit, so objects sharing a Texture may use different policies in one frame.
+
+Actual canvas-property changes update inheriting canvas descendants, queue redraw under the normal attached/coalescing rules and then raise PropertyListChanged on the changed item. Overrides stop propagation; neutral nodes stop canvas propagation. Viewport defaults are resolved during submission for independent canvas roots. Entry/reparent/TopLevel refresh inherited state; detached policy writes become effective upon entry. Hidden items retain redraw requests. State remains committed if a property-list callback throws. Thread, capture and disposal guards apply before mutation.
+
+Viewport.CanvasItemDefaultTextureFilter defaults to Linear and CanvasItemDefaultTextureRepeat to Disabled. Their ParentNode choice inherits a direct canvas/viewport parent or falls back to those defaults. The current public runtime supports only a root Window; nested/offscreen viewport activation remains unavailable. Viewport.AnisotropicFilteringLevel starts from the active ProjectSettings anisotropy override, normally four samples. The limit affects only anisotropic canvas modes and can change between frames. Disabled preserves ordinary mipmap filtering.
+
+GPU uses all stored image mip levels for mipmap modes and restricts Nearest/Linear to level zero. Images without mipmaps use their sole level. Canvas mip interpolation is linear by default; ProjectSettings.UseNearestMipmapFilter changes it to nearest at GPU-renderer startup. Canvas sampler settings also apply to the reserved TEXTURE binding in HLSL and GLSL materials. Other named material texture parameters retain the existing fixed nearest-texel/nearest-mip/clamp profile, including explicit shader LOD sampling.
+
+| Sampling capability | GPU | Hardware compatibility | Software compatibility |
+| --- | --- | --- | --- |
+| Nearest base-level sampling | Yes | Yes | Yes |
+| Linear base-level sampling | Yes | Yes | Explicitly rejected |
+| Stored mipmaps / anisotropy | Yes | Explicitly rejected | Explicitly rejected |
+| Clamp / ordinary repeat | Yes | Yes, subject to wrapping support | Yes, subject to wrapping support |
+| Mirrored repeat | Yes | Explicitly rejected | Explicitly rejected |
+
+SDL_Renderer's [address modes](https://wiki.libsdl.org/SDL3/SDL_TextureAddressMode) do not include mirrored repeat. Its pinned [software triangle path](https://github.com/libsdl-org/SDL/blob/release-3.4.16/src/render/software/SDL_triangle.c) does not implement linear filtering; accepting the scale-mode setter alone is not proof of filtered output. The engine rejects that unsupported request before clearing/drawing. Software consumers must explicitly choose nearest for texture drawing. Non-power-of-two repeat still requires the driver's wrapping capability. No backend silently downgrades an unsupported sampling choice.
+
+Sampler caches belong to the GPU backend, are bounded by the enum/anisotropy combinations and are disposed with it. Texture updates and replacements preserve each command's sampling choice. The warmed resolution, batch construction and submission paths allocate no managed memory.
+
 
 ## Canvas lifecycle
 
@@ -37,6 +60,12 @@ TopLevel items and items below neutral Node parents are independent canvas roots
 Nodes borrow materials and textures; native texture caches belong to the backend. Updates reuse compatible allocations; replacement recreates them. Unused cached resources are released, and shutdown releases all backend state. A disposed or unreadable texture fails when its retained drawing is consumed. A custom Texture may override drawing with ordinary CanvasItem geometry instead of providing an image.
 
 Current framebuffer and blending precision is RGBA8. GPU samples byte and supported floating-point images, including stored mips. Compatibility support depends on the native driver; the tested drivers reject float textures explicitly. The component has no lights, clipping hierarchy, polygon/mesh API, public offscreen targets, GUI drawing, independent window renderers or device-loss recovery. Other targets remain unverified under [ADR 0021](../decisions/product.md#adr-0021).
+
+## Sampling verification
+
+[CanvasSamplingTests](../../tests/Electron2D.Tests/CanvasSamplingTests.cs) covers inheritance, neutral/TopLevel/reparent boundaries, detached cache behavior, invalid values, callback failure, owner-thread/disposal guards, PackedScene and project initialization. [CanvasSamplingRenderingTests](../../tests/Electron2D.Tests/CanvasSamplingRenderingTests.cs) checks consecutive frames with shared textures and distinct filters, live inheritance/repeat changes, resource updates, both imported shader languages, all six concrete GPU filter modes, base-level clamping, nearest/linear mip interpolation, and increased stripe contrast across anisotropy limits. Compatibility tests reject unsupported modes before FramePostDraw. Legacy pixel-art fixtures now explicitly select nearest.
+
+The initial native audit caught and corrected a regression in explicit material LOD sampling; the fixed material sampler keeps its earlier mip range and interpolation. It also exposed software linear filtering silently acting as nearest, now converted to an explicit capability failure. Native results and precision apply to tested Linux Wayland GPU/compatibility and dummy/software only; no new self-contained publish or visual owner acceptance is claimed.
 
 ## Verification
 
