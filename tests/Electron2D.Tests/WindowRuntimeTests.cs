@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Electron2D;
 using SDL3;
 
@@ -12,6 +13,7 @@ internal static class WindowRuntimeTests
         engine.MaxFps = 20;
         try
         {
+            CheckNativeControls();
             using (var manualTree = new SceneTree(new Node()))
             {
                 manualTree.Quit(1);
@@ -221,6 +223,169 @@ internal static class WindowRuntimeTests
     }
 
     private static Window NewWindow() => new() { Title = "Window runtime checks", Size = new Vector2I(160, 100) };
+
+    private static void CheckNativeControls()
+    {
+        var buffers = new List<nint>();
+        try
+        {
+            using (var template = new Window { Borderless = true, Unresizable = true, Mode = Window.ModeEnum.Maximized })
+            {
+                Check(!template.IsMaximizeAllowed() && template.GetFlag(Window.Flags.Borderless), "Detached policies are executable configuration.");
+                foreach (var flag in Enum.GetValues<Window.Flags>())
+                {
+                    if (flag == Window.Flags.Max)
+                        Reject<ArgumentOutOfRangeException>(() => template.SetFlag(flag, true));
+                    else if (flag is not (Window.Flags.ResizeDisabled or Window.Flags.Borderless or Window.Flags.AlwaysOnTop or Window.Flags.NoFocus))
+                    {
+                        Reject<NotSupportedException>(() => template.GetFlag(flag));
+                        Reject<NotSupportedException>(() => template.SetFlag(flag, false));
+                    }
+                }
+                Reject<ArgumentOutOfRangeException>(() => template.SetFlag((Window.Flags)(-1), true));
+                Reject<ArgumentOutOfRangeException>(() => template.Mode = (Window.ModeEnum)99);
+                Reject<ArgumentOutOfRangeException>(() => template.CurrentScreen = -1);
+                Reject<InvalidOperationException>(template.MoveToCenter);
+                Reject<InvalidOperationException>(() => template.SetImeActive(true));
+                Check(template.GetSizeWithDecorations() == template.Size && template.GetPositionWithDecorations() == Vector2I.Zero,
+                    "Detached decoration geometry needs no native owner.");
+                template.CurrentScreen = 999;
+                using var packed = new PackedScene();
+                packed.Pack(template);
+                using var copy = (Window)packed.Instantiate();
+                Check(copy.Mode == template.Mode && copy.Borderless && copy.Unresizable && copy.CurrentScreen == 0,
+                    "PackedScene reconstructs mode and policies without imposing a machine-specific screen.");
+            }
+
+            var window = NewWindow();
+            window.Visible = false;
+            window.Borderless = window.Unresizable = true;
+            if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland")
+                window.Mode = Window.ModeEnum.ExclusiveFullscreen;
+            var events = new List<string>();
+            IReadOnlyList<string>? files = null;
+            window.MouseEntered += () => events.Add("enter");
+            window.MouseExited += () => events.Add("exit");
+            window.DpiChanged += () => events.Add("scale");
+            window.FilesDropped += paths => { files = paths; events.Add("files"); };
+            window.AddChild(new Probe
+            {
+                ReadyAction = _ =>
+                {
+                    var native = NativeWindow();
+                    var flags = SDL.GetWindowFlags(native);
+                    Check(window.Borderless && window.Unresizable, "Startup preserves configured flags.");
+                    // The dummy backend accepts these setters without implementing native policy changes.
+                    if (SDL.GetCurrentVideoDriver() != "dummy")
+                        Check((flags & SDL.WindowFlags.Borderless) != 0 && (flags & SDL.WindowFlags.Resizable) == 0,
+                            $"Preconfigured flags reach native creation before ready: {flags}.");
+                    window.Unresizable = window.Borderless = false;
+                    Check(window.IsMaximizeAllowed() && (SDL.GetWindowFlags(native) & SDL.WindowFlags.Borderless) == 0,
+                        "Live property setters restore native policies.");
+                    Check(window.GetSizeWithDecorations() == window.Size, "Hidden geometry returns client dimensions.");
+                    window.CurrentScreen = window.CurrentScreen;
+                    Reject<ArgumentOutOfRangeException>(() => window.CurrentScreen = int.MaxValue);
+                    Task.Run(() => Reject<InvalidOperationException>(() => window.Unresizable = true)).GetAwaiter().GetResult();
+                    Check(!window.Unresizable, "Off-thread requests preserve configured state.");
+                    window.SetImeActive(true);
+                    Check(SDL.TextInputActive(native), "Window activates native text input.");
+                    window.SetImePosition(new Vector2I(12, 18));
+                    window.SetImeActive(false);
+                    Check(!SDL.TextInputActive(native), "Window deactivates native text input.");
+                    Reject<ArgumentOutOfRangeException>(() => window.SetTaskbarProgressValue(float.NaN));
+                    Reject<ArgumentOutOfRangeException>(() => window.SetTaskbarProgressState((DisplayServer.ProgressState)99));
+                    if (SDL.GetCurrentVideoDriver() == "wayland")
+                    {
+                        Check(SDL.SyncWindow(native) && window.Mode == Window.ModeEnum.Fullscreen,
+                            "Preconfigured mode reaches the native window before ready.");
+                        Reject<NotSupportedException>(() => window.AlwaysOnTop = true);
+                        Reject<NotSupportedException>(() => window.Unfocusable = true);
+                        Check(!window.AlwaysOnTop && !window.Unfocusable &&
+                              (SDL.GetWindowFlags(native) & SDL.WindowFlags.NotFocusable) == 0,
+                            "Unsupported Wayland flags fail before managed or native mutation.");
+                        Reject<NotSupportedException>(window.MoveToCenter);
+                        Reject<NotSupportedException>(() => window.GetPositionWithDecorations());
+                        Reject<NotSupportedException>(() => window.SetTaskbarProgressValue(0.5f));
+                        window.Mode = Window.ModeEnum.ExclusiveFullscreen;
+                        Check(SDL.SyncWindow(native) && window.Mode == Window.ModeEnum.Fullscreen,
+                            "The high-level exclusive request reports Wayland's actual fullscreen adaptation.");
+                        window.Mode = Window.ModeEnum.Windowed;
+                        Check(SDL.SyncWindow(native) && window.Mode == Window.ModeEnum.Windowed, "Leaving fullscreen restores the observed window mode.");
+                    }
+                    PushWindowEvent(SDL.EventType.WindowMouseLeave);
+                    PushWindowEvent(SDL.EventType.WindowMouseEnter);
+                    PushWindowEvent(SDL.EventType.WindowMouseEnter);
+                    PushWindowEvent(SDL.EventType.WindowMouseLeave);
+                    PushWindowEvent(SDL.EventType.WindowMouseLeave);
+                    PushWindowEvent(SDL.EventType.WindowDisplayScaleChanged);
+                    PushDrop(buffers, SDL.EventType.DropBegin);
+                    PushDrop(buffers, SDL.EventType.DropFile, "/tmp/first.txt");
+                    PushDrop(buffers, SDL.EventType.DropFile, "/tmp/второй.txt");
+                    PushDrop(buffers, SDL.EventType.DropComplete);
+                },
+                ProcessAction = (node, _) =>
+                {
+                    Check(events.Contains("enter") && events.Contains("exit") && events.Contains("scale") && events.Contains("files"),
+                        "Window forwards pointer, scale and file-drop signals before frame callbacks.");
+                    Check(files is not null && files.SequenceEqual(new[] { "/tmp/first.txt", "/tmp/второй.txt" }),
+                        "One completed drop retains all paths in native order.");
+                    node.Tree!.Quit();
+                }
+            });
+            Engine.Instance.Run(window);
+            AssertReleased(window);
+            Check(files is { Count: 2 } && files[1] == "/tmp/второй.txt", "Managed drop data survives native disposal.");
+            Reject<ObjectDisposedException>(() => window.GetFlag(Window.Flags.Borderless));
+            Reject<ObjectDisposedException>(() => window.GetSizeWithDecorations());
+
+            window = NewWindow();
+            var deliveredAfterFailure = false;
+            window.MouseEntered += () => Fail("pointer signal");
+            window.FilesDropped += _ => deliveredAfterFailure = true;
+            window.AddChild(new Probe
+            {
+                ReadyAction = _ =>
+                {
+                    PushWindowEvent(SDL.EventType.WindowMouseLeave);
+                    PushWindowEvent(SDL.EventType.WindowMouseEnter);
+                    PushDrop(buffers, SDL.EventType.DropFile, "/tmp/after-failure.txt");
+                }
+            });
+            try { Engine.Instance.Run(window); throw new Exception("Expected pointer signal failure."); }
+            catch (Exception error) when (error.ToString().Contains("injected pointer signal", StringComparison.Ordinal)) { }
+            Check(deliveredAfterFailure, "A failing window signal does not strand later native events.");
+            AssertReleased(window);
+
+            window = NewWindow();
+            window.CurrentScreen = int.MaxValue;
+            Reject<ArgumentOutOfRangeException>(() => Engine.Instance.Run(window));
+            AssertReleased(window);
+            if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland")
+                foreach (var flag in new[] { Window.Flags.AlwaysOnTop, Window.Flags.NoFocus })
+                {
+                    window = NewWindow();
+                    window.SetFlag(flag, true);
+                    Reject<NotSupportedException>(() => Engine.Instance.Run(window));
+                    AssertReleased(window);
+                }
+        }
+        finally { foreach (var buffer in buffers) Marshal.FreeCoTaskMem(buffer); }
+    }
+
+    private static void PushWindowEvent(SDL.EventType type)
+    {
+        var input = new SDL.Event { Window = new SDL.WindowEvent { Type = type, WindowID = SDL.GetWindowID(NativeWindow()) } };
+        Check(SDL.PushEvent(ref input), "The backend accepts a window event.");
+    }
+
+    private static void PushDrop(List<nint> buffers, SDL.EventType type, string? path = null)
+    {
+        var pointer = path is null ? 0 : Marshal.StringToCoTaskMemUTF8(path);
+        if (pointer != 0) buffers.Add(pointer);
+        var input = new SDL.Event { Drop = new SDL.DropEvent { Type = type, WindowID = SDL.GetWindowID(NativeWindow()), Data = pointer } };
+        Check(SDL.PushEvent(ref input), "The backend accepts a file-drop event with test-owned memory.");
+    }
+
     private static void Fail(string phase) => throw new InvalidOperationException("injected " + phase);
     private static void AssertReleased(Window window, Node? child = null) => Check(window.IsDisposed &&
         (child is null || child.IsDisposed) && Engine.Instance.MainLoop is null && DisplayServer.Instance is null &&

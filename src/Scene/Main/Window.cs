@@ -4,7 +4,7 @@ namespace Electron2D;
 /// <remarks>Pass a detached window to <see cref="Engine.Run"/>. The runtime opens its native window before
 /// scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels
 /// on Wayland and native window units elsewhere. Rendering and embedded windows are not implemented.</remarks>
-public class Window : Viewport
+public partial class Window : Viewport
 {
     private static readonly PropertyDescriptor[] WindowProperties =
     [
@@ -12,6 +12,11 @@ public class Window : Viewport
         new PropertyDescriptor<Window, Vector2I>(nameof(Size), w => w.Size, (w, v) => w.Size = v, _ => new(100, 100), stored: true),
         new PropertyDescriptor<Window, Vector2I>(nameof(MinSize), w => w.MinSize, (w, v) => w.MinSize = v, _ => Vector2I.Zero, stored: true),
         new PropertyDescriptor<Window, Vector2I>(nameof(MaxSize), w => w.MaxSize, (w, v) => w.MaxSize = v, _ => Vector2I.Zero, stored: true),
+        new PropertyDescriptor<Window, ModeEnum>(nameof(Mode), w => w.Mode, (w, v) => w.Mode = v, _ => ModeEnum.Windowed, stored: true),
+        new PropertyDescriptor<Window, bool>(nameof(Unresizable), w => w.Unresizable, (w, v) => w.Unresizable = v, _ => false, stored: true),
+        new PropertyDescriptor<Window, bool>(nameof(Borderless), w => w.Borderless, (w, v) => w.Borderless = v, _ => false, stored: true),
+        new PropertyDescriptor<Window, bool>(nameof(AlwaysOnTop), w => w.AlwaysOnTop, (w, v) => w.AlwaysOnTop = v, _ => false, stored: true),
+        new PropertyDescriptor<Window, bool>(nameof(Unfocusable), w => w.Unfocusable, (w, v) => w.Unfocusable = v, _ => false, stored: true),
     ];
 
     private DisplayServer? _display;
@@ -178,6 +183,10 @@ public class Window : Viewport
             TitleChanged = null;
             FocusEntered = null;
             FocusExited = null;
+            MouseEntered = null;
+            MouseExited = null;
+            DpiChanged = null;
+            FilesDropped = null;
         }
         base.Dispose(disposing);
     }
@@ -188,13 +197,24 @@ public class Window : Viewport
         _display.WindowSetMinSize(_minSize);
         _display.WindowSetMaxSize(_maxSize);
         _display.WindowSetSize(_size);
+        foreach (var flag in new[] { Flags.ResizeDisabled, Flags.Borderless, Flags.AlwaysOnTop, Flags.NoFocus })
+            if (GetFlag(flag))
+                _display.WindowSetFlag((DisplayServer.WindowFlag)flag, true);
+        if (_currentScreen is { } screen)
+            _display.WindowSetCurrentScreen(screen);
         if (_screenPosition is { } position)
             _display.WindowSetPosition(position);
+        if (_mode != ModeEnum.Windowed)
+            _display.WindowSetMode((DisplayServer.WindowMode)_mode);
         _size = _display.WindowGetSize();
         _display.CloseRequested += HandleClose;
         _display.QuitRequested += HandleClose;
         _display.WindowRectChanged += HandleRect;
         _display.WindowFocusChanged += HandleFocus;
+        _display.WindowMouseEntered += HandleMouseEntered;
+        _display.WindowMouseExited += HandleMouseExited;
+        _display.WindowDpiChanged += HandleDpiChanged;
+        _display.FilesDropped += HandleFilesDropped;
     }
 
     internal void EnsureNativeOpen()
@@ -211,6 +231,10 @@ public class Window : Viewport
         display.QuitRequested -= HandleClose;
         display.WindowRectChanged -= HandleRect;
         display.WindowFocusChanged -= HandleFocus;
+        display.WindowMouseEntered -= HandleMouseEntered;
+        display.WindowMouseExited -= HandleMouseExited;
+        display.WindowDpiChanged -= HandleDpiChanged;
+        display.FilesDropped -= HandleFilesDropped;
         display.Dispose();
         _display = null;
     }
@@ -234,6 +258,10 @@ public class Window : Viewport
 
     private void HandleRect(RectI rect) => CommitSize(rect.Size);
     private void HandleFocus(bool focused) { if (focused) FocusEntered?.Invoke(); else FocusExited?.Invoke(); }
+    private void HandleMouseEntered() => MouseEntered?.Invoke();
+    private void HandleMouseExited() => MouseExited?.Invoke();
+    private void HandleDpiChanged() => DpiChanged?.Invoke();
+    private void HandleFilesDropped(IReadOnlyList<string> paths) => FilesDropped?.Invoke(paths);
 
     private void CommitSize(Vector2I size)
     {

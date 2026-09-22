@@ -1043,6 +1043,252 @@
       "godot": "Window::property:position",
       "state": "Partial",
       "reason": "Renamed to ScreenPosition because the unified Node retains scene Position (ADR 0008). Native desktop coordinates; Wayland rejects queries/requests explicitly, including preconfigured startup requests."
+    },
+    {
+      "electron2d": "T:Electron2D.Window.Flags",
+      "godot": "Window::enum:Flags",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "T:Electron2D.Window.ModeEnum",
+      "godot": "Window::enum:Mode",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.AlwaysOnTop()",
+      "godot": "Window::enum_value:Flags.FLAG_ALWAYS_ON_TOP",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.Borderless()",
+      "godot": "Window::enum_value:Flags.FLAG_BORDERLESS",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.ExcludeFromCapture()",
+      "godot": "Window::enum_value:Flags.FLAG_EXCLUDE_FROM_CAPTURE",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.ExtendToTitle()",
+      "godot": "Window::enum_value:Flags.FLAG_EXTEND_TO_TITLE",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.Max()",
+      "godot": "Window::enum_value:Flags.FLAG_MAX",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.MaximizeDisabled()",
+      "godot": "Window::enum_value:Flags.FLAG_MAXIMIZE_DISABLED",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.MinimizeDisabled()",
+      "godot": "Window::enum_value:Flags.FLAG_MINIMIZE_DISABLED",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.MousePassthrough()",
+      "godot": "Window::enum_value:Flags.FLAG_MOUSE_PASSTHROUGH",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.NoFocus()",
+      "godot": "Window::enum_value:Flags.FLAG_NO_FOCUS",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.Popup()",
+      "godot": "Window::enum_value:Flags.FLAG_POPUP",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.PopupWmHint()",
+      "godot": "Window::enum_value:Flags.FLAG_POPUP_WM_HINT",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.ResizeDisabled()",
+      "godot": "Window::enum_value:Flags.FLAG_RESIZE_DISABLED",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.SharpCorners()",
+      "godot": "Window::enum_value:Flags.FLAG_SHARP_CORNERS",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.Flags.Transparent()",
+      "godot": "Window::enum_value:Flags.FLAG_TRANSPARENT",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.ModeEnum.ExclusiveFullscreen()",
+      "godot": "Window::enum_value:Mode.MODE_EXCLUSIVE_FULLSCREEN",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.ModeEnum.Fullscreen()",
+      "godot": "Window::enum_value:Mode.MODE_FULLSCREEN",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.ModeEnum.Maximized()",
+      "godot": "Window::enum_value:Mode.MODE_MAXIMIZED",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.ModeEnum.Minimized()",
+      "godot": "Window::enum_value:Mode.MODE_MINIMIZED",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Window.ModeEnum.Windowed()",
+      "godot": "Window::enum_value:Mode.MODE_WINDOWED",
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
+    },
+    {
+      "electron2d": "event:Electron2D.Window.DpiChanged()",
+      "godot": "Window::signal:dpi_changed()",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
+    },
+    {
+      "electron2d": "event:Electron2D.Window.FilesDropped()",
+      "godot": "Window::signal:files_dropped(PackedStringArray:)",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
+    },
+    {
+      "electron2d": "event:Electron2D.Window.MouseEntered()",
+      "godot": "Window::signal:mouse_entered()",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
+    },
+    {
+      "electron2d": "event:Electron2D.Window.MouseExited()",
+      "godot": "Window::signal:mouse_exited()",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
+    },
+    {
+      "electron2d": "method:Electron2D.Window.GetFlag(Electron2D.Window.Flags)",
+      "godot": "Window::method:get_flag(int:Window.Flags)",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
+    },
+    {
+      "electron2d": "method:Electron2D.Window.GetPositionWithDecorations()",
+      "godot": "Window::method:get_position_with_decorations()",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
+    },
+    {
+      "electron2d": "method:Electron2D.Window.GetSizeWithDecorations()",
+      "godot": "Window::method:get_size_with_decorations()",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
+    },
+    {
+      "electron2d": "method:Electron2D.Window.IsMaximizeAllowed()",
+      "godot": "Window::method:is_maximize_allowed()",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
+    },
+    {
+      "electron2d": "method:Electron2D.Window.MoveToCenter()",
+      "godot": "Window::method:move_to_center()",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
+    },
+    {
+      "electron2d": "method:Electron2D.Window.SetFlag(Electron2D.Window.Flags,System.Boolean)",
+      "godot": "Window::method:set_flag(int:Window.Flags,bool:)",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
+    },
+    {
+      "electron2d": "method:Electron2D.Window.SetImeActive(System.Boolean)",
+      "godot": "Window::method:set_ime_active(bool:)",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
+    },
+    {
+      "electron2d": "method:Electron2D.Window.SetImePosition(Electron2D.Vector2I)",
+      "godot": "Window::method:set_ime_position(Vector2i:)",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
+    },
+    {
+      "electron2d": "method:Electron2D.Window.SetTaskbarProgressState(Electron2D.DisplayServer.ProgressState)",
+      "godot": "Window::method:set_taskbar_progress_state(int:DisplayServer.ProgressState)",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
+    },
+    {
+      "electron2d": "method:Electron2D.Window.SetTaskbarProgressValue(System.Single)",
+      "godot": "Window::method:set_taskbar_progress_value(float:)",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
+    },
+    {
+      "electron2d": "property:Electron2D.Window.AlwaysOnTop()",
+      "godot": "Window::property:always_on_top",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
+    },
+    {
+      "electron2d": "property:Electron2D.Window.Borderless()",
+      "godot": "Window::property:borderless",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
+    },
+    {
+      "electron2d": "property:Electron2D.Window.CurrentScreen()",
+      "godot": "Window::property:current_screen",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
+    },
+    {
+      "electron2d": "property:Electron2D.Window.Mode()",
+      "godot": "Window::property:mode",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
+    },
+    {
+      "electron2d": "property:Electron2D.Window.Unfocusable()",
+      "godot": "Window::property:unfocusable",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
+    },
+    {
+      "electron2d": "property:Electron2D.Window.Unresizable()",
+      "godot": "Window::property:unresizable",
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
     }
   ],
   "extras": [
@@ -2020,24 +2266,7 @@
         "Window::enum:ContentScaleAspect",
         "Window::enum:ContentScaleMode",
         "Window::enum:ContentScaleStretch",
-        "Window::enum:Flags",
-        "Window::enum:Mode",
         "Window::enum:WindowInitialPosition",
-        "Window::enum_value:Flags.FLAG_ALWAYS_ON_TOP",
-        "Window::enum_value:Flags.FLAG_BORDERLESS",
-        "Window::enum_value:Flags.FLAG_EXCLUDE_FROM_CAPTURE",
-        "Window::enum_value:Flags.FLAG_EXTEND_TO_TITLE",
-        "Window::enum_value:Flags.FLAG_MAX",
-        "Window::enum_value:Flags.FLAG_MAXIMIZE_DISABLED",
-        "Window::enum_value:Flags.FLAG_MINIMIZE_DISABLED",
-        "Window::enum_value:Flags.FLAG_MOUSE_PASSTHROUGH",
-        "Window::enum_value:Flags.FLAG_NO_FOCUS",
-        "Window::enum_value:Flags.FLAG_RESIZE_DISABLED",
-        "Window::enum_value:Flags.FLAG_SHARP_CORNERS",
-        "Window::enum_value:Mode.MODE_FULLSCREEN",
-        "Window::enum_value:Mode.MODE_MAXIMIZED",
-        "Window::enum_value:Mode.MODE_MINIMIZED",
-        "Window::enum_value:Mode.MODE_WINDOWED",
         "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_ABSOLUTE",
         "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN",
         "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_OTHER_SCREEN",
@@ -2046,44 +2275,24 @@
         "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS",
         "Window::method:_get_contents_minimum_size()",
         "Window::method:get_contents_minimum_size()",
-        "Window::method:get_flag(int:Window.Flags)",
-        "Window::method:get_position_with_decorations()",
-        "Window::method:get_size_with_decorations()",
         "Window::method:hide()",
-        "Window::method:is_maximize_allowed()",
-        "Window::method:move_to_center()",
         "Window::method:move_to_foreground()",
         "Window::method:reset_size()",
-        "Window::method:set_flag(int:Window.Flags,bool:)",
-        "Window::method:set_ime_active(bool:)",
-        "Window::method:set_ime_position(Vector2i:)",
-        "Window::method:set_taskbar_progress_state(int:DisplayServer.ProgressState)",
-        "Window::method:set_taskbar_progress_value(float:)",
         "Window::method:show()",
         "Window::method:start_drag()",
         "Window::method:start_resize(int:DisplayServer.WindowResizeEdge)",
-        "Window::property:always_on_top",
         "Window::property:auto_translate",
-        "Window::property:borderless",
-        "Window::property:current_screen",
         "Window::property:exclude_from_capture",
         "Window::property:extend_to_title",
         "Window::property:initial_position",
         "Window::property:keep_title_visible",
         "Window::property:maximize_disabled",
         "Window::property:minimize_disabled",
-        "Window::property:mode",
         "Window::property:mouse_passthrough",
         "Window::property:mouse_passthrough_polygon",
         "Window::property:nonclient_area",
         "Window::property:sharp_corners",
-        "Window::property:unfocusable",
-        "Window::property:unresizable",
-        "Window::signal:dpi_changed()",
-        "Window::signal:files_dropped(PackedStringArray:)",
         "Window::signal:go_back_requested()",
-        "Window::signal:mouse_entered()",
-        "Window::signal:mouse_exited()",
         "Window::signal:nonclient_window_input(InputEvent:)",
         "Window::signal:titlebar_changed()",
         "Window::signal:visibility_changed()",
@@ -2113,7 +2322,6 @@
         "Window::enum_value:ContentScaleMode.CONTENT_SCALE_MODE_VIEWPORT",
         "Window::enum_value:ContentScaleStretch.CONTENT_SCALE_STRETCH_FRACTIONAL",
         "Window::enum_value:ContentScaleStretch.CONTENT_SCALE_STRETCH_INTEGER",
-        "Window::enum_value:Flags.FLAG_TRANSPARENT",
         "Window::method:can_draw()",
         "Window::method:get_output_max_linear_value()",
         "Window::property:content_scale_aspect",
@@ -2130,9 +2338,6 @@
       "state": "Blocked",
       "reason": "First native multiwindow and embedded/popup viewport ownership slice after rendering; one root window exists today (ADRs 0008 and 0040).",
       "godot": [
-        "Window::enum_value:Flags.FLAG_POPUP",
-        "Window::enum_value:Flags.FLAG_POPUP_WM_HINT",
-        "Window::enum_value:Mode.MODE_EXCLUSIVE_FULLSCREEN",
         "Window::method:get_focused_window()",
         "Window::method:is_embedded()",
         "Window::method:popup(Rect2i:)",
@@ -2176,6 +2381,65 @@
       "reason": "MaxFps is executable Run cadence control with zero unlimited, runtime updates and unscaled monotonic waiting. Persistent ProjectSettings application/run/max_fps integration and presentation/VSync interaction await their explicit settings and rendering slices (ADRs 0016 and 0028).",
       "godot": [
         "Engine::property:max_fps"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040.",
+      "godot": [
+        "Window::enum:Flags",
+        "Window::enum:Mode",
+        "Window::enum_value:Flags.FLAG_ALWAYS_ON_TOP",
+        "Window::enum_value:Flags.FLAG_BORDERLESS",
+        "Window::enum_value:Flags.FLAG_EXCLUDE_FROM_CAPTURE",
+        "Window::enum_value:Flags.FLAG_EXTEND_TO_TITLE",
+        "Window::enum_value:Flags.FLAG_MAX",
+        "Window::enum_value:Flags.FLAG_MAXIMIZE_DISABLED",
+        "Window::enum_value:Flags.FLAG_MINIMIZE_DISABLED",
+        "Window::enum_value:Flags.FLAG_MOUSE_PASSTHROUGH",
+        "Window::enum_value:Flags.FLAG_NO_FOCUS",
+        "Window::enum_value:Flags.FLAG_POPUP",
+        "Window::enum_value:Flags.FLAG_POPUP_WM_HINT",
+        "Window::enum_value:Flags.FLAG_RESIZE_DISABLED",
+        "Window::enum_value:Flags.FLAG_SHARP_CORNERS",
+        "Window::enum_value:Flags.FLAG_TRANSPARENT",
+        "Window::enum_value:Mode.MODE_EXCLUSIVE_FULLSCREEN",
+        "Window::enum_value:Mode.MODE_FULLSCREEN",
+        "Window::enum_value:Mode.MODE_MAXIMIZED",
+        "Window::enum_value:Mode.MODE_MINIMIZED",
+        "Window::enum_value:Mode.MODE_WINDOWED"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040.",
+      "godot": [
+        "Window::signal:dpi_changed()",
+        "Window::signal:files_dropped(PackedStringArray:)",
+        "Window::signal:mouse_entered()",
+        "Window::signal:mouse_exited()",
+        "Window::method:get_flag(int:Window.Flags)",
+        "Window::method:set_flag(int:Window.Flags,bool:)",
+        "Window::property:always_on_top",
+        "Window::property:borderless",
+        "Window::property:unfocusable",
+        "Window::property:unresizable"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds.",
+      "godot": [
+        "Window::method:get_position_with_decorations()",
+        "Window::method:get_size_with_decorations()",
+        "Window::method:is_maximize_allowed()",
+        "Window::method:move_to_center()",
+        "Window::method:set_ime_active(bool:)",
+        "Window::method:set_ime_position(Vector2i:)",
+        "Window::method:set_taskbar_progress_state(int:DisplayServer.ProgressState)",
+        "Window::method:set_taskbar_progress_value(float:)",
+        "Window::property:current_screen",
+        "Window::property:mode"
       ]
     }
   ]

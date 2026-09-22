@@ -43,6 +43,8 @@
     "Vector2.Axis": "Vector2.Axis",
     "Vector2i.Axis": "Vector2I.Axis",
     "Vector4.Axis": "Vector4.Axis",
-    "Vector4i.Axis": "Vector4I.Axis"
+    "Vector4i.Axis": "Vector4I.Axis",
+    "Window.Mode": "Window.ModeEnum",
+    "Window.Flags": "Window.Flags"
   }
 }

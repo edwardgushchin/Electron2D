@@ -1619,6 +1619,42 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Window.Flags",
+    "kind": "type",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "Flags",
+    "signature": "public enum Electron2D.Window.Flags",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Window.ModeEnum",
+    "kind": "type",
+    "declaringType": "Electron2D.Window.ModeEnum",
+    "name": "ModeEnum",
+    "signature": "public enum Electron2D.Window.ModeEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constant:Electron2D.DisplayServer.InvalidScreen()",
     "kind": "constant",
     "declaringType": "Electron2D.DisplayServer",
@@ -10285,6 +10321,253 @@
     "value": "2"
   },
   {
+    "id": "enumValue:Electron2D.Window.Flags.AlwaysOnTop()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "AlwaysOnTop",
+    "signature": "public const Electron2D.Window.Flags AlwaysOnTop = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.Flags.Borderless()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "Borderless",
+    "signature": "public const Electron2D.Window.Flags Borderless = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.Flags.ExcludeFromCapture()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "ExcludeFromCapture",
+    "signature": "public const Electron2D.Window.Flags ExcludeFromCapture = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.Flags.ExtendToTitle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "ExtendToTitle",
+    "signature": "public const Electron2D.Window.Flags ExtendToTitle = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.Flags.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "Max",
+    "signature": "public const Electron2D.Window.Flags Max = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.Flags.MaximizeDisabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "MaximizeDisabled",
+    "signature": "public const Electron2D.Window.Flags MaximizeDisabled = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.Flags.MinimizeDisabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "MinimizeDisabled",
+    "signature": "public const Electron2D.Window.Flags MinimizeDisabled = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.Flags.MousePassthrough()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "MousePassthrough",
+    "signature": "public const Electron2D.Window.Flags MousePassthrough = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.Flags.NoFocus()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "NoFocus",
+    "signature": "public const Electron2D.Window.Flags NoFocus = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.Flags.Popup()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "Popup",
+    "signature": "public const Electron2D.Window.Flags Popup = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.Flags.PopupWmHint()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "PopupWmHint",
+    "signature": "public const Electron2D.Window.Flags PopupWmHint = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.Flags.ResizeDisabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "ResizeDisabled",
+    "signature": "public const Electron2D.Window.Flags ResizeDisabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.Flags.SharpCorners()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "SharpCorners",
+    "signature": "public const Electron2D.Window.Flags SharpCorners = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.Flags.Transparent()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.Flags",
+    "name": "Transparent",
+    "signature": "public const Electron2D.Window.Flags Transparent = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.Flags",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.ModeEnum.ExclusiveFullscreen()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.ModeEnum",
+    "name": "ExclusiveFullscreen",
+    "signature": "public const Electron2D.Window.ModeEnum ExclusiveFullscreen = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.ModeEnum",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.ModeEnum.Fullscreen()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.ModeEnum",
+    "name": "Fullscreen",
+    "signature": "public const Electron2D.Window.ModeEnum Fullscreen = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.ModeEnum",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.ModeEnum.Maximized()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.ModeEnum",
+    "name": "Maximized",
+    "signature": "public const Electron2D.Window.ModeEnum Maximized = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.ModeEnum",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.ModeEnum.Minimized()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.ModeEnum",
+    "name": "Minimized",
+    "signature": "public const Electron2D.Window.ModeEnum Minimized = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.ModeEnum",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Window.ModeEnum.Windowed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Window.ModeEnum",
+    "name": "Windowed",
+    "signature": "public const Electron2D.Window.ModeEnum Windowed = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.ModeEnum",
+    "value": "0"
+  },
+  {
     "id": "event:Electron2D.DisplayServer.CloseRequested()",
     "kind": "event",
     "declaringType": "Electron2D.DisplayServer",
@@ -10870,6 +11153,32 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Window.DpiChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Window",
+    "name": "DpiChanged",
+    "signature": "public event System.Action DpiChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Window.FilesDropped()",
+    "kind": "event",
+    "declaringType": "Electron2D.Window",
+    "name": "FilesDropped",
+    "signature": "public event System.Action\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E FilesDropped",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Window.FocusEntered()",
     "kind": "event",
     "declaringType": "Electron2D.Window",
@@ -10888,6 +11197,32 @@
     "declaringType": "Electron2D.Window",
     "name": "FocusExited",
     "signature": "public event System.Action FocusExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Window.MouseEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.Window",
+    "name": "MouseEntered",
+    "signature": "public event System.Action MouseEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Window.MouseExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.Window",
+    "name": "MouseExited",
+    "signature": "public event System.Action MouseExited",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -30931,6 +31266,38 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Window.GetFlag(Electron2D.Window.Flags)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "GetFlag",
+    "signature": "public System.Boolean GetFlag(Electron2D.Window.Flags flag)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "flag",
+        "type": "Electron2D.Window.Flags",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.GetPositionWithDecorations()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "GetPositionWithDecorations",
+    "signature": "public Electron2D.Vector2I GetPositionWithDecorations()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Window.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.Window",
@@ -30941,6 +31308,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.GetSizeWithDecorations()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "GetSizeWithDecorations",
+    "signature": "public Electron2D.Vector2I GetSizeWithDecorations()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2I",
     "value": null
   },
   {
@@ -30996,6 +31376,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Window.IsMaximizeAllowed()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "IsMaximizeAllowed",
+    "signature": "public System.Boolean IsMaximizeAllowed()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.MoveToCenter()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "MoveToCenter",
+    "signature": "public System.Void MoveToCenter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Window.RequestAttention()",
     "kind": "method",
     "declaringType": "Electron2D.Window",
@@ -31005,6 +31411,106 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.SetFlag(Electron2D.Window.Flags,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "SetFlag",
+    "signature": "public System.Void SetFlag(Electron2D.Window.Flags flag, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "flag",
+        "type": "Electron2D.Window.Flags",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.SetImeActive(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "SetImeActive",
+    "signature": "public System.Void SetImeActive(System.Boolean active)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "active",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.SetImePosition(Electron2D.Vector2I)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "SetImePosition",
+    "signature": "public System.Void SetImePosition(Electron2D.Vector2I position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.SetTaskbarProgressState(Electron2D.DisplayServer.ProgressState)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "SetTaskbarProgressState",
+    "signature": "public System.Void SetTaskbarProgressState(Electron2D.DisplayServer.ProgressState state)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "state",
+        "type": "Electron2D.DisplayServer.ProgressState",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.SetTaskbarProgressValue(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "SetTaskbarProgressValue",
+    "signature": "public System.Void SetTaskbarProgressValue(System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -38648,6 +39154,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Window.AlwaysOnTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "AlwaysOnTop",
+    "signature": "public System.Boolean AlwaysOnTop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.Borderless()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "Borderless",
+    "signature": "public System.Boolean Borderless { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.CurrentScreen()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "CurrentScreen",
+    "signature": "public System.Int32 CurrentScreen { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Window.MaxSize()",
     "kind": "property",
     "declaringType": "Electron2D.Window",
@@ -38671,6 +39216,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.Mode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "Mode",
+    "signature": "public Electron2D.Window.ModeEnum Mode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window.ModeEnum",
     "value": null
   },
   {
@@ -38710,6 +39268,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.Unfocusable()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "Unfocusable",
+    "signature": "public System.Boolean Unfocusable { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.Unresizable()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "Unresizable",
+    "signature": "public System.Boolean Unresizable { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

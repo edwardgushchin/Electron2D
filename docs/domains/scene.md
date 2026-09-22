@@ -12,7 +12,7 @@ Its production sources live under `src/Scene/Main/`, `src/Scene/Animation/`, and
 
 | Component | Responsibility | State |
 | --- | --- | --- |
-| [Window runtime](../components/window-runtime.md) | Native root window, client rectangle and input boundary | Implemented root slice; rendering and multiwindow incomplete |
+| [Window runtime](../components/window-runtime.md) | Native root window, presentation policies, platform events and client/input boundary | Implemented root slice; rendering and multiwindow incomplete |
 | [Unified 2D node](../components/unified-node.md) | Hierarchy, 2D transforms, paths, groups, visibility/Z state, process/input policy, lifecycle endpoints, and deletion requests | Implemented and verified |
 | [Scene tree](../components/scene-tree.md) | Active-root ownership, exception-safe lifecycle, pause state, frame/input dispatch, events/counts, reusable Node timers, lightweight one-shot timers, typed group operations, deferred work, and deletion execution | Implemented and verified |
 | [Tweening](../components/tweening.md) | Typed property/method interpolation, sequencing, callbacks, waits, nested timelines, loops, and frame policies | Implemented and verified |
@@ -107,4 +107,4 @@ Production types include [`Window`](../classes/Window.md), [`Viewport`](../class
 
 ## Windowed lifecycle
 
-The [Window runtime component](../components/window-runtime.md) provides Window : Viewport : Node, root native ownership, client geometry and scene input handling. Engine.Run consumes the configured window and children. Renderer, offscreen viewports, nested windows, GUI and content scaling are still absent.
+The [Window runtime component](../components/window-runtime.md) provides Window : Viewport : Node, root native ownership, presentation mode, four executable native policies, optional screen selection, client/decorated geometry, IME/taskbar requests, window events and scene input handling. Window.ModeEnum and Window.Flags describe the mode/policy identifiers. Capability failures stay explicit; declared policy IDs do not imply implemented native integration. Engine.Run consumes the configured window and children. Renderer, offscreen viewports, nested windows, GUI and content scaling are still absent.
