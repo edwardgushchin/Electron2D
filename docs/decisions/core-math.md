@@ -1,6 +1,6 @@
 # Electron2D core math decisions
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 This bounded log owns the complete architectural records for core math. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -134,11 +134,11 @@ Verification is currently Linux/.NET 8. ADR 0029 has since delivered transform m
 <a id="adr-0026"></a>
 ## ADR 0026: Separate Transform2D foundational type
 
-Last updated: 2026-09-21
+Last updated: 2026-09-23
 
 ### Status
 
-Accepted and fulfilled for affine semantics by ADR 0029. This decision partially supersedes ADR 0008 only where that ADR rejected a separate engine-owned transform type. ADRs 0032 and 0033 complete the rename to `Transform`, its `Vector2` storage, and the `Node`/rectangle migration; the unified `Node` hierarchy and all other ADR 0008 decisions remain accepted.
+Accepted and fulfilled for affine semantics by ADR 0029. This decision partially supersedes ADR 0008 only where that ADR rejected a separate engine-owned transform type. ADRs 0032 and 0033 complete the rename to `Transform`, its `Vector2` storage, and the `Node`/rectangle migration; scene inheritance is independently defined by the accepted `SceneNode → CanvasItem → Node` hierarchy in ADR 0008; this math decision does not authorize combining those classes.
 
 ### Context
 

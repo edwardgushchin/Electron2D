@@ -1,8 +1,8 @@
 # Engine inventory
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
-The current Node inheritance consolidation is unapproved and requires resolution under [ADR 0008](decisions/scene.md#adr-0008). Describing existing code or passing its checks does not establish architectural acceptance.
+The accepted scene hierarchy is `SceneNode → CanvasItem → Node`, with Sprite under Node and Control under CanvasItem ([ADR 0008](decisions/scene.md#adr-0008)). The existing combined Node implementation has not yet been migrated; implementation inventories and API pages below describe current code.
 
 This is the exhaustive inventory of implemented Electron2D engine domains, components, and production types. Test-only helpers are not engine types.
 

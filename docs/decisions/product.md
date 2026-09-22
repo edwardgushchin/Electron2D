@@ -1,6 +1,6 @@
 # Electron2D product architecture decisions
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 This bounded document owns the current product architecture decisions. Use [the decision index](index.md) to route other work; read only the affected documents and explicitly linked dependencies.
 
@@ -39,7 +39,7 @@ Electron2D will not implement `Variant`. Public APIs use concrete types, generic
 <a id="adr-0002"></a>
 ## ADR 0002: Represent game signals with typed C# events
 
-Last updated: 2026-09-20
+Last updated: 2026-09-23
 
 - Status: Accepted; connection lifecycle extended by [0010](core-object-runtime.md#adr-0010)
 - Scope: Public event and callback APIs
@@ -54,11 +54,11 @@ Discrete game notifications use typed C# events, normally `event Action` or `eve
 
 Core contracts that are known to be required may be declared before their producer component when their semantics are stable. `ElectronObject.ScriptChanged` is such a contract: the protected notifier exists now because scripting is confirmed for a later phase, while script attachment and initialization remain explicitly unimplemented.
 
-Per-frame work does not use events. Implemented scene and fixed-step processing use direct `SceneTree` calls and virtual `Node` callbacks; future rendering, input routing, and other traversal follow the same direct-call rule.
+Per-frame work does not use events. Implemented scene and fixed-step processing use direct `SceneTree` calls and virtual `SceneNode` callbacks; future rendering, input routing, and other traversal follow the same direct-call rule.
 
 ### Lifetime rule
 
-A shorter-lived subscriber must unsubscribe from a longer-lived publisher as part of its lifecycle. Direct `+=` subscriptions require matching `-=` cleanup; ADR 0010 adds `EventConnection` as the preferred owned token when deterministic cleanup, one-shot, or deferred delivery is needed. `ElectronObject` and `Node` clear the event subscriber lists they own during disposal, but this cannot remove a disposed subscriber from a different longer-lived publisher. Automatic weak events are not implemented.
+A shorter-lived subscriber must unsubscribe from a longer-lived publisher as part of its lifecycle. Direct `+=` subscriptions require matching `-=` cleanup; ADR 0010 adds `EventConnection` as the preferred owned token when deterministic cleanup, one-shot, or deferred delivery is needed. `ElectronObject` and `SceneNode` clear the event subscriber lists they own during disposal, but this cannot remove a disposed subscriber from a different longer-lived publisher. Automatic weak events are not implemented.
 
 ### Consequences
 
@@ -77,7 +77,7 @@ A shorter-lived subscriber must unsubscribe from a longer-lived publisher as par
 <a id="adr-0004"></a>
 ## ADR 0004: Build a 2D-only scene-oriented engine in one assembly
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Status: Accepted; managed-dependency packaging specified by [0012](product.md#adr-0012), runtime target matrix defined by [0021](product.md#adr-0021), editor/game product boundary amended by [0027](product.md#adr-0027), and rendering backend strategy defined by [0028](rendering.md#adr-0028)
 - Scope: Entire product architecture and packaging
@@ -93,8 +93,8 @@ Electron2D is intended to provide a familiar high-level API modeled on Godot's 2
 - Electron2D supports only two-dimensional games.
 - Three-dimensional rendering, physics, transforms, cameras, assets, nodes, compatibility aliases, and speculative shared 2D/3D abstractions are outside scope.
 - The public image-texture resource is `Texture`; `ImageTexture` derives directly from it. All image textures are two-dimensional by product definition, so there is no `Texture2D` suffix or empty dimension-neutral parent. The reference `Texture` and `Texture2D` contracts share one `Texture.md` coverage page. Coverage names for `Texture2DArray`, `Texture2DArrayRD`, and `Texture2DRD` are `TextureArray`, `TextureArrayRD`, and `TextureRD`. Source identities and declarations remain intact inside the comparison; these names do not authorize new runtime types or change implementation states. Shader-language intrinsic names and internal backend identifiers retain their native spelling.
-- The image-drawing scene node is named `Sprite`, without a redundant dimensional suffix or 3D sibling. This name does not authorize flattening its base classes; inheritance is unresolved in [ADR 0008](scene.md#adr-0008). The internal coverage page retains the reference identity.
-- The high-level API follows Godot's 2D concepts, lifecycle, composition model, and recognizable naming where they remain compatible with the typed C# decisions in ADR 0001 and ADR 0002.
+- The image-drawing scene node is named `Sprite`, without a redundant dimensional suffix or 3D sibling. Its inheritance is `Sprite : Node : CanvasItem : SceneNode : ElectronObject` under [ADR 0008](scene.md#adr-0008); the runtime migration is tracked there. The internal coverage page retains the reference identity.
+- The entire in-scope public API must correspond to Godot's API and behavior under all previously accepted decisions. Godot `Node` maps to `SceneNode` with the same applicable API; Godot `Node2D` maps to `Node` with the same applicable API. Keep the separate `CanvasItem` layer and spatial/UI branches under ADR 0008. Preserve inheritance, members, defaults, values, lifecycle and ordering except for specifically accepted adaptations (including typed C#, events, managed lifetime, strict 2D scope, math/resource naming, shaders and acronym casing). Current omissions remain implementation gaps. Familiarity alone, backend convenience or a naming change does not authorize a reduced or redesigned API.
 - The public and protected runtime API is bounded by the reference engine's public 2D capabilities. A C# projection may use constructors, typed values, events, disposal, and explicit library-host entry points to express an existing capability or lifecycle. Such a projection must name its reference concept in the bidirectional coverage register and must not add an independent game-facing capability. Backend helpers and observations available only to the implementation stay internal. The runtime owns the ordinary windowed scene lifecycle; game-specific policy remains in the consumer. Review the complete compiled surface, including existing declarations, against this rule; a rationale for an Electron2D-only row is not itself permission to expand the semantic scope.
 - All production runtime-engine domains and components compile into `Electron2D.csproj` with assembly name `Electron2D`, producing one managed engine assembly: `Electron2D.dll`.
 - Tests, examples, benchmarks, analyzers, and development tools may use separate projects because they are not shipped as parts of the engine.

@@ -11,6 +11,8 @@ These instructions apply to the whole repository. Keep this file about how to wo
 
 ## Make a change
 
+- Preserve the accepted reference API and behavior under all existing ADRs. Godot `Node` maps to Electron2D `SceneNode` with the same applicable API; `Node2D` maps to `Node` with the same applicable API. Follow [ADR 0008](docs/decisions/scene.md#adr-0008) for inheritance and role-based type substitutions. Keep `CanvasItem` separate and apply the mapping across consumers, parameters, return types, events, factories and coverage; a rename does not authorize missing members or merged responsibilities.
+
 - Keep every acronym in Electron2D-owned function, method and property names fully uppercase, regardless of its length or position: `LoadPNGFromBuffer`, `SaveJPGToBuffer`, `GetGLVersion`, `GetFPS`, `MaxFPS`. Follow [ADR 0045](docs/decisions/product.md#adr-0045); update callers, XML, class pages and coverage together when renaming.
 - Preserve unrelated work and keep changes task-scoped. For a requested implementation, deliver a complete executable vertical slice under the accepted architecture; do not add inert compatibility stubs. Audit the relevant API and behavior in both directions, including applicable sibling types, and record accepted adaptations, exclusions, and dependency triggers in coverage.
 - Update affected source XML documentation, class/component/domain pages, inventory, and coverage in the same change as behavior or public API. Change an ADR only when an architectural decision changes. Document actual behavior and verification limits, never planned behavior as implemented.

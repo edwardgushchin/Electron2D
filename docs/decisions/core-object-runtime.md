@@ -1,6 +1,6 @@
 # Electron2D core object and runtime decisions
 
-Last updated: 2026-09-21
+Last updated: 2026-09-23
 
 This bounded log owns the complete architectural records for core object and runtime. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -84,14 +84,14 @@ Godot's `Object` exposes numeric notifications plus Variant-based property disco
 <a id="adr-0009"></a>
 ## ADR 0009: Permit teardown inspection on the disposing thread
 
-Last updated: 2026-09-20
+Last updated: 2026-09-23
 
 - Status: Accepted
 - Scope: `ElectronObject.ThrowIfDisposed()` during deterministic teardown
 
 ### Context
 
-ADR 0003 publishes `IsDisposed` as soon as disposal starts so concurrent callers cannot continue using an object. The same guard originally rejected the thread that had just won disposal. That made pre-delete notifications and derived teardown callbacks unable to read ordinary guarded state; an attached `Node` exit callback could fail merely by reading `Name` while direct disposal detached it.
+ADR 0003 publishes `IsDisposed` as soon as disposal starts so concurrent callers cannot continue using an object. The same guard originally rejected the thread that had just won disposal. That made pre-delete notifications and derived teardown callbacks unable to read ordinary guarded state; an attached `SceneNode` exit callback could fail merely by reading `Name` while direct disposal detached it.
 
 ### Decision
 
@@ -116,7 +116,7 @@ ADR 0003 publishes `IsDisposed` as soon as disposal starts so concurrent callers
 <a id="adr-0010"></a>
 ## ADR 0010: Add owned one-shot and deferred wrappers for typed events
 
-Last updated: 2026-09-21
+Last updated: 2026-09-23
 
 - Status: Accepted
 - Scope: Typed event subscription lifecycle and delivery policy
@@ -145,7 +145,7 @@ These capabilities are useful independently of scripting and serialization. They
 - One connection token owns one wrapper and gives subscribers an explicit lifecycle boundary.
 - The scheduler determines delivery thread, safe point, ordering, and exception aggregation.
 - Failed custom event removal can leave an inert wrapper in the publisher; the terminal token prevents further user-handler calls.
-- Existing child-related `Node` events now pass the publishing parent first and the affected child second.
+- Existing child-related `SceneNode` events now pass the publishing parent first and the affected child second.
 - There is still no `Connect`, `Disconnect`, event-name lookup, callable rebinding, or flags enum.
 
 ### Rejected alternatives

@@ -1,8 +1,8 @@
 # API coverage register
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
-The current Node inheritance consolidation is unapproved and requires resolution under [ADR 0008](../decisions/scene.md#adr-0008). Describing existing code or passing its checks does not establish architectural acceptance.
+The accepted scene hierarchy is `SceneNode → CanvasItem → Node`, with Sprite under Node and Control under CanvasItem ([ADR 0008](../decisions/scene.md#adr-0008)). The existing combined Node implementation has not yet been migrated; implementation inventories and API pages below describe current code.
 
 This is the entry point for the living, bidirectional comparison between the official stable Godot API and the Electron2D production API. The register accounts for upstream declarations even when they are outside Electron2D's 2D product, and for Electron2D declarations that have no upstream counterpart. It is a census and roadmap, not a claim that every listed member is implemented.
 
@@ -24,6 +24,10 @@ The table for each family uses this minimum schema; the page header links to the
 | --- | --- | --- | --- |
 
 Use an explicit `—` when either side has no counterpart. Type and member links must resolve to their class reference or source declaration; do not infer a match solely from similar names. One upstream declaration can map to multiple C# overloads or events, and several upstream declarations can map to one typed API when the behavior is preserved. Record every declaration in such mappings so that neither side disappears from the census. Under [ADR 0004](../decisions/product.md#adr-0004), Electron2D-only rows must explain the reference capability or lifecycle they project into C#; a reason alone cannot authorize a new semantic capability. Backend and example policy belongs outside the public runtime API. Keep behavior gaps in the same row or a linked, per-member note: units, coordinate space, return values, state transitions, lifecycle timing, ordering, errors, ownership, and thread affinity matter as much as names.
+
+## Scene type mapping
+
+The accepted target under [ADR 0008](../decisions/scene.md#adr-0008) is Godot `Node` → Electron2D `SceneNode`, Godot `CanvasItem` → Electron2D `CanvasItem`, and Godot `Node2D` → Electron2D `Node`, preserving each applicable API, behavior and inheritance role. The pinned source identities remain unchanged. Until the runtime migration, existing mappings to the combined Node describe current declarations only and remain partial where the target contract differs. Renaming a type does not establish semantic parity or permit dropping reference members.
 
 ## State vocabulary
 

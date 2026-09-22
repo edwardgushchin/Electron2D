@@ -538,13 +538,13 @@
       "electron2d": "method:Electron2D.Node.AddChild(Electron2D.Node)",
       "godot": "Node::method:add_child(Node:,bool:,int:Node.InternalMode)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "method:Electron2D.Node.AddSibling(Electron2D.Node)",
       "godot": "Node::method:add_sibling(Node:,bool:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "method:Electron2D.Node.CancelFree()",
@@ -556,67 +556,67 @@
       "electron2d": "method:Electron2D.Node.FindChild(System.String,System.Boolean)",
       "godot": "Node::method:find_child(String:,bool:,bool:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "method:Electron2D.Node.FindChild`1(System.String,System.Boolean)",
       "godot": "Node::method:find_child(String:,bool:,bool:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "method:Electron2D.Node.FindChildren(System.String,System.Boolean)",
       "godot": "Node::method:find_children(String:,String:,bool:,bool:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "method:Electron2D.Node.FindChildren`1(System.String,System.Boolean)",
       "godot": "Node::method:find_children(String:,String:,bool:,bool:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "method:Electron2D.Node.GetChild(System.Int32)",
       "godot": "Node::method:get_child(int:,bool:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "method:Electron2D.Node.GetGroups()",
       "godot": "Node::method:get_groups()",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "method:Electron2D.Node.GetIndex()",
       "godot": "Node::method:get_index(bool:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "method:Electron2D.Node.GetNode(System.String)",
       "godot": "Node::method:get_node(NodePath:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "method:Electron2D.Node.GetNode`1(System.String)",
       "godot": "Node::method:get_node(NodePath:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "method:Electron2D.Node.GetPath()",
       "godot": "Node::method:get_path()",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "method:Electron2D.Node.GetPathTo(Electron2D.Node)",
       "godot": "Node::method:get_path_to(Node:,bool:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "method:Electron2D.Node.OnEnterTree()",
@@ -868,13 +868,13 @@
       "electron2d": "property:Electron2D.Node.ChildCount()",
       "godot": "Node::method:get_child_count(bool:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "property:Electron2D.Node.Children()",
       "godot": "Node::method:get_children(bool:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "property:Electron2D.Node.InputEnabled()",
@@ -892,49 +892,49 @@
       "electron2d": "property:Electron2D.Node.IsInsideTree()",
       "godot": "Node::method:is_inside_tree()",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "property:Electron2D.Node.IsNodeReady()",
       "godot": "Node::method:is_node_ready()",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "property:Electron2D.Node.IsQueuedForDeletion()",
       "godot": "Object::method:is_queued_for_deletion()",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "property:Electron2D.Node.IsVisibleInTree()",
       "godot": "CanvasItem::method:is_visible_in_tree()",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "property:Electron2D.Node.NotifyLocalTransformChanges()",
       "godot": "CanvasItem::method:is_local_transform_notification_enabled()",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "property:Electron2D.Node.NotifyLocalTransformChanges()",
       "godot": "CanvasItem::method:set_notify_local_transform(bool:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "property:Electron2D.Node.NotifyTransformChanges()",
       "godot": "CanvasItem::method:is_transform_notification_enabled()",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "property:Electron2D.Node.NotifyTransformChanges()",
       "godot": "CanvasItem::method:set_notify_transform(bool:)",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "property:Electron2D.Node.PhysicsProcessEnabled()",
@@ -952,7 +952,7 @@
       "electron2d": "property:Electron2D.Node.PhysicsProcessPriority()",
       "godot": "Node::property:process_physics_priority",
       "state": "Partial",
-      "reason": "Current Node combines Node/CanvasItem/Node2D, but this inheritance adaptation is unapproved (ADR 0008). Audit inheritance, defaults, lifecycle and ordering."
+      "reason": "Current Node still combines tree/canvas/spatial APIs; migrate to the accepted SceneNode/CanvasItem/Node hierarchy with corresponding APIs under ADR 0008. Audit inheritance, defaults, lifecycle and ordering."
     },
     {
       "electron2d": "property:Electron2D.Node.ProcessEnabled()",

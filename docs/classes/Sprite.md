@@ -1,8 +1,8 @@
 # Sprite
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
-The current consolidation of hierarchy, canvas and spatial behavior in Node has not been approved by the user; [ADR 0008](../decisions/scene.md#adr-0008) records the unresolved inheritance decision. The API below describes existing code.
+The accepted target is `SceneNode → CanvasItem → Node`, with `Sprite : Node`, `Timer : SceneNode`, `Viewport : SceneNode` and `Control : CanvasItem`, under [ADR 0008](../decisions/scene.md#adr-0008). The current runtime still combines these responsibilities in Node and requires migration. The API below describes existing code; acceptance of the target does not claim it is implemented.
 
 - Declaration: `public class Sprite : Node`
 - Source: [Sprite.cs](../../src/Scene/2D/Sprite.cs)

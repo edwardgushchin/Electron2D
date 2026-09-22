@@ -1,8 +1,8 @@
 # Node
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
-The current consolidation of hierarchy, canvas and spatial behavior in Node has not been approved by the user; [ADR 0008](../decisions/scene.md#adr-0008) records the unresolved inheritance decision. The API below describes existing code.
+The accepted target is `SceneNode → CanvasItem → Node`, with `Sprite : Node`, `Timer : SceneNode`, `Viewport : SceneNode` and `Control : CanvasItem`, under [ADR 0008](../decisions/scene.md#adr-0008). The current runtime still combines these responsibilities in Node and requires migration. The API below describes existing code; acceptance of the target does not claim it is implemented.
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1946,7 +1946,7 @@ There is no native system-event creation, GUI/viewport consumption, focus synchr
 
 ## Relevant decisions
 
-- [0008: Unresolved scene inheritance](../decisions/scene.md#adr-0008)
+- [0008: SceneNode, CanvasItem and Node responsibilities](../decisions/scene.md#adr-0008)
 - [0026: Separate Transform foundational type](../decisions/core-math.md#adr-0026)
 - [0029: Typed Transform value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)

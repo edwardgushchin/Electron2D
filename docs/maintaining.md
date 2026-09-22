@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -13,6 +13,10 @@ Electron2D follows the current official Godot API for implemented 2D concepts wh
 [The coverage index](coverage/index.md) owns the pinned upstream reference, full bidirectional declaration accounting, state vocabulary, blocked-prerequisite rules, completeness checks, regeneration commands, and implementation roadmap. Update affected rows in the same change as public API or behavior. Keep `inventory.md` as the map of implemented Electron2D types, not a second compatibility register. Treat unknown, unreviewed, missing, duplicate, stale, and unjustified extra rows as audit failures. Distinguish complete accounting from semantic compatibility.
 
 `examples/` contains user-facing code for learning and building games. Example code and project files use only public Electron2D API, including bootstrap; implementation backends and their packages stay in the runtime project. Place API probes, injected events, failure fixtures, and conformance assertions in `tests/` or development tools, following [ADR 0027](decisions/product.md#adr-0027). Preserve vendored upstream formatting when updating its source; exclude `src/Vendor/SDL3-CS` from `dotnet format` while verifying Electron2D-owned code.
+
+## Reference API correspondence
+
+The accepted target preserves the complete applicable Godot API and behavior under all existing decisions, including the typed C#, strictly 2D and naming adaptations. [ADR 0008](decisions/scene.md#adr-0008) maps Godot `Node` to `SceneNode` and `Node2D` to `Node`, with the same applicable API. Keep `CanvasItem` and the separate spatial/UI branches. Audit each member at its proper declaring layer and propagate the renamed types through every API position. Any further divergence needs an accepted decision; missing implementation remains a gap.
 
 ## Complete implementation slice
 

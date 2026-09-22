@@ -1,8 +1,8 @@
 # Scene domain
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
-The current consolidation of hierarchy, canvas and spatial behavior in Node has not been approved by the user; [ADR 0008](../decisions/scene.md#adr-0008) records the unresolved inheritance decision. The API below describes existing code.
+The accepted target is `SceneNode → CanvasItem → Node`, with `Sprite : Node`, `Timer : SceneNode`, `Viewport : SceneNode` and `Control : CanvasItem`, under [ADR 0008](../decisions/scene.md#adr-0008). The current runtime still combines these responsibilities in Node and requires migration. The API below describes existing code; acceptance of the target does not claim it is implemented.
 
 ## Responsibility
 
@@ -45,7 +45,7 @@ Production types include [`Sprite`](../classes/Sprite.md), [`Window`](../classes
 - Scene depends on the Input domain's typed event values and process-wide service boundary for propagation.
 - Window now depends on the backend-neutral DisplayServer API for its native lifetime. Scene delegates drawing to the backend-neutral RenderingServer and has no direct SDL3-CS dependency, audio, collision physics, asset loading/saving, file serialization, scripting, networking, or Localization.
 - Future gameplay, rendering, GUI input, and 2D physics types may depend on Scene.
-- Scene must not introduce 3D types. Separation of non-spatial, canvas and spatial classes remains unresolved in ADR 0008; the current consolidation is not an approved constraint.
+- Scene must not introduce 3D types. Non-spatial, canvas and spatial behavior belongs to SceneNode, CanvasItem and Node respectively under ADR 0008; the existing combined implementation must be migrated.
 - Scene lifecycle and game-state semantics must not vary by target platform; native event generation remains a host boundary.
 
 ## Domain-wide invariants
@@ -92,7 +92,7 @@ Production types include [`Sprite`](../classes/Sprite.md), [`Window`](../classes
 - [0012: Vendored SDL3-CS and Box2D.NET](../decisions/product.md#adr-0012)
 - [0005: Notifications and typed editor properties](../decisions/core-object-runtime.md#adr-0005)
 - [0006: Scene-tree deferred work and queued deletion](../decisions/scene.md#adr-0006)
-- [0008: Unresolved scene inheritance](../decisions/scene.md#adr-0008)
+- [0008: SceneNode, CanvasItem and Node responsibilities](../decisions/scene.md#adr-0008)
 - [0010: Typed event connections](../decisions/core-object-runtime.md#adr-0010)
 - [0011: SceneTree production contract](../decisions/scene.md#adr-0011)
 - [0015: Main-loop lifecycle and host boundary](../decisions/core-object-runtime.md#adr-0015)

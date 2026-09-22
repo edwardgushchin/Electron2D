@@ -1,6 +1,8 @@
 # Scene tree component
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
+
+Scene inheritance migration: [ADR 0008](../decisions/scene.md#adr-0008) assigns the neutral tree API to `SceneNode`, canvas behavior to `CanvasItem`, and the spatial API to `Node`. Signatures on this page describe the existing runtime until that migration is implemented.
 
 ## Scope
 
