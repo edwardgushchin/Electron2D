@@ -1,6 +1,6 @@
 # Color
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** —
 
@@ -18,6 +18,8 @@ Represents a color using floating-point red, green, blue, and alpha components.
 
 `Color` is a mutable 16-byte RGBA value with four sequential `float` fields. It represents ordinary nonlinear sRGB color, linear alpha, overbright/HDR intermediate values, HSV/OKHSL conversions, straight-alpha composition, packed integers, HTML-style text, and exact or approximate comparisons. It owns no resources, identity, handles, callbacks, or managed reference state and does not derive from `ElectronObject`.
 
+Method and property names keep acronyms uppercase: `HTML`, `SRGB`, `HSV`, `OKHSL`, `RGBE`, `ABGR`, `ARGB` and `RGBA`. The `OKHSLH`, `OKHSLS` and `OKHSLL` properties append the hue, saturation or lightness component letter to `OKHSL`.
+
 The zero-initialized value and `new Color()` are transparent black `(0, 0, 0, 0)`. `Colors.Black` is opaque black and `Colors.Transparent` is transparent white. `new Color(r, g, b)` defaults alpha to one. `new Color(existing)` is the RGB-plus-replacement-alpha constructor and therefore also defaults alpha to one; normal assignment copies all four components.
 
 Components usually range from `0` to `1`, but values outside that range are retained for
@@ -30,7 +32,7 @@ The following focused snippet uses the current public API. Names not declared in
 
 ```csharp
 var tint = new Color(0.2f, 0.6f, 1f, 1f);
-var html = tint.ToHtml();
+var html = tint.ToHTML();
 ```
 
 ## Constructors
@@ -55,9 +57,9 @@ var html = tint.ToHtml();
 | [`public float H { get; set; }`](#p-electron2d-color-h) | Gets or sets the HSV hue, typically from `0` to `1`. |
 | [`public float S { get; set; }`](#p-electron2d-color-s) | Gets or sets the HSV saturation, typically from `0` to `1`. |
 | [`public float V { get; set; }`](#p-electron2d-color-v) | Gets or sets the HSV value component, typically from `0` to `1`. |
-| [`public float OkHslH { get; set; }`](#p-electron2d-color-okhslh) | Gets or sets the perceptual OKHSL hue, from `0` to `1`. |
-| [`public float OkHslS { get; set; }`](#p-electron2d-color-okhsls) | Gets or sets the perceptual OKHSL saturation, from `0` to `1`. |
-| [`public float OkHslL { get; set; }`](#p-electron2d-color-okhsll) | Gets or sets the perceptual OKHSL lightness, from `0` to `1`. |
+| [`public float OKHSLH { get; set; }`](#p-electron2d-color-okhslh) | Gets or sets the perceptual OKHSL hue, from `0` to `1`. |
+| [`public float OKHSLS { get; set; }`](#p-electron2d-color-okhsls) | Gets or sets the perceptual OKHSL saturation, from `0` to `1`. |
+| [`public float OKHSLL { get; set; }`](#p-electron2d-color-okhsll) | Gets or sets the perceptual OKHSL lightness, from `0` to `1`. |
 | [`public float Luminance { get; }`](#p-electron2d-color-luminance) | Gets the relative light intensity of a linear-space RGB color. |
 | [`public float this[int index] { get; set; }`](#p-electron2d-color-item-system-int32) | Gets or sets a component by RGBA index. |
 
@@ -71,23 +73,23 @@ var html = tint.ToHtml();
 | [`public Color Inverted()`](#m-electron2d-color-inverted) | Inverts the RGB components while preserving alpha. |
 | [`public Color Lightened(float amount)`](#m-electron2d-color-lightened-system-single) | Lightens the RGB components toward one by a ratio while preserving alpha. |
 | [`public Color Lerp(Color to, float weight)`](#m-electron2d-color-lerp-electron2d-color-system-single) | Linearly interpolates every component toward another color. |
-| [`public Color LinearToSrgb()`](#m-electron2d-color-lineartosrgb) | Converts linear RGB components to nonlinear sRGB while preserving alpha. |
-| [`public Color SrgbToLinear()`](#m-electron2d-color-srgbtolinear) | Converts nonlinear sRGB components to linear RGB while preserving alpha. |
-| [`public uint ToAbgr32()`](#m-electron2d-color-toabgr32) | Packs the color into `0xAABBGGRR`. |
-| [`public ulong ToAbgr64()`](#m-electron2d-color-toabgr64) | Packs the color into `0xAAAABBBBGGGGRRRR`. |
-| [`public uint ToArgb32()`](#m-electron2d-color-toargb32) | Packs the color into `0xAARRGGBB`. |
-| [`public ulong ToArgb64()`](#m-electron2d-color-toargb64) | Packs the color into `0xAAAARRRRGGGGBBBB`. |
-| [`public uint ToRgba32()`](#m-electron2d-color-torgba32) | Packs the color into `0xRRGGBBAA`. |
-| [`public ulong ToRgba64()`](#m-electron2d-color-torgba64) | Packs the color into `0xRRRRGGGGBBBBAAAA`. |
-| [`public string ToHtml(bool includeAlpha = true)`](#m-electron2d-color-tohtml-system-boolean) | Formats the color as lowercase hexadecimal RGBA or RGB without a leading hash sign. |
-| [`public static Color FromHtml(ReadOnlySpan<char> rgba)`](#m-electron2d-color-fromhtml-system-readonlyspan-system-char) | Parses a color from HTML-style hexadecimal RGB or RGBA text. |
+| [`public Color LinearToSRGB()`](#m-electron2d-color-lineartosrgb) | Converts linear RGB components to nonlinear sRGB while preserving alpha. |
+| [`public Color SRGBToLinear()`](#m-electron2d-color-srgbtolinear) | Converts nonlinear sRGB components to linear RGB while preserving alpha. |
+| [`public uint ToABGR32()`](#m-electron2d-color-toabgr32) | Packs the color into `0xAABBGGRR`. |
+| [`public ulong ToABGR64()`](#m-electron2d-color-toabgr64) | Packs the color into `0xAAAABBBBGGGGRRRR`. |
+| [`public uint ToARGB32()`](#m-electron2d-color-toargb32) | Packs the color into `0xAARRGGBB`. |
+| [`public ulong ToARGB64()`](#m-electron2d-color-toargb64) | Packs the color into `0xAAAARRRRGGGGBBBB`. |
+| [`public uint ToRGBA32()`](#m-electron2d-color-torgba32) | Packs the color into `0xRRGGBBAA`. |
+| [`public ulong ToRGBA64()`](#m-electron2d-color-torgba64) | Packs the color into `0xRRRRGGGGBBBBAAAA`. |
+| [`public string ToHTML(bool includeAlpha = true)`](#m-electron2d-color-tohtml-system-boolean) | Formats the color as lowercase hexadecimal RGBA or RGB without a leading hash sign. |
+| [`public static Color FromHTML(ReadOnlySpan<char> rgba)`](#m-electron2d-color-fromhtml-system-readonlyspan-system-char) | Parses a color from HTML-style hexadecimal RGB or RGBA text. |
 | [`public static Color Color8(byte r8, byte g8, byte b8, byte a8 = 255)`](#m-electron2d-color-color8-system-byte-system-byte-system-byte-system-byte) | Constructs a color from 8-bit integer components. |
-| [`public static Color FromHsv(float hue, float saturation, float value, float alpha = 1f)`](#m-electron2d-color-fromhsv-system-single-system-single-system-single-system-single) | Constructs a color from HSV components. |
-| [`public void ToHsv(out float hue, out float saturation, out float value)`](#m-electron2d-color-tohsv-system-single-byref-system-single-byref-system-single-byref) | Computes this color's HSV components in one pass. |
-| [`public static Color FromOkHsl(float hue, float saturation, float lightness, float alpha = 1f)`](#m-electron2d-color-fromokhsl-system-single-system-single-system-single-system-single) | Constructs a color from perceptually uniform OKHSL components. |
-| [`public static Color FromRgbe9995(uint rgbe)`](#m-electron2d-color-fromrgbe9995-system-uint32) | Decodes a shared-exponent RGBE9995 value. |
+| [`public static Color FromHSV(float hue, float saturation, float value, float alpha = 1f)`](#m-electron2d-color-fromhsv-system-single-system-single-system-single-system-single) | Constructs a color from HSV components. |
+| [`public void ToHSV(out float hue, out float saturation, out float value)`](#m-electron2d-color-tohsv-system-single-byref-system-single-byref-system-single-byref) | Computes this color's HSV components in one pass. |
+| [`public static Color FromOKHSL(float hue, float saturation, float lightness, float alpha = 1f)`](#m-electron2d-color-fromokhsl-system-single-system-single-system-single-system-single) | Constructs a color from perceptually uniform OKHSL components. |
+| [`public static Color FromRGBE9995(uint rgbe)`](#m-electron2d-color-fromrgbe9995-system-uint32) | Decodes a shared-exponent RGBE9995 value. |
 | [`public static Color FromString(string text, Color defaultColor)`](#m-electron2d-color-fromstring-system-string-electron2d-color) | Parses hexadecimal text or a standard name, returning a fallback on failure. |
-| [`public static bool HtmlIsValid(ReadOnlySpan<char> color)`](#m-electron2d-color-htmlisvalid-system-readonlyspan-system-char) | Tests whether a span is valid HTML-style hexadecimal color text. |
+| [`public static bool HTMLIsValid(ReadOnlySpan<char> color)`](#m-electron2d-color-htmlisvalid-system-readonlyspan-system-char) | Tests whether a span is valid HTML-style hexadecimal color text. |
 | [`public override bool Equals(object obj)`](#m-electron2d-color-equals-system-object) | Tests whether another object is an exactly equal color. |
 | [`public bool Equals(Color other)`](#m-electron2d-color-equals-electron2d-color) | Tests all components for exact floating-point equality. |
 | [`public bool IsEqualApprox(Color other)`](#m-electron2d-color-isequalapprox-electron2d-color) | Tests all components for scale-aware approximate equality. |
@@ -244,7 +246,7 @@ Gets or sets the HSV hue, typically from `0` to `1`.
 
 **Value:** The hue of this color; achromatic colors report `0`.
 
-**Remarks:** Setting the value reconstructs RGB through [`Color.FromHsv(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromhsv-system-single-system-single-system-single-system-single) and preserves alpha.
+**Remarks:** Setting the value reconstructs RGB through [`Color.FromHSV(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromhsv-system-single-system-single-system-single-system-single) and preserves alpha.
 
 <a id="p-electron2d-color-s"></a>
 ### `public float S { get; set; }`
@@ -253,7 +255,7 @@ Gets or sets the HSV saturation, typically from `0` to `1`.
 
 **Value:** The ratio of RGB chroma to the greatest RGB component, or `0` when the greatest component is zero.
 
-**Remarks:** Setting the value reconstructs RGB through [`Color.FromHsv(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromhsv-system-single-system-single-system-single-system-single) and preserves alpha.
+**Remarks:** Setting the value reconstructs RGB through [`Color.FromHSV(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromhsv-system-single-system-single-system-single-system-single) and preserves alpha.
 
 <a id="p-electron2d-color-v"></a>
 ### `public float V { get; set; }`
@@ -262,34 +264,34 @@ Gets or sets the HSV value component, typically from `0` to `1`.
 
 **Value:** The greatest RGB component.
 
-**Remarks:** Setting the value reconstructs RGB through [`Color.FromHsv(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromhsv-system-single-system-single-system-single-system-single) and preserves alpha.
+**Remarks:** Setting the value reconstructs RGB through [`Color.FromHSV(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromhsv-system-single-system-single-system-single-system-single) and preserves alpha.
 
 <a id="p-electron2d-color-okhslh"></a>
-### `public float OkHslH { get; set; }`
+### `public float OKHSLH { get; set; }`
 
 Gets or sets the perceptual OKHSL hue, from `0` to `1`.
 
 **Value:** The normalized perceptual hue; achromatic colors report `0`.
 
-**Remarks:** Setting the value reconstructs RGB through [`Color.FromOkHsl(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromokhsl-system-single-system-single-system-single-system-single) and preserves alpha.
+**Remarks:** Setting the value reconstructs RGB through [`Color.FromOKHSL(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromokhsl-system-single-system-single-system-single-system-single) and preserves alpha.
 
 <a id="p-electron2d-color-okhsls"></a>
-### `public float OkHslS { get; set; }`
+### `public float OKHSLS { get; set; }`
 
 Gets or sets the perceptual OKHSL saturation, from `0` to `1`.
 
 **Value:** The normalized perceptual saturation; achromatic colors report `0`.
 
-**Remarks:** Setting the value reconstructs RGB through [`Color.FromOkHsl(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromokhsl-system-single-system-single-system-single-system-single) and preserves alpha.
+**Remarks:** Setting the value reconstructs RGB through [`Color.FromOKHSL(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromokhsl-system-single-system-single-system-single-system-single) and preserves alpha.
 
 <a id="p-electron2d-color-okhsll"></a>
-### `public float OkHslL { get; set; }`
+### `public float OKHSLL { get; set; }`
 
 Gets or sets the perceptual OKHSL lightness, from `0` to `1`.
 
 **Value:** The normalized perceptual lightness.
 
-**Remarks:** Setting the value reconstructs RGB through [`Color.FromOkHsl(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromokhsl-system-single-system-single-system-single-system-single) and preserves alpha.
+**Remarks:** Setting the value reconstructs RGB through [`Color.FromOKHSL(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromokhsl-system-single-system-single-system-single-system-single) and preserves alpha.
 
 <a id="p-electron2d-color-luminance"></a>
 ### `public float Luminance { get; }`
@@ -298,7 +300,7 @@ Gets the relative light intensity of a linear-space RGB color.
 
 **Value:** `0.2126 × R + 0.7152 × G + 0.0722 × B`; alpha is ignored.
 
-**Remarks:** Call [`Color.SrgbToLinear`](Color.md#m-electron2d-color-srgbtolinear) first when the stored RGB components are sRGB encoded.
+**Remarks:** Call [`Color.SRGBToLinear`](Color.md#m-electron2d-color-srgbtolinear) first when the stored RGB components are sRGB encoded.
 
 <a id="p-electron2d-color-item-system-int32"></a>
 ### `public float this[int index] { get; set; }`
@@ -392,21 +394,21 @@ Linearly interpolates every component toward another color.
 **Remarks:** The weight is not clamped and therefore supports extrapolation.
 
 <a id="m-electron2d-color-lineartosrgb"></a>
-### `public Color LinearToSrgb()`
+### `public Color LinearToSRGB()`
 
 Converts linear RGB components to nonlinear sRGB while preserving alpha.
 
 **Returns:** The sRGB-encoded color.
 
 <a id="m-electron2d-color-srgbtolinear"></a>
-### `public Color SrgbToLinear()`
+### `public Color SRGBToLinear()`
 
 Converts nonlinear sRGB components to linear RGB while preserving alpha.
 
 **Returns:** The linear-space color.
 
 <a id="m-electron2d-color-toabgr32"></a>
-### `public uint ToAbgr32()`
+### `public uint ToABGR32()`
 
 Packs the color into `0xAABBGGRR`.
 
@@ -415,7 +417,7 @@ Packs the color into `0xAABBGGRR`.
 **Remarks:** Components are clamped to `0..1`; NaN becomes zero.
 
 <a id="m-electron2d-color-toabgr64"></a>
-### `public ulong ToAbgr64()`
+### `public ulong ToABGR64()`
 
 Packs the color into `0xAAAABBBBGGGGRRRR`.
 
@@ -424,7 +426,7 @@ Packs the color into `0xAAAABBBBGGGGRRRR`.
 **Remarks:** Components are clamped to `0..1`; NaN becomes zero.
 
 <a id="m-electron2d-color-toargb32"></a>
-### `public uint ToArgb32()`
+### `public uint ToARGB32()`
 
 Packs the color into `0xAARRGGBB`.
 
@@ -433,7 +435,7 @@ Packs the color into `0xAARRGGBB`.
 **Remarks:** Components are clamped to `0..1`; NaN becomes zero.
 
 <a id="m-electron2d-color-toargb64"></a>
-### `public ulong ToArgb64()`
+### `public ulong ToARGB64()`
 
 Packs the color into `0xAAAARRRRGGGGBBBB`.
 
@@ -442,7 +444,7 @@ Packs the color into `0xAAAARRRRGGGGBBBB`.
 **Remarks:** Components are clamped to `0..1`; NaN becomes zero.
 
 <a id="m-electron2d-color-torgba32"></a>
-### `public uint ToRgba32()`
+### `public uint ToRGBA32()`
 
 Packs the color into `0xRRGGBBAA`.
 
@@ -451,7 +453,7 @@ Packs the color into `0xRRGGBBAA`.
 **Remarks:** Components are clamped to `0..1`; NaN becomes zero.
 
 <a id="m-electron2d-color-torgba64"></a>
-### `public ulong ToRgba64()`
+### `public ulong ToRGBA64()`
 
 Packs the color into `0xRRRRGGGGBBBBAAAA`.
 
@@ -460,7 +462,7 @@ Packs the color into `0xRRRRGGGGBBBBAAAA`.
 **Remarks:** Components are clamped to `0..1`; NaN becomes zero.
 
 <a id="m-electron2d-color-tohtml-system-boolean"></a>
-### `public string ToHtml(bool includeAlpha = true)`
+### `public string ToHTML(bool includeAlpha = true)`
 
 Formats the color as lowercase hexadecimal RGBA or RGB without a leading hash sign.
 
@@ -471,7 +473,7 @@ Formats the color as lowercase hexadecimal RGBA or RGB without a leading hash si
 **Returns:** Six or eight hexadecimal digits. Each component is clamped to `0..1` and rounded to a byte.
 
 <a id="m-electron2d-color-fromhtml-system-readonlyspan-system-char"></a>
-### `public static Color FromHtml(ReadOnlySpan<char> rgba)`
+### `public static Color FromHTML(ReadOnlySpan<char> rgba)`
 
 Parses a color from HTML-style hexadecimal RGB or RGBA text.
 
@@ -485,7 +487,7 @@ Parses a color from HTML-style hexadecimal RGB or RGBA text.
 
 - `ArgumentOutOfRangeException`: The length or a character is invalid.
 
-**Remarks:** An empty span returns opaque black for parity with the typed API contract; [`Color.HtmlIsValid(ReadOnlySpan{Char})`](Color.md#m-electron2d-color-htmlisvalid-system-readonlyspan-system-char) still reports it as invalid.
+**Remarks:** An empty span returns opaque black for parity with the typed API contract; [`Color.HTMLIsValid(ReadOnlySpan{Char})`](Color.md#m-electron2d-color-htmlisvalid-system-readonlyspan-system-char) still reports it as invalid.
 
 <a id="m-electron2d-color-color8-system-byte-system-byte-system-byte-system-byte"></a>
 ### `public static Color Color8(byte r8, byte g8, byte b8, byte a8 = 255)`
@@ -502,7 +504,7 @@ Constructs a color from 8-bit integer components.
 **Returns:** The components divided by 255.
 
 <a id="m-electron2d-color-fromhsv-system-single-system-single-system-single-system-single"></a>
-### `public static Color FromHsv(float hue, float saturation, float value, float alpha = 1f)`
+### `public static Color FromHSV(float hue, float saturation, float value, float alpha = 1f)`
 
 Constructs a color from HSV components.
 
@@ -518,7 +520,7 @@ Constructs a color from HSV components.
 **Remarks:** Inputs are not clamped. Hue is periodic for ordinary nonnegative values.
 
 <a id="m-electron2d-color-tohsv-system-single-byref-system-single-byref-system-single-byref"></a>
-### `public void ToHsv(out float hue, out float saturation, out float value)`
+### `public void ToHSV(out float hue, out float saturation, out float value)`
 
 Computes this color's HSV components in one pass.
 
@@ -529,7 +531,7 @@ Computes this color's HSV components in one pass.
 - `value`: Receives the greatest RGB component.
 
 <a id="m-electron2d-color-fromokhsl-system-single-system-single-system-single-system-single"></a>
-### `public static Color FromOkHsl(float hue, float saturation, float lightness, float alpha = 1f)`
+### `public static Color FromOKHSL(float hue, float saturation, float lightness, float alpha = 1f)`
 
 Constructs a color from perceptually uniform OKHSL components.
 
@@ -543,7 +545,7 @@ Constructs a color from perceptually uniform OKHSL components.
 **Returns:** The equivalent sRGB color, componentwise clamped to `0..1`, including alpha.
 
 <a id="m-electron2d-color-fromrgbe9995-system-uint32"></a>
-### `public static Color FromRgbe9995(uint rgbe)`
+### `public static Color FromRGBE9995(uint rgbe)`
 
 Decodes a shared-exponent RGBE9995 value.
 
@@ -570,7 +572,7 @@ Parses hexadecimal text or a standard name, returning a fallback on failure.
 - `ArgumentNullException`: `text` is `null`.
 
 <a id="m-electron2d-color-htmlisvalid-system-readonlyspan-system-char"></a>
-### `public static bool HtmlIsValid(ReadOnlySpan<char> color)`
+### `public static bool HTMLIsValid(ReadOnlySpan<char> color)`
 
 Tests whether a span is valid HTML-style hexadecimal color text.
 
@@ -848,7 +850,7 @@ Compares colors lexicographically in red, green, blue, alpha order.
 
 ## Parsing and named colors
 
-HTML-style input permits exactly 3, 4, 6, or 8 ASCII hexadecimal digits and at most one leading `#`; it does not trim whitespace. Three/four-digit forms divide each nibble by 15, six/eight-digit forms divide bytes by 255, and missing alpha is one. `HtmlIsValid("")` is false while direct `FromHtml` on an empty span returns opaque black as a retained C# compatibility edge case.
+HTML-style input permits exactly 3, 4, 6, or 8 ASCII hexadecimal digits and at most one leading `#`; it does not trim whitespace. Three/four-digit forms divide each nibble by 15, six/eight-digit forms divide bytes by 255, and missing alpha is one. `HTMLIsValid("")` is false while direct `FromHTML` on an empty span returns opaque black as a retained C# compatibility edge case.
 
 Named parsing is case-insensitive and removes spaces, hyphens, underscores, apostrophes, and periods before lookup. [`Colors`](Colors.md) owns all 146 public names. String constructors reject null or unknown input; `FromString` rejects null but returns its fallback for an unknown name.
 

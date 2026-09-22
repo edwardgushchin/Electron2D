@@ -17,6 +17,8 @@ Production sources are [`src/Core/Math/Color.cs`](../../src/Core/Math/Color.cs),
 
 ## Runtime flow
 
+The API preserves uppercase acronyms under [ADR 0045](../decisions/product.md#adr-0045), including HTML, SRGB, HSV, OKHSL, RGBE and packed channel order. OKHSL properties retain the component suffix (`OKHSLH`, `OKHSLS`, `OKHSLL`).
+
 1. Callers construct/copy RGBA values or obtain a named value from `Colors`.
 2. Numeric operations return new values except explicit field/property/indexer mutation.
 3. HSV/OKHSL property setters reconstruct RGB while retaining alpha; OKHSL construction clamps the final RGBA value.

@@ -486,13 +486,13 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">The image is empty or is not RGB8 or RGBA8.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the conversion commits.</exception>
-    public void SrgbToLinear() => TransformRgb8Colors(static color => color.SrgbToLinear());
+    public void SRGBToLinear() => TransformRGB8Colors(static color => color.SRGBToLinear());
 
     /// <summary>Converts RGB components from linear encoding to nonlinear sRGB encoding.</summary>
     /// <exception cref="InvalidOperationException">The image is empty or is not RGB8 or RGBA8.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the conversion commits.</exception>
-    public void LinearToSrgb() => TransformRgb8Colors(static color => color.LinearToSrgb());
+    public void LinearToSRGB() => TransformRGB8Colors(static color => color.LinearToSRGB());
 
     /// <summary>Converts a height image into a wrapping RGBA8 tangent-space normal map.</summary>
     /// <param name="bumpScale">The finite multiplier applied to neighboring height differences.</param>
@@ -563,7 +563,7 @@ public sealed partial class Image
     /// <returns>A new independent image that preserves the source mipmap policy.</returns>
     /// <exception cref="InvalidOperationException">The image is empty or is not RGBE9995.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
-    public Image RgbeToSrgb()
+    public Image RGBEToSRGB()
     {
         var state = RequireReadablePixels();
         if (state.Format != Format.Rgbe9995)
@@ -572,7 +572,7 @@ public sealed partial class Image
         var resultState = ConvertState(state, Format.Rgbf);
         var bytes = GetBytesPerPixel(resultState.Format);
         for (var offset = 0; offset < resultState.Data.Length; offset += bytes)
-            WriteColor(resultState.Data, offset, resultState.Format, ReadColor(resultState.Data, offset, resultState.Format).LinearToSrgb());
+            WriteColor(resultState.Data, offset, resultState.Format, ReadColor(resultState.Data, offset, resultState.Format).LinearToSRGB());
         resultState = ConvertState(resultState, Format.Rgb8);
         var result = new Image();
         result.SetStateWithoutNotification(resultState);
@@ -711,7 +711,7 @@ public sealed partial class Image
             });
     }
 
-    private void TransformRgb8Colors(Func<Color, Color> transform) => Mutate(
+    private void TransformRGB8Colors(Func<Color, Color> transform) => Mutate(
         state =>
         {
             RequireReadablePixels(state);

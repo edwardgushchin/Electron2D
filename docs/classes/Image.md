@@ -1,6 +1,6 @@
 # Image
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
@@ -94,11 +94,11 @@ byte[] ownedCopy = image.GetData();
 | [`public void AdjustBcs(float brightness, float contrast, float saturation)`](#adjustbcs) | Adjusts brightness, contrast, and saturation. |
 | [`public void FixAlphaEdges()`](#fixalphaedges) | Propagates nearby opaque RGB into low-alpha `Rgba8` pixels. |
 | [`public void PremultiplyAlpha()`](#premultiplyalpha) | Multiplies `Rgba8` RGB bytes by alpha. |
-| [`public void SrgbToLinear()`](#srgbtolinear) | Converts `Rgb8` or `Rgba8` RGB values to linear encoding. |
-| [`public void LinearToSrgb()`](#lineartosrgb) | Converts `Rgb8` or `Rgba8` RGB values to nonlinear encoding. |
+| [`public void SRGBToLinear()`](#srgbtolinear) | Converts `Rgb8` or `Rgba8` RGB values to linear encoding. |
+| [`public void LinearToSRGB()`](#lineartosrgb) | Converts `Rgb8` or `Rgba8` RGB values to nonlinear encoding. |
 | [`public void BumpMapToNormalMap(float bumpScale = 1f)`](#bumpmaptonormalmap) | Converts height values to a wrapping tangent-space normal map. |
 | [`public void NormalMapToXy()`](#normalmaptoxy) | Packs normal X/Y into `La8`. |
-| [`public Image RgbeToSrgb()`](#rgbetosrgb) | Decodes `Rgbe9995` into a new `Rgb8` image. |
+| [`public Image RGBEToSRGB()`](#rgbetosrgb) | Decodes `Rgbe9995` into a new `Rgb8` image. |
 | [`public ImageMetrics ComputeImageMetrics(Image comparedImage, bool useLuma)`](#computeimagemetrics) | Computes absolute-error statistics over the common area. |
 
 ## Enumerations
@@ -376,12 +376,12 @@ For each base-level `Rgba8` pixel with alpha below 20/255, copies RGB from the n
 Multiplies each base-level `Rgba8` RGB byte by its alpha byte with deterministic integer rounding, preserves alpha, and rebuilds mipmaps. Other formats are rejected.
 
 <a id="srgbtolinear"></a>
-### `public void SrgbToLinear()`
+### `public void SRGBToLinear()`
 
 Transforms RGB components of every stored `Rgb8` or `Rgba8` pixel from nonlinear sRGB to linear encoding. Alpha is preserved.
 
 <a id="lineartosrgb"></a>
-### `public void LinearToSrgb()`
+### `public void LinearToSRGB()`
 
 Transforms RGB components of every stored `Rgb8` or `Rgba8` pixel from linear to nonlinear sRGB encoding. Alpha is preserved.
 
@@ -396,7 +396,7 @@ Uses each pixel's red/luminance-derived height and wrapping right/below differen
 Converts readable data to `Rgba8`, then stores green as luminance and red as alpha in `La8`. The existing mipmap layout is retained.
 
 <a id="rgbetosrgb"></a>
-### `public Image RgbeToSrgb()`
+### `public Image RGBEToSRGB()`
 
 Returns a new `Rgb8` image by decoding shared-exponent `Rgbe9995` values and applying linear-to-sRGB conversion. Source dimensions and mipmap policy are preserved.
 

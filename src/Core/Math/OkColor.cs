@@ -36,7 +36,7 @@ internal static class OkColor
 
     private readonly record struct Cs(float C0, float CMid, float CMax);
 
-    internal static Rgb ToSrgb(float hue, float saturation, float lightness)
+    internal static Rgb ToSRGB(float hue, float saturation, float lightness)
     {
         if (lightness == 1f)
             return new Rgb(1f, 1f, 1f);
@@ -67,19 +67,19 @@ internal static class OkColor
             chroma = k0 + (t * k1 / (1f - (k2 * t)));
         }
 
-        var rgb = OklabToLinearSrgb(new Lab(l, chroma * a, chroma * b));
-        return new Rgb(ToSrgbChannel(rgb.R), ToSrgbChannel(rgb.G), ToSrgbChannel(rgb.B));
+        var rgb = OklabToLinearSRGB(new Lab(l, chroma * a, chroma * b));
+        return new Rgb(ToSRGBChannel(rgb.R), ToSRGBChannel(rgb.G), ToSRGBChannel(rgb.B));
     }
 
-    internal static Hsl FromSrgb(float red, float green, float blue)
+    internal static Hsl FromSRGB(float red, float green, float blue)
     {
         if (red == 0f && green == 0f && blue == 0f)
             return default;
 
-        var lab = LinearSrgbToOklab(new Rgb(
-            FromSrgbChannel(red),
-            FromSrgbChannel(green),
-            FromSrgbChannel(blue)));
+        var lab = LinearSRGBToOklab(new Rgb(
+            FromSRGBChannel(red),
+            FromSRGBChannel(green),
+            FromSRGBChannel(blue)));
         var chroma = Mathf.Sqrt((lab.A * lab.A) + (lab.B * lab.B));
         if (chroma <= 0.0000001f)
             return new Hsl(0f, 0f, Toe(lab.L));
@@ -111,13 +111,13 @@ internal static class OkColor
         return new Hsl(hue, saturation, Toe(lab.L));
     }
 
-    private static float ToSrgbChannel(float value) =>
+    private static float ToSRGBChannel(float value) =>
         value <= 0.0031308f ? 12.92f * value : (1.055f * Mathf.Pow(value, 1f / 2.4f)) - 0.055f;
 
-    private static float FromSrgbChannel(float value) =>
+    private static float FromSRGBChannel(float value) =>
         value > 0.04045f ? Mathf.Pow((value + 0.055f) / 1.055f, 2.4f) : value / 12.92f;
 
-    private static Lab LinearSrgbToOklab(Rgb color)
+    private static Lab LinearSRGBToOklab(Rgb color)
     {
         var l = (0.4122214708f * color.R) + (0.5363325363f * color.G) + (0.0514459929f * color.B);
         var m = (0.2119034982f * color.R) + (0.6806995451f * color.G) + (0.1073969566f * color.B);
@@ -131,7 +131,7 @@ internal static class OkColor
             (0.0259040371f * cubeRootL) + (0.7827717662f * cubeRootM) - (0.8086757660f * cubeRootS));
     }
 
-    private static Rgb OklabToLinearSrgb(Lab color)
+    private static Rgb OklabToLinearSRGB(Lab color)
     {
         var cubeRootL = color.L + (0.3963377774f * color.A) + (0.2158037573f * color.B);
         var cubeRootM = color.L - (0.1055613458f * color.A) - (0.0638541728f * color.B);
@@ -215,7 +215,7 @@ internal static class OkColor
     private static Lc FindCusp(float a, float b)
     {
         var saturation = ComputeMaxSaturation(a, b);
-        var atMaximum = OklabToLinearSrgb(new Lab(1f, saturation * a, saturation * b));
+        var atMaximum = OklabToLinearSRGB(new Lab(1f, saturation * a, saturation * b));
         var lightness = MathF.Cbrt(1f / Mathf.Max(atMaximum.R, Mathf.Max(atMaximum.G, atMaximum.B)));
         return new Lc(lightness, lightness * saturation);
     }

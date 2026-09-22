@@ -66,69 +66,69 @@ public struct Color : IEquatable<Color>
 
     /// <summary>Gets or sets the HSV hue, typically from <c>0</c> to <c>1</c>.</summary>
     /// <value>The hue of this color; achromatic colors report <c>0</c>.</value>
-    /// <remarks>Setting the value reconstructs RGB through <see cref="FromHsv(float, float, float, float)"/> and preserves alpha.</remarks>
+    /// <remarks>Setting the value reconstructs RGB through <see cref="FromHSV(float, float, float, float)"/> and preserves alpha.</remarks>
     public float H
     {
         readonly get
         {
-            ToHsv(out var hue, out _, out _);
+            ToHSV(out var hue, out _, out _);
             return hue;
         }
-        set => this = FromHsv(value, S, V, A);
+        set => this = FromHSV(value, S, V, A);
     }
 
     /// <summary>Gets or sets the HSV saturation, typically from <c>0</c> to <c>1</c>.</summary>
     /// <value>The ratio of RGB chroma to the greatest RGB component, or <c>0</c> when the greatest component is zero.</value>
-    /// <remarks>Setting the value reconstructs RGB through <see cref="FromHsv(float, float, float, float)"/> and preserves alpha.</remarks>
+    /// <remarks>Setting the value reconstructs RGB through <see cref="FromHSV(float, float, float, float)"/> and preserves alpha.</remarks>
     public float S
     {
         readonly get
         {
-            ToHsv(out _, out var saturation, out _);
+            ToHSV(out _, out var saturation, out _);
             return saturation;
         }
-        set => this = FromHsv(H, value, V, A);
+        set => this = FromHSV(H, value, V, A);
     }
 
     /// <summary>Gets or sets the HSV value component, typically from <c>0</c> to <c>1</c>.</summary>
     /// <value>The greatest RGB component.</value>
-    /// <remarks>Setting the value reconstructs RGB through <see cref="FromHsv(float, float, float, float)"/> and preserves alpha.</remarks>
+    /// <remarks>Setting the value reconstructs RGB through <see cref="FromHSV(float, float, float, float)"/> and preserves alpha.</remarks>
     public float V
     {
         readonly get => Mathf.Max(R, Mathf.Max(G, B));
-        set => this = FromHsv(H, S, value, A);
+        set => this = FromHSV(H, S, value, A);
     }
 
     /// <summary>Gets or sets the perceptual OKHSL hue, from <c>0</c> to <c>1</c>.</summary>
     /// <value>The normalized perceptual hue; achromatic colors report <c>0</c>.</value>
-    /// <remarks>Setting the value reconstructs RGB through <see cref="FromOkHsl(float, float, float, float)"/> and preserves alpha.</remarks>
-    public float OkHslH
+    /// <remarks>Setting the value reconstructs RGB through <see cref="FromOKHSL(float, float, float, float)"/> and preserves alpha.</remarks>
+    public float OKHSLH
     {
-        readonly get => GetOkHsl().H;
-        set => this = FromOkHsl(value, OkHslS, OkHslL, A);
+        readonly get => GetOKHSL().H;
+        set => this = FromOKHSL(value, OKHSLS, OKHSLL, A);
     }
 
     /// <summary>Gets or sets the perceptual OKHSL saturation, from <c>0</c> to <c>1</c>.</summary>
     /// <value>The normalized perceptual saturation; achromatic colors report <c>0</c>.</value>
-    /// <remarks>Setting the value reconstructs RGB through <see cref="FromOkHsl(float, float, float, float)"/> and preserves alpha.</remarks>
-    public float OkHslS
+    /// <remarks>Setting the value reconstructs RGB through <see cref="FromOKHSL(float, float, float, float)"/> and preserves alpha.</remarks>
+    public float OKHSLS
     {
-        readonly get => GetOkHsl().S;
-        set => this = FromOkHsl(OkHslH, value, OkHslL, A);
+        readonly get => GetOKHSL().S;
+        set => this = FromOKHSL(OKHSLH, value, OKHSLL, A);
     }
 
     /// <summary>Gets or sets the perceptual OKHSL lightness, from <c>0</c> to <c>1</c>.</summary>
     /// <value>The normalized perceptual lightness.</value>
-    /// <remarks>Setting the value reconstructs RGB through <see cref="FromOkHsl(float, float, float, float)"/> and preserves alpha.</remarks>
-    public float OkHslL
+    /// <remarks>Setting the value reconstructs RGB through <see cref="FromOKHSL(float, float, float, float)"/> and preserves alpha.</remarks>
+    public float OKHSLL
     {
-        readonly get => GetOkHsl().L;
-        set => this = FromOkHsl(OkHslH, OkHslS, value, A);
+        readonly get => GetOKHSL().L;
+        set => this = FromOKHSL(OKHSLH, OKHSLS, value, A);
     }
 
     /// <summary>Gets the relative light intensity of a linear-space RGB color.</summary>
     /// <value><c>0.2126 × R + 0.7152 × G + 0.0722 × B</c>; alpha is ignored.</value>
-    /// <remarks>Call <see cref="SrgbToLinear"/> first when the stored RGB components are sRGB encoded.</remarks>
+    /// <remarks>Call <see cref="SRGBToLinear"/> first when the stored RGB components are sRGB encoded.</remarks>
     public readonly float Luminance => (0.2126f * R) + (0.7152f * G) + (0.0722f * B);
 
     /// <summary>Gets or sets a component by RGBA index.</summary>
@@ -217,7 +217,7 @@ public struct Color : IEquatable<Color>
     public Color(string code)
     {
         ArgumentNullException.ThrowIfNull(code);
-        this = HtmlIsValid(code) ? FromHtml(code) : Named(code);
+        this = HTMLIsValid(code) ? FromHTML(code) : Named(code);
     }
 
     /// <summary>Initializes a color from an HTML hexadecimal code or standard name and replaces its alpha.</summary>
@@ -297,54 +297,54 @@ public struct Color : IEquatable<Color>
 
     /// <summary>Converts linear RGB components to nonlinear sRGB while preserving alpha.</summary>
     /// <returns>The sRGB-encoded color.</returns>
-    public readonly Color LinearToSrgb() => new(
-        LinearChannelToSrgb(R),
-        LinearChannelToSrgb(G),
-        LinearChannelToSrgb(B),
+    public readonly Color LinearToSRGB() => new(
+        LinearChannelToSRGB(R),
+        LinearChannelToSRGB(G),
+        LinearChannelToSRGB(B),
         A);
 
     /// <summary>Converts nonlinear sRGB components to linear RGB while preserving alpha.</summary>
     /// <returns>The linear-space color.</returns>
-    public readonly Color SrgbToLinear() => new(
-        SrgbChannelToLinear(R),
-        SrgbChannelToLinear(G),
-        SrgbChannelToLinear(B),
+    public readonly Color SRGBToLinear() => new(
+        SRGBChannelToLinear(R),
+        SRGBChannelToLinear(G),
+        SRGBChannelToLinear(B),
         A);
 
     /// <summary>Packs the color into <c>0xAABBGGRR</c>.</summary>
     /// <returns>An unsigned 32-bit ABGR value with one rounded byte per component.</returns>
     /// <remarks>Components are clamped to <c>0..1</c>; NaN becomes zero.</remarks>
-    public readonly uint ToAbgr32() => Pack32(A, B, G, R);
+    public readonly uint ToABGR32() => Pack32(A, B, G, R);
 
     /// <summary>Packs the color into <c>0xAAAABBBBGGGGRRRR</c>.</summary>
     /// <returns>An unsigned 64-bit ABGR value with one rounded word per component.</returns>
     /// <remarks>Components are clamped to <c>0..1</c>; NaN becomes zero.</remarks>
-    public readonly ulong ToAbgr64() => Pack64(A, B, G, R);
+    public readonly ulong ToABGR64() => Pack64(A, B, G, R);
 
     /// <summary>Packs the color into <c>0xAARRGGBB</c>.</summary>
     /// <returns>An unsigned 32-bit ARGB value with one rounded byte per component.</returns>
     /// <remarks>Components are clamped to <c>0..1</c>; NaN becomes zero.</remarks>
-    public readonly uint ToArgb32() => Pack32(A, R, G, B);
+    public readonly uint ToARGB32() => Pack32(A, R, G, B);
 
     /// <summary>Packs the color into <c>0xAAAARRRRGGGGBBBB</c>.</summary>
     /// <returns>An unsigned 64-bit ARGB value with one rounded word per component.</returns>
     /// <remarks>Components are clamped to <c>0..1</c>; NaN becomes zero.</remarks>
-    public readonly ulong ToArgb64() => Pack64(A, R, G, B);
+    public readonly ulong ToARGB64() => Pack64(A, R, G, B);
 
     /// <summary>Packs the color into <c>0xRRGGBBAA</c>.</summary>
     /// <returns>An unsigned 32-bit RGBA value with one rounded byte per component.</returns>
     /// <remarks>Components are clamped to <c>0..1</c>; NaN becomes zero.</remarks>
-    public readonly uint ToRgba32() => Pack32(R, G, B, A);
+    public readonly uint ToRGBA32() => Pack32(R, G, B, A);
 
     /// <summary>Packs the color into <c>0xRRRRGGGGBBBBAAAA</c>.</summary>
     /// <returns>An unsigned 64-bit RGBA value with one rounded word per component.</returns>
     /// <remarks>Components are clamped to <c>0..1</c>; NaN becomes zero.</remarks>
-    public readonly ulong ToRgba64() => Pack64(R, G, B, A);
+    public readonly ulong ToRGBA64() => Pack64(R, G, B, A);
 
     /// <summary>Formats the color as lowercase hexadecimal RGBA or RGB without a leading hash sign.</summary>
     /// <param name="includeAlpha">Whether to append the alpha byte.</param>
     /// <returns>Six or eight hexadecimal digits. Each component is clamped to <c>0..1</c> and rounded to a byte.</returns>
-    public readonly string ToHtml(bool includeAlpha = true)
+    public readonly string ToHTML(bool includeAlpha = true)
     {
         Span<char> text = stackalloc char[includeAlpha ? 8 : 6];
         WriteHexByte(text, 0, R);
@@ -360,8 +360,8 @@ public struct Color : IEquatable<Color>
     /// <param name="rgba">Three, four, six, or eight hexadecimal digits, optionally prefixed by one <c>#</c>.</param>
     /// <returns>The parsed color; formats without alpha produce an alpha value of <c>1</c>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The length or a character is invalid.</exception>
-    /// <remarks>An empty span returns opaque black for parity with the typed API contract; <see cref="HtmlIsValid"/> still reports it as invalid.</remarks>
-    public static Color FromHtml(ReadOnlySpan<char> rgba)
+    /// <remarks>An empty span returns opaque black for parity with the typed API contract; <see cref="HTMLIsValid"/> still reports it as invalid.</remarks>
+    public static Color FromHTML(ReadOnlySpan<char> rgba)
     {
         if (rgba.IsEmpty)
             return Colors.Black;
@@ -402,7 +402,7 @@ public struct Color : IEquatable<Color>
     /// <param name="alpha">The alpha component, typically from <c>0</c> to <c>1</c>.</param>
     /// <returns>The equivalent RGBA color.</returns>
     /// <remarks>Inputs are not clamped. Hue is periodic for ordinary nonnegative values.</remarks>
-    public static Color FromHsv(float hue, float saturation, float value, float alpha = 1f)
+    public static Color FromHSV(float hue, float saturation, float value, float alpha = 1f)
     {
         if (saturation == 0f)
             return new Color(value, value, value, alpha);
@@ -428,7 +428,7 @@ public struct Color : IEquatable<Color>
     /// <param name="hue">Receives the hue, or <c>0</c> for an achromatic color.</param>
     /// <param name="saturation">Receives the saturation.</param>
     /// <param name="value">Receives the greatest RGB component.</param>
-    public readonly void ToHsv(out float hue, out float saturation, out float value)
+    public readonly void ToHSV(out float hue, out float saturation, out float value)
     {
         var maximum = Mathf.Max(R, Mathf.Max(G, B));
         var minimum = Mathf.Min(R, Mathf.Min(G, B));
@@ -459,9 +459,9 @@ public struct Color : IEquatable<Color>
     /// <param name="lightness">The perceptual lightness, typically from <c>0</c> to <c>1</c>.</param>
     /// <param name="alpha">The alpha component, typically from <c>0</c> to <c>1</c>.</param>
     /// <returns>The equivalent sRGB color, componentwise clamped to <c>0..1</c>, including alpha.</returns>
-    public static Color FromOkHsl(float hue, float saturation, float lightness, float alpha = 1f)
+    public static Color FromOKHSL(float hue, float saturation, float lightness, float alpha = 1f)
     {
-        var rgb = OkColor.ToSrgb(hue, saturation, lightness);
+        var rgb = OkColor.ToSRGB(hue, saturation, lightness);
         return new Color(
             ClampOkComponent(rgb.R),
             ClampOkComponent(rgb.G),
@@ -472,7 +472,7 @@ public struct Color : IEquatable<Color>
     /// <summary>Decodes a shared-exponent RGBE9995 value.</summary>
     /// <param name="rgbe">Nine-bit red, green, and blue mantissas followed by a five-bit exponent.</param>
     /// <returns>The decoded linear RGB color with opaque alpha.</returns>
-    public static Color FromRgbe9995(uint rgbe)
+    public static Color FromRGBE9995(uint rgbe)
     {
         var multiplier = Mathf.Pow(2f, ((rgbe >> 27) & 0x1f) - 24f);
         return new Color(
@@ -489,14 +489,14 @@ public struct Color : IEquatable<Color>
     public static Color FromString(string text, Color defaultColor)
     {
         ArgumentNullException.ThrowIfNull(text);
-        return HtmlIsValid(text) ? FromHtml(text) : Named(text, defaultColor);
+        return HTMLIsValid(text) ? FromHTML(text) : Named(text, defaultColor);
     }
 
     /// <summary>Tests whether a span is valid HTML-style hexadecimal color text.</summary>
     /// <param name="color">The candidate text.</param>
     /// <returns><see langword="true"/> for 3, 4, 6, or 8 hexadecimal digits with an optional leading <c>#</c>; otherwise <see langword="false"/>.</returns>
     /// <remarks>Whitespace and multiple hash signs are not accepted.</remarks>
-    public static bool HtmlIsValid(ReadOnlySpan<char> color)
+    public static bool HTMLIsValid(ReadOnlySpan<char> color)
     {
         if (color.IsEmpty)
             return false;
@@ -644,9 +644,9 @@ public struct Color : IEquatable<Color>
     public readonly string ToString(string? format) =>
         $"({R.ToString(format, CultureInfo.InvariantCulture)}, {G.ToString(format, CultureInfo.InvariantCulture)}, {B.ToString(format, CultureInfo.InvariantCulture)}, {A.ToString(format, CultureInfo.InvariantCulture)})";
 
-    private readonly OkColor.Hsl GetOkHsl()
+    private readonly OkColor.Hsl GetOKHSL()
     {
-        var hsl = OkColor.FromSrgb(R, G, B);
+        var hsl = OkColor.FromSRGB(R, G, B);
         return new OkColor.Hsl(
             ClampOkComponent(hsl.H),
             ClampOkComponent(hsl.S),
@@ -669,10 +669,10 @@ public struct Color : IEquatable<Color>
         return (int)scaled;
     }
 
-    private static float LinearChannelToSrgb(float channel) =>
+    private static float LinearChannelToSRGB(float channel) =>
         channel < 0.0031308f ? 12.92f * channel : (1.055f * Mathf.Pow(channel, 1f / 2.4f)) - 0.055f;
 
-    private static float SrgbChannelToLinear(float channel) =>
+    private static float SRGBChannelToLinear(float channel) =>
         channel < 0.04045f ? channel / 12.92f : Mathf.Pow((channel + 0.055f) / 1.055f, 2.4f);
 
     private static uint Pack32(float first, float second, float third, float fourth) =>

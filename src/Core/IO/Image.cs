@@ -719,7 +719,7 @@ public sealed partial class Image : Resource
                 if (format == Format.Rgbah) a = ReadHalf(data, offset + 6);
                 break;
             case Format.Rgbe9995:
-                return Color.FromRgbe9995(BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(offset)));
+                return Color.FromRGBE9995(BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(offset)));
             case Format.R16:
             case Format.Rg16:
             case Format.Rgb16:
@@ -806,7 +806,7 @@ public sealed partial class Image : Resource
                 if (format == Format.Rgbah) WriteHalf(data, offset + 6, color.A);
                 return;
             case Format.Rgbe9995:
-                BinaryPrimitives.WriteUInt32LittleEndian(data.AsSpan(offset), ToRgbe9995(color));
+                BinaryPrimitives.WriteUInt32LittleEndian(data.AsSpan(offset), ToRGBE9995(color));
                 return;
             case Format.R16:
             case Format.Rg16:
@@ -858,7 +858,7 @@ public sealed partial class Image : Resource
 
     private static ushort ToUShortInteger(float value) => (ushort)Math.Clamp((int)value, 0, 65535);
 
-    private static uint ToRgbe9995(Color color)
+    private static uint ToRGBE9995(Color color)
     {
         const float maximum = 65408f;
         const float minimum = 1f / 65536f;

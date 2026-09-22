@@ -136,7 +136,7 @@
       "reason": "Byte-typed RGBA8 factory (ADR 0024)."
     },
     {
-      "electron2d": "method:Electron2D.Color.FromHtml(System.ReadOnlySpan<System.Char>)",
+      "electron2d": "method:Electron2D.Color.FromHTML(System.ReadOnlySpan<System.Char>)",
       "godot": "Color::method:html(String:)",
       "reason": "Span-based HTML parser counterpart; empty input is an accepted C# edge adaptation (ADR 0024)."
     },
@@ -1123,7 +1123,7 @@
       "adr": "core-math.md#adr-0024"
     },
     {
-      "electron2d": "method:Electron2D.Color.ToHsv(ref System.Single,ref System.Single,ref System.Single)",
+      "electron2d": "method:Electron2D.Color.ToHSV(ref System.Single,ref System.Single,ref System.Single)",
       "reason": "C# value, ordering, HSV output, or formatting member with no separate Color XML declaration.",
       "adr": "core-math.md#adr-0024"
     },

@@ -11801,11 +11801,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.FromHsv(System.Single,System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.Color.FromHSV(System.Single,System.Single,System.Single,System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "FromHsv",
-    "signature": "public static Electron2D.Color FromHsv(System.Single hue, System.Single saturation, System.Single value, System.Single alpha = 1f)",
+    "name": "FromHSV",
+    "signature": "public static Electron2D.Color FromHSV(System.Single hue, System.Single saturation, System.Single value, System.Single alpha = 1f)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -11835,11 +11835,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.FromHtml(System.ReadOnlySpan\u003CSystem.Char\u003E)",
+    "id": "method:Electron2D.Color.FromHTML(System.ReadOnlySpan\u003CSystem.Char\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "FromHtml",
-    "signature": "public static Electron2D.Color FromHtml(System.ReadOnlySpan\u003CSystem.Char\u003E rgba)",
+    "name": "FromHTML",
+    "signature": "public static Electron2D.Color FromHTML(System.ReadOnlySpan\u003CSystem.Char\u003E rgba)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -11854,11 +11854,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.FromOkHsl(System.Single,System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.Color.FromOKHSL(System.Single,System.Single,System.Single,System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "FromOkHsl",
-    "signature": "public static Electron2D.Color FromOkHsl(System.Single hue, System.Single saturation, System.Single lightness, System.Single alpha = 1f)",
+    "name": "FromOKHSL",
+    "signature": "public static Electron2D.Color FromOKHSL(System.Single hue, System.Single saturation, System.Single lightness, System.Single alpha = 1f)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -11888,11 +11888,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.FromRgbe9995(System.UInt32)",
+    "id": "method:Electron2D.Color.FromRGBE9995(System.UInt32)",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "FromRgbe9995",
-    "signature": "public static Electron2D.Color FromRgbe9995(System.UInt32 rgbe)",
+    "name": "FromRGBE9995",
+    "signature": "public static Electron2D.Color FromRGBE9995(System.UInt32 rgbe)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -11944,11 +11944,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.HtmlIsValid(System.ReadOnlySpan\u003CSystem.Char\u003E)",
+    "id": "method:Electron2D.Color.HTMLIsValid(System.ReadOnlySpan\u003CSystem.Char\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "HtmlIsValid",
-    "signature": "public static System.Boolean HtmlIsValid(System.ReadOnlySpan\u003CSystem.Char\u003E color)",
+    "name": "HTMLIsValid",
+    "signature": "public static System.Boolean HTMLIsValid(System.ReadOnlySpan\u003CSystem.Char\u003E color)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12038,11 +12038,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.LinearToSrgb()",
+    "id": "method:Electron2D.Color.LinearToSRGB()",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "LinearToSrgb",
-    "signature": "public Electron2D.Color LinearToSrgb()",
+    "name": "LinearToSRGB",
+    "signature": "public Electron2D.Color LinearToSRGB()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12051,11 +12051,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.SrgbToLinear()",
+    "id": "method:Electron2D.Color.SRGBToLinear()",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "SrgbToLinear",
-    "signature": "public Electron2D.Color SrgbToLinear()",
+    "name": "SRGBToLinear",
+    "signature": "public Electron2D.Color SRGBToLinear()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12064,11 +12064,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.ToAbgr32()",
+    "id": "method:Electron2D.Color.ToABGR32()",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "ToAbgr32",
-    "signature": "public System.UInt32 ToAbgr32()",
+    "name": "ToABGR32",
+    "signature": "public System.UInt32 ToABGR32()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12077,11 +12077,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.ToAbgr64()",
+    "id": "method:Electron2D.Color.ToABGR64()",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "ToAbgr64",
-    "signature": "public System.UInt64 ToAbgr64()",
+    "name": "ToABGR64",
+    "signature": "public System.UInt64 ToABGR64()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12090,11 +12090,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.ToArgb32()",
+    "id": "method:Electron2D.Color.ToARGB32()",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "ToArgb32",
-    "signature": "public System.UInt32 ToArgb32()",
+    "name": "ToARGB32",
+    "signature": "public System.UInt32 ToARGB32()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12103,11 +12103,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.ToArgb64()",
+    "id": "method:Electron2D.Color.ToARGB64()",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "ToArgb64",
-    "signature": "public System.UInt64 ToArgb64()",
+    "name": "ToARGB64",
+    "signature": "public System.UInt64 ToARGB64()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12116,11 +12116,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.ToHsv(ref System.Single,ref System.Single,ref System.Single)",
+    "id": "method:Electron2D.Color.ToHSV(ref System.Single,ref System.Single,ref System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "ToHsv",
-    "signature": "public System.Void ToHsv(out System.Single hue, out System.Single saturation, out System.Single value)",
+    "name": "ToHSV",
+    "signature": "public System.Void ToHSV(out System.Single hue, out System.Single saturation, out System.Single value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12145,11 +12145,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.ToHtml(System.Boolean)",
+    "id": "method:Electron2D.Color.ToHTML(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "ToHtml",
-    "signature": "public System.String ToHtml(System.Boolean includeAlpha = true)",
+    "name": "ToHTML",
+    "signature": "public System.String ToHTML(System.Boolean includeAlpha = true)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12164,11 +12164,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.ToRgba32()",
+    "id": "method:Electron2D.Color.ToRGBA32()",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "ToRgba32",
-    "signature": "public System.UInt32 ToRgba32()",
+    "name": "ToRGBA32",
+    "signature": "public System.UInt32 ToRGBA32()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12177,11 +12177,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Color.ToRgba64()",
+    "id": "method:Electron2D.Color.ToRGBA64()",
     "kind": "method",
     "declaringType": "Electron2D.Color",
-    "name": "ToRgba64",
-    "signature": "public System.UInt64 ToRgba64()",
+    "name": "ToRGBA64",
+    "signature": "public System.UInt64 ToRGBA64()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -17199,11 +17199,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.LinearToSrgb()",
+    "id": "method:Electron2D.Image.LinearToSRGB()",
     "kind": "method",
     "declaringType": "Electron2D.Image",
-    "name": "LinearToSrgb",
-    "signature": "public System.Void LinearToSrgb()",
+    "name": "LinearToSRGB",
+    "signature": "public System.Void LinearToSRGB()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -17235,6 +17235,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Image.RGBEToSRGB()",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "RGBEToSRGB",
+    "signature": "public Electron2D.Image RGBEToSRGB()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
     "value": null
   },
   {
@@ -17291,19 +17304,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.RgbeToSrgb()",
-    "kind": "method",
-    "declaringType": "Electron2D.Image",
-    "name": "RgbeToSrgb",
-    "signature": "public Electron2D.Image RgbeToSrgb()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Image",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.Image.Rotate180()",
     "kind": "method",
     "declaringType": "Electron2D.Image",
@@ -17332,6 +17332,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Image.SRGBToLinear()",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "SRGBToLinear",
+    "signature": "public System.Void SRGBToLinear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -17433,19 +17446,6 @@
     "declaringType": "Electron2D.Image",
     "name": "ShrinkX2",
     "signature": "public System.Void ShrinkX2()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Image.SrgbToLinear()",
-    "kind": "method",
-    "declaringType": "Electron2D.Image",
-    "name": "SrgbToLinear",
-    "signature": "public System.Void SrgbToLinear()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -34188,11 +34188,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Color.OkHslH()",
+    "id": "property:Electron2D.Color.OKHSLH()",
     "kind": "property",
     "declaringType": "Electron2D.Color",
-    "name": "OkHslH",
-    "signature": "public System.Single OkHslH { get; set; }",
+    "name": "OKHSLH",
+    "signature": "public System.Single OKHSLH { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -34201,11 +34201,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Color.OkHslL()",
+    "id": "property:Electron2D.Color.OKHSLL()",
     "kind": "property",
     "declaringType": "Electron2D.Color",
-    "name": "OkHslL",
-    "signature": "public System.Single OkHslL { get; set; }",
+    "name": "OKHSLL",
+    "signature": "public System.Single OKHSLL { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -34214,11 +34214,11 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Color.OkHslS()",
+    "id": "property:Electron2D.Color.OKHSLS()",
     "kind": "property",
     "declaringType": "Electron2D.Color",
-    "name": "OkHslS",
-    "signature": "public System.Single OkHslS { get; set; }",
+    "name": "OKHSLS",
+    "signature": "public System.Single OKHSLS { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

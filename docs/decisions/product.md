@@ -422,6 +422,8 @@ Every acronym in an Electron2D-owned function, method or property name is writte
 
 Examples: `LoadPNGFromBuffer`, `LoadJPGFromBuffer`, `LoadBMPFromBuffer`, `LoadTGAFromBuffer`, `SavePNG`, `SaveJPGToBuffer`, `GetGLVersion`, `CompileHLSL`, `CompileGLSL`, `GetGPUInfo`, `GetInstanceID`, `ReadUTF8` and `GetFPS`; a property uses `MaxFPS`. `FPS` follows the same uppercase rule as the other acronyms. These illustrate spelling; they do not introduce or claim implementation of those APIs. The rule also applies to other acronyms; this list is not exhaustive.
 
+Color APIs use `ToHTML`, `FromHTML`, `HTMLIsValid`, `LinearToSRGB`, `SRGBToLinear`, `FromHSV`, `ToHSV`, `FromOKHSL`, `FromRGBE9995` and the `ToABGR32`/`ToARGB32`/`ToRGBA32` families, including their 64-bit variants. Component properties retain their suffix: `OKHSLH`, `OKHSLS`, `OKHSLL` (the final `L` is the lightness component after the `OKHSL` acronym).
+
 Do not turn acronyms into title-case words such as `Png`, `Jpg`, `Gl`, `Gpu`, `Utf8` or `Fps`. Compound names retain ordinary words while capitalizing their acronym parts: `WebP` and `OpenGL`; `SPIR-V` is written `SPIRV` inside an identifier, where a hyphen cannot be used.
 
 Apply the rule to new functions, methods and properties immediately. Existing nonconforming names are migration work, not a second accepted convention. A rename updates every affected call site, source XML, current class/component documentation and bidirectional coverage mapping in the same change. Preserve behavior while changing spelling. Do not add aliases solely to retain the rejected casing.

@@ -37,7 +37,7 @@ The following contracts are fixed:
 - typed property descriptors and packed scenes store/copy `Color` directly because it contains no managed references;
 - no boolean truth conversion, `System.Drawing` dependency, native name-index API, speculative renderer conversion, or public RGBE encoder is added.
 
-The typed C# empty-span behavior of `FromHtml` returning opaque black is retained, even though `HtmlIsValid` reports empty input as invalid. String constructors do not route invalid input through that edge: they try names and throw for unknown values. Null is rejected explicitly with `ArgumentNullException`.
+The typed C# empty-span behavior of `FromHTML` returning opaque black is retained, even though `HTMLIsValid` reports empty input as invalid. String constructors do not route invalid input through that edge: they try names and throw for unknown values. Null is rejected explicitly with `ArgumentNullException`.
 
 ### Consequences
 

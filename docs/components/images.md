@@ -33,6 +33,8 @@ This Resources component owns portable managed 2D pixel buffers, raw format iden
 
 ## Dependencies and interactions
 
+Color-space conversions use `SRGBToLinear`, `LinearToSRGB` and `RGBEToSRGB`, following the same acronym spelling as the underlying Color API. Their pixel conversion and format contracts are unchanged.
+
 The component depends on `Resource`, typed property descriptors, `Color`, `Vector2I`, `RectI`, and BCL binary/numeric primitives. Future texture upload consumes its copied raw buffer and format metadata. `FileAccess` may later supply encoded bytes to an approved codec layer, but Image currently has no dependency on file formats, SDL, GPU APIs, or third-party packages.
 
 ## Invariants and error behavior

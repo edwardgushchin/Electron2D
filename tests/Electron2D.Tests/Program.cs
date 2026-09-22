@@ -1071,8 +1071,8 @@ static void VerifyColors()
     var rgba = new Color(0.1f, 0.2f, 0.3f, 0.4f);
     Require(new Color(rgba) == new Color(0.1f, 0.2f, 0.3f, 1f) && new Color(rgba, 0.7f).A == 0.7f,
         "The copy-and-alpha constructor must copy RGB and replace alpha.");
-    Require(new Color(0x12345678u).ToRgba32() == 0x12345678u &&
-            new Color(0x123456789abcdef0ul).ToRgba64() == 0x123456789abcdef0ul,
+    Require(new Color(0x12345678u).ToRGBA32() == 0x12345678u &&
+            new Color(0x123456789abcdef0ul).ToRGBA64() == 0x123456789abcdef0ul,
         "Packed RGBA constructors and encoders must be inverse for byte- and word-aligned values.");
 
     var channels = new Color();
@@ -1099,10 +1099,10 @@ static void VerifyColors()
         "The color indexer setter must reject indices above three.");
 
     var red = Colors.Red;
-    red.ToHsv(out var redHue, out var redSaturation, out var redValue);
+    red.ToHSV(out var redHue, out var redSaturation, out var redValue);
     Require(NearlyEqual(redHue, 0f) && NearlyEqual(redSaturation, 1f) && NearlyEqual(redValue, 1f) &&
-            ColorNearlyEqual(Color.FromHsv(1f / 3f, 1f, 1f, 0.25f), new Color(0f, 1f, 0f, 0.25f)) &&
-            ColorNearlyEqual(Color.FromHsv(0.7f, 0f, 0.4f, 0.3f), new Color(0.4f, 0.4f, 0.4f, 0.3f)),
+            ColorNearlyEqual(Color.FromHSV(1f / 3f, 1f, 1f, 0.25f), new Color(0f, 1f, 0f, 0.25f)) &&
+            ColorNearlyEqual(Color.FromHSV(0.7f, 0f, 0.4f, 0.3f), new Color(0.4f, 0.4f, 0.4f, 0.3f)),
         "HSV conversion must cover chromatic and achromatic colors and preserve alpha.");
     var hsvMutable = new Color(1f, 0f, 0f, 0.35f) { H = 2f / 3f };
     var saturationMutable = new Color(1f, 0f, 0f, 0.35f) { S = 0f };
@@ -1112,11 +1112,11 @@ static void VerifyColors()
             ColorNearlyEqual(valueMutable, new Color(0.5f, 0f, 0f, 0.35f)),
         "HSV property setters must reconstruct RGB while preserving alpha.");
 
-    Require(NearlyEqual(Colors.Red.OkHslH, 0.0812f, 0.001f) &&
-            NearlyEqual(Colors.Red.OkHslS, 1f, 0.001f) &&
-            NearlyEqual(Colors.Red.OkHslL, 0.5681f, 0.001f) &&
-            NearlyEqual(Colors.Green.OkHslH, 0.3958f, 0.001f) &&
-            NearlyEqual(Colors.Blue.OkHslH, 0.7335f, 0.001f),
+    Require(NearlyEqual(Colors.Red.OKHSLH, 0.0812f, 0.001f) &&
+            NearlyEqual(Colors.Red.OKHSLS, 1f, 0.001f) &&
+            NearlyEqual(Colors.Red.OKHSLL, 0.5681f, 0.001f) &&
+            NearlyEqual(Colors.Green.OKHSLH, 0.3958f, 0.001f) &&
+            NearlyEqual(Colors.Blue.OKHSLH, 0.7335f, 0.001f),
         "OKHSL primary-color anchors must match the perceptual reference transform.");
     foreach (var sample in new[]
              {
@@ -1124,7 +1124,7 @@ static void VerifyColors()
                  new Color(0.2f, 0.2f, 0.2f, 0.4f), Colors.White, Colors.Black
              })
     {
-        var roundTrip = Color.FromOkHsl(sample.OkHslH, sample.OkHslS, sample.OkHslL, sample.A);
+        var roundTrip = Color.FromOKHSL(sample.OKHSLH, sample.OKHSLS, sample.OKHSLL, sample.A);
         Require(ColorNearlyEqual(roundTrip, sample, 0.002f),
             "OKHSL conversion must round-trip ordinary sRGB colors.");
     }
@@ -1134,25 +1134,25 @@ static void VerifyColors()
             foreach (var gridBlue in okGrid)
             {
                 var sample = new Color(gridRed, gridGreen, gridBlue, 0.37f);
-                var roundTrip = Color.FromOkHsl(sample.OkHslH, sample.OkHslS, sample.OkHslL, sample.A);
+                var roundTrip = Color.FromOKHSL(sample.OKHSLH, sample.OKHSLS, sample.OKHSLL, sample.A);
                 Require(ColorNearlyEqual(roundTrip, sample, 0.003f),
-                    $"OKHSL must round-trip a broad ordinary sRGB grid: {sample} -> ({sample.OkHslH}, {sample.OkHslS}, {sample.OkHslL}) -> {roundTrip}.");
+                    $"OKHSL must round-trip a broad ordinary sRGB grid: {sample} -> ({sample.OKHSLH}, {sample.OKHSLS}, {sample.OKHSLL}) -> {roundTrip}.");
             }
     var saturatedDarkBlue = new Color(0f, 0f, 0.25f, 0.37f);
-    var clampedDarkBlue = Color.FromOkHsl(
-        saturatedDarkBlue.OkHslH,
-        saturatedDarkBlue.OkHslS,
-        saturatedDarkBlue.OkHslL,
+    var clampedDarkBlue = Color.FromOKHSL(
+        saturatedDarkBlue.OKHSLH,
+        saturatedDarkBlue.OKHSLS,
+        saturatedDarkBlue.OKHSLL,
         saturatedDarkBlue.A);
     var okMutable = new Color(0.3f, 0.6f, 0.9f, 0.42f);
-    okMutable.OkHslL = 0.4f;
-    Require(NearlyEqual(new Color(0.25f, 0.25f, 0.25f).OkHslS, 0f) &&
-            saturatedDarkBlue.OkHslS == 1f &&
+    okMutable.OKHSLL = 0.4f;
+    Require(NearlyEqual(new Color(0.25f, 0.25f, 0.25f).OKHSLS, 0f) &&
+            saturatedDarkBlue.OKHSLS == 1f &&
             ColorNearlyEqual(clampedDarkBlue, new Color(0.000297069f, 0.022376226f, 0.216744155f, 0.37f), 0.000001f) &&
             okMutable.A == 0.42f &&
-            Color.FromOkHsl(0.5f, 0.5f, 0.5f, -1f).A == 0f &&
-            Color.FromOkHsl(0.5f, 0.5f, 0.5f, 2f).A == 1f &&
-            Color.FromOkHsl(float.NaN, float.NaN, float.NaN, float.NaN) == default,
+            Color.FromOKHSL(0.5f, 0.5f, 0.5f, -1f).A == 0f &&
+            Color.FromOKHSL(0.5f, 0.5f, 0.5f, 2f).A == 1f &&
+            Color.FromOKHSL(float.NaN, float.NaN, float.NaN, float.NaN) == default,
         "OKHSL must define achromatic saturation and clamp all constructed components.");
 
     Require(NearlyEqual(new Color(1f, 1f, 1f).Luminance, 1f) &&
@@ -1176,44 +1176,44 @@ static void VerifyColors()
             ColorNearlyEqual(rgba.Inverted(), new Color(0.9f, 0.8f, 0.7f, 0.4f)),
         "Color adjustment operations must preserve their documented unbounded interpolation behavior.");
 
-    var srgbThreshold = new Color(0.04045f, 0.5f, 1f, 0.25f).SrgbToLinear();
+    var srgbThreshold = new Color(0.04045f, 0.5f, 1f, 0.25f).SRGBToLinear();
     Require(NearlyEqual(srgbThreshold.R, 0.0031308f, 0.000001f) &&
             NearlyEqual(srgbThreshold.G, 0.214041f, 0.00001f) && srgbThreshold.A == 0.25f &&
-            ColorNearlyEqual(srgbThreshold.LinearToSrgb(), new Color(0.04045f, 0.5f, 1f, 0.25f), 0.00001f),
+            ColorNearlyEqual(srgbThreshold.LinearToSRGB(), new Color(0.04045f, 0.5f, 1f, 0.25f), 0.00001f),
         "sRGB transfer functions must cover their nonlinear branch and preserve alpha.");
 
     var packed = new Color(0.1f, 0.2f, 0.3f, 0.4f);
-    Require(packed.ToRgba32() == 0x1a334c66u && packed.ToArgb32() == 0x661a334cu &&
-            packed.ToAbgr32() == 0x664c331au &&
-            new Color(1f, 0f, 1f, 0.5f).ToRgba64() == 0xffff0000ffff8000ul &&
-            new Color(-1f, 2f, float.NaN, float.PositiveInfinity).ToRgba32() == 0x00ff00ffu,
+    Require(packed.ToRGBA32() == 0x1a334c66u && packed.ToARGB32() == 0x661a334cu &&
+            packed.ToABGR32() == 0x664c331au &&
+            new Color(1f, 0f, 1f, 0.5f).ToRGBA64() == 0xffff0000ffff8000ul &&
+            new Color(-1f, 2f, float.NaN, float.PositiveInfinity).ToRGBA32() == 0x00ff00ffu,
         "Packed integer encoders must use the documented channel ordering and midpoint rounding.");
     for (var byteValue = 0; byteValue <= byte.MaxValue; byteValue++)
     {
         var byteColor = Color.Color8((byte)byteValue, (byte)byteValue, (byte)byteValue, (byte)byteValue);
         var repeated = (uint)byteValue * 0x01010101u;
         Require(byteColor.R8 == byteValue && byteColor.G8 == byteValue &&
-                byteColor.B8 == byteValue && byteColor.A8 == byteValue && byteColor.ToRgba32() == repeated,
+                byteColor.B8 == byteValue && byteColor.A8 == byteValue && byteColor.ToRGBA32() == repeated,
             "Every byte channel must survive Color8, integer-scale access, and RGBA packing.");
     }
     var rgbe = (24u << 27) | (3u << 18) | (2u << 9) | 1u;
-    Require(Color.FromRgbe9995(rgbe) == new Color(1f, 2f, 3f, 1f),
+    Require(Color.FromRGBE9995(rgbe) == new Color(1f, 2f, 3f, 1f),
         "RGBE9995 decoding must apply the shared exponent to all mantissas.");
 
-    Require(Color.HtmlIsValid("#abc") && Color.HtmlIsValid("abcd") && Color.HtmlIsValid("A1b2C3") &&
-            Color.HtmlIsValid("#10203040") && !Color.HtmlIsValid("") && !Color.HtmlIsValid("#") &&
-            !Color.HtmlIsValid("#12xz") && !Color.HtmlIsValid("##ffffff"),
+    Require(Color.HTMLIsValid("#abc") && Color.HTMLIsValid("abcd") && Color.HTMLIsValid("A1b2C3") &&
+            Color.HTMLIsValid("#10203040") && !Color.HTMLIsValid("") && !Color.HTMLIsValid("#") &&
+            !Color.HTMLIsValid("#12xz") && !Color.HTMLIsValid("##ffffff"),
         "HTML validation must accept only optional-hash 3, 4, 6, and 8 digit hexadecimal forms.");
-    Require(Color.FromHtml("#abc") == Color.Color8(0xaa, 0xbb, 0xcc) &&
-            Color.FromHtml("abcd") == Color.Color8(0xaa, 0xbb, 0xcc, 0xdd) &&
-            Color.FromHtml("10203040") == Color.Color8(0x10, 0x20, 0x30, 0x40) &&
-            Color.FromHtml(ReadOnlySpan<char>.Empty) == Colors.Black &&
-            new Color(-1f, 0.5f, 2f, 0.5f).ToHtml() == "0080ff80" &&
-            new Color(1f, 0.5f, 0f).ToHtml(includeAlpha: false) == "ff8000",
+    Require(Color.FromHTML("#abc") == Color.Color8(0xaa, 0xbb, 0xcc) &&
+            Color.FromHTML("abcd") == Color.Color8(0xaa, 0xbb, 0xcc, 0xdd) &&
+            Color.FromHTML("10203040") == Color.Color8(0x10, 0x20, 0x30, 0x40) &&
+            Color.FromHTML(ReadOnlySpan<char>.Empty) == Colors.Black &&
+            new Color(-1f, 0.5f, 2f, 0.5f).ToHTML() == "0080ff80" &&
+            new Color(1f, 0.5f, 0f).ToHTML(includeAlpha: false) == "ff8000",
         "HTML parsing and formatting must handle shorthand, alpha, the empty compatibility case, clamping, and lowercase output.");
-    Expect<ArgumentOutOfRangeException>(() => Color.FromHtml("12"),
+    Expect<ArgumentOutOfRangeException>(() => Color.FromHTML("12"),
         "HTML parsing must reject an invalid length.");
-    Expect<ArgumentOutOfRangeException>(() => Color.FromHtml("12xz"),
+    Expect<ArgumentOutOfRangeException>(() => Color.FromHTML("12xz"),
         "HTML parsing must reject a non-hexadecimal character.");
     Expect<ArgumentNullException>(() => _ = new Color((string)null!),
         "The string constructor must reject null.");
@@ -1222,8 +1222,8 @@ static void VerifyColors()
             new Color("Rebecca_Purple", 0.25f) == new Color(Colors.RebeccaPurple, 0.25f) &&
             Color.FromString("not-a-color", rgba) == rgba &&
             Colors.Aqua == Colors.Cyan && Colors.Fuchsia == Colors.Magenta && Colors.Green == Colors.Lime &&
-            Colors.Gray.ToRgba32() == 0xbebebeffu && Colors.WebGray.ToRgba32() == 0x808080ffu &&
-            Colors.Maroon.ToRgba32() == 0xb03060ffu && Colors.WebMaroon.ToRgba32() == 0x800000ffu,
+            Colors.Gray.ToRGBA32() == 0xbebebeffu && Colors.WebGray.ToRGBA32() == 0x808080ffu &&
+            Colors.Maroon.ToRGBA32() == 0xb03060ffu && Colors.WebMaroon.ToRGBA32() == 0x800000ffu,
         "Named parsing must normalize supported separators, replace alpha, provide fallback, and preserve aliases.");
     Expect<ArgumentOutOfRangeException>(() => _ = new Color("not-a-color"),
         "The string constructor must reject an unknown color name.");
@@ -1357,18 +1357,18 @@ static void VerifyImages()
         [nameof(Image.GetPixel)] = 2,
         [nameof(Image.GetRegion)] = 1,
         [nameof(Image.GetUsedRect)] = 1,
-        [nameof(Image.LinearToSrgb)] = 1,
+        [nameof(Image.LinearToSRGB)] = 1,
         [nameof(Image.NormalMapToXy)] = 1,
         [nameof(Image.PremultiplyAlpha)] = 1,
         [nameof(Image.Resize)] = 1,
         [nameof(Image.ResizeToPowerOfTwo)] = 1,
-        [nameof(Image.RgbeToSrgb)] = 1,
+        [nameof(Image.RGBEToSRGB)] = 1,
         [nameof(Image.Rotate180)] = 1,
         [nameof(Image.Rotate90)] = 1,
         [nameof(Image.SetData)] = 1,
         [nameof(Image.SetPixel)] = 2,
         [nameof(Image.ShrinkX2)] = 1,
-        [nameof(Image.SrgbToLinear)] = 1,
+        [nameof(Image.SRGBToLinear)] = 1,
     };
     var actualMethods = typeof(Image)
         .GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance |
@@ -1694,8 +1694,8 @@ static void VerifyImages()
     {
         image.SetPixel(0, 0, new Color(0.5f, 0.25f, 0.75f, 1f));
         var original = image.GetPixel(0, 0);
-        image.SrgbToLinear();
-        image.LinearToSrgb();
+        image.SRGBToLinear();
+        image.LinearToSRGB();
         Require(ColorNearlyEqual(image.GetPixel(0, 0), original, 0.01f),
             "sRGB conversions must approximately round-trip normalized RGB8 data.");
         image.Convert(Image.Format.Rgbaf);
@@ -1722,7 +1722,7 @@ static void VerifyImages()
     {
         rgbe.SetPixel(0, 0, new Color(2f, 1f, 0.5f));
         rgbe.SetPixel(1, 0, new Color(0.25f, 0.5f, 1f));
-        using var srgb = rgbe.RgbeToSrgb();
+        using var srgb = rgbe.RGBEToSRGB();
         Require(srgb.PixelFormat == Image.Format.Rgb8 && srgb.Size == rgbe.Size && srgb.HasMipmaps,
             "RGBE conversion must return an RGB8 copy and preserve mipmap policy.");
     }
@@ -1791,7 +1791,7 @@ static Color ExerciseColorHotPath(int iterations)
     var destination = new Color(0.9f, 0.8f, 0.7f, 0.6f);
     for (var index = 0; index < iterations; index++)
     {
-        value = value.Lerp(destination, 0.0001f).SrgbToLinear().LinearToSrgb();
+        value = value.Lerp(destination, 0.0001f).SRGBToLinear().LinearToSRGB();
         value = (value * 1.00001f).Clamp(new Color(-10f, -10f, -10f, -10f), new Color(10f, 10f, 10f, 10f));
     }
 
