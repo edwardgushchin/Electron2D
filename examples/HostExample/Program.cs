@@ -1,10 +1,11 @@
 using Electron2D;
-using Electron2D.HostExample;
 
-var host = new ApplicationHost("Electron2D: window and input", new Vector2I(640, 360));
-host.Run(new ExampleRoot(host));
+var window = new Window { Title = "Electron2D: window and input", Size = new Vector2I(640, 360) };
+window.AddChild(new ExampleRoot());
+Engine.Instance.MaxFps = 60;
+return Engine.Instance.Run(window);
 
-sealed class ExampleRoot(ApplicationHost host) : Node
+sealed class ExampleRoot : Node
 {
     private double _reportTime;
 
@@ -23,7 +24,7 @@ sealed class ExampleRoot(ApplicationHost host) : Node
             Console.WriteLine($"{arrow.Keycode}: {(arrow.Pressed ? "down" : "up")}");
 
         if (@event is InputEventKey { Pressed: true, Echo: false, Keycode: Key.Escape })
-            host.RequestExit();
+            Tree!.Quit();
     }
 
     protected override void OnProcess(double delta)

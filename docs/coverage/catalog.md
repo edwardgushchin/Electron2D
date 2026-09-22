@@ -920,7 +920,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. One 
 | [VideoStreamPlayback](classes/VideoStreamPlayback.md) | Resource | Blocked | 14 |
 | [VideoStreamPlayer](classes/VideoStreamPlayer.md) | Control | Blocked | 19 |
 | [VideoStreamTheora](classes/VideoStreamTheora.md) | VideoStream | Blocked | 0 |
-| [Viewport](classes/Viewport.md) | Node | Blocked | 200 |
+| [Viewport](classes/Viewport.md) | Node | Partial | 200 |
 | [ViewportTexture](classes/ViewportTexture.md) | Texture2D | Blocked | 1 |
 | [VirtualJoystick](classes/VirtualJoystick.md) | Control | Blocked | 27 |
 | [VisibleOnScreenEnabler2D](classes/VisibleOnScreenEnabler2D.md) | VisibleOnScreenNotifier2D | Blocked | 6 |
@@ -1051,7 +1051,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. One 
 | [WebSocketMultiplayerPeer](classes/WebSocketMultiplayerPeer.md) | MultiplayerPeer | Blocked | 11 |
 | [WebSocketPeer](classes/WebSocketPeer.md) | PacketPeer | Blocked | 30 |
 | [WebXRInterface](classes/WebXRInterface.md) | XRInterface | Excluded | 32 |
-| [Window](classes/Window.md) | Viewport | Blocked | 199 |
+| [Window](classes/Window.md) | Viewport | Partial | 199 |
 | [WorkerThreadPool](classes/WorkerThreadPool.md) | Object | Blocked | 9 |
 | [World2D](classes/World2D.md) | Resource | Blocked | 4 |
 | [World3D](classes/World3D.md) | Resource | Excluded | 7 |

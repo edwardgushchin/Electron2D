@@ -1,10 +1,10 @@
 # Engine runtime component
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Scope
 
-This Core component coordinates one process-wide engine runtime: project-backed timing settings, fixed-step synchronization, time scaling, `MainLoop` attachment/finalization, frame metrics, architecture/version reporting, and a typed named-singleton registry. It consumes host-supplied elapsed time and does not own a clock, thread, native event pump, or frame wait.
+This Core component coordinates one process-wide engine runtime: project-backed timing settings, fixed-step synchronization, time scaling, `MainLoop` attachment/finalization, frame metrics, architecture/version reporting, and a typed named-singleton registry. Engine.Run(Window) owns the ordinary windowed clock, event pump, frame limit, and cleanup on the calling main thread. Manual embedding can still supply elapsed time.
 
 ## Owned types
 
@@ -23,7 +23,7 @@ Callback exceptions restore Engine's running state. Initialization/finalization 
 
 ## Dependencies
 
-The component depends on Core object lifecycle, MainLoop, ProjectSettings, and the permanent Input/InputMap service registrations plus ordinary .NET synchronization, runtime architecture reporting, and assembly metadata. `SceneTree` is accepted through `MainLoop`. The first executable SDL consumer uses Engine for timing policy and lifecycle; Engine does not depend on SDL.
+The component depends on Core object lifecycle, MainLoop, ProjectSettings, and the permanent Input/InputMap service registrations plus ordinary .NET synchronization, runtime architecture reporting, and assembly metadata. Manual loops are accepted through MainLoop. Engine.Run has a deliberate in-assembly dependency on SceneTree and Window for native scene orchestration; it does not reference SDL types.
 
 ## Invariants
 
@@ -40,7 +40,7 @@ The component depends on Core object lifecycle, MainLoop, ProjectSettings, and t
 
 ## Current implementation status and exclusions
 
-Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. The executable example owns a monotonic clock, SDL event pumping, and a frame-rate wait outside this component. Rendering/draw counts, logging flags, generated attribution/license data, script debugging/languages, movie writing, and editor hints remain absent. Their exact reference-API disposition is in the [`Engine` class inventory](../classes/Engine.md#official-reference-coverage-inventory).
+Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. Engine.Run now supplies the monotonic clock, event pumping through Window, MaxFps waiting and complete scene/window lifetime. Rendering/draw counts, logging flags, generated attribution/license data, script debugging/languages, movie writing, and editor hints remain absent. Their exact reference-API disposition is in the [`Engine` class inventory](../classes/Engine.md#official-reference-coverage-inventory).
 
 ## Verification
 

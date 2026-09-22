@@ -69,6 +69,8 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | [Core](domains/core.md) | [Geometry values](components/geometry-values.md) | [`RectI`](classes/RectI.md) | [`RectI.cs`](../src/Core/Math/RectI.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Geometry values](components/geometry-values.md) | [`Transform`](classes/Transform.md) | [`Transform.cs`](../src/Core/Math/Transform.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Geometry values](components/geometry-values.md) | [`Side`](classes/Side.md) | [`Side.cs`](../src/Core/Math/Side.cs) | Current | Implemented and verified |
+| [Scene](domains/scene.md) | [Window runtime](components/window-runtime.md) | [`Window`](classes/Window.md) | [`Window.cs`](../src/Scene/Main/Window.cs) | Current | Root native window; renderer and multiwindow remain incomplete |
+| [Scene](domains/scene.md) | [Window runtime](components/window-runtime.md) | [`Viewport`](classes/Viewport.md) | [`Viewport.cs`](../src/Scene/Main/Viewport.cs) | Current | Root client rectangle and input boundary; no render targets |
 | [Scene](domains/scene.md) | [Unified 2D node](components/unified-node.md) | [`Node`](classes/Node.md) | [`Node.cs`](../src/Scene/Main/Node.cs) | Current | Implemented and verified |
 | [Scene](domains/scene.md) | [Unified 2D node](components/unified-node.md) | [`NodeProcessMode`](classes/NodeProcessMode.md) | [`NodeProcessMode.cs`](../src/Scene/Main/NodeProcessMode.cs) | Current | Implemented and verified |
 | [Scene](domains/scene.md) | [Scene tree](components/scene-tree.md) | [`SceneTree`](classes/SceneTree.md) | [`SceneTree.cs`](../src/Scene/Main/SceneTree.cs) | Current | Implemented and verified |

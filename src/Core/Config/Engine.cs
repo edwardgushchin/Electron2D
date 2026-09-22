@@ -6,17 +6,16 @@ namespace Electron2D;
 /// <summary>Coordinates process-wide frame scheduling, runtime metrics, and named engine singletons.</summary>
 /// <remarks>
 /// <para>
-/// <see cref="Instance"/> is created once for the process and cannot be disposed. Runtime execution remains
-/// host-driven: a host attaches one <see cref="MainLoop"/>, supplies finite elapsed time to
+/// <see cref="Instance"/> is created once for the process and cannot be disposed. Use Run to own a windowed scene lifecycle. For embedding, a host attaches one <see cref="MainLoop"/>, supplies finite elapsed time to
 /// <see cref="AdvanceFrame"/>, and finally calls <see cref="Stop"/>.
 /// </para>
 /// <para>
 /// Runtime lifecycle and frame execution have owner-thread affinity. Configuration properties, metric reads, and
-/// named-singleton operations are safe from other threads. Timing properties use the process-wide
+/// named-singleton operations are safe from other threads. Fixed-step and time-scale properties use the process-wide
 /// <see cref="ProjectSettings"/> registry, including active feature overrides. A frame uses one configuration snapshot.
 /// </para>
 /// </remarks>
-public sealed class Engine : ElectronObject
+public sealed partial class Engine : ElectronObject
 {
     private const int RuntimeIdle = 0;
     private const int RuntimeStarting = 1;
@@ -49,6 +48,7 @@ public sealed class Engine : ElectronObject
                 engine => engine.TimeScale,
                 (engine, value) => engine.TimeScale = value,
                 _ => 1d),
+            new PropertyDescriptor<Engine, int>(nameof(MaxFps), engine => engine.MaxFps, (engine, value) => engine.MaxFps = value, _ => 0),
             new PropertyDescriptor<Engine, ulong>(nameof(ProcessFrames), engine => engine.ProcessFrames),
             new PropertyDescriptor<Engine, ulong>(nameof(PhysicsFrames), engine => engine.PhysicsFrames),
             new PropertyDescriptor<Engine, double>(nameof(FramesPerSecond), engine => engine.FramesPerSecond),
@@ -250,6 +250,13 @@ public sealed class Engine : ElectronObject
     /// <exception cref="Exception">A loop callback or project-settings event handler throws.</exception>
     public bool AdvanceFrame(double elapsedSeconds)
     {
+        if (Volatile.Read(ref _applicationRun) != 0)
+            throw new InvalidOperationException("Engine.Run owns frame execution until it returns.");
+        return AdvanceFrameCore(elapsedSeconds);
+    }
+
+    private bool AdvanceFrameCore(double elapsedSeconds)
+    {
         if (!double.IsFinite(elapsedSeconds) || elapsedSeconds < 0d)
             throw new ArgumentOutOfRangeException(nameof(elapsedSeconds), elapsedSeconds, "Elapsed time must be finite and non-negative.");
 
@@ -338,6 +345,8 @@ public sealed class Engine : ElectronObject
     /// <exception cref="Exception">Loop finalization throws. Detachment still completes.</exception>
     public void Stop()
     {
+        if (Volatile.Read(ref _applicationRun) != 0)
+            throw new InvalidOperationException("Request SceneTree.Quit to stop Engine.Run.");
         EnsureRuntimeOwnerThread();
 
         if (Interlocked.CompareExchange(ref _runtimeState, RuntimeStopping, RuntimeRunning) != RuntimeRunning)

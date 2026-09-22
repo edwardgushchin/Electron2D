@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -42,6 +42,7 @@ tree.ProcessFrame(1.0 / 60.0);
 
 | Member | Description |
 | --- | --- |
+| [`public bool AutoAcceptQuit { get; set; }`](#p-electron2d-scenetree-autoacceptquit) | True by default. |
 | [`public Node Root { get; }`](#p-electron2d-scenetree-root) | Gets the root node owned by this tree. |
 | [`public int NodeCount { get; }`](#p-electron2d-scenetree-nodecount) | Gets the number of nodes currently inside this tree. |
 | [`public bool Paused { get; set; }`](#p-electron2d-scenetree-paused) | Gets or sets whether pause-aware processing and timers are paused. |
@@ -50,6 +51,7 @@ tree.ProcessFrame(1.0 / 60.0);
 
 | Member | Description |
 | --- | --- |
+| [`public void Quit(int exitCode = 0)`](#m-electron2d-scenetree-quit-system-int32) | Atomically requests exit from any thread, without immediate disposal or process termination. |
 | [`public void Defer(Action action)`](#m-electron2d-scenetree-defer-system-action) | Thread-safely queues an action for a future deferred flush while the tree remains live. |
 | [`public void SetDeferred<T>(Action<T> setter, T value)`](#m-electron2d-scenetree-setdeferred-1-system-action-0-0) | Thread-safely queues a typed setter invocation for a future deferred flush. |
 | [`public SceneTreeTimer CreateTimer(double timeSeconds, bool processAlways = true, bool processInPhysics = false)`](#m-electron2d-scenetree-createtimer-system-double-system-boolean-system-boolean) | Creates a one-shot timer owned and processed by this tree. |
@@ -102,7 +104,7 @@ Creates and immediately activates a scene tree rooted at `root`.
 
 - `ArgumentNullException`: `root` is `null`.
 - `ArgumentException`: `root` has a parent, belongs to a tree, or is queued for deletion.
-- `InvalidOperationException`: Construction is attempted from a scene factory, or `root` is still being instantiated.
+- `InvalidOperationException`: Construction is attempted from a scene factory, the root is being captured or instantiated, or an inactive Window is supplied.
 - `ObjectDisposedException`: Disposal of `root` has started.
 - `AggregateException`: Activation or rollback callbacks fail.
 
@@ -114,6 +116,11 @@ and the supplied hierarchy remains owned by the caller. A reference captured fro
 a terminal disposed tree.
 
 ## Property Descriptions
+
+<a id="p-electron2d-scenetree-autoacceptquit"></a>
+### `public bool AutoAcceptQuit { get; set; }`
+
+True by default. The root Window raises CloseRequested, then requests quit if this property remains true and quit is not already requested. A handler may disable it or request its own exit code. Read/write requires the owner thread and a live tree; closed trees throw ObjectDisposedException.
 
 <a id="p-electron2d-scenetree-root"></a>
 ### `public Node Root { get; }`
@@ -154,6 +161,11 @@ reparented, and removed or disposed candidates are skipped. Notification failure
 are collected after traversal completes.
 
 ## Method Descriptions
+
+<a id="m-electron2d-scenetree-quit-system-int32"></a>
+### `public void Quit(int exitCode = 0)`
+
+Atomically requests exit from any thread, without immediate disposal or process termination. The latest accepted request supplies the exit code. Engine.Run observes quit before frames and during waits; the current frame completes. Manual Process/PhysicsProcess return true after a request; manual embedding still owns finalization. Requests after work acceptance closes throw ObjectDisposedException.
 
 <a id="m-electron2d-scenetree-defer-system-action"></a>
 ### `public void Defer(Action action)`
@@ -515,7 +527,7 @@ Performs one variable-step frame.
 
 **Remarks:** The default implementation does no work and returns `false`.
 
-Runs the existing process-frame pipeline and never requests host termination.
+Runs the process-frame pipeline and returns whether Quit was requested.
 
 <a id="m-electron2d-scenetree-onphysicsprocess-system-double"></a>
 ### `protected override bool OnPhysicsProcess(double delta)`
@@ -530,7 +542,7 @@ Performs one fixed-step physics frame.
 
 **Remarks:** The default implementation does no work and returns `false`.
 
-Runs the existing physics-frame pipeline and never requests host termination.
+Runs the physics-frame pipeline and returns whether Quit was requested.
 
 <a id="m-electron2d-scenetree-onnotification-system-int32"></a>
 ### `protected override void OnNotification(int what)`
@@ -688,7 +700,7 @@ The class depends on [`MainLoop`](MainLoop.md), typed [`InputEvent`](InputEvent.
 
 `tests/Electron2D.Tests/Program.cs` covers constructor validation, inherited-loop initialization/driving/finalization, Engine attachment/zero-delta scheduling/finalization, three-stage input ordering/handled state/re-entry/failure continuation/allocation, system-notification propagation, escaped-reference terminal state, timer/tween cleanup, and enter/ready rollback; stale lifecycle snapshots; lifecycle and tree-event order; exception-safe teardown and queued deletion; cross-tree deletion transfer; lifecycle execution barriers; pause re-entry/traversal/execution barriers; exiting/pre-delete/cleanup ownership guards; 256 concurrent QueueFree/flush iterations; a 64-iteration concurrent enqueue/disposal stress check; frame counters/events; public/internal process ordering, failure continuation, pause eligibility, and scaled/original deltas; group operations and invalid flags; both timer facilities; complete typed tween sequencing/lifetime/failure cases; generic queued object deletion; captured deferred batches; cancellation; recursive node disposal; and zero steady-state managed allocation across warmed idle, active-Timer, active-Tween, and input paths.
 
-`SceneTree` itself has no automatic frame pump or elapsed-time source. Core [`Engine`](Engine.md) provides host-driven fixed-step accumulation, scaled/original delta delivery, time scaling, and interpolation state, but there is still no SDL clock/pump, frame waiting, current-scene switching, renderer synchronization, native/GUI input routing, physics simulation, loaded-scene performance benchmark, or exception logger. Allocation checks cover warmed empty and small active-Timer/Tween/input hierarchies, not large-scene performance; concurrency checks are local stress tests rather than formal proofs or platform-wide performance evidence. Input hardware gaps use ADR 0038's exact triggers.
+`SceneTree` itself has no automatic frame pump or elapsed-time source. Core [`Engine`](Engine.md) provides host-driven fixed-step accumulation, scaled/original delta delivery, time scaling, and interpolation state, and Engine.Run supplies the window clock/pump and frame wait. There is still no current-scene switching, renderer synchronization, GUI input routing, physics simulation, loaded-scene performance benchmark, or exception logger. Allocation checks cover warmed empty and small active-Timer/Tween/input hierarchies, not large-scene performance; concurrency checks are local stress tests rather than formal proofs or platform-wide performance evidence. Input hardware gaps use ADR 0038's exact triggers.
 
 ## Related decision
 

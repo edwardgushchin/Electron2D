@@ -16,6 +16,7 @@ public sealed class SceneTree : MainLoop
     private static readonly IReadOnlyList<PropertyDescriptor> SceneTreeProperties = Array.AsReadOnly<PropertyDescriptor>(
     [
         new PropertyDescriptor<SceneTree, Node>(nameof(Root), tree => tree.Root),
+        new PropertyDescriptor<SceneTree, bool>(nameof(AutoAcceptQuit), tree => tree.AutoAcceptQuit, (tree, value) => tree.AutoAcceptQuit = value, _ => true),
         new PropertyDescriptor<SceneTree, bool>(nameof(HasDeferredWork), tree => tree.HasDeferredWork),
         new PropertyDescriptor<SceneTree, ulong>(nameof(ProcessFrameCount), tree => tree.ProcessFrameCount),
         new PropertyDescriptor<SceneTree, ulong>(nameof(PhysicsFrameCount), tree => tree.PhysicsFrameCount),
@@ -42,6 +43,9 @@ public sealed class SceneTree : MainLoop
     private bool _isDispatchingInput;
     private bool _inputHandled;
     private bool _paused;
+    private bool _autoAcceptQuit = true;
+    private int _quitRequested;
+    private int _exitCode;
     private int _activeExecution;
     private int _lifecycleExecutionDepth;
     private ulong _processFrameCount;
@@ -59,15 +63,19 @@ public sealed class SceneTree : MainLoop
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="root"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="root"/> has a parent, belongs to a tree, or is queued for deletion.</exception>
-    /// <exception cref="InvalidOperationException">Construction is attempted from a scene factory, or <paramref name="root"/> is still being instantiated.</exception>
+    /// <exception cref="InvalidOperationException">Construction is attempted from a scene factory, the root is being captured or instantiated, or an inactive Window is supplied.</exception>
     /// <exception cref="ObjectDisposedException">Disposal of <paramref name="root"/> has started.</exception>
     /// <exception cref="AggregateException">Activation or rollback callbacks fail.</exception>
-    public SceneTree(Node root)
+    public SceneTree(Node root) : this(root, attachToEngine: false) { }
+
+    internal SceneTree(Node root, bool attachToEngine)
     {
         ArgumentNullException.ThrowIfNull(root);
         Node.EnsureSceneFactoryComplete();
         ObjectDisposedException.ThrowIf(root.IsDisposed, root);
-        root.EnsureSceneInstantiationComplete();
+        root.EnsureSceneActivationAvailable();
+        if (root is Window window)
+            window.EnsureNativeOpen();
 
         if (root.Parent is not null)
             throw new ArgumentException("A SceneTree root cannot have a parent.", nameof(root));
@@ -85,6 +93,8 @@ public sealed class SceneTree : MainLoop
 
         try
         {
+            if (attachToEngine)
+                Engine.Instance.AttachConstructingTree(this);
             Initialize();
             root.EnterTree(this);
             root.MakeReady(readied);
@@ -399,6 +409,49 @@ public sealed class SceneTree : MainLoop
     /// <exception cref="AggregateException">One or more frame events, node callbacks, timers, tweens, or deferred operations fail.</exception>
     public void PhysicsFrame(double delta) => _ = PhysicsProcess(delta);
 
+    /// <summary>Gets or sets whether a root window close request automatically requests quit after its signal.</summary>
+    /// <value>True by default.</value>
+    /// <exception cref="InvalidOperationException">The caller is not the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The tree is finalized or disposed.</exception>
+    public bool AutoAcceptQuit
+    {
+        get { EnsureOwnerThread(); EnsureAcceptingWork(); return _autoAcceptQuit; }
+        set { EnsureOwnerThread(); EnsureAcceptingWork(); _autoAcceptQuit = value; }
+    }
+
+    /// <summary>Requests termination after the current callback or frame, with the supplied exit code.</summary>
+    /// <param name="exitCode">The code returned by Engine.Run; defaults to zero.</param>
+    /// <remarks>May be called from any thread. The latest accepted request supplies the exit code. It does not
+    /// terminate the process or dispose the tree synchronously. Manual MainLoop.Process/PhysicsProcess calls
+    /// return true once quit is requested; an embedding host remains responsible for stopping its loop.</remarks>
+    /// <exception cref="ObjectDisposedException">The tree no longer accepts work.</exception>
+    public void Quit(int exitCode = 0)
+    {
+        lock (_workGate)
+        {
+            EnsureAcceptingWorkUnderLock();
+            Volatile.Write(ref _exitCode, exitCode);
+            Volatile.Write(ref _quitRequested, 1);
+        }
+    }
+
+    internal void AcceptWindowClose()
+    {
+        EnsureOwnerThread();
+        lock (_workGate)
+        {
+            EnsureAcceptingWorkUnderLock();
+            if (_autoAcceptQuit && _quitRequested == 0)
+            {
+                Volatile.Write(ref _exitCode, 0);
+                Volatile.Write(ref _quitRequested, 1);
+            }
+        }
+    }
+
+    internal bool QuitRequested => Volatile.Read(ref _quitRequested) != 0;
+    internal int ExitCode => Volatile.Read(ref _exitCode);
+
     /// <summary>Marks the input event currently being dispatched as handled.</summary>
     /// <remarks>
     /// Handling stops the current stage immediately and skips every later input stage. The flag belongs only to the
@@ -622,19 +675,19 @@ public sealed class SceneTree : MainLoop
         base.GetPropertyDescriptors().Concat(SceneTreeProperties);
 
     /// <inheritdoc />
-    /// <remarks>Runs the existing process-frame pipeline and never requests host termination.</remarks>
+    /// <remarks>Runs the process-frame pipeline and returns whether quit was requested.</remarks>
     protected override bool OnProcess(double delta)
     {
         RunFrame(delta, CurrentUnscaledFrameDelta, physics: false);
-        return false;
+        return QuitRequested;
     }
 
     /// <inheritdoc />
-    /// <remarks>Runs the existing physics-frame pipeline and never requests host termination.</remarks>
+    /// <remarks>Runs the physics-frame pipeline and returns whether quit was requested.</remarks>
     protected override bool OnPhysicsProcess(double delta)
     {
         RunFrame(delta, CurrentUnscaledFrameDelta, physics: true);
-        return false;
+        return QuitRequested;
     }
 
     internal override void ValidateInputEventDispatch()
@@ -716,6 +769,8 @@ public sealed class SceneTree : MainLoop
     /// <exception cref="InvalidOperationException">Construction is incomplete or execution is active.</exception>
     protected override void ValidateFinalization()
     {
+        if (ReferenceEquals(Engine.Instance.MainLoop, this) && Engine.Instance.OwnsWindowRun)
+            throw new InvalidOperationException("Request Quit while Engine.Run owns the scene lifecycle.");
         if (!_constructionComplete)
             throw new InvalidOperationException("A SceneTree cannot be finalized before construction completes.");
 
@@ -730,6 +785,8 @@ public sealed class SceneTree : MainLoop
     /// <exception cref="InvalidOperationException">The caller is not the owner thread or execution is active.</exception>
     protected override void ValidateDisposal()
     {
+        if (ReferenceEquals(Engine.Instance.MainLoop, this) && Engine.Instance.OwnsWindowRun)
+            throw new InvalidOperationException("Request Quit while Engine.Run owns the scene lifecycle.");
         EnsureOwnerThread();
 
         if (_activeExecution != 0 || _lifecycleExecutionDepth != 0 || _isChangingPause)

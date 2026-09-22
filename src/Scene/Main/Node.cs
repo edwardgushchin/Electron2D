@@ -633,7 +633,7 @@ public class Node : ElectronObject
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">A visibility notification or event handler throws after visibility changes.</exception>
-    public bool Visible
+    public virtual bool Visible
     {
         get
         {
@@ -651,6 +651,23 @@ public class Node : ElectronObject
             PropagateVisibilityChanged();
         }
     }
+
+    /// <summary>Finds this node's nearest viewport, including itself.</summary>
+    /// <returns>The nearest viewport ancestor, or null in a hierarchy without a viewport.</returns>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    public Viewport? GetViewport()
+    {
+        ThrowIfDisposed();
+        for (Node? node = this; node is not null; node = node.Parent)
+            if (node is Viewport viewport)
+                return viewport;
+        return null;
+    }
+
+    /// <summary>Finds this node's containing window, including itself.</summary>
+    /// <returns>The nearest window ancestor, or null in a hierarchy without a window.</returns>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    public Window? GetWindow() => GetViewport() as Window;
 
     /// <summary>Gets whether this node is active and locally visible through its complete ancestor chain.</summary>
     /// <value><see langword="true"/> only inside a tree when this node and every ancestor are visible.</value>
@@ -2014,9 +2031,9 @@ public class Node : ElectronObject
 
     internal void EndSceneInstantiation() => Volatile.Write(ref _sceneInstantiationDepth, 0);
 
-    internal void EnsureSceneInstantiationComplete()
+    internal void EnsureSceneActivationAvailable()
     {
-        ThrowIfDisposed();
+        EnsureNotSceneCapture();
         if (Volatile.Read(ref _sceneInstantiationDepth) != 0)
             throw new InvalidOperationException("A node cannot become a scene-tree root before packed-scene instantiation completes.");
     }
@@ -2128,7 +2145,7 @@ public class Node : ElectronObject
     internal void EnterTree(SceneTree tree)
     {
         EnsureSceneFactoryComplete();
-        EnsureSceneInstantiationComplete();
+        EnsureSceneActivationAvailable();
 
         if (_isEnteringTree || _isExitingTree)
             throw new InvalidOperationException($"Node '{Name}' cannot re-enter a SceneTree from an in-progress lifecycle callback.");
@@ -2604,6 +2621,8 @@ public class Node : ElectronObject
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(child);
         child.EnsureNotSceneCapture();
+        if (child is Viewport)
+            throw new NotSupportedException("Child viewports require multiwindow or offscreen rendering support.");
         Tree?.EnsureOwnerThread();
 
         if (ReferenceEquals(child, this))

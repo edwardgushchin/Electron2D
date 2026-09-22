@@ -12,12 +12,13 @@ Its production sources live under `src/Scene/Main/`, `src/Scene/Animation/`, and
 
 | Component | Responsibility | State |
 | --- | --- | --- |
+| [Window runtime](../components/window-runtime.md) | Native root window, client rectangle and input boundary | Implemented root slice; rendering and multiwindow incomplete |
 | [Unified 2D node](../components/unified-node.md) | Hierarchy, 2D transforms, paths, groups, visibility/Z state, process/input policy, lifecycle endpoints, and deletion requests | Implemented and verified |
 | [Scene tree](../components/scene-tree.md) | Active-root ownership, exception-safe lifecycle, pause state, frame/input dispatch, events/counts, reusable Node timers, lightweight one-shot timers, typed group operations, deferred work, and deletion execution | Implemented and verified |
 | [Tweening](../components/tweening.md) | Typed property/method interpolation, sequencing, callbacks, waits, nested timelines, loops, and frame policies | Implemented and verified |
 | [Packed scenes](../components/packed-scenes.md) | Typed in-memory owned-hierarchy capture, live metadata, detached reconstruction, and per-instance local resources | Implemented and verified |
 
-Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classes/NodeProcessMode.md), [`SceneTree`](../classes/SceneTree.md), [`Timer`](../classes/Timer.md), [`TimerProcessCallback`](../classes/TimerProcessCallback.md), [`SceneTreeTimer`](../classes/SceneTreeTimer.md), [`GroupCallFlags`](../classes/GroupCallFlags.md), [`Tween`](../classes/Tween.md), its four nested enum types, [`Tweener`](../classes/Tweener.md), its six concrete task types, [`PackedScene`](../classes/PackedScene.md), [`SceneState`](../classes/SceneState.md), and [`PackedSceneEditState`](../classes/PackedSceneEditState.md).
+Production types include [`Window`](../classes/Window.md), [`Viewport`](../classes/Viewport.md), [`Node`](../classes/Node.md), [`NodeProcessMode`](../classes/NodeProcessMode.md), [`SceneTree`](../classes/SceneTree.md), [`Timer`](../classes/Timer.md), [`TimerProcessCallback`](../classes/TimerProcessCallback.md), [`SceneTreeTimer`](../classes/SceneTreeTimer.md), [`GroupCallFlags`](../classes/GroupCallFlags.md), [`Tween`](../classes/Tween.md), its four nested enum types, [`Tweener`](../classes/Tweener.md), its six concrete task types, [`PackedScene`](../classes/PackedScene.md), [`SceneState`](../classes/SceneState.md), and [`PackedSceneEditState`](../classes/PackedSceneEditState.md).
 
 ## Public surface
 
@@ -38,7 +39,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - Scene depends on Core's `Mathf`/`Vector2`/`Transform` math, Resources including `Resource`, and .NET collections and filesystem-name matching.
 - Resources has a narrow reciprocal dependency on `Node` for `Resource.GetLocalScene()` under ADR 0023. This is an intentional in-assembly type cycle, not another managed assembly.
 - Scene depends on the Input domain's typed event values and process-wide service boundary for propagation.
-- Scene does not depend on SDL3-CS, a native input backend, rendering, audio, collision physics, asset loading/saving, file serialization, scripting, networking, or Localization.
+- Window now depends on the backend-neutral DisplayServer API for its native lifetime. Scene has no direct SDL3-CS dependency, rendering, audio, collision physics, asset loading/saving, file serialization, scripting, networking, or Localization.
 - Future gameplay, rendering, GUI input, and 2D physics types may depend on Scene.
 - Scene must not introduce 3D types or a separate `Node2D` hierarchy.
 - Scene lifecycle and game-state semantics must not vary by target platform; native event generation remains a host boundary.
@@ -103,3 +104,7 @@ Production types are [`Node`](../classes/Node.md), [`NodeProcessMode`](../classe
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0037: Typed SceneTree tween scheduling](../decisions/scene.md#adr-0037)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
+
+## Windowed lifecycle
+
+The [Window runtime component](../components/window-runtime.md) provides Window : Viewport : Node, root native ownership, client geometry and scene input handling. Engine.Run consumes the configured window and children. Renderer, offscreen viewports, nested windows, GUI and content scaling are still absent.

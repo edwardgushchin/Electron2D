@@ -82,7 +82,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - Disposal is explicit and idempotent.
 - Starting disposal makes the object unavailable to other threads immediately; the winning disposal thread may inspect guarded state while running teardown callbacks.
 - Dynamic Godot facilities are not recreated with `dynamic` or broad `object` containers.
-- Main-loop lifecycle and frames are one-shot/non-reentrant owner-thread operations; effective/original deltas are finite, non-negative, and frame-scoped; no hidden thread or clock exists.
+- Main-loop lifecycle and frames are one-shot/non-reentrant owner-thread operations; effective/original deltas are finite, non-negative, and frame-scoped; no hidden game thread exists; Engine.Run measures monotonic time on the calling thread.
 - Engine is process-wide and non-disposable; it schedules only from host-supplied elapsed time, bounds catch-up, carries original time independently of scaling, permanently registers Input/InputMap, and never takes disposal ownership of the active loop or user-registered singletons.
 - Configuration keys reject universal-value and engine-object types. Parsing is transactional, mutation is lock-serialized, and saves replace through flushed same-directory temporary files. Encrypted files are authenticated before parsing.
 - Project settings require exact typed definition identities, validate a complete candidate before load replacement, preserve unknown persisted entries, and lexically confine directory-backed virtual paths.
@@ -102,7 +102,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - No `Vector3`, `Vector3I`, 3D rectangle, transform, node, renderer, or physics type. Four-component vectors are numeric tuples rather than spatial 4D types.
 - No script attachment, script runtime, editor application, or general file serialization. Only the typed `ScriptChanged` notification contract exists for the confirmed future scripting component.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers, and persistence requires a typed stable endpoint identity/binding schema.
-- The SDL display server translates window and input events, but no complete application host, permission request API, clock/wait-based maximum-FPS pacing, or exit-code service exists. `Engine` and `MainLoop` expose integration endpoints without simulating those missing services.
+- Engine.Run now owns windowed application startup, event pumping, monotonic MaxFps pacing, SceneTree.Quit exit codes and cleanup. Permission requests, rendering and other platform integrations remain absent.
 - No six-target build/package/test matrix, Android host/package, iOS host/bundle, Web browser host/build/storage integration, signing pipeline, or complete native/browser verification exists yet. Current executable verification is Linux-only and does not separately establish X11 and Wayland behavior.
 - No resource-pack mount, exported/archive-backed virtual filesystem, resource-UID resolver, or platform-pipe backend exists. `FileAccess`, `DirAccess`, and `ProjectSettings` resolve only configured `res://`/`user://` directories; `uid://` and `pipe://` fail explicitly, and `ConfigFile` still accepts only ordinary operating-system paths. FastLZ and Zstandard are not implemented. The macOS and Windows extended-attribute/directory backends are implemented but not verified on native hosts. Android/iOS directory links and drive enumeration await host/storage integration.
 - No renderer draw count, logging-output controls, generated author/license manifest, script backtrace/language registry, movie writer, or editor hints; the Engine coverage inventory records each dependency boundary.
@@ -141,3 +141,7 @@ The same harness verifies project-setting registration, value snapshots, validat
 - [0035: Foreseeable public type-family completeness](../decisions/core-math.md#adr-0035)
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
+
+## Windowed lifecycle
+
+Engine.Run(Window) is the ordinary application entry point, with MaxFps, monotonic timing, event pumping and deterministic scene/native teardown. This adds a narrow in-assembly dependency on SceneTree and Window; manual Start/AdvanceFrame/Stop remain available for embedding.

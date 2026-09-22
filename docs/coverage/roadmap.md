@@ -4,8 +4,8 @@ Last updated: 2026-09-22
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1557 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 672 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [BitMap](classes/BitMap.md), [Curve](classes/Curve.md), [Curve2D](classes/Curve2D.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
+1. Review 1579 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+2. Complete 755 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [BitMap](classes/BitMap.md), [Curve](classes/Curve.md), [Curve2D](classes/Curve2D.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
 3. Implement the remaining domains in dependency order: SDL3 GPU 2D rendering with the accepted SDL_Renderer fallback; GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable fallback slice must audit each of the five blocked GL/EGL/GLX `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -14,16 +14,18 @@ These classes already have an Electron2D type. Sort by missing member count, the
 
 | Godot class | Unimplemented members | Partial members |
 | --- | ---: | ---: |
-| [Node](classes/Node.md) | 101 | 64 |
+| [Node](classes/Node.md) | 99 | 66 |
+| [Window](classes/Window.md) | 81 | 14 |
 | [Input](classes/Input.md) | 61 | 26 |
 | [CanvasItem](classes/CanvasItem.md) | 43 | 15 |
 | [Object](classes/Object.md) | 34 | 22 |
 | [TranslationServer](classes/TranslationServer.md) | 27 | 6 |
 | [Image](classes/Image.md) | 26 | 58 |
 | [ProjectSettings](classes/ProjectSettings.md) | 22 | 24 |
-| [SceneTree](classes/SceneTree.md) | 21 | 21 |
-| [Engine](classes/Engine.md) | 17 | 17 |
+| [SceneTree](classes/SceneTree.md) | 19 | 21 |
+| [Engine](classes/Engine.md) | 16 | 18 |
 | [SceneState](classes/SceneState.md) | 12 | 16 |
+| [Viewport](classes/Viewport.md) | 7 | 5 |
 | [FileAccess](classes/FileAccess.md) | 4 | 66 |
 | [Resource](classes/Resource.md) | 4 | 21 |
 | [Color](classes/Color.md) | 3 | 203 |
@@ -68,8 +70,8 @@ These classes already have an Electron2D type. Sort by missing member count, the
 
 | Exact trigger | Classes |
 | --- | ---: |
-| Rendering2D: trigger is the first SDL3 GPU 2D rendering slice (ADR 0028). | 156 |
-| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 150 |
+| Rendering2D: trigger is the first SDL3 GPU 2D rendering slice (ADR 0028). | 155 |
+| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 149 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 79 |
 | Audio: trigger is the first audio mixing and playback slice. | 56 |
 | Networking: trigger is the first networking and multiplayer slice. | 41 |

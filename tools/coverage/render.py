@@ -384,7 +384,7 @@ def render():
                  f"Electron2D type: {', '.join(engine_link(engine_by_id[f'T:{owner}']) for owner in owners) if owners else '—'}.", "",
                  "Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.", ""]
         if name == "DisplayServer":
-            lines.extend(["Current release verification requires Linux/Wayland only under [ADR 0021](../../decisions/product.md#adr-0021). The self-contained host example starts on Wayland with packaged SDL and advances its scene; user-assisted physical arrow-key input and Escape exit passed. See the [class verification](../../classes/DisplayServer.md#verification). Other target platforms remain in the product matrix without blocking this stage.", ""])
+            lines.extend(["Current release verification requires Linux/Wayland only under [ADR 0021](../../decisions/product.md#adr-0021). The earlier self-contained host example, before Window/Engine.Run migration, started on Wayland with packaged SDL and advanced its scene; user-assisted physical arrow-key input and Escape exit passed. See the [class verification](../../classes/DisplayServer.md#verification). Other target platforms remain in the product matrix without blocking this stage.", ""])
         lines.extend(["| Godot API | Electron2D API | State | Reason / implementation trigger |",
                       "| --- | --- | --- | --- |"])
         class_engine = engine_by_id.get(f"T:{owners[0]}") if owners else None

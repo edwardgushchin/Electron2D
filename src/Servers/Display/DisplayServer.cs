@@ -588,6 +588,16 @@ public sealed partial class DisplayServer : ElectronObject
         base.Dispose(disposing);
     }
 
+    internal void SetWindowVisible(bool visible)
+    {
+        EnsureOwner();
+        var window = GetWindow(MainWindowId);
+        if (!(visible ? SDL.ShowWindow(window) : SDL.HideWindow(window)))
+            throw SdlFailure("change window visibility");
+        if (visible && _waylandWindowPosition)
+            PresentBlankWindowSurface(window);
+    }
+
     private void EnsureOwner()
     {
         ThrowIfDisposed();

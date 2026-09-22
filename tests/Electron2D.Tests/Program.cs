@@ -73,6 +73,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_POINTER_CONFINE"
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW") == "1")
+{
+    WindowRuntimeTests.Run();
+    return;
+}
+
 VerifyInstanceIds();
 VerifyLifetime();
 VerifyNotificationsAndProperties();
@@ -113,7 +119,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY") == "1")
     DisplayServerClipboardTests.Run();
     using (var display = DisplayServer.Open("Icon checks", new Vector2I(64, 64), hidden: true))
         DisplayServerIconTests.Run(display);
-    ApplicationHostTests.Run();
+    WindowRuntimeTests.Run();
 }
 
 Console.WriteLine("Electron2D checks passed.");

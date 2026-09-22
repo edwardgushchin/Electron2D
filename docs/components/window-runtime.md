@@ -1,0 +1,33 @@
+# Window runtime component
+
+Last updated: 2026-09-22
+
+## Scope and types
+
+[Window](../classes/Window.md) derives from [Viewport](../classes/Viewport.md), which derives from the unified Node. A consumer configures a root Window, adds scene children, and calls Engine.Run. This component has no renderer. It provides an executable native window and scene input boundary, not a completed rendering or GUI API.
+
+## Runtime flow
+
+Engine reserves its idle state, opens the native window through DisplayServer, creates and publishes SceneTree before ready, and drives the native event pump before fixed/process frames. MaxFps uses unscaled monotonic time; native events continue during bounded waits. SceneTree.Quit requests exit and returns its code from Run. Window.CloseRequested precedes the default AutoAcceptQuit decision.
+
+Window properties configure title, positive client size, minimum/maximum constraints, optional desktop position and visibility. Native calls inherit DisplayServer platform capability failures. Inherited Node.Position remains a scene transform; ScreenPosition is the native desktop position and is rejected on Wayland. Node.Show/Hide dispatch the Window visibility override even through a Node reference. GetVisibleRect uses a zero client origin. SizeChanged follows client-size updates, never mere desktop movement.
+
+Viewport shares SceneTree's current handled-input flag. PushInput borrows a client-coordinate event for synchronous scene dispatch without modifying global Input polling state. Child nodes discover their Window/Viewport through ancestor lookup.
+
+## Dependencies and invariants
+
+- Engine.Run depends on SceneTree and Window; Window depends on DisplayServer's engine API. Native SDL types stay in DisplayServer. All types remain in Electron2D.dll.
+- One active native root is supported. Child Viewports are rejected before hierarchy mutation; direct SceneTree(Window) activation is rejected unless Engine.Run has opened that root.
+- Attached mutation and native calls use the owner/main thread. Quit and MaxFps configuration accept cross-thread calls.
+- Native services opened directly through DisplayServer must finish before shutdown. Pending asynchronous file dialogs can reject native disposal under the existing DisplayServer contract; Run reports the cleanup failure and DisplayServer.Instance remains available for completion/release. Window exposes no asynchronous dialog API yet.
+- Engine remains reserved throughout scene exit, disposal and native cleanup. Manual frame/stop/tree-disposal interference is rejected. All owned cleanup stages are attempted and failures remain observable.
+- Validation/busy-engine rejection preserves caller ownership. After reservation, failed startup also disposes the transferred root. A later run uses a new Window.
+- PackedScene stores the title and size/limit configuration plus inherited stored Node properties. ScreenPosition is an optional platform startup request, not stored scene data.
+
+## Verification and limits
+
+WindowRuntimeTests covers detached configuration/validation, packed reconstruction, native title/visibility, root discovery, input-before-frame ordering, viewport input borrowing/handling, frame limiting, quit/close policy, cross-thread quit, lifecycle interference, callback failure cleanup, startup ownership and repeated runs. Dummy and native Wayland executions passed. The published self-contained linux-x64 test binary also passed on Wayland with LD_LIBRARY_PATH unset; it packages Electron2D.dll and native SDL through the runtime project. Native Wayland tests use injected events, not physical user input or visual acceptance. Repeated SDL/GTK initialization emits a GTK locale warning. Other platforms, performance, rendering, content scaling, GUI, offscreen targets and multiwindow behavior remain unverified or absent.
+
+Run: `env -u LD_LIBRARY_PATH ELECTRON2D_TEST_WINDOW=1 SDL_VIDEODRIVER=dummy dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release` (use `wayland` for the native integration check).
+
+Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0016](../decisions/core-object-runtime.md#adr-0016), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028), [0040](../decisions/display.md#adr-0040). Per-member incomplete dependencies live in the [Window](../coverage/classes/Window.md) and [Viewport](../coverage/classes/Viewport.md) coverage pages.

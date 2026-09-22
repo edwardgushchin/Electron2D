@@ -8,6 +8,5 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" />
-    <Compile Include="../../examples/HostExample/ApplicationHost.cs" Link="ApplicationHost.cs" />
   </ItemGroup>
 </Project>

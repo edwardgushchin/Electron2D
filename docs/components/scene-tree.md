@@ -1,6 +1,6 @@
 # Scene tree component
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Scope
 
@@ -59,7 +59,7 @@ The component depends on Core's `MainLoop` and `EventConnection`, typed Input ev
 
 ## Current implementation status and exclusions
 
-Implemented and covered by executable checks. Core Engine supplies host-driven time scaling, original delta delivery for `Timer.IgnoreTimeScale` and `Tween.SetIgnoreTimeScale`, fixed-step scheduling, and interpolation metrics when used, but there is no application/game-loop thread, automatic SDL clock, frame waiting, native system-event creation, permission request implementation, focus synchronization, automatic current-scene switching/loading, renderer synchronization, GUI/viewport input consumption, multiplayer polling, accessibility backend, editor behavior, or physics simulation. Callers may explicitly install a detached root returned by the separate [Packed scenes](packed-scenes.md) component. Blocked reference APIs and their missing domains are enumerated in the [`SceneTree`](../classes/SceneTree.md#official-reference-coverage-inventory), [`Timer`](../classes/Timer.md#official-reference-coverage-inventory), [`Tween`](../classes/Tween.md#official-reference-coverage-inventory), and [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers); no placeholder surface is exposed for them.
+Implemented and covered by executable checks. Core Engine supplies host-driven time scaling, original delta delivery for `Timer.IgnoreTimeScale` and `Tween.SetIgnoreTimeScale`, fixed-step scheduling, and interpolation metrics when used, and Engine.Run supplies an owner-thread window clock/pump and frame wait. There is no background game-loop thread, permission request implementation, focus synchronization, automatic current-scene switching/loading, renderer synchronization, GUI input consumption, multiplayer polling, accessibility backend, editor behavior, or physics simulation. Callers may explicitly install a detached root returned by the separate [Packed scenes](packed-scenes.md) component. Blocked reference APIs and their missing domains are enumerated in the [`SceneTree`](../classes/SceneTree.md#official-reference-coverage-inventory), [`Timer`](../classes/Timer.md#official-reference-coverage-inventory), [`Tween`](../classes/Tween.md#official-reference-coverage-inventory), and [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers); no placeholder surface is exposed for them.
 
 ## Verification
 
@@ -74,3 +74,7 @@ Tests cover valid and failing activation, packed-factory/unfinished-node activat
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0037: Typed SceneTree tween scheduling](../decisions/scene.md#adr-0037)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
+
+## Windowed lifecycle
+
+SceneTree.Quit requests exit and supplies Engine.Run's return code; AutoAcceptQuit defaults to true and is evaluated after Window.CloseRequested. Both Process and PhysicsProcess report pending quit after completing their frame lane. Engine.Run publishes the tree before ready and reserves its finalization/disposal until runtime teardown. Ordinary Node roots still support manual/headless embedding.

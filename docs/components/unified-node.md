@@ -1,6 +1,6 @@
 # Unified 2D node component
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Scope
 
@@ -74,3 +74,7 @@ Implemented: ordered hierarchy and reparenting, lifecycle and typed events, rela
 - [0034: Canonical scalar mathematics and pre-release correction](../decisions/core-math.md#adr-0034)
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
+
+## Windowed lifecycle
+
+Node.GetViewport/GetWindow find the nearest containing viewport/window, including self. Node.Visible is virtual; Window overrides it so Show/Hide and writes through Node apply native visibility as well as scene state. Viewport children are rejected before mutation until native multiwindow/offscreen ownership exists. Window.ScreenPosition is separate from inherited scene Position.

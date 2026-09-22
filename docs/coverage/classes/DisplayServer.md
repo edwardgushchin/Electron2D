@@ -8,7 +8,7 @@ Godot base: [Object](Object.md). Electron2D type: [`public sealed class Electron
 
 Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
 
-Current release verification requires Linux/Wayland only under [ADR 0021](../../decisions/product.md#adr-0021). The self-contained host example starts on Wayland with packaged SDL and advances its scene; user-assisted physical arrow-key input and Escape exit passed. See the [class verification](../../classes/DisplayServer.md#verification). Other target platforms remain in the product matrix without blocking this stage.
+Current release verification requires Linux/Wayland only under [ADR 0021](../../decisions/product.md#adr-0021). The earlier self-contained host example, before Window/Engine.Run migration, started on Wayland with packaged SDL and advanced its scene; user-assisted physical arrow-key input and Escape exit passed. See the [class verification](../../classes/DisplayServer.md#verification). Other target platforms remain in the product matrix without blocking this stage.
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |

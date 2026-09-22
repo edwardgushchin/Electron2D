@@ -1,10 +1,10 @@
 # Node
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
-**Inherited By:** [Timer](Timer.md)
+**Inherited By:** [Timer](Timer.md), [Viewport](Viewport.md)
 
 - **Source:** [`src/Scene/Main/Node.cs`](../../src/Scene/Main/Node.cs)
 - **Namespace:** `Electron2D`
@@ -66,7 +66,7 @@ root.AddChild(new Node { Name = "Player", Position = new Vector2(32f, 16f) });
 | [`public float Skew { get; set; }`](#p-electron2d-node-skew) | Gets or sets the local skew angle in radians. |
 | [`public float GlobalSkew { get; set; }`](#p-electron2d-node-globalskew) | Gets or sets the hierarchy-global skew angle in radians. |
 | [`public bool TopLevel { get; set; }`](#p-electron2d-node-toplevel) | Gets or sets whether this node ignores its parent's transform. |
-| [`public bool Visible { get; set; }`](#p-electron2d-node-visible) | Gets or sets this node's local logical visibility. |
+| [`public virtual bool Visible { get; set; }`](#p-electron2d-node-visible) | Gets or sets this node's local logical visibility. |
 | [`public bool IsVisibleInTree { get; }`](#p-electron2d-node-isvisibleintree) | Gets whether this node is active and locally visible through its complete ancestor chain. |
 | [`public int ZIndex { get; set; }`](#p-electron2d-node-zindex) | Gets or sets this node's local Z-order value. |
 | [`public bool ZAsRelative { get; set; }`](#p-electron2d-node-zasrelative) | Gets or sets whether effective Z order accumulates ancestor Z values. |
@@ -87,6 +87,8 @@ root.AddChild(new Node { Name = "Player", Position = new Vector2(32f, 16f) });
 
 | Member | Description |
 | --- | --- |
+| [`public Window? GetWindow()`](#m-electron2d-node-getwindow) | Returns the containing root Window, including itself, or null. |
+| [`public Viewport? GetViewport()`](#m-electron2d-node-getviewport) | Returns the nearest Viewport ancestor, including this node itself, or null if none exists. |
 | [`public void AddChild(Node child)`](#m-electron2d-node-addchild-electron2d-node) | Appends a detached node as the last direct child. |
 | [`public void AddSibling(Node sibling)`](#m-electron2d-node-addsibling-electron2d-node) | Inserts a detached node immediately after this node in its parent's child order. |
 | [`public bool RemoveChild(Node child)`](#m-electron2d-node-removechild-electron2d-node) | Removes a direct child without disposing it. |
@@ -496,7 +498,7 @@ Gets or sets whether this node ignores its parent's transform.
 **Remarks:** The current global transform is preserved when the mode changes.
 
 <a id="p-electron2d-node-visible"></a>
-### `public bool Visible { get; set; }`
+### `public virtual bool Visible { get; set; }`
 
 Gets or sets this node's local logical visibility.
 
@@ -695,6 +697,16 @@ Gets the delta from the most recent SceneTree-managed physics-process frame deli
 **Remarks:** [`Engine`](Engine.md) applies [`Engine.TimeScale`](Engine.md#p-electron2d-engine-timescale) before an Engine-driven delivery.
 
 ## Method Descriptions
+
+<a id="m-electron2d-node-getwindow"></a>
+### `public Window? GetWindow()`
+
+Returns the containing root Window, including itself, or null. The current implementation has one root viewport and rejects child Viewports before hierarchy mutation; future subviewport routing remains in coverage.
+
+<a id="m-electron2d-node-getviewport"></a>
+### `public Viewport? GetViewport()`
+
+Returns the nearest Viewport ancestor, including this node itself, or null if none exists. Works for a detached window hierarchy; does not open a native window. Disposed nodes throw ObjectDisposedException.
 
 <a id="m-electron2d-node-addchild-electron2d-node"></a>
 ### `public void AddChild(Node child)`

@@ -1,14 +1,14 @@
 # Engine
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
 **Inherited By:** —
 
-- **Source:** [`src/Core/Config/Engine.cs`](../../src/Core/Config/Engine.cs)
+- **Source:** [`src/Core/Config/Engine.cs`](../../src/Core/Config/Engine.cs), [`Engine.Run.cs`](../../src/Core/Config/Engine.Run.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public sealed class Engine : ElectronObject`
+- **Declaration:** `public sealed partial class Engine : ElectronObject`
 
 > Coordinates process-wide frame scheduling, runtime metrics, and named engine singletons.
 
@@ -18,14 +18,13 @@ Coordinates process-wide frame scheduling, runtime metrics, and named engine sin
 
 `Engine` is the non-disposable process-wide runtime coordinator. It reads/writes persisted timing configuration through [`ProjectSettings`](ProjectSettings.md), attaches one [`MainLoop`](MainLoop.md), converts host-supplied unscaled elapsed time into fixed and variable callbacks, publishes runtime metrics, and maintains a thread-safe registry of named non-owned `ElectronObject` instances. The registry is initialized with permanent `Engine`, `ProjectSettings`, [`Input`](Input.md), and [`InputMap`](InputMap.md) entries.
 
-The host still owns the elapsed-time source, native event pump, waiting/frame pacing, and final disposal of the loop. `Engine.Stop()` finalizes and detaches the loop but deliberately does not dispose it. The registry retains references but never acquires disposal ownership.
+Engine.Run(Window) owns the elapsed-time source, native event pump, waiting/frame pacing and final disposal for ordinary windowed scenes. Manual embedding retains caller ownership. `Engine.Stop()` finalizes and detaches the loop but deliberately does not dispose it. The registry retains references but never acquires disposal ownership.
 
-[`Engine.Instance`](Engine.md#p-electron2d-engine-instance) is created once for the process and cannot be disposed. Runtime execution remains
-host-driven: a host attaches one [`Engine.MainLoop`](Engine.md#p-electron2d-engine-mainloop), supplies finite elapsed time to
+[`Engine.Instance`](Engine.md#p-electron2d-engine-instance) is created once for the process and cannot be disposed. For manual embedding, a host attaches one [`Engine.MainLoop`](Engine.md#p-electron2d-engine-mainloop), supplies finite elapsed time to
 [`Engine.AdvanceFrame(Double)`](Engine.md#m-electron2d-engine-advanceframe-system-double), and finally calls [`Engine.Stop`](Engine.md#m-electron2d-engine-stop).
 
 Runtime lifecycle and frame execution have owner-thread affinity. Configuration properties, metric reads, and
-named-singleton operations are safe from other threads. Timing properties use the process-wide
+named-singleton operations are safe from other threads. Fixed-step and time-scale properties use the process-wide
 [`ProjectSettings`](ProjectSettings.md) registry, including active feature overrides. A frame uses one configuration snapshot.
 
 ## Examples
@@ -33,16 +32,17 @@ named-singleton operations are safe from other threads. Timing properties use th
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-Engine engine = Engine.Instance;
-engine.Start(mainLoop);
-engine.AdvanceFrame(elapsedSeconds);
-engine.Stop();
+var window = new Window { Title = "Game", Size = new Vector2I(960, 540) };
+window.AddChild(scene); // a caller-created Node hierarchy
+Engine.Instance.MaxFps = 60;
+int exitCode = Engine.Instance.Run(window);
 ```
 
 ## Properties
 
 | Member | Description |
 | --- | --- |
+| [`public int MaxFps { get; set; }`](#p-electron2d-engine-maxfps) | Maximum cadence for Run. |
 | [`public static Engine Instance { get; }`](#p-electron2d-engine-instance) | Gets the process-wide engine instance. |
 | [`public int PhysicsTicksPerSecond { get; set; }`](#p-electron2d-engine-physicstickspersecond) | Gets or sets the fixed-step callback frequency. |
 | [`public int MaxPhysicsStepsPerFrame { get; set; }`](#p-electron2d-engine-maxphysicsstepsperframe) | Gets or sets the maximum number of fixed-step callbacks run during one process frame. |
@@ -61,6 +61,7 @@ engine.Stop();
 
 | Member | Description |
 | --- | --- |
+| [`public int Run(Window window)`](#m-electron2d-engine-run-electron2d-window) | Consumes a validated detached root Window after reserving the idle engine. |
 | [`public void Start(MainLoop mainLoop)`](#m-electron2d-engine-start-electron2d-mainloop) | Attaches and, when necessary, initializes one application loop. |
 | [`public bool AdvanceFrame(double elapsedSeconds)`](#m-electron2d-engine-advanceframe-system-double) | Advances fixed-step callbacks followed by one process callback. |
 | [`public void Stop()`](#m-electron2d-engine-stop) | Finalizes and detaches the current application loop. |
@@ -74,6 +75,11 @@ engine.Stop();
 | [`protected override void ValidateDisposal()`](#m-electron2d-engine-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
 
 ## Property Descriptions
+
+<a id="p-electron2d-engine-maxfps"></a>
+### `public int MaxFps { get; set; }`
+
+Maximum cadence for Run. Zero (default) is unlimited; negative values throw ArgumentOutOfRangeException. Atomic reads/writes are allowed from any thread; this runtime value is not persisted in ProjectSettings. Waiting measures unscaled monotonic time and pumps events in intervals of at most 10 ms. Manual AdvanceFrame does not wait.
 
 <a id="p-electron2d-engine-instance"></a>
 ### `public static Engine Instance { get; }`
@@ -202,6 +208,11 @@ Gets immutable version information for the loaded Electron2D assembly.
 **Value:** The process-wide version descriptor.
 
 ## Method Descriptions
+
+<a id="m-electron2d-engine-run-electron2d-window"></a>
+### `public int Run(Window window)`
+
+Consumes a validated detached root Window after reserving the idle engine. Opens the native window, creates and publishes SceneTree before ready, pumps events before frames, then disposes the scene before releasing native ownership. Returns SceneTree.Quit's code, zero for default close. Rejected null/disposed/attached roots and a busy engine retain caller ownership. Once reserved, failed native startup and callback failures still dispose transferred scene state. Cleanup failures are aggregated. The engine stays reserved until cleanup completes. Runs on the native main thread; no rendering or console handlers are installed. Native services opened directly through DisplayServer must finish before teardown; pending asynchronous dialogs can reject disposal and leave DisplayServer.Instance alive for completion/release. Start, AdvanceFrame, Stop and manual tree finalization/disposal cannot interfere with the active Run. Reuse requires a new Window.
 
 <a id="m-electron2d-engine-start-electron2d-mainloop"></a>
 ### `public void Start(MainLoop mainLoop)`
@@ -428,7 +439,7 @@ The class depends on `ElectronObject`, `MainLoop`, `EngineVersionInfo`, `Project
 
 `tests/Electron2D.Tests/Program.cs` verifies singleton lifetime, all four permanent service registrations, project-setting defaults/feature overrides/event flushing, invalid configuration, typed property discovery, architecture/version data, registry validation/type/ownership/order/concurrency, loop publication during initialization/finalization, automatic initialization, existing `SceneTree` attachment, owner-thread enforcement, re-entry rejection, fixed-before-process order, scaling, original-delta Timer delivery at zero scale in both lanes, input transition-lane completion, jitter/interpolation boundaries, catch-up cap, stop combination, process and physics callback failures, failed initialization/finalization cleanup, counters, FPS, and zero steady-state allocation across a warmed empty frame path.
 
-The checks use deterministic supplied deltas, not a real SDL clock, display, renderer, operating-system event pump, or loaded game benchmark. They establish managed scheduling behavior, not hard real-time guarantees or visual acceptance.
+The original scheduling checks use deterministic supplied deltas. WindowRuntimeTests additionally exercises Run with native SDL dummy and Wayland windows, event queues, monotonic waiting, quit/close, failure cleanup and reopening. Wayland events are injected and repeated initialization emits a GTK locale warning. No renderer or loaded game benchmark is covered. They establish managed scheduling behavior, not hard real-time guarantees or visual acceptance.
 
 ## Related scene decision
 

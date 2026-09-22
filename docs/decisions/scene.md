@@ -9,7 +9,7 @@ Decisions in this log: [0006](#adr-0006), [0008](#adr-0008), [0011](#adr-0011), 
 <a id="adr-0006"></a>
 ## ADR 0006: Own hierarchy, deferred work, and queued deletion in SceneTree
 
-Last updated: 2026-09-20
+Last updated: 2026-09-22
 
 - Status: Accepted; frame scheduling refined by [0008](scene.md#adr-0008), lifecycle and queue safety refined by [0011](scene.md#adr-0011)
 - Scope: `Node` hierarchy and `SceneTree` scheduling
@@ -27,7 +27,7 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 - Core's `EventConnection` can receive `SceneTree.Defer` as its scheduler for cancellable deferred event delivery.
 - A flush atomically captures one action batch. Work enqueued during execution waits for the next flush.
 - Node deletion is a separate atomic request processed after deferred actions. It detaches and disposes the full subtree; it can be cancelled before processing.
-- The application owns time and the safe point. It may call `ProcessFrame`, `PhysicsFrame`, or `FlushDeferred`; the frame methods run their callback lane and then flush. `SceneTree` does not create a hidden thread or clock.
+- The normal `Engine.Run` entry point owns time and the safe point. An embedding application may instead call `ProcessFrame`, `PhysicsFrame`, or `FlushDeferred`; the frame methods run their callback lane and then flush. `SceneTree` does not create a hidden thread or clock.
 
 ### Consequences
 
@@ -48,7 +48,7 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 <a id="adr-0008"></a>
 ## ADR 0008: Combine scene and 2D spatial behavior in one Node
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 - Status: Accepted; the original external-numerics transform choice is superseded by [ADR 0026](core-math.md#adr-0026), [ADR 0032](core-math.md#adr-0032), and [ADR 0033](core-math.md#adr-0033), and Node input callbacks are extended by [ADR 0038](input.md#adr-0038)
 - Scope: Scene-domain public object model
@@ -63,8 +63,10 @@ Godot separates non-spatial hierarchy/lifecycle behavior (`Node`) from 2D spatia
 - `Node` combines hierarchy, lifecycle, paths, groups, processing, typed input callbacks, deletion, 2D local/global transforms, visibility, and Z ordering.
 - Historical note: the initial Node transform vocabulary used external numerics directly. ADR 0026 introduced the engine-owned affine value, ADR 0029 completed its math, and ADRs 0032/0033 completed Node migration to `Electron2D.Transform` and `Vector2`.
 - Godot-like concepts keep recognizable names where they remain useful, but the API stays typed C#: strings represent paths/groups/names, delegates and virtual methods represent callbacks, and C# events represent signals.
-- Renderer-independent canvas state (`Visible`, `ZIndex`, `ZAsRelative`) belongs on `Node` now. Renderer-bound drawing, materials, canvas handles, lights, clipping, input picking, and viewport behavior wait for their actual domains.
+- Renderer-independent canvas state (`Visible`, `ZIndex`, `ZAsRelative`) belongs on `Node` now. `Window : Viewport : Node` introduces the root native window and its input boundary. The inherited `Position` continues to mean scene position; `Window.ScreenPosition` denotes the native desktop position and does not transform children. `Visible` is virtual so calls through `Node`, including `Show` and `Hide`, apply native window visibility. The window viewport rectangle starts at zero and uses the native client size. Renderer-bound drawing, materials, canvas handles, lights, clipping, input picking, and rendered viewport behavior wait for their actual domains. The first window slice supports one root viewport; adding a viewport as a child is rejected before hierarchy mutation until native multiwindow and offscreen rendering are integrated.
 - `SceneTree` is the host-driven frame boundary. It delivers explicitly enabled process and physics-process callbacks in priority/tree order and flushes deferred work afterward; it does not create a hidden thread or clock.
+
+`Engine.Run` consumes a validated detached root Window after reserving the idle engine. It opens the native window and publishes the SceneTree through Engine.MainLoop before scene entry/ready, processes native input before frames, and checks quit during the bounded frame wait. The engine remains reserved through all cleanup, including callback failures. Root close signals precede the default quit decision, allowing a handler to disable `AutoAcceptQuit`. A quit request completes the current callback/frame; it does not dispose the tree from inside user callbacks. Window rendering, SubViewport, embedded windows, GUI, and content scaling are separate unresolved dependencies; no draw or texture capability is implied by the window/input base.
 
 ### Consequences
 
@@ -116,7 +118,7 @@ Electron2D must keep typed C# calls, deterministic ownership, its managed runtim
 - Cross-thread scheduling has a precise linearization point at the queue lock. The lock is intentionally small and never held while user code runs.
 - Typed group operations require explicit delegates and therefore remain compile-time checked.
 - Timers use delivered frame delta. ADR 0016 later added Engine time scaling, and ADR 0036 added reusable Node timers with original-delta time-scale bypass; lightweight `SceneTreeTimer` still has no independent bypass.
-- Historical implementation note: scene switching, application quit, tweening, multiplayer, accessibility, editor signals, and platform notifications were absent when this ADR was adopted. ADR 0037 later implemented typed tweening; the other listed domains remain absent.
+- Historical implementation note: scene switching, application quit, tweening, multiplayer, accessibility, editor signals, and platform notifications were absent when this ADR was adopted. ADR 0037 later implemented typed tweening; the application quit lifecycle is now implemented by `SceneTree.Quit`, `AutoAcceptQuit`, and `Engine.Run`; the other listed domains remain absent.
 - Historical implementation note: ADR 0037 extended activation rollback and finalization to invalidate SceneTree-owned tweens while retaining this ADR's failure-continuing cleanup rule.
 
 ### Rejected alternatives
