@@ -6,7 +6,7 @@ Last updated: 2026-09-22
 
 [Window](../classes/Window.md) derives from [Viewport](../classes/Viewport.md), which derives from the unified Node. Window owns the [ModeEnum](../classes/Window.ModeEnum.md) and [Flags](../classes/Window.Flags.md) identifiers. A consumer configures a root Window, adds scene children, and calls Engine.Run. This component has no renderer. It provides an executable native window and scene input boundary, not a completed rendering or GUI API.
 
-[ADR 0028](../decisions/rendering.md#adr-0028) selects HLSL source and compatible SPIR-V bytecode through SDL3-CS/SDL_shadercross for future GPU shader support. Window currently has no executable shader or material integration; the SDL_Renderer fallback contract continues to exclude arbitrary shaders.
+[ADR 0028](../decisions/rendering.md#adr-0028) selects HLSL and GLSL compilation at project import/build, followed by one SPIR-V validation, reflection and GPU-program path through SDL3-CS/SDL_shadercross. Compatible SPIR-V from third-party compilers uses the same path. Direct language support also requires diagnostics, material parameters, textures, consistent bindings and backend checks. Window currently has no executable shader or material integration; the SDL_Renderer fallback contract continues to exclude arbitrary shaders.
 
 ## Runtime flow
 
