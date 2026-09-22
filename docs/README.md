@@ -126,4 +126,4 @@ This directory describes the engine as it exists now. Planned features are liste
 - Enum: [ClockDirection](classes/ClockDirection.md)
 - Decisions: [routing index](decisions/index.md) with bounded logs for [Product architecture](decisions/product.md), [Core object/runtime](decisions/core-object-runtime.md), [Core data/I/O](decisions/core-data-io.md), [Core math](decisions/core-math.md), [Input](decisions/input.md), [Scene](decisions/scene.md), [Resources](decisions/resources.md), [Localization](decisions/localization.md), and [Rendering](decisions/rendering.md).
 
-The maintenance rules for this documentation are mandatory and live in the repository root [AGENTS.md](../AGENTS.md).
+Repository workflow instructions live in [AGENTS.md](../AGENTS.md). The [maintenance contract](maintaining.md) covers implementation and documentation checks; the [decision index](decisions/index.md) routes to architectural decisions.
