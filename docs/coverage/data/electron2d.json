@@ -1834,6 +1834,45 @@
     "value": "-4096"
   },
   {
+    "id": "constant:Electron2D.CanvasItem.NotificationDraw()",
+    "kind": "constant",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "NotificationDraw",
+    "signature": "public const System.Int32 NotificationDraw = 30",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "30"
+  },
+  {
+    "id": "constant:Electron2D.CanvasItem.NotificationEnterCanvas()",
+    "kind": "constant",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "NotificationEnterCanvas",
+    "signature": "public const System.Int32 NotificationEnterCanvas = 32",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "32"
+  },
+  {
+    "id": "constant:Electron2D.CanvasItem.NotificationExitCanvas()",
+    "kind": "constant",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "NotificationExitCanvas",
+    "signature": "public const System.Int32 NotificationExitCanvas = 33",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "33"
+  },
+  {
     "id": "constant:Electron2D.CanvasItem.NotificationLocalTransformChanged()",
     "kind": "constant",
     "declaringType": "Electron2D.CanvasItem",
@@ -10888,6 +10927,32 @@
     "parameters": [],
     "returnType": "Electron2D.Window.ModeEnum",
     "value": "0"
+  },
+  {
+    "id": "event:Electron2D.CanvasItem.Draw()",
+    "kind": "event",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "Draw",
+    "signature": "public event System.Action\u003CElectron2D.CanvasItem\u003E Draw",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.CanvasItem\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CanvasItem.Hidden()",
+    "kind": "event",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "Hidden",
+    "signature": "public event System.Action\u003CElectron2D.CanvasItem\u003E Hidden",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.CanvasItem\u003E",
+    "value": null
   },
   {
     "id": "event:Electron2D.CanvasItem.LocalTransformChanged()",

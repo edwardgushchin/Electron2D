@@ -1574,11 +1574,16 @@ public class Node : ElectronObject
         }
     }
 
+    // Layer-specific membership work is separate from manually dispatched notifications.
+    internal virtual void OnTreeMembershipChanged(bool entering) { }
+
     private void EnterTreeCore(SceneTree tree)
     {
 
         Tree = tree;
         List<Exception>? errors = null;
+        try { OnTreeMembershipChanged(entering: true); }
+        catch (Exception error) { CollectException(ref errors, error); }
 
         try
         {
@@ -1772,6 +1777,9 @@ public class Node : ElectronObject
             {
                 CollectException(ref errors, error);
             }
+
+            try { OnTreeMembershipChanged(entering: false); }
+            catch (Exception error) { CollectException(ref errors, error); }
 
             try
             {

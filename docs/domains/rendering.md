@@ -26,6 +26,6 @@ Games use Sprite for texture, sheet-frame and region drawing, or record custom c
 
 ## Verification and limits
 
-Current native verification covers Linux Wayland GPU/Vulkan and compatibility, plus the software renderer under the dummy video driver. Pixel checks cover ordinary drawing, both shader languages and canvas ordering; other target backends, user visual acceptance, whole-frame performance, lights, clipping, meshes, GUI, offscreen/multiwindow rendering and device recovery remain unfinished. See the component pages for exact checks and limits.
+Current native verification covers Linux Wayland GPU/Vulkan and compatibility, plus the software renderer under the dummy video driver. Pixel checks cover ordinary drawing, both shader languages, canvas ordering and lifecycle-driven recording through notifications/events/overrides; other target backends, user visual acceptance, whole-frame performance, lights, clipping, meshes, GUI, offscreen/multiwindow rendering and device recovery remain unfinished. See the component pages for exact checks and limits.
 
 [ADR 0028](../decisions/rendering.md#adr-0028) owns backend/shader decisions, [ADR 0004](../decisions/product.md#adr-0004) owns the 2D product boundary, and [ADR 0021](../decisions/product.md#adr-0021) owns the current platform gate.

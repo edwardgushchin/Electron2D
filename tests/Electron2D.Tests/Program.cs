@@ -104,6 +104,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW") == "1")
 }
 
 SceneHierarchyTests.Run();
+CanvasLifecycleTests.Run();
 VerifyInstanceIds();
 VerifyLifetime();
 VerifyNotificationsAndProperties();

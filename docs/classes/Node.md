@@ -1173,6 +1173,10 @@ The parent owns its children; SceneTree owns the active root. PackedScene captur
 
 The hierarchy is implemented; complete reference API parity is not claimed. Missing GUI, canvas policies, rendering primitives, interpolation, scene-file authoring and other capabilities remain classified per member in [coverage](../coverage/index.md). No inert compatibility members are added.
 
+## Canvas membership integration
+
+SceneTree activation uses an internal layer hook separately from public numeric notification dispatch. CanvasItem attaches before the tree-enter callback and detaches after the tree-exit callback. Failures join existing lifecycle error aggregation and activation rollback. Manual tree notifications still call their typed callbacks without changing membership.
+
 ## Relevant decisions
 
 - [0008: Node, CanvasItem and Entity](../decisions/scene.md#adr-0008)

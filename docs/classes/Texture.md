@@ -77,7 +77,7 @@ Counts levels following the base image. It is zero for a texture without mipmaps
 
 ### Draw
 
-Records a borrowed texture at `position` with its current logical Size. The target must be inside its own OnDraw callback on the scene owner thread; null targets, disposed resources and nonfinite arguments are rejected. Null modulation means white. Transpose exchanges source axes and the destination width/height. An uninitialized zero-size texture records nothing.
+Records a borrowed texture at `position` with its current logical Size. The target must be inside its own canvas recording scope on the scene owner thread; null targets, disposed resources and nonfinite arguments are rejected. Null modulation means white. Transpose exchanges source axes and the destination width/height. An uninitialized zero-size texture records nothing.
 
 ### DrawRect
 

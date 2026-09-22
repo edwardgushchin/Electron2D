@@ -9,7 +9,7 @@ The component owns [RenderingServer](../classes/RenderingServer.md) and its inte
 ## Runtime flow
 
 1. Open the backend selected by typed ProjectSettings. GPU initialization can fall back only when enabled; shader-dependent draws fail on compatibility.
-2. Deliver FramePreDraw, capture visible nodes and invoke OnDraw when first visible or after QueueRedraw. Clear the command list and reset draw transform before that callback. Redraw requests inside the callback schedule a later frame.
+2. Deliver FramePreDraw and capture visible nodes. For pending recording, clear commands/reset the draw transform, then deliver NotificationDraw, synchronous Draw handlers and OnDraw in order. All three may draw. QueueRedraw inside this recording coalesces; internal resource changes remain pending for the next frame. Failure clears partial commands, retains the dirty flag and closes the recording scope before host cleanup.
 3. Recapture after drawing callbacks. Resolve canvas roots in scene order, behind-parent subtrees and nested local Y groups; sort globally by effective Z, preserving the resolved order at equal Z. Transform retained local geometry into framebuffer pixels. Inherited Modulate and local SelfModulate multiply command colors.
 4. Batch adjacent commands only when material, texture and repeat mode match. Resolve current immutable pixel snapshots and preflight native resources before clearing/drawing. Pixel updates do not require OnDraw.
 5. Upload and submit to the RGBA8 target, copy it to the native window and deliver FramePostDraw. Submission is not display completion. Callback failures trigger Engine.Run cleanup.
@@ -24,6 +24,10 @@ GPU consumes vertex position/color/UV and the imported fragment interface. Built
 
 Sprite borrows its texture, records through the texture's virtual region draw method and rebuilds on frame, region, layout or texture changes. Its resource notification callback only marks an atomic redraw request; it cannot run scene code on a worker. CanvasItem consumes that request atomically before OnDraw, retaining notifications that arrive during recording for the next frame.
 
+## Canvas lifecycle
+
+Actual SceneTree entry attaches each canvas parent-first and notifies visible entry; exit detaches child-first without visibility/Hidden signals. TopLevel changes rebind the item with an exit/entry pair and schedule redraw. Local Visible changes always notify the item; effective changes propagate through locally visible direct canvas children, including TopLevel, with Hidden following visibility delivery when becoming hidden. Neutral nodes break inheritance and Window visibility reaches every canvas root. Showing and reattachment request fresh recording. C# notification overrides call base for inherited event dispatch; manual tree notifications do not alter membership.
+
 ## Canvas ordering
 
 TopLevel items and items below neutral Node parents are independent canvas roots. A root's canvas subtree precedes the next root at equal effective Z. ShowBehindParent draws a child subtree before its parent. YSortEnabled orders the item itself at Y = 0 and direct canvas children by local Y; nested enabled children join that group, while disabled children keep their subtree together at their own Y. Approximate Y ties keep scene order using the shared Mathf contract. Invisible items are omitted, neutral/TopLevel boundaries end the group, and Z takes precedence everywhere. Changes use the next submission without rerecording retained commands and do not reorder processing/input.
@@ -35,6 +39,8 @@ Nodes borrow materials and textures; native texture caches belong to the backend
 Current framebuffer and blending precision is RGBA8. GPU samples byte and supported floating-point images, including stored mips. Compatibility support depends on the native driver; the tested drivers reject float textures explicitly. The component has no lights, clipping hierarchy, polygon/mesh API, public offscreen targets, GUI drawing, independent window renderers or device-loss recovery. Other targets remain unverified under [ADR 0021](../decisions/product.md#adr-0021).
 
 ## Verification
+
+[CanvasLifecycleTests](../../tests/Electron2D.Tests/CanvasLifecycleTests.cs) checks activation, reattachment, TopLevel rebinding, visibility propagation, Hidden, manual notifications, callback failure continuation and recording recovery. Native six-frame readback sequences verify drawing in the notification, event and override, redraw on showing/rebinding/reattachment and coalescing inside Draw. The suite passes on Wayland GPU/compatibility and dummy/software.
 
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs), [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) and [CanvasTextureTests](../../tests/Electron2D.Tests/CanvasTextureTests.cs) check native framebuffer pixels, retained redraw behavior, transforms/Z/modulation, failure cleanup, texture regions/flips/transpose/repeat, Update/SetImage, virtual overrides, disposed resources and both imported languages. UV readback checks the half-texel clipping boundary and interior interpolation. Warmed texture geometry replay allocates zero managed bytes in 1,000 iterations.
 

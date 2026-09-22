@@ -62,16 +62,16 @@ public abstract partial class CanvasItem
     }
 
     /// <summary>Requests regeneration of this node's retained drawing commands before a later visible frame.</summary>
-    /// <remarks>Requests coalesce. Hidden nodes retain the request until visible. A request inside OnDraw schedules
-    /// the following frame; it does not re-enter drawing. Transforms, modulation and material changes need no redraw.</remarks>
+    /// <remarks>Detached calls do nothing. Requests coalesce. Hidden nodes retain the request until visible. A request during
+    /// the current recording coalesces with that recording; it does not schedule another redraw. Transforms, modulation and material changes need no redraw.</remarks>
     /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
-    public void QueueRedraw() { EnsureMutable(); InvalidateCanvas(); }
+    public void QueueRedraw() { EnsureMutable(); if (IsInsideTree && !_drawing) InvalidateCanvas(); }
 
     // Resource change notifications may arrive from a loading thread; scene work stays on the owner thread.
     internal void InvalidateCanvas() => Interlocked.Exchange(ref _redrawPending, 1);
 
-    /// <summary>Records a filled rectangle or a centered rectangular outline during OnDraw.</summary>
+    /// <summary>Records a filled rectangle or a centered rectangular outline during canvas recording.</summary>
     /// <param name="rect">A finite local rectangle; negative dimensions are normalized.</param>
     /// <param name="color">The finite drawing color.</param>
     /// <param name="filled">Whether to fill the rectangle; true by default.</param>
@@ -80,7 +80,7 @@ public abstract partial class CanvasItem
     /// <remarks>Zero-area rectangles and zero-width outlines draw nothing. Outline widths larger than the rectangle
     /// collapse its hole. Drawing obeys this node's transform, visibility, Z order and modulation.</remarks>
     /// <exception cref="ArgumentException">Geometry, color or width is not finite.</exception>
-    /// <exception cref="InvalidOperationException">Called outside this node's OnDraw callback or off its owner thread.</exception>
+    /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public void DrawRect(Rect rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)
     {
@@ -90,7 +90,7 @@ public abstract partial class CanvasItem
         (_canvasCommands ??= []).Add(new CanvasCommand(false, rect.Position, rect.Size, color, filled, width, antialiased, _drawTransform));
     }
 
-    /// <summary>Records a straight line during OnDraw.</summary>
+    /// <summary>Records a straight line during canvas recording.</summary>
     /// <param name="from">The finite starting point in local coordinates.</param>
     /// <param name="to">The finite ending point in local coordinates.</param>
     /// <param name="color">The finite drawing color.</param>
@@ -98,7 +98,7 @@ public abstract partial class CanvasItem
     /// <param name="antialiased">Whether to feather the boundary over one framebuffer pixel.</param>
     /// <remarks>Lines use flat caps. Coincident endpoints or zero width draw nothing.</remarks>
     /// <exception cref="ArgumentException">Geometry, color or width is not finite.</exception>
-    /// <exception cref="InvalidOperationException">Called outside this node's OnDraw callback or off its owner thread.</exception>
+    /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public void DrawLine(Vector2 from, Vector2 to, Color color, float width = -1f, bool antialiased = false)
     {
@@ -108,13 +108,13 @@ public abstract partial class CanvasItem
         (_canvasCommands ??= []).Add(new CanvasCommand(true, from, to, color, false, width, antialiased, _drawTransform));
     }
 
-    /// <summary>Draws a borrowed texture at its logical size during this node's OnDraw callback.</summary>
+    /// <summary>Draws a borrowed texture at its logical size during this item's canvas recording.</summary>
     /// <param name="texture">The live texture; its virtual Draw implementation supplies the command.</param>
     /// <param name="position">The finite local top-left position.</param>
     /// <param name="modulate">The finite color multiplier, or null for white.</param>
     /// <exception cref="ArgumentNullException">The texture is null.</exception>
     /// <exception cref="ArgumentException">Position or modulation is not finite.</exception>
-    /// <exception cref="InvalidOperationException">Called outside OnDraw or off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node or texture is disposed.</exception>
     public void DrawTexture(Texture texture, Vector2 position, Color? modulate = null)
     {
@@ -122,7 +122,7 @@ public abstract partial class CanvasItem
         texture.Draw(this, position, modulate);
     }
 
-    /// <summary>Stretches or repeats a borrowed texture over a local rectangle during OnDraw.</summary>
+    /// <summary>Stretches or repeats a borrowed texture over a local rectangle during canvas recording.</summary>
     /// <param name="texture">The live texture; its virtual DrawRect implementation supplies the command.</param>
     /// <param name="rect">The finite destination. Negative dimensions flip without moving its origin.</param>
     /// <param name="tile">Whether to repeat at the texture's logical pixel size.</param>
@@ -130,7 +130,7 @@ public abstract partial class CanvasItem
     /// <param name="transpose">Whether to exchange texture axes and destination dimensions.</param>
     /// <exception cref="ArgumentNullException">The texture is null.</exception>
     /// <exception cref="ArgumentException">Geometry or modulation is not finite.</exception>
-    /// <exception cref="InvalidOperationException">Called outside OnDraw or off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node or texture is disposed.</exception>
     public void DrawTextureRect(Texture texture, Rect rect, bool tile, Color? modulate = null, bool transpose = false)
     {
@@ -138,7 +138,7 @@ public abstract partial class CanvasItem
         texture.DrawRect(this, rect, tile, modulate, transpose);
     }
 
-    /// <summary>Stretches a source region of a borrowed texture over a local rectangle during OnDraw.</summary>
+    /// <summary>Stretches a source region of a borrowed texture over a local rectangle during canvas recording.</summary>
     /// <param name="texture">The live texture; its virtual DrawRectRegion implementation supplies the command.</param>
     /// <param name="rect">The finite destination. Negative dimensions flip without moving its origin.</param>
     /// <param name="sourceRect">The finite region in logical texture pixels; negative dimensions toggle flipping.</param>
@@ -147,7 +147,7 @@ public abstract partial class CanvasItem
     /// <param name="clipUV">Whether to constrain sampling to texel centers inside the source region.</param>
     /// <exception cref="ArgumentNullException">The texture is null.</exception>
     /// <exception cref="ArgumentException">Geometry or modulation is not finite.</exception>
-    /// <exception cref="InvalidOperationException">Called outside OnDraw or off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node or texture is disposed.</exception>
     public void DrawTextureRectRegion(Texture texture, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
     {
@@ -178,20 +178,20 @@ public abstract partial class CanvasItem
             _drawTransform, texture, src, transpose, clipUV, tile));
     }
 
-    /// <summary>Sets an additional transform for subsequent commands in this OnDraw callback.</summary>
+    /// <summary>Sets an additional transform for subsequent commands in this canvas recording.</summary>
     /// <param name="position">Translation in local units.</param>
     /// <param name="rotation">Rotation in radians, zero by default.</param>
     /// <param name="scale">Scale, or null for one on both axes.</param>
     /// <exception cref="ArgumentException">The transform is not finite.</exception>
-    /// <exception cref="InvalidOperationException">Called outside this node's OnDraw callback or off its owner thread.</exception>
+    /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public void DrawSetTransform(Vector2 position, float rotation = 0f, Vector2? scale = null) =>
         DrawSetTransformMatrix(new Transform(rotation, scale ?? Vector2.One, 0f, position));
 
-    /// <summary>Sets the full additional transform for subsequent commands in this OnDraw callback.</summary>
+    /// <summary>Sets the full additional transform for subsequent commands in this canvas recording.</summary>
     /// <param name="transform">The finite local drawing transform.</param>
     /// <exception cref="ArgumentException">The transform is not finite.</exception>
-    /// <exception cref="InvalidOperationException">Called outside this node's OnDraw callback or off its owner thread.</exception>
+    /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public void DrawSetTransformMatrix(Transform transform)
     {
@@ -200,18 +200,37 @@ public abstract partial class CanvasItem
         _drawTransform = transform;
     }
 
+    /// <summary>Occurs during recording, after NotificationDraw and before OnDraw.</summary>
+    /// <remarks>Handlers run synchronously on the scene owner thread and may issue drawing commands for this item.
+    /// Deferred handlers run outside the recording scope and cannot draw. A handler failure aborts recording.</remarks>
+    public event Action<CanvasItem>? Draw;
+
     /// <summary>Records this node's retained canvas commands before its first visible frame and after QueueRedraw.</summary>
     /// <remarks>Runs on the scene owner thread during rendering. Geometry, texture and drawing-transform calls
-    /// are valid only here. The command list is cleared and the drawing transform reset to identity before entry.</remarks>
+    /// are valid during NotificationDraw, synchronous Draw handlers and this callback. The command list is cleared and the drawing transform reset to identity before entry.</remarks>
     protected virtual void OnDraw() { }
 
     internal void PrepareCanvas()
     {
+        EnsureMutable();
+        if (_drawing) throw new InvalidOperationException("Canvas recording cannot be re-entered.");
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
         _canvasCommands?.Clear();
         _drawTransform = Transform.Identity;
         _drawing = true;
-        try { OnDraw(); }
+        try
+        {
+            DispatchNotification(NotificationDraw);
+            if (IsDisposed) return;
+            Draw?.Invoke(this);
+            if (!IsDisposed) OnDraw();
+        }
+        catch
+        {
+            _canvasCommands?.Clear();
+            InvalidateCanvas();
+            throw;
+        }
         finally { _drawing = false; }
     }
 
@@ -241,7 +260,7 @@ public abstract partial class CanvasItem
     private void EnsureDrawing()
     {
         EnsureMutable();
-        if (!_drawing) throw new InvalidOperationException("Drawing commands require this node's OnDraw callback.");
+        if (!_drawing) throw new InvalidOperationException("Drawing commands require this item's active recording scope.");
     }
 
     private static void ValidateCanvasColor(Color color)

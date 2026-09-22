@@ -16,6 +16,10 @@ The abstract canvas base. Owns visibility, Z/Y order, behind-parent drawing, mod
 
 Canvas roots follow scene order; a root's canvas subtree is ordered before the following root. TopLevel and neutral Node boundaries create separate canvas roots. Effective Z is always the primary draw key. At equal Z, children normally draw after their parent; ShowBehindParent draws a child subtree before it. YSortEnabled instead sorts the item itself (Y = 0) and its canvas children by local Y, merging nested enabled groups while keeping other child subtrees together. Drawing order does not change processing or input order.
 
+Canvas attachment is part of actual SceneTree membership. Entry delivers NotificationEnterCanvas before the tree-enter callback, then visibility delivery when initially visible. Exit delivers NotificationExitCanvas after the tree-exit callback, with children exiting first. Changing TopLevel emits an exit/entry pair for this item and schedules redraw; failures are aggregated after the transition. These notifications use ordinary C# override/base dispatch under the engine's notification contract. Manual tree notifications do not attach or detach a canvas.
+
+Local Visible changes notify the item, including while detached or below a hidden parent. Effective changes propagate only through locally visible direct canvas children; Hidden follows visibility delivery when becoming hidden in the tree. Tree exit does not emit Hidden. Visible entry and showing schedule redraw. A visibility notification delivered with Notify raises VisibilityChanged through the base handler without changing state.
+
 ## Examples
 
 The snippet uses the Electron2D namespace; attach the hierarchy to a SceneTree or an Engine.Run window to activate it.
@@ -56,13 +60,13 @@ class PaintedNode : Entity
 | Member | Contract |
 | --- | --- |
 | [`protected override void Dispose(bool disposing)`](#m-electron2d-canvasitem-dispose-system-boolean) | Disposes the scene hierarchy and clears retained canvas commands and this layer's subscribers in a finally block. Borrowed resources remain caller-owned. |
-| [`public void DrawLine(Vector2 from, Vector2 to, Color color, float width = -1f, bool antialiased = false)`](#m-electron2d-canvasitem-drawline-electron2d-vector2-electron2d-vector2-electron2d-color-system-single-system-boolean) | Records a straight line during OnDraw. |
-| [`public void DrawRect(Rect rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)`](#m-electron2d-canvasitem-drawrect-electron2d-rect-electron2d-color-system-boolean-system-single-system-boolean) | Records a filled rectangle or a centered rectangular outline during OnDraw. |
-| [`public void DrawSetTransform(Vector2 position, float rotation = 0f, Vector2? scale = null)`](#m-electron2d-canvasitem-drawsettransform-electron2d-vector2-system-single-system-nullable-electron2d-vector2) | Sets an additional transform for subsequent commands in this OnDraw callback. |
-| [`public void DrawSetTransformMatrix(Transform transform)`](#m-electron2d-canvasitem-drawsettransformmatrix-electron2d-transform) | Sets the full additional transform for subsequent commands in this OnDraw callback. |
-| [`public void DrawTexture(Texture texture, Vector2 position, Color? modulate = null)`](#m-electron2d-canvasitem-drawtexture-electron2d-texture-electron2d-vector2-system-nullable-electron2d-color) | Draws a borrowed texture at its logical size during this node's OnDraw callback. |
-| [`public void DrawTextureRect(Texture texture, Rect rect, bool tile, Color? modulate = null, bool transpose = false)`](#m-electron2d-canvasitem-drawtexturerect-electron2d-texture-electron2d-rect-system-boolean-system-nullable-electron2d-color-system-boolean) | Stretches or repeats a borrowed texture over a local rectangle during OnDraw. |
-| [`public void DrawTextureRectRegion(Texture texture, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`](#m-electron2d-canvasitem-drawtexturerectregion-electron2d-texture-electron2d-rect-electron2d-rect-system-nullable-electron2d-color-system-boolean-system-boolean) | Stretches a source region of a borrowed texture over a local rectangle during OnDraw. |
+| [`public void DrawLine(Vector2 from, Vector2 to, Color color, float width = -1f, bool antialiased = false)`](#m-electron2d-canvasitem-drawline-electron2d-vector2-electron2d-vector2-electron2d-color-system-single-system-boolean) | Records a straight line during canvas recording. |
+| [`public void DrawRect(Rect rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)`](#m-electron2d-canvasitem-drawrect-electron2d-rect-electron2d-color-system-boolean-system-single-system-boolean) | Records a filled rectangle or a centered rectangular outline during canvas recording. |
+| [`public void DrawSetTransform(Vector2 position, float rotation = 0f, Vector2? scale = null)`](#m-electron2d-canvasitem-drawsettransform-electron2d-vector2-system-single-system-nullable-electron2d-vector2) | Sets an additional transform for subsequent commands in this canvas recording. |
+| [`public void DrawSetTransformMatrix(Transform transform)`](#m-electron2d-canvasitem-drawsettransformmatrix-electron2d-transform) | Sets the full additional transform for subsequent commands in this canvas recording. |
+| [`public void DrawTexture(Texture texture, Vector2 position, Color? modulate = null)`](#m-electron2d-canvasitem-drawtexture-electron2d-texture-electron2d-vector2-system-nullable-electron2d-color) | Draws a borrowed texture at its logical size during this item's canvas recording. |
+| [`public void DrawTextureRect(Texture texture, Rect rect, bool tile, Color? modulate = null, bool transpose = false)`](#m-electron2d-canvasitem-drawtexturerect-electron2d-texture-electron2d-rect-system-boolean-system-nullable-electron2d-color-system-boolean) | Stretches or repeats a borrowed texture over a local rectangle during canvas recording. |
+| [`public void DrawTextureRectRegion(Texture texture, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`](#m-electron2d-canvasitem-drawtexturerectregion-electron2d-texture-electron2d-rect-electron2d-rect-system-nullable-electron2d-color-system-boolean-system-boolean) | Stretches a source region of a borrowed texture over a local rectangle during canvas recording. |
 | [`public Transform GetGlobalTransform()`](#m-electron2d-canvasitem-getglobaltransform) | Returns the transform composed through the direct canvas-parent chain. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-canvasitem-getpropertydescriptors) | Extends neutral descriptors with visibility, ordering, top-level state, modulation and borrowed materials. |
 | [`public abstract Transform GetTransform()`](#m-electron2d-canvasitem-gettransform) | Returns the local transform supplied by this item's placement model. |
@@ -70,7 +74,7 @@ class PaintedNode : Entity
 | [`public void MoveToFront()`](#m-electron2d-canvasitem-movetofront) | Moves this node to the last position among its siblings. |
 | [`protected void NotifyLocalTransformChanged()`](#m-electron2d-canvasitem-notifylocaltransformchanged) | Delivers enabled transform notifications after a derived placement model changes. |
 | [`protected virtual void OnDraw()`](#m-electron2d-canvasitem-ondraw) | Records this node's retained canvas commands before its first visible frame and after QueueRedraw. |
-| [`protected override void OnNotification(int what)`](#m-electron2d-canvasitem-onnotification-system-int32) | Preserves inherited lifecycle dispatch and propagates transform/visibility changes at parent boundaries, collecting callback failures. |
+| [`protected override void OnNotification(int what)`](#m-electron2d-canvasitem-onnotification-system-int32) | Preserves inherited lifecycle dispatch, projects NotificationVisibilityChanged to its typed event and propagates transform changes at parent boundaries. Actual canvas attachment is owned by SceneTree membership, independently of manually dispatched tree notifications. |
 | [`public void QueueRedraw()`](#m-electron2d-canvasitem-queueredraw) | Requests regeneration of this node's retained drawing commands before a later visible frame. |
 | [`public void Show()`](#m-electron2d-canvasitem-show) | Sets `CanvasItem.Visible` to `true`. |
 
@@ -78,6 +82,8 @@ class PaintedNode : Entity
 
 | Member | Contract |
 | --- | --- |
+| [`public event Action<CanvasItem>? Draw`](#e-electron2d-canvasitem-draw) | Synchronous recording event between NotificationDraw and OnDraw. |
+| [`public event Action<CanvasItem>? Hidden`](#e-electron2d-canvasitem-hidden) | Effective transition to hidden, after visibility delivery. |
 | [`public event Action<CanvasItem>? LocalTransformChanged`](#e-electron2d-canvasitem-localtransformchanged) | Occurs after this node's local transform actually changes. |
 | [`public event Action<CanvasItem>? TransformChanged`](#e-electron2d-canvasitem-transformchanged) | Occurs when this node's global transform is affected by a local or ancestor change. |
 | [`public event Action<CanvasItem>? VisibilityChanged`](#e-electron2d-canvasitem-visibilitychanged) | Occurs after local or inherited logical visibility is propagated to this node. |
@@ -88,6 +94,9 @@ class PaintedNode : Entity
 | --- | --- |
 | [`public const int MaximumZIndex = 4096`](#f-electron2d-canvasitem-maximumzindex) | Specifies the largest supported local or effective Z index. |
 | [`public const int MinimumZIndex = -4096`](#f-electron2d-canvasitem-minimumzindex) | Specifies the smallest supported local or effective Z index. |
+| [`public const int NotificationDraw = 30`](#f-electron2d-canvasitem-notificationdraw) | Delivered before Draw and OnDraw while recording commands. |
+| [`public const int NotificationEnterCanvas = 32`](#f-electron2d-canvasitem-notificationentercanvas) | Delivered on canvas attachment, parent-first during tree entry. |
+| [`public const int NotificationExitCanvas = 33`](#f-electron2d-canvasitem-notificationexitcanvas) | Delivered on canvas detachment, child-first during tree exit; ordinary C# override/base dispatch applies. |
 | [`public const int NotificationLocalTransformChanged = 35`](#f-electron2d-canvasitem-notificationlocaltransformchanged) | Identifies a local-transform change notification when local notification delivery is enabled. |
 | [`public const int NotificationTransformChanged = 2000`](#f-electron2d-canvasitem-notificationtransformchanged) | Identifies a global-transform change notification when global notification delivery is enabled. |
 | [`public const int NotificationVisibilityChanged = 31`](#f-electron2d-canvasitem-notificationvisibilitychanged) | Identifies the notification propagated after local or inherited visibility changes. |
@@ -185,13 +194,13 @@ Gets or sets whether this node ignores its parent's transform.
 
 **Value:** `false` by default.
 
-**Remarks:** The local transform stays unchanged; global coordinates are recomputed against the new canvas boundary. The item becomes a separate canvas root, drawn after the preceding root's entire canvas subtree at the same Z. Roots retain scene order; Z takes precedence. Logical visibility continues to follow direct canvas ancestors.
+**Remarks:** The local transform stays unchanged; global coordinates are recomputed against the new canvas boundary. The item becomes a separate canvas root, drawn after the preceding root's entire canvas subtree at the same Z. Roots retain scene order; Z takes precedence. Logical visibility continues to follow direct canvas ancestors. An attached change emits NotificationExitCanvas with the old mode, then NotificationEnterCanvas with the committed new mode. It schedules redraw; recursive rebinding is rejected and callback failures are aggregated after the transition.
 
-**System.InvalidOperationException:** Mutation occurs off the owner thread or during packed-scene capture.
+**System.InvalidOperationException:** Mutation occurs off the owner thread, during packed-scene capture, or recursively during canvas rebinding.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the mode changes.
+**System.AggregateException:** A canvas or transform callback fails; the mode transition still completes.
 
 <a id="p-electron2d-canvasitem-useparentmaterial"></a>
 ### `public bool UseParentMaterial { get; set; }`
@@ -211,7 +220,7 @@ Gets or sets this node's local logical visibility.
 
 **Value:** `true` by default.
 
-**Remarks:** An actual change synchronously propagates visibility notifications and events through direct canvas descendants.
+**Remarks:** A local change notifies this item. An effective tree-visibility change propagates through locally visible direct canvas children, including TopLevel items. Showing schedules redraw; hiding raises Hidden after visibility delivery.
 
 **System.InvalidOperationException:** An attached node is mutated off the owner thread.
 
@@ -262,7 +271,7 @@ Disposes the scene hierarchy and clears retained canvas commands and this layer'
 <a id="m-electron2d-canvasitem-drawline-electron2d-vector2-electron2d-vector2-electron2d-color-system-single-system-boolean"></a>
 ### `public void DrawLine(Vector2 from, Vector2 to, Color color, float width = -1f, bool antialiased = false)`
 
-Records a straight line during OnDraw.
+Records a straight line during canvas recording.
 
 **Parameter `from`:** The finite starting point in local coordinates.
 
@@ -278,14 +287,14 @@ Records a straight line during OnDraw.
 
 **System.ArgumentException:** Geometry, color or width is not finite.
 
-**System.InvalidOperationException:** Called outside this node's OnDraw callback or off its owner thread.
+**System.InvalidOperationException:** Called outside this item's recording scope or off its owner thread.
 
 **System.ObjectDisposedException:** The node is disposed.
 
 <a id="m-electron2d-canvasitem-drawrect-electron2d-rect-electron2d-color-system-boolean-system-single-system-boolean"></a>
 ### `public void DrawRect(Rect rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)`
 
-Records a filled rectangle or a centered rectangular outline during OnDraw.
+Records a filled rectangle or a centered rectangular outline during canvas recording.
 
 **Parameter `rect`:** A finite local rectangle; negative dimensions are normalized.
 
@@ -301,14 +310,14 @@ Records a filled rectangle or a centered rectangular outline during OnDraw.
 
 **System.ArgumentException:** Geometry, color or width is not finite.
 
-**System.InvalidOperationException:** Called outside this node's OnDraw callback or off its owner thread.
+**System.InvalidOperationException:** Called outside this item's recording scope or off its owner thread.
 
 **System.ObjectDisposedException:** The node is disposed.
 
 <a id="m-electron2d-canvasitem-drawsettransform-electron2d-vector2-system-single-system-nullable-electron2d-vector2"></a>
 ### `public void DrawSetTransform(Vector2 position, float rotation = 0f, Vector2? scale = null)`
 
-Sets an additional transform for subsequent commands in this OnDraw callback.
+Sets an additional transform for subsequent commands in this canvas recording.
 
 **Parameter `position`:** Translation in local units.
 
@@ -318,27 +327,27 @@ Sets an additional transform for subsequent commands in this OnDraw callback.
 
 **System.ArgumentException:** The transform is not finite.
 
-**System.InvalidOperationException:** Called outside this node's OnDraw callback or off its owner thread.
+**System.InvalidOperationException:** Called outside this item's recording scope or off its owner thread.
 
 **System.ObjectDisposedException:** The node is disposed.
 
 <a id="m-electron2d-canvasitem-drawsettransformmatrix-electron2d-transform"></a>
 ### `public void DrawSetTransformMatrix(Transform transform)`
 
-Sets the full additional transform for subsequent commands in this OnDraw callback.
+Sets the full additional transform for subsequent commands in this canvas recording.
 
 **Parameter `transform`:** The finite local drawing transform.
 
 **System.ArgumentException:** The transform is not finite.
 
-**System.InvalidOperationException:** Called outside this node's OnDraw callback or off its owner thread.
+**System.InvalidOperationException:** Called outside this item's recording scope or off its owner thread.
 
 **System.ObjectDisposedException:** The node is disposed.
 
 <a id="m-electron2d-canvasitem-drawtexture-electron2d-texture-electron2d-vector2-system-nullable-electron2d-color"></a>
 ### `public void DrawTexture(Texture texture, Vector2 position, Color? modulate = null)`
 
-Draws a borrowed texture at its logical size during this node's OnDraw callback.
+Draws a borrowed texture at its logical size during this item's canvas recording.
 
 **Parameter `texture`:** The live texture; its virtual Draw implementation supplies the command.
 
@@ -350,14 +359,14 @@ Draws a borrowed texture at its logical size during this node's OnDraw callback.
 
 **System.ArgumentException:** Position or modulation is not finite.
 
-**System.InvalidOperationException:** Called outside OnDraw or off the owner thread.
+**System.InvalidOperationException:** Called outside the recording scope or off the owner thread.
 
 **System.ObjectDisposedException:** The node or texture is disposed.
 
 <a id="m-electron2d-canvasitem-drawtexturerect-electron2d-texture-electron2d-rect-system-boolean-system-nullable-electron2d-color-system-boolean"></a>
 ### `public void DrawTextureRect(Texture texture, Rect rect, bool tile, Color? modulate = null, bool transpose = false)`
 
-Stretches or repeats a borrowed texture over a local rectangle during OnDraw.
+Stretches or repeats a borrowed texture over a local rectangle during canvas recording.
 
 **Parameter `texture`:** The live texture; its virtual DrawRect implementation supplies the command.
 
@@ -373,14 +382,14 @@ Stretches or repeats a borrowed texture over a local rectangle during OnDraw.
 
 **System.ArgumentException:** Geometry or modulation is not finite.
 
-**System.InvalidOperationException:** Called outside OnDraw or off the owner thread.
+**System.InvalidOperationException:** Called outside the recording scope or off the owner thread.
 
 **System.ObjectDisposedException:** The node or texture is disposed.
 
 <a id="m-electron2d-canvasitem-drawtexturerectregion-electron2d-texture-electron2d-rect-electron2d-rect-system-nullable-electron2d-color-system-boolean-system-boolean"></a>
 ### `public void DrawTextureRectRegion(Texture texture, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`
 
-Stretches a source region of a borrowed texture over a local rectangle during OnDraw.
+Stretches a source region of a borrowed texture over a local rectangle during canvas recording.
 
 **Parameter `texture`:** The live texture; its virtual DrawRectRegion implementation supplies the command.
 
@@ -398,7 +407,7 @@ Stretches a source region of a borrowed texture over a local rectangle during On
 
 **System.ArgumentException:** Geometry or modulation is not finite.
 
-**System.InvalidOperationException:** Called outside OnDraw or off the owner thread.
+**System.InvalidOperationException:** Called outside the recording scope or off the owner thread.
 
 **System.ObjectDisposedException:** The node or texture is disposed.
 
@@ -467,19 +476,19 @@ Delivers enabled transform notifications after a derived placement model changes
 
 Records this node's retained canvas commands before its first visible frame and after QueueRedraw.
 
-**Remarks:** Runs on the scene owner thread during rendering. Geometry, texture and drawing-transform calls are valid only here. The command list is cleared and the drawing transform reset to identity before entry.
+**Remarks:** Runs on the scene owner thread during rendering. The recording sequence is NotificationDraw, synchronous Draw handlers, then OnDraw. Geometry, texture and drawing-transform calls are valid in all three stages for this item. Commands and draw transform are reset before the notification. Failure aborts subsequent stages, clears partial commands and restores the dirty flag; the recording scope always closes.
 
 <a id="m-electron2d-canvasitem-onnotification-system-int32"></a>
 ### `protected override void OnNotification(int what)`
 
-Preserves inherited lifecycle dispatch and propagates transform/visibility changes at parent boundaries, collecting callback failures.
+Preserves inherited lifecycle dispatch, projects NotificationVisibilityChanged to its typed event and propagates transform changes at parent boundaries. Actual canvas attachment is owned by SceneTree membership, independently of manually dispatched tree notifications.
 
 <a id="m-electron2d-canvasitem-queueredraw"></a>
 ### `public void QueueRedraw()`
 
 Requests regeneration of this node's retained drawing commands before a later visible frame.
 
-**Remarks:** Requests coalesce. Hidden nodes retain the request until visible. A request inside OnDraw schedules the following frame; it does not re-enter drawing. Transforms, modulation and material changes need no redraw.
+**Remarks:** Detached calls do nothing. Requests coalesce. Hidden nodes retain the request until visible. A request during this item's active recording coalesces with that recording and does not schedule another redraw. Internal resource invalidations arriving during recording remain pending for the next frame. Transforms, modulation and material changes need no redraw.
 
 **System.InvalidOperationException:** An attached node is mutated off its owner thread or during scene capture.
 
@@ -497,6 +506,16 @@ Sets `CanvasItem.Visible` to `true`.
 **System.Exception:** A visibility notification or event handler throws after visibility changes.
 
 ## Event Descriptions
+
+<a id="e-electron2d-canvasitem-draw"></a>
+### `public event Action<CanvasItem>? Draw`
+
+Synchronous owner-thread event after NotificationDraw and before OnDraw. The argument is the recording item. Handlers may issue its drawing commands; deferred handlers run outside that scope. Failure aborts recording, clears partial commands and closes the scope before propagating through the host's cleanup.
+
+<a id="e-electron2d-canvasitem-hidden"></a>
+### `public event Action<CanvasItem>? Hidden`
+
+Synchronous event after visibility notification/event delivery when this item becomes hidden in its tree. The argument is the affected item. Direct visible descendants participate, including TopLevel items; locally hidden branches stop propagation. Local changes below a hidden parent and tree exit do not emit Hidden. Callback failures are reported after remaining affected children are attempted.
 
 <a id="e-electron2d-canvasitem-localtransformchanged"></a>
 ### `public event Action<CanvasItem>? LocalTransformChanged`
@@ -517,7 +536,7 @@ Occurs when this node's global transform is affected by a local or ancestor chan
 
 Occurs after local or inherited logical visibility is propagated to this node.
 
-**Remarks:** Delivery follows `CanvasItem.NotificationVisibilityChanged` and continues through descendants.
+**Remarks:** The base handler for `CanvasItem.NotificationVisibilityChanged` raises this event, including manual notifications. Actual effective visibility changes propagate through locally visible direct canvas descendants, and visible tree entry also notifies this item. Hiding by tree exit does not raise this event.
 
 ## Constant Descriptions
 
@@ -546,17 +565,34 @@ Identifies a global-transform change notification when global notification deliv
 
 Identifies the notification propagated after local or inherited visibility changes.
 
+<a id="f-electron2d-canvasitem-notificationdraw"></a>
+### `public const int NotificationDraw = 30`
+
+Delivered before Draw and OnDraw while recording commands.
+
+<a id="f-electron2d-canvasitem-notificationentercanvas"></a>
+### `public const int NotificationEnterCanvas = 32`
+
+Delivered on canvas attachment, parent-first during tree entry.
+
+<a id="f-electron2d-canvasitem-notificationexitcanvas"></a>
+### `public const int NotificationExitCanvas = 33`
+
+Delivered on canvas detachment, child-first during tree exit; ordinary C# override/base dispatch applies.
+
 ## Ownership, errors and dependencies
 
 The parent owns its children; SceneTree owns the active root. PackedScene capture uses explicit stored descriptors and static exact-type factories. Scene-local resources belong to the instantiated root; externally supplied textures/materials are borrowed. Mutations honor scene capture, lifetime and owner-thread guards. Callback failures are reported after the documented committed state; cleanup attempts every owned stage. See [Node](Node.md) for inherited lifecycle and [the scene hierarchy component](../components/scene-hierarchy.md) for cross-layer flow.
 
-Drawing commands are valid only during OnDraw and retain borrowed resources. QueueRedraw coalesces requests; resource-thread notifications only set an atomic flag, and recording runs on the owner thread. Global transform notifications stop at neutral and TopLevel children. Failed transform/visibility delivery does not skip later direct canvas siblings.
+Drawing commands retain borrowed resources and are valid during NotificationDraw, synchronous Draw handlers and OnDraw. Deferred handlers execute outside the recording scope and cannot draw. QueueRedraw coalesces requests; resource-thread notifications only set an atomic flag, and recording runs on the owner thread. Global transform notifications stop at neutral and TopLevel children. Failed transform/visibility delivery does not skip later direct canvas siblings.
 
 ## Verification and limits
 
 [SceneHierarchyTests](../../tests/Electron2D.Tests/SceneHierarchyTests.cs) verifies inheritance, neutral API boundaries, direct custom CanvasItem transforms, mixed parenting, notifications, timer/tween scheduling, packed factories/state, deletion and failure continuation. Existing [runtime checks](../../tests/Electron2D.Tests/Program.cs) retain lifecycle, input, math and ownership coverage. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) verifies mixed-tree pixels and a direct CanvasItem drawing texture through both GPU and compatibility backends on Linux Wayland. This does not establish visual owner acceptance or other platforms.
 
 [CanvasOrderingTests](../../tests/Electron2D.Tests/CanvasOrderingTests.cs) verifies 31 framebuffer cases for behind-parent subtrees, effective Z, canvas-root order, local/nested Y groups, visibility and mutations from drawing callbacks on Wayland GPU/compatibility and dummy/software. Managed checks cover defaults, owner-thread guards and packed ordering flags; warmed rendering with nested Y groups allocates zero managed bytes in the measured interval.
+
+[CanvasLifecycleTests](../../tests/Electron2D.Tests/CanvasLifecycleTests.cs) verifies lifecycle/visibility/recording order, manual notifications, reattachment, callback failures and recording recovery. Six-frame pixel sequences on Linux Wayland GPU/compatibility and dummy/software verify all three drawing stages plus redraw on showing, reattachment and TopLevel rebinding. The complete renderer allocation check still passes.
 
 The hierarchy is implemented; complete reference API parity is not claimed. Missing GUI, canvas policies, rendering primitives, interpolation, scene-file authoring and other capabilities remain classified per member in [coverage](../coverage/index.md). No inert compatibility members are added.
 

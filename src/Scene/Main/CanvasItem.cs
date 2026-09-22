@@ -45,6 +45,12 @@ public abstract partial class CanvasItem : Node
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
+        if (what == NotificationVisibilityChanged)
+        {
+            base.OnNotification(what);
+            VisibilityChanged?.Invoke(this);
+            return;
+        }
         if (what is not (NotificationParented or NotificationUnparented))
         {
             base.OnNotification(what);
@@ -55,9 +61,43 @@ public abstract partial class CanvasItem : Node
         catch (Exception error) { CollectException(ref errors, error); }
         try { PropagateGlobalTransformChanged(); }
         catch (Exception error) { CollectException(ref errors, error); }
-        try { PropagateVisibilityChanged(); }
-        catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Canvas lifecycle callbacks failed.", errors);
+    }
+
+    private bool _inCanvas;
+    private bool _parentVisible;
+    private bool _rebindingCanvas;
+
+    internal override void OnTreeMembershipChanged(bool entering)
+    {
+        if (!entering)
+        {
+            try { ExitCanvas(); }
+            finally { _parentVisible = false; }
+            return;
+        }
+        _parentVisible = (Parent as CanvasItem)?.IsVisibleInTree ?? GetWindow()?.Visible ?? true;
+        List<Exception>? errors = null;
+        try { EnterCanvas(); }
+        catch (Exception error) { CollectException(ref errors, error); }
+        try { if (IsVisibleInTree) DispatchNotification(NotificationVisibilityChanged); }
+        catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Canvas entry callbacks failed.", errors);
+    }
+
+    private void EnterCanvas()
+    {
+        if (IsDisposed || _inCanvas || !IsInsideTree) return;
+        _inCanvas = true;
+        InvalidateCanvas();
+        DispatchNotification(NotificationEnterCanvas);
+    }
+
+    private void ExitCanvas()
+    {
+        if (!_inCanvas) return;
+        _inCanvas = false;
+        DispatchNotification(NotificationExitCanvas);
     }
 
     /// <inheritdoc />
@@ -73,7 +113,7 @@ public abstract partial class CanvasItem : Node
             if (disposing)
             {
                 _canvasCommands?.Clear(); _material = null;
-                VisibilityChanged = null; LocalTransformChanged = null; TransformChanged = null;
+                VisibilityChanged = null; Hidden = null; Draw = null; LocalTransformChanged = null; TransformChanged = null;
             }
         }
     }
@@ -93,6 +133,16 @@ public abstract partial class CanvasItem : Node
         new PropertyDescriptor<CanvasItem, bool>(nameof(ZAsRelative), node => node.ZAsRelative, (node, value) => node.ZAsRelative = value, _ => true, stored: true),
         new PropertyDescriptor<CanvasItem, bool>(nameof(TopLevel), node => node.TopLevel, (node, value) => node.TopLevel = value, _ => false, stored: true)
     ];
+
+    /// <summary>Identifies the drawing notification delivered before Draw and OnDraw.</summary>
+    public const int NotificationDraw = 30;
+
+    /// <summary>Identifies canvas attachment, delivered parent-first during tree entry and after TopLevel rebinding.</summary>
+    public const int NotificationEnterCanvas = 32;
+
+    /// <summary>Identifies canvas detachment, delivered child-first during tree exit and before TopLevel rebinding.</summary>
+    /// <remarks>Overrides use ordinary C# virtual/base dispatch; no automatic reverse inheritance dispatch is performed.</remarks>
+    public const int NotificationExitCanvas = 33;
 
     /// <summary>Identifies the notification propagated after local or inherited visibility changes.</summary>
     public const int NotificationVisibilityChanged = 31;
@@ -156,10 +206,12 @@ public abstract partial class CanvasItem : Node
     /// <value><see langword="false"/> by default.</value>
     /// <remarks>The local transform stays unchanged; global coordinates are recomputed against the new canvas boundary.
     /// This item becomes a separate canvas root, drawn after the preceding root's entire canvas subtree at the same Z.
-    /// Canvas roots retain scene order; Z still takes precedence. Logical visibility continues to follow direct canvas ancestors.</remarks>
-    /// <exception cref="InvalidOperationException">Mutation occurs off the owner thread or during packed-scene capture.</exception>
+    /// Canvas roots retain scene order; Z still takes precedence. Logical visibility continues to follow direct canvas ancestors.
+    /// Attached changes deliver NotificationExitCanvas before committing the mode and NotificationEnterCanvas afterward, scheduling redraw.
+    /// Callback failures are aggregated after the transition; recursive rebinding is rejected.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation occurs off the owner thread, during packed-scene capture, or recursively during canvas rebinding.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
-    /// <exception cref="Exception">A transform notification or event handler throws after the mode changes.</exception>
+    /// <exception cref="AggregateException">A canvas or transform callback fails; the mode transition still completes.</exception>
     public bool TopLevel
     {
         get
@@ -174,14 +226,27 @@ public abstract partial class CanvasItem : Node
             if (_topLevel == value)
                 return;
 
-            _topLevel = value;
-            PropagateGlobalTransformChanged();
+            if (_rebindingCanvas) throw new InvalidOperationException("Canvas rebinding cannot be re-entered.");
+            _rebindingCanvas = true;
+            List<Exception>? errors = null;
+            try
+            {
+                try { ExitCanvas(); }
+                catch (Exception error) { CollectException(ref errors, error); }
+                _topLevel = value;
+                try { EnterCanvas(); }
+                catch (Exception error) { CollectException(ref errors, error); }
+                try { if (!IsDisposed) PropagateGlobalTransformChanged(); }
+                catch (Exception error) { CollectException(ref errors, error); }
+            }
+            finally { _rebindingCanvas = false; }
+            ThrowCollected("Canvas rebinding callbacks failed.", errors);
         }
     }
 
     /// <summary>Gets or sets this node's local logical visibility.</summary>
     /// <value><see langword="true"/> by default.</value>
-    /// <remarks>An actual change synchronously propagates visibility notifications and events through direct canvas descendants.</remarks>
+    /// <remarks>An actual local change notifies this item. Effective tree-visibility changes propagate through locally visible direct canvas children, including TopLevel items. Showing schedules redraw; hiding raises Hidden after visibility delivery.</remarks>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">A visibility notification or event handler throws after visibility changes.</exception>
@@ -200,14 +265,15 @@ public abstract partial class CanvasItem : Node
                 return;
 
             _visible = value;
-            PropagateVisibilityChanged();
+            if (IsInsideTree && _parentVisible) ApplyVisibilityChange();
+            else DispatchNotification(NotificationVisibilityChanged);
         }
     }
 
     /// <summary>Gets whether this node is active and locally visible through its direct canvas ancestor chain.</summary>
     /// <value><see langword="true"/> only inside a tree when this node, its direct canvas ancestors and its window are visible.</value>
     /// <exception cref="ObjectDisposedException">This node or a queried ancestor is disposing on another thread, or has finished disposing.</exception>
-    public bool IsVisibleInTree => IsInsideTree && Visible && ((Parent as CanvasItem)?.IsVisibleInTree ?? GetWindow()?.Visible ?? true);
+    public bool IsVisibleInTree => IsInsideTree && Visible && _parentVisible;
 
     /// <summary>Gets or sets this node's local Z-order value.</summary>
     /// <value>An integer from <see cref="MinimumZIndex"/> through <see cref="MaximumZIndex"/>; the default is zero.</value>
@@ -294,8 +360,12 @@ public abstract partial class CanvasItem : Node
     }
 
     /// <summary>Occurs after local or inherited logical visibility is propagated to this node.</summary>
-    /// <remarks>Delivery follows <see cref="NotificationVisibilityChanged"/> and continues through descendants.</remarks>
+    /// <remarks>The base notification handler raises this event, including manual visibility notifications. Effective changes propagate through locally visible direct canvas descendants; visible tree entry also delivers it.</remarks>
     public event Action<CanvasItem>? VisibilityChanged;
+
+    /// <summary>Occurs after visibility delivery when this item becomes hidden in its tree.</summary>
+    /// <remarks>Explicit changes below a hidden parent and tree exit do not raise this event. Delivery is synchronous.</remarks>
+    public event Action<CanvasItem>? Hidden;
 
     /// <summary>Occurs after this node's local transform actually changes.</summary>
     /// <remarks>The event is always enabled; numeric local-transform notification delivery is separately configurable.</remarks>
@@ -346,16 +416,33 @@ public abstract partial class CanvasItem : Node
 
     internal void PropagateVisibilityChanged()
     {
+        if (IsDisposed || !IsInsideTree) return;
+        var parentVisible = (Parent as CanvasItem)?.IsVisibleInTree ?? GetWindow()?.Visible ?? true;
+        if (_parentVisible == parentVisible) return;
+        _parentVisible = parentVisible;
+        if (Visible) ApplyVisibilityChange();
+    }
+
+    private void ApplyVisibilityChange()
+    {
+        var visible = IsVisibleInTree;
         List<Exception>? errors = null;
         try { DispatchNotification(NotificationVisibilityChanged); }
         catch (Exception error) { CollectException(ref errors, error); }
-        try { VisibilityChanged?.Invoke(this); }
-        catch (Exception error) { CollectException(ref errors, error); }
-        foreach (var child in Children.ToArray())
+        if (!IsDisposed)
         {
-            if (child is not CanvasItem item || item.IsDisposed || !ReferenceEquals(item.Parent, this)) continue;
-            try { item.PropagateVisibilityChanged(); }
-            catch (Exception error) { CollectException(ref errors, error); }
+            if (IsVisibleInTree) InvalidateCanvas();
+            else if (!visible)
+            {
+                try { Hidden?.Invoke(this); }
+                catch (Exception error) { CollectException(ref errors, error); }
+            }
+            foreach (var child in Children.ToArray())
+            {
+                if (child is not CanvasItem item || item.IsDisposed || !ReferenceEquals(item.Parent, this)) continue;
+                try { item.PropagateVisibilityChanged(); }
+                catch (Exception error) { CollectException(ref errors, error); }
+            }
         }
         ThrowCollected("Canvas visibility callbacks failed.", errors);
     }

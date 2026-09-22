@@ -23,11 +23,13 @@ CanvasItem adds retained drawing and canvas state. A direct canvas parent contri
 
 Canvas roots follow scene order, each subtree before the next root. Effective Z takes precedence over behind-parent and nested local Y ordering. These canvas settings are stored by PackedScene and do not change process/input order. See [canvas rendering](canvas-rendering.md#canvas-ordering) for group boundaries.
 
+Canvas membership has explicit entry/exit notifications independent of manual tree notifications. Entry is parent-first; exit is child-first. TopLevel rebinds only that item. Visibility delivery skips locally hidden branches, Hidden follows effective hide transitions, and showing schedules redraw. The [canvas component](canvas-rendering.md#canvas-lifecycle) records ordering and failure behavior.
+
 CanvasItem.GetTransform is abstract. Entity implements it with an engine-owned Transform and adds the writable spatial properties. Direct CanvasItem subclasses can supply a different placement model; an Entity child consumes that parent's transform without requiring the parent to be a spatial Entity. Transform notifications stop at neutral and top-level children. Notification failures are collected while other direct canvas siblings are attempted.
 
 Entity.Reparent overrides the neutral operation. It validates a destination inverse before mutation when retaining global state, preserves structural lifecycle checks, then restores its local transform after attachment. A neutral reparent has no spatial state to preserve. GetRelativeTransformToParent separately multiplies local transforms along an uninterrupted spatial-node chain. Translate adds in parent space; MoveLocalX/Y move along the current local basis.
 
-RenderingServer traverses all Nodes and records only CanvasItems. OnDraw/QueueRedraw and rectangle/line/texture methods belong to CanvasItem; Texture draw methods accept that base. Retained resource notifications atomically schedule owner-thread recording. Commands borrow Texture and Material; renderer backends own native caches.
+RenderingServer traverses all Nodes and records only CanvasItems. NotificationDraw/Draw/OnDraw recording, QueueRedraw and rectangle/line/texture methods belong to CanvasItem; Texture draw methods accept that base. Retained resource notifications atomically schedule owner-thread recording. Commands borrow Texture and Material; renderer backends own native caches.
 
 PackedScene captures any Node root. Each inheritance layer contributes only its own stored descriptors. Neutral and spatial nodes have separate default factories; derived types still supply an explicit static exact-type factory. Reconstruction is detached, shared resources remain borrowed, and the root owns scene-local duplicates.
 

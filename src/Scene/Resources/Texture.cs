@@ -39,14 +39,14 @@ public abstract class Texture : Resource
     /// must return readable image data and notify Changed when that data changes.</remarks>
     public virtual Image? GetImage() { ThrowIfDisposed(); return null; }
 
-    /// <summary>Draws this texture at its logical size during the target node's OnDraw callback.</summary>
+    /// <summary>Draws this texture at its logical size during the target item's canvas recording.</summary>
     /// <param name="canvasItem">The node recording the command; it borrows this texture.</param>
     /// <param name="position">The finite local top-left position.</param>
     /// <param name="modulate">The finite color multiplier, or null for white.</param>
     /// <param name="transpose">Whether to exchange the texture axes and drawing dimensions.</param>
     /// <exception cref="ArgumentException">Geometry or modulation is not finite.</exception>
     /// <exception cref="ArgumentNullException">The target node is null.</exception>
-    /// <exception cref="InvalidOperationException">The target is not recording OnDraw on its owner thread.</exception>
+    /// <exception cref="InvalidOperationException">The target is not recording canvas commands on its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The texture or target node is disposed.</exception>
     public virtual void Draw(CanvasItem canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)
     {
@@ -54,7 +54,7 @@ public abstract class Texture : Resource
         canvasItem.RecordTexture(this, new Rect(position, Size), null, modulate ?? Colors.White, false, transpose, false);
     }
 
-    /// <summary>Stretches or tiles this texture over a local rectangle during OnDraw.</summary>
+    /// <summary>Stretches or tiles this texture over a local rectangle during canvas recording.</summary>
     /// <param name="canvasItem">The node recording the command; it borrows this texture.</param>
     /// <param name="rect">The finite destination. Negative dimensions flip the image without moving its origin.</param>
     /// <param name="tile">Whether to repeat at logical pixel size instead of stretching.</param>
@@ -64,7 +64,7 @@ public abstract class Texture : Resource
     /// without recording this command again. The node does not own or dispose this resource.</remarks>
     /// <exception cref="ArgumentException">Geometry or modulation is not finite.</exception>
     /// <exception cref="ArgumentNullException">The target node is null.</exception>
-    /// <exception cref="InvalidOperationException">The target is not recording OnDraw on its owner thread.</exception>
+    /// <exception cref="InvalidOperationException">The target is not recording canvas commands on its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The texture or target node is disposed.</exception>
     public virtual void DrawRect(CanvasItem canvasItem, Rect rect, bool tile, Color? modulate = null, bool transpose = false)
     {
@@ -72,7 +72,7 @@ public abstract class Texture : Resource
         canvasItem.RecordTexture(this, rect, null, modulate ?? Colors.White, tile, transpose, false);
     }
 
-    /// <summary>Stretches a source region over a local rectangle during OnDraw.</summary>
+    /// <summary>Stretches a source region over a local rectangle during canvas recording.</summary>
     /// <param name="canvasItem">The node recording the command; it borrows this texture.</param>
     /// <param name="rect">The finite destination. Negative dimensions flip without moving the origin.</param>
     /// <param name="sourceRect">The finite source in logical texture pixels. Negative dimensions toggle the corresponding flip.</param>
@@ -82,7 +82,7 @@ public abstract class Texture : Resource
     /// <remarks>Sampling outside the full texture clamps to its edges. Zero-area regions draw nothing.</remarks>
     /// <exception cref="ArgumentException">Geometry or modulation is not finite.</exception>
     /// <exception cref="ArgumentNullException">The target node is null.</exception>
-    /// <exception cref="InvalidOperationException">The target is not recording OnDraw on its owner thread.</exception>
+    /// <exception cref="InvalidOperationException">The target is not recording canvas commands on its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The texture or target node is disposed.</exception>
     public virtual void DrawRectRegion(CanvasItem canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
     {

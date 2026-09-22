@@ -24,6 +24,7 @@ internal static partial class RenderingRuntimeTests
                 settings.Set(ProjectSettings.RenderingMethod, backend);
                 VerifySceneHierarchy(backend);
                 VerifyCanvasOrdering(backend);
+                VerifyCanvasLifecycle(backend);
                 VerifyFrame(backend);
                 VerifyFrameAllocations(backend);
                 VerifyCanvasTexture(backend);
