@@ -112,6 +112,7 @@ Every completed implementation must end with one task-scoped atomic local commit
 - Do not create intermediate implementation commits. If verification or the post-implementation audit finds a defect, fix it before creating the single final commit.
 - Do not declare an implementation complete until that commit exists and the implementation's tracked working tree is clean. Report its hash and subject in the completion response.
 - Never amend, rebase, squash, rewrite, or push commits unless the user explicitly requests that operation.
+- After completing a task in a branch, merge that branch into local `main`, verify the result there, and delete the completed branch and its worktree. Do not report a branch-only result as finished.
 
 ## XML documentation is part of the public API
 
