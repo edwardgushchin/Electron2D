@@ -25,6 +25,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyFrame(backend);
                 VerifyFrameAllocations(backend);
                 VerifyCanvasTexture(backend);
+                VerifySprite(backend);
                 VerifyCanvasTextureFailures();
                 VerifyCanvasHDR(backend);
                 VerifyFailure(backend, "SwapHlsl");
@@ -38,6 +39,7 @@ internal static partial class RenderingRuntimeTests
                     VerifyCanvasTexture(backend, "CanvasHLSL");
                     VerifyCanvasTexture(backend, "CanvasGLSL");
                     VerifyCanvasUV();
+                    VerifySprite(backend, "CanvasGLSL");
                 }
                 VerifyTextureFailure(backend);
             }

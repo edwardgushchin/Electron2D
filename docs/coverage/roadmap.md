@@ -4,8 +4,8 @@ Last updated: 2026-09-22
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1682 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 1270 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [BitMap](classes/BitMap.md), [Curve](classes/Curve.md), [Curve2D](classes/Curve2D.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
+1. Review 1685 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+2. Complete 1301 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [AtlasTexture](classes/AtlasTexture.md), [BitMap](classes/BitMap.md), [Curve](classes/Curve.md), [Curve2D](classes/Curve2D.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [SpriteFrames](classes/SpriteFrames.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
 3. Implement the remaining domains in dependency order: SDL3 GPU 2D rendering with the accepted SDL_Renderer fallback; GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable fallback slice must audit each of the five blocked GL/EGL/GLX `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -65,6 +65,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [ShaderMaterial](classes/ShaderMaterial.md) | 0 | 3 |
 | [InputEventJoypadMotion](classes/InputEventJoypadMotion.md) | 0 | 2 |
 | [SceneTreeTimer](classes/SceneTreeTimer.md) | 0 | 2 |
+| [Sprite2D](classes/Sprite2D.md) | 0 | 2 |
 | [AwaitTweener](classes/AwaitTweener.md) | 0 | 1 |
 | [CallbackTweener](classes/CallbackTweener.md) | 0 | 1 |
 | [InputEventFromWindow](classes/InputEventFromWindow.md) | 0 | 1 |
@@ -77,8 +78,8 @@ These classes already have an Electron2D type. Sort by missing member count, the
 
 | Exact trigger | Classes |
 | --- | ---: |
-| Rendering2D: trigger is the first SDL3 GPU 2D rendering slice (ADR 0028). | 151 |
-| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 146 |
+| Rendering2D: trigger is the first SDL3 GPU 2D rendering slice (ADR 0028). | 148 |
+| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 145 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 79 |
 | Audio: trigger is the first audio mixing and playback slice. | 56 |
 | Networking: trigger is the first networking and multiplayer slice. | 41 |
@@ -107,6 +108,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: first typed 2D navigation and pathfinding slice. | 1 |
 | Trigger: first typed multiplayer replication slice after scene persistence (ADR 0023). | 1 |
 | Trigger: first typed rich-text effect slice after 2D GUI and text rendering (ADR 0028). | 1 |
+| Trigger: the first SpriteFrames and animated-sprite vertical slice must implement the absent animation resource plus timed playback, frame progress, loop/ping-pong transitions and events using existing SceneTree processing and canvas. Static Sprite rendering is available but does not supply animation playback (ADRs 0008/0028). | 1 |
 | Separate product-scope decision for each of 2 currently unassigned families; see their catalog pages for exact names. | 2 |
 
 Each [catalog entry](catalog.md) opens the complete member table. Excluded rows have an accepted product reason and no implementation task.

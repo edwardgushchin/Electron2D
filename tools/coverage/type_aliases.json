@@ -10,7 +10,8 @@
     "Vector2i": "Vector2I",
     "Vector4i": "Vector4I",
     "MethodTweener": "MethodTweener<TValue>",
-    "PropertyTweener": "PropertyTweener<TValue>"
+    "PropertyTweener": "PropertyTweener<TValue>",
+    "Sprite2D": "Sprite"
   },
   "enums": {
     "@GlobalScope.ClockDirection": "ClockDirection",

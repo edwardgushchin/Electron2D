@@ -4,7 +4,7 @@ Last updated: 2026-09-22
 
 This is the exhaustive inventory of implemented Electron2D engine domains, components, and production types. Test-only helpers are not engine types.
 
-Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and Wayland, Android, and iOS; its editor targets Windows, macOS, and Linux on X11 and Wayland under ADR 0021. All currently implemented production rows in this inventory are runtime types belonging to `Electron2D.dll`. Accepted external runtime dependencies may ship as separate assemblies under ADR 0012. The future first-party editor is a separate executable consumer under ADR 0027 and has no implemented production rows yet.
+Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and Wayland, Android, iOS, and Web; its editor targets Windows, macOS, and Linux on X11 and Wayland under ADR 0021. All currently implemented production rows in this inventory are runtime types belonging to `Electron2D.dll`. Approved managed SDL3-CS bindings are internal source in that assembly under ADR 0012; native libraries remain platform deployment files. The future first-party editor is a separate executable consumer under ADR 0027 and has no implemented production rows yet.
 
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
@@ -69,6 +69,7 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | [Core](domains/core.md) | [Geometry values](components/geometry-values.md) | [`RectI`](classes/RectI.md) | [`RectI.cs`](../src/Core/Math/RectI.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Geometry values](components/geometry-values.md) | [`Transform`](classes/Transform.md) | [`Transform.cs`](../src/Core/Math/Transform.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Geometry values](components/geometry-values.md) | [`Side`](classes/Side.md) | [`Side.cs`](../src/Core/Math/Side.cs) | Current | Implemented and verified |
+| [Scene](domains/scene.md) | [Canvas rendering](components/canvas-rendering.md) | [`Sprite`](classes/Sprite.md) | [`Sprite.cs`](../src/Scene/2D/Sprite.cs) | Current | Texture frames/regions, bounds/opacity, events and packed state; wider inherited canvas policies incomplete |
 | [Scene](domains/scene.md) | [Window runtime](components/window-runtime.md) | [`Window`](classes/Window.md) | [`Window.cs`](../src/Scene/Main/Window.cs) | Current | Root native window, mode/policies and platform events; renderer and multiwindow remain incomplete |
 | [Scene](domains/scene.md) | [Window runtime](components/window-runtime.md) | [`Window.ModeEnum`](classes/Window.ModeEnum.md) | [`Window.Native.cs`](../src/Scene/Main/Window.Native.cs) | Current | Five presentation IDs; Wayland exclusive maps to compositor fullscreen |
 | [Scene](domains/scene.md) | [Window runtime](components/window-runtime.md) | [`Window.Flags`](classes/Window.Flags.md) | [`Window.Native.cs`](../src/Scene/Main/Window.Native.cs) | Current | Individual policy IDs; four executable policies with platform restrictions |

@@ -21,7 +21,7 @@ Hierarchy operations maintain one parent, ordered unique-name children, path add
 
 The [Packed scenes](packed-scenes.md) component is the reuse boundary for Node hierarchies. It freezes a source hierarchy during capture, stores explicitly enabled properties and persistent groups, reconstructs independent detached instances through a static factory hook, and transfers per-instance resource ownership to the new root. The packed hierarchy may be one reusable game object or a complete level; `SceneFilePath` records only an external packed-scene source on an instantiated root.
 
-OnDraw and the retained rectangle/line/texture API delegate to the [canvas rendering component](canvas-rendering.md), using typed Texture and Material resources. Commands are regenerated on QueueRedraw; transforms, modulation and texture updates reuse them.
+OnDraw and the retained rectangle/line/texture API delegate to the [canvas rendering component](canvas-rendering.md), using typed Texture and Material resources. Commands are regenerated on QueueRedraw; transforms, modulation and texture pixel updates reuse them. Sprite additionally rebuilds its geometry after texture size/content notifications. The internal redraw flag is consumed atomically before OnDraw, so worker notifications during recording request a later frame without running scene code on the worker. Public QueueRedraw keeps the normal scene-owner mutation guards.
 
 ## Dependencies
 

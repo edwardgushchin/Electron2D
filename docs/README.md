@@ -103,6 +103,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Class hierarchy: [InputEvent](classes/InputEvent.md), [InputEventFromWindow](classes/InputEventFromWindow.md), [InputEventWithModifiers](classes/InputEventWithModifiers.md), [InputEventAction](classes/InputEventAction.md), [InputEventKey](classes/InputEventKey.md), [InputEventMouse](classes/InputEventMouse.md), [InputEventMouseButton](classes/InputEventMouseButton.md), [InputEventMouseMotion](classes/InputEventMouseMotion.md), [InputEventJoypadButton](classes/InputEventJoypadButton.md), [InputEventJoypadMotion](classes/InputEventJoypadMotion.md), [InputEventScreenTouch](classes/InputEventScreenTouch.md), [InputEventScreenDrag](classes/InputEventScreenDrag.md), [InputEventGesture](classes/InputEventGesture.md), [InputEventMagnifyGesture](classes/InputEventMagnifyGesture.md), and [InputEventPanGesture](classes/InputEventPanGesture.md)
 - Input enums: [Key](classes/Key.md), [KeyModifierMask](classes/KeyModifierMask.md), [KeyLocation](classes/KeyLocation.md), [MouseButton](classes/MouseButton.md), [MouseButtonMask](classes/MouseButtonMask.md), [JoyAxis](classes/JoyAxis.md), and [JoyButton](classes/JoyButton.md)
 - Class: [Node](classes/Node.md)
+- Class: [Sprite](classes/Sprite.md)
 - Enum: [NodeProcessMode](classes/NodeProcessMode.md)
 - Class: [SceneTree](classes/SceneTree.md)
 - Class: [Timer](classes/Timer.md)

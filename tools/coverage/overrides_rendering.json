@@ -244,6 +244,11 @@
       "godot": "ShaderMaterial::method:get_shader_parameter(StringName:)",
       "electron2d": "method:Electron2D.ShaderMaterial.GetShaderParameterArray`1(System.String)",
       "reason": "Typed scalar/vector, copied fixed-array and borrowed Texture getters replace Variant. Names and type/shape are validated; scalar/array defaults are zero and an absent texture override returns null. Reflected Shader defaults resolve at draw time. Matrices, further uniform types, authored value defaults and complete material integration remain pending (ADRs 0001/0005/0028)."
+    },
+    {
+      "godot": "Sprite2D::method:get_rect()",
+      "electron2d": "method:Electron2D.Sprite.GetRect()",
+      "reason": "Local inspection bounds remain a method; Sprite maps onto the unified Node under ADR 0004. Pixel snapping is still a documented dependency."
     }
   ],
   "statusGroups": [
@@ -506,6 +511,119 @@
         "Shader::method:inspect_native_shader_code()",
         "Material::method:inspect_native_shader_code()"
       ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Sprite projects Sprite2D onto the unified Node under ADR 0004. Texture/frame/region rendering, typed events, bounds, opacity and PackedScene state are executable in SpriteTests and SpriteRenderingTests on Linux Wayland GPU/compatibility. Inherited sampler repeat/filter, viewport snapping, editor and accessibility integration remain incomplete; platform evidence follows ADR 0021.",
+      "godot": [
+        "class:Sprite2D"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "SpriteTests and SpriteRenderingTests verify defaults, local geometry, sheet indexing, regions/flips, retained redraw, resource ownership and notifications, owner-thread guards, callback failures and PackedScene reconstruction. Positive grids must fit Int32.MaxValue; invalid arguments throw before mutation. Grid resizing preserves valid coordinates or silently resets Frame; only explicit Frame/FrameCoords changes emit FrameChanged. Texture reference changes emit TextureChanged; resource content changes only request redraw. Typed events/properties and the unified 2D name follow ADRs 0004/0005/0008. Native pixel verification covers Wayland GPU/compatibility; wider inherited canvas policies are recorded separately.",
+      "godot": [
+        "Sprite2D::property:centered",
+        "Sprite2D::property:flip_h",
+        "Sprite2D::property:flip_v",
+        "Sprite2D::property:frame",
+        "Sprite2D::property:frame_coords",
+        "Sprite2D::property:hframes",
+        "Sprite2D::property:offset",
+        "Sprite2D::property:region_enabled",
+        "Sprite2D::property:region_filter_clip_enabled",
+        "Sprite2D::property:region_rect",
+        "Sprite2D::property:texture",
+        "Sprite2D::property:vframes",
+        "Sprite2D::signal:frame_changed()",
+        "Sprite2D::signal:texture_changed()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "GetRect verifies signed dimensions, two-stage integer truncation, centering/offset and the empty one-by-one fallback in SpriteTests. Finite derived geometry is enforced. Trigger: the first viewport pixel-snapping policy slice must apply its offset adjustment here; this inherited behavior is not available yet (ADR 0028).",
+      "godot": [
+        "Sprite2D::method:get_rect()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "IsPixelOpaque verifies fractional half-open bounds, source alpha, sheet/region selection, custom Texture dispatch and clamp sampling. Finite input and live nonnegative texture dimensions are required. Signed regions deliberately follow the existing source/destination flip combination in Texture drawing rather than the reference opacity discrepancy. Trigger: the first shared canvas repeat/mirrored-repeat policy slice must apply wrapping here alongside rendering (ADR 0028).",
+      "godot": [
+        "Sprite2D::method:is_pixel_opaque(Vector2:)"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "Texture virtual drawing and the canvas consumer now exist. Next complete AtlasTexture slice must implement atlas ownership/change propagation, region and transparent margins, clipping, image/opacity queries and Resource duplication; no GUI prerequisite is required (ADRs 0013/0028).",
+      "godot": [
+        "class:AtlasTexture",
+        "AtlasTexture::property:atlas",
+        "AtlasTexture::property:filter_clip",
+        "AtlasTexture::property:margin",
+        "AtlasTexture::property:region",
+        "AtlasTexture::property:resource_local_to_scene"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "Texture resources and scene processing now exist. Next SpriteFrames/animated-sprite slice must supply named animations, frame durations, loop modes, events and duplicate/scene-local resource behavior before timed playback (ADRs 0008/0013/0028).",
+      "godot": [
+        "class:SpriteFrames",
+        "SpriteFrames::enum:LoopMode",
+        "SpriteFrames::enum_value:LoopMode.LOOP_LINEAR",
+        "SpriteFrames::enum_value:LoopMode.LOOP_NONE",
+        "SpriteFrames::enum_value:LoopMode.LOOP_PINGPONG",
+        "SpriteFrames::method:add_animation(StringName:)",
+        "SpriteFrames::method:add_frame(StringName:,Texture2D:,float:,int:)",
+        "SpriteFrames::method:clear(StringName:)",
+        "SpriteFrames::method:clear_all()",
+        "SpriteFrames::method:duplicate_animation(StringName:,StringName:)",
+        "SpriteFrames::method:get_animation_loop(StringName:)",
+        "SpriteFrames::method:get_animation_loop_mode(StringName:)",
+        "SpriteFrames::method:get_animation_names()",
+        "SpriteFrames::method:get_animation_speed(StringName:)",
+        "SpriteFrames::method:get_frame_count(StringName:)",
+        "SpriteFrames::method:get_frame_duration(StringName:,int:)",
+        "SpriteFrames::method:get_frame_texture(StringName:,int:)",
+        "SpriteFrames::method:has_animation(StringName:)",
+        "SpriteFrames::method:remove_animation(StringName:)",
+        "SpriteFrames::method:remove_frame(StringName:,int:)",
+        "SpriteFrames::method:rename_animation(StringName:,StringName:)",
+        "SpriteFrames::method:set_animation_loop(StringName:,bool:)",
+        "SpriteFrames::method:set_animation_loop_mode(StringName:,int:SpriteFrames.LoopMode)",
+        "SpriteFrames::method:set_animation_speed(StringName:,float:)",
+        "SpriteFrames::method:set_frame(StringName:,int:,Texture2D:,float:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: the first SpriteFrames and animated-sprite vertical slice must implement the absent animation resource plus timed playback, frame progress, loop/ping-pong transitions and events using existing SceneTree processing and canvas. Static Sprite rendering is available but does not supply animation playback (ADRs 0008/0028).",
+      "godot": [
+        "class:AnimatedSprite2D",
+        "AnimatedSprite2D::method:get_playing_speed()",
+        "AnimatedSprite2D::method:is_playing()",
+        "AnimatedSprite2D::method:pause()",
+        "AnimatedSprite2D::method:play(StringName:,float:,bool:)",
+        "AnimatedSprite2D::method:play_backwards(StringName:)",
+        "AnimatedSprite2D::method:set_frame_and_progress(int:,float:)",
+        "AnimatedSprite2D::method:stop()",
+        "AnimatedSprite2D::property:animation",
+        "AnimatedSprite2D::property:autoplay",
+        "AnimatedSprite2D::property:centered",
+        "AnimatedSprite2D::property:flip_h",
+        "AnimatedSprite2D::property:flip_v",
+        "AnimatedSprite2D::property:frame",
+        "AnimatedSprite2D::property:frame_progress",
+        "AnimatedSprite2D::property:offset",
+        "AnimatedSprite2D::property:speed_scale",
+        "AnimatedSprite2D::property:sprite_frames",
+        "AnimatedSprite2D::signal:animation_changed()",
+        "AnimatedSprite2D::signal:animation_finished()",
+        "AnimatedSprite2D::signal:animation_looped()",
+        "AnimatedSprite2D::signal:frame_changed()",
+        "AnimatedSprite2D::signal:sprite_frames_changed()"
+      ]
     }
   ],
   "extras": [
@@ -603,6 +721,31 @@
       "electron2d": "method:Electron2D.RenderingServer.ValidateDisposal()",
       "reason": "Protected implementation of owner-thread/lifetime validation for the Engine.Run-owned rendering service. Public disposal cannot interrupt an active host or render frame.",
       "adr": "ADRs 0003/0015/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Sprite..ctor()",
+      "reason": "Default construction of the existing image-drawing scene-node concept with a borrowed optional Texture; unified Node inheritance and the Sprite name are the strict 2D mapping.",
+      "adr": "ADR 0004"
+    },
+    {
+      "electron2d": "method:Electron2D.Sprite.OnDraw()",
+      "reason": "Protected implementation of the inherited canvas drawing callback; records the selected frame through the Texture virtual draw hook.",
+      "adr": "ADRs 0004/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.Sprite.GetPropertyDescriptors()",
+      "reason": "Protected implementation of typed property metadata/storage for the existing sprite properties. Frame grid dimensions restore before Frame; FrameCoords remains a nonstored alias.",
+      "adr": "ADRs 0005/0013"
+    },
+    {
+      "electron2d": "method:Electron2D.Sprite.CreateSceneInstanceFactory()",
+      "reason": "Protected implementation of existing PackedScene construction. A static exact-type factory creates detached Sprite instances without retaining the packed source.",
+      "adr": "ADRs 0011/0013"
+    },
+    {
+      "electron2d": "method:Electron2D.Sprite.Dispose(System.Boolean)",
+      "reason": "Protected managed lifetime hook disconnects the borrowed texture and clears typed events before inherited Node cleanup; ordinary borrowed resources are not disposed.",
+      "adr": "ADRs 0003/0006"
     }
   ]
 }

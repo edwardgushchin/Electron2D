@@ -4,7 +4,7 @@ Last updated: 2026-09-22
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
-**Inherited By:** [Timer](Timer.md), [Viewport](Viewport.md)
+**Inherited By:** [Sprite](Sprite.md), [Timer](Timer.md), [Viewport](Viewport.md)
 
 - **Source:** [`src/Scene/Main/Node.cs`](../../src/Scene/Main/Node.cs)
 - **Namespace:** `Electron2D`
@@ -1952,3 +1952,5 @@ There is no native system-event creation, GUI/viewport consumption, focus synchr
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0037: Typed SceneTree tween scheduling](../decisions/scene.md#adr-0037)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
+
+The [Sprite](Sprite.md) subclass supplies ordinary image/frame drawing. Internal resource invalidation uses an atomic pending-redraw flag so worker notifications only schedule owner-thread drawing; public QueueRedraw retains its scene mutation checks.

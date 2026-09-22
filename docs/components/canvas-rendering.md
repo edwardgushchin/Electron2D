@@ -4,7 +4,7 @@ Last updated: 2026-09-22
 
 ## Scope and owned types
 
-The component owns [RenderingServer](../classes/RenderingServer.md) and its internal GPU and compatibility backends. [Node](../classes/Node.md) records rectangle, line and texture commands; [Texture](../classes/Texture.md) and [shader materials](shader-materials.md) provide borrowed resources. Engine.Run owns the root Window and the renderer lifetime. This is an executable part of the rendering vertical slice, with broader API coverage still incomplete.
+The component owns [RenderingServer](../classes/RenderingServer.md) and its internal GPU and compatibility backends. [Node](../classes/Node.md) records rectangle, line and texture commands; [Sprite](../classes/Sprite.md) supplies the ready-to-use texture/frame/region node; [Texture](../classes/Texture.md) and [shader materials](shader-materials.md) provide borrowed resources. Engine.Run owns the root Window and the renderer lifetime. This is an executable part of the rendering vertical slice, with broader API coverage still incomplete.
 
 ## Runtime flow
 
@@ -21,6 +21,8 @@ Filled rectangles, centered outlines and flat-cap lines support local widths, on
 Texture drawing stretches, repeats or selects a source region. Negative destination sizes flip without relocating the origin; negative source sizes toggle the corresponding flip. Transpose exchanges UV axes and destination dimensions. Nearest sampling is fixed in this integration. Source clipping clamps half-texel borders while preserving interior interpolation. Texture size overrides affect coordinates at command recording; later pixel replacement changes the sampled image without rewriting geometry.
 
 GPU consumes vertex position/color/UV and the imported fragment interface. Built-in TEXTURE is supplied per command, using white for untextured geometry. Compatibility rejects arbitrary shaders, uploads the base mip level and checks unsupported high-precision formats and repeat capabilities. The software driver receives textured triangles separately because SDL 3.4.16's rectangle shortcut loses transposed and constant UVs; native vendored code remains unchanged.
+
+Sprite borrows its texture, records through the texture's virtual region draw method and rebuilds on frame, region, layout or texture changes. Its resource notification callback only marks an atomic redraw request; it cannot run scene code on a worker. Node consumes that request atomically before OnDraw, retaining notifications that arrive during recording for the next frame.
 
 ## Ownership and limits
 
@@ -41,3 +43,7 @@ The self-contained linux-x64 test publish also passed the complete canvas textur
 The compatibility backend captures borrowed graphics identities immediately after creating its SDL renderer, checking the current context belongs to the owned window. On Linux EGL it validates the display/config against that context; on X11 GLX it resolves the exact framebuffer config and visual by native context config ID. DisplayServer exposes these through WindowGetNativeHandle while the renderer lives. Queries use the captured identities without changing current context or graphics state. GPU/software expose no GL identity. Tests in RenderingNativeHandleTests verify native identities, foreign context/config isolation, pixel readback, cleanup and reopen on Wayland EGL and XWayland GLX. Other platforms and X11/EGL creation remain unverified.
 
 The same graphics-handle checks pass in a self-contained linux-x64 test publish launched from `/tmp` with `LD_LIBRARY_PATH` unset and `PATH=/usr/bin:/bin`. The host GTK icon loader needs ordinary system utilities such as `bwrap`; an empty PATH aborted GTK before the handle checks. This is a desktop environment requirement, not a compiler or development-runtime dependency.
+
+[SpriteTests](../../tests/Electron2D.Tests/SpriteTests.cs) verifies the texture-backed scene node's properties, events, grid changes, opacity, PackedScene storage/ownership and atomic redraw from worker notifications. [SpriteRenderingTests](../../tests/Electron2D.Tests/SpriteRenderingTests.cs) passed twelve successive image/flip/frame/region/layout/update/replacement/visibility/clear frames on Linux Wayland GPU/Vulkan and compatibility, and dummy/software; GPU also passed with the imported GLSL material. This is native pixel verification, without separate visual owner acceptance.
+
+The self-contained linux-x64 publish also passed the Sprite managed checks and these complete rendering sequences from `/tmp`, with `LD_LIBRARY_PATH` unset and `PATH=/usr/bin:/bin`. No development shader compiler or `dotnet` host was used to run that package.

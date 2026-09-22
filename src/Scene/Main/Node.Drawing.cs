@@ -10,7 +10,7 @@ public partial class Node
         new PropertyDescriptor<Node, bool>(nameof(UseParentMaterial), n => n.UseParentMaterial, (n, v) => n.UseParentMaterial = v, _ => false, stored: true),
     ];
     private List<CanvasCommand>? _canvasCommands;
-    private bool _redrawPending = true;
+    private int _redrawPending = 1;
     private bool _drawing;
     private Transform _drawTransform = Transform.Identity;
     private Color _modulate = Colors.White;
@@ -66,7 +66,10 @@ public partial class Node
     /// the following frame; it does not re-enter drawing. Transforms, modulation and material changes need no redraw.</remarks>
     /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
-    public void QueueRedraw() { EnsureMutable(); _redrawPending = true; }
+    public void QueueRedraw() { EnsureMutable(); InvalidateCanvas(); }
+
+    // Resource change notifications may arrive from a loading thread; scene work stays on the owner thread.
+    internal void InvalidateCanvas() => Interlocked.Exchange(ref _redrawPending, 1);
 
     /// <summary>Records a filled rectangle or a centered rectangular outline during OnDraw.</summary>
     /// <param name="rect">A finite local rectangle; negative dimensions are normalized.</param>
@@ -204,8 +207,7 @@ public partial class Node
 
     internal void PrepareCanvas()
     {
-        if (!_redrawPending) return;
-        _redrawPending = false;
+        if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
         _canvasCommands?.Clear();
         _drawTransform = Transform.Identity;
         _drawing = true;

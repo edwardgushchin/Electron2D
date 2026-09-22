@@ -54,7 +54,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ArrayMesh](classes/ArrayMesh.md) | Mesh | Blocked | 23 |
 | [ArrayOccluder3D](classes/ArrayOccluder3D.md) | Occluder3D | Excluded | 3 |
 | [AspectRatioContainer](classes/AspectRatioContainer.md) | Container | Blocked | 13 |
-| [AtlasTexture](classes/AtlasTexture.md) | Texture2D | Blocked | 5 |
+| [AtlasTexture](classes/AtlasTexture.md) | Texture2D | Unimplemented | 5 |
 | [AudioBusLayout](classes/AudioBusLayout.md) | Resource | Blocked | 0 |
 | [AudioEffect](classes/AudioEffect.md) | Resource | Blocked | 1 |
 | [AudioEffectAmplify](classes/AudioEffectAmplify.md) | AudioEffect | Blocked | 2 |
@@ -811,10 +811,10 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SpringBoneCollisionPlane3D](classes/SpringBoneCollisionPlane3D.md) | SpringBoneCollision3D | Excluded | 0 |
 | [SpringBoneCollisionSphere3D](classes/SpringBoneCollisionSphere3D.md) | SpringBoneCollision3D | Excluded | 2 |
 | [SpringBoneSimulator3D](classes/SpringBoneSimulator3D.md) | SkeletonModifier3D | Excluded | 84 |
-| [Sprite2D](classes/Sprite2D.md) | Node2D | Blocked | 16 |
+| [Sprite2D](classes/Sprite2D.md) | Node2D | Partial | 16 |
 | [Sprite3D](classes/Sprite3D.md) | SpriteBase3D | Excluded | 9 |
 | [SpriteBase3D](classes/SpriteBase3D.md) | GeometryInstance3D | Excluded | 36 |
-| [SpriteFrames](classes/SpriteFrames.md) | Resource | Blocked | 24 |
+| [SpriteFrames](classes/SpriteFrames.md) | Resource | Unimplemented | 24 |
 | [StandardMaterial3D](classes/StandardMaterial3D.md) | BaseMaterial3D | Excluded | 0 |
 | [StaticBody2D](classes/StaticBody2D.md) | PhysicsBody2D | Blocked | 3 |
 | [StaticBody3D](classes/StaticBody3D.md) | PhysicsBody3D | Excluded | 3 |

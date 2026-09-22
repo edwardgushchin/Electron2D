@@ -91,6 +91,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDER") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPRITE") == "1")
+{
+    SpriteTests.Run();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW") == "1")
 {
     WindowRuntimeTests.Run();
@@ -104,6 +110,7 @@ VerifyEventConnections();
 VerifyTranslations();
 VerifyMathf();
 VerifyColors();
+SpriteTests.Run();
 VerifyImages();
 VerifyVector2Values();
 VerifyVector2IValues();

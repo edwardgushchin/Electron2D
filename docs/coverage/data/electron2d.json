@@ -1354,6 +1354,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Sprite",
+    "kind": "type",
+    "declaringType": "Electron2D.Sprite",
+    "name": "Sprite",
+    "signature": "public class Electron2D.Sprite",
+    "visibility": "public",
+    "baseType": "Electron2D.Node",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SubtweenTweener",
     "kind": "type",
     "declaringType": "Electron2D.SubtweenTweener",
@@ -3598,6 +3613,19 @@
     "declaringType": "Electron2D.ShaderMaterial",
     "name": ".ctor",
     "signature": "public ShaderMaterial()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Sprite..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Sprite",
+    "name": ".ctor",
+    "signature": "public Sprite()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -11323,6 +11351,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.SceneTreeTimer\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Sprite.FrameChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Sprite",
+    "name": "FrameChanged",
+    "signature": "public event System.Action FrameChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Sprite.TextureChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Sprite",
+    "name": "TextureChanged",
+    "signature": "public event System.Action TextureChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
     "value": null
   },
   {
@@ -28703,6 +28757,96 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Sprite.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.Sprite",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Sprite.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Sprite",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Sprite.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Sprite",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Sprite.GetRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.Sprite",
+    "name": "GetRect",
+    "signature": "public Electron2D.Rect GetRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Sprite.IsPixelOpaque(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Sprite",
+    "name": "IsPixelOpaque",
+    "signature": "public System.Boolean IsPixelOpaque(Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Sprite.OnDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.Sprite",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SubtweenTweener.SetDelay(System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.SubtweenTweener",
@@ -40462,6 +40606,162 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Shader",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Sprite.Centered()",
+    "kind": "property",
+    "declaringType": "Electron2D.Sprite",
+    "name": "Centered",
+    "signature": "public System.Boolean Centered { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Sprite.FlipH()",
+    "kind": "property",
+    "declaringType": "Electron2D.Sprite",
+    "name": "FlipH",
+    "signature": "public System.Boolean FlipH { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Sprite.FlipV()",
+    "kind": "property",
+    "declaringType": "Electron2D.Sprite",
+    "name": "FlipV",
+    "signature": "public System.Boolean FlipV { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Sprite.Frame()",
+    "kind": "property",
+    "declaringType": "Electron2D.Sprite",
+    "name": "Frame",
+    "signature": "public System.Int32 Frame { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Sprite.FrameCoords()",
+    "kind": "property",
+    "declaringType": "Electron2D.Sprite",
+    "name": "FrameCoords",
+    "signature": "public Electron2D.Vector2I FrameCoords { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Sprite.HFrames()",
+    "kind": "property",
+    "declaringType": "Electron2D.Sprite",
+    "name": "HFrames",
+    "signature": "public System.Int32 HFrames { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Sprite.Offset()",
+    "kind": "property",
+    "declaringType": "Electron2D.Sprite",
+    "name": "Offset",
+    "signature": "public Electron2D.Vector2 Offset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Sprite.RegionEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Sprite",
+    "name": "RegionEnabled",
+    "signature": "public System.Boolean RegionEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Sprite.RegionFilterClipEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Sprite",
+    "name": "RegionFilterClipEnabled",
+    "signature": "public System.Boolean RegionFilterClipEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Sprite.RegionRect()",
+    "kind": "property",
+    "declaringType": "Electron2D.Sprite",
+    "name": "RegionRect",
+    "signature": "public Electron2D.Rect RegionRect { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Sprite.Texture()",
+    "kind": "property",
+    "declaringType": "Electron2D.Sprite",
+    "name": "Texture",
+    "signature": "public Electron2D.Texture Texture { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Sprite.VFrames()",
+    "kind": "property",
+    "declaringType": "Electron2D.Sprite",
+    "name": "VFrames",
+    "signature": "public System.Int32 VFrames { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
