@@ -6,7 +6,7 @@ Last updated: 2026-09-23
 
 **Inherited By:** No production type yet. The accepted GUI branch will place BaseButton and Button here.
 
-- **Source:** [Control.cs](../../src/Scene/GUI/Control.cs), [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs)
+- **Source:** [Control.cs](../../src/Scene/GUI/Control.cs), [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs), [Control.Focus.cs](../../src/Scene/GUI/Control.Focus.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public class Control : CanvasItem`
 
@@ -14,7 +14,7 @@ Last updated: 2026-09-23
 
 Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the scene tree and canvas rendering API. A direct Control parent supplies the area for anchors; a root Control uses its viewport's visible size. A direct non-Control canvas parent supplies a zero-size anchor area in this slice. Detached controls also use a zero-size anchor area. Offsets are local canvas units; anchors are fractions of the parent area. Changes to the parent rectangle or viewport size reflow an attached control synchronously. Pivot, rotation and scale change the canvas transform without changing its layout rectangle. Control itself emits no drawing commands.
 
-The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Full GUI behavior remains partial: content clipping, stationary-pointer geometry changes, keyboard focus navigation, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, container sizing, layout direction, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
+The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: content clipping, stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, container sizing, layout direction, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
 
 ## Example
 
@@ -55,7 +55,9 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public ControlMouseFilter MouseFilter { get; set; }` | Stop by default; Pass bubbles; Ignore does not receive or block pointer events. |
 | `public CursorShape MouseDefaultCursorShape { get; set; }` | Arrow by default; a hovered control refreshes the native cursor after a change. |
 | `public bool MouseForcePassScrollEvents { get; set; }` | True by default; permits wheel bubbling through Stop. |
-| `public ControlFocusMode FocusMode { get; set; }` | None by default; Click permits pointer or explicit focus. Keyboard navigation and All mode remain absent. |
+| `public ControlFocusMode FocusMode { get; set; }` | None by default; Click permits pointer or explicit focus; All also permits action navigation. |
+| `public string FocusNext { get; set; }` / `FocusPrevious` | Relative paths for forward and backward focus traversal; empty by default. |
+| `public string FocusNeighborLeft { get; set; }` / `FocusNeighborTop` / `FocusNeighborRight` / `FocusNeighborBottom` | Relative paths for directional navigation; empty by default. |
 
 ## Methods and extension points
 
@@ -75,6 +77,9 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public void GrabFocus(bool hideFocus = false)` | Requests focus while attached and visible. |
 | `public bool HasFocus(bool ignoreHiddenFocus = false)` | Queries whether this is the current focused control. |
 | `public void ReleaseFocus()` | Releases focus if held. |
+| `public string GetFocusNeighbor(Side side)` / `void SetFocusNeighbor(Side side, string neighbor)` | Reads or writes a directional focus path. |
+| `public Control? FindNextValidFocus()` / `FindPrevValidFocus()` | Finds the next eligible Control in viewport traversal order, with wrapping. |
+| `public Control? FindValidFocusNeighbor(Side side)` | Finds an eligible Control through an explicit path chain or spatial search. |
 | `public CursorShape GetCursorShape(Vector2 atPosition = default)` | Queries the typed cursor override with control-local coordinates. |
 | `protected virtual CursorShape OnGetCursorShape(Vector2 atPosition)` | Returns MouseDefaultCursorShape unless overridden. |
 | `protected virtual bool HasPoint(Vector2 point)` | Tests a local point against the half-open rectangle; override for a custom hit shape. |
@@ -145,7 +150,19 @@ Root-viewport pointer motion updates the hover chain even if a Node handled the 
 
 ### `FocusMode`, `GrabFocus`, `HasFocus`, `ReleaseFocus`
 
-`FocusMode` defaults to None, rejects unsupported enum values, and releases active focus when set back to None. Click permits focus by left pointer press or explicit `GrabFocus`; `hideFocus` records hidden visual focus, reported as absent by `HasFocus(ignoreHiddenFocus: true)`. `GrabFocus` requires an attached control and has no effect while hidden, in None mode or outside a root Viewport. `ReleaseFocus` does nothing when this control is not focused. Hiding or detaching the control releases focus. A focus transfer commits before the previous control's NotificationFocusExit and FocusExited; the root Viewport then raises GUIFocusChanged, followed by the new control's NotificationFocusEnter and FocusEntered. Explicit release sends only the exit notification and event. Changing `hideFocus` on the current owner redraws it without another notification. Focus changes request redraw. Callback failures are collected while later focus callbacks continue, then propagate as AggregateException; focus state remains committed. Reentrant release suppresses a pending enter notification or event after focus is cleared.
+`FocusMode` defaults to None, rejects unsupported enum values, and releases active focus when set back to None. Click permits focus by left pointer press or explicit `GrabFocus`; All additionally permits automatic action navigation. `hideFocus` records hidden visual focus, reported as absent by `HasFocus(ignoreHiddenFocus: true)`. `GrabFocus` requires an attached control and has no effect while hidden, in None mode or outside a root Viewport. `ReleaseFocus` does nothing when this control is not focused. Hiding or detaching the control releases focus. A focus transfer commits before the previous control's NotificationFocusExit and FocusExited; the root Viewport then raises GUIFocusChanged, followed by the new control's NotificationFocusEnter and FocusEntered. Explicit release sends only the exit notification and event. Changing `hideFocus` on the current owner redraws it without another notification. Focus changes request redraw. Callback failures are collected while later focus callbacks continue, then propagate as AggregateException; focus state remains committed. Reentrant release suppresses a pending enter notification or event after focus is cleared.
+
+### `FocusNext`, `FocusPrevious`, `FocusNeighborLeft`, `FocusNeighborTop`, `FocusNeighborRight`, `FocusNeighborBottom`
+
+Each path is an empty string by default, is relative to this Control, and is stored by PackedScene. A nonempty sequential path is consulted before automatic traversal; a missing or non-Control path returns no target. Directional paths can chain through ineligible Controls. Setters reject null; attached mutations require the scene owner thread.
+
+### `GetFocusNeighbor(Side side)`, `SetFocusNeighbor(Side side, string neighbor)`
+
+These access the same four directional paths as the properties. Invalid sides throw `ArgumentOutOfRangeException`; a null new path throws `ArgumentNullException`.
+
+### `FindNextValidFocus()`, `FindPrevValidFocus()`, `FindValidFocusNeighbor(Side side)`
+
+Queries return a borrowed Control or null when detached or no eligible target exists. Sequential automatic traversal wraps through visible `All` Controls in the root viewport. Directional automatic search compares global axis-aligned rectangles; explicit paths can select `Click` Controls. An invalid direction throws `ArgumentOutOfRangeException`. Exact upstream spatial ordering, scroll clipping and nested viewport ownership remain partial.
 
 ### `HasPoint`, `OnGUIInput`, `GUIInput`, `AcceptEvent`
 
@@ -173,7 +190,7 @@ Moves to a new direct parent. With the default option, it validates the destinat
 
 ### `OnNotification(int what)`, `GetPropertyDescriptors()`, `CreateSceneInstanceFactory()`, `Dispose(bool disposing)`
 
-OnNotification subscribes to the direct canvas parent's geometry or root viewport size at canvas entry, disconnects at exit, releases focus when hidden or detached, and emits Resized after NotificationResized. The focus notifications 43/44 pass through this protected hook before the corresponding event. GetPropertyDescriptors stores rectangle, transform, anchors, offsets, mouse filter, wheel policy and focus mode for PackedScene. The factory creates exact Control instances. Disposal removes borrowed event subscriptions and clears the control events.
+OnNotification subscribes to the direct canvas parent's geometry or root viewport size at canvas entry, disconnects at exit, releases focus when hidden or detached, and emits Resized after NotificationResized. The focus notifications 43/44 pass through this protected hook before the corresponding event. GetPropertyDescriptors stores rectangle, transform, anchors, offsets, mouse filter, wheel policy, focus mode and focus paths for PackedScene. The factory creates exact Control instances. Disposal removes borrowed event subscriptions and clears the control events.
 
 ### `Resized`, `NotificationResized`
 
@@ -187,12 +204,14 @@ When reflow changes position or size, the control commits both values, invalidat
 
 ## Verification and limits
 
-[ControlLayoutTests](../../tests/Electron2D.Tests/ControlLayoutTests.cs) check nested anchors, parent and viewport resize propagation, callback order, transform inheritance, packed anchors/offsets, pivot/global position, invalid arguments, owner thread and disposal. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) check root viewport GUI input order, local coordinates, filter/bubbling, wheel pass, focus notification and event order, explicit viewport release, failure continuation, pointer release capture and temporary event ownership. [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs) checks managed hover ordering, filters, notifications and cursor state; [ControlHoverNativeTests](../../tests/Electron2D.Tests/ControlHoverNativeTests.cs) checks native cursor precedence on Linux Wayland. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) includes a child Sprite pixel check in the native renderer. Full GUI interaction and reference parity remain unverified.
+[ControlLayoutTests](../../tests/Electron2D.Tests/ControlLayoutTests.cs) check nested anchors, parent and viewport resize propagation, callback order, transform inheritance, packed anchors/offsets, pivot/global position, invalid arguments, owner thread and disposal. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) check root viewport GUI input order, local coordinates, filter/bubbling, wheel pass, focus notification and event order, explicit viewport release, failure continuation, pointer release capture and temporary event ownership. [ControlFocusNavigationTests](../../tests/Electron2D.Tests/ControlFocusNavigationTests.cs) checks managed Tab/arrow routing, paths, wrapping, hidden targets and packed state. [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs) checks managed hover ordering, filters, notifications and cursor state; [ControlHoverNativeTests](../../tests/Electron2D.Tests/ControlHoverNativeTests.cs) checks native cursor precedence on Linux Wayland. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) includes a child Sprite pixel check in the native renderer. Full GUI interaction and reference parity remain unverified.
 
 ### GUI input behavior
 
-The top hit Control in a root viewport receives a temporary local pointer event. The root GUI picker orders by canvas layer, effective Z and reverse scene traversal; it does not yet match every renderer ordering rule. `Ignore` is skipped; `Pass` continues through direct Control parents until handled or a `Stop` control; `Stop` handles the event automatically. Wheel events pass a `Stop` control when `MouseForcePassScrollEvents` is true. A left-button press retains its target for the corresponding release and held-pointer motion. A left press focuses an eligible control, with hidden visual focus. Explicit `GrabFocus` takes focus without hiding it; hiding, detaching or setting `FocusMode` to None releases it. Keyboard, controller and action events reach the focused control without bubbling. `AcceptEvent` stops later GUI and unhandled stages. Failures are aggregated after other eligible scene callbacks run; positional GUI copies are disposed after synchronous delivery. Hover uses the same root picker. Clipping, multiple-button capture, navigation and nested viewport routes remain incomplete.
+The top hit Control in a root viewport receives a temporary local pointer event. The root GUI picker orders by canvas layer, effective Z and reverse scene traversal; it does not yet match every renderer ordering rule. `Ignore` is skipped; `Pass` continues through direct Control parents until handled or a `Stop` control; `Stop` handles the event automatically. Wheel events pass a `Stop` control when `MouseForcePassScrollEvents` is true. A left-button press retains its target for the corresponding release and held-pointer motion. A left press focuses an eligible control, with hidden visual focus. Explicit `GrabFocus` takes focus without hiding it; hiding, detaching or setting `FocusMode` to None releases it. Keyboard, controller and action events reach the focused control without bubbling. `AcceptEvent` stops later GUI and unhandled stages. Unhandled `ui_*` actions traverse focus after GUI delivery. Failures are aggregated after other eligible scene callbacks run; positional GUI copies are disposed after synchronous delivery. Hover uses the same root picker. Clipping, multiple-button capture and nested viewport routes remain incomplete.
 
-Targeted scene-hierarchy pixel checks passed on Linux Wayland compatibility/GPU and dummy/software. The full Wayland rendering runtime suite in this run passed, including the camera, canvas-layer and scene-hierarchy stages.
+`FocusNext` and `FocusPrevious` take precedence over automatic traversal; an invalid path returns null. Directional paths can chain through ineligible controls, with cycle protection, then fall back to spatial search. Automatic traversal accepts visible `All` controls in scene order within the root viewport; explicit paths may select visible `Click` controls. Arrow search uses global axis-aligned rectangles, not the full reference ranking or scroll clipping. Navigation happens after focused GUI callbacks if they leave the event unhandled. No native keyboard navigation has been verified for this slice.
+
+Targeted scene-hierarchy pixel checks passed on Linux Wayland compatibility/GPU and dummy/software in an earlier slice; they do not verify this navigation change.
 
 **Decisions:** [scene hierarchy](../decisions/scene.md#adr-0008), [typed 2D API](../decisions/product.md#adr-0004), [rendering](../decisions/rendering.md#adr-0028).

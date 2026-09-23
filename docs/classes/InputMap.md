@@ -1,6 +1,6 @@
 # InputMap
 
-Last updated: 2026-09-21
+Last updated: 2026-09-23
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -17,6 +17,8 @@ Last updated: 2026-09-21
 Owns the process-wide mapping from named game actions to typed input-event bindings.
 
 `InputMap` is the non-disposable process-wide registry of ordinal action names, finite deadzones, and ordered typed event bindings. Binding `Resource` references remain caller-owned and live; they must not be disposed or mutated concurrently with matching. Disposing a registered binding outside matching removes that reference from every affected action.
+
+The registry starts with `ui_focus_next` (Tab), `ui_focus_prev` (Shift+Tab), and `ui_left`, `ui_up`, `ui_right`, `ui_down` (arrow keys). Their bindings are ordinary live action events and can be changed or erased through the public API. The root viewport consumes these actions for GUI focus navigation when a focused control leaves the event unhandled.
 
 Collection operations are lock-serialized and return snapshots. Binding resources remain caller-owned and mutable;
 callers must not mutate or dispose a binding concurrently with matching. Action names use ordinal comparison.

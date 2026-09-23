@@ -83,7 +83,7 @@ internal static class ControlInputTests
         Check(order.Contains("parent") && borrowed!.IsDisposed, "A GUI callback failure does not skip parent delivery or leak local input.");
         child.Fail = false;
         Reject<ArgumentOutOfRangeException>(() => child.MouseFilter = (ControlMouseFilter)9);
-        Reject<ArgumentOutOfRangeException>(() => child.FocusMode = (ControlFocusMode)2);
+        Reject<ArgumentOutOfRangeException>(() => child.FocusMode = (ControlFocusMode)3);
         using var settings = new Control { MouseForcePassScrollEvents = false };
         var settingsChild = new Control { FocusMode = ControlFocusMode.Click };
         settings.AddChild(settingsChild);

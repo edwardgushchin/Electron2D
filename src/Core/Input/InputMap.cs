@@ -22,6 +22,22 @@ public sealed class InputMap : ElectronObject
 
     private InputMap()
     {
+        AddBuiltInKeyAction("ui_focus_next", Key.Tab);
+        AddBuiltInKeyAction("ui_focus_prev", Key.Tab, shift: true);
+        AddBuiltInKeyAction("ui_left", Key.Left);
+        AddBuiltInKeyAction("ui_up", Key.Up);
+        AddBuiltInKeyAction("ui_right", Key.Right);
+        AddBuiltInKeyAction("ui_down", Key.Down);
+    }
+
+    private void AddBuiltInKeyAction(string name, Key key, bool shift = false)
+    {
+        var definition = new ActionDefinition(DefaultDeadzone);
+        var binding = new InputEventKey { Keycode = key, ShiftPressed = shift };
+        definition.Events.Add(binding);
+        _actions.Add(name, definition);
+        _actionOrder.Add(name);
+        AttachBindingUnderLock(name, binding);
     }
 
     /// <summary>Gets the process-wide action map.</summary>

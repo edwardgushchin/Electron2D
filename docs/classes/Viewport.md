@@ -29,7 +29,7 @@ if (inputEvent.IsActionPressed("confirm"))
 
 This stops later scene input stages. It does not change Input polling state. `PushInput` retains caller ownership and accepts client coordinates by default, or viewport coordinates with `inLocalCoordinates: true`. Positional conversion creates a temporary event owned by dispatch.
 
-The root viewport owns keyboard focus for its controls. `GetGUIFocusOwner()` returns the current borrowed control; `ReleaseGUIFocus()` clears it. A new owner raises `GUIFocusChanged` before that control's focus notification and event.
+The root viewport owns keyboard focus for its controls. `GetGUIFocusOwner()` returns the current borrowed control; `ReleaseGUIFocus()` clears it. A new owner raises `GUIFocusChanged` before that control's focus notification and event. Unhandled Tab and directional actions can move focus to visible controls with `FocusMode.All` or an explicit path.
 
 ## Canvas transforms and pointer coordinates
 

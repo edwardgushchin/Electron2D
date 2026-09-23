@@ -134,6 +134,7 @@ SceneHierarchyTests.Run();
 RemoteTransformTests.Run();
 ControlLayoutTests.Run();
 ControlInputTests.Run();
+ControlFocusNavigationTests.Run();
 ControlHoverTests.Run();
 CanvasLifecycleTests.Run();
 CanvasSamplingTests.Run();

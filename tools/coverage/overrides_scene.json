@@ -2612,8 +2612,18 @@
     },
     {
       "state": "Partial",
-      "reason": "Click and explicit focus, hidden pointer focus, keyboard target delivery, hide/detach release, focus notifications and focus events run in the root viewport. All-mode keyboard/gamepad navigation, accessibility focus and nested viewport routing remain absent.",
+      "reason": "Click/All eligibility, hidden pointer focus, focused keyboard delivery, Tab/arrow action navigation, hide/detach release, focus notifications and focus events run in the root viewport. Accessibility focus, exact directional ranking, scroll clipping and nested viewport routing remain absent.",
       "godot": ["Control::enum:FocusMode", "Control::property:focus_mode", "Control::method:grab_focus(bool:)", "Control::method:has_focus(bool:)", "Control::method:release_focus()", "Control::signal:focus_entered()", "Control::signal:focus_exited()"]
+    },
+    {
+      "state": "Partial",
+      "reason": "Relative focus paths default empty, persist through PackedScene and select visible eligible controls in managed tests. Exact reference path diagnostics and nested viewport behavior remain to audit.",
+      "godot": ["Control::method:get_focus_neighbor(int:Side)", "Control::method:set_focus_neighbor(int:Side,NodePath:)", "Control::property:focus_next", "Control::property:focus_previous", "Control::property:focus_neighbor_left", "Control::property:focus_neighbor_top", "Control::property:focus_neighbor_right", "Control::property:focus_neighbor_bottom"]
+    },
+    {
+      "state": "Partial",
+      "reason": "Managed Tab traversal wraps through visible All controls and honors explicit Click paths; directional paths, cycle protection and rectangle-based search execute. Neutral ancestors, exact spatial ranking, scroll clipping and nested viewport traversal differ or remain unverified.",
+      "godot": ["Control::method:find_next_valid_focus()", "Control::method:find_prev_valid_focus()", "Control::method:find_valid_focus_neighbor(int:Side)"]
     },
     {
       "state": "Implemented",
@@ -2622,7 +2632,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Root viewport focus ownership, explicit release and focus-change event execute in ControlInputTests. Embedded viewport ownership, navigation and full GUI semantics remain absent.",
+      "reason": "Root viewport focus ownership, explicit release and focus-change event execute in ControlInputTests; managed action navigation executes in ControlFocusNavigationTests. Embedded viewport ownership and full GUI semantics remain absent.",
       "godot": ["Viewport::method:gui_get_focus_owner()", "Viewport::method:gui_release_focus()", "Viewport::signal:gui_focus_changed(Control:)"]
     },
     {

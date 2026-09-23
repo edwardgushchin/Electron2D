@@ -6190,6 +6190,19 @@
     "value": "4"
   },
   {
+    "id": "enumValue:Electron2D.ControlFocusMode.All()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlFocusMode",
+    "name": "All",
+    "signature": "public const Electron2D.ControlFocusMode All = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlFocusMode",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.ControlFocusMode.Click()",
     "kind": "enumValue",
     "declaringType": "Electron2D.ControlFocusMode",
@@ -19475,6 +19488,51 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.FindNextValidFocus()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "FindNextValidFocus",
+    "signature": "public Electron2D.Control FindNextValidFocus()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.FindPrevValidFocus()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "FindPrevValidFocus",
+    "signature": "public Electron2D.Control FindPrevValidFocus()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.FindValidFocusNeighbor(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "FindValidFocusNeighbor",
+    "signature": "public Electron2D.Control FindValidFocusNeighbor(Electron2D.Side side)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "side",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Control",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.GetAnchor(Electron2D.Side)",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -19510,6 +19568,25 @@
       }
     ],
     "returnType": "Electron2D.Control.CursorShape",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetFocusNeighbor(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetFocusNeighbor",
+    "signature": "public System.String GetFocusNeighbor(Electron2D.Side side)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "side",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -19789,6 +19866,30 @@
         "name": "pushOppositeAnchor",
         "type": "System.Boolean",
         "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.SetFocusNeighbor(Electron2D.Side,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetFocusNeighbor",
+    "signature": "public System.Void SetFocusNeighbor(Electron2D.Side side, System.String neighbor)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "side",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "neighbor",
+        "type": "System.String",
+        "default": null
       }
     ],
     "returnType": "System.Void",
@@ -53207,6 +53308,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ControlFocusMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.FocusNeighborBottom()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "FocusNeighborBottom",
+    "signature": "public System.String FocusNeighborBottom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.FocusNeighborLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "FocusNeighborLeft",
+    "signature": "public System.String FocusNeighborLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.FocusNeighborRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "FocusNeighborRight",
+    "signature": "public System.String FocusNeighborRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.FocusNeighborTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "FocusNeighborTop",
+    "signature": "public System.String FocusNeighborTop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.FocusNext()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "FocusNext",
+    "signature": "public System.String FocusNext { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.FocusPrevious()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "FocusPrevious",
+    "signature": "public System.String FocusPrevious { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

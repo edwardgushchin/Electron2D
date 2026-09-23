@@ -1415,13 +1415,15 @@ public sealed partial class SceneTree : MainLoop
 
         if (inputEvent is not (InputEventKey or InputEventJoypadButton or InputEventJoypadMotion or InputEventAction)) return;
         var focused = _guiFocus;
-        if (focused is null) return;
-        if (focused.IsDisposed || !ReferenceEquals(focused.Tree, this) || !focused.IsVisibleInTree || focused.FocusMode == ControlFocusMode.None || !ReferenceEquals(focused.GetViewport(), viewport))
+        if (focused is not null && (focused.IsDisposed || !ReferenceEquals(focused.Tree, this) || !focused.IsVisibleInTree || focused.FocusMode == ControlFocusMode.None || !ReferenceEquals(focused.GetViewport(), viewport)))
         {
             try { ReleaseGUIFocus(focused); } catch (Exception error) { CollectException(ref errors, error); }
-            return;
+            focused = null;
         }
-        try { focused.DispatchGUIInput(inputEvent); } catch (Exception error) { CollectException(ref errors, error); }
+        if (focused is not null)
+            try { focused.DispatchGUIInput(inputEvent); } catch (Exception error) { CollectException(ref errors, error); }
+        if (!_inputHandled)
+            try { NavigateGUIFocus(viewport, inputEvent); } catch (Exception error) { CollectException(ref errors, error); }
     }
 
     private Control? FindMouseControl(Viewport viewport, Vector2 point, ref List<Exception>? errors)

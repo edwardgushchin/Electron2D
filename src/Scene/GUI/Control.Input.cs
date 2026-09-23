@@ -17,7 +17,9 @@ public enum ControlFocusMode
     /// <summary>Cannot receive focus.</summary>
     None = 0,
     /// <summary>Can receive focus by pointer press or an explicit request.</summary>
-    Click = 1
+    Click = 1,
+    /// <summary>Can also receive focus through keyboard or controller navigation.</summary>
+    All = 2
 }
 
 public partial class Control
