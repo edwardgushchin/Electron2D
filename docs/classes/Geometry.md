@@ -14,7 +14,7 @@ Last updated: 2026-09-23
 
 Stateless, backend-independent two-dimensional geometry queries on engine-owned [`Vector2`](Vector2.md) and [`Vector2I`](Vector2I.md). This C# static service projects the reference geometry singleton's pure operations without an object to create or dispose. Calls are safe from multiple threads when callers do not mutate their own input values concurrently. Vector values are single precision; polygon triangulation uses double area and orientation intermediates. Inputs are not generally checked for finiteness. Each returned array is owned by the caller.
 
-The current production slice covers grid-line rasterization, nearest points, line/segment intersections, polygon predicates, convex hulls, simple-polygon triangulation and segment/circle intersections. The rest of the reference geometry surface, including polygon boolean operations, offsets, Delaunay triangulation and atlasing, is still absent; see [reference geometry coverage](../coverage/classes/Geometry2D.md).
+The current production slice covers grid-line rasterization, nearest points, line/segment intersections, polygon predicates, convex hulls, simple-polygon triangulation, atlas layout and segment/circle intersections. The rest of the reference geometry surface, including polygon boolean operations, offsets and Delaunay triangulation, is still absent; see [reference geometry coverage](../coverage/classes/Geometry2D.md).
 
 ## Example
 
@@ -40,6 +40,7 @@ Vector2? crossing = Geometry.SegmentIntersectsSegment(
 | [`public static bool IsPointInPolygon(Vector2 point, ReadOnlySpan<Vector2> polygon)`](#ispointinpolygon) | Odd-even polygon inclusion, including the boundary. |
 | [`public static bool IsPolygonClockwise(ReadOnlySpan<Vector2> polygon)`](#ispolygonclockwise) | Cartesian winding test. |
 | [`public static Vector2? LineIntersectsLine(Vector2 fromA, Vector2 dirA, Vector2 fromB, Vector2 dirB)`](#lineintersectsline) | Unique intersection of infinite lines, or `null`. |
+| [`public static (Vector2[] Points, Vector2I Size) MakeAtlas(ReadOnlySpan<Vector2> sizes)`](#makeatlas) | Tile origins and the occupied atlas size. |
 | [`public static bool PointIsInsideTriangle(Vector2 point, Vector2 a, Vector2 b, Vector2 c)`](#pointisinsidetriangle) | Strict oriented-edge triangle test. |
 | [`public static float SegmentIntersectsCircle(Vector2 segmentFrom, Vector2 segmentTo, Vector2 circlePosition, float circleRadius)`](#segmentintersectscircle) | First circle crossing fraction, or -1. |
 | [`public static Vector2? SegmentIntersectsSegment(Vector2 fromA, Vector2 toA, Vector2 fromB, Vector2 toB)`](#segmentintersectssegment) | Unique intersection of finite segments, or `null`. |
@@ -83,6 +84,10 @@ Returns the sign of the reference signed-edge sum for three or more vertices. It
 
 `fromA`/`fromB` are points; `dirA`/`dirB` are directions, not endpoints. Returns `null` for parallel or coincident lines using a `1e-5f` zero-denominator threshold. For a unique crossing, returns its unbounded position.
 
+### MakeAtlas
+
+Truncates each finite tile size to integer pixels and tries power-of-two strip widths through 4096 pixels. Tiles are processed by descending width; equal widths retain input order. The returned `Points` array restores input order, and `Size` reports actual occupied bounds, which need not be powers of two. The chosen candidate has the smallest ratio of power-of-two-rounded width and height; equal ratios keep the first candidate. Empty input throws `ArgumentException`. Nonpositive dimensions after truncation, widths above 4096, nonfinite or out-of-range values, and layouts exceeding 32-bit atlas height throw `ArgumentOutOfRangeException`. The input is not modified, and the returned array belongs to the caller.
+
 ### PointIsInsideTriangle
 
 Compares the signs of three oriented crosses around `point`. The strict sign comparisons preserve the reference behavior for boundaries and degenerate triangles; do not use this method as an inclusive boundary predicate.
@@ -101,7 +106,7 @@ Returns three indices into the input contour per triangle, in counterclockwise o
 
 ## Dependencies and verification
 
-Only Core math and the .NET base library are used; no scene, renderer, physics or native backend is required. `GeometryTests.Run` checks raster orientation/endpoints, integer extremes, projections, nearest pairs, circle boundaries, crossings, polygon interior/boundaries/winding, convex hull ordering, triangulation and segment/circle contact. `CanvasPolygonTests.Run` checks drawing reuse and zero-allocation redraw. These managed checks pass on Linux/.NET 8. Native canvas polygon pixel checks pass on Wayland for compatibility and GPU backends, including HLSL/GLSL fixtures; other platforms and exhaustive numeric parity with the reference remain unverified.
+Only Core math and the .NET base library are used; no scene, renderer, physics or native backend is required. `GeometryTests.Run` checks raster orientation/endpoints, integer extremes, projections, nearest pairs, circle boundaries, crossings, polygon interior/boundaries/winding, convex hull ordering, atlas layout and limits, triangulation and segment/circle contact. `CanvasPolygonTests.Run` checks drawing reuse and zero-allocation redraw. These managed checks pass on Linux/.NET 8. Native canvas polygon pixel checks pass on Wayland for compatibility and GPU backends, including HLSL/GLSL fixtures; other platforms and exhaustive numeric parity with the reference remain unverified.
 
 ## Decisions
 

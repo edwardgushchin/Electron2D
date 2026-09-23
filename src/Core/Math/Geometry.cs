@@ -275,6 +275,70 @@ public static class Geometry
         return TryTriangulatePolygon(polygon, new int[polygon.Length], triangles) ? triangles : [];
     }
 
+    /// <summary>Packs rectangular tiles into an atlas using the reference scanline layout search.</summary>
+    /// <param name="sizes">Tile sizes in input order; components are truncated to integer pixels.</param>
+    /// <returns>Tile origins in input order and the unrounded bounding size of the atlas.</returns>
+    /// <exception cref="ArgumentException">No tile sizes were supplied.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">A truncated size is nonpositive, a width exceeds 4096 pixels, or no layout fits a 32-bit integer atlas height.</exception>
+    /// <remarks>Input and returned positions are independent. Candidate strip widths are powers of two up to 4096, but the returned bounds are the actual occupied size. Equal-width tiles retain input order.</remarks>
+    public static (Vector2[] Points, Vector2I Size) MakeAtlas(ReadOnlySpan<Vector2> sizes)
+    {
+        if (sizes.IsEmpty) throw new ArgumentException("At least one tile size is required.", nameof(sizes));
+        var rectangles = new (int Width, int Height, int Index)[sizes.Length];
+        for (var i = 0; i < sizes.Length; i++)
+        {
+            var size = new Vector2I(sizes[i]);
+            if (size.X <= 0 || size.Y <= 0 || size.X > 4096)
+                throw new ArgumentOutOfRangeException(nameof(sizes), "Tile dimensions must be positive and width must not exceed 4096 pixels.");
+            rectangles[i] = (size.X, size.Y, i);
+        }
+        Array.Sort(rectangles, static (a, b) =>
+        {
+            var widthOrder = b.Width.CompareTo(a.Width);
+            return widthOrder == 0 ? a.Index.CompareTo(b.Index) : widthOrder;
+        });
+
+        var candidatePoints = new Vector2[sizes.Length];
+        var bestPoints = new Vector2[sizes.Length];
+        var bestSize = Vector2I.Zero;
+        var bestAspect = double.PositiveInfinity;
+        for (var width = 1; width <= 4096; width <<= 1)
+        {
+            if (width < rectangles[0].Width) continue;
+            var skyline = new long[width];
+            var offset = 0;
+            long limitHeight = 0;
+            long maxHeight = 0;
+            var maxWidth = 0;
+            foreach (var rectangle in rectangles)
+            {
+                if (offset + rectangle.Width > width) offset = 0;
+                long fromY = 0;
+                for (var x = offset; x < offset + rectangle.Width; x++)
+                    fromY = Math.Max(fromY, skyline[x]);
+                var endHeight = fromY + rectangle.Height;
+                var endWidth = offset + rectangle.Width;
+                candidatePoints[rectangle.Index] = new Vector2(offset, (float)fromY);
+                if (offset == 0) limitHeight = endHeight;
+                for (var x = offset; x < endWidth; x++) skyline[x] = endHeight;
+                maxHeight = Math.Max(maxHeight, endHeight);
+                maxWidth = Math.Max(maxWidth, endWidth);
+                if (offset == 0 || endHeight > limitHeight) offset = endWidth;
+            }
+            if (maxHeight > int.MaxValue) continue;
+            var powerHeight = System.Numerics.BitOperations.RoundUpToPowerOf2((uint)maxHeight);
+            var powerWidth = System.Numerics.BitOperations.RoundUpToPowerOf2((uint)maxWidth);
+            var aspect = powerHeight > powerWidth ? (double)powerHeight / powerWidth : (double)powerWidth / powerHeight;
+            if (aspect >= bestAspect) continue;
+            bestAspect = aspect;
+            bestSize = new Vector2I(maxWidth, (int)maxHeight);
+            candidatePoints.CopyTo(bestPoints, 0);
+        }
+        if (double.IsPositiveInfinity(bestAspect))
+            throw new ArgumentOutOfRangeException(nameof(sizes), "No atlas layout fits a 32-bit integer height.");
+        return (bestPoints, bestSize);
+    }
+
     // The caller supplies reusable buffers so retained canvas redraws allocate nothing.
     internal static bool TryTriangulatePolygon(ReadOnlySpan<Vector2> polygon, Span<int> remaining, Span<int> triangles)
     {

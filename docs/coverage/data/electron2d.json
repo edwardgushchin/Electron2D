@@ -23272,6 +23272,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Geometry.MakeAtlas(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "MakeAtlas",
+    "signature": "public static System.ValueTuple\u003CElectron2D.Vector2[], Electron2D.Vector2I\u003E MakeAtlas(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E sizes)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sizes",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.ValueTuple\u003CElectron2D.Vector2[], Electron2D.Vector2I\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Geometry.PointIsInsideTriangle(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.Geometry",

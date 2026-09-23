@@ -51,6 +51,11 @@
       "reason": "Vector2? represents the reference Vector2-or-null result without Variant; directions define infinite lines."
     },
     {
+      "godot": "Geometry2D::method:make_atlas(PackedVector2Array:)",
+      "electron2d": "method:Electron2D.Geometry.MakeAtlas(System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "A named typed tuple replaces the dictionary's points/size keys; integer truncation and power-of-two width candidates preserve the reference packing role, with explicit managed input/range errors."
+    },
+    {
       "godot": "Geometry2D::method:point_is_inside_triangle(Vector2:,Vector2:,Vector2:,Vector2:)",
       "electron2d": "method:Electron2D.Geometry.PointIsInsideTriangle(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
       "reason": "Signed edge tests follow the pinned reference predicate for the four typed Vector2 arguments."
@@ -2364,7 +2369,7 @@
         "class:Geometry2D"
       ],
       "state": "Partial",
-      "reason": "The C# static projection implements thirteen pure raster, nearest-point, polygon and intersection methods. Polygon boolean/offset, Delaunay triangulation, atlas packing and other reference methods remain absent; see docs/classes/Geometry.md."
+      "reason": "The C# static projection implements fourteen raster, nearest-point, polygon, atlas and intersection methods. Polygon boolean/offset, Delaunay triangulation and other reference methods remain absent; see docs/classes/Geometry.md."
     },
     {
       "godot": [
@@ -2377,13 +2382,14 @@
         "Geometry2D::method:is_point_in_polygon(Vector2:,PackedVector2Array:)",
         "Geometry2D::method:is_polygon_clockwise(PackedVector2Array:)",
         "Geometry2D::method:line_intersects_line(Vector2:,Vector2:,Vector2:,Vector2:)",
+        "Geometry2D::method:make_atlas(PackedVector2Array:)",
         "Geometry2D::method:point_is_inside_triangle(Vector2:,Vector2:,Vector2:,Vector2:)",
         "Geometry2D::method:segment_intersects_circle(Vector2:,Vector2:,Vector2:,float:)",
         "Geometry2D::method:segment_intersects_segment(Vector2:,Vector2:,Vector2:,Vector2:)",
         "Geometry2D::method:triangulate_polygon(PackedVector2Array:)"
       ],
       "state": "Implemented",
-      "reason": "Thirteen stateless methods follow the pinned formulas and typed result adaptation; GeometryTests covers boundary, degenerate, winding, hull, polygon triangulation, crossing and null cases on Linux/.NET 8. CanvasPolygonTests covers renderer reuse and zero-allocation redraw. Native and exhaustive numeric parity remain unverified."
+      "reason": "Fourteen stateless methods follow the pinned formulas and typed result adaptation; GeometryTests covers boundaries, degenerate inputs, winding, hull, triangulation, atlas layout, crossing and null cases on Linux/.NET 8. CanvasPolygonTests covers renderer reuse and zero-allocation redraw. Native and exhaustive numeric parity remain unverified."
     },
     {
       "godot": [
