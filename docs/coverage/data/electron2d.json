@@ -2210,6 +2210,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Translation",
+    "kind": "type",
+    "declaringType": "Electron2D.Translation",
+    "name": "Translation",
+    "signature": "public class Electron2D.Translation",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TranslationServer",
     "kind": "type",
     "declaringType": "Electron2D.TranslationServer",
@@ -5118,6 +5133,19 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Translation..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Translation",
+    "name": ".ctor",
+    "signature": "public Translation()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -39138,6 +39166,327 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Translation.AddMessage(System.String,System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "AddMessage",
+    "signature": "public System.Void AddMessage(System.String source, System.String translation, System.String context = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "translation",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "context",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Translation.AddPluralMessage(System.String,System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "AddPluralMessage",
+    "signature": "public System.Void AddPluralMessage(System.String source, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E translations, System.String context = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "translations",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+        "default": null
+      },
+      {
+        "name": "context",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Translation.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Translation.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Translation.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Translation.EraseMessage(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "EraseMessage",
+    "signature": "public System.Void EraseMessage(System.String source, System.String context = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "context",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Translation.GetMessage(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "GetMessage",
+    "signature": "public System.String GetMessage(System.String source, System.String context = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "context",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Translation.GetMessageCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "GetMessageCount",
+    "signature": "public System.Int32 GetMessageCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Translation.GetMessageList()",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "GetMessageList",
+    "signature": "public System.String[] GetMessageList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Translation.GetPluralMessage(System.String,System.String,System.Int64,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "GetPluralMessage",
+    "signature": "public System.String GetPluralMessage(System.String source, System.String plural, System.Int64 count, System.String context = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "plural",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "count",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "context",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Translation.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Translation.GetTranslatedMessageList()",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "GetTranslatedMessageList",
+    "signature": "public System.String[] GetTranslatedMessageList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Translation.OnGetMessage(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "OnGetMessage",
+    "signature": "protected virtual System.String OnGetMessage(System.String source, System.String context)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "context",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Translation.OnGetPluralMessage(System.String,System.String,System.Int64,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Translation",
+    "name": "OnGetPluralMessage",
+    "signature": "protected virtual System.String OnGetPluralMessage(System.String source, System.String plural, System.Int64 count, System.String context)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "plural",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "count",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "context",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TranslationServer.AddPluralTranslation(System.Globalization.CultureInfo,System.String,System.String,System.String,System.Func\u003CSystem.Int64, System.String\u003E,System.String)",
     "kind": "method",
     "declaringType": "Electron2D.TranslationServer",
@@ -39176,6 +39525,30 @@
         "name": "context",
         "type": "System.String",
         "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.AddTranslation(Electron2D.Translation,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "AddTranslation",
+    "signature": "public static System.Void AddTranslation(Electron2D.Translation translation, System.String domain = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "translation",
+        "type": "Electron2D.Translation",
+        "default": null
+      },
+      {
+        "name": "domain",
+        "type": "System.String",
+        "default": "\u0022\u0022"
       }
     ],
     "returnType": "System.Void",
@@ -39230,6 +39603,30 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.RemoveTranslation(Electron2D.Translation,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "RemoveTranslation",
+    "signature": "public static System.Void RemoveTranslation(Electron2D.Translation translation, System.String domain = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "translation",
+        "type": "Electron2D.Translation",
+        "default": null
+      },
+      {
+        "name": "domain",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -55274,6 +55671,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Translation.Locale()",
+    "kind": "property",
+    "declaringType": "Electron2D.Translation",
+    "name": "Locale",
+    "signature": "public System.String Locale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Translation.PluralSelector()",
+    "kind": "property",
+    "declaringType": "Electron2D.Translation",
+    "name": "PluralSelector",
+    "signature": "public System.Func\u003CSystem.Int64, System.Int32\u003E PluralSelector { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CSystem.Int64, System.Int32\u003E",
     "value": null
   },
   {

@@ -1,6 +1,6 @@
 # Electron2D localization decisions
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 This bounded log owns the complete architectural records for localization. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0007](#adr-0007).
 <a id="adr-0007"></a>
 ## ADR 0007: Use a typed process-wide translation service
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Status: Accepted
 - Scope: Runtime message translation
@@ -20,18 +20,19 @@ Godot `Object` provides per-object translation enablement, a domain, and `tr`/`t
 
 ### Decision
 
-- `TranslationServer` is a process-wide in-memory catalog selected by one `CultureInfo`.
+- `TranslationServer` is a process-wide in-memory catalog selected by one `CultureInfo`. It also registers borrowed `Translation : Resource` catalogs by domain without owning their disposal. Resource edits become visible immediately; removal, clearing, or disposal stops their lookup.
 - Keys are culture, domain, context, and source text; lookup falls back through parent cultures to invariant culture.
+- Existing direct registrations take priority within a locale. Resource catalogs follow in reverse registration order; every locale is checked before moving to its parent.
 - `ElectronObject` stores a translation-enabled flag and domain and exposes typed `Tr`/`TrN` methods.
 - Missing messages return the source text.
-- Plural registrations receive `Func<long, string>` so catalog owners provide language-specific rules rather than relying on an incomplete engine heuristic.
-- Catalog access is lock-protected; the global enabled flag is internal and uses volatile access. Applications control translation per object through `ElectronObject`.
+- Direct plural registrations receive `Func<long, string>`. Resource catalogs use copied plural-form lists and a typed `Func<long, int>` selector; English catalogs use the source English fallback when no selector is assigned. Non-English catalogs with multiple forms require a selector and fail explicitly without one. This projects the plural-rule capability without exposing a string-expression evaluator; built-in rules for other locales and the reference textual override remain coverage gaps.
+- Catalog state is lock-protected; resource lookup and its overridable callbacks run outside the server lock. Direct plural selectors retain their existing locked-lookup contract. The global enabled flag is internal and uses volatile access. Applications control translation per object through `ElectronObject`.
 
 ### Consequences
 
-- The current runtime supports deterministic translation lookup without `Variant` or another package.
+- The current runtime supports deterministic direct and resource-backed translation lookup without `Variant` or another package. Typed resource copying preserves independent message containers.
 - Catalog loading, locale negotiation, formatting, and CLDR rules remain separate future concerns.
-- Plural selectors run during locked lookup and should be short; recursive selector logic remains the caller's responsibility.
+- Direct plural selectors run during locked lookup and should be short; resource selectors run after snapshotting state. Recursive selector logic remains the caller's responsibility.
 - Global catalog state must be restored or cleared by isolated tests and applications that replace languages.
 
 ### Rejected alternatives

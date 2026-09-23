@@ -5996,6 +5996,43 @@ static void VerifyTranslations()
         Require(instance.TrN("apple", "apples", 0) == "pomme", "TrN must use the registered culture-specific selector.");
         Require(instance.TrN("apple", "apples", 2) == "pommes", "TrN must resolve plural messages.");
 
+        using var catalog = new Translation { Locale = "fr" };
+        catalog.AddMessage("Play", "Jouer", "menu");
+        catalog.AddPluralMessage("pear", ["poire", "poires"], "fruit");
+        catalog.PluralSelector = count => count > 1 ? 1 : 0;
+        Require(catalog.GetMessageCount() == 2 && catalog.GetMessageList().Contains("menu\u0004Play") &&
+                catalog.GetTranslatedMessageList().Contains("poires") && catalog.GetMessage("Play") == string.Empty,
+            "Translation resources must retain contextual messages and all plural forms.");
+        using var duplicate = (Translation)catalog.Duplicate();
+        catalog.AddMessage("Play", "Démarrer", "menu");
+        Require(duplicate.GetMessage("Play", "menu") == "Jouer" &&
+                duplicate.GetPluralMessage("pear", "pears", 2, "fruit") == "poires",
+            "Translation duplication must copy message containers and the plural selector.");
+        TranslationServer.AddTranslation(catalog, "game");
+        Require(instance.Tr("Play", "menu") == "Démarrer" &&
+                instance.TrN("pear", "pears", 0, "fruit") == "poire" &&
+                instance.TrN("pear", "pears", 2, "fruit") == "poires",
+            "Registered resource catalogs must participate in contextual and plural lookup with parent-culture fallback.");
+        catalog.EraseMessage("Play", "menu");
+        Require(instance.Tr("Play", "menu") == "Play", "Resource edits must become visible without re-registration.");
+        TranslationServer.RemoveTranslation(catalog, "game");
+        Require(instance.TrN("pear", "pears", 2, "fruit") == "pears", "Removing a catalog must stop its lookup without disposing it.");
+        TranslationServer.AddTranslation(catalog, "game");
+        catalog.Dispose();
+        Require(instance.TrN("pear", "pears", 2, "fruit") == "pears", "Disposing a catalog must unregister it.");
+
+        using var english = new Translation();
+        english.AddPluralMessage("box", ["box", "boxes"]);
+        Require(english.GetPluralMessage("box", "boxes", 1) == "box" &&
+                english.GetPluralMessage("box", "boxes", 2) == "boxes",
+            "English catalogs must use the source fallback plural rule.");
+        Expect<ArgumentException>(() => english.AddPluralMessage("empty", []),
+            "A plural catalog entry must contain at least one form.");
+        using var noRule = new Translation { Locale = "fr" };
+        noRule.AddPluralMessage("pear", ["poire", "poires"]);
+        Expect<InvalidOperationException>(() => noRule.GetPluralMessage("pear", "pears", 2),
+            "Non-English plural lookup must fail explicitly when no selector has been supplied.");
+
         instance.CanTranslateMessages = false;
         Require(instance.Tr("Hello") == "Hello", "Per-object translation disabling must return the source message.");
     }

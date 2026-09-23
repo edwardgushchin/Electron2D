@@ -1,6 +1,6 @@
 # Translation component
 
-Last updated: 2026-09-20
+Last updated: 2026-09-23
 
 ## Scope
 
@@ -8,11 +8,11 @@ This Localization component stores and resolves domain/context translations for 
 
 ## Owned type
 
-[`TranslationServer`](../classes/TranslationServer.md) is the only owned production type. `ElectronObject` provides per-instance domain and enablement settings and delegates `Tr`/`TrN` calls to the server.
+[`TranslationServer`](../classes/TranslationServer.md) resolves direct registrations and borrowed [`Translation`](../classes/Translation.md) resources. `ElectronObject` provides per-instance domain and enablement settings and delegates `Tr`/`TrN` calls to the server.
 
 ## Current implementation status
 
-Implemented as an in-memory runtime catalog and covered by executable checks. No catalog asset loader or automatic locale selection exists.
+Direct registration and contextual, mutable resource catalogs execute through the same lookup path. Resource duplication copies independent message containers. No catalog asset loader or automatic locale selection exists.
 
 ## Dependencies
 
@@ -22,11 +22,11 @@ The component depends only on .NET globalization, collections, and threading pri
 
 Singular keys consist of culture, domain, context, and source message. Plural keys additionally contain source singular and plural forms. Resolution tries the exact culture, then each parent, then invariant culture.
 
-Plural registrations take `Func<long, string>`, allowing the catalog owner to implement language-specific rules without a universal dynamic value or a built-in incomplete plural heuristic.
+Direct plural registrations take `Func<long, string>`. Resource catalogs store plural-form lists and select an index through `Func<long, int>`; English has its source fallback, while other locales with multiple forms require a selector.
 
 ## Threading
 
-Catalog registration, clearing, culture changes, and lookup use one internal lock. The global enabled flag uses volatile access. Translation selector delegates execute while the catalog lock is held and therefore should be short; recursive selector logic remains the caller's responsibility.
+Direct registration, resource registry changes, clearing, and culture changes use the server lock. Resource state has its own lock; lookup snapshots registered resources and invokes their override hooks and selectors outside the server lock. Direct selector delegates still execute under the server lock and should be short. The global enabled flag uses volatile access.
 
 ## Exclusions
 
@@ -34,4 +34,4 @@ The component does not load files, format parameters, infer plural rules, or sel
 
 ## Verification
 
-Tests cover parent-culture lookup, source fallback, domain selection, custom plural rules, and per-object disabling.
+Tests cover parent-culture lookup, source fallback, domain selection, direct and resource plural selectors, contextual edits, independent duplication, removal, disposal, and per-object disabling.
