@@ -1,6 +1,6 @@
 # PopupMenu API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/PopupMenu.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PopupMenu.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -86,8 +86,8 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`method toggle_item_checked(int index) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PopupMenu.xml) | — | Blocked | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). |
 | [`method toggle_item_multistate(int index) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PopupMenu.xml) | — | Blocked | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). |
 | [`property bool allow_search = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PopupMenu.xml) | — | Blocked | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). |
-| [`property int canvas_item_default_texture_filter [Viewport.DefaultCanvasItemTextureFilter] = 4`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PopupMenu.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
-| [`property int canvas_item_default_texture_repeat [Viewport.DefaultCanvasItemTextureRepeat] = 3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PopupMenu.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
+| [`property int canvas_item_default_texture_filter [Viewport.DefaultCanvasItemTextureFilter] = 4`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PopupMenu.xml) | — | Blocked | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). |
+| [`property int canvas_item_default_texture_repeat [Viewport.DefaultCanvasItemTextureRepeat] = 3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PopupMenu.xml) | — | Blocked | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). |
 | [`property bool hide_on_checkable_item_selection = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PopupMenu.xml) | — | Blocked | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). |
 | [`property bool hide_on_item_selection = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PopupMenu.xml) | — | Blocked | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). |
 | [`property bool hide_on_state_item_selection = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PopupMenu.xml) | — | Blocked | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). |

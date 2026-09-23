@@ -1,6 +1,6 @@
 # TorusMesh API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/TorusMesh.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TorusMesh.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -10,8 +10,8 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class TorusMesh`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TorusMesh.xml) | — | Blocked | Rendering2D: trigger is the first SDL3 GPU 2D rendering slice (ADR 0028). |
-| [`property float inner_radius = 0.5`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TorusMesh.xml) | — | Blocked | Rendering2D: trigger is the first SDL3 GPU 2D rendering slice (ADR 0028). |
-| [`property float outer_radius = 1.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TorusMesh.xml) | — | Blocked | Rendering2D: trigger is the first SDL3 GPU 2D rendering slice (ADR 0028). |
-| [`property int ring_segments = 32`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TorusMesh.xml) | — | Blocked | Rendering2D: trigger is the first SDL3 GPU 2D rendering slice (ADR 0028). |
-| [`property int rings = 64`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TorusMesh.xml) | — | Blocked | Rendering2D: trigger is the first SDL3 GPU 2D rendering slice (ADR 0028). |
+| [`class TorusMesh`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TorusMesh.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property float inner_radius = 0.5`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TorusMesh.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property float outer_radius = 1.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TorusMesh.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property int ring_segments = 32`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TorusMesh.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property int rings = 64`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TorusMesh.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |

@@ -1,6 +1,6 @@
 # TileData API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/TileData.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileData.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -50,7 +50,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`property float probability = 1.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileData.xml) | — | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
 | [`property int terrain = -1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileData.xml) | — | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
 | [`property int terrain_set = -1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileData.xml) | — | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`property Vector2i texture_origin = Vector2i(0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileData.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
+| [`property Vector2i texture_origin = Vector2i(0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileData.xml) | — | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
 | [`property bool transpose = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileData.xml) | — | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
 | [`property int y_sort_origin = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileData.xml) | — | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
 | [`property int z_index = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileData.xml) | — | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |

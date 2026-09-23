@@ -1,6 +1,6 @@
 # SliderJoint3D API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/SliderJoint3D.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SliderJoint3D.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -35,8 +35,8 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`enum_value PARAM_LINEAR_ORTHOGONAL_RESTITUTION [Param] = 9`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SliderJoint3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`enum_value PARAM_LINEAR_ORTHOGONAL_SOFTNESS [Param] = 8`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SliderJoint3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`enum_value PARAM_MAX [Param] = 22`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SliderJoint3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`method get_param(int param [SliderJoint3D.Param]) -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SliderJoint3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
-| [`method set_param(int param [SliderJoint3D.Param], float value) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SliderJoint3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method get_param(int param [SliderJoint3D.Param]) -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SliderJoint3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`method set_param(int param [SliderJoint3D.Param], float value) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SliderJoint3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property float angular_limit/damping = 0.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SliderJoint3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property float angular_limit/lower_angle = 0.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SliderJoint3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property float angular_limit/restitution = 0.7`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SliderJoint3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |

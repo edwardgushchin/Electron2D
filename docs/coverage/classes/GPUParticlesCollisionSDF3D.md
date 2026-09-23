@@ -1,6 +1,6 @@
 # GPUParticlesCollisionSDF3D API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/GPUParticlesCollisionSDF3D.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/GPUParticlesCollisionSDF3D.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -22,7 +22,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`method get_bake_mask_value(int layer_number) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/GPUParticlesCollisionSDF3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method set_bake_mask_value(int layer_number, bool value) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/GPUParticlesCollisionSDF3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property int bake_mask = 4294967295`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/GPUParticlesCollisionSDF3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`property int resolution [GPUParticlesCollisionSDF3D.Resolution] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/GPUParticlesCollisionSDF3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
-| [`property Vector3 size = Vector3(2, 2, 2)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/GPUParticlesCollisionSDF3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
-| [`property Texture3D texture`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/GPUParticlesCollisionSDF3D.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property int resolution [GPUParticlesCollisionSDF3D.Resolution] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/GPUParticlesCollisionSDF3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property Vector3 size = Vector3(2, 2, 2)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/GPUParticlesCollisionSDF3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property Texture3D texture`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/GPUParticlesCollisionSDF3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property float thickness = 1.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/GPUParticlesCollisionSDF3D.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |

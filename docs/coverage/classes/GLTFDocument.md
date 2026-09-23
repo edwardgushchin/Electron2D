@@ -1,6 +1,6 @@
 # GLTFDocument API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [modules/gltf/doc_classes/GLTFDocument.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -22,8 +22,8 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`enum_value ROOT_NODE_MODE_KEEP_ROOT [RootNodeMode] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`enum_value ROOT_NODE_MODE_MULTI_ROOT [RootNodeMode] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`enum_value ROOT_NODE_MODE_SINGLE_ROOT [RootNodeMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`enum_value TEXTURE_MAP_MODE_DO_NOT_REMAP [TextureMapMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
-| [`enum_value TEXTURE_MAP_MODE_REMAP_TO_STANDARD_MATERIAL [TextureMapMode] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
+| [`enum_value TEXTURE_MAP_MODE_DO_NOT_REMAP [TextureMapMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`enum_value TEXTURE_MAP_MODE_REMAP_TO_STANDARD_MATERIAL [TextureMapMode] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`enum_value VISIBILITY_MODE_EXCLUDE [VisibilityMode] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`enum_value VISIBILITY_MODE_INCLUDE_OPTIONAL [VisibilityMode] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`enum_value VISIBILITY_MODE_INCLUDE_REQUIRED [VisibilityMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
@@ -43,5 +43,5 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`property String image_format = "PNG"`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property float lossy_quality = 0.75`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property int root_node_mode [GLTFDocument.RootNodeMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`property int texture_map_mode [GLTFDocument.TextureMapMode] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
+| [`property int texture_map_mode [GLTFDocument.TextureMapMode] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property int visibility_mode [GLTFDocument.VisibilityMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFDocument.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |

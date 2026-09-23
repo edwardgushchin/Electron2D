@@ -4,7 +4,7 @@
 import json
 import re
 
-from render import CLASS_PAGES, DATA, choose, render
+from render import CLASS_PAGES, DATA, choose, coverage_target, render
 
 
 def check_texture_pages(pages, upstream):
@@ -58,6 +58,28 @@ def main():
 
     pages, summary = render()
     check_texture_pages(pages, upstream)
+    class_rows = {
+        name: next(line for line in pages[CLASS_PAGES / coverage_target(name)].splitlines()
+                   if line.startswith(f"| [`class {name}`]"))
+        for name in ("AStar2D", "AStarGrid2D", "AESContext", "InputEventMIDI", "Shortcut",
+                     "Texture2DArray", "RenderingDevice", "FramebufferCacheRD", "BoxMesh",
+                     "RefCounted", "Line2D", "NativeMenu", "GDScriptLanguageProtocol",
+                     "EditorNode3DGizmo")
+    }
+    assert " | Blocked | Navigation2D:" in class_rows["AStar2D"]
+    assert " | Blocked | Navigation2D:" in class_rows["AStarGrid2D"]
+    assert "cryptography utility contract" in class_rows["AESContext"]
+    assert "accepted MIDI-domain" in class_rows["InputEventMIDI"]
+    assert "GUI/editor Shortcut" in class_rows["Shortcut"]
+    assert "layered/array texture storage" in class_rows["Texture2DArray"]
+    assert " | Unimplemented | " in class_rows["Line2D"]
+    assert "native-menu service" in class_rows["NativeMenu"]
+    for name in ("RenderingDevice", "FramebufferCacheRD", "BoxMesh", "RefCounted",
+                 "GDScriptLanguageProtocol", "EditorNode3DGizmo"):
+        assert " | Excluded | " in class_rows[name]
+        assert all(" | Excluded | " in line for line in pages[CLASS_PAGES / f"{name}.md"].splitlines()
+                   if line.startswith("| [`")), f"Excluded class has a blocked member: {name}"
+    assert not any("first SDL3 GPU 2D rendering slice" in content for content in pages.values())
     for name in ("CurveTexture", "CurveXYZTexture"):
         rows = [line for line in pages[CLASS_PAGES / f"{name}.md"].splitlines() if line.startswith("| [`")]
         assert rows and all(" | Implemented | " in line for line in rows), f"Audited curve texture member lost implementation evidence: {name}"

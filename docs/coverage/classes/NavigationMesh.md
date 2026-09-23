@@ -1,6 +1,6 @@
 # NavigationMesh API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/NavigationMesh.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationMesh.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -47,8 +47,8 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`property float detail_sample_max_error = 1.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationMesh.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property float edge_max_error = 1.3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationMesh.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property float edge_max_length = 0.0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationMesh.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`property AABB filter_baking_aabb = AABB(0, 0, 0, 0, 0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationMesh.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
-| [`property Vector3 filter_baking_aabb_offset = Vector3(0, 0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationMesh.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property AABB filter_baking_aabb = AABB(0, 0, 0, 0, 0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationMesh.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`property Vector3 filter_baking_aabb_offset = Vector3(0, 0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationMesh.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property bool filter_ledge_spans = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationMesh.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property bool filter_low_hanging_obstacles = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationMesh.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property bool filter_walkable_low_height_spans = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationMesh.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |

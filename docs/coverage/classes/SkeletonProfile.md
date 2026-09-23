@@ -1,6 +1,6 @@
 # SkeletonProfile API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/SkeletonProfile.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -22,7 +22,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`method get_group(int bone_idx) -> StringName`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method get_group_name(int group_idx) -> StringName`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method get_handle_offset(int bone_idx) -> Vector2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`method get_reference_pose(int bone_idx) -> Transform3D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method get_reference_pose(int bone_idx) -> Transform3D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method get_tail_direction(int bone_idx) -> int [SkeletonProfile.TailDirection]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method get_texture(int group_idx) -> Texture2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method is_required(int bone_idx) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
@@ -32,7 +32,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`method set_group(int bone_idx, StringName group) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method set_group_name(int group_idx, StringName group_name) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method set_handle_offset(int bone_idx, Vector2 handle_offset) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`method set_reference_pose(int bone_idx, Transform3D bone_name) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method set_reference_pose(int bone_idx, Transform3D bone_name) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method set_required(int bone_idx, bool required) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method set_tail_direction(int bone_idx, int tail_direction [SkeletonProfile.TailDirection]) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method set_texture(int group_idx, Texture2D texture) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SkeletonProfile.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |

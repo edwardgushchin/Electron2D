@@ -1,6 +1,6 @@
 # EditorInspector API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/EditorInspector.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorInspector.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -19,7 +19,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`method get_edited_object() -> Object`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorInspector.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`method get_selected_path() -> String`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorInspector.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`method instantiate_property_editor(Object object, int type [Variant.Type], String path, int hint [PropertyHint], String hint_text, int usage, bool wide = false) -> EditorProperty`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorInspector.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
-| [`property bool draw_focus_border = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorInspector.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
+| [`property bool draw_focus_border = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorInspector.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`property int focus_mode [Control.FocusMode] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorInspector.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`property bool follow_focus = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorInspector.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`property int horizontal_scroll_mode [ScrollContainer.ScrollMode] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorInspector.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |

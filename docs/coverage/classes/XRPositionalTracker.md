@@ -1,6 +1,6 @@
 # XRPositionalTracker API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/XRPositionalTracker.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRPositionalTracker.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -21,7 +21,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`method has_pose(StringName name) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRPositionalTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method invalidate_pose(StringName name) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRPositionalTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method set_input(StringName name, Variant value) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRPositionalTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`method set_pose(StringName name, Transform3D transform, Vector3 linear_velocity, Vector3 angular_velocity, int tracking_confidence [XRPose.TrackingConfidence]) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRPositionalTracker.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method set_pose(StringName name, Transform3D transform, Vector3 linear_velocity, Vector3 angular_velocity, int tracking_confidence [XRPose.TrackingConfidence]) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRPositionalTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property int hand [XRPositionalTracker.TrackerHand] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRPositionalTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property String profile = ""`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRPositionalTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`signal button_pressed(String action_name) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRPositionalTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |

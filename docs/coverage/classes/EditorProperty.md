@@ -1,6 +1,6 @@
 # EditorProperty API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/EditorProperty.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorProperty.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -27,9 +27,9 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`property bool checkable = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorProperty.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`property bool checked = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorProperty.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`property bool deletable = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorProperty.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
-| [`property bool draw_background = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorProperty.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
-| [`property bool draw_label = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorProperty.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
-| [`property bool draw_warning = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorProperty.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
+| [`property bool draw_background = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorProperty.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`property bool draw_label = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorProperty.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
+| [`property bool draw_warning = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorProperty.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`property int focus_mode [Control.FocusMode] = 3`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorProperty.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`property bool keying = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorProperty.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`property String label = ""`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/EditorProperty.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |

@@ -1,6 +1,6 @@
 # VoxelGI API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/VoxelGI.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VoxelGI.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -21,5 +21,5 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`method debug_bake() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VoxelGI.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property CameraAttributes camera_attributes`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VoxelGI.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property VoxelGIData data`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VoxelGI.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`property Vector3 size = Vector3(20, 20, 20)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VoxelGI.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`property Vector3 size = Vector3(20, 20, 20)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VoxelGI.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property int subdiv [VoxelGI.Subdiv] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VoxelGI.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |

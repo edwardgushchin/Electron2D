@@ -1,6 +1,6 @@
 # TileMapLayer API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/TileMapLayer.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileMapLayer.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -58,6 +58,6 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`property PackedByteArray tile_map_data = PackedByteArray()`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileMapLayer.xml) | — | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
 | [`property TileSet tile_set`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileMapLayer.xml) | — | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
 | [`property bool use_kinematic_bodies = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileMapLayer.xml) | — | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`property bool x_draw_order_reversed = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileMapLayer.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
+| [`property bool x_draw_order_reversed = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileMapLayer.xml) | — | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
 | [`property int y_sort_origin = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileMapLayer.xml) | — | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
 | [`signal changed() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/TileMapLayer.xml) | — | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |

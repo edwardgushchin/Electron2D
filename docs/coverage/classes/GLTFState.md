@@ -1,6 +1,6 @@
 # GLTFState API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [modules/gltf/doc_classes/GLTFState.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -40,7 +40,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`method get_scene_node(int gltf_node_index) -> Node`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method get_skeletons() -> GLTFSkeleton[]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method get_skins() -> GLTFSkin[]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`method get_texture_samplers() -> GLTFTextureSampler[]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
+| [`method get_texture_samplers() -> GLTFTextureSampler[]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method get_textures() -> GLTFTexture[]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method get_unique_animation_names() -> String[]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method get_unique_names() -> String[]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
@@ -57,7 +57,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`method set_nodes(GLTFNode[] nodes) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method set_skeletons(GLTFSkeleton[] skeletons) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method set_skins(GLTFSkin[] skins) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`method set_texture_samplers(GLTFTextureSampler[] texture_samplers) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
+| [`method set_texture_samplers(GLTFTextureSampler[] texture_samplers) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method set_textures(GLTFTexture[] textures) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method set_unique_animation_names(String[] unique_animation_names) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method set_unique_names(String[] unique_names) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/gltf/doc_classes/GLTFState.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |

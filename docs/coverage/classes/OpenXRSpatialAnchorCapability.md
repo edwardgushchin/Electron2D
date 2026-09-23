@@ -1,6 +1,6 @@
 # OpenXRSpatialAnchorCapability API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -15,7 +15,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`enum_value PERSISTENCE_SCOPE_LOCAL_ANCHORS [PersistenceScope] = 1000781000`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`enum_value PERSISTENCE_SCOPE_SYSTEM_MANAGED [PersistenceScope] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method create_default_persistence_context(Callable user_callback = Callable()) -> OpenXRFutureResult`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`method create_new_anchor(Transform3D transform, RID spatial_context = RID(), OpenXRStructureBase next = null) -> OpenXRAnchorTracker`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method create_new_anchor(Transform3D transform, RID spatial_context = RID(), OpenXRStructureBase next = null) -> OpenXRAnchorTracker`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method create_persistence_context(int scope [OpenXRSpatialAnchorCapability.PersistenceScope], Callable user_callback = Callable()) -> OpenXRFutureResult`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method do_entity_update(RID spatial_context, OpenXRSpatialComponentData[] component_data, OpenXRStructureBase next_snapshot_create = null, OpenXRStructureBase next_snapshot_query = null) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method free_persistence_context(RID persistence_context) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRSpatialAnchorCapability.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |

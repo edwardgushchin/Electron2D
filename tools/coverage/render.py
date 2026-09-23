@@ -114,13 +114,43 @@ def reason_for_type(item, lookup):
         return "Excluded", "Public manual reference counting is excluded by ADRs 0003 and 0014. RefCounted ancestry maps to ElectronObject managed lifetime and IDisposable; descendant APIs are audited on their own pages."
     if name in {"NodePath", "StringName"}:
         return "Excluded", "Separate path/name wrapper is excluded by the string-based Node and group contract (ADRs 0008 and 0001); use string."
-    if name.startswith("RD") or name.startswith("UniformSetCacheRD"):
+    if name == "Marshalls":
+        return "Excluded", "Base64 and UTF-8 conversion use System.Convert and System.Text; Variant serialization is excluded by ADR 0001. No engine-owned wrapper is needed."
+    if name.startswith("GDScript") or name == "@GDScript":
+        return "Excluded", "GDScript runtime and tooling are outside the typed C# contract (ADR 0001)."
+    if (name.startswith("RD") or name.startswith("UniformSetCacheRD")
+            or name.endswith("RD") or name == "RenderingDevice"):
         return "Excluded", "Direct rendering-device public types conflict with the backend-neutral 2D API decision (ADR 0028)."
+    three_d_only = {
+        "BoxMesh", "CapsuleMesh", "CompositorEffect", "CompressedCubemap",
+        "CompressedCubemapArray", "CubemapArray", "CylinderMesh", "EditorNode3DGizmo",
+        "EditorNode3DGizmoPlugin", "EditorSceneFormatImporter", "EditorSceneFormatImporterBlend",
+        "EditorSceneFormatImporterFBX2GLTF", "EditorSceneFormatImporterGLTF",
+        "EditorSceneFormatImporterUFBX", "FogMaterial", "GridMapEditorPlugin",
+        "MeshConvexDecompositionSettings", "MeshLibrary",
+        "NavigationMeshGenerator", "NavigationServer3DManager", "PanoramaSkyMaterial",
+        "PhysicalSkyMaterial", "PhysicsServer3DManager", "PhysicsServer3DRenderingServerHandler",
+        "PlaceholderCubemap", "PlaceholderCubemapArray", "PlaneMesh", "PointMesh",
+        "PrismMesh", "ProceduralSkyMaterial", "QuadMesh",
+        "RenderData", "RenderDataExtension", "RenderSceneBuffers",
+        "RenderSceneBuffersConfiguration", "RenderSceneBuffersExtension", "RenderSceneData",
+        "RenderSceneDataExtension", "ResourceImporterOBJ", "ResourceImporterScene",
+        "RibbonTrailMesh", "SphereMesh", "TextMesh", "TorusMesh", "TubeTrailMesh",
+        "VisualShaderNodeBillboard", "VisualShaderNodeCubemap", "VisualShaderNodeCubemapParameter",
+        "VisualShaderNodeLinearSceneDepth", "VisualShaderNodeParticleMeshEmitter",
+        "VisualShaderNodeScreenNormalWorldSpace", "VisualShaderNodeTexture3DParameter",
+        "VisualShaderNodeTextureParameterTriplanar", "VisualShaderNodeWorldPositionFromDepth",
+        "VisualShaderNodeDeterminant", "VisualShaderNodeTransformCompose",
+        "VisualShaderNodeTransformConstant", "VisualShaderNodeTransformDecompose",
+        "VisualShaderNodeTransformFunc", "VisualShaderNodeTransformOp",
+        "VisualShaderNodeTransformParameter", "VisualShaderNodeTransformVecMult",
+    }
     # Mesh is shared by MeshInstance2D; exclude individual 3D members, not its whole family.
     three_d_roots = {"NavigationMesh", "Environment", "Compositor", "CameraAttributes", "Cubemap", "Sky", "SkyMaterial", "LightmapGIData", "Lightmapper", "BoneMap", "Texture3D"}
     if (re.search(r"(^|[^A-Za-z0-9])3D([^A-Za-z0-9]|$)", lineage)
             or any(part.endswith("3D") for part in ancestors)
             or any(part in three_d_roots for part in ancestors)
+            or name in three_d_only
             or name in {"AABB", "Basis", "Plane", "Projection", "Quaternion", "Transform3D", "SkeletonProfile", "SkeletonProfileHumanoid", "Skin", "SkinReference", "MobileVRInterface", "WebXRInterface"}
             or name.startswith(("OpenXR", "XR", "Skeleton3D", "BoneAttachment3D", "Node3DGizmo", "GLTF", "FBX", "Lightmap", "Voxel", "FogVolume"))):
         return "Excluded", "3D/XR product scope is excluded by ADR 0004; no implementation trigger."
@@ -128,8 +158,6 @@ def reason_for_type(item, lookup):
         return "Partial", "Global functions/constants/enums are distributed across typed C# declarations; audit each row."
     if item.get("api_type") == "editor" or name.startswith("Editor") or "Editor" in ancestors:
         return "Blocked", "Trigger: first self-hosted editor executable slice under ADR 0027."
-    if name in {"@GDScript", "GDScript", "GDScriptFunctionState"}:
-        return "Excluded", "GDScript runtime is outside the typed C# contract (ADR 0001)."
     accepted_slices = (
         ({"BitMap", "Color", "Geometry2D", "RandomNumberGenerator", "Rect2", "Rect2i", "Transform2D", "Vector2", "Vector2i", "Vector3", "Vector3i", "Vector4", "Vector4i"},
          "first complete typed 2D math or geometry slice (ADRs 0024, 0032, 0033 and 0035)"),
@@ -148,12 +176,62 @@ def reason_for_type(item, lookup):
          "first procedural 2D curve or noise resource slice after typed resource storage (ADR 0013)"),
         ({"Path2D", "PathFollow2D"},
          "first scene path/follower slice using the implemented PathCurve and Entity; include progress, rotation, looping, change subscriptions and packing (ADRs 0008 and 0013); navigation is not a prerequisite"),
+        ({"Line2D", "Marker2D", "Parallax2D", "ParallaxBackground", "ParallaxLayer", "Polygon2D", "RemoteTransform2D"},
+         "next 2D scene-node slice using the existing Entity, CanvasItem, canvas layers and polygon renderer (ADRs 0008 and 0028)"),
         ({"CurveTexture", "CurveXYZTexture"},
          "first curve-texture slice using implemented Curve and Texture; integrate curve-change rebaking, float channel formats and verified backend sampling (ADRs 0013 and 0028); GUI is not a prerequisite"),
+        ({"AnimatedTexture"},
+         "next timed texture-frame resource slice using the existing Texture, SpriteFrames and engine clock (ADRs 0013 and 0028)"),
     )
     for names, trigger in accepted_slices:
         if name in names:
             return "Unimplemented", f"Accepted 2D capability; trigger: {trigger}."
+    if name == "InputEventMIDI":
+        return "Blocked", "Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038)."
+    if name in {"InputEventShortcut", "Shortcut"}:
+        return "Blocked", "Trigger: first typed GUI/editor Shortcut ownership and focus-routing slice (ADR 0038)."
+    if name == "AccessibilityServer":
+        return "Blocked", "Trigger: first semantic accessibility-tree, focus and native screen-reader bridge slice (ADR 0041)."
+    if name == "NativeMenu":
+        return "Blocked", "Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041)."
+    if name in {"CameraFeed", "CameraServer", "CameraTexture"}:
+        return "Blocked", "Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021)."
+    if name in {"TextureLayered", "ImageTextureLayered", "Texture2DArray", "CompressedTexture2DArray", "CompressedTextureLayered", "PlaceholderTexture2DArray", "PlaceholderTextureLayered"}:
+        return "Blocked", "Trigger: first layered/array texture storage, upload and sampling slice in the 2D renderer (ADR 0028)."
+    if name in {"PlaceholderMaterial", "PlaceholderTexture2D"}:
+        return "Blocked", "Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023)."
+    if name in {"BlitMaterial", "DrawableTexture2D"}:
+        return "Blocked", "Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028)."
+    if name in {"CanvasTexture", "MeshTexture"}:
+        return "Blocked", "Trigger: first 2D light/mesh texture renderer integration (ADR 0028)."
+    if name == "NoiseTexture2D":
+        return "Blocked", "Trigger: complete the Noise resource and first noise-texture rebaking slice (ADR 0013)."
+    if name == "ExternalTexture":
+        return "Blocked", "Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028)."
+    if name == "DPITexture":
+        return "Blocked", "Trigger: first typed GUI DPI-scale and theme-texture slice (ADR 0028)."
+    if name in {"PackedDataContainer", "PackedDataContainerRef"}:
+        return "Blocked", "Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023)."
+    if name in {"AESContext", "HMACContext", "HashingContext"}:
+        return "Blocked", "Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001)."
+    if name.startswith("VisualShader"):
+        return "Blocked", "Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028)."
+    if name in {"CPUParticles2D", "GPUParticles2D", "ParticleProcessMaterial"}:
+        return "Blocked", "Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028)."
+    if name in {"DirectionalLight2D", "Light2D", "LightOccluder2D", "OccluderPolygon2D", "PointLight2D"}:
+        return "Blocked", "Trigger: first 2D light and occlusion renderer slice (ADR 0028)."
+    if name in {"BackBufferCopy", "CanvasGroup"}:
+        return "Blocked", "Trigger: first 2D offscreen composition and framebuffer-copy slice (ADR 0028)."
+    if name in {"CanvasItemMaterial", "CanvasModulate", "ShaderGlobalsOverride"}:
+        return "Blocked", "Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028)."
+    if name in {"ShaderInclude", "ShaderIncludeDB"}:
+        return "Blocked", "Trigger: first shader include import and dependency-tracking slice (ADR 0028)."
+    if name in {"SubViewport", "ViewportTexture"}:
+        return "Blocked", "Trigger: first independent offscreen viewport lifecycle and texture-output slice (ADRs 0008 and 0028)."
+    if name in {"VisibleOnScreenEnabler2D", "VisibleOnScreenNotifier2D"}:
+        return "Blocked", "Trigger: first retained-canvas visibility tracking and notification slice (ADR 0028)."
+    if name in {"ArrayMesh", "ImmediateMesh", "MeshInstance2D", "MultiMeshInstance2D", "PrimitiveMesh", "PlaceholderMesh"}:
+        return "Blocked", "Trigger: first typed 2D mesh-data and MeshInstance2D renderer slice (ADR 0028)."
     blocked_slices = (
         ({"ResourceFormatLoader", "ResourceFormatSaver", "ResourceImporter", "ResourcePreloader", "ResourceUID", "MissingResource", "MissingNode", "InstancePlaceholder", "PCKPacker", "ZIPReader", "ZIPPacker"},
          "first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023)"),
@@ -161,17 +239,15 @@ def reason_for_type(item, lookup):
          "first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028)"),
         ({"Mesh", "ImporterMesh", "MeshConvexDecompositionSettings", "MeshDataTool", "MeshLibrary", "MultiMesh", "SurfaceTool", "TriangleMesh"},
          "first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028)"),
-        ({"CompositorEffect", "RenderData", "RenderDataExtension", "RenderDataRD", "RenderSceneBuffers", "RenderSceneBuffersConfiguration", "RenderSceneBuffersExtension", "RenderSceneBuffersRD", "RenderSceneData", "RenderSceneDataExtension", "RenderSceneDataRD", "FramebufferCacheRD"},
-         "a concrete backend-neutral 2D compositing contract in the SDL3 GPU renderer; exclude direct RD members under ADR 0028"),
         ({"CodeHighlighter", "SyntaxHighlighter", "UndoRedo", "FoldableGroup", "ColorPalette"},
          "first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028)"),
         ({"CharFXTransform"}, "first typed rich-text effect slice after 2D GUI and text rendering (ADR 0028)"),
         ({"SkeletonModification2D", "SkeletonModification2DCCDIK", "SkeletonModification2DFABRIK", "SkeletonModification2DJiggle", "SkeletonModification2DLookAt", "SkeletonModification2DPhysicalBones", "SkeletonModification2DStackHolder", "SkeletonModification2DTwoBoneIK", "SkeletonModificationStack2D"},
          "first 2D skeletal animation and inverse-kinematics slice"),
-        ({"CSharpScript", "Script", "ScriptBacktrace", "ScriptLanguage", "ScriptLanguageExtension", "Expression", "GDExtension", "GDExtensionManager", "GodotInstance"},
+        ({"CSharpScript", "Script", "ScriptBacktrace", "ScriptExtension", "ScriptLanguage", "ScriptLanguageExtension", "Expression", "GDExtension", "GDExtensionManager", "GodotInstance"},
          "an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001)"),
         ({"OS", "Time", "Performance", "EngineDebugger", "EngineProfiler", "Logger", "MovieWriter", "StatusIndicator"},
-         "first SDL-backed host, profiling, logging or capture integration slice with target capability reporting (ADRs 0015, 0016 and 0021)"),
+         "first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021)"),
         ({"JavaClass", "JavaClassWrapper", "JavaObject", "JavaScriptBridge", "JavaScriptObject", "JNISingleton"},
          "first Android or Web host-interoperability slice after the portable SDL host (ADR 0021)"),
         ({"SceneReplicationConfig"}, "first typed multiplayer replication slice after scene persistence (ADR 0023)"),
@@ -188,18 +264,23 @@ def reason_for_type(item, lookup):
     for names, trigger in blocked_slices:
         if name in names:
             return "Blocked", f"Trigger: {trigger}."
+    gui_type = ("Control" in ancestors or "Window" in ancestors and name != "Window"
+                or name in {"ButtonGroup", "LabelSettings", "PopupMenu", "RichTextEffect",
+                            "TextLine", "TextParagraph", "TouchScreenButton", "TreeItem"}
+                or name.startswith(("StyleBox", "TextServer", "Theme")))
+    if gui_type:
+        return "Blocked", "GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028)."
     families = (
         ("Physics2D", r"Physics|Collision|RigidBody2D|StaticBody2D|CharacterBody2D|Area2D|Joint2D|RayCast2D|ShapeCast2D|Shape2D|SpringArm2D", "first Box2D.NET-backed 2D physics slice (ADR 0012)"),
-        ("GUI", r"Control|Button|Label|Text|Box|Container|Theme|Popup|Window|Scroll|LineEdit|Tab|Tree|Grid|Panel|Separator|GraphEdit|ColorPicker", "first typed 2D GUI and theme slice after rendering (ADR 0028)"),
         ("Audio", r"Audio|Sound|Microphone", "first audio mixing and playback slice"),
-        ("Navigation2D", r"Navigation|AStar2D|PathFollow2D|Path2D", "first 2D navigation slice"),
+        ("Navigation2D", r"Navigation|AStar(?:Grid)?2D|PathFollow2D|Path2D", "first 2D navigation slice"),
         ("Animation", r"Animation|Skeleton2D|Bone2D", "first scene animation slice"),
         ("Tiles", r"Tile|Atlas", "first tile and atlas resource slice after 2D rendering"),
         ("Networking", r"Multiplayer|PacketPeer|ENet|WebRTC|WebSocket|HTTP|TLS|DTLS|TCP|UDP|IP$|SocketServer|StreamPeer|UDSServer|UPNP", "first networking and multiplayer slice"),
         ("Assets", r"ResourceLoader|ResourceSaver|CompressedTexture|StreamTexture|ImageTexture|Font|Video|PackedData|ImageFormatLoader|GLTF|FBX", "first concrete loader and native-backed asset slice (ADR 0013/0023)"),
         ("InputHost", r"InputEvent|InputMap|Input$|Shortcut|Joypad|TouchScreen|Sensor", "first SDL input-host integration slice (ADR 0038)"),
         ("Host", r"DisplayServer|OS$|Time$|NativeMenu|CameraServer|CameraFeed|AccessibilityServer", "first SDL-backed platform host and display slice (ADR 0021/0038)"),
-        ("Rendering2D", r"Canvas|Sprite|Texture|Shader|Material|Light2D|Polygon2D|Viewport|Camera2D|Parallax|Rendering|Gradient|Particle|Occluder|Mesh", "first SDL3 GPU 2D rendering slice (ADR 0028)"),
+        ("Rendering2D", r"Canvas|Sprite|Texture|Shader|Material|Light2D|Polygon2D|Viewport|Camera2D|Parallax|Rendering|Gradient|Particle|Occluder|Mesh", "first missing type-specific 2D renderer integration beyond the existing GPU/fallback canvas slice (ADR 0028)"),
     )
     for domain, pattern, trigger in families:
         if re.search(pattern, lineage, re.IGNORECASE):
@@ -275,7 +356,7 @@ def special_reason(item, member):
     if item["name"] in {"CurveTexture", "CurveXYZTexture"}:
         return None  # Audited curve-texture members use the rendering overrides, including texture-mode values.
     if any(token in name for token in ("draw_", "canvas_", "texture_", "shader_", "render_")):
-        return "Blocked", "Trigger: first SDL3 GPU 2D rendering slice (ADR 0028)."
+        return "Blocked", "Trigger: first missing operation-specific retained-canvas, texture or shader integration in the existing 2D renderer (ADR 0028)."
     return None
 
 
@@ -416,8 +497,7 @@ def render():
         inherited = f"[{godot_type['inherits']}]({coverage_target(godot_type['inherits'])})" if godot_type["inherits"] else "—"
         page_name = TEXTURE_NAMES.get(name, name)
         page = CLASS_PAGES / f"{page_name}.md"
-        audit_date = "2026-09-23" if page_name in {"Vector3", "Vector3i", "Shader", "ShaderMaterial", "RefCounted"} else "2026-09-22"
-        lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {audit_date}", ""]
+        lines = [] if page in page_text else [f"# {page_name} API coverage", "", "Last updated: 2026-09-23", ""]
         if page_name == "Texture":
             if page not in page_text:
                 lines.extend(["The reference Texture and Texture2D contracts share one Electron2D Texture page under [ADR 0004](../../decisions/product.md#adr-0004). Each source declaration remains accounted for below.", ""])
@@ -441,7 +521,9 @@ def render():
         member_states = Counter()
         for member in godot_type["members"]:
             seen_upstream.add(member["id"])
-            special = special_reason(godot_type, member)
+            special = None if class_state == "Excluded" and not owners else special_reason(godot_type, member)
+            if class_state == "Blocked" and special and special[0] == "Blocked" and "operation-specific retained-canvas" in special[1]:
+                special = (class_state, class_reason)
             candidates = []
             if name == "@GlobalScope":
                 if member["kind"] in {"method", "constant"}:
@@ -545,7 +627,7 @@ def render():
             "The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.", "",
             f"1. Review {counts['Partial']} partially implemented rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.",
             f"2. Complete {counts['Unimplemented']} missing declarations in already represented type families; split each type by its documented dependency trigger.{actionable_note}",
-            "3. Implement the remaining domains in dependency order: SDL3 GPU 2D rendering with the accepted SDL_Renderer fallback; GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable fallback slice must audit each of the five blocked GL/EGL/GLX `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.", "",
+            "3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.", "",
             "## Existing type backlog", "",
             "These classes already have an Electron2D type. Sort by missing member count, then unaudited mapped count; this is workload order, not a claim that dependencies can be skipped.", "",
             "| Godot class | Unimplemented members | Partial members |", "| --- | ---: | ---: |"]

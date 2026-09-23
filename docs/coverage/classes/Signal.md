@@ -1,6 +1,6 @@
 # Signal API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/Signal.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Signal.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -14,8 +14,8 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`constructor Signal() -> Signal`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Signal.xml) | — | Excluded | Engine-owned dynamic/untyped primitive or collection is replaced by C# types and typed contracts (ADR 0001/0002); no engine-owned duplicate. |
 | [`constructor Signal(Object object, StringName signal) -> Signal`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Signal.xml) | — | Excluded | Engine-owned dynamic/untyped primitive or collection is replaced by C# types and typed contracts (ADR 0001/0002); no engine-owned duplicate. |
 | [`constructor Signal(Signal from) -> Signal`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Signal.xml) | — | Excluded | Engine-owned dynamic/untyped primitive or collection is replaced by C# types and typed contracts (ADR 0001/0002); no engine-owned duplicate. |
-| [`method connect(Callable callable, int flags = 0) -> int`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Signal.xml) | — | Excluded | Dynamic name/Variant/Callable API is replaced by typed C# contracts (ADRs 0001 and 0002). |
-| [`method disconnect(Callable callable) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Signal.xml) | — | Excluded | Dynamic name/Variant/Callable API is replaced by typed C# contracts (ADRs 0001 and 0002). |
+| [`method connect(Callable callable, int flags = 0) -> int`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Signal.xml) | — | Excluded | Engine-owned dynamic/untyped primitive or collection is replaced by C# types and typed contracts (ADR 0001/0002); no engine-owned duplicate. |
+| [`method disconnect(Callable callable) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Signal.xml) | — | Excluded | Engine-owned dynamic/untyped primitive or collection is replaced by C# types and typed contracts (ADR 0001/0002); no engine-owned duplicate. |
 | [`method emit() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Signal.xml) | — | Excluded | Engine-owned dynamic/untyped primitive or collection is replaced by C# types and typed contracts (ADR 0001/0002); no engine-owned duplicate. |
 | [`method get_connections() -> Array`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Signal.xml) | — | Excluded | Engine-owned dynamic/untyped primitive or collection is replaced by C# types and typed contracts (ADR 0001/0002); no engine-owned duplicate. |
 | [`method get_name() -> StringName`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Signal.xml) | — | Excluded | Engine-owned dynamic/untyped primitive or collection is replaced by C# types and typed contracts (ADR 0001/0002); no engine-owned duplicate. |

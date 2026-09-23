@@ -5,8 +5,8 @@ Last updated: 2026-09-23
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
 1. Review 1839 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 1161 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [BitMap](classes/BitMap.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
-3. Implement the remaining domains in dependency order: SDL3 GPU 2D rendering with the accepted SDL_Renderer fallback; GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable fallback slice must audit each of the five blocked GL/EGL/GLX `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
+2. Complete 1257 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [AnimatedTexture](classes/AnimatedTexture.md), [BitMap](classes/BitMap.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Line2D](classes/Line2D.md), [Marker2D](classes/Marker2D.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [Parallax2D](classes/Parallax2D.md), [ParallaxBackground](classes/ParallaxBackground.md), [ParallaxLayer](classes/ParallaxLayer.md), [Polygon2D](classes/Polygon2D.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [RemoteTransform2D](classes/RemoteTransform2D.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
+3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
 
@@ -81,36 +81,55 @@ These classes already have an Electron2D type. Sort by missing member count, the
 
 | Exact trigger | Classes |
 | --- | ---: |
-| Rendering2D: trigger is the first SDL3 GPU 2D rendering slice (ADR 0028). | 145 |
-| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 141 |
-| Trigger: first self-hosted editor executable slice under ADR 0027. | 79 |
+| Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028). | 92 |
+| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 89 |
+| Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
 | Audio: trigger is the first audio mixing and playback slice. | 56 |
 | Networking: trigger is the first networking and multiplayer slice. | 41 |
-| Physics2D: trigger is the first Box2D.NET-backed 2D physics slice (ADR 0012). | 41 |
-| Animation: trigger is the first scene animation slice. | 26 |
-| Navigation2D: trigger is the first 2D navigation slice. | 13 |
-| Trigger: a concrete backend-neutral 2D compositing contract in the SDL3 GPU renderer; exclude direct RD members under ADR 0028. | 12 |
-| Assets: trigger is the first concrete loader and native-backed asset slice (ADR 0013/0023). | 11 |
+| Physics2D: trigger is the first Box2D.NET-backed 2D physics slice (ADR 0012). | 39 |
+| Animation: trigger is the first scene animation slice. | 28 |
+| Assets: trigger is the first concrete loader and native-backed asset slice (ADR 0013/0023). | 13 |
+| Navigation2D: trigger is the first 2D navigation slice. | 12 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 11 |
-| Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 9 |
+| Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 10 |
 | Trigger: first 2D skeletal animation and inverse-kinematics slice. | 9 |
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 8 |
-| Trigger: first SDL-backed host, profiling, logging or capture integration slice with target capability reporting (ADRs 0015, 0016 and 0021). | 8 |
-| Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 8 |
+| Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 8 |
+| Trigger: first layered/array texture storage, upload and sampling slice in the 2D renderer (ADR 0028). | 7 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
+| Trigger: first typed 2D mesh-data and MeshInstance2D renderer slice (ADR 0028). | 6 |
+| Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 6 |
+| Trigger: first 2D light and occlusion renderer slice (ADR 0028). | 5 |
 | Trigger: first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028). | 5 |
-| Host: trigger is the first SDL-backed platform host and display slice (ADR 0021/0038). | 4 |
 | Trigger: a typed engine job-system decision with ownership, cancellation and target threading guarantees (ADRs 0001 and 0021). | 4 |
-| InputHost: trigger is the first SDL input-host integration slice (ADR 0038). | 3 |
+| Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001). | 3 |
+| Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028). | 3 |
+| Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028). | 3 |
+| Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
 | Trigger: first typed networking-security integration slice with a portable crypto backend (ADR 0021). | 3 |
+| Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 2 |
+| Trigger: first 2D offscreen composition and framebuffer-copy slice (ADR 0028). | 2 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 2 |
 | Trigger: first audio decoding and playback slice. | 2 |
+| Trigger: first independent offscreen viewport lifecycle and texture-output slice (ADRs 0008 and 0028). | 2 |
+| Trigger: first retained-canvas visibility tracking and notification slice (ADR 0028). | 2 |
+| Trigger: first shader include import and dependency-tracking slice (ADR 0028). | 2 |
+| Trigger: first typed GUI/editor Shortcut ownership and focus-routing slice (ADR 0038). | 2 |
+| Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first typed networking, address-resolution and RPC slice. | 2 |
+| Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
+| Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
+| Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
 | Trigger: an accepted public weak-reference contract beyond System.WeakReference<T>; Resource currently uses only an internal weak path cache (ADR 0013). | 1 |
+| Trigger: complete the Noise resource and first noise-texture rebaking slice (ADR 0013). | 1 |
 | Trigger: first backend-neutral 2D renderer resource-identity and lifetime slice (ADR 0028). | 1 |
+| Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041). | 1 |
+| Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |
+| Trigger: first semantic accessibility-tree, focus and native screen-reader bridge slice (ADR 0041). | 1 |
 | Trigger: first typed 2D navigation and pathfinding slice. | 1 |
+| Trigger: first typed GUI DPI-scale and theme-texture slice (ADR 0028). | 1 |
 | Trigger: first typed multiplayer replication slice after scene persistence (ADR 0023). | 1 |
 | Trigger: first typed rich-text effect slice after 2D GUI and text rendering (ADR 0028). | 1 |
-| Separate product-scope decision for each of 2 currently unassigned families; see their catalog pages for exact names. | 2 |
+| Separate product-scope decision for each of 1 currently unassigned families; see their catalog pages for exact names. | 1 |
 
 Each [catalog entry](catalog.md) opens the complete member table. Excluded rows have an accepted product reason and no implementation task.

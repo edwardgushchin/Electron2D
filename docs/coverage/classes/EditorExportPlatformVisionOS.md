@@ -1,6 +1,6 @@
 # EditorExportPlatformVisionOS API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [platform/visionos/doc_classes/EditorExportPlatformVisionOS.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/visionos/doc_classes/EditorExportPlatformVisionOS.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -197,6 +197,6 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`property PackedStringArray privacy/tracking_domains`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/visionos/doc_classes/EditorExportPlatformVisionOS.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`property bool privacy/tracking_enabled`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/visionos/doc_classes/EditorExportPlatformVisionOS.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`property int privacy/user_defaults_access_reasons`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/visionos/doc_classes/EditorExportPlatformVisionOS.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
-| [`property bool shader_baker/enabled`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/visionos/doc_classes/EditorExportPlatformVisionOS.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
+| [`property bool shader_baker/enabled`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/visionos/doc_classes/EditorExportPlatformVisionOS.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`property bool user_data/accessible_from_files_app`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/visionos/doc_classes/EditorExportPlatformVisionOS.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |
 | [`property bool user_data/accessible_from_itunes_sharing`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/visionos/doc_classes/EditorExportPlatformVisionOS.xml) | — | Blocked | Trigger: first self-hosted editor executable slice under ADR 0027. |

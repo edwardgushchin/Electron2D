@@ -1,6 +1,6 @@
 # OpenXRExtensionWrapper API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [modules/openxr/doc_classes/OpenXRExtensionWrapper.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRExtensionWrapper.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -23,8 +23,8 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`method _on_instance_created(int instance) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRExtensionWrapper.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method _on_instance_destroyed() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRExtensionWrapper.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method _on_main_swapchains_created() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRExtensionWrapper.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`method _on_post_draw_viewport(RID viewport) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRExtensionWrapper.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
-| [`method _on_pre_draw_viewport(RID viewport) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRExtensionWrapper.xml) | — | Blocked | Trigger: first SDL3 GPU 2D rendering slice (ADR 0028). |
+| [`method _on_post_draw_viewport(RID viewport) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRExtensionWrapper.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`method _on_pre_draw_viewport(RID viewport) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRExtensionWrapper.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method _on_pre_render() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRExtensionWrapper.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method _on_process() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRExtensionWrapper.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method _on_register_metadata(OpenXRInteractionProfileMetadata interaction_profile_metadata) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/openxr/doc_classes/OpenXRExtensionWrapper.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |

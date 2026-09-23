@@ -1,6 +1,6 @@
 # XRBodyTracker API coverage
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Godot source: [doc/classes/XRBodyTracker.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRBodyTracker.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -110,9 +110,9 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`enum_value JOINT_FLAG_POSITION_TRACKED [JointFlags] = 8`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRBodyTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`enum_value JOINT_FLAG_POSITION_VALID [JointFlags] = 4`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRBodyTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method get_joint_flags(int joint [XRBodyTracker.Joint]) -> int [XRBodyTracker.JointFlags]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRBodyTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`method get_joint_transform(int joint [XRBodyTracker.Joint]) -> Transform3D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRBodyTracker.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method get_joint_transform(int joint [XRBodyTracker.Joint]) -> Transform3D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRBodyTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`method set_joint_flags(int joint [XRBodyTracker.Joint], int flags [XRBodyTracker.JointFlags]) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRBodyTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`method set_joint_transform(int joint [XRBodyTracker.Joint], Transform3D transform) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRBodyTracker.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |
+| [`method set_joint_transform(int joint [XRBodyTracker.Joint], Transform3D transform) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRBodyTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property int body_flags [XRBodyTracker.BodyFlags] = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRBodyTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property bool has_tracking_data = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRBodyTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
 | [`property int type [XRServer.TrackerType] = 32`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/XRBodyTracker.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
