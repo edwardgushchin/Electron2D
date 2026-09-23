@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
+using CryptographicRandomNumberGenerator = System.Security.Cryptography.RandomNumberGenerator;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -463,7 +464,7 @@ public sealed class ConfigFile : ElectronObject
         ValidatePassword(password);
         EnsureAuthenticatedEncryptionSupported();
 
-        var salt = RandomNumberGenerator.GetBytes(EncryptionSaltSize);
+        var salt = CryptographicRandomNumberGenerator.GetBytes(EncryptionSaltSize);
         var derivedKey = Rfc2898DeriveBytes.Pbkdf2(
             password,
             salt,
@@ -691,7 +692,7 @@ public sealed class ConfigFile : ElectronObject
         offset += salt.Length;
 
         var nonce = envelope.AsSpan(offset, EncryptionNonceSize);
-        RandomNumberGenerator.Fill(nonce);
+        CryptographicRandomNumberGenerator.Fill(nonce);
 
         using var cipher = new AesGcm(key, EncryptionTagSize);
         cipher.Encrypt(

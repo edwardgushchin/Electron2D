@@ -688,7 +688,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RDUniform](classes/RDUniform.md) | RefCounted | Excluded | 5 |
 | [RDVertexAttribute](classes/RDVertexAttribute.md) | RefCounted | Excluded | 6 |
 | [RID](classes/RID.md) | — | Blocked | 10 |
-| [RandomNumberGenerator](classes/RandomNumberGenerator.md) | RefCounted | Unimplemented | 9 |
+| [RandomNumberGenerator](classes/RandomNumberGenerator.md) | RefCounted | Implemented | 9 |
 | [Range](classes/Range.md) | Control | Blocked | 17 |
 | [RayCast2D](classes/RayCast2D.md) | Node2D | Blocked | 21 |
 | [RayCast3D](classes/RayCast3D.md) | Node3D | Excluded | 25 |

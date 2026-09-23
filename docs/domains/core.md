@@ -12,7 +12,7 @@ Its production sources are grouped by upstream module under `src/Core/`: `Config
 
 ## Current state
 
-The domain currently contains eleven implemented components:
+The domain currently contains twelve implemented components:
 
 | Component | Responsibility | State |
 | --- | --- | --- |
@@ -25,10 +25,11 @@ The domain currently contains eleven implemented components:
 | [Main loop](../components/main-loop.md) | Owner-thread application lifecycle, frame hooks, stop requests, and platform-notification endpoints | Implemented and verified |
 | [Engine runtime](../components/engine-runtime.md) | Process-wide loop coordination, fixed-step scheduling, time scaling, metrics, build information, and named singletons | Implemented and verified |
 | [Scalar math](../components/scalar-math.md) | Stateless constants, transcendental functions, angles, interpolation, approximation, rounding, wrapping, and audio conversion | Implemented and verified |
+| [Random generation](../components/random-generation.md) | Independent PCG32 streams, seed/state restoration, bounded, weighted and normal sampling | Implemented and managed-verified |
 | [Color values](../components/color-values.md) | Floating-point RGBA math, HSV/OKHSL conversion, packing/parsing, and the standard named catalog | Implemented and verified |
 | [Geometry values](../components/geometry-values.md) | Engine-owned two/three/four-component vectors, rectangles, affine transforms, side identities, numeric and spatial operations | Implemented and verified |
 
-Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`FileAccessMode`](../classes/FileAccessMode.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Mathf`](../classes/Mathf.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), [`Transform`](../classes/Transform.md), and [`Side`](../classes/Side.md).
+Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`FileAccessMode`](../classes/FileAccessMode.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Mathf`](../classes/Mathf.md), [`RandomNumberGenerator`](../classes/RandomNumberGenerator.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), [`Transform`](../classes/Transform.md), and [`Side`](../classes/Side.md).
 
 ## Public surface
 
@@ -47,6 +48,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `Engine`: singleton runtime configuration, bounded host-driven scheduling, scaled/original delta delivery, callback metrics, architecture/version data, and typed named-singleton lookup including permanent Input/InputMap services.
 - `EngineVersionInfo`: immutable typed assembly version metadata.
 - `Mathf`: seven scalar constants and 127 integer/float/double/decimal operations covering transcendental math, angles, interpolation, approximation, rounding, periodic values, and audio conversion.
+- `RandomNumberGenerator`: independent managed PCG32 stream with restorable 64-bit seed/state and integer, float, normal and weighted sampling; it is not a cryptographic random source.
 - `Color`: sequential floating-point RGBA value with color-space conversion, math, composition, packing, text, and comparison behavior.
 - `Colors`: immutable 146-entry named color surface and lookup catalog.
 - `Vector2` and `Vector2I`: complete two-component floating-point/integer values for 2D spatial, grid, and numeric behavior.
@@ -66,6 +68,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `TranslationServer` has no dependency back on Core, so this direction does not form a cycle.
 - Core does not depend on SDL3-CS.
 - Scalar math depends only on .NET numeric primitives and has no mutable state, native backend, or higher-domain dependency.
+- Random generation uses .NET numeric and wall/monotonic clock primitives and inherited object lifetime; encryption and temporary-name code explicitly uses the separate .NET cryptographic generator.
 - Color math depends on `Mathf`, .NET primitives, and the bundled MIT-licensed managed OKHSL formulas; it has no native or rendering dependency. `ConfigFile` provides its strict finite JSON schema, while typed scene property storage consumes the reference-free value without a dependency back from Core Math to Scene.
 - Vector, rectangle, and transform math depends on `Mathf` plus .NET layout/formatting primitives. `ConfigFile` provides strict vector, `Position`/`Size`, and `X`/`Y`/`Origin` schemas, while typed scene storage consumes reference-free values without a dependency back from Core Math to Scene.
 - `Rect`, `Transform`, and Scene's `Entity` use `Electron2D.Vector2`; public external numerics types and old compatibility names are absent.
@@ -89,6 +92,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - File access enforces exact modes, complete scalar reads, strict UTF-8, authenticated-before-exposure encrypted reads, and lock-serialized instance calls. It is blocking/allocating and excluded from real-time hot paths.
 - Directory access captures one immutable path scope, serializes instance state, never recursively deletes caller-selected content, and distinguishes unsorted listing snapshots from ordinally sorted content snapshots.
 - `Mathf` is stateless, and normal nonthrowing calls are allocation-free after warmup. Single-precision approximate comparison uses strict `1e-6f`; double precision uses strict `1e-14`; documented managed exceptions remain visible.
+- Each `RandomNumberGenerator` instance serializes its draws and seed/state changes. Fixed seeds reproduce a stream; bounded integers use unbiased rejection, and disposal closes the stream.
 - Colors are sequential four-float values. Ordinary arithmetic retains HDR and IEEE 754 values; packed and HTML output are clamped/deterministic, and named lookup is immutable and thread-safe.
 - Vectors are sequential two-, three-, or four-component float/int values. Floating math retains IEEE behavior; ordinary integer component arithmetic wraps except for documented managed failures. Integer-vector squared norms return checked signed 64-bit values, while lengths and distances remain finite across all 32-bit coordinates; numeric hot paths allocate no managed memory after warmup.
 - Rectangles are sequential four-component values. Ordinary storage retains signed components and floating IEEE 754 values, normalization is explicit, point containment is half-open, integer math wraps except for documented managed failures, and numeric geometry is allocation-free after warmup.
@@ -110,6 +114,8 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 ## Verification
 
 `tests/Electron2D.Tests/Program.cs` verifies concurrent identity allocation, notifications, the `ElectronObject` lifetime contract, typed property discovery/access/validation/revert, property-list/script-change events, event-connection lifecycle/concurrency, the exact `Mathf` constant/overload surface and numeric boundaries, complete color behavior, all six vector surfaces and numeric boundaries, floating-point and integer rectangle layout/geometry/conversions/boundaries, transform decomposition/composition/inversion/interpolation/rectangle operations, Entity vector/transform integration, strict persistence, packed-scene storage, allocation behavior, configuration parsing/encoding/persistence/encryption/concurrency, file and directory access, MainLoop state/error/thread/Input-transition behavior, and Engine scaled/original scheduling/service-registry integration. SDL dummy-driver checks belong to the separate Display domain; this Core verification does not prove renderer or native-host behavior.
+
+[RandomNumberGeneratorTests](../../tests/Electron2D.Tests/RandomNumberGeneratorTests.cs) verifies fixed PCG32 vectors, state replay, integer range boundaries, weighted and normal sampling, typed descriptors and disposal on managed Linux/.NET.
 
 Built-in rendering settings now include canvas mip interpolation and viewport anisotropy defaults; their consumption and native evidence are documented in [project settings](../components/project-settings.md) and [canvas rendering](../components/canvas-rendering.md).
 

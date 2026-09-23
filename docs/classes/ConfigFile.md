@@ -508,7 +508,7 @@ Public operations may be invoked concurrently. Document reads and mutations are 
 
 ## Dependencies and interactions
 
-The class depends on `ElectronObject`, `System.Text.Json`, UTF-8/file primitives, `RandomNumberGenerator`, PBKDF2, and `AesGcm`. It does not depend on Scene, SDL, a resource loader, rendering, input, physics, scripting, or an editor. `ProjectSettings` reuses this component without changing its typed file contract.
+The class depends on `ElectronObject`, `System.Text.Json`, UTF-8/file primitives, `System.Security.Cryptography.RandomNumberGenerator`, PBKDF2, and `AesGcm`. It does not depend on Scene, SDL, a resource loader, rendering, input, physics, scripting, or an editor. `ProjectSettings` reuses this component without changing its typed file contract.
 
 ## Verification and known limitations
 

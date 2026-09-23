@@ -40,7 +40,7 @@ Implemented and verified. The complete audited 4.7.2 stable typed scalar surface
 
 ## Exclusions and limitations
 
-- No random-number generator, noise, generic numeric abstraction, vector overload, configurable global epsilon, approximate fast-trigonometry mode, or public SIMD contract exists.
+- Random generation is a separate [Core component](random-generation.md). This scalar-math component has no noise, generic numeric abstraction, vector overload, configurable global epsilon, approximate fast-trigonometry mode, or public SIMD contract.
 - Cube root remains a direct internal BCL operation where required because it is not part of the audited public surface.
 - Transcendental bit-for-bit equivalence across every supported OS/architecture is not claimed; only contract-level behavior is fixed.
 - Verification currently executes on Linux/.NET 8. Windows, macOS, Android, iOS, and Web remain unverified; this scalar component has no X11/Wayland-specific behavior.
