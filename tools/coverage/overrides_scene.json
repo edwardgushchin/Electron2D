@@ -1,5 +1,9 @@
 {
   "mappings": [
+    {"electron2d": "method:Electron2D.Control.GetGlobalRect()", "godot": "Control::method:get_global_rect()", "state": "Partial", "reason": "Control rectangle query uses the composed canvas transform and current layout size; rotation and layout-direction parity remain to audit."},
+    {"electron2d": "method:Electron2D.Control.GetParentAreaSize()", "godot": "Control::method:get_parent_area_size()", "state": "Partial", "reason": "The direct control or root viewport layout area is executable; other canvas-parent anchorable rectangles remain to audit."},
+    {"electron2d": "method:Electron2D.Control.GetParentControl()", "godot": "Control::method:get_parent_control()", "state": "Implemented", "reason": "Returns only the direct Control parent, as exercised by ControlLayoutTests."},
+    {"electron2d": "method:Electron2D.Control.GetRect()", "godot": "Control::method:get_rect()", "state": "Partial", "reason": "Local transformed origin and scale are executable; rotation and layout-direction parity remain to audit."},
     {
       "electron2d": "constant:Electron2D.CanvasItem.MaximumZIndex()",
       "godot": "RenderingServer::constant:CANVAS_ITEM_Z_MAX",
@@ -1742,6 +1746,13 @@
     }
   ],
   "extras": [
+    {"electron2d": "constructor:Electron2D.Control..ctor()", "state": "Implemented", "reason": "C# constructor for the reference Control type; creates detached zero-size layout state under ADR 0004."},
+    {"electron2d": "method:Electron2D.Control.CreateSceneInstanceFactory()", "state": "Implemented", "reason": "Typed PackedScene factory hook for the reference Control scene node under ADR 0004."},
+    {"electron2d": "method:Electron2D.Control.Dispose(System.Boolean)", "state": "Implemented", "reason": "Managed lifetime hook disconnects borrowed layout events under ADR 0003."},
+    {"electron2d": "method:Electron2D.Control.GetPropertyDescriptors()", "state": "Partial", "reason": "Typed scene metadata stores rectangle, transform, anchors and offsets; further layout properties await descriptors."},
+    {"electron2d": "method:Electron2D.Control.GetTransform()", "state": "Partial", "reason": "Control override supplies the inherited CanvasItem local-transform query with pivot, rotation and scale; full transform parity remains to audit."},
+    {"electron2d": "method:Electron2D.Control.OnNotification(System.Int32)", "state": "Partial", "reason": "Typed lifecycle hook projects reference Control canvas entry, exit and resize notifications; GUI lifecycle remains incomplete."},
+    {"electron2d": "method:Electron2D.Control.Reparent(Electron2D.Node,System.Boolean)", "state": "Partial", "reason": "Control override of inherited Node.Reparent preserves the global transformed origin after layout reflow; full Control transform parity remains to audit."},
     {
       "electron2d": "constructor:Electron2D.InputEvent..ctor()",
       "reason": "C# constructor supplies typed object creation; Godot class XML has no constructor row.",

@@ -284,6 +284,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Control",
+    "kind": "type",
+    "declaringType": "Electron2D.Control",
+    "name": "Control",
+    "signature": "public class Electron2D.Control",
+    "visibility": "public",
+    "baseType": "Electron2D.CanvasItem",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Curve",
     "kind": "type",
     "declaringType": "Electron2D.Curve",
@@ -2473,6 +2488,19 @@
     "value": "31"
   },
   {
+    "id": "constant:Electron2D.Control.NotificationResized()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Control",
+    "name": "NotificationResized",
+    "signature": "public const System.Int32 NotificationResized = 40",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "40"
+  },
+  {
     "id": "constant:Electron2D.DisplayServer.InvalidScreen()",
     "kind": "constant",
     "declaringType": "Electron2D.DisplayServer",
@@ -3594,6 +3622,19 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Control..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Control",
+    "name": ".ctor",
+    "signature": "public Control()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -12821,6 +12862,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Control.Resized()",
+    "kind": "event",
+    "declaringType": "Electron2D.Control",
+    "name": "Resized",
+    "signature": "public event System.Action Resized",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Curve.DomainChanged()",
     "kind": "event",
     "declaringType": "Electron2D.Curve",
@@ -17126,6 +17180,255 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetAnchor(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetAnchor",
+    "signature": "public System.Single GetAnchor(Electron2D.Side side)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "side",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetGlobalRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetGlobalRect",
+    "signature": "public Electron2D.Rect GetGlobalRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetOffset(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetOffset",
+    "signature": "public System.Single GetOffset(Electron2D.Side side)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "side",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetParentAreaSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetParentAreaSize",
+    "signature": "public Electron2D.Vector2 GetParentAreaSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetParentControl()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetParentControl",
+    "signature": "public Electron2D.Control GetParentControl()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetRect",
+    "signature": "public Electron2D.Rect GetRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetTransform()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetTransform",
+    "signature": "public override Electron2D.Transform GetTransform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.Reparent(Electron2D.Node,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "Reparent",
+    "signature": "public override System.Void Reparent(Electron2D.Node newParent, System.Boolean keepGlobalTransform = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "newParent",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "keepGlobalTransform",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.SetAnchor(Electron2D.Side,System.Single,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetAnchor",
+    "signature": "public System.Void SetAnchor(Electron2D.Side side, System.Single anchor, System.Boolean keepOffset = false, System.Boolean pushOppositeAnchor = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "side",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "anchor",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "keepOffset",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "pushOppositeAnchor",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.SetOffset(Electron2D.Side,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetOffset",
+    "signature": "public System.Void SetOffset(Electron2D.Side side, System.Single offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "side",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -47747,6 +48050,201 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.AnchorBottom()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "AnchorBottom",
+    "signature": "public System.Single AnchorBottom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.AnchorLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "AnchorLeft",
+    "signature": "public System.Single AnchorLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.AnchorRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "AnchorRight",
+    "signature": "public System.Single AnchorRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.AnchorTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "AnchorTop",
+    "signature": "public System.Single AnchorTop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.GlobalPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "GlobalPosition",
+    "signature": "public Electron2D.Vector2 GlobalPosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.OffsetBottom()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "OffsetBottom",
+    "signature": "public System.Single OffsetBottom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.OffsetLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "OffsetLeft",
+    "signature": "public System.Single OffsetLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.OffsetRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "OffsetRight",
+    "signature": "public System.Single OffsetRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.OffsetTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "OffsetTop",
+    "signature": "public System.Single OffsetTop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.PivotOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "PivotOffset",
+    "signature": "public Electron2D.Vector2 PivotOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.Position()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "Position",
+    "signature": "public Electron2D.Vector2 Position { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.Rotation()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "Rotation",
+    "signature": "public System.Single Rotation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.RotationDegrees()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "RotationDegrees",
+    "signature": "public System.Single RotationDegrees { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.Scale()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "Scale",
+    "signature": "public Electron2D.Vector2 Scale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.Size()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "Size",
+    "signature": "public Electron2D.Vector2 Size { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {

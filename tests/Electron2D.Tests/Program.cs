@@ -112,6 +112,7 @@ GradientTests.Run();
 AnimatedSpriteTests.Run();
 RenderingRuntimeTests.VerifyAtlasResources();
 SceneHierarchyTests.Run();
+ControlLayoutTests.Run();
 CanvasLifecycleTests.Run();
 CanvasSamplingTests.Run();
 CanvasPixelSnapTests.Run();

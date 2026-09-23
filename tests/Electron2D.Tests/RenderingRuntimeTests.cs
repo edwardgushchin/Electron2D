@@ -176,6 +176,15 @@ internal static partial class RenderingRuntimeTests
                 }
                 return;
             }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_HIERARCHY") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    VerifySceneHierarchy(backend);
+                }
+                return;
+            }
             VerifyShaderBooleans("BooleansHLSL"); VerifyShaderBooleans("BooleansGLSL");
             VerifyImageDependency();
             VerifyResources();

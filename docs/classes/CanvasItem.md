@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 **Inherits:** [Node](Node.md)
 
-**Inherited By:** [Entity](Entity.md)
+**Inherited By:** [Entity](Entity.md), [Control](Control.md)
 
 - **Source:** [CanvasItem.cs](../../src/Scene/Main/CanvasItem.cs)
 - **Namespace:** `Electron2D`
@@ -12,7 +12,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-The abstract canvas base. Owns visibility, Z/Y order, behind-parent drawing, modulation, materials, retained drawing and transform queries/notifications. Entity supplies a concrete spatial placement model. A direct CanvasItem subclass can provide its own model through GetTransform and notify changes with NotifyLocalTransformChanged. The Control/UI branch is not yet implemented. Only direct canvas parents contribute transforms, modulation and materials; a neutral Node breaks those chains. TopLevel preserves the local transform while ending transform/material/modulation/Z inheritance. Visibility follows direct canvas parents, including TopLevel items, and the containing window.
+The abstract canvas base. Owns visibility, Z/Y order, behind-parent drawing, modulation, materials, retained drawing and transform queries/notifications. Entity supplies a concrete spatial placement model; Control supplies a rectangular layout model in the separate UI branch. A direct CanvasItem subclass can provide its own model through GetTransform and notify changes with NotifyLocalTransformChanged. Only direct canvas parents contribute transforms, modulation and materials; a neutral Node breaks those chains. TopLevel preserves the local transform while ending transform/material/modulation/Z inheritance. Visibility follows direct canvas parents, including TopLevel items, and the containing window.
 
 Canvas roots follow scene order; a root's canvas subtree is ordered before the following root. TopLevel and neutral Node boundaries create separate canvas roots. Effective Z is always the primary draw key. At equal Z, children normally draw after their parent; ShowBehindParent draws a child subtree before it. YSortEnabled instead sorts the item itself (Y = 0) and its canvas children by local Y, merging nested enabled groups while keeping other child subtrees together. Drawing order does not change processing or input order.
 
@@ -126,7 +126,7 @@ Applies inverse `G` to GetGlobalMousePosition. A singular logical global transfo
 
 All coordinate queries require a live item and enforce its attached owner thread. Except GetCanvasLayerNode and the detached fallback of GetGlobalTransformWithCanvas, they require active viewport membership; missing membership/off-owner access throws InvalidOperationException and disposal throws ObjectDisposedException. Queries preserve logical node state and do not emit notifications.
 
-Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs); [Wayland GPU/compatibility and dummy rendering/input checks](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Native readback includes noncommuting viewport transforms, independent canvas roots, retained commands, pixel snapping and HLSL/GLSL materials. Camera and CanvasLayer are integrated; GUI, nested viewports and content scaling remain absent; no physical-input/visual or other-platform acceptance is claimed.
+Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs); [Wayland GPU/compatibility and dummy rendering/input checks](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Native readback includes noncommuting viewport transforms, independent canvas roots, retained commands, pixel snapping and HLSL/GLSL materials. Camera and CanvasLayer are integrated; Control layout is present, while GUI input, themes, nested viewports and content scaling remain absent; no physical-input/visual or other-platform acceptance is claimed.
 
 ## Constructors
 

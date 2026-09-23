@@ -4,8 +4,8 @@ Last updated: 2026-09-23
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1840 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 1257 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [AnimatedTexture](classes/AnimatedTexture.md), [BitMap](classes/BitMap.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Line2D](classes/Line2D.md), [Marker2D](classes/Marker2D.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [Parallax2D](classes/Parallax2D.md), [ParallaxBackground](classes/ParallaxBackground.md), [ParallaxLayer](classes/ParallaxLayer.md), [Polygon2D](classes/Polygon2D.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [RemoteTransform2D](classes/RemoteTransform2D.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
+1. Review 1865 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+2. Complete 1440 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [AnimatedTexture](classes/AnimatedTexture.md), [BitMap](classes/BitMap.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Line2D](classes/Line2D.md), [Marker2D](classes/Marker2D.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [Parallax2D](classes/Parallax2D.md), [ParallaxBackground](classes/ParallaxBackground.md), [ParallaxLayer](classes/ParallaxLayer.md), [Polygon2D](classes/Polygon2D.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [RemoteTransform2D](classes/RemoteTransform2D.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -15,6 +15,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Godot class | Unimplemented members | Partial members |
 | --- | ---: | ---: |
 | [RenderingServer](classes/RenderingServer.md) | 565 | 7 |
+| [Control](classes/Control.md) | 183 | 24 |
 | [Node](classes/Node.md) | 97 | 66 |
 | [Input](classes/Input.md) | 61 | 26 |
 | [Window](classes/Window.md) | 44 | 34 |
@@ -82,7 +83,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Exact trigger | Classes |
 | --- | ---: |
 | Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028). | 92 |
-| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 89 |
+| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 88 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
 | Audio: trigger is the first audio mixing and playback slice. | 56 |
 | Networking: trigger is the first networking and multiplayer slice. | 41 |

@@ -256,7 +256,7 @@ Subscribers run synchronously on the scene owner thread. Desktop movement does n
 
 ## Lifecycle, verification and limits
 
-See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. Physical-input/visual acceptance and other platforms remain unverified. Root rendering is implemented; content scaling, offscreen targets, GUI and nested windows remain absent. Native Wayland rejects Position and may constrain geometry; focus requests obey compositor policy.
+See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. Physical-input/visual acceptance and other platforms remain unverified. Root rendering and Control rectangle layout are implemented; content scaling, offscreen targets, interactive GUI and nested windows remain absent. Native Wayland rejects Position and may constrain geometry; focus requests obey compositor policy.
 
 Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028).
 

@@ -6,7 +6,7 @@ Last updated: 2026-09-23
 
 Scene owns Electron2D's primary Node-based game-object model, reusable typed in-memory scenes, and the active [`MainLoop`](../classes/MainLoop.md) implementation that delivers lifecycle, frame, pause, deferred-work, and deletion phases. A game object, composed subsystem, or complete world is represented by a Node hierarchy; the same hierarchy can be packed and instantiated for reuse. It is a 2D-only runtime domain for Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web and compiles into the single `Electron2D.dll` assembly.
 
-Its production sources live under `src/Scene/Main/`, `src/Scene/2D/`, `src/Scene/Animation/`, and `src/Scene/Resources/`, matching their engine-module ownership without changing the flat public `Electron2D` namespace.
+Its production sources live under `src/Scene/Main/`, `src/Scene/2D/`, `src/Scene/GUI/`, `src/Scene/Animation/`, and `src/Scene/Resources/`, matching their engine-module ownership without changing the flat public `Electron2D` namespace.
 
 ## Component inventory
 
@@ -20,13 +20,14 @@ Its production sources live under `src/Scene/Main/`, `src/Scene/2D/`, `src/Scene
 | [Tweening](../components/tweening.md) | Typed property/method interpolation, sequencing, callbacks, waits, nested timelines, loops, and frame policies | Implemented and verified |
 | [Packed scenes](../components/packed-scenes.md) | Typed in-memory owned-hierarchy capture, live metadata, detached reconstruction, and per-instance local resources | Implemented and verified |
 
-Production types include [`Path`](../classes/Path.md), [`PathFollow`](../classes/PathFollow.md), [`Node`](../classes/Node.md), [`CanvasItem`](../classes/CanvasItem.md), [`Sprite`](../classes/Sprite.md), [`AnimatedSprite`](../classes/AnimatedSprite.md), [`Window`](../classes/Window.md), [`Viewport`](../classes/Viewport.md), [`Entity`](../classes/Entity.md), [`NodeProcessMode`](../classes/NodeProcessMode.md), [`SceneTree`](../classes/SceneTree.md), [`Timer`](../classes/Timer.md), [`TimerProcessCallback`](../classes/TimerProcessCallback.md), [`SceneTreeTimer`](../classes/SceneTreeTimer.md), [`GroupCallFlags`](../classes/GroupCallFlags.md), [`Tween`](../classes/Tween.md), its four nested enum types, [`Tweener`](../classes/Tweener.md), its six concrete task types, [`PackedScene`](../classes/PackedScene.md), [`SceneState`](../classes/SceneState.md), and [`PackedSceneEditState`](../classes/PackedSceneEditState.md).
+Production types include [`Path`](../classes/Path.md), [`PathFollow`](../classes/PathFollow.md), [`Node`](../classes/Node.md), [`CanvasItem`](../classes/CanvasItem.md), [`Control`](../classes/Control.md), [`Sprite`](../classes/Sprite.md), [`AnimatedSprite`](../classes/AnimatedSprite.md), [`Window`](../classes/Window.md), [`Viewport`](../classes/Viewport.md), [`Entity`](../classes/Entity.md), [`NodeProcessMode`](../classes/NodeProcessMode.md), [`SceneTree`](../classes/SceneTree.md), [`Timer`](../classes/Timer.md), [`TimerProcessCallback`](../classes/TimerProcessCallback.md), [`SceneTreeTimer`](../classes/SceneTreeTimer.md), [`GroupCallFlags`](../classes/GroupCallFlags.md), [`Tween`](../classes/Tween.md), its four nested enum types, [`Tweener`](../classes/Tweener.md), its six concrete task types, [`PackedScene`](../classes/PackedScene.md), [`SceneState`](../classes/SceneState.md), and [`PackedSceneEditState`](../classes/PackedSceneEditState.md).
 
 ## Public surface
 
 - `Node`: neutral ordered hierarchy, lifecycle, paths/groups, processing/input, packed ownership and deletion.
 - `CanvasItem : Node`: abstract retained drawing, visibility, materials, modulation, Z, shared transform queries, texture sampling policies and local geometry notifications through ItemRectChanged.
 - `Entity : CanvasItem`: spatial position, rotation, scale, skew and helpers; Sprite, AnimatedSprite, Path and PathFollow derive directly from it.
+- `Control : CanvasItem`: rectangular anchor/offset layout, pivot transform and resize propagation; focus, theme, GUI input and containers remain gaps.
 - `Sprite`: borrowed texture drawing, sheet frames, atlas regions, local bounds/opacity, change notifications and typed PackedScene state.
 - `Path` / `PathFollow`: borrowed PathCurve containment, attached direct-parent sampling, loop/clamp and ratio controls, offsets, rotation, deferred worker resource changes and packed state.
 - `AnimatedSprite`: named SpriteFrames playback through the internal idle lane, reverse/custom speed, loop and progress events, retained texture/atlas drawing and packed state. Its [timing contract](../classes/AnimatedSprite.md#timing-contract-and-source-audit) includes exact-boundary and ping-pong details.
@@ -115,7 +116,7 @@ Production types include [`Path`](../classes/Path.md), [`PathFollow`](../classes
 
 ## Windowed lifecycle
 
-The [Window runtime component](../components/window-runtime.md) provides Window : Viewport : Node, root native ownership, presentation mode, four executable native policies, optional screen selection, client/decorated geometry, IME/taskbar requests, window events and scene input handling. Window.ModeEnum and Window.Flags describe the mode/policy identifiers. Capability failures stay explicit; declared policy IDs do not imply implemented native integration. Engine.Run consumes the configured window and children. The root canvas renders retained rectangles, lines, polylines, dashes, arcs, circles, ellipses, polygons, short primitives, textures and GPU shader materials after scene processing. Offscreen viewports, nested windows, GUI and content scaling are still absent.
+The [Window runtime component](../components/window-runtime.md) provides Window : Viewport : Node, root native ownership, presentation mode, four executable native policies, optional screen selection, client/decorated geometry, IME/taskbar requests, window events and scene input handling. Window.ModeEnum and Window.Flags describe the mode/policy identifiers. Capability failures stay explicit; declared policy IDs do not imply implemented native integration. Engine.Run consumes the configured window and children. The root canvas renders retained rectangles, lines, polylines, dashes, arcs, circles, ellipses, polygons, short primitives, textures and GPU shader materials after scene processing. Control rectangle layout is present; interactive GUI, offscreen viewports, nested windows and content scaling remain absent.
 
 Pixel-snapping integration is described by [the canvas component](../components/canvas-rendering.md#pixel-snapping). Viewport owns independent transform/vertex policies; rendering preserves logical node transforms, while Sprite local queries honor attached transform snapping. Project defaults initialize the explicit root Window at construction.
 

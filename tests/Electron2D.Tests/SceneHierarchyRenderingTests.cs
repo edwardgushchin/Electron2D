@@ -14,8 +14,10 @@ internal static partial class RenderingRuntimeTests
         var separate = new Sprite { Texture = texture, Centered = false, Position = new(8, 8), Scale = new(8, 8) };
         var canvas = new DirectCanvas(texture);
         var observer = new CanvasNode { Name = "observer" };
+        var ui = new Control { Position = new(48, 8), Size = new(24, 24) };
+        ui.AddChild(new Sprite { Texture = texture, Centered = false, Position = new(2, 2), Scale = new(8, 8) });
         window.AddChild(parent); parent.AddChild(direct); parent.AddChild(bridge); bridge.AddChild(separate);
-        window.AddChild(canvas); window.AddChild(observer);
+        window.AddChild(canvas); window.AddChild(ui); window.AddChild(observer);
         var frames = 0;
         observer.ReadyAction = n =>
         {
@@ -26,6 +28,7 @@ internal static partial class RenderingRuntimeTests
                 using var image = server.Readback();
                 Pixel(image, 10, 10, Colors.White);
                 Pixel(image, 10, 42, Colors.Cyan);
+                Pixel(image, 52, 12, Colors.White);
                 if (++frames == 1)
                 {
                     Pixel(image, 34, 10, Colors.Red);

@@ -199,7 +199,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ConfigFile](classes/ConfigFile.md) | RefCounted | Partial | 17 |
 | [ConfirmationDialog](classes/ConfirmationDialog.md) | AcceptDialog | Blocked | 5 |
 | [Container](classes/Container.md) | Control | Blocked | 11 |
-| [Control](classes/Control.md) | CanvasItem | Blocked | 267 |
+| [Control](classes/Control.md) | CanvasItem | Partial | 267 |
 | [ConvertTransformModifier3D](classes/ConvertTransformModifier3D.md) | BoneConstraint3D | Excluded | 25 |
 | [ConvexPolygonShape2D](classes/ConvexPolygonShape2D.md) | Shape2D | Blocked | 2 |
 | [ConvexPolygonShape3D](classes/ConvexPolygonShape3D.md) | Shape3D | Excluded | 1 |
