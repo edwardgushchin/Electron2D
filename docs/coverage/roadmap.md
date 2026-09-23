@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1677 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+1. Review 1690 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
 2. Complete 1107 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [FastNoiseLite](classes/FastNoiseLite.md), [JSON](classes/JSON.md), [Marker2D](classes/Marker2D.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [Parallax2D](classes/Parallax2D.md), [ParallaxBackground](classes/ParallaxBackground.md), [ParallaxLayer](classes/ParallaxLayer.md) class slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -51,6 +51,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [InputEvent](classes/InputEvent.md) | 0 | 14 |
 | [InputEventKey](classes/InputEventKey.md) | 0 | 14 |
 | [Line2D](classes/Line2D.md) | 0 | 14 |
+| [NoiseTexture2D](classes/NoiseTexture2D.md) | 0 | 12 |
 | [Timer](classes/Timer.md) | 0 | 12 |
 | [Translation](classes/Translation.md) | 0 | 9 |
 | [TranslationDomain](classes/TranslationDomain.md) | 0 | 9 |
@@ -127,7 +128,6 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
 | Trigger: an accepted public weak-reference contract beyond System.WeakReference<T>; Resource currently uses only an internal weak path cache (ADR 0013). | 1 |
-| Trigger: complete the Noise resource and first noise-texture rebaking slice (ADR 0013). | 1 |
 | Trigger: first backend-neutral 2D renderer resource-identity and lifetime slice (ADR 0028). | 1 |
 | Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041). | 1 |
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |

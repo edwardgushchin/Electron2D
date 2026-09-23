@@ -24,7 +24,8 @@
     "GradientTexture2D": "GradientTexture",
     "Camera2D": "Camera",
     "Line2D": "Line",
-    "Polygon2D": "Polygon"
+    "Polygon2D": "Polygon",
+    "NoiseTexture2D": "NoiseTexture"
   },
   "enums": {
     "CanvasItemMaterial.BlendMode": "CanvasItemMaterial.BlendModeEnum",

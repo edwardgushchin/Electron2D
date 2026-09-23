@@ -1275,9 +1275,70 @@
       "godot": "AnimatedTexture::property:resource_local_to_scene",
       "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
       "reason": "Inherited ResourceLocalToScene is the stored scene-local switch. PackedScene duplicates the animated texture and its force-local frame graph; AnimatedTextureTests verifies the local scene association."
+    },
+    {
+      "godot": "NoiseTexture2D::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "state": "Partial",
+      "reason": "The inherited Resource switch and graph-copy hooks exist; managed duplicate tests pass, but scene-local noise texture instantiation has not yet been verified."
+    },
+    {
+      "godot": "Texture2D::method:get_width()",
+      "electron2d": "method:Electron2D.NoiseTexture.GetWidth()",
+      "reason": "Returns the configured width, including before a noise source is assigned. NoiseTextureTests checks the managed dimension contract."
+    },
+    {
+      "godot": "Texture2D::method:_get_width()",
+      "electron2d": "method:Electron2D.NoiseTexture.GetWidth()",
+      "reason": "Concrete override of the inherited width query; retained Sprite pixels pass on Linux Wayland compatibility and GPU backends, other platforms unverified."
+    },
+    {
+      "godot": "Texture2D::method:get_height()",
+      "electron2d": "method:Electron2D.NoiseTexture.GetHeight()",
+      "reason": "Returns the configured height, including before a noise source is assigned. NoiseTextureTests checks the managed dimension contract."
+    },
+    {
+      "godot": "Texture2D::method:_get_height()",
+      "electron2d": "method:Electron2D.NoiseTexture.GetHeight()",
+      "reason": "Concrete override of the inherited height query; retained Sprite pixels pass on Linux Wayland compatibility and GPU backends, other platforms unverified."
+    },
+    {
+      "godot": "Texture2D::method:get_size()",
+      "electron2d": "method:Electron2D.NoiseTexture.GetSize()",
+      "reason": "Returns both configured dimensions from one synchronized snapshot."
+    },
+    {
+      "godot": "Texture2D::method:get_image()",
+      "electron2d": "method:Electron2D.NoiseTexture.GetImage()",
+      "reason": "Managed image generation is executable with grayscale, color ramp, normals, mipmaps and source invalidation. Retained Sprite pixels pass on Linux Wayland compatibility and GPU; exact derived-format and other-platform parity remain partial."
+    },
+    {
+      "godot": "Texture2D::method:_get_image()",
+      "electron2d": "method:Electron2D.NoiseTexture.GetImage()",
+      "reason": "Concrete image-read override of the inherited texture contract; retained Sprite pixels pass on Linux Wayland compatibility and GPU, other platforms unverified."
+    },
+    {
+      "godot": "Texture2D::method:has_alpha()",
+      "electron2d": "property:Electron2D.NoiseTexture.HasAlpha()",
+      "reason": "The pinned noise texture reports false regardless of its generated RGBA image; NoiseTextureTests checks the inherited method projection."
+    },
+    {
+      "godot": "Texture2D::method:_has_alpha()",
+      "electron2d": "property:Electron2D.NoiseTexture.HasAlpha()",
+      "reason": "Concrete override of the pinned false alpha declaration; generated pixel alpha remains available through GetImage and IsPixelOpaque."
     }
   ],
   "statusGroups": [
+    {
+      "state": "Partial",
+      "reason": "NoiseTextureTests covers 2D sampling, defaults, source invalidation, gradient mapping, normals, mipmaps, seamless selection, copies, failure recovery and disposal. Generation is lazy with immediate invalidation under ADR 0013 rather than the pinned deferred worker schedule; exact derived-image parity and scene-local instantiation remain to verify. Retained Sprite pixels pass on Linux Wayland compatibility and GPU; other platforms remain unverified.",
+      "godot": ["class:NoiseTexture2D", "NoiseTexture2D::property:as_normal_map", "NoiseTexture2D::property:bump_strength", "NoiseTexture2D::property:color_ramp", "NoiseTexture2D::property:generate_mipmaps", "NoiseTexture2D::property:height", "NoiseTexture2D::property:invert", "NoiseTexture2D::property:noise", "NoiseTexture2D::property:normalize", "NoiseTexture2D::property:seamless", "NoiseTexture2D::property:seamless_blend_skirt", "NoiseTexture2D::property:width"]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Three-dimensional noise-space sampling is outside the strict 2D product boundary (ADR 0004).",
+      "godot": ["NoiseTexture2D::property:in_3d_space"]
+    },
     {
       "state": "Partial",
       "reason": "Five blend modes and the live BlendMode resource are executable on Linux Wayland GPU and compatibility hardware renderers. Software supports Mix and rejects the other modes. Light modes require the first 2D light and occlusion slice; particle animation requires 2D particle simulation and renderer integration (ADR 0028).",
@@ -2481,6 +2542,31 @@
     {
       "electron2d": "property:Electron2D.AnimatedTexture.PixelFormat()",
       "reason": "Concrete override projects inherited Texture2D/Texture current-frame dimensions, image/opacity queries or image format/mipmap metadata; AnimatedTextureTests verifies current/empty-frame queries. Mixed-size frame crop and source-resize invalidation are verified by managed and native tests."
+    },
+    {
+      "electron2d": "constructor:Electron2D.NoiseTexture..ctor()",
+      "reason": "Managed construction of the existing generated noise texture with its reference defaults and no source.",
+      "adr": "ADRs 0004/0013"
+    },
+    {
+      "electron2d": "method:Electron2D.NoiseTexture.CreateDuplicateInstance()",
+      "reason": "Exact-type construction for managed Resource graph duplication of the generated noise texture.",
+      "adr": "ADR 0013"
+    },
+    {
+      "electron2d": "method:Electron2D.NoiseTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed stored-setting and borrowed-source copying through the Resource graph policy.",
+      "adr": "ADR 0013"
+    },
+    {
+      "electron2d": "method:Electron2D.NoiseTexture.GetPropertyDescriptors()",
+      "reason": "Typed stored-property metadata for the reference noise texture settings.",
+      "adr": "ADRs 0005/0013"
+    },
+    {
+      "electron2d": "method:Electron2D.NoiseTexture.Dispose(System.Boolean)",
+      "reason": "Detaches change subscriptions and releases owned generated pixels without disposing borrowed sources.",
+      "adr": "ADRs 0003/0013"
     }
   ]
 }

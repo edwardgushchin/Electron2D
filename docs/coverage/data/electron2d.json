@@ -1760,6 +1760,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.NoiseTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "NoiseTexture",
+    "signature": "public sealed class Electron2D.NoiseTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PackedScene",
     "kind": "type",
     "declaringType": "Electron2D.PackedScene",
@@ -4574,6 +4589,19 @@
     "name": ".ctor",
     "signature": "protected Noise()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.NoiseTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": ".ctor",
+    "signature": "public NoiseTexture()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -34409,6 +34437,142 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NoiseTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NoiseTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NoiseTexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NoiseTexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NoiseTexture.GetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "GetImage",
+    "signature": "public override Electron2D.Image GetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NoiseTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NoiseTexture.GetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "GetSize",
+    "signature": "public override Electron2D.Vector2 GetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NoiseTexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PackedScene.CanInstantiate()",
     "kind": "method",
     "declaringType": "Electron2D.PackedScene",
@@ -56227,6 +56391,162 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NoiseTexture.AsNormalMap()",
+    "kind": "property",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "AsNormalMap",
+    "signature": "public System.Boolean AsNormalMap { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NoiseTexture.BumpStrength()",
+    "kind": "property",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "BumpStrength",
+    "signature": "public System.Single BumpStrength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NoiseTexture.ColorRamp()",
+    "kind": "property",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "ColorRamp",
+    "signature": "public Electron2D.Gradient ColorRamp { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Gradient",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NoiseTexture.GenerateMipmaps()",
+    "kind": "property",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "GenerateMipmaps",
+    "signature": "public System.Boolean GenerateMipmaps { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NoiseTexture.HasAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "HasAlpha",
+    "signature": "public System.Boolean HasAlpha { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NoiseTexture.Height()",
+    "kind": "property",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "Height",
+    "signature": "public System.Int32 Height { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NoiseTexture.Invert()",
+    "kind": "property",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "Invert",
+    "signature": "public System.Boolean Invert { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NoiseTexture.Noise()",
+    "kind": "property",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "Noise",
+    "signature": "public Electron2D.Noise Noise { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Noise",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NoiseTexture.Normalize()",
+    "kind": "property",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "Normalize",
+    "signature": "public System.Boolean Normalize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NoiseTexture.Seamless()",
+    "kind": "property",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "Seamless",
+    "signature": "public System.Boolean Seamless { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NoiseTexture.SeamlessBlendSkirt()",
+    "kind": "property",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "SeamlessBlendSkirt",
+    "signature": "public System.Single SeamlessBlendSkirt { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NoiseTexture.Width()",
+    "kind": "property",
+    "declaringType": "Electron2D.NoiseTexture",
+    "name": "Width",
+    "signature": "public System.Int32 Width { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
