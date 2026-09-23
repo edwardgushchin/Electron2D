@@ -506,7 +506,7 @@ def render():
         inherited = f"[{godot_type['inherits']}]({coverage_target(godot_type['inherits'])})" if godot_type["inherits"] else "—"
         page_name = TEXTURE_NAMES.get(name, name)
         page = CLASS_PAGES / f"{page_name}.md"
-        updated = "2026-09-24" if name.startswith("Packed") and name.endswith("Array") else "2026-09-23"
+        updated = "2026-09-24" if name in {"OptimizedTranslation", "Translation"} or (name.startswith("Packed") and name.endswith("Array")) else "2026-09-23"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:
@@ -617,7 +617,7 @@ def render():
     engine_only = [entry for entry in engine if entry["id"] not in used_engine]
     if len(used_engine) + len(engine_only) != len(engine):
         raise ValueError("Electron2D accounting mismatch")
-    lines = ["# Electron2D declarations without an audited upstream row", "", "Last updated: 2026-09-23", "",
+    lines = ["# Electron2D declarations without an audited upstream row", "", "Last updated: 2026-09-24", "",
              "These declarations are present in the compiled runtime. A blank upstream cell means no exact counterpart was established by the conservative name-and-arity mapper; it does not claim an intentional extension. Review each against the linked Godot class page and record a rationale before declaring parity.", "",
              "| Godot API | Electron2D API | State | Reason / next action |", "| --- | --- | --- | --- |"]
     for entry in engine_only:

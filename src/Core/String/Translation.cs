@@ -151,11 +151,11 @@ public class Translation : Resource
 
     /// <summary>Gets the number of contextual source-message entries.</summary>
     /// <returns>The entry count; plural forms count as one entry.</returns>
-    public int GetMessageCount() { lock (_gate) { ThrowIfDisposed(); return _messages.Count; } }
+    public virtual int GetMessageCount() { lock (_gate) { ThrowIfDisposed(); return _messages.Count; } }
 
     /// <summary>Gets source messages with context separated by the EOT character.</summary>
     /// <returns>An independent array of source-message keys.</returns>
-    public string[] GetMessageList()
+    public virtual string[] GetMessageList()
     {
         lock (_gate)
         {
@@ -166,7 +166,7 @@ public class Translation : Resource
 
     /// <summary>Gets every translated form stored by this catalog.</summary>
     /// <returns>An independent array including all plural forms.</returns>
-    public string[] GetTranslatedMessageList()
+    public virtual string[] GetTranslatedMessageList()
     {
         lock (_gate) { ThrowIfDisposed(); return _messages.Values.SelectMany(forms => forms).ToArray(); }
     }

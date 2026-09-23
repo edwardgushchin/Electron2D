@@ -1,10 +1,10 @@
 # Translation
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [Resource](Resource.md)
 
-**Inherited By:** Custom translation resources
+**Inherited By:** [OptimizedTranslation](OptimizedTranslation.md), custom translation resources
 
 - **Source:** [`src/Core/String/Translation.cs`](../../src/Core/String/Translation.cs)
 - **Namespace:** `Electron2D`
@@ -13,6 +13,8 @@ Last updated: 2026-09-23
 ## Description
 
 `Translation` is a mutable in-memory catalog for one locale. Each `(context, source)` key stores one or more translated strings. The catalog owns copies of plural-form lists and keeps no external resource references. Register it with [TranslationServer](TranslationServer.md) to serve `ElectronObject.Tr` and `TrN`; registration borrows the catalog, observes later edits, and ends on removal, clearing, or disposal.
+
+The message-count and list methods are virtual so a compressed derived catalog can omit source keys while retaining the same server lookup contract. [OptimizedTranslation](OptimizedTranslation.md) supplies that implementation.
 
 Reads and writes are serialized per resource. `Resource.Changed` is raised after a mutation commits, outside the resource lock; a throwing handler does not roll it back. The managed `Resource` duplication hooks copy message containers independently and retain the plural-selector delegate reference. All public operations except construction reject a disposed resource.
 
@@ -53,9 +55,9 @@ The snippet assumes `using System.Globalization;` and leaves any prior process-w
 | [`public void EraseMessage(string source, string context = "")`](#erasemessage) | Removes a contextual entry when present. |
 | [`public string GetMessage(string source, string context = "")`](#getmessage) | Resolves the first form or returns empty text. |
 | [`public string GetPluralMessage(string source, string plural, long count, string context = "")`](#getpluralmessage) | Resolves one plural form or returns empty text. |
-| [`public int GetMessageCount()`](#getmessagecount) | Counts contextual entries. |
-| [`public string[] GetMessageList()`](#getmessagelist) | Returns copied source keys, with contexts encoded by EOT. |
-| [`public string[] GetTranslatedMessageList()`](#gettranslatedmessagelist) | Returns all stored translated forms. |
+| [`public virtual int GetMessageCount()`](#getmessagecount) | Counts contextual entries. |
+| [`public virtual string[] GetMessageList()`](#getmessagelist) | Returns copied source keys, with contexts encoded by EOT. |
+| [`public virtual string[] GetTranslatedMessageList()`](#gettranslatedmessagelist) | Returns all stored translated forms. |
 | [`protected virtual string? OnGetMessage(string source, string context)`](#ongetmessage) | Derived singular lookup before local storage. |
 | [`protected virtual string? OnGetPluralMessage(string source, string plural, long count, string context)`](#ongetpluralmessage) | Derived plural lookup before local storage. |
 | [`protected override Resource CreateDuplicateInstance()`](#createduplicateinstance) | Creates an exact-type duplication target. |

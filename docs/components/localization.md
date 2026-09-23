@@ -1,6 +1,6 @@
 # Translation component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Scope
 
@@ -8,15 +8,15 @@ This Localization component stores and resolves domain/context translations for 
 
 ## Owned type
 
-[`TranslationServer`](../classes/TranslationServer.md) resolves direct registrations and owns named [`TranslationDomain`](../classes/TranslationDomain.md) registrations of borrowed [`Translation`](../classes/Translation.md) resources. `ElectronObject` provides per-instance domain and enablement settings and delegates `Tr`/`TrN` calls to the server.
+[`TranslationServer`](../classes/TranslationServer.md) resolves direct registrations and owns named [`TranslationDomain`](../classes/TranslationDomain.md) registrations of borrowed [`Translation`](../classes/Translation.md) resources. [`OptimizedTranslation`](../classes/OptimizedTranslation.md) is a derived catalog that stores compressed values without source keys. `ElectronObject` provides per-instance domain and enablement settings and delegates `Tr`/`TrN` calls to the server.
 
 ## Current implementation status
 
-Direct registration and contextual, mutable resource catalogs execute through the same lookup path. A registered domain can override culture and enablement and pseudolocalize singular results. Resource duplication copies independent message containers. No catalog asset loader or automatic locale selection exists.
+Direct registration and contextual, mutable resource catalogs execute through the same lookup path. A registered domain can override culture and enablement and pseudolocalize singular results. Resource duplication copies independent message containers. Optimized catalogs generate hash-keyed, optionally Brotli-compressed values, skip contextual entries, keep only the first plural form, hide source keys, and duplicate their lookup maps. No catalog asset loader or automatic locale selection exists.
 
 ## Dependencies
 
-The component depends only on .NET globalization, collections, and threading primitives. Core calls into it, but it has no dependency back on Core and no SDL3-CS dependency.
+The component depends on .NET globalization, collections, cryptography and Brotli compression. Core calls into it, but it has no dependency back on Core and no SDL3-CS dependency.
 
 ## Lookup
 
@@ -30,8 +30,8 @@ Direct registration, domain registry changes, clearing, and culture changes use 
 
 ## Exclusions
 
-The component does not load files, format parameters, infer plural rules, or select culture from the operating system after startup.
+The component does not load files, format parameters, infer plural rules, or select culture from the operating system after startup. Optimized catalogs do not implement the source engine's serialized Smaz format or restrict `Generate` to an editor build in the shared assembly.
 
 ## Verification
 
-Tests cover parent-culture lookup, source fallback, domain selection, direct and resource plural selectors, contextual edits, independent duplication, removal, disposal, per-object disabling, domain locale override and singular pseudolocalization. Exact Unicode and locale-score parity remain unaudited.
+Tests cover parent-culture lookup, source fallback, domain selection, direct and resource plural selectors, contextual edits, optimized compressed lookup and key hiding, independent duplication, removal, disposal, per-object disabling, domain locale override and singular pseudolocalization. A warmed 1,024-call direct optimized lookup check measured 0 managed allocated bytes on Linux/.NET 8. Native or external allocations, the complete server lookup route, total catalog memory use, and exact Unicode and locale-score parity remain unmeasured or unaudited.

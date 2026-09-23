@@ -571,7 +571,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [OpenXRSpatialQueryResultData](classes/OpenXRSpatialQueryResultData.md) | OpenXRSpatialComponentData | Excluded | 3 |
 | [OpenXRStructureBase](classes/OpenXRStructureBase.md) | RefCounted | Excluded | 3 |
 | [OpenXRVisibilityMask](classes/OpenXRVisibilityMask.md) | VisualInstance3D | Excluded | 0 |
-| [OptimizedTranslation](classes/OptimizedTranslation.md) | Translation | Unimplemented | 1 |
+| [OptimizedTranslation](classes/OptimizedTranslation.md) | Translation | Partial | 1 |
 | [OptionButton](classes/OptionButton.md) | Button | Blocked | 50 |
 | [PCKPacker](classes/PCKPacker.md) | RefCounted | Blocked | 5 |
 | [PackedByteArray](classes/PackedByteArray.md) | — | Excluded | 76 |

@@ -1913,6 +1913,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.OptimizedTranslation",
+    "kind": "type",
+    "declaringType": "Electron2D.OptimizedTranslation",
+    "name": "OptimizedTranslation",
+    "signature": "public sealed class Electron2D.OptimizedTranslation",
+    "visibility": "public",
+    "baseType": "Electron2D.Translation",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PackedScene",
     "kind": "type",
     "declaringType": "Electron2D.PackedScene",
@@ -4810,6 +4825,19 @@
     "declaringType": "Electron2D.NoiseTexture",
     "name": ".ctor",
     "signature": "public NoiseTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.OptimizedTranslation..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.OptimizedTranslation",
+    "name": ".ctor",
+    "signature": "public OptimizedTranslation()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -35627,6 +35655,193 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OptimizedTranslation.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptimizedTranslation",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptimizedTranslation.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptimizedTranslation",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptimizedTranslation.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptimizedTranslation",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptimizedTranslation.Generate(Electron2D.Translation)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptimizedTranslation",
+    "name": "Generate",
+    "signature": "public System.Boolean Generate(Electron2D.Translation source)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "Electron2D.Translation",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptimizedTranslation.GetMessageCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptimizedTranslation",
+    "name": "GetMessageCount",
+    "signature": "public override System.Int32 GetMessageCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptimizedTranslation.GetMessageList()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptimizedTranslation",
+    "name": "GetMessageList",
+    "signature": "public override System.String[] GetMessageList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptimizedTranslation.GetTranslatedMessageList()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptimizedTranslation",
+    "name": "GetTranslatedMessageList",
+    "signature": "public override System.String[] GetTranslatedMessageList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptimizedTranslation.OnGetMessage(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptimizedTranslation",
+    "name": "OnGetMessage",
+    "signature": "protected override System.String OnGetMessage(System.String source, System.String context)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "context",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptimizedTranslation.OnGetPluralMessage(System.String,System.String,System.Int64,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptimizedTranslation",
+    "name": "OnGetPluralMessage",
+    "signature": "protected override System.String OnGetPluralMessage(System.String source, System.String plural, System.Int64 count, System.String context)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "plural",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "count",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "context",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PackedScene.CanInstantiate()",
     "kind": "method",
     "declaringType": "Electron2D.PackedScene",
@@ -41964,7 +42179,7 @@
     "kind": "method",
     "declaringType": "Electron2D.Translation",
     "name": "GetMessageCount",
-    "signature": "public System.Int32 GetMessageCount()",
+    "signature": "public virtual System.Int32 GetMessageCount()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -41977,7 +42192,7 @@
     "kind": "method",
     "declaringType": "Electron2D.Translation",
     "name": "GetMessageList",
-    "signature": "public System.String[] GetMessageList()",
+    "signature": "public virtual System.String[] GetMessageList()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -42037,7 +42252,7 @@
     "kind": "method",
     "declaringType": "Electron2D.Translation",
     "name": "GetTranslatedMessageList",
-    "signature": "public System.String[] GetTranslatedMessageList()",
+    "signature": "public virtual System.String[] GetTranslatedMessageList()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

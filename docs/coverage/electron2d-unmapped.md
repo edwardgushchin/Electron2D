@@ -1,6 +1,6 @@
 # Electron2D declarations without an audited upstream row
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 These declarations are present in the compiled runtime. A blank upstream cell means no exact counterpart was established by the conservative name-and-arity mapper; it does not claim an intentional extension. Review each against the linked Godot class page and record a rationale before declaring parity.
 
@@ -65,6 +65,7 @@ These declarations are present in the compiled runtime. A blank upstream cell me
 | — | [`public Node()`](../classes/Node.md) | Implemented | Electron2D-specific: C# constructor supplies typed object creation; Godot class XML has no constructor row. (docs/decisions/product.md#adr-0001). |
 | — | [`protected Noise()`](../classes/Noise.md) | Implemented | Electron2D-specific: Protected managed construction permits concrete noise resource subclasses; the reference abstract class has no constructor declaration. (adr-0004). |
 | — | [`public NoiseTexture()`](../classes/NoiseTexture.md) | Implemented | Electron2D-specific: Managed construction of the existing generated noise texture with its reference defaults and no source. (ADRs 0004/0013). |
+| — | [`public OptimizedTranslation()`](../classes/OptimizedTranslation.md) | Implemented | Electron2D-specific: Managed construction of an empty optimized catalog; the reference has no constructor row. (adr-0007). |
 | — | [`public PackedScene()`](../classes/PackedScene.md) | Implemented | Electron2D-specific: C# constructor supplies typed object creation; Godot class XML has no constructor row. (docs/decisions/product.md#adr-0001). |
 | — | [`public Parallax()`](../classes/Parallax.md) | Implemented | Electron2D-specific: C# construction of the detached camera-relative canvas node with audited source defaults (ADR 0004). (class reference). |
 | — | [`public ParallaxBackground()`](../classes/ParallaxBackground.md) | Implemented | Electron2D-specific: Typed construction initializes the inherited canvas layer to -100 and all scroll settings to their pinned defaults. (class reference). |
@@ -306,6 +307,9 @@ These declarations are present in the compiled runtime. A blank upstream cell me
 | — | [`protected override Electron2D.Resource CreateDuplicateInstance()`](../classes/NoiseTexture.md) | Implemented | Electron2D-specific: Exact-type construction for managed Resource graph duplication of the generated noise texture. (ADR 0013). |
 | — | [`protected override System.Void Dispose(System.Boolean disposing)`](../classes/NoiseTexture.md) | Implemented | Electron2D-specific: Detaches change subscriptions and releases owned generated pixels without disposing borrowed sources. (ADRs 0003/0013). |
 | — | [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](../classes/NoiseTexture.md) | Implemented | Electron2D-specific: Typed stored-property metadata for the reference noise texture settings. (ADRs 0005/0013). |
+| — | [`protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)`](../classes/OptimizedTranslation.md) | Implemented | Electron2D-specific: Copies the immutable compressed lookup snapshot to an independent resource. (adr-0013). |
+| — | [`protected override Electron2D.Resource CreateDuplicateInstance()`](../classes/OptimizedTranslation.md) | Implemented | Electron2D-specific: Exact-type target for Resource duplication. (adr-0013). |
+| — | [`protected override System.Void Dispose(System.Boolean disposing)`](../classes/OptimizedTranslation.md) | Implemented | Electron2D-specific: Clears the compressed lookup table during managed disposal. (adr-0003). |
 | — | [`protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)`](../classes/PackedScene.md) | Implemented | Electron2D-specific: Typed resource/event duplication or path-state extension hook. (docs/decisions/resources.md#adr-0013). |
 | — | [`protected override Electron2D.Resource CreateDuplicateInstance()`](../classes/PackedScene.md) | Implemented | Electron2D-specific: Typed resource/event duplication or path-state extension hook. (docs/decisions/resources.md#adr-0013). |
 | — | [`protected override System.Void OnResetState()`](../classes/PackedScene.md) | Implemented | Electron2D-specific: Typed resource/event duplication or path-state extension hook. (docs/decisions/resources.md#adr-0013). |

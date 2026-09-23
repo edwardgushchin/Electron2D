@@ -6065,6 +6065,48 @@ static void VerifyTranslations()
         Expect<InvalidOperationException>(() => noRule.GetPluralMessage("pear", "pears", 2),
             "Non-English plural lookup must fail explicitly when no selector has been supplied.");
 
+        using var source = new Translation { Locale = "fr" };
+        var longValue = string.Concat(Enumerable.Repeat("économie locale ", 40));
+        source.AddMessage("Compressed", longValue);
+        source.AddMessage("Short", "Oui");
+        source.AddMessage("ContextOnly", "Contexte", "menu");
+        source.AddPluralMessage("Plural", ["Premier", "Seconds"]);
+        using var optimized = new OptimizedTranslation();
+        Require(!optimized.Generate(null) && optimized.GetMessageList().Length == 0,
+            "Null generation leaves an optimized catalog empty.");
+        Require(optimized.Generate(source) && optimized.Locale == "fr" &&
+                optimized.GetMessage("Compressed") == longValue && optimized.GetMessage("Short") == "Oui" &&
+                optimized.GetMessage("ContextOnly", "menu") == string.Empty &&
+                optimized.GetPluralMessage("Plural", "Plurals", 2) == "Premier" &&
+                optimized.GetMessageCount() == 0 && optimized.GetMessageList().Length == 0 &&
+                optimized.GetTranslatedMessageList().Contains(longValue),
+            "Optimized catalogs resolve compressed and raw singular values without retaining source keys or contextual/plural behavior.");
+        using var emptySource = new Translation { Locale = "de" };
+        emptySource.AddMessage("ContextOnly", "Nur Kontext", "menu");
+        Require(!optimized.Generate(emptySource) && optimized.Locale == "fr" && optimized.GetMessage("Short") == "Oui",
+            "Generation without eligible messages preserves the prior catalog.");
+        using var optimizedCopy = (OptimizedTranslation)optimized.Duplicate();
+        source.AddMessage("Compressed", "changed");
+        optimized.Dispose();
+        Require(optimizedCopy.GetMessage("Compressed") == longValue &&
+                optimizedCopy.GetTranslatedMessageList().Contains("Oui"),
+            "Optimized copies retain independent lookup data after source edits and original disposal.");
+        for (var index = 0; index < 64; index++)
+            _ = optimizedCopy.GetMessage(index % 2 == 0 ? "Compressed" : "Short");
+        var optimizedAllocationsBefore = GC.GetAllocatedBytesForCurrentThread();
+        string lastOptimizedMessage = string.Empty;
+        for (var index = 0; index < 1_024; index++)
+            lastOptimizedMessage = optimizedCopy.GetMessage(index % 2 == 0 ? "Compressed" : "Short");
+        var optimizedAllocatedBytes = GC.GetAllocatedBytesForCurrentThread() - optimizedAllocationsBefore;
+        Require(lastOptimizedMessage == "Oui" && optimizedAllocatedBytes == 0,
+            $"Warmed optimized translation lookup must not allocate managed memory; observed {optimizedAllocatedBytes} bytes.");
+        TranslationServer.AddTranslation(optimizedCopy, "game");
+        Require(instance.Tr("Compressed") == longValue && instance.Tr("ContextOnly", "menu") == "ContextOnly",
+            "Optimized catalogs participate in registered domain lookup without contextual entries.");
+        TranslationServer.RemoveTranslation(optimizedCopy, "game");
+        Expect<ObjectDisposedException>(() => optimized.GetMessageList(),
+            "Disposed optimized catalogs reject inherited list access.");
+
         instance.CanTranslateMessages = false;
         Require(instance.Tr("Hello") == "Hello", "Per-object translation disabling must return the source message.");
     }

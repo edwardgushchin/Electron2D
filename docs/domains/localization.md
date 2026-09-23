@@ -1,6 +1,6 @@
 # Localization domain
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Responsibility
 
@@ -14,11 +14,11 @@ Its production source lives under `src/Core/String/`, matching its low-level eng
 | --- | --- | --- |
 | [Translation](../components/localization.md) | Thread-safe direct and resource-backed translation registration and resolution | Implemented for in-memory lookup; locale-rule and asset gaps remain |
 
-Production types are [`TranslationServer`](../classes/TranslationServer.md), [`TranslationDomain`](../classes/TranslationDomain.md), and [`Translation`](../classes/Translation.md). `ElectronObject` delegates `Tr` and `TrN` to this domain when per-object translation is enabled.
+Production types are [`TranslationServer`](../classes/TranslationServer.md), [`TranslationDomain`](../classes/TranslationDomain.md), [`Translation`](../classes/Translation.md), and [`OptimizedTranslation`](../classes/OptimizedTranslation.md). `ElectronObject` delegates `Tr` and `TrN` to this domain when per-object translation is enabled.
 
 ## Public surface
 
-`TranslationServer` exposes the culture, direct singular/plural registration, named domain registry, main-domain resource queries, lookup, pseudolocalization and catalog clearing. `TranslationDomain` manages borrowed catalogs, locale override, enablement and singular pseudolocalization options. `Translation` stores contextual messages and plural forms and supports independent Resource duplication. `ElectronObject` supplies per-instance translation enablement and lookup entry points from Core. The service's global enabled flag is internal.
+`TranslationServer` exposes the culture, direct singular/plural registration, named domain registry, main-domain resource queries, lookup, pseudolocalization and catalog clearing. `TranslationDomain` manages borrowed catalogs, locale override, enablement and singular pseudolocalization options. `Translation` stores contextual messages and plural forms. `OptimizedTranslation` generates and resolves compressed singular values without retaining source keys. Both support Resource duplication. `ElectronObject` supplies per-instance translation enablement and lookup entry points from Core. The service's global enabled flag is internal.
 
 ## Dependency direction
 
@@ -39,13 +39,14 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 ## Not implemented
 
 - No `.po`, `.mo`, `.resx`, JSON, or binary catalog loader.
+- Optimized translation payloads use an internal Brotli representation; reference Smaz file compatibility and editor-only generation gating remain absent.
 - No operating-system locale discovery, number formatting, interpolation, or full Unicode bidirectional-text implementation. Pseudolocalization includes only test direction-control marks; exact Unicode and locale-score parity remain partial.
 - No built-in CLDR plural-rule database or textual plural-rule evaluator; non-English resource catalogs with multiple forms require a typed selector.
 - No native locale-discovery or six-target localization verification exists yet.
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` and `TranslationDomainTests.cs` verify parent-culture fallback, source fallback, direct and resource plural selection, contextual catalogs, duplication, disposal, domain lifecycle and locale override, singular pseudolocalization, and per-object translation disabling.
+`tests/Electron2D.Tests/Program.cs` and `TranslationDomainTests.cs` verify parent-culture fallback, source fallback, direct and resource plural selection, contextual and optimized catalogs, duplication, disposal, domain lifecycle and locale override, singular pseudolocalization, and per-object translation disabling.
 
 ## Decisions
 
