@@ -28,6 +28,8 @@
   },
   "enums": {
     "CanvasItemMaterial.BlendMode": "CanvasItemMaterial.BlendModeEnum",
+    "Control.FocusMode": "ControlFocusMode",
+    "Control.MouseFilter": "ControlMouseFilter",
     "@GlobalScope.ClockDirection": "ClockDirection",
     "@GlobalScope.JoyAxis": "JoyAxis",
     "@GlobalScope.JoyButton": "JoyButton",

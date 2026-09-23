@@ -1,5 +1,7 @@
 {
   "mappings": [
+    {"electron2d": "method:Electron2D.Control.OnGUIInput(Electron2D.InputEvent)", "godot": "Control::method:_gui_input(InputEvent:)", "state": "Partial", "reason": "Root viewport input invokes the typed virtual callback after Node input, with pointer hit testing and focused keyboard delivery. Hover, clipping, full draw order, nested viewports and callback/signal order remain to audit."},
+    {"electron2d": "method:Electron2D.Control.HasPoint(Electron2D.Vector2)", "godot": "Control::method:_has_point(Vector2:)", "state": "Partial", "reason": "A virtual half-open local rectangle test is used for root viewport pointer targeting; custom shapes work. Clipping and full draw order remain to audit."},
     {"electron2d": "property:Electron2D.Polygon.Vertices()", "godot": "Polygon2D::property:polygon", "state": "Partial", "reason": "ADR 0004 maps the vertex list to Vertices because C# forbids a Polygon member on Polygon. Copied finite vertices, default contour, inverted fill and packed state execute; full skeletal geometry remains absent."},
     {"electron2d": "method:Electron2D.Line.GetPointCount()", "godot": "Line2D::method:get_point_count()", "state": "Implemented", "reason": "Returns the stored point count, including duplicate points; LineTests covers insertion, removal and clear."},
     {"electron2d": "method:Electron2D.Control.GetGlobalRect()", "godot": "Control::method:get_global_rect()", "state": "Partial", "reason": "Control rectangle query uses the composed canvas transform and current layout size; rotation and layout-direction parity remain to audit."},
@@ -2578,6 +2580,21 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "Control.AcceptEvent forwards to the active SceneTree handled flag; ControlInputTests verifies that GUI and unhandled delivery stop while the original input event remains caller-owned.",
+      "godot": ["Control::method:accept_event()"]
+    },
+    {
+      "state": "Partial",
+      "reason": "Root viewport pointer routing executes Stop, Pass, Ignore and default wheel pass with ControlInputTests. Hover notifications, content clipping, exact renderer order, touch and nested viewport semantics remain absent.",
+      "godot": ["Control::enum:MouseFilter", "Control::property:mouse_filter", "Control::property:mouse_force_pass_scroll_events", "Control::signal:gui_input(InputEvent:)"]
+    },
+    {
+      "state": "Partial",
+      "reason": "Click and explicit focus, hidden pointer focus, keyboard target delivery, hide/detach release and focus events run in the root viewport. All-mode keyboard/gamepad navigation, accessibility focus and focus notifications remain absent.",
+      "godot": ["Control::enum:FocusMode", "Control::property:focus_mode", "Control::method:grab_focus(bool:)", "Control::method:has_focus(bool:)", "Control::method:release_focus()", "Control::signal:focus_entered()", "Control::signal:focus_exited()"]
+    },
     {
       "state": "Partial",
       "reason": "Polygon : Entity draws filled, inverted, colored and textured contours and stores typed scene state on tested Linux backends. Antialiasing and skeletal deformation remain separate member gaps under ADR 0004.",

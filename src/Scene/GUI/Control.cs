@@ -2,8 +2,8 @@ namespace Electron2D;
 
 /// <summary>A canvas item with a rectangular layout and a pivot-based transform.</summary>
 /// <remarks>Anchors and offsets resolve against the direct canvas parent's rectangle or the viewport.
-/// Focus, input routing, theme and container layout are separate GUI capabilities.</remarks>
-public class Control : CanvasItem
+/// The root viewport routes pointer and focused keyboard input to controls. Theme, container layout and complete GUI routing remain separate capabilities.</remarks>
+public partial class Control : CanvasItem
 {
     private readonly float[] _anchors = new float[4];
     private readonly float[] _offsets = new float[4];
@@ -235,7 +235,14 @@ public class Control : CanvasItem
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        if (what == NotificationExitTree || what == NotificationVisibilityChanged && !IsVisibleInTree)
+        {
+            List<Exception>? errors = null;
+            try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+            try { Tree?.ReleaseGUIFocus(this); } catch (Exception error) { CollectException(ref errors, error); }
+            ThrowCollected("Control visibility callbacks failed.", errors);
+        }
+        else base.OnNotification(what);
         if (what == NotificationEnterCanvas)
         {
             _layoutParent = GetParentItem();
@@ -256,7 +263,7 @@ public class Control : CanvasItem
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { DisconnectLayoutSource(); Resized = null; }
+        if (disposing) { DisconnectLayoutSource(); Resized = null; GUIInput = null; FocusEntered = null; FocusExited = null; }
         base.Dispose(disposing);
     }
 
@@ -303,6 +310,9 @@ public class Control : CanvasItem
         new PropertyDescriptor<Control, float>(nameof(OffsetLeft), node => node.OffsetLeft, (node, value) => node.OffsetLeft = value, _ => 0f, stored: true),
         new PropertyDescriptor<Control, float>(nameof(OffsetTop), node => node.OffsetTop, (node, value) => node.OffsetTop = value, _ => 0f, stored: true),
         new PropertyDescriptor<Control, float>(nameof(OffsetRight), node => node.OffsetRight, (node, value) => node.OffsetRight = value, _ => 0f, stored: true),
-        new PropertyDescriptor<Control, float>(nameof(OffsetBottom), node => node.OffsetBottom, (node, value) => node.OffsetBottom = value, _ => 0f, stored: true)
+        new PropertyDescriptor<Control, float>(nameof(OffsetBottom), node => node.OffsetBottom, (node, value) => node.OffsetBottom = value, _ => 0f, stored: true),
+        new PropertyDescriptor<Control, ControlMouseFilter>(nameof(MouseFilter), node => node.MouseFilter, (node, value) => node.MouseFilter = value, _ => ControlMouseFilter.Stop, stored: true),
+        new PropertyDescriptor<Control, bool>(nameof(MouseForcePassScrollEvents), node => node.MouseForcePassScrollEvents, (node, value) => node.MouseForcePassScrollEvents = value, _ => true, stored: true),
+        new PropertyDescriptor<Control, ControlFocusMode>(nameof(FocusMode), node => node.FocusMode, (node, value) => node.FocusMode = value, _ => ControlFocusMode.None, stored: true)
     ];
 }

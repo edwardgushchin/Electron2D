@@ -20,7 +20,7 @@ Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/Inp
 - `InputMap`: action registration, deadzones, binding management, matching, and descriptions.
 - `InputEvent` hierarchy: typed stored property discovery, action matching, text, duplication, accumulation, coordinate transforms, device/window/modifier data, and concrete keyboard, pointer, touch, gesture, controller, and direct-action payloads.
 - Input enums: complete key identifiers/modifier masks, key location, mouse buttons/mask, and standardized/raw controller axes/buttons.
-- `Node`/`SceneTree` integration: explicit opt-in callbacks and handled propagation.
+- `Node`/`SceneTree` integration: explicit opt-in callbacks, root viewport Control targeting, focus and handled propagation.
 
 ## Dependency direction
 
@@ -33,13 +33,13 @@ Input depends on Core object/resource lifecycle and math. `Engine` registers the
 - Emulated events use device ID `-1`, precede their source events, and do not recursively generate input. Their active press is paired with a release when the setting changes during contact.
 - Action names are ordinal; strengths/deadzones are finite and bounded.
 - Process and physics transition windows are independent and clear even after a frame callback fails.
-- Scene input is owner-thread, pause-aware, reverse depth-first, membership-revalidated, and stoppable through handled state.
+- Scene input is owner-thread, pause-aware, reverse depth-first for Node stages, and stoppable through handled state. Root viewport Control targeting uses geometry and focus between the Node stages.
 - Binding configuration and queries are lock-serialized. Registered binding resources remain live caller-owned references and cannot be disposed or mutated concurrently with matching.
 - The warmed non-emulated mapped event and scene traversal path performs no steady-state managed allocation; generated pointer events and positional viewport-conversion copies allocate short-lived resources.
 
 ## Current limitations
 
-The Display domain now implements native cursor/window operations and direct SDL event pumping, including mouse-motion accumulation, explicit input flush, mouse/touch emulation, and deduplication of SDL-generated pointer counterparts. Controller lifecycle/effects, sensors, MIDI, shortcuts, project-setting action persistence, and GUI consumption and nested viewport routing remain absent; root viewport coordinate conversion is implemented. None is represented by a stub. [ADR 0038](../decisions/input.md#adr-0038) names the exact implementation trigger and actionability rule for every gap.
+The Display domain now implements native cursor/window operations and direct SDL event pumping, including mouse-motion accumulation, explicit input flush, mouse/touch emulation, and deduplication of SDL-generated pointer counterparts. Root viewport Control pointer routing and keyboard focus are implemented; hover, clipping, touch targeting, focus navigation, exact drawing order and nested viewport routing remain absent. Controller lifecycle/effects, sensors, MIDI, shortcuts and project-setting action persistence also remain absent. [ADR 0038](../decisions/input.md#adr-0038) names the exact implementation trigger and actionability rule for every gap.
 
 The SDL keyboard adapter supplies distinct logical, physical, and current-layout label keys. Its label is derived from the unmodified scancode and can preserve non-Latin key identity. Left/right control, shift, alt, and GUI scancodes set the corresponding `KeyLocation`; all other scancodes are `Unspecified`. Native key events currently leave `Unicode` at zero; text input is delivered separately. SDL key events contain no produced text scalar, and a text-input event can represent multiple scalars or an IME commit without identifying a key press. A native per-key Unicode source with verified IME/composition semantics is required in the first native keyboard/text adapter slice. Caller-created typed key events may carry a Unicode scalar.
 

@@ -35,6 +35,9 @@ public sealed class SceneTree : MainLoop
     private readonly HashSet<GroupOperationKey> _uniqueGroupOperations = [];
     private readonly List<Node> _scheduleTraversal = [];
     private readonly List<Node> _inputTraversal = [];
+    private Control? _guiFocus;
+    private Control? _guiMouseCapture;
+    private bool _guiFocusHidden;
     private readonly List<ScheduledNode> _scheduledNodes = [];
     private readonly List<SceneTreeTimer> _timerSnapshot = [];
     private readonly List<SceneTreeTimer> _timers = [];
@@ -538,6 +541,38 @@ public sealed class SceneTree : MainLoop
         return _inputHandled;
     }
 
+    internal bool HasGUIFocus(Control control, bool ignoreHiddenFocus)
+    {
+        EnsureOwnerThread();
+        return ReferenceEquals(_guiFocus, control) && (!ignoreHiddenFocus || !_guiFocusHidden);
+    }
+
+    internal void SetGUIFocus(Control control, bool hideFocus)
+    {
+        EnsureOwnerThread();
+        if (!ReferenceEquals(control.Tree, this) || !control.IsVisibleInTree || control.FocusMode == ControlFocusMode.None)
+            return;
+        if (ReferenceEquals(_guiFocus, control)) { _guiFocusHidden = hideFocus; return; }
+        var previous = _guiFocus;
+        _guiFocus = control;
+        _guiFocusHidden = hideFocus;
+        List<Exception>? errors = null;
+        try { previous?.NotifyFocusExited(); } catch (Exception error) { CollectException(ref errors, error); }
+        if (ReferenceEquals(_guiFocus, control))
+            try { control.NotifyFocusEntered(); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("GUI focus callbacks failed.", errors);
+    }
+
+    internal void ReleaseGUIFocus(Control control)
+    {
+        EnsureOwnerThread();
+        if (ReferenceEquals(_guiMouseCapture, control)) _guiMouseCapture = null;
+        if (!ReferenceEquals(_guiFocus, control)) return;
+        _guiFocus = null;
+        _guiFocusHidden = false;
+        control.NotifyFocusExited();
+    }
+
     /// <summary>Returns every current node in a group in depth-first pre-order.</summary>
     /// <param name="group">The nonblank, case-sensitive group name.</param>
     /// <returns>A read-only snapshot of matching nodes.</returns>
@@ -786,6 +821,9 @@ public sealed class SceneTree : MainLoop
         {
             CaptureInputNodes();
             DispatchInputStage(@event, InputStage.Input, ref errors);
+
+            if (!_inputHandled && Root is Viewport viewport)
+                DispatchGUIInput(viewport, @event, ref errors);
 
             if (!_inputHandled && @event is InputEventKey key)
                 DispatchInputStage(key, InputStage.UnhandledKey, ref errors);
@@ -1304,6 +1342,80 @@ public sealed class SceneTree : MainLoop
                 CollectException(ref errors, error);
             }
         }
+    }
+
+    private void DispatchGUIInput(Viewport viewport, InputEvent inputEvent, ref List<Exception>? errors)
+    {
+        if (inputEvent is InputEventMouse mouse)
+        {
+            var captured = _guiMouseCapture;
+            if (captured is not null && (!ReferenceEquals(captured.Tree, this) || !captured.IsVisibleInTree || captured.MouseFilter == ControlMouseFilter.Ignore))
+                captured = _guiMouseCapture = null;
+
+            var release = mouse is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false };
+            var press = mouse is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: true };
+            var target = captured is not null && (release || mouse is InputEventMouseMotion { ButtonMask: var mask } && (mask & MouseButtonMask.Left) != 0)
+                ? captured : FindMouseControl(viewport, mouse.Position, ref errors);
+            if (press) _guiMouseCapture = target;
+            if (release) _guiMouseCapture = null;
+            if (target is null) return;
+            if (press && target.FocusMode != ControlFocusMode.None)
+                try { SetGUIFocus(target, hideFocus: true); } catch (Exception error) { CollectException(ref errors, error); }
+
+            for (Control? current = target; current is not null && !_inputHandled;)
+            {
+                if (current.IsDisposed || !ReferenceEquals(current.Tree, this) || !ReferenceEquals(current.GetViewport(), viewport)) break;
+                var next = current.TopLevel ? null : current.Parent as Control;
+                if (current.MouseFilter != ControlMouseFilter.Ignore && current.IsVisibleInTree)
+                {
+                    var filter = current.MouseFilter;
+                    var forcePassWheel = current.MouseForcePassScrollEvents;
+                    try
+                    {
+                        using var local = current.MakeInputLocal(mouse);
+                        current.DispatchGUIInput(local);
+                    }
+                    catch (Exception error) { CollectException(ref errors, error); }
+                    var wheel = mouse is InputEventMouseButton { ButtonIndex: >= MouseButton.WheelUp and <= MouseButton.WheelRight };
+                    if (filter == ControlMouseFilter.Stop && (!wheel || !forcePassWheel) && !_inputHandled)
+                        SetInputAsHandled();
+                }
+                current = next;
+            }
+            return;
+        }
+
+        if (inputEvent is not (InputEventKey or InputEventJoypadButton or InputEventJoypadMotion or InputEventAction)) return;
+        var focused = _guiFocus;
+        if (focused is null) return;
+        if (focused.IsDisposed || !ReferenceEquals(focused.Tree, this) || !focused.IsVisibleInTree || focused.FocusMode == ControlFocusMode.None || !ReferenceEquals(focused.GetViewport(), viewport))
+        {
+            try { ReleaseGUIFocus(focused); } catch (Exception error) { CollectException(ref errors, error); }
+            return;
+        }
+        try { focused.DispatchGUIInput(inputEvent); } catch (Exception error) { CollectException(ref errors, error); }
+    }
+
+    private Control? FindMouseControl(Viewport viewport, Vector2 point, ref List<Exception>? errors)
+    {
+        Control? best = null;
+        var bestLayer = int.MinValue;
+        var bestZ = int.MinValue;
+        for (var index = _inputTraversal.Count - 1; index >= 0; index--)
+        {
+            if (_inputTraversal[index] is not Control control || control.IsDisposed || !ReferenceEquals(control.Tree, this) ||
+                !control.IsVisibleInTree || control.MouseFilter == ControlMouseFilter.Ignore || !ReferenceEquals(control.GetViewport(), viewport)) continue;
+            try
+            {
+                if (!control.HitTest(point)) continue;
+                var layer = control.GetCanvasLayerNode()?.Layer ?? 0;
+                var z = control.EffectiveZIndex;
+                if (best is null || layer > bestLayer || layer == bestLayer && z > bestZ)
+                { best = control; bestLayer = layer; bestZ = z; }
+            }
+            catch (Exception error) { CollectException(ref errors, error); }
+        }
+        return best;
     }
 
     private void FlushDeferredCore(ref List<Exception>? errors, bool flushTransforms = false)

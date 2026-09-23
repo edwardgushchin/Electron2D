@@ -119,6 +119,7 @@ RenderingRuntimeTests.VerifyAtlasResources();
 SceneHierarchyTests.Run();
 RemoteTransformTests.Run();
 ControlLayoutTests.Run();
+ControlInputTests.Run();
 CanvasLifecycleTests.Run();
 CanvasSamplingTests.Run();
 CanvasPixelSnapTests.Run();
@@ -1422,6 +1423,8 @@ static void VerifyImages()
         [nameof(Image.LoadWebPFromBuffer)] = 1,
         [nameof(Image.LoadBMPFromBuffer)] = 1,
         [nameof(Image.LoadTGAFromBuffer)] = 1,
+        [nameof(Image.LoadSVGFromBuffer)] = 1,
+        [nameof(Image.LoadSVGFromString)] = 1,
         [nameof(Image.NormalMapToXY)] = 1,
         [nameof(Image.PremultiplyAlpha)] = 1,
         [nameof(Image.Resize)] = 1,

@@ -6,7 +6,7 @@ Last updated: 2026-09-23
 
 **Inherited By:** No production type yet. The accepted GUI branch will place BaseButton and Button here.
 
-- **Source:** [Control.cs](../../src/Scene/GUI/Control.cs)
+- **Source:** [Control.cs](../../src/Scene/GUI/Control.cs), [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public class Control : CanvasItem`
 
@@ -14,7 +14,7 @@ Last updated: 2026-09-23
 
 Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the scene tree and canvas rendering API. A direct Control parent supplies the area for anchors; a root Control uses its viewport's visible size. A direct non-Control canvas parent supplies a zero-size anchor area in this slice. Detached controls also use a zero-size anchor area. Offsets are local canvas units; anchors are fractions of the parent area. Changes to the parent rectangle or viewport size reflow an attached control synchronously. Pivot, rotation and scale change the canvas transform without changing its layout rectangle. Control itself emits no drawing commands.
 
-This first executable layout slice does not provide focus, mouse routing, accessibility, themes, container minimum/maximum sizing, layout direction, clipping, or button behavior. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
+The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection and bubbling. Full GUI behavior remains partial: hover notifications, content clipping, keyboard focus navigation, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, container sizing, layout direction, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
 
 ## Example
 
@@ -52,6 +52,9 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public float OffsetTop { get; set; }` | Top local offset. |
 | `public float OffsetRight { get; set; }` | Right local offset. |
 | `public float OffsetBottom { get; set; }` | Bottom local offset. |
+| `public ControlMouseFilter MouseFilter { get; set; }` | Stop by default; Pass bubbles; Ignore does not receive or block pointer events. |
+| `public bool MouseForcePassScrollEvents { get; set; }` | True by default; permits wheel bubbling through Stop. |
+| `public ControlFocusMode FocusMode { get; set; }` | None by default; Click permits pointer or explicit focus. Keyboard navigation and All mode remain absent. |
 
 ## Methods and extension points
 
@@ -67,8 +70,14 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public Rect GetGlobalRect()` | Returns transformed global origin and scale times layout size; not an axis-aligned rotated bound. |
 | `public override Transform GetTransform()` | Returns translation composed with pivot, rotation and scale. |
 | `public override void Reparent(Node newParent, bool keepGlobalTransform = true)` | Moves in the neutral tree; preserves global origin by default, validating a canvas inverse before mutation. |
+| `public void AcceptEvent()` | Marks current scene input handled. |
+| `public void GrabFocus(bool hideFocus = false)` | Requests focus while attached and visible. |
+| `public bool HasFocus(bool ignoreHiddenFocus = false)` | Queries whether this is the current focused control. |
+| `public void ReleaseFocus()` | Releases focus if held. |
+| `protected virtual bool HasPoint(Vector2 point)` | Tests a local point against the half-open rectangle; override for a custom hit shape. |
+| `protected virtual void OnGUIInput(InputEvent inputEvent)` | Receives routed pointer or focused keyboard input. |
 | `protected override void OnNotification(int what)` | Connects/disconnects layout sources and raises Resized after NotificationResized. |
-| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Supplies stored position, size, rotation degrees, scale, pivot, anchors and offsets. |
+| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Supplies stored layout, transform and GUI input policy. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Creates exact Control instances for PackedScene. |
 | `protected override void Dispose(bool disposing)` | Disconnects parent/viewport events and clears Resized. |
 
@@ -77,6 +86,9 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | Member | Contract |
 | --- | --- |
 | `public event Action? Resized` | Raised synchronously on the owner thread after a size change while attached. |
+| `public event Action<InputEvent>? GUIInput` | Raised after OnGUIInput with the same borrowed event. |
+| `public event Action? FocusEntered` | Raised after this control gains keyboard focus. |
+| `public event Action? FocusExited` | Raised after focus is released or transferred. |
 | `public const int NotificationResized = 40` | Delivered before Resized, after the rectangle and transform are committed. |
 
 ## Member behavior
@@ -105,6 +117,18 @@ Each property reads or sets one fraction of the parent area through GetAnchor an
 
 Each property reads or sets one local offset through GetOffset and SetOffset. The default is zero. The resolved edge is offset plus anchor times the corresponding parent-area dimension.
 
+### `MouseFilter`, `MouseForcePassScrollEvents`
+
+`MouseFilter` defaults to Stop and rejects undefined enum values. It controls hit selection and whether an unhandled pointer event bubbles through direct Control parents. `MouseForcePassScrollEvents` defaults to true and allows wheel input through a Stop control; setting it false makes Stop consume a wheel event. Both values are stored in a packed scene.
+
+### `FocusMode`, `GrabFocus`, `HasFocus`, `ReleaseFocus`
+
+`FocusMode` defaults to None, rejects unsupported enum values, and releases active focus when set back to None. Click permits focus by left pointer press or explicit `GrabFocus`; `hideFocus` records hidden visual focus, reported as absent by `HasFocus(ignoreHiddenFocus: true)`. `GrabFocus` requires an attached control and has no effect while hidden or in None mode. `ReleaseFocus` does nothing when this control is not focused. Hiding or detaching the control releases focus. A focus change commits before `FocusExited` and `FocusEntered`; subscriber failures propagate after the state change.
+
+### `HasPoint`, `OnGUIInput`, `GUIInput`, `AcceptEvent`
+
+The virtual `HasPoint` tests a control-local point against `[0, Size.X) × [0, Size.Y)` by default and can define a custom hit shape. Pointer events are copied into each receiving Control's local coordinates; `OnGUIInput` runs before the `GUIInput` event. The local event is borrowed only during the callback. `AcceptEvent` forwards to the active scene handled flag and throws outside input delivery. Callback failures are collected while eligible parent and later Node callbacks continue.
+
 ### `GetAnchor(Side side)`, `SetAnchor(Side side, float anchor, bool keepOffset = false, bool pushOppositeAnchor = true)`
 
 Side chooses left, top, right or bottom. GetAnchor returns its current fraction. SetAnchor accepts any finite fraction; keepOffset retains the current offset instead of the current edge, and pushOppositeAnchor moves the opposite anchor when sides cross. Invalid sides and nonfinite fractions throw ArgumentOutOfRangeException.
@@ -127,7 +151,7 @@ Moves to a new direct parent. With the default option, it validates the destinat
 
 ### `OnNotification(int what)`, `GetPropertyDescriptors()`, `CreateSceneInstanceFactory()`, `Dispose(bool disposing)`
 
-OnNotification subscribes to the direct canvas parent's geometry or root viewport size at canvas entry, disconnects at exit and emits Resized after NotificationResized. GetPropertyDescriptors stores rectangle, transform, anchors and offsets for PackedScene. The factory creates exact Control instances. Disposal removes borrowed event subscriptions and clears Resized.
+OnNotification subscribes to the direct canvas parent's geometry or root viewport size at canvas entry, disconnects at exit, releases focus when hidden or detached, and emits Resized after NotificationResized. GetPropertyDescriptors stores rectangle, transform, anchors, offsets, mouse filter, wheel policy and focus mode for PackedScene. The factory creates exact Control instances. Disposal removes borrowed event subscriptions and clears the control events.
 
 ### `Resized`, `NotificationResized`
 
@@ -141,7 +165,11 @@ When reflow changes position or size, the control commits both values, invalidat
 
 ## Verification and limits
 
-[ControlLayoutTests](../../tests/Electron2D.Tests/ControlLayoutTests.cs) check nested anchors, parent and viewport resize propagation, callback order, transform inheritance, packed anchors/offsets, pivot/global position, invalid arguments, owner thread and disposal. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) includes a child Sprite pixel check in the native renderer. Further layout policies and GUI behavior are tracked in coverage; this class is only partially implemented against the accepted reference API.
+[ControlLayoutTests](../../tests/Electron2D.Tests/ControlLayoutTests.cs) check nested anchors, parent and viewport resize propagation, callback order, transform inheritance, packed anchors/offsets, pivot/global position, invalid arguments, owner thread and disposal. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) check root viewport GUI input order, local coordinates, filter/bubbling, wheel pass, focus, pointer release capture, temporary event ownership and callback failure continuation. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) includes a child Sprite pixel check in the native renderer. Native GUI interaction and full reference parity are unverified.
+
+### GUI input behavior
+
+The top hit Control in a root viewport receives a temporary local pointer event. The root GUI picker orders by canvas layer, effective Z and reverse scene traversal; it does not yet match every renderer ordering rule. `Ignore` is skipped; `Pass` continues through direct Control parents until handled or a `Stop` control; `Stop` handles the event automatically. Wheel events pass a `Stop` control when `MouseForcePassScrollEvents` is true. A left-button press retains its target for the corresponding release and held-pointer motion. A left press focuses an eligible control, with hidden visual focus. Explicit `GrabFocus` takes focus without hiding it; hiding, detaching or setting `FocusMode` to None releases it. Keyboard, controller and action events reach the focused control without bubbling. `AcceptEvent` stops later GUI and unhandled stages. Failures are aggregated after other eligible scene callbacks run; positional GUI copies are disposed after synchronous delivery. No hover signals, clipping, multiple-button capture, navigation or nested viewport route is claimed.
 
 Targeted scene-hierarchy pixel checks passed on Linux Wayland compatibility/GPU and dummy/software. The full Wayland rendering runtime suite in this run passed, including the camera, canvas-layer and scene-hierarchy stages.
 

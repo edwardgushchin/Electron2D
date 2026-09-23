@@ -329,6 +329,42 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ControlFocusMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ControlFocusMode",
+    "name": "ControlFocusMode",
+    "signature": "public enum Electron2D.ControlFocusMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ControlMouseFilter",
+    "kind": "type",
+    "declaringType": "Electron2D.ControlMouseFilter",
+    "name": "ControlMouseFilter",
+    "signature": "public enum Electron2D.ControlMouseFilter",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Curve",
     "kind": "type",
     "declaringType": "Electron2D.Curve",
@@ -5622,6 +5658,71 @@
     "parameters": [],
     "returnType": "Electron2D.ClockDirection",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlFocusMode.Click()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlFocusMode",
+    "name": "Click",
+    "signature": "public const Electron2D.ControlFocusMode Click = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlFocusMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlFocusMode.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlFocusMode",
+    "name": "None",
+    "signature": "public const Electron2D.ControlFocusMode None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlFocusMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlMouseFilter.Ignore()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlMouseFilter",
+    "name": "Ignore",
+    "signature": "public const Electron2D.ControlMouseFilter Ignore = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlMouseFilter",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlMouseFilter.Pass()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlMouseFilter",
+    "name": "Pass",
+    "signature": "public const Electron2D.ControlMouseFilter Pass = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlMouseFilter",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlMouseFilter.Stop()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlMouseFilter",
+    "name": "Stop",
+    "signature": "public const Electron2D.ControlMouseFilter Stop = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlMouseFilter",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.Curve.TangentMode.Count()",
@@ -13437,6 +13538,45 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Control.FocusEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.Control",
+    "name": "FocusEntered",
+    "signature": "public event System.Action FocusEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Control.FocusExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.Control",
+    "name": "FocusExited",
+    "signature": "public event System.Action FocusExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Control.GUIInput()",
+    "kind": "event",
+    "declaringType": "Electron2D.Control",
+    "name": "GUIInput",
+    "signature": "public event System.Action\u003CElectron2D.InputEvent\u003E GUIInput",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.InputEvent\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Control.Resized()",
     "kind": "event",
     "declaringType": "Electron2D.Control",
@@ -18331,6 +18471,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.AcceptEvent()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "AcceptEvent",
+    "signature": "public System.Void AcceptEvent()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -18479,6 +18632,82 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.GrabFocus(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GrabFocus",
+    "signature": "public System.Void GrabFocus(System.Boolean hideFocus = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "hideFocus",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.HasFocus(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "HasFocus",
+    "signature": "public System.Boolean HasFocus(System.Boolean ignoreHiddenFocus = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ignoreHiddenFocus",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.HasPoint(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "HasPoint",
+    "signature": "protected virtual System.Boolean HasPoint(Electron2D.Vector2 point)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnGUIInput",
+    "signature": "protected virtual System.Void OnGUIInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.OnNotification(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -18494,6 +18723,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.ReleaseFocus()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "ReleaseFocus",
+    "signature": "public System.Void ReleaseFocus()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -50486,6 +50728,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.FocusMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "FocusMode",
+    "signature": "public Electron2D.ControlFocusMode FocusMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlFocusMode",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Control.GlobalPosition()",
     "kind": "property",
     "declaringType": "Electron2D.Control",
@@ -50496,6 +50751,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.MouseFilter()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "MouseFilter",
+    "signature": "public Electron2D.ControlMouseFilter MouseFilter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlMouseFilter",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.MouseForcePassScrollEvents()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "MouseForcePassScrollEvents",
+    "signature": "public System.Boolean MouseForcePassScrollEvents { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
