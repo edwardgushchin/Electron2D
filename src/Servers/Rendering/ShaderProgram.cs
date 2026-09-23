@@ -33,13 +33,13 @@ internal sealed record ShaderTexture(string Name, int Binding)
 internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned, int MatrixStride, bool RowMajor, int BooleanWidth)
 {
     internal int Count => Math.Max(1, ArrayLength);
-    internal bool Accepts<T>() where T : unmanaged => typeof(T) == Type || Type == typeof(Vector4) && (typeof(T) == typeof(Color) || typeof(T) == typeof(Rect));
+    internal bool Accepts<T>() where T : unmanaged => typeof(T) == Type || Type == typeof(Vector3) && typeof(T) == typeof(Color) || Type == typeof(Vector4) && (typeof(T) == typeof(Color) || typeof(T) == typeof(Rect));
     internal bool SameType(ShaderUniform other) => Type == other.Type && Unsigned == other.Unsigned && ArrayLength == other.ArrayLength && BooleanWidth == other.BooleanWidth;
 
     internal PropertyDescriptor Describe(string propertyName) => Type == typeof(float) ? Describe<float>(propertyName) :
         Type == typeof(bool) ? Describe<bool>(propertyName) : Type == typeof(int) ? Describe<int>(propertyName) : Type == typeof(uint) ? Describe<uint>(propertyName) :
-        Type == typeof(Vector2) ? Describe<Vector2>(propertyName) : Type == typeof(Vector4) ? Describe<Vector4>(propertyName) :
-        Type == typeof(Transform) ? Describe<Transform>(propertyName) : Type == typeof(Vector2I) ? Describe<Vector2I>(propertyName) : Type == typeof(Color) ? Describe<Color>(propertyName) : Describe<Vector4I>(propertyName);
+        Type == typeof(Vector2) ? Describe<Vector2>(propertyName) : Type == typeof(Vector3) ? Describe<Vector3>(propertyName) : Type == typeof(Vector4) ? Describe<Vector4>(propertyName) :
+        Type == typeof(Transform) ? Describe<Transform>(propertyName) : Type == typeof(Vector2I) ? Describe<Vector2I>(propertyName) : Type == typeof(Vector3I) ? Describe<Vector3I>(propertyName) : Describe<Vector4I>(propertyName);
 
     internal void Write<T>(Span<byte> target, in T value) where T : unmanaged
     {
@@ -77,7 +77,7 @@ internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Off
             basis[2] = stored[RowMajor ? 1 : MatrixStride / 4]; basis[3] = stored[MatrixStride / 4 + 1];
         }
         else source.CopyTo(bytes);
-        if (Type == typeof(Color)) MemoryMarshal.Cast<byte, float>(bytes)[3] = 1;
+        if (Type == typeof(Vector3) && typeof(T) == typeof(Color)) MemoryMarshal.Cast<byte, float>(bytes)[3] = 1;
         return value;
     }
 

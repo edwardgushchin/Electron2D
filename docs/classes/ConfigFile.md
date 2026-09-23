@@ -1,6 +1,6 @@
 # ConfigFile
 
-Last updated: 2026-09-21
+Last updated: 2026-09-23
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -16,7 +16,7 @@ Last updated: 2026-09-21
 
 Stores strongly typed values in a sectioned text configuration and loads or saves them as one document.
 
-`ConfigFile` owns one in-memory, insertion-ordered, case-sensitive configuration document. Values are addressed only through [`ConfigKey<T>`](ConfigKey.Generic.md) and are stored immediately as independent compact JSON snapshots. It owns no live object references and exposes no universal value container. [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2I`](Vector2I.md), [`Vector4`](Vector4.md), [`Vector4I`](Vector4I.md), [`Rect`](Rect.md), [`RectI`](RectI.md), and [`Transform`](Transform.md) use stable exact schemas rather than incidental public-member serialization.
+`ConfigFile` owns one in-memory, insertion-ordered, case-sensitive configuration document. Values are addressed only through [`ConfigKey<T>`](ConfigKey.Generic.md) and are stored immediately as independent compact JSON snapshots. It owns no live object references and exposes no universal value container. [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2I`](Vector2I.md), [`Vector3`](Vector3.md), [`Vector3I`](Vector3I.md), [`Vector4`](Vector4.md), [`Vector4I`](Vector4I.md), [`Rect`](Rect.md), [`RectI`](RectI.md), and [`Transform`](Transform.md) use stable exact schemas rather than incidental public-member serialization.
 
 The text format is section-oriented. Sectionless assignments precede named sections, named headers use `[section]`, assignments use `key=json`, and unsafe identifiers are JSON-quoted. Blank lines and full comment lines beginning with `;` are accepted. Comments are not retained when encoding.
 
@@ -494,6 +494,7 @@ Disposal clears all sections and entries, then completes inherited deterministic
 - Serializer failures during `SetValue` occur before mutation.
 - Color serialization accepts only finite components and always writes `R`, `G`, `B`, and `A` in that order. Typed decoding rejects missing, duplicate, unknown, nonnumeric, or non-finite fields as `InvalidDataException` without changing the stored token.
 - `Vector2` serialization accepts only finite components and writes `X` then `Y`; `Vector2I` writes exact 32-bit integer `X` and `Y` fields. Their typed decoders reject missing, duplicate, unknown, nonnumeric, out-of-range, or non-finite fields as applicable.
+- `Vector3` serialization accepts only finite components and writes `X`, `Y`, then `Z`; `Vector3I` writes exact 32-bit integer fields in the same order. Their typed decoders reject missing, duplicate, unknown, nonnumeric, out-of-range, or non-finite fields as applicable.
 - `Vector4` serialization accepts only finite components and writes `X`, `Y`, `Z`, then `W`; `Vector4I` writes exact 32-bit integer fields in the same order. Their typed decoders reject missing, duplicate, unknown, nonnumeric, out-of-range, or non-finite fields as applicable.
 - Rectangle serialization accepts only finite position and size components and writes `Position` then `Size`, each with `X` then `Y`. Typed decoding rejects missing, duplicate, unknown, nonnumeric, or non-finite fields as `InvalidDataException`; computed `End` and `Area` are excluded.
 - Integer rectangle serialization writes exact 32-bit `Position` then `Size` components, each with `X` then `Y`. Typed decoding rejects missing, duplicate, unknown, non-integer, or out-of-range fields as `InvalidDataException`; computed `End` and `Area` are excluded.
@@ -511,7 +512,7 @@ The class depends on `ElectronObject`, `System.Text.Json`, UTF-8/file primitives
 
 ## Verification and known limitations
 
-`tests/Electron2D.Tests/Program.cs` verifies defaults, parameter/type rejection, scalar/vector/collection/color/floating-rectangle/integer-rectangle/transform round trips, exact schemas for all four vector types and both rectangle types, malformed-field failures, copy isolation, missing/default/try-get behavior, insertion order, null deletion, section cleanup, incompatible types, failed serialization rollback, comments/BOM/quoted identifiers, stable encoding, transactional parse failure, concurrent writes and disposal, strict UTF-8, merge behavior, atomic overwrite, temporary cleanup, raw-key and password encryption, random salt/nonce behavior, wrong keys/passwords/modes, tampering, malformed envelopes, and access after disposal.
+`tests/Electron2D.Tests/Program.cs` verifies defaults, parameter/type rejection, scalar/vector/collection/color/floating-rectangle/integer-rectangle/transform round trips, exact schemas for all six vector types and both rectangle types, malformed-field failures, copy isolation, missing/default/try-get behavior, insertion order, null deletion, section cleanup, incompatible types, failed serialization rollback, comments/BOM/quoted identifiers, stable encoding, transactional parse failure, concurrent writes and disposal, strict UTF-8, merge behavior, atomic overwrite, temporary cleanup, raw-key and password encryption, random salt/nonce behavior, wrong keys/passwords/modes, tampering, malformed envelopes, and access after disposal.
 
 There is no comment preservation, direct virtual path resolution, asynchronous or streaming I/O, external binary-envelope compatibility, or custom public serializer registry. Feature overrides and virtual paths belong to `ProjectSettings`. JSON models must be supported by the built-in serializer and should be stable data contracts rather than live engine types.
 

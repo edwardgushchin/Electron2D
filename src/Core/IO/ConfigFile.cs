@@ -78,7 +78,9 @@ public sealed class ConfigFile : ElectronObject
             new ColorJsonConverter(),
             new Vector2JsonConverter(),
             new Vector2IJsonConverter(),
+            new Vector3JsonConverter(),
             new Vector4JsonConverter(),
+            new Vector3IJsonConverter(),
             new Vector4IJsonConverter(),
             new RectJsonConverter(),
             new RectIJsonConverter(),
@@ -1180,6 +1182,127 @@ internal sealed class Vector2IJsonConverter : JsonConverter<Vector2I>
         writer.WriteStartObject();
         writer.WriteNumber(nameof(Vector2I.X), value.X);
         writer.WriteNumber(nameof(Vector2I.Y), value.Y);
+        writer.WriteEndObject();
+    }
+}
+
+internal sealed class Vector3JsonConverter : JsonConverter<Vector3>
+{
+    public override Vector3 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException("A three-component vector must be a JSON object.");
+
+        var fields = 0;
+        var value = default(Vector3);
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
+        {
+            if (reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException("A three-component vector contains an invalid JSON token.");
+
+            var propertyName = reader.GetString();
+            var field = propertyName switch
+            {
+                nameof(Vector3.X) => 1,
+                nameof(Vector3.Y) => 2,
+                nameof(Vector3.Z) => 4,
+                _ => throw new JsonException($"A three-component vector contains unknown field '{propertyName}'."),
+            };
+            if ((fields & field) != 0)
+                throw new JsonException($"A three-component vector contains duplicate field '{propertyName}'.");
+            if (!reader.Read() || reader.TokenType != JsonTokenType.Number || !reader.TryGetSingle(out var component) || !float.IsFinite(component))
+                throw new JsonException($"Three-component vector field '{propertyName}' must be a finite number.");
+
+            fields |= field;
+            switch (field)
+            {
+                case 1:
+                    value.X = component;
+                    break;
+                case 2:
+                    value.Y = component;
+                    break;
+                case 4:
+                    value.Z = component;
+                    break;
+            }
+        }
+
+        if (reader.TokenType != JsonTokenType.EndObject)
+            throw new JsonException("A three-component vector JSON object is incomplete.");
+        if (fields != 7)
+            throw new JsonException("A three-component vector must contain exactly X, Y, and Z fields.");
+        return value;
+    }
+
+    public override void Write(Utf8JsonWriter writer, Vector3 value, JsonSerializerOptions options)
+    {
+        if (!value.IsFinite())
+            throw new JsonException("Configuration vectors require finite components.");
+
+        writer.WriteStartObject();
+        writer.WriteNumber(nameof(Vector3.X), value.X);
+        writer.WriteNumber(nameof(Vector3.Y), value.Y);
+        writer.WriteNumber(nameof(Vector3.Z), value.Z);
+        writer.WriteEndObject();
+    }
+}
+
+internal sealed class Vector3IJsonConverter : JsonConverter<Vector3I>
+{
+    public override Vector3I Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException("A three-component integer vector must be a JSON object.");
+
+        var fields = 0;
+        var value = default(Vector3I);
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
+        {
+            if (reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException("A three-component integer vector contains an invalid JSON token.");
+
+            var propertyName = reader.GetString();
+            var field = propertyName switch
+            {
+                nameof(Vector3I.X) => 1,
+                nameof(Vector3I.Y) => 2,
+                nameof(Vector3I.Z) => 4,
+                _ => throw new JsonException($"A three-component integer vector contains unknown field '{propertyName}'."),
+            };
+            if ((fields & field) != 0)
+                throw new JsonException($"A three-component integer vector contains duplicate field '{propertyName}'.");
+            if (!reader.Read() || reader.TokenType != JsonTokenType.Number || !reader.TryGetInt32(out var component))
+                throw new JsonException($"Three-component integer vector field '{propertyName}' must be a 32-bit integer.");
+
+            fields |= field;
+            switch (field)
+            {
+                case 1:
+                    value.X = component;
+                    break;
+                case 2:
+                    value.Y = component;
+                    break;
+                case 4:
+                    value.Z = component;
+                    break;
+            }
+        }
+
+        if (reader.TokenType != JsonTokenType.EndObject)
+            throw new JsonException("A three-component integer vector JSON object is incomplete.");
+        if (fields != 7)
+            throw new JsonException("A three-component integer vector must contain exactly X, Y, and Z fields.");
+        return value;
+    }
+
+    public override void Write(Utf8JsonWriter writer, Vector3I value, JsonSerializerOptions options)
+    {
+        writer.WriteStartObject();
+        writer.WriteNumber(nameof(Vector3I.X), value.X);
+        writer.WriteNumber(nameof(Vector3I.Y), value.Y);
+        writer.WriteNumber(nameof(Vector3I.Z), value.Z);
         writer.WriteEndObject();
     }
 }

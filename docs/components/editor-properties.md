@@ -50,4 +50,4 @@ No editor UI, reflection scanner, attributes, file-serialization schema, categor
 
 ## Verification
 
-The executable test verifies discovery, storage metadata, typed reads and writes, validation, typed revert-value retrieval, object-level revert, property-list change notification, packed capture/restore including `Color`, all four vector values, `Rect`, `RectI`, `Transform`, and Timer configuration, resource remapping, and unsupported stored-shape rejection.
+The executable test verifies discovery, storage metadata, typed reads and writes, validation, typed revert-value retrieval, object-level revert, property-list change notification, packed capture/restore including `Color`, all six vector values, `Rect`, `RectI`, `Transform`, and Timer configuration, resource remapping, and unsupported stored-shape rejection.

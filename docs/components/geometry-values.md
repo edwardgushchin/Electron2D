@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 ## Scope
 
-This Core component owns the engine's backend-independent value mathematics: two- and four-component floating-point/integer vectors, floating-point and integer 2D axis-aligned rectangles, the 2D affine transform, and rectangle side identities. It contains no renderer, physics, input, asset, scene ownership, native handles, or global state.
+This Core component owns the engine's backend-independent value mathematics: two-, three-, and four-component floating-point/integer vectors, floating-point and integer 2D axis-aligned rectangles, the 2D affine transform, and rectangle side identities. It contains no renderer, physics, input, asset, scene ownership, native handles, or global state.
 
 ## Owned types
 
@@ -12,6 +12,8 @@ This Core component owns the engine's backend-independent value mathematics: two
 | --- | --- | --- |
 | [`Vector2`](../classes/Vector2.md) | Canonical two-component floating-point spatial and numeric value | [`Vector2.cs`](../../src/Core/Math/Vector2.cs) |
 | [`Vector2I`](../classes/Vector2I.md) | Canonical two-component integer grid and numeric value | [`Vector2I.cs`](../../src/Core/Math/Vector2I.cs) |
+| [`Vector3`](../classes/Vector3.md) | Three-component floating-point numeric value | [`Vector3.cs`](../../src/Core/Math/Vector3.cs) |
+| [`Vector3I`](../classes/Vector3I.md) | Three-component integer numeric value | [`Vector3I.cs`](../../src/Core/Math/Vector3I.cs) |
 | [`Vector4`](../classes/Vector4.md) | Four-component floating-point numeric tuple | [`Vector4.cs`](../../src/Core/Math/Vector4.cs) |
 | [`Vector4I`](../classes/Vector4I.md) | Four-component integer numeric tuple | [`Vector4I.cs`](../../src/Core/Math/Vector4I.cs) |
 | [`Rect`](../classes/Rect.md) | Mutable sequential rectangle and typed geometry operations | [`Rect.cs`](../../src/Core/Math/Rect.cs) |
@@ -36,7 +38,7 @@ This Core component owns the engine's backend-independent value mathematics: two
 
 ## Invariants
 
-- `Vector2` and `Vector2I` are sequential X/Y values of 8 bytes; `Vector4` and `Vector4I` are sequential X/Y/Z/W values of 16 bytes.
+- `Vector2` and `Vector2I` are sequential X/Y values of 8 bytes; `Vector3` and `Vector3I` are sequential X/Y/Z values of 12 bytes; `Vector4` and `Vector4I` are sequential X/Y/Z/W values of 16 bytes.
 - `Rect` is 16 bytes containing `Vector2 Position` then `Vector2 Size`; `RectI` is 16 bytes containing `Vector2I Position` then `Vector2I Size`; `Transform` is 24 bytes containing `Vector2 X`, `Y`, then `Origin`.
 - Floating-point ordinary math retains IEEE values; finite persistence validates only at its serialization boundary.
 - Floating-point component approximation uses the strict internal tolerance (`1e-6f`) and accepts exact equality first; unit-vector checks retain their separate `0.001` tolerance.
@@ -50,15 +52,15 @@ This Core component owns the engine's backend-independent value mathematics: two
 
 ## Current implementation status
 
-Implemented and verified. `Rect`, `Transform`, and `Entity` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `Mathf`. `Vector2I`, `Vector4`, `Vector4I`, and `RectI` provide their complete currently implementable value contracts, including typed conversions within vector and rectangle dimensional pairs. Strict configuration schemas and direct packed-scene storage exist for all four vectors, both rectangles, and transforms.
+Implemented and verified. `Rect`, `Transform`, and `Entity` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `Mathf`. `Vector2I`, `Vector3`, `Vector3I`, `Vector4`, `Vector4I`, and `RectI` provide their complete currently implementable value contracts, including typed conversions within vector and rectangle dimensional pairs. Strict configuration schemas and direct packed-scene storage exist for all six vectors, both rectangles, and transforms.
 
 ## Exclusions and limitations
 
 - Universal-value truth conversion is permanently excluded by the typed C# architecture.
 - Four-component projection operations are excluded because the engine has no 3D projection type.
-- `Vector3`, `Vector3I`, 3D rectangles, and 3D transforms are outside the 2D product boundary.
+- Three-dimensional rectangles, transforms, nodes, and rendering remain outside the 2D product boundary. Numeric `Vector3` and `Vector3I` do not introduce these systems.
 - No public external-numerics adapter exists. Future native/package adapters must remain localized at integration boundaries.
-- No renderer, shader-uniform binding, physics, UI layout, atlas, or native ABI integration is claimed by these pure values.
+- Shader uniforms accept the numeric vector values; these pure values do not add physics, UI layout, atlas, or native ABI integration.
 
 ## Verification
 

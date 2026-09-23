@@ -1,6 +1,6 @@
 # Godot class-reference catalog
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.
 
@@ -910,8 +910,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Variant](classes/Variant.md) | — | Excluded | 0 |
 | [Vector2](classes/Vector2.md) | — | Partial | 82 |
 | [Vector2i](classes/Vector2i.md) | — | Implemented | 53 |
-| [Vector3](classes/Vector3.md) | — | Excluded | 94 |
-| [Vector3i](classes/Vector3i.md) | — | Excluded | 56 |
+| [Vector3](classes/Vector3.md) | — | Partial | 94 |
+| [Vector3i](classes/Vector3i.md) | — | Partial | 56 |
 | [Vector4](classes/Vector4.md) | — | Partial | 66 |
 | [Vector4i](classes/Vector4i.md) | — | Partial | 52 |
 | [VehicleBody3D](classes/VehicleBody3D.md) | RigidBody3D | Excluded | 4 |

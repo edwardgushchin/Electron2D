@@ -29,7 +29,7 @@ One validated std140 uniform member. Reflection determines its numeric element t
 
 `ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned, int MatrixStride, bool RowMajor, int BooleanWidth)`
 
-Arguments become record properties. ArrayLength zero denotes a scalar/vector/matrix; a positive length denotes a fixed array. Offsets/strides are bytes. Unsigned distinguishes signed and unsigned shader integers even when both use Vector2I/Vector4I. Float3 has Type Color and ElementSize 12; its alignment and array stride remain 16 bytes. Float2x2 has Type Transform; MatrixStride is the byte step between its two stored vectors and RowMajor chooses rows instead of columns. ElementSize spans the first component through the second vector (MatrixStride + 8); matrices require 16-byte alignment. Non-matrix MatrixStride is zero. BooleanWidth is zero for numeric members and 1..4 for validated boolean storage: width one has Type bool, widths two through four Type int. Physical components remain uint32. Creation follows reflection validation, not arbitrary user input.
+Arguments become record properties. ArrayLength zero denotes a scalar/vector/matrix; a positive length denotes a fixed array. Offsets/strides are bytes. Unsigned distinguishes signed and unsigned shader integers even when both use Vector2I/Vector3I/Vector4I. Float3 has Type Vector3 and ElementSize 12; its alignment and array stride remain 16 bytes. Float2x2 has Type Transform; MatrixStride is the byte step between its two stored vectors and RowMajor chooses rows instead of columns. ElementSize spans the first component through the second vector (MatrixStride + 8); matrices require 16-byte alignment. Non-matrix MatrixStride is zero. BooleanWidth is zero for numeric members and 1..4 for validated boolean storage: width one has Type bool, widths two through four Type int. Physical components remain uint32. Creation follows reflection validation, not arbitrary user input.
 
 ### Element count
 
@@ -41,7 +41,7 @@ Returns max(1, ArrayLength).
 
 `internal bool Accepts<T>() where T : unmanaged`
 
-Accepts the reflected C# type, plus Color and Rect as aliases for Vector4. Float3 accepts Color only. Logical booleans accept bool or int masks according to width; arrays use the same element mapping. Integer vectors carry signed/unsigned component bits without conversion. Float2x2 accepts Transform, storing only X/Y. Does not imply arbitrary unmanaged types are supported.
+Accepts the reflected C# type, plus Color and Rect as aliases for Vector4. Float3 uses Vector3 and also accepts Color. Logical booleans accept bool or int masks according to width; arrays use the same element mapping. Integer vectors carry signed/unsigned component bits without conversion. Float2x2 accepts Transform, storing only X/Y. Does not imply arbitrary unmanaged types are supported.
 
 ### Migration compatibility
 
@@ -57,7 +57,7 @@ Boolean writes normalize each physical component to zero/one from bool or the co
 
 `internal T Read<T>(ReadOnlySpan<byte> source) where T : unmanaged`
 
-Boolean reads return bool or the low component mask. Copies stored components into a zero-initialized typed value, reconstructing alpha one for float3 Color. Float2x2 gathers its four basis components and leaves Origin zero. Callers validate T and provide exactly the reflected component slice. Both helpers use stack-backed spans with no managed allocation.
+Boolean reads return bool or the low component mask. Copies stored components into a zero-initialized typed value, reconstructing alpha one when float3 is read as Color. Float2x2 gathers its four basis components and leaves Origin zero. Callers validate T and provide exactly the reflected component slice. Both helpers use stack-backed spans with no managed allocation.
 
 ### Descriptor
 

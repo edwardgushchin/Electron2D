@@ -68,7 +68,7 @@ Verification is currently Linux/.NET 8. Renderer/native pixel equivalence and th
 <a id="adr-0025"></a>
 ## ADR 0025: Typed axis-aligned rectangle geometry
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ### Status
 
@@ -293,7 +293,7 @@ This ADR records the required architecture only. It does not make `Vector` a pro
 <a id="adr-0033"></a>
 ## ADR 0033: Dimensioned engine-owned vector family
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ### Status
 
@@ -307,23 +307,23 @@ The existing rectangle and affine-transform names do not have this ambiguity: El
 
 ### Decision
 
-Electron2D owns four canonical vector values: `Vector2`, `Vector2I`, `Vector4`, and `Vector4I`.
+Electron2D owns six canonical vector values: `Vector2`, `Vector2I`, `Vector3`, `Vector3I`, `Vector4`, and `Vector4I`.
 
 - `Vector2` is the engine's single-precision 2D spatial and numeric pair. `Vector2I` is its 32-bit integer counterpart for pixels, grids, tiles, dimensions, and integer pairs.
+- `Vector3` and `Vector3I` are three-component floating-point and integer numeric values. `Vector3` carries arbitrary `vec3`/`float3` data; `Color` carries values with RGB semantics. A numeric three-component value does not add three-dimensional nodes, scenes, transforms, cameras, physics, rendering paths, or assets.
 - `Vector4` and `Vector4I` are four-component numeric tuples. Their existence does not create 3D or 4D scene geometry, transforms, cameras, physics, rendering paths, or assets.
 - `Rect`, `Transform`, and `Entity` use `Electron2D.Vector2` throughout their public/protected API and engine-owned state.
 - The previously accepted `Vector` name and the temporary `VectorI` name do not ship. No aliases, forwarding wrappers, duplicate overloads, or compatibility conversions are provided.
-- `Vector3` and `Vector3I` are absent because the engine has no three-dimensional spatial domain and no implemented subsystem currently requires three generic components.
+- Typed shader parameters use `Vector3` as the canonical `vec3`/`float3` descriptor and accept `Color` when the components represent RGB. Signed and unsigned three-component integer uniforms use `Vector3I` with preserved component bits.
 - External numerics types may appear only inside future localized integration adapters. They do not cross a public/protected Electron2D boundary.
 - Every vector is a sequential mutable value with explicit float/integer arithmetic, edge behavior, invariant formatting, strict typed configuration persistence, packed-scene storage, and allocation-free warmed numeric operations.
 - Universal-value truth conversion is permanently excluded by ADR 0001. Four-component projection operators are excluded because Electron2D has no 3D projection type.
 
 ### Consequences
 
-- The vector family states component count explicitly and remains coherent when two- and four-component values coexist.
+- The vector family states component count explicitly across two-, three-, and four-component values.
 - The completed migration is source-breaking from both the former external numerics surface and ADR 0032's unimplemented `Vector` spelling. The repository is pre-release and retains only the final contract.
-- `Vector4` and `Vector4I` can later cross a typed GPU boundary without requiring placeholder shader or renderer APIs now.
-- `Vector2I` and `Vector4I` use explicit managed integer behavior: ordinary component arithmetic wraps, invalid division throws, and float-to-integer conversion rejects non-finite or out-of-range components. Their squared length and distance return signed 64-bit values after widening before multiplication; they throw `OverflowException` if the exact result exceeds `long.MaxValue`. Distance widens coordinate differences before subtraction. Length and distance use widened floating-point arithmetic independently of the squared-return limit and remain finite for every 32-bit input. This corrects the pre-release 32-bit squared wrap, which made moderate lengths NaN.
+- `Vector2I`, `Vector3I`, and `Vector4I` use explicit managed integer behavior: ordinary component arithmetic wraps, invalid division throws, and float-to-integer conversion rejects non-finite or out-of-range components. Their squared length and distance return signed 64-bit values after widening before multiplication; they throw `OverflowException` if the exact result exceeds `long.MaxValue`. Distance widens coordinate differences before subtraction. Length and distance use widened floating-point arithmetic independently of the squared-return limit and remain finite for every 32-bit input. This corrects the pre-release 32-bit squared wrap, which made moderate lengths NaN.
 - Their floating-scalar division returns a floating vector with IEEE 754 results, including infinity or NaN for a zero divisor. The typed API has no dynamic `Variant` error state under ADR 0001.
 - The current executable verification is Linux/.NET 8 only. Sequential managed layout is verified, but native ABI and the full five-target matrix are not.
 
@@ -331,13 +331,13 @@ Electron2D owns four canonical vector values: `Vector2`, `Vector2I`, `Vector4`, 
 
 - **Keep `Vector` beside `Vector4`:** rejected because one name hides component count while the other exposes it.
 - **Add only floating-point four-component data:** rejected after the integer counterpart was explicitly required and provides a symmetric typed parameter family.
-- **Add `Vector3` for family completeness:** rejected because no current 2D subsystem needs it and a speculative type would blur the 2D-only boundary.
+- **Use `Color` for every three-component numeric value:** rejected because arbitrary numeric triples do not imply RGB semantics; `Color` remains available for explicitly color-valued data.
 - **Retain `Vector`/`VectorI` aliases:** rejected because aliases create a second public vocabulary and compatibility debt before release.
 - **Reuse external numerics vectors:** rejected by ADR 0032's retained engine-ownership decision.
 
 ### Verification
 
-The executable harness covers all four layouts, constants, index failures, methods and operators, float/integer conversions, interpolation, IEEE values, NaN ordering, integer wrap/overflow/division failures, invariant formatting, strict configuration schemas, direct packed-scene storage, and warmed allocation-free numeric loops. Existing rectangle, transform, and node tests exercise the completed `Vector2` migration.
+The executable harness covers all six layouts, constants, index failures, methods and operators, float/integer conversions, interpolation, IEEE values, NaN ordering, integer wrap/overflow/division failures, invariant formatting, strict configuration schemas, direct packed-scene storage, and warmed allocation-free numeric loops. Existing rectangle, transform, and node tests exercise the completed `Vector2` migration.
 
 The post-implementation checks also audit production/test sources for old vector, rectangle, transform, and external-numerics names. Passing local checks do not establish native ABI, rendering/shader integration, visual behavior, mobile/desktop packaging, or six-target acceptance.
 

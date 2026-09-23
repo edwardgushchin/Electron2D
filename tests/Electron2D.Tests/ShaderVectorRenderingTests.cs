@@ -3,6 +3,67 @@ using Electron2D;
 
 internal static partial class RenderingRuntimeTests
 {
+    private static void VerifyShaderTriples()
+    {
+        using var shader = LoadShader("Triples");
+        using var material = new ShaderMaterial { Shader = shader };
+        var descriptors = shader.GetShaderUniformList();
+        Check(descriptors.Count == 6 && descriptors.Single(p => p.Name == "numeric") is PropertyDescriptor<ShaderMaterial, Vector3> &&
+            descriptors.Single(p => p.Name == "signedTriple") is PropertyDescriptor<ShaderMaterial, Vector3I> &&
+            descriptors.Single(p => p.Name == "unsignedArray") is PropertyDescriptor<ShaderMaterial, Vector3I[]>,
+            "Float3 and signed/unsigned int3 values use numeric descriptors.");
+        Check(material.GetShaderParameter<Vector3>("numeric") == Vector3.Zero &&
+            material.GetShaderParameter<Color>("numeric") == Colors.Black,
+            "Numeric float3 defaults to zero and Color reconstructs RGB alpha.");
+        material.SetShaderParameter("numeric", new Vector3(.25f, .5f, .75f));
+        material.SetShaderParameter("signedTriple", new Vector3I(-1, 2, -3));
+        material.SetShaderParameter("unsignedTriple", new Vector3I(-1, 2, 3));
+        material.SetShaderParameter<Vector3>("numericArray", [Vector3.Right, Vector3.Up]);
+        material.SetShaderParameter<Vector3I>("signedArray", [new(-1, 2, -3), new(4, 5, 6)]);
+        material.SetShaderParameter<Vector3I>("unsignedArray", [new(-1, 2, 3), new(4, 5, 6)]);
+        Check(material.GetShaderParameter<Color>("numeric") == new Color(.25f, .5f, .75f, 1f) &&
+            material.GetShaderParameter<Vector3I>("unsignedTriple") == new Vector3I(-1, 2, 3) &&
+            material.GetShaderParameterArray<Vector3I>("signedArray")[1] == new Vector3I(4, 5, 6),
+            "Numeric triples roundtrip with signedness and RGB alias semantics.");
+        Reject<ArgumentException>(() => material.SetShaderParameter("numeric", new Vector3(0, 0, float.NaN)));
+        Reject<ArgumentException>(() => material.SetShaderParameter("signedTriple", new Vector4I(1, 2, 3, 4)));
+        Reject<ArgumentException>(() => material.SetShaderParameter<Vector3>("numericArray", [Vector3.Zero]));
+        Check(material.GetShaderParameter<Vector3>("numeric") == new Vector3(.25f, .5f, .75f) &&
+            material.GetShaderParameterArray<Vector3>("numericArray")[0] == Vector3.Right,
+            "Invalid triple updates leave prior values intact.");
+        Console.WriteLine("Shader float3/int3/uint3 material contract passed.");
+    }
+
+    private static void VerifyShaderTripleFrame()
+    {
+        using var shader = LoadShader("Triples");
+        using var material = new ShaderMaterial { Shader = shader };
+        material.SetShaderParameter("numeric", new Vector3(.25f, .5f, .75f));
+        material.SetShaderParameter("signedTriple", new Vector3I(-1, 2, -3));
+        material.SetShaderParameter("unsignedTriple", new Vector3I(-1, 2, 3));
+        material.SetShaderParameter<Vector3>("numericArray", [Vector3.Right, Vector3.Up]);
+        material.SetShaderParameter<Vector3I>("signedArray", [new(-1, 2, -3), new(4, 5, 6)]);
+        material.SetShaderParameter<Vector3I>("unsignedArray", [new(-1, 2, 3), new(4, 5, 6)]);
+
+        var window = new Window { Size = new(16, 16) };
+        var node = new CanvasNode { Material = material, DrawAction = n => n.DrawRect(new(0, 0, 12, 12), Colors.White) };
+        window.AddChild(node);
+        window.Ready += _ =>
+        {
+            var server = RenderingServer.Instance!;
+            server.SetDefaultClearColor(Colors.Black);
+            server.FramePostDraw += () =>
+            {
+                using var image = server.Readback();
+                Pixel(image, 4, 4, new(.25f, .5f, .75f, 1));
+                window.Tree!.Quit();
+            };
+        };
+        Engine.Instance.Run(window);
+        Released(window);
+        Console.WriteLine("Shader float3/int3/uint3 GPU pixel and cleanup passed.");
+    }
+
     private static void InitializeVectorValues(ShaderMaterial material, Color rgb)
     {
         material.SetShaderParameter("rgb", rgb);
@@ -22,12 +83,13 @@ internal static partial class RenderingRuntimeTests
         using var material = new ShaderMaterial { Shader = shader };
         var descriptors = shader.GetShaderUniformList();
         Check(descriptors.Count == 9, "Both source languages expose all vector value descriptors.");
-        Check(material.GetShaderParameter<Color>("rgb") == Colors.Black && material.GetShaderParameterArray<Color>("rgbArray").All(c => c == Colors.Black), "RGB values start at zero, with canonical alpha one.");
-        var rgb = (PropertyDescriptor<ShaderMaterial, Color>)descriptors.Single(p => p.Name == "rgb");
-        var colors = (PropertyDescriptor<ShaderMaterial, Color[]>)descriptors.Single(p => p.Name == "rgbArray");
-        Check(rgb.TryGetRevertValue(material, out var black) && black == Colors.Black && colors.TryGetRevertValue(material, out var blacks) && blacks.All(c => c == Colors.Black), "RGB scalar/array revert values match typed readers.");
+        Check(material.GetShaderParameter<Vector3>("rgb") == Vector3.Zero && material.GetShaderParameterArray<Vector3>("rgbArray").All(c => c == Vector3.Zero) && material.GetShaderParameter<Color>("rgb") == Colors.Black, "Float3 defaults are numeric zero, with RGB alpha reconstructed as one.");
+        var rgb = (PropertyDescriptor<ShaderMaterial, Vector3>)descriptors.Single(p => p.Name == "rgb");
+        var colors = (PropertyDescriptor<ShaderMaterial, Vector3[]>)descriptors.Single(p => p.Name == "rgbArray");
+        Check(rgb.TryGetRevertValue(material, out var black) && black == Vector3.Zero && colors.TryGetRevertValue(material, out var blacks) && blacks.All(c => c == Vector3.Zero), "Float3 scalar/array revert values match typed readers.");
         Check(descriptors.Single(p => p.Name == "rectangle") is PropertyDescriptor<ShaderMaterial, Vector4> && descriptors.Single(p => p.Name == "pairs") is PropertyDescriptor<ShaderMaterial, Vector2I[]>, "Aliases preserve canonical vector descriptors.");
         InitializeVectorValues(material, new(.25f, .5f, .75f, .125f));
+        Check(material.GetShaderParameter<Vector3>("rgb") == new Vector3(.25f, .5f, .75f), "Numeric float3 reads preserve all components.");
         Check(material.GetShaderParameter<Color>("rgb") == new Color(.25f, .5f, .75f, 1) && material.GetShaderParameter<float>("tail") == .75f, "RGB writes do not overwrite the adjacent scalar with alpha.");
         Check(material.GetShaderParameter<Vector4>("rectangle") == new Vector4(.125f, .25f, .5f, 1) && material.GetShaderParameter<Color>("rectangle") == new Color(.125f, .25f, .5f, 1), "Rect, Vector4 and Color share the float4 component order.");
         Check(material.GetShaderParameterArray<Rect>("rectangles")[1] == new Rect(-1, -2, -3, -4), "Rect uniform values retain signed sizes.");
@@ -46,13 +108,13 @@ internal static partial class RenderingRuntimeTests
         Check(material.GetShaderParameterArray<Color>("rgbArray")[0] == Colors.White && material.GetShaderParameterArray<Rect>("rectangles")[0] == new Rect(1, 2, 3, 4), "Invalid arrays preserve every prior element.");
         using var copy = (ShaderMaterial)material.Duplicate(true); using var copiedShader = copy.Shader!;
         using var target = new ShaderMaterial(); target.CopyFromResource(material);
-        rgb.SetValue(material, Colors.Red); colors.Revert(material);
+        rgb.SetValue(material, Vector3.Right); colors.Revert(material);
         Check(copy.GetShaderParameter<Color>("rgb") == new Color(.25f, .5f, .75f) && target.GetShaderParameterArray<Color>("rgbArray")[0] == Colors.White, "Deep duplication and copying preserve independent vector storage.");
         Check(material.GetShaderParameterArray<Color>("rgbArray").All(c => c == Colors.Black), "RGB array descriptor reverts every element.");
         InitializeVectorValues(material, Colors.Blue);
         using var reordered = LoadShader("ValuesReordered"); shader.SetSPIRV(reordered.GetSPIRV());
         Check(material.GetShaderParameter<Color>("rgb") == Colors.Blue && material.GetShaderParameterArray<Vector4I>("quads")[1] == new Vector4I(1, 2, 3, 4) && material.GetShaderParameterArray<Rect>("rectangles")[1] == new Rect(-1, -2, -3, -4), "Reload migrates values across offsets, strides and buffers.");
-        rgb.SetValue(material, Colors.Green);
+        rgb.SetValue(material, Vector3.Up);
         Check(material.GetShaderParameter<Color>("rgb") == Colors.Green, "Old descriptor snapshots use the new compatible layout.");
         using var signed = LoadShader("ValuesSigned"); shader.SetSPIRV(signed.GetSPIRV());
         Check(material.GetShaderParameter<Vector2I>("pair") == Vector2I.Zero && material.GetShaderParameter<Vector4I>("quad") == Vector4I.Zero && material.GetShaderParameterArray<Vector2I>("pairs").All(v => v == Vector2I.Zero) && material.GetShaderParameterArray<Vector4I>("quads").All(v => v == Vector4I.Zero), "A signedness change resets scalar and array vectors despite identical C# carrier types.");

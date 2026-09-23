@@ -46,7 +46,7 @@ public sealed class ShaderMaterial : Material
     }
 
     /// <summary>Sets a typed scalar, vector or matrix material uniform.</summary>
-    /// <typeparam name="T">Bool, float, int, uint, Vector2, Vector4, Color, Rect, Transform, Vector2I or Vector4I as required by the shader.</typeparam>
+    /// <typeparam name="T">Bool, float, int, uint, Vector2, Vector3, Vector4, Color, Rect, Transform, Vector2I, Vector3I or Vector4I as required by the shader.</typeparam>
     /// <param name="name">The exact, case-sensitive uniform member name.</param>
     /// <param name="value">The new value. Color maps RGB to float3 or RGBA to float4 without color-space conversion.
     /// Rect maps position and size to float4. Integer vectors preserve component bits for signed or unsigned shader vectors.
@@ -94,7 +94,7 @@ public sealed class ShaderMaterial : Material
     }
 
     /// <summary>Reads a typed scalar, vector or matrix material uniform.</summary>
-    /// <typeparam name="T">The supported type matching the reflected value; Color also accepts float4 and Rect aliases float4.</typeparam>
+    /// <typeparam name="T">The supported type matching the reflected value; Color aliases float3 and float4, and Rect aliases float4.</typeparam>
     /// <param name="name">The exact, case-sensitive uniform member name.</param>
     /// <returns>The current value; initially identity for matrices and zero for other stored components.
     /// Boolean vectors return only their represented low mask bits. Color mapped from float3 always has alpha one. Transform mapped from float2x2 always has zero Origin.</returns>
@@ -174,7 +174,7 @@ public sealed class ShaderMaterial : Material
 
     private static void ValidateValue<T>(in T value) where T : unmanaged
     {
-        if (typeof(T) != typeof(float) && typeof(T) != typeof(Vector2) && typeof(T) != typeof(Vector4) && typeof(T) != typeof(Color) && typeof(T) != typeof(Rect) && typeof(T) != typeof(Transform)) return;
+        if (typeof(T) != typeof(float) && typeof(T) != typeof(Vector2) && typeof(T) != typeof(Vector3) && typeof(T) != typeof(Vector4) && typeof(T) != typeof(Color) && typeof(T) != typeof(Rect) && typeof(T) != typeof(Transform)) return;
         foreach (var component in MemoryMarshal.Cast<T, float>(MemoryMarshal.CreateReadOnlySpan(in value, 1)))
             if (!float.IsFinite(component)) throw new ArgumentException("Material floating-point values must be finite.", nameof(value));
     }

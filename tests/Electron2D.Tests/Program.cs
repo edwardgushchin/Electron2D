@@ -134,6 +134,7 @@ SpriteTests.Run();
 VerifyImages();
 VerifyVector2Values();
 VerifyVector2IValues();
+VerifyVector3Values();
 VerifyVector4Values();
 VerifyVector4IValues();
 VerifyRectangles();
@@ -2074,6 +2075,50 @@ static void VerifyVector2IValues()
     Expect<InvalidDataException>(() => config.GetValue(key), "ConfigFile must reject non-integer Vector2I fields.");
 }
 
+static void VerifyVector3Values()
+{
+    Require(Marshal.SizeOf<Vector3>() == 12 && Marshal.SizeOf<Vector3I>() == 12 &&
+            Vector3.Zero == default && Vector3I.Zero == default && Vector3.Right == new Vector3(1, 0, 0) &&
+            Vector3I.Forward == new Vector3I(0, 0, -1), "Three-component values have sequential layouts and stable constants.");
+    var value = new Vector3(3, 4, 12);
+    var (x, y, z) = value;
+    Require((x, y, z) == (3f, 4f, 12f) && value[2] == 12 && value.Length() == 13 &&
+            value.LengthSquared() == 169 && value.Dot(Vector3.Up) == 4 &&
+            Vector3.Right.Cross(Vector3.Up) == Vector3.Back &&
+            Vector3.Right.Rotated(Vector3.Back, Mathf.Pi / 2).IsEqualApprox(Vector3.Up) &&
+            Vector3.Right.AngleTo(Vector3.Up) == Mathf.Pi / 2 &&
+            Vector3.Right.SignedAngleTo(Vector3.Up, Vector3.Back) == Mathf.Pi / 2 &&
+            Vector3.Right.Slide(Vector3.Up) == Vector3.Right &&
+            Vector3.Right.Project(Vector3.Up) == Vector3.Zero &&
+            Vector3.Back.OctahedronEncode().IsEqualApprox(new Vector2(.5f, .5f)) &&
+            Vector3.OctahedronDecode(new Vector2(.5f, .5f)).IsEqualApprox(Vector3.Back),
+        "Three-component vector arithmetic, geometry and packing retain all axes.");
+    Require(Vector3.One.MinAxisIndex() == Vector3.Axis.Z && Vector3.One.MaxAxisIndex() == Vector3.Axis.X &&
+            new Vector3I(1, 2, 3) * new Vector3I(2, 3, 4) == new Vector3I(2, 6, 12) &&
+            -new Vector3I(1, 2, 3) == new Vector3I(-1, -2, -3) &&
+            new Vector3I(3, 4, 12).LengthSquared() == 169 &&
+            new Vector3I(1, 2, 3).DistanceSquaredTo(new Vector3I(4, 6, 6)) == 34 &&
+            (Vector3I)new Vector3(1.9f, -2.9f, 3.9f) == new Vector3I(1, -2, 3) &&
+            new Vector3(new Vector3I(1, 2, 3)) == new Vector3(1, 2, 3),
+        "Integer arithmetic, norms, ties and typed conversions retain all axes.");
+    Require(float.IsFinite(Vector3I.MinValue.DistanceTo(Vector3I.MaxValue)) &&
+            float.IsFinite(Vector3I.MinValue.Length()), "Full-range integer distances remain finite.");
+    Expect<OverflowException>(() => _ = Vector3I.MinValue.DistanceSquaredTo(Vector3I.MaxValue), "Squared integer distances reject overflow.");
+    Expect<OverflowException>(() => _ = Vector3I.MinValue.LengthSquared(), "Squared integer lengths reject overflow.");
+    Expect<ArgumentOutOfRangeException>(() => _ = value[3], "A fourth vector component does not exist.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Vector3I)new Vector3(0, 0, float.NaN), "Nonfinite integer conversion is rejected.");
+    using var config = new ConfigFile();
+    var floatKey = new ConfigKey<Vector3>("math", "triple");
+    var intKey = new ConfigKey<Vector3I>("math", "triplei");
+    config.SetValue(floatKey, value); config.SetValue(intKey, new Vector3I(1, 2, 3));
+    Require(config.GetValue(floatKey) == value && config.GetValue(intKey) == new Vector3I(1, 2, 3) &&
+            config.EncodeToText().Contains("triple={\"X\":3,\"Y\":4,\"Z\":12}", StringComparison.Ordinal),
+        "Configuration stores exact three-component schemas.");
+    Expect<JsonException>(() => config.SetValue(floatKey, Vector3.Inf), "Configuration rejects nonfinite triples.");
+    config.Parse("[math]\ntriple={\"X\":1,\"Y\":2,\"Z\":3,\"W\":4}\n");
+    Expect<InvalidDataException>(() => config.GetValue(floatKey), "Configuration rejects a fourth field.");
+}
+
 static void VerifyVector4Values()
 {
     Require(Marshal.SizeOf<Vector4>() == 16 && typeof(Vector4).IsDefined(typeof(SerializableAttribute), false) &&
@@ -2239,6 +2284,8 @@ static void VerifyVector4IValues()
         Name = "VectorRoot",
         PackedVector2 = new Vector2(1.5f, -2.5f),
         PackedVector2I = new Vector2I(3, -4),
+        PackedVector3 = new Vector3(.5f, 1.5f, 2.5f),
+        PackedVector3I = new Vector3I(3, -4, 5),
         PackedVector4 = new Vector4(1f, 2f, 3f, 4f),
         PackedVector4I = new Vector4I(5, 6, 7, 8),
     };
@@ -2246,8 +2293,9 @@ static void VerifyVector4IValues()
     source.Dispose();
     using var instance = (ColorPackedNode)scene.Instantiate();
     Require(instance.PackedVector2 == new Vector2(1.5f, -2.5f) && instance.PackedVector2I == new Vector2I(3, -4) &&
+            instance.PackedVector3 == new Vector3(.5f, 1.5f, 2.5f) && instance.PackedVector3I == new Vector3I(3, -4, 5) &&
             instance.PackedVector4 == new Vector4(1f, 2f, 3f, 4f) && instance.PackedVector4I == new Vector4I(5, 6, 7, 8),
-        "PackedScene must preserve all four stored vector value types.");
+        "PackedScene must preserve all six stored vector value types.");
 
     _ = ExerciseVectorHotPath(32);
     var beforeAllocations = GC.GetAllocatedBytesForCurrentThread();
@@ -6697,6 +6745,10 @@ static void VerifyTweens()
                 Tween.TransitionType.Linear, Tween.EaseType.InOut), 15d) &&
             Tween.InterpolateValue(new Vector2(1f, 2f), new Vector2(2f, 4f), 1d, 1d,
                 Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector2(3f, 6f) &&
+            Tween.InterpolateValue(new Vector3(1f, 2f, 3f), new Vector3(2f, 4f, 6f), 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector3(2f, 4f, 6f) &&
+            Tween.InterpolateValue(new Vector3I(1, 2, 3), Vector3I.One, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector3I(2, 3, 4) &&
             Tween.InterpolateValue(Transform.Identity, new Transform(0f, new Vector2(4f, 6f)), 0.5d, 1d,
                 Tween.TransitionType.Linear, Tween.EaseType.In).Origin == new Vector2(2f, 3f) &&
             Tween.InterpolateValue(0, 1, 0.5d, 1d,
@@ -8072,6 +8124,12 @@ sealed class ColorPackedNode : Entity
         (node, value) => node.PackedVector2I = value,
         _ => Vector2I.Zero,
         stored: true);
+    private static readonly PropertyDescriptor<ColorPackedNode, Vector3> Vector3Property = new(
+        nameof(PackedVector3), node => node.PackedVector3, (node, value) => node.PackedVector3 = value,
+        _ => Vector3.Zero, stored: true);
+    private static readonly PropertyDescriptor<ColorPackedNode, Vector3I> Vector3IProperty = new(
+        nameof(PackedVector3I), node => node.PackedVector3I, (node, value) => node.PackedVector3I = value,
+        _ => Vector3I.Zero, stored: true);
     private static readonly PropertyDescriptor<ColorPackedNode, Vector4> Vector4Property = new(
         nameof(PackedVector4),
         node => node.PackedVector4,
@@ -8091,6 +8149,8 @@ sealed class ColorPackedNode : Entity
     private Transform _transform = Transform.Identity;
     private Vector2 _vector2;
     private Vector2I _vector2I;
+    private Vector3 _vector3;
+    private Vector3I _vector3I;
     private Vector4 _vector4;
     private Vector4I _vector4I;
 
@@ -8164,6 +8224,18 @@ sealed class ColorPackedNode : Entity
         }
     }
 
+    public Vector3 PackedVector3
+    {
+        get => _vector3;
+        set { EnsureMutable(); _vector3 = value; }
+    }
+
+    public Vector3I PackedVector3I
+    {
+        get => _vector3I;
+        set { EnsureMutable(); _vector3I = value; }
+    }
+
     public Vector4I PackedVector4I
     {
         get => _vector4I;
@@ -8184,6 +8256,8 @@ sealed class ColorPackedNode : Entity
             .Append(TransformProperty)
             .Append(Vector2Property)
             .Append(Vector2IProperty)
+            .Append(Vector3Property)
+            .Append(Vector3IProperty)
             .Append(Vector4Property)
             .Append(Vector4IProperty);
 

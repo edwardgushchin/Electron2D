@@ -75,6 +75,7 @@ def comparable_type(value):
         "bool": "bool", "systemboolean": "bool",
         "string": "string", "systemstring": "string",
         "vector2": "vector2", "vector2i": "vector2i",
+        "vector3": "vector3", "vector3i": "vector3i",
         "vector4": "vector4", "vector4i": "vector4i",
         "rect2": "rect", "rect2i": "recti", "rect": "rect", "recti": "recti",
         "transform2d": "transform", "transform": "transform", "color": "color",
@@ -120,7 +121,7 @@ def reason_for_type(item, lookup):
     if (re.search(r"(^|[^A-Za-z0-9])3D([^A-Za-z0-9]|$)", lineage)
             or any(part.endswith("3D") for part in ancestors)
             or any(part in three_d_roots for part in ancestors)
-            or name in {"AABB", "Basis", "Plane", "Projection", "Quaternion", "Vector3", "Vector3i", "Transform3D", "SkeletonProfile", "SkeletonProfileHumanoid", "Skin", "SkinReference", "MobileVRInterface", "WebXRInterface"}
+            or name in {"AABB", "Basis", "Plane", "Projection", "Quaternion", "Transform3D", "SkeletonProfile", "SkeletonProfileHumanoid", "Skin", "SkinReference", "MobileVRInterface", "WebXRInterface"}
             or name.startswith(("OpenXR", "XR", "Skeleton3D", "BoneAttachment3D", "Node3DGizmo", "GLTF", "FBX", "Lightmap", "Voxel", "FogVolume"))):
         return "Excluded", "3D/XR product scope is excluded by ADR 0004; no implementation trigger."
     if name == "@GlobalScope":
@@ -130,7 +131,7 @@ def reason_for_type(item, lookup):
     if name in {"@GDScript", "GDScript", "GDScriptFunctionState"}:
         return "Excluded", "GDScript runtime is outside the typed C# contract (ADR 0001)."
     accepted_slices = (
-        ({"BitMap", "Color", "Geometry2D", "RandomNumberGenerator", "Rect2", "Rect2i", "Transform2D", "Vector2", "Vector2i", "Vector4", "Vector4i"},
+        ({"BitMap", "Color", "Geometry2D", "RandomNumberGenerator", "Rect2", "Rect2i", "Transform2D", "Vector2", "Vector2i", "Vector3", "Vector3i", "Vector4", "Vector4i"},
          "first complete typed 2D math or geometry slice (ADRs 0024, 0032, 0033 and 0035)"),
         ({"Engine", "MainLoop", "Node", "Object"},
          "next core-object and scene API slice (ADRs 0001, 0005, 0008, 0015 and 0016)"),
@@ -253,6 +254,10 @@ def special_reason(item, member):
         if root in settings:
             return "Blocked", f"Trigger: {settings[root]}."
         raise ValueError(f"Unclassified ProjectSettings family: {root}")
+    if item["name"] == "Vector3" and (member["name"].startswith("MODEL_") or re.search(r"\b(Basis|Quaternion|Transform3D)\b", signature)):
+        return "Excluded", "3D model orientation and transform types are outside ADR 0004; the numeric Vector3 is retained by ADR 0033."
+    if item["name"] in {"Vector3", "Vector3i"}:
+        return None
     if re.search(r"\b(Vector3i?|Transform3D|Basis|Quaternion|AABB|Projection|Plane|[A-Za-z]+3D)\b", signature):
         return "Excluded", "3D-only signature is outside ADR 0004; no implementation trigger."
     if member["kind"] == "annotation":
@@ -411,7 +416,8 @@ def render():
         inherited = f"[{godot_type['inherits']}]({coverage_target(godot_type['inherits'])})" if godot_type["inherits"] else "—"
         page_name = TEXTURE_NAMES.get(name, name)
         page = CLASS_PAGES / f"{page_name}.md"
-        lines = [] if page in page_text else [f"# {page_name} API coverage", "", "Last updated: 2026-09-22", ""]
+        audit_date = "2026-09-23" if page_name in {"Vector3", "Vector3i", "Shader", "ShaderMaterial"} else "2026-09-22"
+        lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {audit_date}", ""]
         if page_name == "Texture":
             if page not in page_text:
                 lines.extend(["The reference Texture and Texture2D contracts share one Electron2D Texture page under [ADR 0004](../../decisions/product.md#adr-0004). Each source declaration remains accounted for below.", ""])
@@ -516,7 +522,7 @@ def render():
     engine_only = [entry for entry in engine if entry["id"] not in used_engine]
     if len(used_engine) + len(engine_only) != len(engine):
         raise ValueError("Electron2D accounting mismatch")
-    lines = ["# Electron2D declarations without an audited upstream row", "", "Last updated: 2026-09-22", "",
+    lines = ["# Electron2D declarations without an audited upstream row", "", "Last updated: 2026-09-23", "",
              "These declarations are present in the compiled runtime. A blank upstream cell means no exact counterpart was established by the conservative name-and-arity mapper; it does not claim an intentional extension. Review each against the linked Godot class page and record a rationale before declaring parity.", "",
              "| Godot API | Electron2D API | State | Reason / next action |", "| --- | --- | --- | --- |"]
     for entry in engine_only:
@@ -525,7 +531,7 @@ def render():
         reason = f"Electron2D-specific: {extra['reason']} ({extra.get('adr', 'class reference')})." if extra else "Audit the corresponding type family; document a typed-C# rationale or link the exact upstream row."
         lines.append(f"| — | {engine_link(entry, from_class=False)} | {state} | {cell(reason)} |")
     page_text[COVERAGE / "electron2d-unmapped.md"] = "\n".join(lines) + "\n"
-    catalog = ["# Godot class-reference catalog", "", "Last updated: 2026-09-22", "",
+    catalog = ["# Godot class-reference catalog", "", "Last updated: 2026-09-23", "",
                f"Source: Godot `{upstream['godot_version']}` at `{COMMIT}`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.", "",
                "| Godot class | Base | Class state | Declared members |", "| --- | --- | --- | ---: |"]
     for item in upstream["types"]:
@@ -535,7 +541,7 @@ def render():
         catalog.append(f"| [{cell(item['name'])}](classes/{coverage_target(item['name'])}) | {cell(item['inherits'] or '—')} | {state} | {len(item['members'])} |")
     page_text[COVERAGE / "catalog.md"] = "\n".join(catalog) + "\n"
     actionable_note = (" Start with the independent " + ", ".join(f"[{name}](classes/{coverage_target(name)})" for name in actionable) + " class slices.") if actionable else ""
-    road = ["# Coverage roadmap", "", "Last updated: 2026-09-22", "",
+    road = ["# Coverage roadmap", "", "Last updated: 2026-09-23", "",
             "The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.", "",
             f"1. Review {counts['Partial']} partially implemented rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.",
             f"2. Complete {counts['Unimplemented']} missing declarations in already represented type families; split each type by its documented dependency trigger.{actionable_note}",

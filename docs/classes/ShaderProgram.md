@@ -82,7 +82,7 @@ Validated binding-ordered texture descriptors, including optional reserved TEXTU
 
 `internal readonly IReadOnlyList<PropertyDescriptor> Descriptors`
 
-Unprefixed typed inspection descriptors, omitting reserved TEXTURE and TIME. Float2x2 uses Transform with identity revert values; float3 uses Color with alpha-one revert values; float4 uses Vector4 (material aliases Color and Rect); signed/unsigned integer vectors use Vector2I/Vector4I. Array descriptors retain the canonical element mapping.
+Unprefixed typed inspection descriptors, omitting reserved TEXTURE and TIME. Float2x2 uses Transform with identity revert values; float3 uses Vector3 (material access also accepts Color, with alpha one on read); float4 uses Vector4 (material aliases Color and Rect); signed/unsigned integer vectors use Vector2I/Vector3I/Vector4I. Array descriptors retain the canonical element mapping.
 
 ### Material descriptors
 

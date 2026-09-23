@@ -1,10 +1,10 @@
 # Coverage roadmap
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1703 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+1. Review 1839 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
 2. Complete 1161 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [BitMap](classes/BitMap.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
 3. Implement the remaining domains in dependency order: SDL3 GPU 2D rendering with the accepted SDL_Renderer fallback; GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable fallback slice must audit each of the five blocked GL/EGL/GLX `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -39,6 +39,8 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [InputEventWithModifiers](classes/InputEventWithModifiers.md) | 1 | 7 |
 | [InputEventMouse](classes/InputEventMouse.md) | 1 | 3 |
 | [InputEventGesture](classes/InputEventGesture.md) | 1 | 1 |
+| [Vector3](classes/Vector3.md) | 0 | 81 |
+| [Vector3i](classes/Vector3i.md) | 0 | 53 |
 | [Vector4i](classes/Vector4i.md) | 0 | 44 |
 | [CanvasItem](classes/CanvasItem.md) | 0 | 36 |
 | [Tween](classes/Tween.md) | 0 | 35 |

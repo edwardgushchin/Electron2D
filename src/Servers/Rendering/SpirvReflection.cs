@@ -75,13 +75,15 @@ internal static unsafe partial class SpirvReflection
                 {
                     (13, 1) => typeof(float),
                     (13, 2) => typeof(Vector2),
-                    (13, 3) => typeof(Color),
+                    (13, 3) => typeof(Vector3),
                     (13, 4) => typeof(Vector4),
                     (7, 1) => typeof(int),
                     (7, 2) => typeof(Vector2I),
+                    (7, 3) => typeof(Vector3I),
                     (7, 4) => typeof(Vector4I),
                     (8, 1) => typeof(uint),
                     (8, 2) => typeof(Vector2I),
+                    (8, 3) => typeof(Vector3I),
                     (8, 4) => typeof(Vector4I),
                     _ => throw new NotSupportedException($"Uniform '{name}' has no integrated typed material mapping.")
                 };

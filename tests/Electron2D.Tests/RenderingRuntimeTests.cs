@@ -46,10 +46,12 @@ internal static partial class RenderingRuntimeTests
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_VECTORS") == "1")
             {
                 VerifyShaderVectorValues("ValuesHLSL"); VerifyShaderVectorValues("ValuesGLSL");
+                VerifyShaderTriples();
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
                     settings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyShaderVectorFrame(backend, "ValuesHLSL"); VerifyShaderVectorFrame(backend, "ValuesGLSL");
+                    if (backend == "gpu") VerifyShaderTripleFrame();
                 }
                 return;
             }
@@ -170,6 +172,7 @@ internal static partial class RenderingRuntimeTests
             VerifyShaderTimeContract("TimeHLSL"); VerifyShaderTimeContract("TimeGLSL");
             VerifyShaderMatrices("MatricesHLSL"); VerifyShaderMatrices("MatricesGLSL");
             VerifyShaderVectorValues("ValuesHLSL"); VerifyShaderVectorValues("ValuesGLSL");
+            VerifyShaderTriples();
             VerifyParameters("MaterialHlsl");
             VerifyParameters("MaterialGlsl");
             VerifyTextureResources();
@@ -241,6 +244,7 @@ internal static partial class RenderingRuntimeTests
                     VerifyAtlasMaterial("TextureGlsl");
                 }
                 VerifyShaderVectorFrame(backend, "ValuesHLSL"); VerifyShaderVectorFrame(backend, "ValuesGLSL");
+                if (backend == "gpu") VerifyShaderTripleFrame();
                 VerifyShaderMatrixFrame(backend, "MatricesHLSL"); VerifyShaderMatrixFrame(backend, "MatricesGLSL");
                 VerifyNamedSamplerDefaults(backend, "TextureHlsl");
                 VerifyNamedSamplerDefaults(backend, "TextureGlsl");

@@ -1394,6 +1394,151 @@
       "godot": "Curve2D::property:point_{index}/position",
       "electron2d": "method:Electron2D.PathCurve.GetPropertyDescriptors()",
       "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Vector3..ctor(Electron2D.Vector3I)",
+      "godot": "Vector3::constructor:Vector3(Vector3i:)",
+      "reason": "Cross-precision vector constructor; parameter type corresponds exactly to the upstream integer/float vector constructor."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Vector3I..ctor(Electron2D.Vector3)",
+      "godot": "Vector3i::constructor:Vector3i(Vector3:)",
+      "reason": "Cross-precision vector constructor; parameter type corresponds exactly to the upstream integer/float vector constructor."
+    },
+    {
+      "electron2d": "indexer:Electron2D.Vector3.Item(System.Int32)",
+      "godot": "Vector3::operator:operator [](int:)",
+      "reason": "C# indexer is the upstream component-index operator."
+    },
+    {
+      "electron2d": "indexer:Electron2D.Vector3I.Item(System.Int32)",
+      "godot": "Vector3i::operator:operator [](int:)",
+      "reason": "C# indexer is the upstream component-index operator."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3.Clamp(System.Single,System.Single)",
+      "godot": "Vector3::method:clampf(float:,float:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3.Max(System.Single)",
+      "godot": "Vector3::method:maxf(float:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3.Min(System.Single)",
+      "godot": "Vector3::method:minf(float:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3.PosMod(Electron2D.Vector3)",
+      "godot": "Vector3::method:posmodv(Vector3:)",
+      "reason": "Vector-valued positive modulo counterpart."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3.Snapped(System.Single)",
+      "godot": "Vector3::method:snappedf(float:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3I.Clamp(System.Int32,System.Int32)",
+      "godot": "Vector3i::method:clampi(int:,int:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3I.Max(System.Int32)",
+      "godot": "Vector3i::method:maxi(int:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3I.Min(System.Int32)",
+      "godot": "Vector3i::method:mini(int:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3I.Snapped(System.Int32)",
+      "godot": "Vector3i::method:snappedi(int:)",
+      "reason": "Scalar overload has the same typed upstream vector operation."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3.op_Multiply(Electron2D.Vector3,Electron2D.Vector3)",
+      "godot": "Vector3::operator:operator *(Vector3:)",
+      "reason": "Componentwise vector multiplication counterpart."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3.op_Multiply(Electron2D.Vector3,System.Single)",
+      "godot": "Vector3::operator:operator *(float:)",
+      "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3.op_Multiply(System.Single,Electron2D.Vector3)",
+      "godot": "Vector3::operator:operator *(float:)",
+      "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3.op_UnaryPlus(Electron2D.Vector3)",
+      "godot": "Vector3::operator:operator unary+()",
+      "reason": "Unary plus counterpart."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3I.op_Explicit(Electron2D.Vector3)",
+      "godot": "Vector3i::constructor:Vector3i(Vector3:)",
+      "reason": "C# cast form of upstream float-to-integer vector conversion."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3I.op_Implicit(Electron2D.Vector3I)",
+      "godot": "Vector3::constructor:Vector3(Vector3i:)",
+      "reason": "C# implicit cast form of upstream integer-to-float vector conversion."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3I.op_Multiply(Electron2D.Vector3I,Electron2D.Vector3I)",
+      "godot": "Vector3i::operator:operator *(Vector3i:)",
+      "reason": "Componentwise vector multiplication counterpart."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3I.op_Multiply(Electron2D.Vector3I,System.Int32)",
+      "godot": "Vector3i::operator:operator *(int:)",
+      "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3I.op_Multiply(Electron2D.Vector3I,System.Single)",
+      "godot": "Vector3i::operator:operator *(float:)",
+      "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3I.op_Multiply(System.Int32,Electron2D.Vector3I)",
+      "godot": "Vector3i::operator:operator *(int:)",
+      "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3I.op_Multiply(System.Single,Electron2D.Vector3I)",
+      "godot": "Vector3i::operator:operator *(float:)",
+      "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3I.op_UnaryPlus(Electron2D.Vector3I)",
+      "godot": "Vector3i::operator:operator unary+()",
+      "reason": "Unary plus counterpart."
+    },
+    {
+      "electron2d": "property:Electron2D.Vector3I.MaxValue()",
+      "godot": "Vector3i::constant:MAX",
+      "reason": "All components equal int.MaxValue, matching upstream MAX."
+    },
+    {
+      "electron2d": "property:Electron2D.Vector3I.MinValue()",
+      "godot": "Vector3i::constant:MIN",
+      "reason": "All components equal int.MinValue, matching upstream MIN."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3.op_Multiply(Electron2D.Vector3,System.Single)",
+      "godot": "Vector3::operator:operator *(int:)",
+      "reason": "The C# int operand converts to float for the existing typed scalar operator; result uses single precision."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3.op_Division(Electron2D.Vector3,System.Single)",
+      "godot": "Vector3::operator:operator /(int:)",
+      "reason": "The C# int operand converts to float for the existing typed scalar operator; result uses single precision."
     }
   ],
   "extras": [
@@ -1881,6 +2026,76 @@
       "electron2d": "method:Electron2D.PathCurve.OnResetState()",
       "reason": "Existing Resource reset hook clears transient sample caches while preserving stored curve state.",
       "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3.Equals(Electron2D.Vector3)",
+      "reason": "C# value equality implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3.Equals(System.Object)",
+      "reason": "C# value equality implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3.GetHashCode()",
+      "reason": "C# value hashing implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3.ToString()",
+      "reason": "C# formatting method with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3.ToString(System.String)",
+      "reason": "C# formatting method with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3I.Equals(Electron2D.Vector3I)",
+      "reason": "C# value equality implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3I.Equals(System.Object)",
+      "reason": "C# value equality implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3I.GetHashCode()",
+      "reason": "C# value hashing implementation with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3I.ToString()",
+      "reason": "C# formatting method with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3I.ToString(System.String)",
+      "reason": "C# formatting method with no separate upstream method declaration.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3.op_Modulus(Electron2D.Vector3,Electron2D.Vector3)",
+      "reason": "C# remainder operator uses signed remainder semantics; upstream exposes positive modulo methods, so this is not their counterpart.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector3.op_Modulus(Electron2D.Vector3,System.Single)",
+      "reason": "C# remainder operator uses signed remainder semantics; upstream exposes positive modulo methods, so this is not their counterpart.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3.Deconstruct(ref System.Single,ref System.Single,ref System.Single)",
+      "reason": "C# tuple deconstruction convenience for the vector components.",
+      "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "method:Electron2D.Vector3I.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32)",
+      "reason": "C# tuple deconstruction convenience for the vector components.",
+      "adr": "core-math.md#adr-0033"
     }
   ],
   "statusGroups": [
