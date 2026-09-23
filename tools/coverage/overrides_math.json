@@ -1589,6 +1589,76 @@
       "godot": "RandomNumberGenerator::property:state",
       "electron2d": "property:Electron2D.RandomNumberGenerator.State()",
       "reason": "UInt64 exposes the restorable PCG32 state without resetting Seed."
+    },
+    {
+      "godot": "class:BitMap",
+      "electron2d": "T:Electron2D.BitMap",
+      "reason": "Managed Resource and typed, bit-packed mask implement the declared 2D bitmap contract (ADRs 0013/0035)."
+    },
+    {
+      "godot": "BitMap::method:convert_to_image()",
+      "electron2d": "method:Electron2D.BitMap.ConvertToImage()",
+      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+    },
+    {
+      "godot": "BitMap::method:create(Vector2i:)",
+      "electron2d": "method:Electron2D.BitMap.Create(Electron2D.Vector2I)",
+      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+    },
+    {
+      "godot": "BitMap::method:create_from_image_alpha(Image:,float:)",
+      "electron2d": "method:Electron2D.BitMap.CreateFromImageAlpha(Electron2D.Image,System.Single)",
+      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+    },
+    {
+      "godot": "BitMap::method:get_bit(int:,int:)",
+      "electron2d": "method:Electron2D.BitMap.GetBit(System.Int32,System.Int32)",
+      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+    },
+    {
+      "godot": "BitMap::method:get_bitv(Vector2i:)",
+      "electron2d": "method:Electron2D.BitMap.GetBitv(Electron2D.Vector2I)",
+      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+    },
+    {
+      "godot": "BitMap::method:get_size()",
+      "electron2d": "method:Electron2D.BitMap.GetSize()",
+      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+    },
+    {
+      "godot": "BitMap::method:get_true_bit_count()",
+      "electron2d": "method:Electron2D.BitMap.GetTrueBitCount()",
+      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+    },
+    {
+      "godot": "BitMap::method:grow_mask(int:,Rect2i:)",
+      "electron2d": "method:Electron2D.BitMap.GrowMask(System.Int32,Electron2D.RectI)",
+      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+    },
+    {
+      "godot": "BitMap::method:opaque_to_polygons(Rect2i:,float:)",
+      "electron2d": "method:Electron2D.BitMap.OpaqueToPolygons(Electron2D.RectI,System.Single)",
+      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+    },
+    {
+      "godot": "BitMap::method:resize(Vector2i:)",
+      "electron2d": "method:Electron2D.BitMap.Resize(Electron2D.Vector2I)",
+      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+    },
+    {
+      "godot": "BitMap::method:set_bit(int:,int:,bool:)",
+      "electron2d": "method:Electron2D.BitMap.SetBit(System.Int32,System.Int32,System.Boolean)",
+      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+    },
+    {
+      "godot": "BitMap::method:set_bit_rect(Rect2i:,bool:)",
+      "electron2d": "method:Electron2D.BitMap.SetBitRect(Electron2D.RectI,System.Boolean)",
+      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+    },
+    {
+      "godot": "BitMap::method:set_bitv(Vector2i:,bool:)",
+      "electron2d": "method:Electron2D.BitMap.SetBitv(Electron2D.Vector2I,System.Boolean)",
+      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     }
   ],
   "extras": [
@@ -2156,6 +2226,26 @@
       "electron2d": "method:Electron2D.RandomNumberGenerator.GetPropertyDescriptors()",
       "reason": "Typed seed/state metadata supplies the existing object property-inspection and persistence contract.",
       "adr": "ADRs 0003/0004/0005"
+    },
+    {
+      "electron2d": "constructor:Electron2D.BitMap..ctor()",
+      "reason": "Explicit Resource construction for an initially empty mask.",
+      "adr": "resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.BitMap.CreateDuplicateInstance()",
+      "reason": "Managed Resource graph duplication factory.",
+      "adr": "resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.BitMap.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Independent bit-buffer copy for managed Resource duplication.",
+      "adr": "resources.md#adr-0013"
+    },
+    {
+      "electron2d": "method:Electron2D.BitMap.Dispose(System.Boolean)",
+      "reason": "Deterministic managed mask cleanup under ElectronObject lifetime.",
+      "adr": "resources.md#adr-0013"
     }
   ],
   "statusGroups": [
@@ -2468,6 +2558,26 @@
       ],
       "state": "Implemented",
       "reason": "The complete declared RNG surface is executable: pinned PCG32 vectors, state replay, range boundaries, weighted errors/selection, normal sampling and managed lifetime are checked by RandomNumberGeneratorTests. Time-dependent seeds and C# unsigned/typed-array representation are accepted adaptations; other platforms remain unverified under ADR 0021."
+    },
+    {
+      "godot": [
+        "class:BitMap",
+        "BitMap::method:convert_to_image()",
+        "BitMap::method:create(Vector2i:)",
+        "BitMap::method:create_from_image_alpha(Image:,float:)",
+        "BitMap::method:get_bit(int:,int:)",
+        "BitMap::method:get_bitv(Vector2i:)",
+        "BitMap::method:get_size()",
+        "BitMap::method:get_true_bit_count()",
+        "BitMap::method:grow_mask(int:,Rect2i:)",
+        "BitMap::method:opaque_to_polygons(Rect2i:,float:)",
+        "BitMap::method:resize(Vector2i:)",
+        "BitMap::method:set_bit(int:,int:,bool:)",
+        "BitMap::method:set_bit_rect(Rect2i:,bool:)",
+        "BitMap::method:set_bitv(Vector2i:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "The complete declared bit mask contract is executable: alpha thresholding, bit operations, nearest resize, L8 image conversion, circular dilation/erosion, marching-squares contours, resource copying and lifetime have managed tests. Native platforms beyond Linux remain unverified."
     }
   ]
 }

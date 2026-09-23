@@ -118,7 +118,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [BaseButton](classes/BaseButton.md) | Control | Blocked | 29 |
 | [BaseMaterial3D](classes/BaseMaterial3D.md) | Material | Excluded | 289 |
 | [Basis](classes/Basis.md) | — | Excluded | 42 |
-| [BitMap](classes/BitMap.md) | Resource | Unimplemented | 13 |
+| [BitMap](classes/BitMap.md) | Resource | Implemented | 13 |
 | [BlitMaterial](classes/BlitMaterial.md) | Material | Blocked | 7 |
 | [Bone2D](classes/Bone2D.md) | Node2D | Blocked | 10 |
 | [BoneAttachment3D](classes/BoneAttachment3D.md) | Node3D | Excluded | 8 |

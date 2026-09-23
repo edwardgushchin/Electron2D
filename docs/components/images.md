@@ -1,16 +1,17 @@
 # Images component
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ## Scope
 
-This Resources component owns portable managed 2D pixel buffers, raw format identity, mipmap layout, CPU image processing, and typed image metrics. It also owns file/buffer decoding and PNG/JPEG saving. Importing, textures, renderer handles, GPU compression and presentation remain separate integrations.
+This Resources component owns portable managed 2D pixel buffers, binary masks, raw format identity, mipmap layout, CPU image processing, and typed image metrics. It also owns file/buffer decoding and PNG/JPEG saving. Importing, textures, renderer handles, GPU compression and presentation remain separate integrations.
 
 ## Owned types
 
 | Type | Role | Source |
 | --- | --- | --- |
 | [`Image`](../classes/Image.md) | Mutable managed pixel resource and processing API | [`Image.cs`](../../src/Core/IO/Image.cs), [`Image.Processing.cs`](../../src/Core/IO/Image.Processing.cs), [`Image.Codecs.cs`](../../src/Core/IO/Image.Codecs.cs) |
+| [`BitMap`](../classes/BitMap.md) | Packed alpha-derived mask, morphology and polygon contours | [`BitMap.cs`](../../src/Core/IO/BitMap.cs) |
 | [`Image.Format`](../classes/Image.Format.md) | Raw uncompressed and GPU block-compressed layout identity | [`Image.cs`](../../src/Core/IO/Image.cs) |
 | [`Image.Interpolation`](../classes/Image.Interpolation.md) | Resize reconstruction filter | [`Image.cs`](../../src/Core/IO/Image.cs) |
 | [`Image.AlphaMode`](../classes/Image.AlphaMode.md) | Detected alpha classification | [`Image.cs`](../../src/Core/IO/Image.cs) |
@@ -30,12 +31,13 @@ This Resources component owns portable managed 2D pixel buffers, raw format iden
 5. Mipmap generation averages 2×2 samples to a complete chain; resize, crop, rotation, and region composition preserve or rebuild mip policy as documented.
 6. Duplication copies the complete buffer and inherited Resource configuration but not external path identity.
 7. Disposal drops the managed buffer, clears image state, then completes inherited Resource disposal.
+8. BitMap can classify a copied Image alpha plane, edit packed bits, dilate or erode a region, and extract marching-squares contours without a renderer.
 
 ## Dependencies and interactions
 
 Color-space conversions use `SRGBToLinear`, `LinearToSRGB` and `RGBEToSRGB`, following the same acronym spelling as the underlying Color API. Their pixel conversion and format contracts are unchanged.
 
-The component depends on `Resource`, typed property descriptors, `Color`, `Vector2I`, `RectI`, and BCL binary/numeric primitives. ImageTexture consumes its copied raw buffer and format metadata for GPU upload. `FileAccess` supplies encoded bytes through existing virtual paths. SDL3-CS provides internal native decoding/encoding; temporary surfaces are copied and released before Image commits. PNG decoding uses the already delivered SDL core decoder because SDL_image 3.4.6 corrupts grayscale and RGB16 colors; JPEG/WebP/BMP/TGA decoding and PNG/JPEG encoding use SDL_image. CPU processing retains its managed-only path.
+The component depends on `Resource`, typed property descriptors, `Color`, `Vector2I`, `RectI`, and BCL binary/numeric primitives. BitMap consumes copied Image alpha data and uses Vector2 contours; it needs no native library. ImageTexture consumes its copied raw buffer and format metadata for GPU upload. `FileAccess` supplies encoded bytes through existing virtual paths. SDL3-CS provides internal native decoding/encoding; temporary surfaces are copied and released before Image commits. PNG decoding uses the already delivered SDL core decoder because SDL_image 3.4.6 corrupts grayscale and RGB16 colors; JPEG/WebP/BMP/TGA decoding and PNG/JPEG encoding use SDL_image. CPU processing retains its managed-only path.
 
 ## Invariants and error behavior
 
@@ -47,10 +49,13 @@ The component depends on `Resource`, typed property descriptors, `Color`, `Vecto
 - Mutation failure before commit preserves the old state. Observer failure occurs after commit and does not roll state back.
 - Source/mask images are snapshotted before destination mutation. No operation promises an atomic transaction across multiple images.
 - Large processing calls allocate replacement buffers and are not intended for steady-state frame hot paths.
+- BitMap stores eight pixels per byte, snapshots source bits for morphology, and commits state before synchronous change notification. It returns independent L8 images and polygon arrays.
 
 ## Current implementation status
 
 All 47 current raw format identities, the complete compression/source/ASTC enum family, exact base/mipmap sizing, 25 uncompressed pixel codecs, 22 raw compressed layouts, pixel access, format conversion, mipmaps, fill, crop/region, flip/rotation, five resize filters, blit/blend/masks, alpha/channel/visible-bound detection, color adjustments, alpha processing, sRGB conversion, normal/RGBE processing, metrics, typed descriptors, Resource duplication, concurrency boundaries, and disposal are implemented.
+
+BitMap's complete declared 2D mask surface is implemented: alpha thresholding, bit access, rectangle writes, nearest resize, L8 conversion, circular grow/shrink and contour extraction. Its managed copy and lifetime behavior use the Resource contract. Physics collision consumers are not yet implemented.
 
 ## Exclusions and deferred integration
 
@@ -61,6 +66,8 @@ PNG/JPEG/WebP/BMP/TGA loading and PNG/JPEG saving are executable; GPU compressio
 ## Verification
 
 `tests/Electron2D.Tests/Program.cs` covers format and block sizes, mip offsets, copy isolation, invalid dimensions/data, every processing family and interpolation mode, clipping/masking, normal/HDR helpers, typed metrics, observer failures, duplication, descriptors, and disposal. Release build and generated XML checks are part of the full gate.
+
+`BitMapTests` covers the new mask contract, including contour crossings and resource duplication.
 
 The managed checks are Linux/.NET 8 only. Native `ImageCodecTests` separately verifies all five integrated loaders, PNG/JPEG saves, header/decoder failure atomicity, independent concurrent calls, virtual paths and atomic file failures. RenderingTextureTests verifies decoded PNG pixels in the fourteenth GPU frame for each source language. Visual-quality, memory-pressure, AOT and other-target acceptance remain pending.
 

@@ -60,6 +60,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.BitMap",
+    "kind": "type",
+    "declaringType": "Electron2D.BitMap",
+    "name": "BitMap",
+    "signature": "public class Electron2D.BitMap",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CallbackTweener",
     "kind": "type",
     "declaringType": "Electron2D.CallbackTweener",
@@ -3446,6 +3461,19 @@
     "declaringType": "Electron2D.AtlasTexture",
     "name": ".ctor",
     "signature": "public AtlasTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.BitMap..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.BitMap",
+    "name": ".ctor",
+    "signature": "public BitMap()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -14945,6 +14973,346 @@
       }
     ],
     "returnType": "Electron2D.AwaitTweener",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.ConvertToImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "ConvertToImage",
+    "signature": "public Electron2D.Image ConvertToImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.Create(Electron2D.Vector2I)",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "Create",
+    "signature": "public System.Void Create(Electron2D.Vector2I size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.CreateFromImageAlpha(Electron2D.Image,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "CreateFromImageAlpha",
+    "signature": "public System.Void CreateFromImageAlpha(Electron2D.Image image, System.Single threshold = 0.1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "image",
+        "type": "Electron2D.Image",
+        "default": null
+      },
+      {
+        "name": "threshold",
+        "type": "System.Single",
+        "default": "0.1f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.GetBit(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "GetBit",
+    "signature": "public System.Boolean GetBit(System.Int32 x, System.Int32 y)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "x",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "y",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.GetBitv(Electron2D.Vector2I)",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "GetBitv",
+    "signature": "public System.Boolean GetBitv(Electron2D.Vector2I position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.GetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "GetSize",
+    "signature": "public Electron2D.Vector2I GetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.GetTrueBitCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "GetTrueBitCount",
+    "signature": "public System.Int32 GetTrueBitCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.GrowMask(System.Int32,Electron2D.RectI)",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "GrowMask",
+    "signature": "public System.Void GrowMask(System.Int32 pixels, Electron2D.RectI rect)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pixels",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.RectI",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.OpaqueToPolygons(Electron2D.RectI,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "OpaqueToPolygons",
+    "signature": "public Electron2D.Vector2[][] OpaqueToPolygons(Electron2D.RectI rect, System.Single epsilon = 2f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rect",
+        "type": "Electron2D.RectI",
+        "default": null
+      },
+      {
+        "name": "epsilon",
+        "type": "System.Single",
+        "default": "2f"
+      }
+    ],
+    "returnType": "Electron2D.Vector2[][]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.Resize(Electron2D.Vector2I)",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "Resize",
+    "signature": "public System.Void Resize(Electron2D.Vector2I newSize)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "newSize",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.SetBit(System.Int32,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "SetBit",
+    "signature": "public System.Void SetBit(System.Int32 x, System.Int32 y, System.Boolean bit)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "x",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "y",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "bit",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.SetBitRect(Electron2D.RectI,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "SetBitRect",
+    "signature": "public System.Void SetBitRect(Electron2D.RectI rect, System.Boolean bit)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rect",
+        "type": "Electron2D.RectI",
+        "default": null
+      },
+      {
+        "name": "bit",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BitMap.SetBitv(Electron2D.Vector2I,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.BitMap",
+    "name": "SetBitv",
+    "signature": "public System.Void SetBitv(Electron2D.Vector2I position, System.Boolean bit)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      },
+      {
+        "name": "bit",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
