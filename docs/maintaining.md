@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -26,6 +26,7 @@ When asked to implement a type or concept, deliver a production-ready vertical s
 2. Classify each item as implemented now, adapted to typed C#, blocked by an exact missing domain/backend/integration or product decision, or permanently excluded by a named accepted decision. For a blocked item, name the trigger and whether it enters the prerequisite's first slice or a separately approved capability. Do not add empty methods, inert state, or false compatibility claims.
 3. Implement all behavior in scope, including disposal, callback failure, re-entrancy, thread affinity, and edge cases. Audit foreseeable 2D sibling types under [ADR 0035](decisions/core-math.md#adr-0035); do not add speculative families or empty aliases. Before first public release, correct proven mistakes instead of retaining them solely for compatibility, with boundary tests and updated documentation; avoid unrelated source changes.
 4. Check positive, negative, boundary, and failure paths, including exceptions from user callbacks where those callbacks can affect engine state. Compare the compiled public surface and executable semantics with the inventory in both directions, including overloads, defaults, event signatures, constants, and enum values.
+   For changed engine-owned hot paths, also check repeated active and idle work after explicit warmup against the zero-allocation rule in [ADR 0014](decisions/resources.md#adr-0014). Record the operation, capacity, backend, threads, and measured managed/native boundary; report unmeasured native or external allocations as a verification limit.
 5. Update source XML and all affected living documents. Fix known P0/P1/P2 defects in scope and run relevant formatting, build, executable, coverage, and documentation checks before the task's atomic commit. Report implemented behavior, adaptations, blocked work, permanent exclusions, checks, and verification limits separately.
 
 ## Living documentation

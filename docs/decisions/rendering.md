@@ -1,6 +1,6 @@
 # Electron2D rendering decisions
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 This bounded log owns the complete architectural records for rendering. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0028](#adr-0028), [0046](#adr-0046).
 <a id="adr-0028"></a>
 ## ADR 0028: GPU-first 2D rendering, HLSL/GLSL import and a shared SPIR-V shader path, and SDL_Renderer fallback
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ### Status
 
@@ -43,7 +43,7 @@ SDL3-CS supplies managed bindings to the DisplayServer. The self-contained Linux
 - The public Electron2D rendering API will be backend-neutral and typed. It must expose the active backend and relevant capabilities without exposing SDL-owned handles or types. A project or host that requires shaders must be able to reject fallback during startup.
 - Shared baseline operations must retain their documented visible semantics on both backends, subject to explicit capability and precision limits. Exact output, performance, advanced blend behavior, and shader support must not be claimed equivalent without backend-specific verification.
 - Fallback is a rendering-initialization policy, not a promise of live backend migration. Runtime switching and recovery after graphics-device loss are deferred until their real lifecycle can be implemented and tested.
-- Native resources remain internal and are deterministically released through `SafeHandle`-based ownership. Render-frame hot paths must avoid steady-state managed allocations.
+- Native resources remain internal and are deterministically released through `SafeHandle`-based ownership. Engine-owned render-frame hot paths have zero managed and engine-owned native allocations after preparation under ADR 0014; backend-internal allocations require separate measurement.
 - The first complete rendering vertical slice must specify the concrete public types, baseline operation set, threading contract, supported HLSL and GLSL profiles, SPIR-V capabilities, shader interfaces, pinned import/build compiler integrations, cache/import pipeline, material model, backend-selection setting and device-loss policy. The two source languages, import/build compilation phase and common SPIR-V runtime path are already decided above. None is represented now by an empty API.
 
 ### Consequences

@@ -1,6 +1,6 @@
 # Electron2D resources decisions
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 This bounded log owns the complete architectural records for resources. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -98,11 +98,11 @@ Executable checks cover path ownership and races, event timing and failures, all
 <a id="adr-0014"></a>
 ## ADR 0014: Managed Resource lifetime and realtime allocation
 
-Last updated: 2026-09-20
+Last updated: 2026-09-24
 
 ### Status
 
-Accepted. Clarifies ADR 0003 and amends the Resource lifetime wording in ADR 0013.
+Accepted. Clarifies ADR 0003 and amends the Resource lifetime wording in ADR 0013. The allocation rule applies to engine-owned hot paths in every runtime domain.
 
 ### Context
 
@@ -124,7 +124,11 @@ When the first concrete loader and native-backed asset establish real shared-own
 
 No lease type or resource manager is implemented before that integration boundary. Their exact API, cache eviction rules, thread affinity, reload behavior, and failure semantics must be decided from the concrete loader/native backend rather than speculative scaffolding.
 
-Steady-state frame, fixed-step physics, future rendering, input-dispatch, and audio-mixing hot paths must avoid managed allocations. Implementations prefer preallocated storage, value types, bounded reusable buffers, and pools where measurements show repeated allocation. Resource construction, loading, scene transitions, and tooling are not automatically allocation-free.
+Engine-owned hot paths have a zero-allocation budget: a repeated successful frame, fixed physics step, input dispatch, render submission, audio mix, or equivalent per-item operation must make no managed-heap or engine-owned native-heap allocation after explicit preparation. This includes allocations hidden in boxing, closures, iterators, formatting, collection growth, lazy cache creation, and native buffer creation. The same rule applies to later runtime domains when they add repeated work.
+
+Prepare capacity, caches, delegates, and native buffers before entering a hot path. Use reusable bounded storage and value types where they preserve the contract. Exhausting prepared capacity must not silently grow storage inside the hot path; specify the limit and handle the excess outside it. Resource construction, loading, scene transitions, baking, diagnostics, and tooling may allocate only as explicit operations outside the measured hot interval. An error or exception path is measured and documented separately; it does not excuse allocations on successful repeated calls.
+
+The engine cannot control allocations inside game-supplied callbacks, external native drivers, or the operating system. Engine-owned callback dispatch must remain allocation-free and the public API must allow a caller to write allocation-free callbacks. Claims of zero allocation identify the tested operation, warmup and capacity, threads, backend, and measurement boundary; unmeasured native or external allocations are not claimed absent.
 
 GC latency modes and no-GC regions are host-wide performance controls, not default engine semantics. They may be enabled only after allocation and frame-time profiling establishes a measurable need, a memory budget, recovery behavior, and target-platform validation. Electron2D does not claim hard real-time guarantees.
 
@@ -135,7 +139,8 @@ GC latency modes and no-GC regions are host-wide performance controls, not defau
 - Native payload release can become deterministic without pretending that managed memory was freed.
 - Callers cannot corrupt object lifetime through mismatched public increment/decrement calls.
 - A future asset manager owns lease counts and cache policy in one place instead of distributing counters across resources.
-- Realtime performance is enforced by measured allocation budgets and hot-path tests, not by assuming either GC or manual reference counting is free.
+- A hot path is not complete until a warmed repeated-operation check shows zero managed allocated bytes. Measure engine-owned native allocations where applicable; document any unmeasured external boundary and test active as well as idle paths.
+- Realtime performance is enforced by a zero allocation budget and hot-path checks, not by assuming either GC or manual reference counting is free.
 
 ### Rejected alternatives
 
@@ -147,7 +152,7 @@ GC latency modes and no-GC regions are host-wide performance controls, not defau
 
 ### Verification boundary
 
-This ADR changes architecture and documentation only; no runtime behavior is added. Existing Resource tests continue to verify deterministic logical disposal, weak path caching, graph duplication, and callback failure handling. Future resource-manager work must add lease-count, concurrent acquire/release, cache eviction, native-handle lifetime, allocation-budget, and frame-time tests before claiming completion.
+This revision changes architecture and documentation only; it does not establish that every current hot path already meets the rule. Existing Resource tests continue to verify deterministic logical disposal, weak path caching, graph duplication, and callback failure handling. Future resource-manager work must add lease-count, concurrent acquire/release, cache eviction, native-handle lifetime, zero-allocation hot-path, and frame-time tests before claiming completion.
 
 ### References
 
