@@ -1,6 +1,6 @@
 # Coverage roadmap
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
@@ -102,6 +102,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Navigation2D: trigger is the first 2D navigation slice. | 12 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 11 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 10 |
+| Typed packed collection; ADR 0001 does not exclude it. Trigger: decide its C# collection projection and audit each member's ownership, mutation, copying and conversions before claiming a replacement or permanent exclusion. | 10 |
 | Trigger: first 2D skeletal animation and inverse-kinematics slice. | 9 |
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 8 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 8 |

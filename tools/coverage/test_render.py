@@ -76,6 +76,17 @@ def main():
     line_rows = [row for row in pages[CLASS_PAGES / "Line2D.md"].splitlines() if row.startswith("| [`")]
     assert len(line_rows) == 33 and all(" | Unimplemented | " not in row and " | Blocked | " not in row for row in line_rows)
     assert "native-menu service" in class_rows["NativeMenu"]
+    packed_types = [item["name"] for item in upstream["types"]
+                    if item["name"].startswith("Packed") and item["name"].endswith("Array")]
+    assert len(packed_types) == 10
+    for name in packed_types:
+        content = pages[CLASS_PAGES / f"{name}.md"]
+        rows = [line for line in content.splitlines() if line.startswith("| [`")]
+        assert rows and " | Blocked | " in rows[0], name
+        assert all(" | Excluded | " not in line for line in rows), name
+        assert "dynamic/untyped" not in content and "ADR 0001/0002" not in content, name
+    packed = pages[CLASS_PAGES / "PackedColorArray.md"]
+    assert "Color[]" in packed and "ReadOnlySpan<Color>" in packed
     for name in ("RenderingDevice", "FramebufferCacheRD", "BoxMesh", "RefCounted",
                  "GDScriptLanguageProtocol", "EditorNode3DGizmo"):
         assert " | Excluded | " in class_rows[name]

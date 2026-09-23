@@ -1,6 +1,6 @@
 # Godot class-reference catalog
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.
 
@@ -574,19 +574,19 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [OptimizedTranslation](classes/OptimizedTranslation.md) | Translation | Unimplemented | 1 |
 | [OptionButton](classes/OptionButton.md) | Button | Blocked | 50 |
 | [PCKPacker](classes/PCKPacker.md) | RefCounted | Blocked | 5 |
-| [PackedByteArray](classes/PackedByteArray.md) | — | Excluded | 76 |
-| [PackedColorArray](classes/PackedColorArray.md) | — | Excluded | 30 |
+| [PackedByteArray](classes/PackedByteArray.md) | — | Blocked | 76 |
+| [PackedColorArray](classes/PackedColorArray.md) | — | Blocked | 30 |
 | [PackedDataContainer](classes/PackedDataContainer.md) | Resource | Blocked | 2 |
 | [PackedDataContainerRef](classes/PackedDataContainerRef.md) | RefCounted | Blocked | 1 |
-| [PackedFloat32Array](classes/PackedFloat32Array.md) | — | Excluded | 30 |
-| [PackedFloat64Array](classes/PackedFloat64Array.md) | — | Excluded | 30 |
-| [PackedInt32Array](classes/PackedInt32Array.md) | — | Excluded | 30 |
-| [PackedInt64Array](classes/PackedInt64Array.md) | — | Excluded | 30 |
+| [PackedFloat32Array](classes/PackedFloat32Array.md) | — | Blocked | 30 |
+| [PackedFloat64Array](classes/PackedFloat64Array.md) | — | Blocked | 30 |
+| [PackedInt32Array](classes/PackedInt32Array.md) | — | Blocked | 30 |
+| [PackedInt64Array](classes/PackedInt64Array.md) | — | Blocked | 30 |
 | [PackedScene](classes/PackedScene.md) | Resource | Partial | 9 |
-| [PackedStringArray](classes/PackedStringArray.md) | — | Excluded | 30 |
-| [PackedVector2Array](classes/PackedVector2Array.md) | — | Excluded | 31 |
-| [PackedVector3Array](classes/PackedVector3Array.md) | — | Excluded | 31 |
-| [PackedVector4Array](classes/PackedVector4Array.md) | — | Excluded | 30 |
+| [PackedStringArray](classes/PackedStringArray.md) | — | Blocked | 30 |
+| [PackedVector2Array](classes/PackedVector2Array.md) | — | Blocked | 31 |
+| [PackedVector3Array](classes/PackedVector3Array.md) | — | Blocked | 31 |
+| [PackedVector4Array](classes/PackedVector4Array.md) | — | Blocked | 30 |
 | [PacketPeer](classes/PacketPeer.md) | RefCounted | Blocked | 7 |
 | [PacketPeerDTLS](classes/PacketPeerDTLS.md) | PacketPeer | Blocked | 10 |
 | [PacketPeerExtension](classes/PacketPeerExtension.md) | PacketPeer | Blocked | 4 |

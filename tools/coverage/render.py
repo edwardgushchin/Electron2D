@@ -108,7 +108,9 @@ def reason_for_type(item, lookup):
         ancestors.append(parent)
         parent = lookup[parent]["inherits"]
     lineage = " ".join(ancestors)
-    if name in {"Variant", "Callable", "Signal", "ClassDB", "Array", "Dictionary", "String", "bool", "float", "int"} or name.startswith("Packed") and name.endswith("Array"):
+    if name.startswith("Packed") and name.endswith("Array"):
+        return "Blocked", "Typed packed collection; ADR 0001 does not exclude it. Trigger: decide its C# collection projection and audit each member's ownership, mutation, copying and conversions before claiming a replacement or permanent exclusion."
+    if name in {"Variant", "Callable", "Signal", "ClassDB", "Array", "Dictionary", "String", "bool", "float", "int"}:
         return "Excluded", "Engine-owned dynamic/untyped primitive or collection is replaced by C# types and typed contracts (ADR 0001/0002); no engine-owned duplicate."
     if name == "RefCounted":
         return "Excluded", "Public manual reference counting is excluded by ADRs 0003 and 0014. RefCounted ancestry maps to ElectronObject managed lifetime and IDisposable; descendant APIs are audited on their own pages."
@@ -289,6 +291,8 @@ def reason_for_type(item, lookup):
 
 
 def special_reason(item, member):
+    if item["name"].startswith("Packed") and item["name"].endswith("Array"):
+        return None
     name = member["name"].lower()
     signature = member["signature"]
     if item["name"] == "RenderingServer":
@@ -497,7 +501,8 @@ def render():
         inherited = f"[{godot_type['inherits']}]({coverage_target(godot_type['inherits'])})" if godot_type["inherits"] else "—"
         page_name = TEXTURE_NAMES.get(name, name)
         page = CLASS_PAGES / f"{page_name}.md"
-        lines = [] if page in page_text else [f"# {page_name} API coverage", "", "Last updated: 2026-09-23", ""]
+        updated = "2026-09-24" if name.startswith("Packed") and name.endswith("Array") else "2026-09-23"
+        lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:
                 lines.extend(["The reference Texture and Texture2D contracts share one Electron2D Texture page under [ADR 0004](../../decisions/product.md#adr-0004). Each source declaration remains accounted for below.", ""])
@@ -506,6 +511,8 @@ def render():
                  f"Godot base: {inherited}. "
                  f"Electron2D type: {', '.join(engine_link(engine_by_id[f'T:{owner}']) for owner in owners) if owners else '—'}.", "",
                  "Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.", ""])
+        if name == "PackedColorArray":
+            lines.extend(["Implemented call sites project color sequences to `Color[]` or `ReadOnlySpan<Color>`; see [Gradient](Gradient.md) and [CanvasItem](CanvasItem.md). Those mappings do not establish the packed array's independent collection, copying, and byte-conversion contracts. The type and its members await a collection-wide decision and audit.", ""])
         if name == "DisplayServer":
             lines.extend(["Current release verification requires Linux/Wayland only under [ADR 0021](../../decisions/product.md#adr-0021). The earlier self-contained host example, before Window/Engine.Run migration, started on Wayland with packaged SDL and advanced its scene; user-assisted physical arrow-key input and Escape exit passed. See the [class verification](../../classes/DisplayServer.md#verification). Other target platforms remain in the product matrix without blocking this stage.", ""])
         lines.extend(["| Godot API | Electron2D API | State | Reason / implementation trigger |",
@@ -613,7 +620,7 @@ def render():
         reason = f"Electron2D-specific: {extra['reason']} ({extra.get('adr', 'class reference')})." if extra else "Audit the corresponding type family; document a typed-C# rationale or link the exact upstream row."
         lines.append(f"| — | {engine_link(entry, from_class=False)} | {state} | {cell(reason)} |")
     page_text[COVERAGE / "electron2d-unmapped.md"] = "\n".join(lines) + "\n"
-    catalog = ["# Godot class-reference catalog", "", "Last updated: 2026-09-23", "",
+    catalog = ["# Godot class-reference catalog", "", "Last updated: 2026-09-24", "",
                f"Source: Godot `{upstream['godot_version']}` at `{COMMIT}`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.", "",
                "| Godot class | Base | Class state | Declared members |", "| --- | --- | --- | ---: |"]
     for item in upstream["types"]:
@@ -623,7 +630,7 @@ def render():
         catalog.append(f"| [{cell(item['name'])}](classes/{coverage_target(item['name'])}) | {cell(item['inherits'] or '—')} | {state} | {len(item['members'])} |")
     page_text[COVERAGE / "catalog.md"] = "\n".join(catalog) + "\n"
     actionable_note = (" Start with the independent " + ", ".join(f"[{name}](classes/{coverage_target(name)})" for name in actionable) + " class slices.") if actionable else ""
-    road = ["# Coverage roadmap", "", "Last updated: 2026-09-23", "",
+    road = ["# Coverage roadmap", "", "Last updated: 2026-09-24", "",
             "The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.", "",
             f"1. Review {counts['Partial']} partially implemented rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.",
             f"2. Complete {counts['Unimplemented']} missing declarations in already represented type families; split each type by its documented dependency trigger.{actionable_note}",
