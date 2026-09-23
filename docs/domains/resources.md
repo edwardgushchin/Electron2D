@@ -13,6 +13,7 @@ Resource base and image sources live under `src/Core/IO/`; shader/material/textu
 | Component | Types | State |
 | --- | --- | --- |
 | [Canvas rendering](../components/canvas-rendering.md) | [`SpriteFrames`](../classes/SpriteFrames.md), [`SpriteFrames.LoopMode`](../classes/SpriteFrames.LoopMode.md) | Named animation data, duration/loop policies and resource graph copying consumed by AnimatedSprite |
+| [Gradients](../components/gradients.md) | Gradient and its mode/space enums, GradientRampTexture, GradientTexture and its fill/repeat enums | Managed interpolation and lazy RGBA8/RGBAF texture generation, typed copies/local ownership and native canvas/material sampling |
 | [Curves](../components/curves.md) | [`Curve`](../classes/Curve.md), [`Curve.TangentMode`](../classes/Curve.TangentMode.md), [`PathCurve`](../classes/PathCurve.md), [`CurveTexture`](../classes/CurveTexture.md), [`CurveXYZTexture`](../classes/CurveXYZTexture.md), [`CurveTexture.TextureModeEnum`](../classes/CurveTexture.TextureModeEnum.md) | Managed scalar/spatial sampling, tangents, baking, tessellation and nearest queries with typed copying and scene-local ownership |
 | [Resource base](../components/resources.md) | [`Resource`](../classes/Resource.md), [`DeepDuplicateMode`](../classes/DeepDuplicateMode.md) | Implemented and verified |
 | [Images](../components/images.md) | [`Image`](../classes/Image.md), its seven nested enums, [`ImageMetrics`](../classes/ImageMetrics.md), [`ClockDirection`](../classes/ClockDirection.md) | Managed buffer and processing contract implemented and verified; five native load formats and PNG/JPEG saving; further codec semantics pending; copied pixels feed textures |
@@ -25,6 +26,8 @@ The domain exposes resource name/path/scene configuration, built-in classificati
 Shader resources add copied binary loading and reflected typed parameter discovery. ShaderMaterial adds borrowed Shader assignment and typed scalar/vector/array values and borrowed Texture bindings with independent resource copies and migration across shader reload. ImageTexture adds copied pixel snapshots, Update, logical size overrides, mip metadata and independent image readback; Texture is its direct abstract parent. AtlasTexture adds borrowed rectangular views with margins, nested drawing, CPU crop/opacity queries, shared source GPU storage and graph-aware resource duplication.
 
 Curve and PathCurve supply independently editable scalar and spatial Bézier resources with lazy caches, typed indexed properties and exact-state duplication. Their managed checks include an executing Entity consumer and PackedScene ownership. Scene Path/PathFollow now consume PathCurve; CurveTexture/CurveXYZTexture generate float snapshots with live subscriptions and the same resource-copy ownership. Texture dimension queries are GetWidth/GetHeight/GetSize; generated textures add writable Width. Native GPU sampling and explicit unsupported-float fallback rejection are verified in the curve component.
+
+Gradient adds typed color points and three interpolation modes/spaces. GradientRampTexture and GradientTexture supply inclusive ramp samples and planar fills with lazy source updates. CPU generation and copying need no renderer; native sampling and explicit HDR backend limits are verified in [Gradients](../components/gradients.md).
 
 ## Dependency direction
 

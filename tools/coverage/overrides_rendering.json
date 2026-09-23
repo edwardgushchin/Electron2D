@@ -504,6 +504,301 @@
       "godot": "Texture2D::method:get_image()",
       "electron2d": "method:Electron2D.CurveXYZTexture.GetImage()",
       "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md. Curve texture GetImage/PixelFormat expose generated CPU snapshots under ADR 0013: the pinned curve classes inherit the base null/FORMAT_MAX fallthrough, while the documented general query contract specifies copied image data and format. This implements that capability without GPU readback; it is not literal preservation of the inherited omission. Uninitialized curve textures return null/L8 and reject drawing rather than creating an opaque placeholder RID."
+    },
+    {
+      "godot": "Gradient::enum:ColorSpace",
+      "electron2d": "T:Electron2D.Gradient.ColorSpace",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::enum:InterpolationMode",
+      "electron2d": "T:Electron2D.Gradient.InterpolationModeEnum",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::enum_value:ColorSpace.GRADIENT_COLOR_SPACE_LINEAR_SRGB",
+      "electron2d": "enumValue:Electron2D.Gradient.ColorSpace.LinearSRGB()",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::enum_value:ColorSpace.GRADIENT_COLOR_SPACE_OKLAB",
+      "electron2d": "enumValue:Electron2D.Gradient.ColorSpace.OKLAB()",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::enum_value:ColorSpace.GRADIENT_COLOR_SPACE_SRGB",
+      "electron2d": "enumValue:Electron2D.Gradient.ColorSpace.SRGB()",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::enum_value:InterpolationMode.GRADIENT_INTERPOLATE_CONSTANT",
+      "electron2d": "enumValue:Electron2D.Gradient.InterpolationModeEnum.Constant()",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::enum_value:InterpolationMode.GRADIENT_INTERPOLATE_CUBIC",
+      "electron2d": "enumValue:Electron2D.Gradient.InterpolationModeEnum.Cubic()",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::enum_value:InterpolationMode.GRADIENT_INTERPOLATE_LINEAR",
+      "electron2d": "enumValue:Electron2D.Gradient.InterpolationModeEnum.Linear()",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::method:add_point(float:,Color:)",
+      "electron2d": "method:Electron2D.Gradient.AddPoint(System.Single,Electron2D.Color)",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::method:get_color(int:)",
+      "electron2d": "method:Electron2D.Gradient.GetColor(System.Int32)",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::method:get_offset(int:)",
+      "electron2d": "method:Electron2D.Gradient.GetOffset(System.Int32)",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::method:get_point_count()",
+      "electron2d": "method:Electron2D.Gradient.GetPointCount()",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::method:remove_point(int:)",
+      "electron2d": "method:Electron2D.Gradient.RemovePoint(System.Int32)",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::method:reverse()",
+      "electron2d": "method:Electron2D.Gradient.Reverse()",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::method:sample(float:)",
+      "electron2d": "method:Electron2D.Gradient.Sample(System.Single)",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::method:set_color(int:,Color:)",
+      "electron2d": "method:Electron2D.Gradient.SetColor(System.Int32,Electron2D.Color)",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::method:set_offset(int:,float:)",
+      "electron2d": "method:Electron2D.Gradient.SetOffset(System.Int32,System.Single)",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::property:colors",
+      "electron2d": "property:Electron2D.Gradient.Colors()",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::property:interpolation_color_space",
+      "electron2d": "property:Electron2D.Gradient.InterpolationColorSpace()",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::property:interpolation_mode",
+      "electron2d": "property:Electron2D.Gradient.InterpolationMode()",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Gradient::property:offsets",
+      "electron2d": "property:Electron2D.Gradient.Offsets()",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture1D::property:gradient",
+      "electron2d": "property:Electron2D.GradientRampTexture.Gradient()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture1D::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture1D::property:use_hdr",
+      "electron2d": "property:Electron2D.GradientRampTexture.UseHDR()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture1D::property:width",
+      "electron2d": "property:Electron2D.GradientRampTexture.Width()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::enum:Fill",
+      "electron2d": "T:Electron2D.GradientTexture.FillEnum",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::enum:Repeat",
+      "electron2d": "T:Electron2D.GradientTexture.RepeatEnum",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::enum_value:Fill.FILL_CONIC",
+      "electron2d": "enumValue:Electron2D.GradientTexture.FillEnum.Conic()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::enum_value:Fill.FILL_LINEAR",
+      "electron2d": "enumValue:Electron2D.GradientTexture.FillEnum.Linear()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::enum_value:Fill.FILL_RADIAL",
+      "electron2d": "enumValue:Electron2D.GradientTexture.FillEnum.Radial()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::enum_value:Fill.FILL_SQUARE",
+      "electron2d": "enumValue:Electron2D.GradientTexture.FillEnum.Square()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::enum_value:Repeat.REPEAT",
+      "electron2d": "enumValue:Electron2D.GradientTexture.RepeatEnum.Repeat()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::enum_value:Repeat.REPEAT_MIRROR",
+      "electron2d": "enumValue:Electron2D.GradientTexture.RepeatEnum.Mirror()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::enum_value:Repeat.REPEAT_NONE",
+      "electron2d": "enumValue:Electron2D.GradientTexture.RepeatEnum.None()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::property:fill",
+      "electron2d": "property:Electron2D.GradientTexture.Fill()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::property:fill_from",
+      "electron2d": "property:Electron2D.GradientTexture.FillFrom()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::property:fill_to",
+      "electron2d": "property:Electron2D.GradientTexture.FillTo()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::property:gradient",
+      "electron2d": "property:Electron2D.GradientTexture.Gradient()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::property:height",
+      "electron2d": "property:Electron2D.GradientTexture.Height()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::property:repeat",
+      "electron2d": "property:Electron2D.GradientTexture.Repeat()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::property:use_hdr",
+      "electron2d": "property:Electron2D.GradientTexture.UseHDR()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "GradientTexture2D::property:width",
+      "electron2d": "property:Electron2D.GradientTexture.Width()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:get_width()",
+      "electron2d": "method:Electron2D.GradientRampTexture.GetWidth()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:_get_width()",
+      "electron2d": "method:Electron2D.GradientRampTexture.GetWidth()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:get_height()",
+      "electron2d": "method:Electron2D.GradientRampTexture.GetHeight()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:_get_height()",
+      "electron2d": "method:Electron2D.GradientRampTexture.GetHeight()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:get_size()",
+      "electron2d": "method:Electron2D.GradientRampTexture.GetSize()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:get_image()",
+      "electron2d": "method:Electron2D.GradientRampTexture.GetImage()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:has_alpha()",
+      "electron2d": "property:Electron2D.GradientRampTexture.HasAlpha()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:_has_alpha()",
+      "electron2d": "property:Electron2D.GradientRampTexture.HasAlpha()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:get_width()",
+      "electron2d": "method:Electron2D.GradientTexture.GetWidth()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:_get_width()",
+      "electron2d": "method:Electron2D.GradientTexture.GetWidth()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:get_height()",
+      "electron2d": "method:Electron2D.GradientTexture.GetHeight()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:_get_height()",
+      "electron2d": "method:Electron2D.GradientTexture.GetHeight()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:get_size()",
+      "electron2d": "method:Electron2D.GradientTexture.GetSize()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:get_image()",
+      "electron2d": "method:Electron2D.GradientTexture.GetImage()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:has_alpha()",
+      "electron2d": "property:Electron2D.GradientTexture.HasAlpha()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "godot": "Texture2D::method:_has_alpha()",
+      "electron2d": "property:Electron2D.GradientTexture.HasAlpha()",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
     }
   ],
   "statusGroups": [
@@ -905,6 +1200,70 @@
         "CurveXYZTexture::property:resource_local_to_scene",
         "CurveXYZTexture::property:width"
       ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md.",
+      "godot": [
+        "class:Gradient",
+        "Gradient::enum:ColorSpace",
+        "Gradient::enum:InterpolationMode",
+        "Gradient::enum_value:ColorSpace.GRADIENT_COLOR_SPACE_LINEAR_SRGB",
+        "Gradient::enum_value:ColorSpace.GRADIENT_COLOR_SPACE_OKLAB",
+        "Gradient::enum_value:ColorSpace.GRADIENT_COLOR_SPACE_SRGB",
+        "Gradient::enum_value:InterpolationMode.GRADIENT_INTERPOLATE_CONSTANT",
+        "Gradient::enum_value:InterpolationMode.GRADIENT_INTERPOLATE_CUBIC",
+        "Gradient::enum_value:InterpolationMode.GRADIENT_INTERPOLATE_LINEAR",
+        "Gradient::method:add_point(float:,Color:)",
+        "Gradient::method:get_color(int:)",
+        "Gradient::method:get_offset(int:)",
+        "Gradient::method:get_point_count()",
+        "Gradient::method:remove_point(int:)",
+        "Gradient::method:reverse()",
+        "Gradient::method:sample(float:)",
+        "Gradient::method:set_color(int:,Color:)",
+        "Gradient::method:set_offset(int:,float:)",
+        "Gradient::property:colors",
+        "Gradient::property:interpolation_color_space",
+        "Gradient::property:interpolation_mode",
+        "Gradient::property:offsets"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md.",
+      "godot": [
+        "class:GradientTexture1D",
+        "GradientTexture1D::property:gradient",
+        "GradientTexture1D::property:resource_local_to_scene",
+        "GradientTexture1D::property:use_hdr",
+        "GradientTexture1D::property:width"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md.",
+      "godot": [
+        "class:GradientTexture2D",
+        "GradientTexture2D::enum:Fill",
+        "GradientTexture2D::enum:Repeat",
+        "GradientTexture2D::enum_value:Fill.FILL_CONIC",
+        "GradientTexture2D::enum_value:Fill.FILL_LINEAR",
+        "GradientTexture2D::enum_value:Fill.FILL_RADIAL",
+        "GradientTexture2D::enum_value:Fill.FILL_SQUARE",
+        "GradientTexture2D::enum_value:Repeat.REPEAT",
+        "GradientTexture2D::enum_value:Repeat.REPEAT_MIRROR",
+        "GradientTexture2D::enum_value:Repeat.REPEAT_NONE",
+        "GradientTexture2D::property:fill",
+        "GradientTexture2D::property:fill_from",
+        "GradientTexture2D::property:fill_to",
+        "GradientTexture2D::property:gradient",
+        "GradientTexture2D::property:height",
+        "GradientTexture2D::property:repeat",
+        "GradientTexture2D::property:resource_local_to_scene",
+        "GradientTexture2D::property:use_hdr",
+        "GradientTexture2D::property:width"
+      ]
     }
   ],
   "extras": [
@@ -1156,6 +1515,81 @@
     {
       "electron2d": "method:Electron2D.CurveXYZTexture.GetPropertyDescriptors()",
       "reason": "Typed metadata for existing writable curve-texture settings; the Width property is distinct from the inherited GetWidth query.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Gradient..ctor()",
+      "reason": "Default managed construction of the existing gradient/texture resource capability without a renderer.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "constructor:Electron2D.GradientRampTexture..ctor()",
+      "reason": "Default managed construction of the existing gradient/texture resource capability without a renderer.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "constructor:Electron2D.GradientTexture..ctor()",
+      "reason": "Default managed construction of the existing gradient/texture resource capability without a renderer.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.Gradient.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed exact point/settings copy and borrowed-source graph policy, preserving frozen immutable pixels for null sources.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.Gradient.CreateDuplicateInstance()",
+      "reason": "Exact-type Resource graph duplication factory.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.Gradient.Dispose(System.Boolean)",
+      "reason": "Deterministic managed cleanup of owned points/pixels and source subscriptions; borrowed resources survive.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.Gradient.GetPropertyDescriptors()",
+      "reason": "Typed metadata projection of existing gradient or generated-texture settings.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.GradientRampTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed exact point/settings copy and borrowed-source graph policy, preserving frozen immutable pixels for null sources.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.GradientRampTexture.CreateDuplicateInstance()",
+      "reason": "Exact-type Resource graph duplication factory.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.GradientRampTexture.Dispose(System.Boolean)",
+      "reason": "Deterministic managed cleanup of owned points/pixels and source subscriptions; borrowed resources survive.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.GradientRampTexture.GetPropertyDescriptors()",
+      "reason": "Typed metadata projection of existing gradient or generated-texture settings.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.GradientTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed exact point/settings copy and borrowed-source graph policy, preserving frozen immutable pixels for null sources.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.GradientTexture.CreateDuplicateInstance()",
+      "reason": "Exact-type Resource graph duplication factory.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.GradientTexture.Dispose(System.Boolean)",
+      "reason": "Deterministic managed cleanup of owned points/pixels and source subscriptions; borrowed resources survive.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.GradientTexture.GetPropertyDescriptors()",
+      "reason": "Typed metadata projection of existing gradient or generated-texture settings.",
       "adr": "ADRs 0003/0004/0013/0014"
     }
   ]

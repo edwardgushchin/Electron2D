@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
-**Inherited By:** [Curve](Curve.md), [PathCurve](PathCurve.md), [Image](Image.md), [InputEvent](InputEvent.md), [PackedScene](PackedScene.md), [SpriteFrames](SpriteFrames.md)
+**Inherited By:** [Gradient](Gradient.md), [Curve](Curve.md), [PathCurve](PathCurve.md), [Image](Image.md), [InputEvent](InputEvent.md), [PackedScene](PackedScene.md), [SpriteFrames](SpriteFrames.md)
 
 - **Source:** [`src/Core/IO/Resource.cs`](../../src/Core/IO/Resource.cs)
 - **Namespace:** `Electron2D`

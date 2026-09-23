@@ -9,7 +9,8 @@ from render import CLASS_PAGES, DATA, choose, render
 
 def check_texture_pages(pages, upstream):
     names = {"Texture": "Texture", "Texture2D": "Texture", "Texture2DArray": "TextureArray",
-             "Texture2DArrayRD": "TextureArrayRD", "Texture2DRD": "TextureRD"}
+             "Texture2DArrayRD": "TextureArrayRD", "Texture2DRD": "TextureRD",
+             "GradientTexture1D": "GradientRampTexture", "GradientTexture2D": "GradientTexture"}
     expected_rows = {}
     for item in upstream["types"]:
         if item["name"] not in names:
@@ -23,7 +24,7 @@ def check_texture_pages(pages, upstream):
         actual = [line.split("](", 1)[0] + "]" for line in pages[page].splitlines() if line.startswith("| [`")]
         assert sorted(actual) == sorted(rows), f"Lost or duplicated texture declarations in {page}"
     for name in names:
-        if "2D" in name:
+        if name != names[name]:
             assert CLASS_PAGES / f"{name}.md" not in pages, f"Redundant texture page: {name}"
     for page, content in pages.items():
         for link, anchor in re.findall(r"\]\(([^)]+\.md)(#[^)]+)?\)", content):

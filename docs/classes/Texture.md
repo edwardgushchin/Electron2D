@@ -5,16 +5,18 @@ Last updated: 2026-09-23
 - Declaration: `public abstract class Texture : Resource`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
 - Inherits: [Resource](Resource.md)
-- Inherited by: [ImageTexture](ImageTexture.md), [AtlasTexture](AtlasTexture.md), [CurveTexture](CurveTexture.md), [CurveXYZTexture](CurveXYZTexture.md)
+- Inherited by: [ImageTexture](ImageTexture.md), [AtlasTexture](AtlasTexture.md), [CurveTexture](CurveTexture.md), [CurveXYZTexture](CurveXYZTexture.md), [GradientRampTexture](GradientRampTexture.md), [GradientTexture](GradientTexture.md)
 - Component: [Shader materials](../components/shader-materials.md)
 
 ## Description
 
 A two-dimensional image texture with a logical drawing size, original pixel metadata and readable image copies. All engine textures are two-dimensional; there is no dimension suffix or empty parent above Texture. The naming and hierarchy are fixed by [ADR 0004](../decisions/product.md#adr-0004).
 
+GradientRampTexture and GradientTexture always report HasAlpha true, including before initialization. Their source edits lazily invalidate pixels without forwarding Changed; native consumers capture new pixels on the next use.
+
 AtlasTexture overrides metadata queries with its view defaults (unspecified format and no own mipmaps); rendering still uses the full source storage. See [AtlasTexture metadata](AtlasTexture.md#pixelformat).
 
-Nodes, materials and shaders borrow textures. ImageTexture and the curve textures own managed pixel data, while AtlasTexture borrows its source; the renderer owns native allocations. Creating or reading a texture does not require an active window. Disposing a node, material or renderer does not dispose borrowed textures.
+Nodes, materials and shaders borrow textures. ImageTexture and the curve/gradient textures own managed pixel data, while AtlasTexture borrows its source; the renderer owns native allocations. Creating or reading a texture does not require an active window. Disposing a node, material or renderer does not dispose borrowed textures.
 
 ## Example
 

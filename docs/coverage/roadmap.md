@@ -77,8 +77,8 @@ These classes already have an Electron2D type. Sort by missing member count, the
 
 | Exact trigger | Classes |
 | --- | ---: |
-| Rendering2D: trigger is the first SDL3 GPU 2D rendering slice (ADR 0028). | 148 |
-| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 143 |
+| Rendering2D: trigger is the first SDL3 GPU 2D rendering slice (ADR 0028). | 147 |
+| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 141 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 79 |
 | Audio: trigger is the first audio mixing and playback slice. | 56 |
 | Networking: trigger is the first networking and multiplayer slice. | 41 |

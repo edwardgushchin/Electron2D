@@ -582,6 +582,123 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Gradient",
+    "kind": "type",
+    "declaringType": "Electron2D.Gradient",
+    "name": "Gradient",
+    "signature": "public sealed class Electron2D.Gradient",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Gradient.ColorSpace",
+    "kind": "type",
+    "declaringType": "Electron2D.Gradient.ColorSpace",
+    "name": "ColorSpace",
+    "signature": "public enum Electron2D.Gradient.ColorSpace",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Gradient.InterpolationModeEnum",
+    "kind": "type",
+    "declaringType": "Electron2D.Gradient.InterpolationModeEnum",
+    "name": "InterpolationModeEnum",
+    "signature": "public enum Electron2D.Gradient.InterpolationModeEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.GradientRampTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": "GradientRampTexture",
+    "signature": "public sealed class Electron2D.GradientRampTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.GradientTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "GradientTexture",
+    "signature": "public sealed class Electron2D.GradientTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.GradientTexture.FillEnum",
+    "kind": "type",
+    "declaringType": "Electron2D.GradientTexture.FillEnum",
+    "name": "FillEnum",
+    "signature": "public enum Electron2D.GradientTexture.FillEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.GradientTexture.RepeatEnum",
+    "kind": "type",
+    "declaringType": "Electron2D.GradientTexture.RepeatEnum",
+    "name": "RepeatEnum",
+    "signature": "public enum Electron2D.GradientTexture.RepeatEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.GroupCallFlags",
     "kind": "type",
     "declaringType": "Electron2D.GroupCallFlags",
@@ -3308,6 +3425,45 @@
     "declaringType": "Electron2D.Entity",
     "name": ".ctor",
     "signature": "public Entity()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Gradient..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Gradient",
+    "name": ".ctor",
+    "signature": "public Gradient()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.GradientRampTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": ".ctor",
+    "signature": "public GradientRampTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.GradientTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": ".ctor",
+    "signature": "public GradientTexture()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -6136,6 +6292,175 @@
     "parameters": [],
     "returnType": "Electron2D.FileCompressionMode",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Gradient.ColorSpace.LinearSRGB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Gradient.ColorSpace",
+    "name": "LinearSRGB",
+    "signature": "public const Electron2D.Gradient.ColorSpace LinearSRGB = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Gradient.ColorSpace",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Gradient.ColorSpace.OKLAB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Gradient.ColorSpace",
+    "name": "OKLAB",
+    "signature": "public const Electron2D.Gradient.ColorSpace OKLAB = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Gradient.ColorSpace",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Gradient.ColorSpace.SRGB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Gradient.ColorSpace",
+    "name": "SRGB",
+    "signature": "public const Electron2D.Gradient.ColorSpace SRGB = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Gradient.ColorSpace",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Gradient.InterpolationModeEnum.Constant()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Gradient.InterpolationModeEnum",
+    "name": "Constant",
+    "signature": "public const Electron2D.Gradient.InterpolationModeEnum Constant = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Gradient.InterpolationModeEnum",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Gradient.InterpolationModeEnum.Cubic()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Gradient.InterpolationModeEnum",
+    "name": "Cubic",
+    "signature": "public const Electron2D.Gradient.InterpolationModeEnum Cubic = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Gradient.InterpolationModeEnum",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Gradient.InterpolationModeEnum.Linear()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Gradient.InterpolationModeEnum",
+    "name": "Linear",
+    "signature": "public const Electron2D.Gradient.InterpolationModeEnum Linear = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Gradient.InterpolationModeEnum",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.GradientTexture.FillEnum.Conic()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GradientTexture.FillEnum",
+    "name": "Conic",
+    "signature": "public const Electron2D.GradientTexture.FillEnum Conic = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GradientTexture.FillEnum",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.GradientTexture.FillEnum.Linear()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GradientTexture.FillEnum",
+    "name": "Linear",
+    "signature": "public const Electron2D.GradientTexture.FillEnum Linear = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GradientTexture.FillEnum",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.GradientTexture.FillEnum.Radial()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GradientTexture.FillEnum",
+    "name": "Radial",
+    "signature": "public const Electron2D.GradientTexture.FillEnum Radial = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GradientTexture.FillEnum",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.GradientTexture.FillEnum.Square()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GradientTexture.FillEnum",
+    "name": "Square",
+    "signature": "public const Electron2D.GradientTexture.FillEnum Square = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GradientTexture.FillEnum",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.GradientTexture.RepeatEnum.Mirror()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GradientTexture.RepeatEnum",
+    "name": "Mirror",
+    "signature": "public const Electron2D.GradientTexture.RepeatEnum Mirror = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GradientTexture.RepeatEnum",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.GradientTexture.RepeatEnum.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GradientTexture.RepeatEnum",
+    "name": "None",
+    "signature": "public const Electron2D.GradientTexture.RepeatEnum None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GradientTexture.RepeatEnum",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.GradientTexture.RepeatEnum.Repeat()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GradientTexture.RepeatEnum",
+    "name": "Repeat",
+    "signature": "public const Electron2D.GradientTexture.RepeatEnum Repeat = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GradientTexture.RepeatEnum",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.GroupCallFlags.Default()",
@@ -19898,6 +20223,536 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Gradient.AddPoint(System.Single,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.Gradient",
+    "name": "AddPoint",
+    "signature": "public System.Void AddPoint(System.Single offset, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Gradient.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Gradient",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Gradient.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.Gradient",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Gradient.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Gradient",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Gradient.GetColor(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Gradient",
+    "name": "GetColor",
+    "signature": "public Electron2D.Color GetColor(System.Int32 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Gradient.GetOffset(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Gradient",
+    "name": "GetOffset",
+    "signature": "public System.Single GetOffset(System.Int32 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Gradient.GetPointCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.Gradient",
+    "name": "GetPointCount",
+    "signature": "public System.Int32 GetPointCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Gradient.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Gradient",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Gradient.RemovePoint(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Gradient",
+    "name": "RemovePoint",
+    "signature": "public System.Void RemovePoint(System.Int32 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Gradient.Reverse()",
+    "kind": "method",
+    "declaringType": "Electron2D.Gradient",
+    "name": "Reverse",
+    "signature": "public System.Void Reverse()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Gradient.Sample(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Gradient",
+    "name": "Sample",
+    "signature": "public Electron2D.Color Sample(System.Single offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Gradient.SetColor(System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.Gradient",
+    "name": "SetColor",
+    "signature": "public System.Void SetColor(System.Int32 point, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Gradient.SetOffset(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Gradient",
+    "name": "SetOffset",
+    "signature": "public System.Void SetOffset(System.Int32 point, System.Single offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientRampTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientRampTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientRampTexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientRampTexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientRampTexture.GetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": "GetImage",
+    "signature": "public override Electron2D.Image GetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientRampTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientRampTexture.GetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": "GetSize",
+    "signature": "public override Electron2D.Vector2 GetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientRampTexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientTexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientTexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientTexture.GetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "GetImage",
+    "signature": "public override Electron2D.Image GetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientTexture.GetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "GetSize",
+    "signature": "public override Electron2D.Vector2 GetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GradientTexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -42973,6 +43828,227 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.UnixPermissionFlags",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Gradient.Colors()",
+    "kind": "property",
+    "declaringType": "Electron2D.Gradient",
+    "name": "Colors",
+    "signature": "public Electron2D.Color[] Colors { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Gradient.InterpolationColorSpace()",
+    "kind": "property",
+    "declaringType": "Electron2D.Gradient",
+    "name": "InterpolationColorSpace",
+    "signature": "public Electron2D.Gradient.ColorSpace InterpolationColorSpace { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Gradient.ColorSpace",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Gradient.InterpolationMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Gradient",
+    "name": "InterpolationMode",
+    "signature": "public Electron2D.Gradient.InterpolationModeEnum InterpolationMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Gradient.InterpolationModeEnum",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Gradient.Offsets()",
+    "kind": "property",
+    "declaringType": "Electron2D.Gradient",
+    "name": "Offsets",
+    "signature": "public System.Single[] Offsets { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GradientRampTexture.Gradient()",
+    "kind": "property",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": "Gradient",
+    "signature": "public Electron2D.Gradient Gradient { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Gradient",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GradientRampTexture.HasAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": "HasAlpha",
+    "signature": "public System.Boolean HasAlpha { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GradientRampTexture.UseHDR()",
+    "kind": "property",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": "UseHDR",
+    "signature": "public System.Boolean UseHDR { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GradientRampTexture.Width()",
+    "kind": "property",
+    "declaringType": "Electron2D.GradientRampTexture",
+    "name": "Width",
+    "signature": "public System.Int32 Width { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GradientTexture.Fill()",
+    "kind": "property",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "Fill",
+    "signature": "public Electron2D.GradientTexture.FillEnum Fill { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GradientTexture.FillEnum",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GradientTexture.FillFrom()",
+    "kind": "property",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "FillFrom",
+    "signature": "public Electron2D.Vector2 FillFrom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GradientTexture.FillTo()",
+    "kind": "property",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "FillTo",
+    "signature": "public Electron2D.Vector2 FillTo { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GradientTexture.Gradient()",
+    "kind": "property",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "Gradient",
+    "signature": "public Electron2D.Gradient Gradient { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Gradient",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GradientTexture.HasAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "HasAlpha",
+    "signature": "public System.Boolean HasAlpha { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GradientTexture.Height()",
+    "kind": "property",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "Height",
+    "signature": "public System.Int32 Height { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GradientTexture.Repeat()",
+    "kind": "property",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "Repeat",
+    "signature": "public Electron2D.GradientTexture.RepeatEnum Repeat { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GradientTexture.RepeatEnum",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GradientTexture.UseHDR()",
+    "kind": "property",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "UseHDR",
+    "signature": "public System.Boolean UseHDR { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GradientTexture.Width()",
+    "kind": "property",
+    "declaringType": "Electron2D.GradientTexture",
+    "name": "Width",
+    "signature": "public System.Int32 Width { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

@@ -22,6 +22,8 @@ TEXTURE_NAMES = {
     "Texture2DArray": "TextureArray",
     "Texture2DArrayRD": "TextureArrayRD",
     "Texture2DRD": "TextureRD",
+    "GradientTexture1D": "GradientRampTexture",
+    "GradientTexture2D": "GradientTexture",
 }
 
 

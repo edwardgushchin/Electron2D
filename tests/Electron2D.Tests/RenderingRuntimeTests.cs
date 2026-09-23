@@ -30,6 +30,15 @@ internal static partial class RenderingRuntimeTests
                 }
                 return;
             }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GRADIENTS") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyGradientCanvas(backend);
+                    if (backend == "gpu") { VerifyGradientMaterial("TextureHlsl"); VerifyGradientMaterial("TextureGlsl"); }
+                }
+                return;
+            }
             VerifyImageDependency();
             VerifyResources();
             VerifyParameters("MaterialHlsl");
@@ -59,6 +68,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyCanvasTextureFailures();
                 VerifyCanvasHDR(backend);
                 VerifyCurveTextureCanvas(backend);
+                VerifyGradientCanvas(backend);
                 VerifyFailure(backend, "SwapHlsl");
                 VerifyFailure(backend, "SwapGlsl");
                 if (backend == "gpu")
@@ -73,6 +83,8 @@ internal static partial class RenderingRuntimeTests
                     VerifyTextureFrame("TextureGlsl");
                     VerifyCurveTextureFrame("TextureHlsl");
                     VerifyCurveTextureFrame("TextureGlsl");
+                    VerifyGradientMaterial("TextureHlsl");
+                    VerifyGradientMaterial("TextureGlsl");
                     VerifyCanvasTexture(backend, "CanvasHLSL");
                     VerifyCanvasTexture(backend, "CanvasGLSL");
                     VerifyCanvasUV();

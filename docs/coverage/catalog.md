@@ -347,9 +347,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Geometry3D](classes/Geometry3D.md) | Object | Excluded | 15 |
 | [GeometryInstance3D](classes/GeometryInstance3D.md) | VisualInstance3D | Excluded | 37 |
 | [GodotInstance](classes/GodotInstance.md) | Object | Blocked | 7 |
-| [Gradient](classes/Gradient.md) | Resource | Blocked | 21 |
-| [GradientTexture1D](classes/GradientTexture1D.md) | Texture2D | Blocked | 4 |
-| [GradientTexture2D](classes/GradientTexture2D.md) | Texture2D | Blocked | 18 |
+| [Gradient](classes/Gradient.md) | Resource | Implemented | 21 |
+| [GradientTexture1D](classes/GradientRampTexture.md) | Texture2D | Implemented | 4 |
+| [GradientTexture2D](classes/GradientTexture.md) | Texture2D | Implemented | 18 |
 | [GraphEdit](classes/GraphEdit.md) | Control | Blocked | 102 |
 | [GraphElement](classes/GraphElement.md) | Container | Blocked | 15 |
 | [GraphFrame](classes/GraphFrame.md) | GraphElement | Blocked | 14 |
