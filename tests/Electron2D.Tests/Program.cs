@@ -129,6 +129,7 @@ XMLParserTests.Run();
 BitMapTests.Run();
 NoiseTests.Run();
 NoiseTextureTests.Run();
+FastNoiseLiteTests.Run();
 AnimatedSpriteTests.Run();
 AnimatedTextureTests.Run();
 RenderingRuntimeTests.VerifyAtlasResources();

@@ -1,0 +1,8 @@
+FastNoiseLite C# source, version 1.1.0
+Repository: https://github.com/Auburn/FastNoiseLite
+Commit: f7af54b56518aa659e1cf9fb103c0b6e36a833d9
+Source: CSharp/FastNoiseLite.cs
+License: MIT (see LICENSE)
+
+Local changes: the class is internal and placed in Electron2D.Internal; trailing whitespace is removed.
+The 3D functions remain internal to the vendored algorithm; the public wrapper exposes only 2D sampling.

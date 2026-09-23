@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 **Inherits:** [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
-**Inherited By:** Concrete application samplers; a built-in FastNoiseLite resource is not implemented yet.
+**Inherited By:** [FastNoiseLite](FastNoiseLite.md) and application samplers.
 
 - **Source:** [Noise.cs](../../src/Core/IO/Noise.cs)
 - **Namespace:** `Electron2D`
@@ -51,7 +51,7 @@ sealed class RampNoise : Noise
 
 ### `GetNoise1D`, `GetNoise2D`, `GetNoise2DV`
 
-Concrete subclasses own the 1D and 2D sample values. The default vector overload calls `GetNoise2D(position.X, position.Y)` and rejects use after disposal. Implementations of the abstract methods should likewise reject disposed access if they hold derived state. No built-in concrete noise algorithm is claimed.
+Concrete subclasses own the 1D and 2D sample values. The default vector overload calls `GetNoise2D(position.X, position.Y)` and rejects use after disposal. Implementations of the abstract methods should likewise reject disposed access if they hold derived state. The built-in FastNoiseLite generator supplies one implementation.
 
 ### `GetImage`
 
@@ -63,4 +63,4 @@ Requests a larger image through `GetImage`, adding at least one pixel of overlap
 
 ## Lifecycle, verification and limits
 
-`NoiseTests` checks vector dispatch, L8 normalization, inversion, constant samples, seamless generation, invalid sizes, nonfinite values and disposed use. These are managed checks; no native renderer or built-in FastNoiseLite generator is involved. [Noise coverage](../coverage/classes/Noise.md) records the partial pixel-parity audit and the excluded 3D methods. [ADR 0004](../decisions/product.md#adr-0004) owns the 2D boundary, and [ADR 0013](../decisions/resources.md#adr-0013) owns Resource copying.
+`NoiseTests` checks vector dispatch, L8 normalization, inversion, constant samples, seamless generation, invalid sizes, nonfinite values and disposed use. These are base-resource managed checks; FastNoiseLiteTests separately checks the built-in generator. [Noise coverage](../coverage/classes/Noise.md) records the partial pixel-parity audit and the excluded 3D methods. [ADR 0004](../decisions/product.md#adr-0004) owns the 2D boundary, and [ADR 0013](../decisions/resources.md#adr-0013) owns Resource copying.

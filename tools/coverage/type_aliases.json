@@ -82,6 +82,12 @@
     "Camera2D.Camera2DProcessCallback": "Camera.CameraProcessCallback",
     "Line2D.LineCapMode": "Line.LineCapMode",
     "Line2D.LineJointMode": "Line.LineJointMode",
-    "Line2D.LineTextureMode": "Line.LineTextureMode"
+    "Line2D.LineTextureMode": "Line.LineTextureMode",
+    "FastNoiseLite.NoiseType": "FastNoiseLite.NoiseTypeEnum",
+    "FastNoiseLite.FractalType": "FastNoiseLite.FractalTypeEnum",
+    "FastNoiseLite.CellularDistanceFunction": "FastNoiseLite.CellularDistanceFunctionEnum",
+    "FastNoiseLite.CellularReturnType": "FastNoiseLite.CellularReturnTypeEnum",
+    "FastNoiseLite.DomainWarpType": "FastNoiseLite.DomainWarpTypeEnum",
+    "FastNoiseLite.DomainWarpFractalType": "FastNoiseLite.DomainWarpFractalTypeEnum"
   }
 }

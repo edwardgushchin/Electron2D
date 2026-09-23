@@ -292,7 +292,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [FABRIK3D](classes/FABRIK3D.md) | IterateIK3D | Excluded | 0 |
 | [FBXDocument](classes/FBXDocument.md) | GLTFDocument | Excluded | 0 |
 | [FBXState](classes/FBXState.md) | GLTFState | Excluded | 1 |
-| [FastNoiseLite](classes/FastNoiseLite.md) | Noise | Unimplemented | 54 |
+| [FastNoiseLite](classes/FastNoiseLite.md) | Noise | Implemented | 54 |
 | [FileAccess](classes/FileAccess.md) | RefCounted | Partial | 91 |
 | [FileDialog](classes/FileDialog.md) | ConfirmationDialog | Blocked | 106 |
 | [FileSystemDock](classes/FileSystemDock.md) | EditorDock | Blocked | 13 |
