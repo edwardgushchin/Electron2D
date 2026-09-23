@@ -1651,6 +1651,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RandomNumberGenerator",
+    "kind": "type",
+    "declaringType": "Electron2D.RandomNumberGenerator",
+    "name": "RandomNumberGenerator",
+    "signature": "public class Electron2D.RandomNumberGenerator",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Rect",
     "kind": "type",
     "declaringType": "Electron2D.Rect",
@@ -4273,6 +4288,19 @@
         "default": "false"
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RandomNumberGenerator..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RandomNumberGenerator",
+    "name": ".ctor",
+    "signature": "public RandomNumberGenerator()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -32866,6 +32894,149 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RandomNumberGenerator.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RandomNumberGenerator",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RandomNumberGenerator.RandWeighted(System.Single[])",
+    "kind": "method",
+    "declaringType": "Electron2D.RandomNumberGenerator",
+    "name": "RandWeighted",
+    "signature": "public System.Int32 RandWeighted(System.Single[] weights)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "weights",
+        "type": "System.Single[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RandomNumberGenerator.Randf()",
+    "kind": "method",
+    "declaringType": "Electron2D.RandomNumberGenerator",
+    "name": "Randf",
+    "signature": "public System.Single Randf()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RandomNumberGenerator.RandfRange(System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RandomNumberGenerator",
+    "name": "RandfRange",
+    "signature": "public System.Single RandfRange(System.Single from, System.Single to)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RandomNumberGenerator.Randfn(System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RandomNumberGenerator",
+    "name": "Randfn",
+    "signature": "public System.Single Randfn(System.Single mean = 0f, System.Single deviation = 1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mean",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "deviation",
+        "type": "System.Single",
+        "default": "1f"
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RandomNumberGenerator.Randi()",
+    "kind": "method",
+    "declaringType": "Electron2D.RandomNumberGenerator",
+    "name": "Randi",
+    "signature": "public System.UInt32 Randi()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RandomNumberGenerator.RandiRange(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RandomNumberGenerator",
+    "name": "RandiRange",
+    "signature": "public System.Int32 RandiRange(System.Int32 from, System.Int32 to)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RandomNumberGenerator.Randomize()",
+    "kind": "method",
+    "declaringType": "Electron2D.RandomNumberGenerator",
+    "name": "Randomize",
+    "signature": "public System.Void Randomize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Rect.Abs()",
     "kind": "method",
     "declaringType": "Electron2D.Rect",
@@ -51444,6 +51615,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Type",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RandomNumberGenerator.Seed()",
+    "kind": "property",
+    "declaringType": "Electron2D.RandomNumberGenerator",
+    "name": "Seed",
+    "signature": "public System.UInt64 Seed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RandomNumberGenerator.State()",
+    "kind": "property",
+    "declaringType": "Electron2D.RandomNumberGenerator",
+    "name": "State",
+    "signature": "public System.UInt64 State { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
     "value": null
   },
   {

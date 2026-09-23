@@ -2,6 +2,7 @@ using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
 using System.Security.Cryptography;
+using CryptographicRandomNumberGenerator = System.Security.Cryptography.RandomNumberGenerator;
 using System.Text;
 using IoFileAccess = System.IO.FileAccess;
 
@@ -281,7 +282,7 @@ public sealed class FileAccess : ElectronObject
 
         for (var attempt = 0; attempt < 64; attempt++)
         {
-            var randomName = RandomNumberGenerator.GetHexString(16);
+            var randomName = CryptographicRandomNumberGenerator.GetHexString(16);
             var fileName = $"{(prefix.Length == 0 ? "" : prefix + "-")}{randomName}{(normalizedExtension.Length == 0 ? "" : "." + normalizedExtension)}";
             var path = System.IO.Path.Combine(
                 System.IO.Path.GetTempPath(),
@@ -410,7 +411,7 @@ public sealed class FileAccess : ElectronObject
         byte[] data;
         if (Truncates(mode))
         {
-            salt = RandomNumberGenerator.GetBytes(EncryptionSaltSize);
+            salt = CryptographicRandomNumberGenerator.GetBytes(EncryptionSaltSize);
             data = [];
         }
         else
@@ -1423,7 +1424,7 @@ public sealed class FileAccess : ElectronObject
         envelope[offset++] = checked((byte)salt.Length);
         salt.CopyTo(envelope.AsSpan(offset));
         offset += salt.Length;
-        RandomNumberGenerator.Fill(envelope.AsSpan(offset, EncryptionNonceSize));
+        CryptographicRandomNumberGenerator.Fill(envelope.AsSpan(offset, EncryptionNonceSize));
         using var cipher = new AesGcm(key, EncryptionTagSize);
         cipher.Encrypt(
             envelope.AsSpan(offset, EncryptionNonceSize),
@@ -1797,7 +1798,7 @@ internal static class AtomicFile
         if (string.IsNullOrEmpty(directory) || fileName.Length == 0)
             throw new ArgumentException("The path must identify a file.", nameof(path));
 
-        var temporaryPath = System.IO.Path.Combine(directory, $".{fileName}.{RandomNumberGenerator.GetHexString(12)}.tmp");
+        var temporaryPath = System.IO.Path.Combine(directory, $".{fileName}.{CryptographicRandomNumberGenerator.GetHexString(12)}.tmp");
         try
         {
             using (var stream = new FileStream(

@@ -110,6 +110,7 @@ PathTests.Run();
 CurveTests.Run();
 CurveTextureTests.Run();
 GradientTests.Run();
+RandomNumberGeneratorTests.Run();
 AnimatedSpriteTests.Run();
 AnimatedTextureTests.Run();
 RenderingRuntimeTests.VerifyAtlasResources();

@@ -1539,6 +1539,56 @@
       "electron2d": "operator:Electron2D.Vector3.op_Division(Electron2D.Vector3,System.Single)",
       "godot": "Vector3::operator:operator /(int:)",
       "reason": "The C# int operand converts to float for the existing typed scalar operator; result uses single precision."
+    },
+    {
+      "godot": "class:RandomNumberGenerator",
+      "electron2d": "T:Electron2D.RandomNumberGenerator",
+      "reason": "Managed object lifetime replaces the RefCounted ancestry; the PCG32 instance stream implements the complete declared generator API (ADRs 0003/0004)."
+    },
+    {
+      "godot": "RandomNumberGenerator::method:rand_weighted(PackedFloat32Array:)",
+      "electron2d": "method:Electron2D.RandomNumberGenerator.RandWeighted(System.Single[])",
+      "reason": "A float array is the typed C# packed-float input; selection, invalid/zero weights and state advancement match the pinned implementation."
+    },
+    {
+      "godot": "RandomNumberGenerator::method:randf()",
+      "electron2d": "method:Electron2D.RandomNumberGenerator.Randf()",
+      "reason": "Unit float sampling uses the pinned PCG32 exponent/significand algorithm."
+    },
+    {
+      "godot": "RandomNumberGenerator::method:randf_range(float:,float:)",
+      "electron2d": "method:Electron2D.RandomNumberGenerator.RandfRange(System.Single,System.Single)",
+      "reason": "Preserves ordered bound interpolation and float arithmetic."
+    },
+    {
+      "godot": "RandomNumberGenerator::method:randfn(float:,float:)",
+      "electron2d": "method:Electron2D.RandomNumberGenerator.Randfn(System.Single,System.Single)",
+      "reason": "Box-Muller sampling retains defaults, epsilon repair and two unit samples."
+    },
+    {
+      "godot": "RandomNumberGenerator::method:randi()",
+      "electron2d": "method:Electron2D.RandomNumberGenerator.Randi()",
+      "reason": "UInt32 exposes the complete unsigned PCG32 output without signed overflow."
+    },
+    {
+      "godot": "RandomNumberGenerator::method:randi_range(int:,int:)",
+      "electron2d": "method:Electron2D.RandomNumberGenerator.RandiRange(System.Int32,System.Int32)",
+      "reason": "Inclusive signed bounds use unbiased rejection; full signed range and equal-bound no-draw behavior are retained."
+    },
+    {
+      "godot": "RandomNumberGenerator::method:randomize()",
+      "electron2d": "method:Electron2D.RandomNumberGenerator.Randomize()",
+      "reason": "Time-dependent seeding combines wall and monotonic clocks with the prior stream state."
+    },
+    {
+      "godot": "RandomNumberGenerator::property:seed",
+      "electron2d": "property:Electron2D.RandomNumberGenerator.Seed()",
+      "reason": "UInt64 retains all seed bits; assignment restarts the stream and changes State."
+    },
+    {
+      "godot": "RandomNumberGenerator::property:state",
+      "electron2d": "property:Electron2D.RandomNumberGenerator.State()",
+      "reason": "UInt64 exposes the restorable PCG32 state without resetting Seed."
     }
   ],
   "extras": [
@@ -2096,6 +2146,16 @@
       "electron2d": "method:Electron2D.Vector3I.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32)",
       "reason": "C# tuple deconstruction convenience for the vector components.",
       "adr": "core-math.md#adr-0033"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RandomNumberGenerator..ctor()",
+      "reason": "Explicit typed construction initializes the existing generator with its time-dependent default seed.",
+      "adr": "ADRs 0003/0004/0005"
+    },
+    {
+      "electron2d": "method:Electron2D.RandomNumberGenerator.GetPropertyDescriptors()",
+      "reason": "Typed seed/state metadata supplies the existing object property-inspection and persistence contract.",
+      "adr": "ADRs 0003/0004/0005"
     }
   ],
   "statusGroups": [
@@ -2392,6 +2452,22 @@
         "Curve2D::property:point_{index}/out",
         "Curve2D::property:point_{index}/position"
       ]
+    },
+    {
+      "godot": [
+        "class:RandomNumberGenerator",
+        "RandomNumberGenerator::method:rand_weighted(PackedFloat32Array:)",
+        "RandomNumberGenerator::method:randf()",
+        "RandomNumberGenerator::method:randf_range(float:,float:)",
+        "RandomNumberGenerator::method:randfn(float:,float:)",
+        "RandomNumberGenerator::method:randi()",
+        "RandomNumberGenerator::method:randi_range(int:,int:)",
+        "RandomNumberGenerator::method:randomize()",
+        "RandomNumberGenerator::property:seed",
+        "RandomNumberGenerator::property:state"
+      ],
+      "state": "Implemented",
+      "reason": "The complete declared RNG surface is executable: pinned PCG32 vectors, state replay, range boundaries, weighted errors/selection, normal sampling and managed lifetime are checked by RandomNumberGeneratorTests. Time-dependent seeds and C# unsigned/typed-array representation are accepted adaptations; other platforms remain unverified under ADR 0021."
     }
   ]
 }

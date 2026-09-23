@@ -1,5 +1,6 @@
 using System.Runtime.ExceptionServices;
 using System.Security.Cryptography;
+using CryptographicRandomNumberGenerator = System.Security.Cryptography.RandomNumberGenerator;
 
 namespace Electron2D;
 
@@ -324,7 +325,7 @@ public class Resource : ElectronObject
             static (buffer, _) =>
             {
                 for (var index = 0; index < buffer.Length; index++)
-                    buffer[index] = SceneUniqueIdAlphabet[RandomNumberGenerator.GetInt32(SceneUniqueIdAlphabet.Length)];
+                    buffer[index] = SceneUniqueIdAlphabet[CryptographicRandomNumberGenerator.GetInt32(SceneUniqueIdAlphabet.Length)];
             });
     }
 
