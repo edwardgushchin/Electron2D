@@ -754,6 +754,29 @@ public class Node : ElectronObject
         return Parent?._children.IndexOf(this) ?? -1;
     }
 
+    /// <summary>Returns this node's current configuration warnings for tooling.</summary>
+    /// <returns>An empty array by default. Overrides return ordered warning messages and should include base warnings.</returns>
+    /// <remarks>This query does not cache results, emit events or require an edited scene. Attached queries run on
+    /// the scene owner thread. Consumers may call it after NodeConfigurationWarningChanged to refresh their display.</remarks>
+    /// <exception cref="InvalidOperationException">An attached query runs off the scene owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
+    public virtual string[] GetConfigurationWarnings()
+    {
+        ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return [];
+    }
+
+    /// <summary>Requests a configuration-warning refresh for this node in the selected edited scene.</summary>
+    /// <remarks>Emits SceneTree.NodeConfigurationWarningChanged synchronously only when this node is the
+    /// EditedSceneRoot or its descendant. Detached nodes and trees without a selected scene emit nothing.
+    /// It does not query, cache or compare warning strings. Repeated requests each emit; handler errors propagate.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation is unavailable or this is not the scene owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
+    /// <exception cref="Exception">A warning-change subscriber fails.</exception>
+    public void UpdateConfigurationWarnings()
+    {
+        EnsureMutable(); Tree?.NotifyConfigurationWarningsChanged(this);
+    }
+
     /// <summary>Determines whether this node is a strict ancestor of another node.</summary>
     /// <param name="node">The node whose parent chain is inspected.</param>
     /// <returns><see langword="true"/> when this node appears in the parent chain; otherwise <see langword="false"/>.</returns>
@@ -1248,7 +1271,7 @@ public class Node : ElectronObject
     }
 
     /// <inheritdoc />
-    /// <remarks>Appends this class's typed hierarchy, spatial, visibility, and processing descriptors to the inherited descriptors.</remarks>
+    /// <remarks>Appends this class's typed hierarchy, ownership, and processing descriptors to the inherited descriptors.</remarks>
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(SceneNodeProperties);
 
     /// <inheritdoc />

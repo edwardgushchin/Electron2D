@@ -55,6 +55,7 @@ timer.Start();
 
 | Member | Description |
 | --- | --- |
+| [`public override string[] GetConfigurationWarnings()`](#diagnostics-getconfigurationwarnings) | Returns current configuration warnings; includes inherited warnings. |
 | [`public bool IsStopped()`](#m-electron2d-timer-isstopped) | Gets whether the timer is stopped or has not started. |
 | [`public void Start()`](#m-electron2d-timer-start) | Starts the timer using [`Timer.WaitTime`](Timer.md#p-electron2d-timer-waittime), or resets an already running countdown. |
 | [`public void Start(double timeSeconds)`](#m-electron2d-timer-start-system-double) | Sets a new wait duration and starts or resets the timer. |
@@ -180,6 +181,14 @@ Gets the remaining countdown time in seconds.
 **Remarks:** The value is read-only. Use [`Timer.Start(Double)`](Timer.md#m-electron2d-timer-start-system-double) to change the duration and restart.
 
 ## Method Descriptions
+
+<a id="diagnostics-getconfigurationwarnings"></a>
+### `public override string[] GetConfigurationWarnings()`
+
+Returns current configuration warnings; includes inherited warnings.
+
+Contract: Appends a warning when WaitTime is less than 0.05 minus Mathf.Epsilon seconds, since frame cadence controls delivered timeouts. The warning is available even when detached or stopped.
+
 
 <a id="m-electron2d-timer-isstopped"></a>
 ### `public bool IsStopped()`
@@ -354,3 +363,5 @@ Verification uses deterministic supplied deltas on Linux. It does not establish 
 - [0014: Realtime allocation](../decisions/resources.md#adr-0014)
 - [0016: Engine scheduling](../decisions/core-object-runtime.md#adr-0016)
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
+
+GetConfigurationWarnings appends a cadence warning below 0.05 - Mathf.Epsilon seconds, including detached/stopped timers. Every valid WaitTime assignment requests refresh after commit; Start(duration) uses that setter before starting. A refresh handler that throws leaves the new duration and previous countdown; disposal/detachment during refresh prevents starting. SceneDiagnosticsTests verifies the threshold, repetition, reentry and failures.

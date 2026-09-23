@@ -16,6 +16,8 @@ public sealed class SceneTree : MainLoop
     private static readonly IReadOnlyList<PropertyDescriptor> SceneTreeProperties = Array.AsReadOnly<PropertyDescriptor>(
     [
         new PropertyDescriptor<SceneTree, Node>(nameof(Root), tree => tree.Root),
+        new PropertyDescriptor<SceneTree, Node?>(nameof(EditedSceneRoot), tree => tree.EditedSceneRoot, (tree, value) => tree.EditedSceneRoot = value, _ => null),
+        new PropertyDescriptor<SceneTree, bool>(nameof(DebugPathsHint), tree => tree.DebugPathsHint, (tree, value) => tree.DebugPathsHint = value, _ => false),
         new PropertyDescriptor<SceneTree, bool>(nameof(AutoAcceptQuit), tree => tree.AutoAcceptQuit, (tree, value) => tree.AutoAcceptQuit = value, _ => true),
         new PropertyDescriptor<SceneTree, bool>(nameof(HasDeferredWork), tree => tree.HasDeferredWork),
         new PropertyDescriptor<SceneTree, ulong>(nameof(ProcessFrameCount), tree => tree.ProcessFrameCount),
@@ -43,6 +45,9 @@ public sealed class SceneTree : MainLoop
     private bool _isDispatchingInput;
     private bool _inputHandled;
     private bool _paused;
+    private Node? _editedSceneRoot;
+    private bool _debugPathsHint;
+    internal readonly Color DebugPathsColor = ProjectSettings.Instance.GetWithOverride(ProjectSettings.DebugPathsColor);
     private bool _autoAcceptQuit = true;
     private int _quitRequested;
     private int _exitCode;
@@ -270,6 +275,52 @@ public sealed class SceneTree : MainLoop
             ThrowCollected("One or more pause-state notifications failed.", errors);
         }
     }
+
+    /// <summary>Gets or selects the root of the scene whose configuration warnings are being inspected.</summary>
+    /// <value>Null initially. A nonnull value must be a live node in this tree; this tree's Root is allowed.</value>
+    /// <remarks>This is a borrowed tooling selection, independent of packed-scene ownership. It enables warning
+    /// change events only for the selected subtree, without enabling an editor or changing processing. Exiting the
+    /// tree clears the selection before NodeRemoved. Selection itself emits no warning-change event.</remarks>
+    /// <exception cref="ArgumentException">The selected node belongs to another tree or is detached.</exception>
+    /// <exception cref="ObjectDisposedException">The tree or selected node is disposed.</exception>
+    /// <exception cref="InvalidOperationException">The caller is not the scene owner thread.</exception>
+    public Node? EditedSceneRoot
+    {
+        get { EnsureOwnerThread(); EnsureAcceptingWork(); return _editedSceneRoot; }
+        set
+        {
+            EnsureOwnerThread(); EnsureAcceptingWork();
+            if (value?.IsDisposed == true) throw new ObjectDisposedException(nameof(value));
+            if (value is not null && !ReferenceEquals(value.Tree, this)) throw new ArgumentException("The edited scene must belong to this tree.", nameof(value));
+            _editedSceneRoot = value;
+        }
+    }
+
+    /// <summary>Gets or sets whether paths draw their curves and tangent direction markers.</summary>
+    /// <value>False initially.</value>
+    /// <remarks>Changes invalidate all attached Path nodes, including hidden ones. Drawing uses the existing
+    /// canvas pipeline, visibility and transforms. Color is sampled from ProjectSettings.DebugPathsColor at tree
+    /// construction. This optional diagnostic works in all build configurations; it creates no editor.</remarks>
+    /// <exception cref="ObjectDisposedException">The tree is finalized or disposed.</exception>
+    /// <exception cref="InvalidOperationException">The caller is not the scene owner thread.</exception>
+    public bool DebugPathsHint
+    {
+        get { EnsureOwnerThread(); EnsureAcceptingWork(); return _debugPathsHint; }
+        set
+        {
+            EnsureOwnerThread(); EnsureAcceptingWork();
+            if (_debugPathsHint == value) return;
+            _debugPathsHint = value;
+            foreach (var node in Root.EnumerateDepthFirst())
+                if (node is Path path) path.InvalidateCanvas();
+        }
+    }
+
+    /// <summary>Occurs when a node in EditedSceneRoot's subtree requests a configuration-warning refresh.</summary>
+    /// <remarks>Arguments are this tree and the requesting node. Delivery is synchronous on the owner thread,
+    /// without automatic warning evaluation or deduplication. A throwing subscriber stops later subscribers.
+    /// A consumer queries Node.GetConfigurationWarnings; no scene dock or editor UI is created.</remarks>
+    public event Action<SceneTree, Node>? NodeConfigurationWarningChanged;
 
     /// <summary>Occurs after a node enters this tree.</summary>
     /// <remarks>
@@ -967,7 +1018,18 @@ public sealed class SceneTree : MainLoop
 
     internal void NotifyNodeAdded(Node node) => NodeAdded?.Invoke(this, node);
 
-    internal void NotifyNodeRemoved(Node node) => NodeRemoved?.Invoke(this, node);
+    internal void NotifyNodeRemoved(Node node)
+    {
+        if (ReferenceEquals(_editedSceneRoot, node)) _editedSceneRoot = null;
+        NodeRemoved?.Invoke(this, node);
+    }
+
+    internal void NotifyConfigurationWarningsChanged(Node node)
+    {
+        if (_editedSceneRoot is { } root && ReferenceEquals(root.Tree, this) &&
+            (ReferenceEquals(root, node) || root.IsAncestorOf(node)))
+            NodeConfigurationWarningChanged?.Invoke(this, node);
+    }
 
     internal void NotifyNodeRenamed(Node node)
     {
@@ -1453,6 +1515,8 @@ public sealed class SceneTree : MainLoop
         NodeAdded = null;
         NodeRemoved = null;
         NodeRenamed = null;
+        NodeConfigurationWarningChanged = null;
+        _editedSceneRoot = null;
         ProcessFrameStarted = null;
         PhysicsFrameStarted = null;
         TreeChanged = null;

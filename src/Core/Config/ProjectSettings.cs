@@ -180,6 +180,12 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<Color> DefaultClearColor { get; } =
         new("rendering/environment/defaults/default_clear_color", new Color(0.3f, 0.3f, 0.3f, 1f), value => value.IsFinite());
 
+    /// <summary>Defines the color of path curves and tangent markers when scene path diagnostics are enabled.</summary>
+    /// <remarks>Defaults to (0.1, 1, 0.7, 0.4). Channels must be finite. Active feature overrides apply at SceneTree
+    /// construction; existing trees retain their color. Diagnostics draw through the ordinary canvas backends.</remarks>
+    public static ProjectSetting<Color> DebugPathsColor { get; } =
+        new("debug/shapes/paths/geometry_color", new Color(0.1f, 1f, 0.7f, 0.4f), value => value.IsFinite());
+
     private static readonly ProjectSettings SharedInstance = CreateSharedInstance();
 
     private readonly object _gate = new();
@@ -237,6 +243,7 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(UseNearestMipmapFilter, isBasic: false);
         RegisterInternal(AnisotropicFilteringLevel, isBasic: false);
         RegisterInternal(DefaultClearColor, isBasic: true);
+        RegisterInternal(DebugPathsColor, isBasic: false);
     }
 
     /// <summary>Gets the process-wide project settings registry.</summary>
@@ -1528,7 +1535,8 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, SnapVerticesToPixel) ||
         ReferenceEquals(setting, UseNearestMipmapFilter) ||
         ReferenceEquals(setting, AnisotropicFilteringLevel) ||
-        ReferenceEquals(setting, DefaultClearColor);
+        ReferenceEquals(setting, DefaultClearColor) ||
+        ReferenceEquals(setting, DebugPathsColor);
 
     private static string ResolveWithinRoot(string root, string relativePath)
     {

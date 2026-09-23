@@ -92,7 +92,9 @@ public class Timer : Node
 
     /// <summary>Gets or sets the countdown duration in seconds.</summary>
     /// <value>A finite value greater than zero; the default is one second.</value>
-    /// <remarks>Changing the value does not alter the current countdown until the timer restarts or repeats.</remarks>
+    /// <remarks>Changing the value does not alter the current countdown until the timer restarts or repeats.
+    /// Every valid assignment commits duration before configuration-warning refresh, even when unchanged.</remarks>
+    /// <exception cref="Exception">A configuration-warning subscriber fails after assignment.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is zero, negative, NaN, or infinite.</exception>
     /// <exception cref="InvalidOperationException">An attached timer is mutated off its tree's owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The timer is disposing on another thread or has finished disposing.</exception>
@@ -108,6 +110,7 @@ public class Timer : Node
             EnsureMutable();
             ValidateWaitTime(value, nameof(value));
             _waitTime = value;
+            UpdateConfigurationWarnings();
         }
     }
 
@@ -240,9 +243,22 @@ public class Timer : Node
         StartCore();
     }
 
+    /// <inheritdoc />
+    /// <remarks>Appends a warning when WaitTime is less than 0.05 minus Mathf.Epsilon seconds, since frame
+    /// cadence controls delivered timeouts. The warning is available even when detached or stopped.</remarks>
+    public override string[] GetConfigurationWarnings()
+    {
+        var warnings = base.GetConfigurationWarnings();
+        return _waitTime < 0.05 - Mathf.Epsilon
+            ? [.. warnings, "Timer intervals below 0.05 seconds depend strongly on frame cadence. Consider using the process callback for very short intervals."] : warnings;
+    }
+
     /// <summary>Sets a new wait duration and starts or resets the timer.</summary>
     /// <param name="timeSeconds">The finite positive countdown duration in seconds.</param>
-    /// <remarks>This typed overload replaces sentinel duration values. Calling it does not clear <see cref="Paused"/>.</remarks>
+    /// <remarks>This typed overload replaces sentinel duration values. Calling it does not clear <see cref="Paused"/>.
+    /// WaitTime commits and requests warning refresh before countdown starts. If that callback disposes or detaches
+    /// the timer, starting is abandoned. A throwing callback leaves the changed duration and previous countdown.</remarks>
+    /// <exception cref="Exception">A configuration-warning subscriber fails.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="timeSeconds"/> is zero, negative, NaN, or infinite.</exception>
     /// <exception cref="InvalidOperationException">The timer is detached or called off its tree's owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The timer is disposing on another thread or has finished disposing.</exception>
@@ -251,7 +267,8 @@ public class Timer : Node
         EnsureMutable();
         EnsureInsideTree();
         ValidateWaitTime(timeSeconds, nameof(timeSeconds));
-        _waitTime = timeSeconds;
+        WaitTime = timeSeconds;
+        if (IsDisposed || !IsInsideTree) return;
         StartCore();
     }
 

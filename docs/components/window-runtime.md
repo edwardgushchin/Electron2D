@@ -35,3 +35,5 @@ WindowRuntimeTests covers detached configuration/validation, packed reconstructi
 Run: `env -u LD_LIBRARY_PATH ELECTRON2D_TEST_WINDOW=1 SDL_VIDEODRIVER=dummy dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release` (use `wayland` for the native integration check).
 
 Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0016](../decisions/core-object-runtime.md#adr-0016), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028), [0040](../decisions/display.md#adr-0040). Per-member incomplete dependencies live in the [Window](../coverage/classes/Window.md) and [Viewport](../coverage/classes/Viewport.md) coverage pages.
+
+Changed Window.Title values request selected-scene configuration-warning refresh before TitleChanged, after committing the native and stored title. Equal assignments do nothing. PathRenderingTests verifies this ordering and committed state after a throwing listener on Wayland and dummy. The base diagnostic API creates no editor UI.

@@ -294,6 +294,8 @@ public abstract partial class CanvasItem : Node
 
     /// <summary>Gets or sets this node's local Z-order value.</summary>
     /// <value>An integer from <see cref="MinimumZIndex"/> through <see cref="MaximumZIndex"/>; the default is zero.</value>
+    /// <remarks>Every valid assignment commits the value then requests configuration-warning refresh, even if unchanged.</remarks>
+    /// <exception cref="Exception">A configuration-warning subscriber fails after assignment.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is outside the supported range.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
@@ -312,6 +314,7 @@ public abstract partial class CanvasItem : Node
                 throw new ArgumentOutOfRangeException(nameof(value), value, $"Z index must be between {MinimumZIndex} and {MaximumZIndex}.");
 
             _zIndex = value;
+            UpdateConfigurationWarnings();
         }
     }
 

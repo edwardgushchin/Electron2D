@@ -56,6 +56,12 @@ tree.ProcessFrame(.5); // Embedding caller supplies time; Engine.Run normally dr
 | [`public bool CubicInterp { get; set; }`](#cubicinterp) | Gets or sets cubic position interpolation between baked points. |
 | [`public bool Loop { get; set; }`](#loop) | Gets or sets whether future Progress assignments wrap by curve length. |
 
+## Methods
+
+| Declaration | Contract |
+| --- | --- |
+| [`public override string[] GetConfigurationWarnings()`](#diagnostics-getconfigurationwarnings) | Returns current configuration warnings; includes inherited warnings. |
+
 ## Protected hooks
 
 | Declaration | Contract |
@@ -189,6 +195,16 @@ Contract: Assignment does not change current progress or transform. Nonlooping a
 
 `ObjectDisposedException`: The node is disposed.
 
+## Method Descriptions
+
+<a id="diagnostics-getconfigurationwarnings"></a>
+### `public override string[] GetConfigurationWarnings()`
+
+Returns current configuration warnings; includes inherited warnings.
+
+Contract: Appends a warning when visible in a tree without a direct Path parent. Hidden or detached followers add no warning. A missing or zero-length curve is valid and adds no warning.
+
+
 ## Protected hooks descriptions
 
 ### GetPropertyDescriptors
@@ -211,4 +227,6 @@ Depends on Entity/CanvasItem/Node membership and transforms, PathCurve sampling,
 
 [PathRenderingTests](../../tests/Electron2D.Tests/PathRenderingTests.cs) verifies pixel movement, curve replacement, worker edits, offsets and inherited visibility on Linux Wayland compatibility/GPU and dummy/software. This is automated native evidence, not owner visual acceptance, other-platform or published/AOT verification. The [pinned implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/path_2d.cpp) was compared with the complete XML. Typed errors, membership safety, thread delivery and failure aggregation follow the existing Electron2D decisions. Reference identities remain on the coverage pages.
 
-Editor curve handles/selection, the editor-only debounce timer, configuration-warning integration and SceneTree debug-path visualization remain missing shared capabilities; [scene-path dependency triggers](../components/scene-paths.md#remaining-shared-capabilities) identify their first slices. No private editor method or inert timer is exposed here. Path3D/PathFollow3D remain permanently excluded. See ADRs [0008](../decisions/scene.md#adr-0008), [0011](../decisions/scene.md#adr-0011), [0013](../decisions/resources.md#adr-0013), [0023](../decisions/scene.md#adr-0023).
+Editor curve handles/selection and the editor-only debounce timer remain missing capabilities; [scene-path dependency triggers](../components/scene-paths.md#remaining-shared-capabilities) identify their first slices. No private editor method or inert timer is exposed here. Path3D/PathFollow3D remain permanently excluded. See ADRs [0008](../decisions/scene.md#adr-0008), [0011](../decisions/scene.md#adr-0011), [0013](../decisions/resources.md#adr-0013), [0023](../decisions/scene.md#adr-0023).
+
+Configuration queries add one warning only when the follower is visible in a tree and its direct parent is not Path. Null/empty parent curves are valid. GetConfigurationWarnings is a typed override; a further override should include base results. Warning conditions are read live; UpdateConfigurationWarnings is an explicit refresh request, not an automatic visibility or hierarchy subscription. Verification: [SceneDiagnosticsTests](../../tests/Electron2D.Tests/SceneDiagnosticsTests.cs).

@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>A spatial node containing a borrowed curve for direct PathFollow children.</summary>
-/// <remarks>The curve is null initially and is not drawn automatically. Owner-thread curve changes update all
+/// <remarks>The curve is null initially and is drawn only when SceneTree.DebugPathsHint is enabled. Owner-thread curve changes update all
 /// attached direct followers synchronously. Worker changes enqueue updates on the existing scene deferred queue;
 /// no scene transform is changed on the worker. Disposing this node disconnects but does not dispose its curve.</remarks>
 public class Path : Entity
@@ -57,6 +57,7 @@ public class Path : Entity
     {
         if (Tree is not { } tree) return;
         EnsureMutable();
+        if (tree.DebugPathsHint) InvalidateCanvas();
         List<Exception>? errors = null;
         foreach (var child in Children.ToArray())
         {
@@ -66,6 +67,36 @@ public class Path : Entity
             catch (Exception error) { CollectException(ref errors, error); }
         }
         ThrowCollected("Path follower updates failed.", errors);
+    }
+
+    /// <inheritdoc />
+    /// <remarks>When DebugPathsHint is enabled, records one-pixel curve segments at approximately ten local units
+    /// and paired tangent markers every fourth sample. Null, single-point and near-zero-length curves draw nothing.
+    /// Recording is bounded to 1,048,576 samples; longer geometry fails before adding commands. Inherited drawing,
+    /// transforms, visibility, modulation and callback failure behavior remain in force.</remarks>
+    /// <exception cref="InvalidOperationException">The curve exceeds the diagnostic sampling budget or has invalid geometry.</exception>
+    protected override void OnDraw()
+    {
+        base.OnDraw();
+        if (Tree is not { DebugPathsHint: true } tree || _curve is not { } curve || curve.PointCount < 2) return;
+        var length = curve.GetBakedLength();
+        if (length <= Mathf.Epsilon) return;
+        var steps = Math.Floor((double)length / 10) + 1;
+        if (steps >= 1_048_576) throw new InvalidOperationException("Path diagnostics exceed the 1,048,576 sample budget.");
+        var count = (int)steps + 1;
+        var interval = length / (count - 1);
+        var previous = Vector2.Zero;
+        for (var i = 0; i < count; i++)
+        {
+            var pose = curve.SampleBakedWithRotation(i * interval, false);
+            if (i != 0) DrawLine(previous, pose.Origin, tree.DebugPathsColor);
+            if (i % 4 == 0)
+            {
+                DrawLine(pose.Origin, pose.Origin + (pose.Y - pose.X) * 5, tree.DebugPathsColor);
+                DrawLine(pose.Origin, pose.Origin + (-pose.Y - pose.X) * 5, tree.DebugPathsColor);
+            }
+            previous = pose.Origin;
+        }
     }
 
     internal override void OnTreeMembershipChanged(bool entering)

@@ -68,3 +68,5 @@ Implemented and covered by the executable harness. The process singleton is regi
 - [0018: Typed configuration files](../decisions/core-data-io.md#adr-0018)
 - [0016: Process-wide Engine runtime](../decisions/core-object-runtime.md#adr-0016)
 - [0001: Typed C# without Variant](../decisions/product.md#adr-0001)
+
+DebugPathsColor defines debug/shapes/paths/geometry_color, defaults to finite Color(0.1, 1, 0.7, 0.4), and is registered as a built-in nonbasic setting. SceneTree samples active feature overrides at construction. Path debug drawing consumes this color through existing canvas commands; later setting changes affect later trees. SceneDiagnosticsTests checks nonfinite rejection without mutation; native PathRenderingTests verifies construction-time capture and actual pixels.

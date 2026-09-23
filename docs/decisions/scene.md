@@ -111,7 +111,7 @@ The hierarchy migration updates consumers, XML/class/component/domain documents,
 
 Coverage retains the pinned Godot identities `Node` and `Node2D`, maps them to the actual production types, and records remaining behavioral gaps. Do not mark members implemented merely because this decision has been accepted or a renamed declaration compiles. The existing runtime checks establish only the behavior they exercise; native and platform acceptance still follows ADR 0021.
 
-Path/PathFollow preserve runtime sampling and policy timing through the existing resource and tree APIs. Worker resource changes use SceneTree.Defer; callback errors retain committed state and sibling updates are attempted under ADR 0011. A newer reentrant follower update is not overwritten by an older position assignment. These mappings add no navigation system, editor debounce timer or separate scheduling surface. Current diagnostics/editor gaps remain documented on the [scene paths component](../components/scene-paths.md).
+Path/PathFollow preserve runtime sampling and policy timing through the existing resource and tree APIs. Worker resource changes use SceneTree.Defer; callback errors retain committed state and sibling updates are attempted under ADR 0011. A newer reentrant follower update is not overwritten by an older position assignment. These mappings add no navigation system, editor debounce timer or separate scheduling surface. Current editor gaps and implemented diagnostics remain documented on the [scene paths component](../components/scene-paths.md).
 
 ### Rejected alternatives
 
@@ -143,6 +143,8 @@ Electron2D must keep typed C# calls, deterministic ownership, its managed runtim
 - Frame, flush, and typed input execution are non-reentrant and cannot begin during entry/exit delivery. Tree disposal from frame, flush, input, or lifecycle callbacks is rejected before the disposal transition.
 - Cancellable node deletion continues through disposal after detach failures or detachment, while a stale request in an old tree cannot consume deletion now owned by a new tree.
 - Pause traversal visits each still-attached node at most once; opposite re-entrant and teardown-time pause transitions are rejected.
+- Reusable configuration diagnostics live on Node and SceneTree: a typed virtual warning query, explicit refresh request, selected live EditedSceneRoot and a synchronous event limited to that selected subtree. Selection clears on exit; errors and thread affinity follow the existing tree contract. Under ADRs 0012/0027 the single runtime assembly makes these capabilities available to a consuming editor in every build configuration. Selecting a subtree opts into diagnostic delivery; it does not create an editor or enable tool scripts.
+- DebugPathsHint controls executable Path canvas visualization using a typed project color sampled at tree construction. Live toggles invalidate retained geometry rather than retaining stale commands. This pre-release correction follows ADR 0034 and the existing canvas redraw contract. Sampling is bounded to 1,048,576 points with explicit recording failure; no native mesh dependency or private editor API is introduced.
 - Node/tree/frame signals are typed C# events. Group calls and setters accept delegates; group ordering, deferral, and uniqueness use `GroupCallFlags`.
 - `Unique` requires `Deferred`, uses operation kind/group/delegate-or-notification identity, ignores setter values, and retains the first accepted operation until its wrapper begins.
 - `SceneTreeTimer` is a tree-owned, one-shot, auto-disposed timer updated after nodes and before deferred work in one selected frame lane.
@@ -349,7 +351,7 @@ The engine is typed C#, uses direct frame traversal for hot paths, and forbids i
 
 The executable harness covers defaults and stable identities, descriptors and packed storage, invalid rollback, detached start/stop, both frame lanes and live lane migration, exact-zero and overshoot behavior, one-shot/repeating state observed by subscribers, local and tree pause, autostart, owner-thread mutation, callback failure continuation, detachment during timeout, zero time scale, and zero warmed allocations.
 
-It does not establish real host cadence, wall-clock precision, platform scheduling, editor warnings, or loaded-scene performance.
+It does not establish real host cadence, wall-clock precision, platform scheduling, editor warning presentation, or loaded-scene performance.
 
 <a id="adr-0037"></a>
 ## ADR 0037: Typed SceneTree tween scheduling

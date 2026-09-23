@@ -149,3 +149,5 @@ The same harness verifies project-setting registration, value snapshots, validat
 Engine.Run(Window) is the ordinary application entry point, with MaxFPS, monotonic timing, event pumping and deterministic scene/native teardown. This adds a narrow in-assembly dependency on SceneTree and Window; manual Start/AdvanceFrame/Stop remain available for embedding.
 
 Pixel-snapping integration is described by [the canvas component](../components/canvas-rendering.md#pixel-snapping). Viewport owns independent transform/vertex policies; rendering preserves logical node transforms, while Sprite local queries honor attached transform snapping. Project defaults initialize the explicit root Window at construction.
+
+The typed ProjectSettings.DebugPathsColor definition supplies the construction-time color for optional SceneTree path diagnostics; the runtime consumer is documented in [Scene paths](../components/scene-paths.md).

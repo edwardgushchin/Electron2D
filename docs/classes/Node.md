@@ -59,6 +59,8 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 
 | Member | Contract |
 | --- | --- |
+| [`public void UpdateConfigurationWarnings()`](#diagnostics-updateconfigurationwarnings) | Requests a configuration-warning refresh for this node in the selected edited scene. |
+| [`public virtual string[] GetConfigurationWarnings()`](#diagnostics-getconfigurationwarnings) | Returns this node's current configuration warnings for tooling. |
 | [`public void AddChild(Node child)`](#m-electron2d-node-addchild-electron2d-scenenode) | Appends a detached node as the last direct child. |
 | [`public void AddSibling(Node sibling)`](#m-electron2d-node-addsibling-electron2d-scenenode) | Inserts a detached node immediately after this node in its parent's child order. |
 | [`public void AddToGroup(string group, bool persistent = false)`](#m-electron2d-node-addtogroup-system-string-system-boolean) | Adds this node to a case-sensitive group. |
@@ -379,6 +381,34 @@ Gets or sets whether this node receives unhandled keyboard events before general
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
 ## Method Descriptions
+
+<a id="diagnostics-updateconfigurationwarnings"></a>
+### `public void UpdateConfigurationWarnings()`
+
+Requests a configuration-warning refresh for this node in the selected edited scene.
+
+Contract: Emits SceneTree.NodeConfigurationWarningChanged synchronously only when this node is the EditedSceneRoot or its descendant. Detached nodes and trees without a selected scene emit nothing. It does not query, cache or compare warning strings. Repeated requests each emit; handler errors propagate.
+
+InvalidOperationException: Mutation is unavailable or this is not the scene owner thread.
+
+ObjectDisposedException: This node is disposed.
+
+Exception: A warning-change subscriber fails.
+
+
+<a id="diagnostics-getconfigurationwarnings"></a>
+### `public virtual string[] GetConfigurationWarnings()`
+
+Returns this node's current configuration warnings for tooling.
+
+Returns: An empty array by default. Overrides return ordered warning messages and should include base warnings.
+
+Contract: This query does not cache results, emit events or require an edited scene. Attached queries run on the scene owner thread. Consumers may call it after NodeConfigurationWarningChanged to refresh their display.
+
+InvalidOperationException: An attached query runs off the scene owner thread.
+
+ObjectDisposedException: This node is disposed.
+
 
 <a id="m-electron2d-node-addchild-electron2d-scenenode"></a>
 ### `public void AddChild(Node child)`
@@ -705,7 +735,7 @@ Builds a relative path from this node to another node in the same hierarchy.
 
 Extends base typed descriptors with neutral name, process and input state for inspection and packed scenes.
 
-**Remarks:** Appends this class's typed hierarchy, spatial, visibility, and processing descriptors to the inherited descriptors.
+**Remarks:** Appends this class's typed hierarchy, ownership, and processing descriptors to the inherited descriptors.
 
 <a id="m-electron2d-node-getviewport"></a>
 ### `public Viewport GetViewport()`
@@ -1183,3 +1213,9 @@ SceneTree activation uses an internal layer hook separately from public numeric 
 - [0004: Product scope and API correspondence](../decisions/product.md#adr-0004)
 - [0023: Typed packed scenes](../decisions/scene.md#adr-0023)
 - [0028: Rendering](../decisions/rendering.md#adr-0028)
+
+## Configuration diagnostics
+
+GetConfigurationWarnings is an immediate typed virtual query, callable without a selected editor scene. UpdateConfigurationWarnings requests a refresh; it does not call the query. Derived setters should explicitly request refresh when their warning conditions change. An empty result is valid, and repeated refresh requests are not deduplicated. Attach a listener to SceneTree.NodeConfigurationWarningChanged and select EditedSceneRoot to consume these events. The listener can query the current array; its exceptions follow ordinary synchronous C# event delivery. No scene dock, script tool mode or accessibility diagnostics are implemented by this API.
+
+[SceneDiagnosticsTests](../../tests/Electron2D.Tests/SceneDiagnosticsTests.cs) verifies the selected-subtree boundary, detached/invalid/disposed nodes, query and subscriber failures, thread affinity and removal cleanup.

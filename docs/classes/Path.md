@@ -10,7 +10,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-A spatial parent containing a borrowed [PathCurve](PathCurve.md). Only direct attached [PathFollow](PathFollow.md) children sample it. Path draws no geometry by itself and starts with a null curve. Its transform affects descendants through Entity/CanvasItem; neutral intermediary nodes do not bind followers.
+A spatial parent containing a borrowed [PathCurve](PathCurve.md). Only direct attached [PathFollow](PathFollow.md) children sample it. Path starts with a null curve and draws diagnostic geometry only when SceneTree.DebugPathsHint is enabled. Its transform affects descendants through Entity/CanvasItem; neutral intermediary nodes do not bind followers.
 
 Assigning Curve always disconnects/reconnects its Changed subscription and resamples attached followers, including assignment of the same resource. Detached changes do not move detached followers; tree entry samples current state. Null or zero-length curves retain existing transforms. Curve replacement/edits do not wrap or clamp stored progress. External disposal of a borrowed curve is caller error; later resource access throws.
 
@@ -54,6 +54,7 @@ tree.ProcessFrame(.5); // Embedding caller supplies time; Engine.Run normally dr
 
 | Declaration | Contract |
 | --- | --- |
+| [`protected override void OnDraw()`](#diagnostics-ondraw) | Records diagnostic path geometry during the inherited drawing scope. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Appends the typed properties listed above to the inherited stored Entity state. |
 | [`protected override Func<Node> CreateSceneInstanceFactory()`](#createsceneinstancefactory) | Supplies a static factory for this exact node type. Derived types must supply their own existing Node factory contract. |
 | [`protected override void Dispose(bool disposing)`](#dispose) | Disconnects the borrowed curve when disposing is true, invalidates pending membership work, and delegates owned subtree cleanup to Entity/Node. Does not dispose the borrowed curve. |
@@ -86,6 +87,16 @@ Contract: Every assignment reconnects Changed and updates attached direct follow
 
 ## Protected hooks descriptions
 
+<a id="diagnostics-ondraw"></a>
+### `protected override void OnDraw()`
+
+Records diagnostic path geometry during the inherited drawing scope.
+
+Contract: When DebugPathsHint is enabled, records one-pixel curve segments at approximately ten local units and paired tangent markers every fourth sample. Null, single-point and near-zero-length curves draw nothing. Recording is bounded to 1,048,576 samples; longer geometry fails before adding commands. Inherited drawing, transforms, visibility, modulation and callback failure behavior remain in force.
+
+InvalidOperationException: The curve exceeds the diagnostic sampling budget or has invalid geometry.
+
+
 ### GetPropertyDescriptors
 
 `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
@@ -112,4 +123,8 @@ Depends on Entity/CanvasItem/Node membership and transforms, PathCurve sampling,
 
 [PathRenderingTests](../../tests/Electron2D.Tests/PathRenderingTests.cs) verifies pixel movement, curve replacement, worker edits, offsets and inherited visibility on Linux Wayland compatibility/GPU and dummy/software. This is automated native evidence, not owner visual acceptance, other-platform or published/AOT verification. The [pinned implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/path_2d.cpp) was compared with the complete XML. Typed errors, membership safety, thread delivery and failure aggregation follow the existing Electron2D decisions. Reference identities remain on the coverage pages.
 
-Editor curve handles/selection, the editor-only debounce timer, configuration-warning integration and SceneTree debug-path visualization remain missing shared capabilities; [scene-path dependency triggers](../components/scene-paths.md#remaining-shared-capabilities) identify their first slices. No private editor method or inert timer is exposed here. Path3D/PathFollow3D remain permanently excluded. See ADRs [0008](../decisions/scene.md#adr-0008), [0011](../decisions/scene.md#adr-0011), [0013](../decisions/resources.md#adr-0013), [0023](../decisions/scene.md#adr-0023).
+Editor curve handles/selection and the editor-only debounce timer remain missing capabilities; [scene-path dependency triggers](../components/scene-paths.md#remaining-shared-capabilities) identify their first slices. No private editor method or inert timer is exposed here. Path3D/PathFollow3D remain permanently excluded. See ADRs [0008](../decisions/scene.md#adr-0008), [0011](../decisions/scene.md#adr-0011), [0013](../decisions/resources.md#adr-0013), [0023](../decisions/scene.md#adr-0023).
+
+Diagnostic drawing is opt-in through SceneTree.DebugPathsHint. It uses the construction-time ProjectSettings.DebugPathsColor snapshot, existing one-framebuffer-pixel lines, approximately ten-unit samples, and paired five-unit backward tangent markers every fourth sample. Scale does not thicken the pixel-width lines. Inherited visibility, transforms, modulation, material and ordering still apply. Curve edits/hint toggles invalidate retained drawing; worker changes use the existing deferred owner-thread path. Curve length must produce at most 1,048,576 samples, otherwise recording fails and discards the whole partial command list. No geometry is recorded for null, fewer than two points, or length at most Mathf.Epsilon.
+
+This is runtime debug visualization. Automatic editor hints, selection handles and authoring remain absent. Native checks: [PathRenderingTests](../../tests/Electron2D.Tests/PathRenderingTests.cs); managed budget/failure checks: [SceneDiagnosticsTests](../../tests/Electron2D.Tests/SceneDiagnosticsTests.cs).

@@ -12,7 +12,7 @@ Its production sources live under `src/Scene/Main/`, `src/Scene/2D/`, `src/Scene
 
 | Component | Responsibility | State |
 | --- | --- | --- |
-| [Scene paths](../components/scene-paths.md) | Path curves and descendant movement by distance, offsets and tangent rotation | Runtime implemented; shared diagnostics/editor capabilities remain pending |
+| [Scene paths](../components/scene-paths.md) | Path curves and descendant movement by distance, offsets and tangent rotation | Runtime, configuration diagnostics and path visualization implemented; editor authoring remains pending |
 | [Canvas rendering](../components/canvas-rendering.md) | Sprite texture/frame/region nodes, AnimatedSprite playback and retained CanvasItem drawing | Executable; inherited canvas policies incomplete |
 | [Window runtime](../components/window-runtime.md) | Native root window, presentation policies, platform events and client/input boundary | Implemented root slice; rendering and multiwindow incomplete |
 | [Scene hierarchy](../components/scene-hierarchy.md) | Hierarchy, 2D transforms, paths, groups, visibility/Z state, process/input policy, lifecycle endpoints, and deletion requests | Implemented and verified |
@@ -119,4 +119,8 @@ The [Window runtime component](../components/window-runtime.md) provides Window 
 
 Pixel-snapping integration is described by [the canvas component](../components/canvas-rendering.md#pixel-snapping). Viewport owns independent transform/vertex policies; rendering preserves logical node transforms, while Sprite local queries honor attached transform snapping. Project defaults initialize the explicit root Window at construction.
 
-[PathTests](../../tests/Electron2D.Tests/PathTests.cs) verifies scene path sampling, lifecycle, copying, failures, worker delivery and warm movement allocation. [PathRenderingTests](../../tests/Electron2D.Tests/PathRenderingTests.cs) verifies descendant pixel movement on Linux Wayland GPU/compatibility and dummy/software; see the [component](../components/scene-paths.md) for remaining shared diagnostics and verification limits.
+[PathTests](../../tests/Electron2D.Tests/PathTests.cs) verifies scene path sampling, lifecycle, copying, failures, worker delivery and warm movement allocation. [PathRenderingTests](../../tests/Electron2D.Tests/PathRenderingTests.cs) verifies descendant pixel movement on Linux Wayland GPU/compatibility and dummy/software; see the [component](../components/scene-paths.md) for remaining editor capabilities and verification limits.
+
+Node now exposes typed configuration-warning queries/refresh requests. SceneTree owns the transient EditedSceneRoot selection, corresponding change event, and opt-in DebugPathsHint; these capabilities use the existing owner-thread/lifetime and canvas boundaries. See [scene paths](../components/scene-paths.md#configuration-diagnostics-and-path-drawing).
+
+Timer and AnimatedSprite override the common warning query for short countdowns and missing frame libraries. ZIndex, timer duration/start, frame-library replacement and window title setters issue the corresponding refresh requests; SceneDiagnosticsTests and native PathRenderingTests cover their ordering and failures.

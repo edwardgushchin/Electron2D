@@ -69,6 +69,7 @@ These details are regression-tested. A future change to documentation-style timi
 
 | Declaration | Contract |
 | --- | --- |
+| [`public override string[] GetConfigurationWarnings()`](#diagnostics-getconfigurationwarnings) | Returns current configuration warnings; includes inherited warnings. |
 | [`public bool IsPlaying()`](#api-isplaying) | Tests whether playback is enabled, including when its speed is zero or the node is detached. |
 | [`public float GetPlayingSpeed()`](#api-getplayingspeed) | Returns the signed product of SpeedScale and the custom speed passed to Play. |
 | [`public void Play(string name = "", float customSpeed = 1, bool fromEnd = false)`](#api-play) | Starts or resumes a named animation. |
@@ -427,6 +428,16 @@ Contract: A clamped assignment may emit even if the resulting index stays equal.
 
 Occurs after library replacement and its stop/property-list/redraw stages.
 
+## Method Descriptions
+
+<a id="diagnostics-getconfigurationwarnings"></a>
+### `public override string[] GetConfigurationWarnings()`
+
+Returns current configuration warnings; includes inherited warnings.
+
+Contract: Appends a warning when SpriteFrames is null, including hidden or detached nodes. An empty nonnull library is valid. Replacing the library requests refresh before SpriteFramesChanged.
+
+
 ## Protected hooks descriptions
 
 <a id="api-onnotification"></a>
@@ -486,3 +497,5 @@ Centered and Offset emit ItemRectChanged when changed. Flips, frame changes and 
 [AnimatedSpriteTests](../../tests/Electron2D.Tests/AnimatedSpriteTests.cs) verifies deterministic forward/reverse/loop/ping-pong traces, duration transitions, exact boundaries, bounded catch-up, zero speed, tree pause/process mode, ready/reentry, event ordering, worker reconciliation, virtual drawing/pixel snapping, packing/local ownership, callback errors/reentry/disposal and allocation-free repeated internal notifications after warmup. This allocation check does not establish whole-frame performance.
 
 [AnimatedSpriteRenderingTests](../../tests/Electron2D.Tests/AnimatedSpriteRenderingTests.cs) checks native pixel readback for texture/atlas/null frames, flips, centering, worker library edits, pixel updates, visibility, timed host completion and error cleanup. Verified on Linux Wayland with compatibility and GPU/Vulkan, including HLSL/GLSL canvas materials, and dummy/software compatibility. Windows, macOS, other platform backends, owner visual acceptance, published deployment and performance remain unverified. This does not add AnimationPlayer, AnimationMixer, an editor, asset import or disk scene serialization. See ADRs [0008](../decisions/scene.md#adr-0008), [0028](../decisions/rendering.md#adr-0028), and [0021](../decisions/product.md#adr-0021).
+
+GetConfigurationWarnings appends a missing-library warning whenever SpriteFrames is null, even while hidden/detached; a nonnull empty library is valid. Library replacement requests warning refresh after state/property-list changes and invalidation, before SpriteFramesChanged. A throwing warning handler leaves committed state and stops later event delivery; disposal prevents further delivery. SceneDiagnosticsTests verifies these contracts.

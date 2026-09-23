@@ -12291,6 +12291,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.SceneTree.NodeConfigurationWarningChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "NodeConfigurationWarningChanged",
+    "signature": "public event System.Action\u003CElectron2D.SceneTree, Electron2D.Node\u003E NodeConfigurationWarningChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.SceneTree, Electron2D.Node\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.SceneTree.NodeRemoved()",
     "kind": "event",
     "declaringType": "Electron2D.SceneTree",
@@ -13004,6 +13017,19 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
     "value": null
   },
   {
@@ -26926,6 +26952,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "GetConfigurationWarnings",
+    "signature": "public virtual System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.GetGroups()",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -27383,6 +27422,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.UpdateConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "UpdateConfigurationWarnings",
+    "signature": "public System.Void UpdateConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.ValidateDisposal()",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -27599,6 +27651,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Path.OnDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.Path",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -28107,6 +28172,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathFollow.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.PathFollow",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
     "value": null
   },
   {
@@ -32311,6 +32389,19 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Timer.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.Timer",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
     "value": null
   },
   {
@@ -43917,6 +44008,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.DebugPathsColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "DebugPathsColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E DebugPathsColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.DefaultClearColor()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -44395,6 +44499,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneTree.DebugPathsHint()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "DebugPathsHint",
+    "signature": "public System.Boolean DebugPathsHint { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneTree.EditedSceneRoot()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "EditedSceneRoot",
+    "signature": "public Electron2D.Node EditedSceneRoot { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node",
     "value": null
   },
   {

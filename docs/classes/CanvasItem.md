@@ -270,6 +270,8 @@ Gets or sets this node's local Z-order value.
 
 **Value:** An integer from `CanvasItem.MinimumZIndex` through `CanvasItem.MaximumZIndex`; the default is zero.
 
+Every valid assignment commits the Z value and then requests configuration-warning refresh, including unchanged values. Invalid assignments do not emit. Subscriber failures propagate after the value is committed. SceneDiagnosticsTests verifies the selected-scene event.
+
 **System.ArgumentOutOfRangeException:** The assigned value is outside the supported range.
 
 **System.InvalidOperationException:** An attached node is mutated off the owner thread.

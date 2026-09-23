@@ -39,8 +39,9 @@ public class AnimatedSprite : Entity
     /// <summary>Gets or sets the borrowed frame library.</summary>
     /// <value>Null by default.</value>
     /// <remarks>Replacement selects the first inserted animation when the current one is absent, clears invalid
-    /// autoplay, stops playback, notifies the property list, requests redraw and emits SpriteFramesChanged.
-    /// Equal assignment is a no-op. Assigning null retains the selected name and frame/progress.</remarks>
+    /// autoplay, stops playback, notifies the property list, requests redraw, requests warning refresh and emits SpriteFramesChanged.
+    /// Equal assignment is a no-op. Assigning null retains the selected name and frame/progress.
+    /// A warning callback failure retains committed state and stops later delivery.</remarks>
     /// <exception cref="ObjectDisposedException">The node or new library is disposed.</exception>
     /// <exception cref="InvalidOperationException">Mutation is unavailable on this thread or during capture.</exception>
     /// <exception cref="Exception">A callback fails after commitment.</exception>
@@ -63,8 +64,18 @@ public class AnimatedSprite : Entity
             }
             Stop(); if (IsDisposed) return;
             NotifyPropertyListChanged(); if (IsDisposed) return;
-            InvalidateCanvas(); SpriteFramesChanged?.Invoke();
+            InvalidateCanvas(); UpdateConfigurationWarnings(); if (IsDisposed) return;
+            SpriteFramesChanged?.Invoke();
         }
+    }
+
+    /// <inheritdoc />
+    /// <remarks>Appends a warning when SpriteFrames is null, including hidden or detached nodes. An empty
+    /// nonnull library is valid. Replacing the library requests refresh before SpriteFramesChanged.</remarks>
+    public override string[] GetConfigurationWarnings()
+    {
+        var warnings = base.GetConfigurationWarnings();
+        return _frames is null ? [.. warnings, "Assign a SpriteFrames resource to display animated frames."] : warnings;
     }
 
     /// <summary>Gets or sets the selected animation.</summary>

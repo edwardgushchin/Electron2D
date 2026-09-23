@@ -44,6 +44,8 @@ tree.ProcessFrame(1.0 / 60.0);
 
 | Member | Description |
 | --- | --- |
+| [`public bool DebugPathsHint { get; set; }`](#diagnostics-debugpathshint) | Gets or sets whether paths draw their curves and tangent direction markers. |
+| [`public Node? EditedSceneRoot { get; set; }`](#diagnostics-editedsceneroot) | Gets or selects the root of the scene whose configuration warnings are being inspected. |
 | [`public bool AutoAcceptQuit { get; set; }`](#p-electron2d-scenetree-autoacceptquit) | True by default. |
 | [`public Node Root { get; }`](#p-electron2d-scenetree-root) | Gets the root node owned by this tree. |
 | [`public int NodeCount { get; }`](#p-electron2d-scenetree-nodecount) | Gets the number of nodes currently inside this tree. |
@@ -84,6 +86,7 @@ tree.ProcessFrame(1.0 / 60.0);
 
 | Member | Description |
 | --- | --- |
+| [`public event Action<SceneTree, Node>? NodeConfigurationWarningChanged`](#diagnostics-nodeconfigurationwarningchanged) | Occurs when a node in EditedSceneRoot's subtree requests a configuration-warning refresh. |
 | [`public event Action<SceneTree, Node> NodeAdded`](#e-electron2d-scenetree-nodeadded) | Occurs after a node enters this tree. |
 | [`public event Action<SceneTree, Node> NodeRemoved`](#e-electron2d-scenetree-noderemoved) | Occurs after a node exits this tree. |
 | [`public event Action<SceneTree, Node> NodeRenamed`](#e-electron2d-scenetree-noderenamed) | Occurs after an active node is renamed. |
@@ -118,6 +121,36 @@ and the supplied hierarchy remains owned by the caller. A reference captured fro
 a terminal disposed tree.
 
 ## Property Descriptions
+
+<a id="diagnostics-debugpathshint"></a>
+### `public bool DebugPathsHint { get; set; }`
+
+Gets or sets whether paths draw their curves and tangent direction markers.
+
+Value: False initially.
+
+Contract: Changes invalidate all attached Path nodes, including hidden ones. Drawing uses the existing canvas pipeline, visibility and transforms. Color is sampled from ProjectSettings.DebugPathsColor at tree construction. This optional diagnostic works in all build configurations; it creates no editor.
+
+ObjectDisposedException: The tree is finalized or disposed.
+
+InvalidOperationException: The caller is not the scene owner thread.
+
+
+<a id="diagnostics-editedsceneroot"></a>
+### `public Node? EditedSceneRoot { get; set; }`
+
+Gets or selects the root of the scene whose configuration warnings are being inspected.
+
+Value: Null initially. A nonnull value must be a live node in this tree; this tree's Root is allowed.
+
+Contract: This is a borrowed tooling selection, independent of packed-scene ownership. It enables warning change events only for the selected subtree, without enabling an editor or changing processing. Exiting the tree clears the selection before NodeRemoved. Selection itself emits no warning-change event.
+
+ArgumentException: The selected node belongs to another tree or is detached.
+
+ObjectDisposedException: The tree or selected node is disposed.
+
+InvalidOperationException: The caller is not the scene owner thread.
+
 
 <a id="p-electron2d-scenetree-autoacceptquit"></a>
 ### `public bool AutoAcceptQuit { get; set; }`
@@ -599,6 +632,14 @@ active tweens, clears event subscribers, and attempts every teardown stage befor
 
 ## Event Descriptions
 
+<a id="diagnostics-nodeconfigurationwarningchanged"></a>
+### `public event Action<SceneTree, Node>? NodeConfigurationWarningChanged`
+
+Occurs when a node in EditedSceneRoot's subtree requests a configuration-warning refresh.
+
+Contract: Arguments are this tree and the requesting node. Delivery is synchronous on the owner thread, without automatic warning evaluation or deduplication. A throwing subscriber stops later subscribers. A consumer queries Node.GetConfigurationWarnings; no scene dock or editor UI is created.
+
+
 <a id="e-electron2d-scenetree-nodeadded"></a>
 ### `public event Action<SceneTree, Node> NodeAdded`
 
@@ -707,3 +748,24 @@ The class depends on [`MainLoop`](MainLoop.md), typed [`InputEvent`](InputEvent.
 ## Related decision
 
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
+
+## Diagnostic consumer example
+
+This managed example uses `using Electron2D;` and a caller-defined Node override for custom warning strings. It requires no editor window.
+
+```csharp
+using var root = new Node();
+var follower = new PathFollow();
+root.AddChild(follower);
+using var tree = new SceneTree(root);
+tree.EditedSceneRoot = root;
+tree.NodeConfigurationWarningChanged += (_, node) =>
+{
+    foreach (var warning in node.GetConfigurationWarnings())
+        Console.WriteLine(warning);
+};
+follower.UpdateConfigurationWarnings(); // Warns about the missing direct Path parent.
+tree.DebugPathsHint = true; // Attached Path nodes draw on the next canvas recording.
+```
+
+EditedSceneRoot and DebugPathsHint are independent transient tooling state, not PackedScene properties. A selected subtree is not reselected automatically after detachment/reentry. A selection may be the tree root or any attached descendant. Disposal closes diagnostics together with other tree operations and clears event subscribers. These runtime capabilities do not create editor UI, enable script tool mode, or implement accessibility/navigation/collision diagnostics. See [scene paths](../components/scene-paths.md) and [SceneDiagnosticsTests](../../tests/Electron2D.Tests/SceneDiagnosticsTests.cs).

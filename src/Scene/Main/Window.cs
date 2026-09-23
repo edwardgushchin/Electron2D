@@ -39,6 +39,8 @@ public partial class Window : Viewport
     }
 
     /// <summary>Gets or sets the native window title.</summary>
+    /// <remarks>A changed title requests configuration-warning refresh after the native and managed values commit.</remarks>
+    /// <exception cref="Exception">A configuration-warning subscriber fails after title assignment.</exception>
     /// <value>An empty string by default.</value>
     /// <exception cref="ArgumentNullException">The new title is null.</exception>
     /// <exception cref="ArgumentException">The title contains a null character.</exception>
@@ -57,6 +59,7 @@ public partial class Window : Viewport
                 return;
             _display?.WindowSetTitle(value);
             _title = value;
+            UpdateConfigurationWarnings();
             TitleChanged?.Invoke();
         }
     }

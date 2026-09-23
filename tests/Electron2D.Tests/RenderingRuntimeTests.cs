@@ -17,7 +17,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyScenePaths(backend);
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyScenePaths(backend); VerifyPathDiagnostics(backend);
                 }
                 return;
             }
@@ -44,7 +44,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyCanvasTexture(backend);
                 VerifySprite(backend);
                 VerifyAnimatedSprite(backend);
-                VerifyScenePaths(backend);
+                VerifyScenePaths(backend); VerifyPathDiagnostics(backend);
                 VerifyAnimatedSpriteFailure();
                 VerifyAtlasFrame(backend);
                 VerifyCanvasTextureFailures();

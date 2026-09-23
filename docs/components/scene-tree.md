@@ -80,3 +80,7 @@ Tests cover valid and failing activation, packed-factory/unfinished-node activat
 ## Windowed lifecycle
 
 SceneTree.Quit requests exit and supplies Engine.Run's return code; AutoAcceptQuit defaults to true and is evaluated after Window.CloseRequested. Both Process and PhysicsProcess report pending quit after completing their frame lane. Engine.Run publishes the tree before ready and reserves its finalization/disposal until runtime teardown. Ordinary Node roots still support manual/headless embedding.
+
+Node.GetConfigurationWarnings and UpdateConfigurationWarnings provide typed diagnostics. SceneTree.EditedSceneRoot limits warning-change events to the selected live subtree, and DebugPathsHint drives optional path drawing. Selection is borrowed and cleared on exit; diagnostics do not create an editor. Contracts and executable evidence: [Scene paths diagnostics](scene-paths.md#configuration-diagnostics-and-path-drawing).
+
+Existing Timer duration setters, AnimatedSprite library replacement, CanvasItem Z changes and Window title updates participate in selected-scene warning refresh. SceneDiagnosticsTests covers their own warning conditions and synchronous event ordering.

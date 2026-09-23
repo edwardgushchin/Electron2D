@@ -1571,6 +1571,42 @@
       "electron2d": "property:Electron2D.Viewport.SnapVerticesToPixel()",
       "godot": "RenderingServer::method:viewport_set_snap_2d_vertices_to_pixel(RID:,bool:)",
       "reason": "Executable typed viewport pixel-snapping contract: false defaults, stored flags, guards, retained replay and independent transform/vertex policies. Explicit root Window construction samples active typed project defaults under the host lifecycle (ADRs 0015/0028); caller configuration takes precedence. Transform rounding applies before hierarchy composition and Y sorting; vertex rounding follows node/draw/framebuffer transforms and preserves clipped texture interpolation. CanvasPixelSnapTests and native CanvasPixelSnapRenderingTests cover negative ties, Sprite queries/retained offsets, neutral/TopLevel boundaries, scaled/nested Y groups, both flags, HLSL/GLSL and warmed allocations. Linux Wayland GPU/compatibility and dummy/software are checked; software truncation of remaining fractional vertices is an explicit ADR 0028 precision limit. Typed Viewport ownership replaces low-level RID setters; nested/offscreen viewports remain separately blocked."
+    },
+    {
+      "godot": "Node::method:_get_configuration_warnings()",
+      "electron2d": "method:Electron2D.Node.GetConfigurationWarnings()",
+      "state": "Implemented",
+      "reason": "Typed virtual string-array query; default empty, live attached queries require the scene owner, detached queries are valid, results are not cached or implicitly evaluated by a refresh. SceneDiagnosticsTests covers a real custom override and PathFollow parent warnings. Self-hosted tooling consumes the same runtime assembly under ADRs 0001/0008/0011/0012/0027; no script tool mode or scene dock is claimed."
+    },
+    {
+      "godot": "Node::method:update_configuration_warnings()",
+      "electron2d": "method:Electron2D.Node.UpdateConfigurationWarnings()",
+      "state": "Implemented",
+      "reason": "Explicit synchronous request emits once per call only for EditedSceneRoot or descendants, never queries warning strings or deduplicates; detached/outside/unselected nodes emit nothing. Owner-thread and capture guards follow Node. SceneDiagnosticsTests covers boundaries, repeat calls, failures and disposal."
+    },
+    {
+      "godot": "SceneTree::signal:node_configuration_warning_changed(Node:)",
+      "electron2d": "event:Electron2D.SceneTree.NodeConfigurationWarningChanged()",
+      "state": "Implemented",
+      "reason": "Typed sender/node event limited to the selected edited subtree. Synchronous invocation preserves identity, repetition and callback errors; finalization clears subscribers. SceneDiagnosticsTests verifies query/refresh separation and selected-root delivery. Reusable tooling is available in the single runtime assembly under ADRs 0011/0012/0027 without creating editor UI."
+    },
+    {
+      "godot": "SceneTree::property:edited_scene_root",
+      "electron2d": "property:Electron2D.SceneTree.EditedSceneRoot()",
+      "state": "Implemented",
+      "reason": "Borrowed nullable selected scene root, null by default; scopes configuration-warning delivery. Accepts any live member including Root, rejects detached/foreign/disposed references, clears before NodeRemoved, does not auto-restore on reentry. Selection and its descriptor are executable in SceneDiagnosticsTests. Single-assembly tooling availability and lifetime validation follow ADRs 0011/0012/0027."
+    },
+    {
+      "godot": "SceneTree::property:debug_paths_hint",
+      "electron2d": "property:Electron2D.SceneTree.DebugPathsHint()",
+      "state": "Implemented",
+      "reason": "False initially; enables executable Path one-pixel curve/tangent drawing. Live changes invalidate attached paths, correcting stale retained drawing under ADR 0034; all-build opt-in diagnostics follow ADRs 0012/0027. PathRenderingTests verifies fourteen stages on Wayland GPU/compatibility and dummy/software: toggles, direction markers, visibility, worker edits, transforms, empty curves and reentry. Sample budget, settings capture and editor exclusions are documented in docs/components/scene-paths.md."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/paths/geometry_color",
+      "electron2d": "property:Electron2D.ProjectSettings.DebugPathsColor()",
+      "state": "Implemented",
+      "reason": "Typed finite Color setting defaults to (0.1,1,0.7,0.4), registered nonbasic and sampled with feature overrides at SceneTree construction. Existing trees retain their color. SceneDiagnosticsTests verifies nonfinite rejection; native PathRenderingTests verifies captured color reaches curve and tangent pixels on Wayland GPU/compatibility and dummy/software. Separate geometry_width and editor hints are not claimed."
     }
   ],
   "extras": [
@@ -2303,6 +2339,26 @@
       "electron2d": "method:Electron2D.PathFollow.GetPropertyDescriptors()",
       "reason": "Existing typed Node metadata hook stores curve/progress/policies, retaining derived ProgressRatio as nonstored tooling state.",
       "adr": "ADRs 0003/0004/0008/0011/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.Path.OnDraw()",
+      "reason": "Existing CanvasItem recording override consumes SceneTree.DebugPathsHint and the sampled project color through DrawLine; no new drawing capability. Native path readback and managed recording budget checks verify behavior.",
+      "adr": "ADRs 0008/0011/0012/0027/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PathFollow.GetConfigurationWarnings()",
+      "reason": "Override of the existing Node warning query adds the native spatial follower condition: visible in a tree without a direct Path parent. Empty/null parent curves remain valid. SceneDiagnosticsTests verifies visibility, parent and disposal cases.",
+      "adr": "ADRs 0008/0011/0012/0027/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.Timer.GetConfigurationWarnings()",
+      "reason": "Existing Node diagnostic override for the reference native sibling condition. Warns below 0.05 minus canonical Mathf.Epsilon, including stopped/detached timers; duration assignments and Start(duration) request refresh. Threshold, errors and reentrant removal are exercised. SceneDiagnosticsTests provides executable evidence.",
+      "adr": "ADRs 0008/0011/0012/0027 / 0034"
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedSprite.GetConfigurationWarnings()",
+      "reason": "Existing Node diagnostic override for the reference native sibling condition. Warns whenever the frame library is null; visibility/tree membership do not suppress it. Library replacement refresh precedes SpriteFramesChanged; ordering and failure commitment are exercised. SceneDiagnosticsTests provides executable evidence.",
+      "adr": "ADRs 0008/0011/0012/0027"
     }
   ],
   "statusGroups": [
@@ -2901,7 +2957,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Path/PathFollow are direct Entity subclasses under ADR 0008, mapping the runtime curve/follower API with the same defaults and policy timing. PathTests verifies loop/clamp endpoints, ratio semantics, offsets, rotation/scale/skew, lifecycle/direct-parent binding, both reparent policies, typed PackedScene ownership, curve replacement, worker deferred delivery, reentrant/callback failure handling and warm movement allocation. PathRenderingTests verifies seven pixel-readback stages on Linux Wayland compatibility/GPU and dummy/software. Typed exceptions, owner-thread dispatch and sibling failure aggregation follow ADRs 0001/0006/0011/0013/0023. Shared Node warnings, SceneTree debug paths and editor curve authoring remain separate documented gaps; see docs/components/scene-paths.md.",
+      "reason": "Path/PathFollow are direct Entity subclasses under ADR 0008, mapping the runtime curve/follower API with the same defaults and policy timing. PathTests verifies loop/clamp endpoints, ratio semantics, offsets, rotation/scale/skew, lifecycle/direct-parent binding, both reparent policies, typed PackedScene ownership, curve replacement, worker deferred delivery, reentrant/callback failure handling and warm movement allocation. PathRenderingTests verifies seven pixel-readback stages on Linux Wayland compatibility/GPU and dummy/software. Typed exceptions, owner-thread dispatch and sibling failure aggregation follow ADRs 0001/0006/0011/0013/0023. Node warnings and SceneTree debug paths are now implemented and verified by SceneDiagnosticsTests and PathRenderingTests; editor curve authoring remains absent; see docs/components/scene-paths.md.",
       "godot": [
         "class:Path2D",
         "Path2D::property:curve"
@@ -2909,7 +2965,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Path/PathFollow are direct Entity subclasses under ADR 0008, mapping the runtime curve/follower API with the same defaults and policy timing. PathTests verifies loop/clamp endpoints, ratio semantics, offsets, rotation/scale/skew, lifecycle/direct-parent binding, both reparent policies, typed PackedScene ownership, curve replacement, worker deferred delivery, reentrant/callback failure handling and warm movement allocation. PathRenderingTests verifies seven pixel-readback stages on Linux Wayland compatibility/GPU and dummy/software. Typed exceptions, owner-thread dispatch and sibling failure aggregation follow ADRs 0001/0006/0011/0013/0023. Shared Node warnings, SceneTree debug paths and editor curve authoring remain separate documented gaps; see docs/components/scene-paths.md.",
+      "reason": "Path/PathFollow are direct Entity subclasses under ADR 0008, mapping the runtime curve/follower API with the same defaults and policy timing. PathTests verifies loop/clamp endpoints, ratio semantics, offsets, rotation/scale/skew, lifecycle/direct-parent binding, both reparent policies, typed PackedScene ownership, curve replacement, worker deferred delivery, reentrant/callback failure handling and warm movement allocation. PathRenderingTests verifies seven pixel-readback stages on Linux Wayland compatibility/GPU and dummy/software. Typed exceptions, owner-thread dispatch and sibling failure aggregation follow ADRs 0001/0006/0011/0013/0023. Node warnings and SceneTree debug paths are now implemented and verified by SceneDiagnosticsTests and PathRenderingTests; editor curve authoring remains absent; see docs/components/scene-paths.md.",
       "godot": [
         "class:PathFollow2D",
         "PathFollow2D::property:cubic_interp",
@@ -2922,19 +2978,45 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "First typed Node configuration-diagnostic slice must add warning overrides and SceneTree change delivery, including visible attached PathFollow nodes lacking a direct Path parent. Runtime path sampling does not implement this shared diagnostic contract; no editor or navigation prerequisite is needed.",
+      "state": "Implemented",
+      "reason": "Typed virtual string-array query; default empty, live attached queries require the scene owner, detached queries are valid, results are not cached or implicitly evaluated by a refresh. SceneDiagnosticsTests covers a real custom override and PathFollow parent warnings. Self-hosted tooling consumes the same runtime assembly under ADRs 0001/0008/0011/0012/0027; no script tool mode or scene dock is claimed.",
       "godot": [
-        "Node::method:_get_configuration_warnings()",
-        "Node::method:update_configuration_warnings()",
+        "Node::method:_get_configuration_warnings()"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Explicit synchronous request emits once per call only for EditedSceneRoot or descendants, never queries warning strings or deduplicates; detached/outside/unselected nodes emit nothing. Owner-thread and capture guards follow Node. SceneDiagnosticsTests covers boundaries, repeat calls, failures and disposal.",
+      "godot": [
+        "Node::method:update_configuration_warnings()"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Typed sender/node event limited to the selected edited subtree. Synchronous invocation preserves identity, repetition and callback errors; finalization clears subscribers. SceneDiagnosticsTests verifies query/refresh separation and selected-root delivery. Reusable tooling is available in the single runtime assembly under ADRs 0011/0012/0027 without creating editor UI.",
+      "godot": [
         "SceneTree::signal:node_configuration_warning_changed(Node:)"
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "First scene debug-path visualization slice must propagate the hint, render path/tangent markers using existing canvas primitives and react to resource, visibility and tree changes. Runtime Path/PathFollow now exist; no navigation or new native dependency is required.",
+      "state": "Implemented",
+      "reason": "Borrowed nullable selected scene root, null by default; scopes configuration-warning delivery. Accepts any live member including Root, rejects detached/foreign/disposed references, clears before NodeRemoved, does not auto-restore on reentry. Selection and its descriptor are executable in SceneDiagnosticsTests. Single-assembly tooling availability and lifetime validation follow ADRs 0011/0012/0027.",
+      "godot": [
+        "SceneTree::property:edited_scene_root"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "False initially; enables executable Path one-pixel curve/tangent drawing. Live changes invalidate attached paths, correcting stale retained drawing under ADR 0034; all-build opt-in diagnostics follow ADRs 0012/0027. PathRenderingTests verifies fourteen stages on Wayland GPU/compatibility and dummy/software: toggles, direction markers, visibility, worker edits, transforms, empty curves and reentry. Sample budget, settings capture and editor exclusions are documented in docs/components/scene-paths.md.",
       "godot": [
         "SceneTree::property:debug_paths_hint"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Typed finite Color setting defaults to (0.1,1,0.7,0.4), registered nonbasic and sampled with feature overrides at SceneTree construction. Existing trees retain their color. SceneDiagnosticsTests verifies nonfinite rejection; native PathRenderingTests verifies captured color reaches curve and tangent pixels on Wayland GPU/compatibility and dummy/software. Separate geometry_width and editor hints are not claimed.",
+      "godot": [
+        "ProjectSettings::property:debug/shapes/paths/geometry_color"
       ]
     }
   ]

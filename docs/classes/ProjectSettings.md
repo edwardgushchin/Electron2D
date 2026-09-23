@@ -47,6 +47,7 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 
 | Member | Description |
 | --- | --- |
+| [`public static ProjectSetting<Color> DebugPathsColor { get; }`](#diagnostics-debugpathscolor) | Defines the color of path curves and tangent markers when scene path diagnostics are enabled. |
 | [`public static ProjectSetting<string> ApplicationName { get; }`](#p-electron2d-projectsettings-applicationname) | Defines the human-readable application name. |
 | [`public static ProjectSetting<string> ApplicationVersion { get; }`](#p-electron2d-projectsettings-applicationversion) | Defines the application version string. |
 | [`public static ProjectSetting<int> PhysicsTicksPerSecond { get; }`](#p-electron2d-projectsettings-physicstickspersecond) | Defines the fixed-step callback frequency used by [`Engine`](Engine.md). |
@@ -159,6 +160,14 @@ Initializes an isolated registry with explicit project and user-data directories
 - `IO.DirectoryNotFoundException`: `projectRoot` does not exist.
 
 ## Property Descriptions
+
+<a id="diagnostics-debugpathscolor"></a>
+### `public static ProjectSetting<Color> DebugPathsColor { get; }`
+
+Defines the color of path curves and tangent markers when scene path diagnostics are enabled.
+
+Contract: Defaults to (0.1, 1, 0.7, 0.4). Channels must be finite. Active feature overrides apply at SceneTree construction; existing trees retain their color. Diagnostics draw through the ordinary canvas backends.
+
 
 <a id="p-electron2d-projectsettings-applicationname"></a>
 ### `public static ProjectSetting<string> ApplicationName { get; }`

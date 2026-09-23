@@ -116,6 +116,16 @@ public class PathFollow : Entity
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public bool Loop { get { ThrowIfDisposed(); return _loop; } set { EnsureMutable(); _loop = value; } }
 
+    /// <inheritdoc />
+    /// <remarks>Appends a warning when visible in a tree without a direct Path parent. Hidden or detached followers
+    /// add no warning. A missing or zero-length curve is valid and adds no warning.</remarks>
+    public override string[] GetConfigurationWarnings()
+    {
+        var warnings = base.GetConfigurationWarnings();
+        return IsInsideTree && IsVisibleInTree && Parent is not Path
+            ? [.. warnings, "PathFollow only works as a direct child of a Path node."] : warnings;
+    }
+
     internal void UpdateFromPath()
     {
         EnsureMutable(); var version = ++_updateVersion; var path = _path;
