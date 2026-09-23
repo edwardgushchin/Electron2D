@@ -2573,8 +2573,13 @@
   ],
   "statusGroups": [
     {
+      "state": "Unimplemented",
+      "reason": "Accepted target name is Polygon : Entity under ADR 0004; no public node exists yet. Trigger: next 2D scene-node slice using Entity, CanvasItem and the polygon renderer; member-specific missing capabilities remain separate coverage obligations.",
+      "godot": ["class:Polygon2D"]
+    },
+    {
       "state": "Partial",
-      "reason": "Line maps the reference spatial polyline under ADR 0004. Point API, stored state and retained drawing are executable, but exact curve, gradient, texture, corner and antialias geometry still need a complete semantic and backend audit. See docs/classes/Line.md.",
+      "reason": "Line maps the reference spatial polyline under ADR 0004. Point API, stored state, bounded hairpin joins, cap-aware sampling and retained drawing are executable, but exact curve, gradient, texture, corner and antialias geometry still need a complete semantic and backend audit. See docs/classes/Line.md.",
       "godot": ["class:Line2D"]
     },
     {
@@ -2589,7 +2594,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Executable retained geometry and typed PackedScene state exist. Reference tessellation, cap UV placement, abrupt/degenerate corners, variable widths, gradient sampling and complete antialias fringes remain to audit against the pinned builder; see docs/classes/Line.md and LineRenderingTests.",
+      "reason": "Executable retained geometry and typed PackedScene state exist. Finite-segment joints bound hairpin turns, cap lengths affect interior curve/gradient distance, and round-cap UV arcs are mapped. Exact reference tessellation, remaining degenerate corners and variable-width seams, full color/UV sampling and complete antialias fringes remain to audit against the pinned builder; see docs/classes/Line.md and LineRenderingTests.",
       "godot": ["Line2D::property:antialiased", "Line2D::property:begin_cap_mode", "Line2D::property:closed", "Line2D::property:default_color", "Line2D::property:end_cap_mode", "Line2D::property:gradient", "Line2D::property:joint_mode", "Line2D::property:points", "Line2D::property:round_precision", "Line2D::property:sharp_limit", "Line2D::property:texture", "Line2D::property:texture_mode", "Line2D::property:width", "Line2D::property:width_curve"]
     },
     {

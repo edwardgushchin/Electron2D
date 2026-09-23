@@ -103,6 +103,7 @@ public class Line : Entity
     }
 
     /// <summary>Gets or sets a borrowed normalized width curve.</summary>
+    /// <remarks>Open-line cap extensions contribute to the normalized distance at interior points.</remarks>
     public Curve? WidthCurve
     {
         get { ThrowIfDisposed(); return _widthCurve; }
@@ -126,6 +127,7 @@ public class Line : Entity
     }
 
     /// <summary>Gets or sets a borrowed gradient across the full line.</summary>
+    /// <remarks>Open-line cap extensions contribute to the normalized distance at interior points.</remarks>
     public Gradient? Gradient
     {
         get { ThrowIfDisposed(); return _gradient; }
@@ -154,6 +156,7 @@ public class Line : Entity
     }
 
     /// <summary>Gets or sets the texture's longitudinal coordinate policy.</summary>
+    /// <remarks>Round caps map their arc into columns before or after the body; Tile requires repeat sampling.</remarks>
     public LineTextureMode TextureMode
     {
         get { ThrowIfDisposed(); return _textureMode; }
@@ -289,7 +292,10 @@ public class Line : Entity
         var segmentCount = closed ? count : count - 1;
         Span<double> distances = count <= 256 ? stackalloc double[count] : new double[count];
         for (var i = 1; i < count; i++) distances[i] = distances[i - 1] + (_effectivePoints[i] - _effectivePoints[i - 1]).Length();
-        var total = distances[^1] + (closed ? (_effectivePoints[0] - _effectivePoints[^1]).Length() : 0);
+        var pathLength = distances[^1] + (closed ? (_effectivePoints[0] - _effectivePoints[^1]).Length() : 0);
+        var beginExtent = !closed && _beginCapMode != LineCapMode.None ? HalfWidth(0) : 0f;
+        var endExtent = !closed && _endCapMode != LineCapMode.None ? HalfWidth(1) : 0f;
+        var total = pathLength + beginExtent + endExtent;
         if (!(total > 0) || !double.IsFinite(total)) return;
         var aspect = 1f;
         if (_texture is not null)
@@ -306,7 +312,8 @@ public class Line : Entity
             var delta = end - start; var length = delta.Length();
             if (!(length > 0)) continue;
             var direction = delta / length; var normal = new Vector2(-direction.Y, direction.X);
-            var t0 = (float)(distances[i] / total); var t1 = next == 0 ? 1f : (float)(distances[next] / total);
+            var t0 = i == 0 ? 0f : (float)((distances[i] + beginExtent) / total);
+            var t1 = next == 0 || (!closed && next == count - 1) ? 1f : (float)((distances[next] + beginExtent) / total);
             var h0 = HalfWidth(t0); var h1 = HalfWidth(t1);
             segments[i] = new Segment(start, end, direction, normal, h0, h1, t0, t1,
                 start + normal * h0, start - normal * h0, end + normal * h1, end - normal * h1);
@@ -321,20 +328,32 @@ public class Line : Entity
             var prevIndex = (i + segmentCount - 1) % segmentCount;
             var nextIndex = i % segmentCount;
             ref var prev = ref segments[prevIndex]; ref var next = ref segments[nextIndex];
-            Join(ref prev, ref next, _effectivePoints[i], (float)(distances[i] / total), total, aspect);
+            Join(ref prev, ref next, _effectivePoints[i], next.StartT, total, aspect);
         }
+        var beginU = 0f; var endU = 0f;
         for (var i = 0; i < segmentCount; i++)
         {
             var segment = segments[i];
             var c0 = ColorAt(segment.StartT); var c1 = ColorAt(segment.EndT);
             var u0 = UAt(segment.StartT, total, aspect); var u1 = UAt(segment.EndT, total, aspect);
+            if (!closed && i == 0 && _beginCapMode == LineCapMode.Round)
+                u0 = _textureMode switch
+                {
+                    LineTextureMode.Tile => beginExtent / (_width * aspect),
+                    LineTextureMode.Stretch => 2f * beginExtent / (float)total,
+                    _ => 0f,
+                };
+            if (!closed && i == segmentCount - 1 && _endCapMode == LineCapMode.Round)
+                u1 = UAt((float)((total - endExtent) / total), total, aspect);
+            if (i == 0) beginU = u0;
+            if (i == segmentCount - 1) endU = u1;
             Quad(segment.StartLeft, segment.StartRight, segment.EndRight, segment.EndLeft, c0, c1, u0, u1);
             if (_antialiased) Fringe(segment, c0, c1, u0, u1);
         }
         if (!closed)
         {
-            if (_beginCapMode == LineCapMode.Round) Cap(segments[0], true, total, aspect);
-            if (_endCapMode == LineCapMode.Round) Cap(segments[^1], false, total, aspect);
+            if (_beginCapMode == LineCapMode.Round) Cap(segments[0], true, total, aspect, beginU);
+            if (_endCapMode == LineCapMode.Round) Cap(segments[^1], false, total, aspect, endU);
         }
     }
 
@@ -355,24 +374,34 @@ public class Line : Entity
     private void Join(ref Segment prev, ref Segment next, Vector2 point, float t, double total, float aspect)
     {
         var cross = prev.Direction.Cross(next.Direction);
-        var denominator = 1f + prev.Direction.Dot(next.Direction);
-        if (Math.Abs(cross) < 0.00001f || denominator <= 0.00001f) return;
-        var half = next.StartHalfWidth;
-        var miter = (prev.Normal + next.Normal) * (half / denominator);
-        var sharp = _jointMode == LineJointMode.Sharp && miter.Length() <= _sharpLimit * Math.Abs(half);
-        if (sharp)
-        {
-            prev.EndLeft = next.StartLeft = point + miter;
-            prev.EndRight = next.StartRight = point - miter;
-            return;
-        }
+        if (Math.Abs(cross) < 0.00001f && prev.Direction.Dot(next.Direction) > 0) return;
+        var innerSign = cross > 0 ? 1f : -1f;
+        var prevInner = prev.Normal * (prev.EndHalfWidth * innerSign);
+        var nextInner = next.Normal * (next.StartHalfWidth * innerSign);
+        var intersection = Geometry.SegmentIntersectsSegment(prev.Start + prevInner, point + prevInner,
+            point + nextInner, next.End + nextInner);
+        var color = ColorAt(t); var u = UAt(t, total, aspect);
         var outerLeft = cross < 0;
-        var inner = outerLeft ? point - miter : point + miter;
         var outerBefore = outerLeft ? prev.EndLeft : prev.EndRight;
         var outerAfter = outerLeft ? next.StartLeft : next.StartRight;
+        if (intersection is null)
+        {
+            Triangle(_mesh, point, outerBefore, outerAfter, color, u, outerLeft ? 0f : 1f);
+            Triangle(_mesh, point, point + prevInner, point + nextInner, color, u, outerLeft ? 1f : 0f);
+            return;
+        }
+        var miter = intersection.Value - point;
+        var half = Math.Max(Math.Abs(prev.EndHalfWidth), Math.Abs(next.StartHalfWidth));
+        var sharp = _jointMode == LineJointMode.Sharp && miter.Length() <= _sharpLimit * half;
+        if (sharp)
+        {
+            prev.EndLeft = next.StartLeft = point + miter * innerSign;
+            prev.EndRight = next.StartRight = point - miter * innerSign;
+            return;
+        }
+        var inner = intersection.Value;
         if (outerLeft) prev.EndRight = next.StartRight = inner;
         else prev.EndLeft = next.StartLeft = inner;
-        var color = ColorAt(t); var u = UAt(t, total, aspect);
         if (_jointMode == LineJointMode.Round)
             Arc(inner, point, outerBefore, outerAfter, cross > 0, color, u, outerLeft ? 0f : 1f);
         else Triangle(_mesh, inner, outerBefore, outerAfter, color, u, outerLeft ? 0f : 1f);
@@ -397,13 +426,35 @@ public class Line : Entity
         Add(_fringe, a, ca, ua, v); Add(_fringe, b + normal, cb with { A = 0 }, ub, v); Add(_fringe, b, cb, ub, v);
     }
 
-    private void Cap(Segment segment, bool begin, double total, float aspect)
+    private void Cap(Segment segment, bool begin, double total, float aspect, float bodyU)
     {
         var point = begin ? segment.Start : segment.End;
         var first = begin ? segment.StartRight : segment.EndRight;
         var last = begin ? segment.StartLeft : segment.EndLeft;
         var t = begin ? segment.StartT : segment.EndT;
-        Arc(point, point, first, last, !begin, ColorAt(t), UAt(t, total, aspect), 0.5f);
+        var startAngle = MathF.Atan2(first.Y - point.Y, first.X - point.X);
+        var sweep = begin ? -MathF.PI : MathF.PI;
+        var radius = (first - point).Length();
+        if (!(radius > 0)) return;
+        var uScale = _textureMode switch
+        {
+            LineTextureMode.Tile => 1f / (_width * aspect),
+            LineTextureMode.Stretch => (begin ? 2f : 1f) / (float)total,
+            _ => 0f,
+        };
+        var color = ColorAt(t);
+        var from = first;
+        for (var i = 1; i <= _roundPrecision; i++)
+        {
+            var angle = startAngle + sweep * i / _roundPrecision;
+            var to = i == _roundPrecision ? last : point + new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * radius;
+            Add(_mesh, point, color, bodyU, .5f);
+            Add(_mesh, from, color, bodyU + (from - point).Dot(segment.Direction) * uScale,
+                .5f - (from - point).Dot(segment.Normal) / (2f * radius));
+            Add(_mesh, to, color, bodyU + (to - point).Dot(segment.Direction) * uScale,
+                .5f - (to - point).Dot(segment.Normal) / (2f * radius));
+            from = to;
+        }
     }
 
     private void Arc(Vector2 pivot, Vector2 center, Vector2 first, Vector2 last, bool positive, Color color, float u, float v)
