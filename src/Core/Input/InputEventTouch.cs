@@ -77,14 +77,16 @@ public sealed class InputEventScreenTouch : InputEventFromWindow
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="transform"/> or <paramref name="localOffset"/> contains NaN or infinity.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="transform"/> or <paramref name="localOffset"/> is nonfinite, or transformed coordinates overflow; rejected before copying.</exception>
     public override InputEvent XformedBy(Transform transform, Vector2 localOffset = default)
     {
         ThrowIfDisposed();
         ValidateFinite(transform, nameof(transform));
         ValidateFinite(localOffset, nameof(localOffset));
+        var position = transform * (Position + localOffset);
+        ValidateFinite(position, nameof(transform));
         var result = (InputEventScreenTouch)Duplicate();
-        result.Position = transform * (Position + localOffset);
+        result.Position = position;
         return result;
     }
 
@@ -279,16 +281,20 @@ public sealed class InputEventScreenDrag : InputEventFromWindow
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="transform"/> or <paramref name="localOffset"/> contains NaN or infinity.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="transform"/> or <paramref name="localOffset"/> is nonfinite, or transformed coordinates overflow; rejected before copying.</exception>
     public override InputEvent XformedBy(Transform transform, Vector2 localOffset = default)
     {
         ThrowIfDisposed();
         ValidateFinite(transform, nameof(transform));
         ValidateFinite(localOffset, nameof(localOffset));
+        var position = transform * (Position + localOffset);
+        ValidateFinite(position, nameof(transform));
+        var relative = transform.BasisXform(Relative); var velocity = transform.BasisXform(Velocity);
+        ValidateFinite(relative, nameof(transform)); ValidateFinite(velocity, nameof(transform));
         var result = (InputEventScreenDrag)Duplicate();
-        result.Position = transform * (Position + localOffset);
-        result.Relative = transform.BasisXform(Relative);
-        result.Velocity = transform.BasisXform(Velocity);
+        result.Position = position;
+        result.Relative = relative;
+        result.Velocity = velocity;
         return result;
     }
 
@@ -399,14 +405,16 @@ public sealed class InputEventMagnifyGesture : InputEventGesture
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="transform"/> or <paramref name="localOffset"/> contains NaN or infinity.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="transform"/> or <paramref name="localOffset"/> is nonfinite, or transformed coordinates overflow; rejected before copying.</exception>
     public override InputEvent XformedBy(Transform transform, Vector2 localOffset = default)
     {
         ThrowIfDisposed();
         ValidateFinite(transform, nameof(transform));
         ValidateFinite(localOffset, nameof(localOffset));
+        var position = transform * (Position + localOffset);
+        ValidateFinite(position, nameof(transform));
         var result = (InputEventMagnifyGesture)Duplicate();
-        result.Position = transform * (Position + localOffset);
+        result.Position = position;
         return result;
     }
 
@@ -455,14 +463,16 @@ public sealed class InputEventPanGesture : InputEventGesture
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="transform"/> or <paramref name="localOffset"/> contains NaN or infinity.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="transform"/> or <paramref name="localOffset"/> is nonfinite, or transformed coordinates overflow; rejected before copying.</exception>
     public override InputEvent XformedBy(Transform transform, Vector2 localOffset = default)
     {
         ThrowIfDisposed();
         ValidateFinite(transform, nameof(transform));
         ValidateFinite(localOffset, nameof(localOffset));
+        var position = transform * (Position + localOffset);
+        ValidateFinite(position, nameof(transform));
         var result = (InputEventPanGesture)Duplicate();
-        result.Position = transform * (Position + localOffset);
+        result.Position = position;
         return result;
     }
 

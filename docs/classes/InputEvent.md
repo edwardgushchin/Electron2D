@@ -294,7 +294,7 @@ Returns this event transformed into another local coordinate space.
 
 - `ObjectDisposedException`: The event is disposing or disposed.
 
-**Remarks:** Global and screen-space coordinates are not transformed.
+**Remarks:** Global and screen-space coordinates are not transformed. Positional overrides validate finite inputs and derived coordinates before allocating a caller-owned copy; overflow throws ArgumentOutOfRangeException. Copies have distinct InstanceID values. Non-positional events retain identity and ownership. Viewport dispatch owns its temporary projection; see [PushInput](Viewport.md#pushinput).
 
 <a id="m-electron2d-inputevent-astext"></a>
 ### `public abstract string AsText()`

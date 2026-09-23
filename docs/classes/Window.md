@@ -144,7 +144,7 @@ Gets or requests the client origin in native desktop coordinates.
 
 The configured position before startup, or zero if no position was requested.
 
-Window has no spatial canvas transform. Leaving Position unset lets the system place the window. A preconfigured position is applied at startup and can fail on an unsupported platform.
+Window has no Entity transform; inherited Viewport.CanvasTransform and GlobalCanvasTransform place its canvas drawing independently of native Position. Leaving Position unset lets the system place the window. A preconfigured position is applied at startup and can fail on an unsupported platform.
 
 **NotSupportedException:** The active compositor does not expose or accept global window positions, including Wayland.
 
@@ -553,3 +553,5 @@ See the [Window runtime component](../components/window-runtime.md) for ownershi
 Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028).
 
 A changed Title requests configuration-warning refresh after native/managed title state commits. Equal assignments do nothing; subscriber errors propagate without restoring the previous title. PathRenderingTests verifies selection, repetition, committed native title and failures through Engine.Run.
+
+Inherited [viewport transforms and pointer coordinates](Viewport.md#canvas-transforms-and-pointer-coordinates) participate in root rendering and native input. GetVisibleRect stays in client-sized viewport units. Native desktop position remains a platform capability, including for CanvasItem.GetScreenTransform.

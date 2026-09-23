@@ -115,6 +115,7 @@ SceneHierarchyTests.Run();
 CanvasLifecycleTests.Run();
 CanvasSamplingTests.Run();
 CanvasPixelSnapTests.Run();
+CanvasCoordinateTests.Run();
 VerifyInstanceIds();
 VerifyLifetime();
 VerifyNotificationsAndProperties();

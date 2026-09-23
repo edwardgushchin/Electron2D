@@ -750,6 +750,22 @@ public sealed class SceneTree : MainLoop
 
     internal override void DispatchInputEvent(InputEvent @event)
     {
+        if (Root is Viewport viewport) DispatchViewportInput(viewport, @event, inLocalCoordinates: false);
+        else DispatchLocalInputEvent(@event);
+    }
+
+    internal void DispatchViewportInput(Viewport viewport, InputEvent inputEvent, bool inLocalCoordinates)
+    {
+        ArgumentNullException.ThrowIfNull(inputEvent); inputEvent.EnsureUsable();
+        ThrowIfDisposed(); EnsureOwnerThread(); EnsureAcceptingWork(); EnsureExecutionAvailable();
+        if (!ReferenceEquals(viewport.Tree, this)) throw new InvalidOperationException("Viewport is not attached to this tree.");
+        var localized = inLocalCoordinates ? inputEvent : viewport.MakeViewportInputLocal(inputEvent);
+        try { DispatchLocalInputEvent(localized); }
+        finally { if (!ReferenceEquals(localized, inputEvent)) localized.Dispose(); }
+    }
+
+    private void DispatchLocalInputEvent(InputEvent @event)
+    {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(@event);
         @event.EnsureUsable();

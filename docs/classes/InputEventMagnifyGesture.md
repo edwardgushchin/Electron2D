@@ -91,7 +91,7 @@ Returns this event transformed into another local coordinate space.
 
 - `ArgumentOutOfRangeException`: `transform` or `localOffset` contains NaN or infinity.
 
-**Remarks:** Global and screen-space coordinates are not transformed.
+**Remarks:** Global and screen-space coordinates are not transformed. All derived positional/motion values are checked for finiteness before duplicating the event; overflow throws ArgumentOutOfRangeException without allocating a partial copy. The successful copy is caller-owned and has a distinct InstanceID. [Canvas coordinate checks](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs) cover this failure boundary across positional event types.
 
 <a id="m-electron2d-inputeventmagnifygesture-astext"></a>
 ### `public override string AsText()`

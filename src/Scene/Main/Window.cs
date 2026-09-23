@@ -265,6 +265,9 @@ public partial class Window : Viewport
         _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
     }
 
+    internal Vector2 GetClientMousePosition() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); EnsureNativeOpen(); return _display!.GetClientMousePosition(); }
+    internal void WarpClientMouse(Vector2I position) { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); EnsureNativeOpen(); _display!.WarpMouse(position); }
+
     internal void EnsureNativeOpen()
     {
         if (_display is null)

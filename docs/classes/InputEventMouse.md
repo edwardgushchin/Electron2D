@@ -43,7 +43,7 @@ Vector2 pointer = inputEvent.Position;
 | --- | --- |
 | [`public MouseButtonMask ButtonMask { get; set; }`](#p-electron2d-inputeventmouse-buttonmask) | Gets or sets the buttons held while this event occurred. |
 | [`public Vector2 Position { get; set; }`](#p-electron2d-inputeventmouse-position) | Gets or sets the pointer position in the current local coordinate space. |
-| [`public Vector2 GlobalPosition { get; set; }`](#p-electron2d-inputeventmouse-globalposition) | Gets or sets the pointer position in the top-level window coordinate space. |
+| [`public Vector2 GlobalPosition { get; set; }`](#p-electron2d-inputeventmouse-globalposition) | Gets or sets the pointer position in the containing window/viewport coordinate space. |
 
 ## Methods
 
@@ -90,7 +90,7 @@ Gets or sets the pointer position in the current local coordinate space.
 <a id="p-electron2d-inputeventmouse-globalposition"></a>
 ### `public Vector2 GlobalPosition { get; set; }`
 
-Gets or sets the pointer position in the top-level window coordinate space.
+Gets or sets the pointer position in the containing window/viewport coordinate space.
 
 **Value:** A finite position in pixels that is preserved by [`InputEvent.XformedBy(Transform,Vector2)`](InputEvent.md#m-electron2d-inputevent-xformedby-electron2d-transform-electron2d-vector2).
 
@@ -123,3 +123,5 @@ Returns the typed properties exposed to tooling before validation.
 ## Inherited API
 
 Public and protected members inherited from [InputEventWithModifiers](InputEventWithModifiers.md). Their lifecycle and error contracts remain applicable unless this page states an override.
+
+Viewport input localization resets GlobalPosition to its viewport-local Position. CanvasItem.MakeInputLocal preserves GlobalPosition while converting Position to the item. Raw host events use client coordinates; XformedBy alone preserves the existing GlobalPosition.

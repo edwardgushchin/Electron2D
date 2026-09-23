@@ -14,7 +14,7 @@ Last updated: 2026-09-23
 
 Provides the root window's client rectangle and scene input boundary.
 
-Only a root `Window` is currently supported. Offscreen render targets, content scaling, and embedded viewports are not implemented. Canvas sampling defaults are connected to the root renderer. Input coordinates use the client area.
+Only a root `Window` is currently supported. Offscreen render targets, content scaling, and embedded viewports are not implemented. Canvas transforms, sampling and pixel-snapping policies are connected to the root renderer. Incoming window input is converted to viewport coordinates.
 
 Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
 
@@ -27,7 +27,65 @@ if (inputEvent.IsActionPressed("confirm"))
     GetViewport()!.SetInputAsHandled();
 ```
 
-This stops later scene input stages. It does not change Input polling state. `PushInput` borrows the caller's event and accepts client coordinates only.
+This stops later scene input stages. It does not change Input polling state. `PushInput` retains caller ownership and accepts client coordinates by default, or viewport coordinates with `inLocalCoordinates: true`. Positional conversion creates a temporary event owned by dispatch.
+
+## Canvas transforms and pointer coordinates
+
+Source: [Viewport.Transforms.cs](../../src/Scene/Main/Viewport.Transforms.cs).
+
+| Declaration | Contract |
+| --- | --- |
+| `public Transform CanvasTransform { get; set; }` | [Default canvas placement](#canvastransform) |
+| `public Transform GlobalCanvasTransform { get; set; }` | [Outer canvas placement](#globalcanvastransform) |
+| `public Transform GetFinalTransform()` | [Viewport-to-client transform](#getfinaltransform) |
+| `public Transform GetScreenTransform()` | [Viewport-to-window transform](#getscreentransform) |
+| `public Vector2 GetMousePosition()` | [Native pointer in viewport units](#getmouseposition) |
+| `public void WarpMouse(Vector2 position)` | [Request native pointer movement](#warpmouse) |
+
+Example, configuring an existing live root window on its owner thread:
+
+```csharp
+window.CanvasTransform = new Transform(0, new Vector2(20, 10));
+window.GlobalCanvasTransform = new Transform(new Vector2(2, 0), new Vector2(0, 2), Vector2.Zero);
+```
+
+### CanvasTransform
+
+`public Transform CanvasTransform { get; set; }`
+
+Identity by default. Maps the default canvas into viewport coordinates. Rendering composes framebuffer scale, final transform, CanvasTransform, then node/drawing transforms. Neutral parents and TopLevel do not remove the viewport transforms. Changes affect the next submission without rerecording retained commands or changing logical node transforms/notifications.
+
+### GlobalCanvasTransform
+
+`public Transform GlobalCanvasTransform { get; set; }`
+
+Identity by default. Maps viewport coordinates into the native client area after CanvasTransform. Its inverse localizes incoming window input; use CanvasItem.MakeInputLocal separately for canvas/node conversion. Both transform properties accept finite singular values for rendering. They are typed runtime descriptors, not stored by PackedScene; reconstructed windows start at identity. Nonfinite assignment throws ArgumentException; mutation during capture or off the attached owner thread throws InvalidOperationException. Queries enforce the attached owner; disposed access throws ObjectDisposedException.
+
+### GetFinalTransform
+
+`public Transform GetFinalTransform()`
+
+Returns GlobalCanvasTransform. The supported root window has identity content stretch; CanvasTransform, desktop position and framebuffer density are excluded. Attached off-owner access throws InvalidOperationException; disposed access throws ObjectDisposedException.
+
+### GetScreenTransform
+
+`public Transform GetScreenTransform()`
+
+Returns GetFinalTransform for the native root window. Screen here is the containing window coordinate space: it does not include desktop placement. The same query guards apply. Embedded/offscreen viewports remain absent.
+
+### GetMousePosition
+
+`public Vector2 GetMousePosition()`
+
+Polls the native client pointer and applies the inverse GetScreenTransform; a singular transform returns zero. Requires an active native root Window and its owner thread, otherwise InvalidOperationException. Does not read the last PushInput event or update Input polling. Fractional client coordinates are retained; CanvasTransform is not removed. Disposed access throws ObjectDisposedException.
+
+### WarpMouse
+
+`public void WarpMouse(Vector2 position)`
+
+Transforms finite viewport coordinates with GetScreenTransform, then truncates to native integer client units. CanvasTransform is not applied. Requires an active native Window and owner thread; capture mutation is rejected. Nonfinite or out-of-Int32 transformed coordinates throw ArgumentException before the native request. Unsupported warping throws NotSupportedException; platform policy can prevent actual movement even when a request is supported. Disposed access throws ObjectDisposedException.
+
+Verification: [managed contracts](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs) and [native pixels, injected input and pointer queries](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Linux Wayland GPU/compatibility and SDL dummy compatibility passed. Native pointer warp success and other platforms have not been verified; unsupported policies are checked explicitly. Camera, CanvasLayer, content stretch and nested viewport integration remain coverage gaps.
 
 ## Pixel snapping properties
 
@@ -100,11 +158,11 @@ All three properties are stored by PackedScene. Undefined/negative/Max enum writ
 
 | Member | Contract |
 | --- | --- |
-| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Adds stored sampling and pixel-snapping properties to neutral node descriptors. |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Adds stored sampling/pixel-snapping properties and runtime canvas transforms to neutral node descriptors. |
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown. |
 | [`public abstract Rect GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
 | [`public bool IsInputHandled()`](#isinputhandled) | Reports whether the current scene input event has been handled. |
-| [`public void PushInput(InputEvent inputEvent)`](#pushinput) | Delivers a borrowed input event directly to this viewport's scene. |
+| [`public void PushInput(InputEvent inputEvent, bool inLocalCoordinates = false)`](#pushinput) | Delivers a borrowed input event directly to this viewport's scene. |
 | [`public void SetInputAsHandled()`](#setinputashandled) | Marks the scene input event currently being dispatched as handled. |
 
 ## Events
@@ -117,7 +175,7 @@ All three properties are stored by PackedScene. Undefined/negative/Max enum writ
 
 `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
 
-Extends Node descriptors with three typed stored sampling properties and two pixel-snapping flags. Window adds its own properties through base chaining. Descriptors retain each property's validation and use the active project anisotropy default.
+Extends Node descriptors with three typed stored sampling properties, two stored pixel-snapping flags, and two non-stored runtime canvas transforms. Window adds its own properties through base chaining. Descriptors retain each property's validation and use the active project anisotropy default.
 
 ## Method Descriptions
 
@@ -147,17 +205,21 @@ Reports whether the current scene input event has been handled.
 **ObjectDisposedException:** The viewport or scene tree is disposed.
 
 <a id="pushinput"></a>
-### `public void PushInput(InputEvent inputEvent)`
+### `public void PushInput(InputEvent inputEvent, bool inLocalCoordinates = false)`
 
 Delivers a borrowed input event directly to this viewport's scene.
 
-**inputEvent:** A live event in client coordinates, retained and disposed by the caller.
+**inputEvent:** A live event retained and disposed by the caller.
 
-Does not update global Input state or emulate pointer devices. Dispatch uses the existing scene input, unhandled-key, and unhandled-input stages. Nested dispatch is rejected.
+**inLocalCoordinates:** False removes `GetFinalTransform()` from window-client coordinates; true borrows already-local viewport input unchanged. It does not remove `CanvasTransform`.
+
+Does not update global Input state or emulate pointer devices. Dispatch uses the existing scene input, unhandled-key, and unhandled-input stages. Nested dispatch is rejected before conversion. Positional conversion uses `InputEvent.XformedBy`; mouse GlobalPosition is then set to localized Position. Relative/Velocity use the inverse basis; screen vectors and pan delta are unchanged. The temporary event is disposed in finally, including callback failure; callbacks must duplicate it to retain it. Non-positional events are borrowed unchanged. Copies have distinct InstanceID values: by-event action transition queries still identify the original parsed event.
 
 **ArgumentNullException:** `inputEvent` is null.
 
-**InvalidOperationException:** The viewport is detached, accessed off-thread, or the scene cannot accept input.
+**ArgumentOutOfRangeException:** Transformed event coordinates overflow finite values, before a copy is allocated.
+
+**InvalidOperationException:** The viewport is detached, accessed off-thread, the scene cannot accept input, or the required final transform is singular.
 
 **ObjectDisposedException:** The event, viewport, or tree is disposed.
 
@@ -185,7 +247,7 @@ Subscribers run synchronously on the scene owner thread. Desktop movement does n
 
 ## Lifecycle, verification and limits
 
-See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. Physical-input/visual acceptance of this new API, other platforms, rendering, content scaling, offscreen targets, GUI and nested windows remain unverified or absent. Native Wayland rejects Position and may constrain geometry; focus requests obey compositor policy.
+See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. Physical-input/visual acceptance and other platforms remain unverified. Root rendering is implemented; content scaling, offscreen targets, GUI and nested windows remain absent. Native Wayland rejects Position and may constrain geometry; focus requests obey compositor policy.
 
 Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028).
 

@@ -37,6 +37,90 @@ class PaintedNode : Entity
 }
 ```
 
+## Viewport and input coordinates
+
+Source: [CanvasItem.Coordinates.cs](../../src/Scene/Main/CanvasItem.Coordinates.cs). These are logical floating-point transforms, independent of render pixel snapping and framebuffer density. With `C = Viewport.CanvasTransform`, `F = Viewport.GetFinalTransform()` and `G = GetGlobalTransform()`, local drawing reaches client coordinates through `F * C * G`.
+
+| Declaration | Contract |
+| --- | --- |
+| `public Rect GetViewportRect()` | [Visible viewport rectangle](#getviewportrect) |
+| `public Transform GetCanvasTransform()` | [Canvas-to-viewport transform](#getcanvastransform) |
+| `public Transform GetGlobalTransformWithCanvas()` | [Local-to-viewport transform](#getglobaltransformwithcanvas) |
+| `public Transform GetViewportTransform()` | [Canvas-to-client transform](#getviewporttransform) |
+| `public Transform GetScreenTransform()` | [Local-to-desktop transform](#getscreentransform) |
+| `public Vector2 MakeCanvasPositionLocal(Vector2 viewportPoint)` | [Convert a viewport point](#makecanvaspositionlocal) |
+| `public InputEvent MakeInputLocal(InputEvent inputEvent)` | [Convert a viewport event](#makeinputlocal) |
+| `public Vector2 GetGlobalMousePosition()` | [Pointer in canvas coordinates](#getglobalmouseposition) |
+| `public Vector2 GetLocalMousePosition()` | [Pointer in local coordinates](#getlocalmouseposition) |
+
+In an attached item's OnInput callback, convert a pointer position without allocating an event:
+
+```csharp
+if (inputEvent is InputEventMouse mouse)
+{
+    Vector2 local = MakeCanvasPositionLocal(mouse.Position);
+    // Use local for the item's own interaction logic.
+}
+```
+
+### GetViewportRect
+
+`public Rect GetViewportRect()`
+
+Returns the active containing viewport's GetVisibleRect, in viewport coordinates. Canvas/node transforms do not change its bounds.
+
+### GetCanvasTransform
+
+`public Transform GetCanvasTransform()`
+
+Returns the active viewport's CanvasTransform. Independent CanvasLayer transforms are not implemented.
+
+### GetGlobalTransformWithCanvas
+
+`public Transform GetGlobalTransformWithCanvas()`
+
+Returns `C * G` while attached, or the logical global transform while detached (even under a detached viewport ancestor). TopLevel and neutral parents break only the node transform chain. GlobalCanvasTransform is excluded. An attached item without a viewport fails explicitly.
+
+### GetViewportTransform
+
+`public Transform GetViewportTransform()`
+
+Returns `F * C`. Does not include this item's transform or native desktop placement.
+
+### GetScreenTransform
+
+`public Transform GetScreenTransform()`
+
+Returns native client-origin translation times viewport GetScreenTransform times `C * G`. Unlike Viewport.GetScreenTransform, this includes desktop placement. Wayland cannot report the native desktop origin and throws NotSupportedException; it does not invent zero desktop coordinates.
+
+### MakeCanvasPositionLocal
+
+`public Vector2 MakeCanvasPositionLocal(Vector2 viewportPoint)`
+
+Applies the inverse of `C * G` to an already-localized viewport point. Nonfinite input throws ArgumentException; singular transforms throw InvalidOperationException. This is a value operation with no warmed allocation. As with Transform arithmetic, extreme finite values can overflow the floating-point result.
+
+### MakeInputLocal
+
+`public InputEvent MakeInputLocal(InputEvent inputEvent)`
+
+Applies InputEvent.XformedBy with the inverse `C * G`. The live input must already be in viewport coordinates. Positional events return a distinct caller-owned copy; non-positional events return the same borrowed object. Dispose the result only when it differs from the input. Mouse GlobalPosition, screen motion vectors and pan delta stay unchanged. Null throws ArgumentNullException; disposed input throws ObjectDisposedException; transformed nonfinite coordinates throw ArgumentOutOfRangeException before allocating a copy. Singular inverses throw InvalidOperationException. A copy has a different InstanceID and does not retain the original event's by-event action-transition identity.
+
+### GetGlobalMousePosition
+
+`public Vector2 GetGlobalMousePosition()`
+
+Returns inverse `C` times the viewport's current native pointer position. Requires an active native Window; does not use the last synthetic event. A singular canvas transform throws InvalidOperationException.
+
+### GetLocalMousePosition
+
+`public Vector2 GetLocalMousePosition()`
+
+Applies inverse `G` to GetGlobalMousePosition. A singular logical global transform throws InvalidOperationException. The native window requirement and pointer semantics are inherited.
+
+All coordinate queries require a live item and enforce its attached owner thread. Except the detached fallback of GetGlobalTransformWithCanvas, they require active viewport membership; missing membership/off-owner access throws InvalidOperationException and disposal throws ObjectDisposedException. Queries preserve logical node state and do not emit notifications.
+
+Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs); [Wayland GPU/compatibility and dummy rendering/input checks](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Native readback includes noncommuting viewport transforms, independent canvas roots, retained commands, pixel snapping and HLSL/GLSL materials. Camera, CanvasLayer, GUI, nested viewports and content scaling remain absent; no physical-input/visual or other-platform acceptance is claimed.
+
 ## Constructors
 
 | Member | Contract |

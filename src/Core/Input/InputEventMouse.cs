@@ -53,8 +53,10 @@ public abstract class InputEventMouse : InputEventWithModifiers
         set { ThrowIfDisposed(); ValidateFinite(value, nameof(value)); _position = value; EmitInputChanged(); }
     }
 
-    /// <summary>Gets or sets the pointer position in the top-level window coordinate space.</summary>
+    /// <summary>Gets or sets the pointer position in the containing window or viewport coordinate space.</summary>
     /// <value>A finite position in pixels that is preserved by <see cref="InputEvent.XformedBy"/>.</value>
+    /// <remarks>Raw host events use client coordinates. Viewport localization sets this to the localized Position;
+    /// subsequent CanvasItem.MakeInputLocal preserves that viewport position.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value contains NaN or infinity.</exception>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
@@ -179,14 +181,16 @@ public sealed class InputEventMouseButton : InputEventMouse
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="transform"/> or <paramref name="localOffset"/> contains NaN or infinity.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="transform"/> or <paramref name="localOffset"/> is nonfinite, or transformed coordinates overflow; rejected before copying.</exception>
     public override InputEvent XformedBy(Transform transform, Vector2 localOffset = default)
     {
         ThrowIfDisposed();
         ValidateFinite(transform, nameof(transform));
         ValidateFinite(localOffset, nameof(localOffset));
+        var position = transform * (Position + localOffset);
+        ValidateFinite(position, nameof(transform));
         var result = (InputEventMouseButton)Duplicate();
-        result.Position = transform * (Position + localOffset);
+        result.Position = position;
         return result;
     }
 
@@ -365,16 +369,20 @@ public sealed class InputEventMouseMotion : InputEventMouse
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="transform"/> or <paramref name="localOffset"/> contains NaN or infinity.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="transform"/> or <paramref name="localOffset"/> is nonfinite, or transformed coordinates overflow; rejected before copying.</exception>
     public override InputEvent XformedBy(Transform transform, Vector2 localOffset = default)
     {
         ThrowIfDisposed();
         ValidateFinite(transform, nameof(transform));
         ValidateFinite(localOffset, nameof(localOffset));
+        var position = transform * (Position + localOffset);
+        ValidateFinite(position, nameof(transform));
+        var relative = transform.BasisXform(Relative); var velocity = transform.BasisXform(Velocity);
+        ValidateFinite(relative, nameof(transform)); ValidateFinite(velocity, nameof(transform));
         var result = (InputEventMouseMotion)Duplicate();
-        result.Position = transform * (Position + localOffset);
-        result.Relative = transform.BasisXform(Relative);
-        result.Velocity = transform.BasisXform(Velocity);
+        result.Position = position;
+        result.Relative = relative;
+        result.Velocity = velocity;
         return result;
     }
 

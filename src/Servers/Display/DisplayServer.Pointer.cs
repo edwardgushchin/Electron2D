@@ -161,6 +161,12 @@ public sealed partial class DisplayServer
         SDL.WarpMouseInWindow(_window.DangerousGetHandle(), position.X / scale, position.Y / scale);
     }
 
+    internal Vector2 GetClientMousePosition()
+    {
+        EnsureOwner(); SDL.GetMouseState(out var x, out var y);
+        return new Vector2(x, y) * GetMousePixelScale();
+    }
+
     private float GetMousePixelScale()
     {
         if (!_waylandWindowPosition)

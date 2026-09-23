@@ -18,7 +18,7 @@ This component converts caller-supplied typed events into raw device state, name
 4. Input commits raw state and per-binding action contributions under its state lock.
 5. Optional pointer emulation creates one device-`-1` event: the first active touch contact generates mouse input, while a left-button mouse press/drag/release can generate scene-only touch input. The generated event is dispatched before its source and is never emulated again. Generated mouse input also commits raw and mapped state; a generated touch does not.
 6. If an Engine loop is active, the source event is synchronously forwarded to it, even if a generated-event callback failed. Callback failures from both events are combined.
-7. SceneTree captures nodes, walks the snapshot in reverse depth-first order through input, unhandled-key, and unhandled stages, and revalidates membership before every callback.
+7. For a Viewport root, SceneTree removes the final transform from window input before callbacks; temporary positional copies are disposed after synchronous dispatch, even on failure. Node-root input retains its original identity. SceneTree captures nodes, walks the snapshot in reverse depth-first order through input, unhandled-key, and unhandled stages, and revalidates membership before every callback.
 8. Each process/physics frame clears only its own just-transition lane in `finally`.
 
 ## Dependencies and interactions
@@ -39,7 +39,7 @@ The component uses `Resource` for event duplication/change reporting, `PropertyD
 - Node ordering and handled semantics are deterministic; callback exceptions are aggregated.
 - Event resources remain caller-owned. Input neither disposes nor stores submitted event objects after transition identity expires.
 - Every event value has a validated stored typed property descriptor, and constructor-specific device defaults are the corresponding revert values.
-- Warmed non-emulated matching and traversal reuse bounded collections. An emulated event is a short-lived owned resource and allocates.
+- Warmed non-emulated matching and traversal reuse bounded collections. Emulated events and positional viewport-conversion copies are short-lived owned resources and allocate.
 
 ## Current implementation status and exclusions
 
@@ -54,3 +54,5 @@ For native SDL key events, the display adapter records the event's logical key, 
 `tests/Electron2D.Tests/Program.cs` covers validation, complete stored event-property discovery/defaults, duplicate bindings, the 32-source ceiling, modifier exactness, pre-mutation owner/execution rejection, state-before-callback ordering, reverse stage order, handled input, independent process/physics transitions, callback failure aggregation, parse re-entry, failure-safe binding invalidation, raw-strength vector composition, direct actions, mouse/controller state, atomic event accumulation, event transforms including unchanged pan delta, release-all, permanent singleton registration, and zero warmed non-emulated managed allocation. Emulation checks cover defaults, first-touch ownership across devices, pairing across setting changes, mapped synthetic mouse state, mouse-to-touch scene delivery, recursive suppression, and callback failure continuation. The optional SDL dummy-driver suite checks native pointer modifier translation.
 
 The SDL dummy-driver suite also checks that a key's scancode label is independent of its logical keycode, that release clears label state, that non-Latin label code points retain their key identity in the mapper, and that all eight side-specific modifier scancodes plus an ordinary key carry the expected location on press and release. A physical keyboard layout has not been exercised.
+
+Viewport localization preserves raw Input state and the original by-event transition identity; a positional copy has a distinct InstanceID. All six positional XformedBy implementations validate derived finite coordinates before Duplicate, preventing unowned partial event copies on overflow. [CanvasCoordinateTests](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs) verify this boundary, disposal on callback failure and local-coordinate borrowing; native injection is covered by CanvasCoordinateRenderingTests.

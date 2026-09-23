@@ -26,7 +26,7 @@ An inherited or wrapper frame increments its lane counter, raises its start even
 
 System notifications are snapshotted and propagated depth-first to every still-live attached node. Explicit inherited finalization and disposal both close work acceptance, release the hierarchy/timers, and invalidate active tweens; explicit finalization leaves only the tree object undisposed and terminal.
 
-Parsed input uses a reusable reverse depth-first snapshot. Regular input runs first, keyboard-only unhandled input second, and general unhandled input last. Handled state stops immediately; current membership, pause eligibility, lifetime, and per-stage enablement are revalidated before every callback. Callback failures are aggregated after eligible delivery continues.
+A Viewport root first localizes incoming client input through its inverse final transform. Positional temporary copies are disposed after dispatch, including errors; local-coordinate and non-positional input stays borrowed. Conversion validates execution/re-entry before copying and does not mutate Input polling. Parsed input uses a reusable reverse depth-first snapshot. Regular input runs first, keyboard-only unhandled input second, and general unhandled input last. Handled state stops immediately; current membership, pause eligibility, lifetime, and per-stage enablement are revalidated before every callback. Callback failures are aggregated after eligible delivery continues.
 
 Immediate typed group operations snapshot members in hierarchy or reverse order on the owner thread. Deferred operations resolve membership when their queued wrapper starts. `Unique` coalesces equal queued operations and retains the first setter value. String-based method/property dispatch is absent.
 

@@ -14218,6 +14218,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CanvasItem.GetCanvasTransform()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetCanvasTransform",
+    "signature": "public Electron2D.Transform GetCanvasTransform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.GetGlobalMousePosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetGlobalMousePosition",
+    "signature": "public Electron2D.Vector2 GetGlobalMousePosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CanvasItem.GetGlobalTransform()",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
@@ -14228,6 +14254,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.GetGlobalTransformWithCanvas()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetGlobalTransformWithCanvas",
+    "signature": "public Electron2D.Transform GetGlobalTransformWithCanvas()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.GetLocalMousePosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetLocalMousePosition",
+    "signature": "public Electron2D.Vector2 GetLocalMousePosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {
@@ -14244,11 +14296,50 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CanvasItem.GetScreenTransform()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetScreenTransform",
+    "signature": "public Electron2D.Transform GetScreenTransform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CanvasItem.GetTransform()",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
     "name": "GetTransform",
     "signature": "public abstract Electron2D.Transform GetTransform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.GetViewportRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetViewportRect",
+    "signature": "public Electron2D.Rect GetViewportRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.GetViewportTransform()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetViewportTransform",
+    "signature": "public Electron2D.Transform GetViewportTransform()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -14267,6 +14358,44 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.MakeCanvasPositionLocal(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "MakeCanvasPositionLocal",
+    "signature": "public Electron2D.Vector2 MakeCanvasPositionLocal(Electron2D.Vector2 viewportPoint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewportPoint",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.MakeInputLocal(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "MakeInputLocal",
+    "signature": "public Electron2D.InputEvent MakeInputLocal(Electron2D.InputEvent inputEvent)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.InputEvent",
     "value": null
   },
   {
@@ -37569,6 +37698,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Viewport.GetFinalTransform()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GetFinalTransform",
+    "signature": "public Electron2D.Transform GetFinalTransform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Viewport.GetMousePosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GetMousePosition",
+    "signature": "public Electron2D.Vector2 GetMousePosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
@@ -37579,6 +37734,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Viewport.GetScreenTransform()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GetScreenTransform",
+    "signature": "public Electron2D.Transform GetScreenTransform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
     "value": null
   },
   {
@@ -37608,11 +37776,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Viewport.PushInput(Electron2D.InputEvent)",
+    "id": "method:Electron2D.Viewport.PushInput(Electron2D.InputEvent,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
     "name": "PushInput",
-    "signature": "public System.Void PushInput(Electron2D.InputEvent inputEvent)",
+    "signature": "public System.Void PushInput(Electron2D.InputEvent inputEvent, System.Boolean inLocalCoordinates = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -37621,6 +37789,11 @@
         "name": "inputEvent",
         "type": "Electron2D.InputEvent",
         "default": null
+      },
+      {
+        "name": "inLocalCoordinates",
+        "type": "System.Boolean",
+        "default": "false"
       }
     ],
     "returnType": "System.Void",
@@ -37636,6 +37809,25 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Viewport.WarpMouse(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "WarpMouse",
+    "signature": "public System.Void WarpMouse(Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -46857,6 +47049,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Viewport.DefaultCanvasItemTextureRepeat",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.CanvasTransform()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "CanvasTransform",
+    "signature": "public Electron2D.Transform CanvasTransform { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.GlobalCanvasTransform()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GlobalCanvasTransform",
+    "signature": "public Electron2D.Transform GlobalCanvasTransform { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
     "value": null
   },
   {

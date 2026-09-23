@@ -39,6 +39,16 @@ internal static partial class RenderingRuntimeTests
                 }
                 return;
             }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_COORDINATES") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasCoordinates(backend); VerifyViewportCoordinateInput(backend);
+                    VerifyFrameAllocations(backend, canvasTransforms: true);
+                    if (backend == "gpu") { VerifyCanvasCoordinates(backend, "CanvasHLSL"); VerifyCanvasCoordinates(backend, "CanvasGLSL"); }
+                }
+                return;
+            }
             VerifyImageDependency();
             VerifyResources();
             VerifyParameters("MaterialHlsl");
@@ -53,6 +63,7 @@ internal static partial class RenderingRuntimeTests
                 var software = VerifyCanvasSampling(backend);
                 VerifySamplingCapabilities(backend, software);
                 VerifyCanvasPixelSnap(backend);
+                VerifyCanvasCoordinates(backend); VerifyViewportCoordinateInput(backend);
                 VerifySceneHierarchy(backend);
                 VerifyCanvasOrdering(backend);
                 VerifyCanvasLifecycle(backend);
@@ -77,6 +88,7 @@ internal static partial class RenderingRuntimeTests
                     VerifyCanvasSampling(backend, "CanvasGLSL");
                     VerifyCanvasPixelSnap(backend, "CanvasHLSL");
                     VerifyCanvasPixelSnap(backend, "CanvasGLSL");
+                    VerifyCanvasCoordinates(backend, "CanvasHLSL"); VerifyCanvasCoordinates(backend, "CanvasGLSL");
                     VerifyMaterialFrame("MaterialHlsl");
                     VerifyMaterialFrame("MaterialGlsl");
                     VerifyTextureFrame("TextureHlsl");
@@ -230,7 +242,7 @@ internal static partial class RenderingRuntimeTests
         finally { first?.Dispose(); }
     }
 
-    private static void VerifyFrameAllocations(string backend, bool snapPixels = false)
+    private static void VerifyFrameAllocations(string backend, bool snapPixels = false, bool canvasTransforms = false)
     {
         using var image = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8);
         image.Fill(Colors.White);
@@ -246,6 +258,7 @@ internal static partial class RenderingRuntimeTests
             material.SetShaderParameter("tint", Colors.White);
         }
         var window = new Window { SnapTransformsToPixel = snapPixels, SnapVerticesToPixel = snapPixels, CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2I(96, 80) };
+        if (canvasTransforms) { window.CanvasTransform = new(0.1f, new(2, 3)); window.GlobalCanvasTransform = new(0, new(1.2f, 0.8f), 0, new(4, 5)); }
         var sorted = new Entity { YSortEnabled = true };
         var island = new Entity();
         var nested = new Entity { YSortEnabled = true };

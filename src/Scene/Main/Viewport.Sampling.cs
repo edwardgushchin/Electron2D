@@ -176,5 +176,5 @@ public abstract partial class Viewport
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ViewportSamplingProperties).Concat(PixelSnapProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ViewportSamplingProperties).Concat(PixelSnapProperties).Concat(CanvasTransformProperties);
 }

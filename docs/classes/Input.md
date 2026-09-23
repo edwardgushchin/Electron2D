@@ -510,3 +510,5 @@ State/configuration queries are lock-serialized. Event parsing is serialized and
 ## Dependencies, verification, and limitations
 
 Depends on InputMap, typed event classes, Engine/MainLoop, SceneTree, and core math. Managed tests cover input state, emulation order, first-contact ownership, release pairing, failure/re-entry, and non-emulated allocation. The optional SDL dummy-driver suite checks pointer modifier translation. Controller discovery/effects, sensors, MIDI, shortcuts, action persistence, and GUI routing have exact implementation triggers in [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers); physical pointer hardware and the full native-host matrix have not been exercised.
+
+A SceneTree with a Viewport root localizes window coordinates after Input commits raw state. Positional callback events can therefore be distinct short-lived copies: polling and by-event transition identity still refer to the original parsed input. Canvas/viewport conversion never rewrites raw polling coordinates. See [Viewport.PushInput](Viewport.md#pushinput).

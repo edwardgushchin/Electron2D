@@ -127,7 +127,8 @@ public sealed class RenderingServer : ElectronObject
             var pixels = _backend.GetPixelSize();
             var client = _window.Size;
             if (pixels.X <= 0 || pixels.Y <= 0) return;
-            var viewportTransform = new Transform(0f, new Vector2((float)pixels.X / client.X, (float)pixels.Y / client.Y), 0f, Vector2.Zero);
+            var viewportTransform = new Transform(0f, new Vector2((float)pixels.X / client.X, (float)pixels.Y / client.Y), 0f, Vector2.Zero)
+                * _window.GetFinalTransform() * _window.CanvasTransform;
             // Drawing callbacks may change parenting, visibility or sibling order.
             _nodes.Clear();
             Capture(tree.Root);
