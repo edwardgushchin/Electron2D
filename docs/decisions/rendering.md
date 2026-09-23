@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 This bounded log owns the complete architectural records for rendering. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
-Decisions in this log: [0028](#adr-0028).
+Decisions in this log: [0028](#adr-0028), [0046](#adr-0046).
 
 <a id="adr-0028"></a>
 ## ADR 0028: GPU-first 2D rendering, HLSL/GLSL import and a shared SPIR-V shader path, and SDL_Renderer fallback
@@ -89,3 +89,33 @@ The Web target has no browser graphics host or verified mapping to these SDL bac
 - [0016: Process-wide Engine runtime and host-driven scheduling](core-object-runtime.md#adr-0016)
 - [0021: Runtime and editor target platforms](product.md#adr-0021)
 - [0027: Self-hosted editor and game project boundary](product.md#adr-0027)
+
+<a id="adr-0046"></a>
+## ADR 0046: Render text with SDL_ttf 3 and HarfBuzz
+
+Last updated: 2026-09-23
+
+### Status
+
+Accepted. Text rendering and the font domain are not yet implemented.
+
+### Context
+
+The existing canvas has GPU and SDL_Renderer paths. The future public font, text and GUI APIs must preserve the applicable reference behavior without exposing a second renderer or native backend types. Font rasterization alone does not supply every text-layout feature.
+
+### Decision
+
+- Use SDL_ttf 3 with HarfBuzz enabled for font loading, text shaping and glyph rasterization. Integrate its output into the existing Electron2D canvas paths; SDL_ttf does not define a separate public rendering API.
+- Keep text layout, fallback, measurement, selection, direction and drawing behavior behind Electron2D-owned, typed APIs. Audit the applicable `TextServer`, font and GUI contracts in the first text slice. Mixed-direction paragraphs, line breaking and other capabilities not supplied by the selected library require engine-owned integration; do not mark them implemented on the basis of SDL_ttf availability.
+- Vendor the complete SDL3-CS TTF managed binding module into `Electron2D.dll` when the executable text slice begins, following [ADR 0012](product.md#adr-0012). Pin and package native SDL_ttf with FreeType and HarfBuzz, whether linked or bundled, for each target. Verify HarfBuzz is enabled in the shipped native build; a build without it does not satisfy this decision.
+- Verify text output on both claimed canvas backends and on each claimed runtime platform under [ADR 0021](product.md#adr-0021), including browser packaging. Until those checks pass, keep unimplemented API and platform behavior blocked or explicitly unsupported in coverage.
+
+### Consequences
+
+- SDL_ttf supplies the native font and shaping foundation while the public contract and canvas integration remain owned by Electron2D.
+- This decision selects a backend, not a completed `TextServer`, font resource or GUI implementation. Native packages and managed bindings are added only with an executable text slice.
+
+### Rejected alternatives
+
+- Introduce SkiaSharp or another complete 2D renderer for text: rejected because Electron2D already owns a canvas renderer and would have to package and reconcile a second graphics stack.
+- Use glyph rasterization without HarfBuzz shaping: rejected because it cannot satisfy the multilingual text contract.

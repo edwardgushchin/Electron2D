@@ -131,10 +131,10 @@ Native SDL deployment remains a separate platform constraint outside the verifie
 <a id="adr-0012"></a>
 ## ADR 0012: Vendor SDL3-CS and Box2D.NET managed source
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Status: Accepted
-- Scope: Managed dependency ownership, deployment packaging, and future 2D physics
+- Scope: Managed dependency ownership, deployment packaging, and future 2D physics, text and audio
 - Refines: the one-managed-assembly rule in [0004](product.md#adr-0004)
 
 ### Context
@@ -145,13 +145,14 @@ SDL3-CS core binding source is pinned in `src/Vendor/SDL3-CS` and compiled into 
 
 ### Decision
 
-- Keep all Electron2D runtime code and the managed source of SDL3-CS and Box2D.NET in `Electron2D.csproj`, producing only `Electron2D.dll` as the managed engine artifact. Do not ship either dependency as a separate managed runtime assembly or depend on its NuGet package in a completed integration.
+- Keep all Electron2D runtime code and the managed source of selected backends, including SDL3-CS, Box2D.NET and the future FAudio binding, in `Electron2D.csproj`, producing only `Electron2D.dll` as the managed engine artifact. Do not ship these bindings as separate managed runtime assemblies or depend on their managed NuGet packages in a completed integration.
 - Keep the SDL3-CS core source vendored under `src/` and refresh it by release tag with `tools/update-sdl3-cs.sh`; vendor the managed source of `ikpil/Box2D.NET` under `src/` in the first executable 2D physics slice.
 - The first rendering slice must include the complete SDL3-CS ShaderCross binding module from the same pinned release and extend the source-refresh script accordingly. Its types remain internal to `Electron2D.dll`. The common SPIR-V reflection and backend-translation path uses SDL_shadercross under [ADR 0028](rendering.md#adr-0028). HLSL and GLSL source compilation belongs to project import/build tooling; account for those pinned compiler integrations separately from the runtime libraries required for SPIR-V reflection and backend translation. This decision does not restore a Silk.NET/shaderc runtime dependency. Record licenses, versions, delivery and native verification for the components actually integrated.
 - Image decoding uses SDL_image through the complete SDL3-CS Image binding module from that same release. The user-approved Linux dependency is `SDL3-CS.Linux.Image`, pinned to `3.4.6.9` (SDL_image 3.4.6), owned by `Electron2D.csproj` and delivered transitively to consumers. This adds native libraries while keeping managed bindings internal to `Electron2D.dll`; public codec integration and platform acceptance are tracked under [ADR 0039](resources.md#adr-0039). On Linux all SDL bindings and native extensions must share one core library; the engine resolves core imports by `libSDL3.so.0` and loads that core before SDL_image or SDL_shadercross.
+- The first text slice vendors the complete SDL3-CS TTF binding module and packages SDL_ttf 3 with HarfBuzz under [ADR 0046](rendering.md#adr-0046). The first audio slice compiles its selected managed FAudio binding into `Electron2D.dll` and packages native FAudio over SDL3 under [ADR 0047](audio.md#adr-0047). Neither backend is a production dependency until its executable slice is integrated and verified; both retain the one-managed-assembly and target-platform rules.
 - Pin each vendored source to an upstream release and commit, retain its required license notices, record local patches, and make upgrades explicit reviewable changes. Verify the compiled assembly, dependent behavior, and target-specific packaging after each update.
-- Keep vendored types behind internal implementation boundaries. The public and protected Electron2D API must not expose SDL3-CS or Box2D.NET types; verify the exported assembly surface when integrating either source tree. Physics nodes, resources, queries, contacts, and errors will use Electron2D types.
-- Engine consumers, including examples, games, and the editor, use only Electron2D's public API. They must not reference, import, or call SDL3-CS, Box2D.NET, or their native APIs, and must not declare backend package dependencies in their projects. Platform packages required by the engine flow from `Electron2D.csproj` into published applications. This rule applies to bootstrap code as well as scene code; backend probes belong in engine tests.
+- Keep vendored types behind internal implementation boundaries. The public and protected Electron2D API must not expose SDL3-CS, Box2D.NET or FAudio binding types; verify the exported assembly surface when integrating each source tree. Physics, text and audio APIs use Electron2D types.
+- Engine consumers, including examples, games, and the editor, use only Electron2D's public API. They must not reference, import, or call SDL3-CS, Box2D.NET, FAudio or their native APIs, and must not declare backend package dependencies in their projects. Platform packages required by the engine flow from `Electron2D.csproj` into published applications. This rule applies to bootstrap code as well as scene code; backend probes belong in engine tests.
 - Native SDL remains a target-specific deployment dependency. Its binary packaging, host lifecycle, and native verification belong to the SDL integration and platform slices under ADR 0021. Vendor source does not imply a single physical deployment file.
 - ADR 0028 selects the SDL GPU and SDL_Renderer roles, HLSL/GLSL import/build compilation, the common SPIR-V path and SDL_shadercross backend integration. The initial canvas and shader integration implements these boundaries with the limits documented in the Rendering domain. The physics domain remains absent.
 
