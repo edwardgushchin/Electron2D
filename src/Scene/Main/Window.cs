@@ -316,8 +316,21 @@ public partial class Window : Viewport
 
     private void HandleRect(RectI rect) => CommitSize(rect.Size);
     private void HandleFocus(bool focused) { if (focused) FocusEntered?.Invoke(); else FocusExited?.Invoke(); }
-    private void HandleMouseEntered() => MouseEntered?.Invoke();
-    private void HandleMouseExited() => MouseExited?.Invoke();
+    private void HandleMouseEntered()
+    {
+        List<Exception>? errors = null;
+        try { Tree?.EnterGUIViewport(this); } catch (Exception error) { CollectException(ref errors, error); }
+        try { MouseEntered?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Window pointer-enter callbacks failed.", errors);
+    }
+
+    private void HandleMouseExited()
+    {
+        List<Exception>? errors = null;
+        try { Tree?.ClearGUIHover(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { MouseExited?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Window pointer-exit callbacks failed.", errors);
+    }
     private void HandleDPIChanged() => DpiChanged?.Invoke();
     private void HandleFilesDropped(IReadOnlyList<string> paths) => FilesDropped?.Invoke(paths);
 

@@ -24,7 +24,7 @@ before its source event; generated mouse events also update raw and mapped state
 are lock-serialized; event delivery is synchronous on the caller thread and an attached [`SceneTree`](SceneTree.md)
 requires its owner thread.
 
-Native pointer controls use the active `DisplayServer` and do not keep a second copy of pointer state. They require a live display and its owner thread; the singleton itself remains available without a display for managed input state.
+Native pointer controls use the active `DisplayServer` for the current mouse mode and cursor shape. Input retains only the default cursor policy used when no Control overrides it. Native operations require a live display and its owner thread; the singleton itself remains available without a display for managed input state.
 
 ## Examples
 
@@ -75,7 +75,7 @@ if (input.IsActionPressed("jump"))
 | [`public void ParseInputEvent(InputEvent event)`](#m-electron2d-input-parseinputevent-electron2d-inputevent) | Submits one typed input event, updates state, and synchronously routes it to the active main loop. |
 | [`public void ReleasePressedEvents()`](#m-electron2d-input-releasepressedevents) | Releases every tracked key, mouse button, controller button, axis, and action source. |
 | [`public CursorShape GetCurrentCursorShape()`](#m-electron2d-input-getcurrentcursorshape) | Gets the shape selected on the active display. |
-| [`public void SetDefaultCursorShape(CursorShape shape = CursorShape.Arrow)`](#m-electron2d-input-setdefaultcursorshape) | Selects a native cursor immediately; retained GUI default behavior is incomplete. |
+| [`public void SetDefaultCursorShape(CursorShape shape = CursorShape.Arrow)`](#m-electron2d-input-setdefaultcursorshape) | Stores the viewport default and refreshes the current native cursor. |
 | [`public void SetCustomMouseCursor(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`](#m-electron2d-input-setcustommousecursor) | Installs copied image pixels in a cursor slot or restores the system shape. |
 | [`public void WarpMouse(Vector2 position)`](#m-electron2d-input-warpmouse) | Requests a native pointer warp on supporting backends. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-input-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
@@ -518,7 +518,7 @@ Returns the current display cursor shape, including a change made directly throu
 <a id="m-electron2d-input-setdefaultcursorshape"></a>
 ### `public void SetDefaultCursorShape(CursorShape shape = CursorShape.Arrow)`
 
-Selects one of the 17 native cursor shapes immediately. It does not yet retain a viewport default separate from the current cursor, honor Control-specific cursor overrides, or synthesize mouse motion to refresh hovering Controls. Those behaviors require the GUI hover/cursor routing slice.
+Stores one of the 17 native cursor shapes separately from the current display shape. It selects the native shape immediately, then reapplies an active root-viewport Control override if present. It does not synthesize mouse motion; the pinned event side effect and nested viewport routing remain gaps.
 
 <a id="m-electron2d-input-setcustommousecursor"></a>
 ### `public void SetCustomMouseCursor(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`
@@ -548,6 +548,6 @@ State/configuration queries are lock-serialized. Event parsing is serialized and
 
 ## Dependencies, verification, and limitations
 
-Depends on InputMap, typed event classes, Engine/MainLoop, SceneTree, core math and, for native pointer controls, the active DisplayServer. Managed tests cover input state, emulation order, first-contact ownership, release pairing, failure/re-entry, non-emulated allocation and root viewport Control GUI delivery. The optional SDL dummy-driver suite checks pointer modifier translation. A separate Wayland native run verifies all mouse modes, cursor shapes, a copied image and cleanup. Controller discovery/effects, sensors, MIDI, shortcuts, action persistence, complete GUI routing and nested viewports have exact implementation triggers in [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers); physical pointer hardware and the full native-host matrix have not been exercised.
+Depends on InputMap, typed event classes, Engine/MainLoop, SceneTree, core math and, for native pointer controls, the active DisplayServer. Managed tests cover input state, emulation order, first-contact ownership, release pairing, failure/re-entry, non-emulated allocation and root viewport Control GUI delivery and hover. The optional SDL dummy-driver suite checks pointer modifier translation. Targeted Wayland native runs verify pointer modes, cursor shapes, a copied image, Control cursor precedence and cleanup. Controller discovery/effects, sensors, MIDI, shortcuts, action persistence, complete GUI routing and nested viewports have exact implementation triggers in [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers); physical pointer hardware and the full native-host matrix have not been exercised.
 
 A SceneTree with a Viewport root localizes window coordinates after Input commits raw state. Positional callback events can therefore be distinct short-lived copies: polling and by-event transition identity still refer to the original parsed input. Canvas/viewport conversion never rewrites raw polling coordinates. See [Viewport.PushInput](Viewport.md#pushinput).

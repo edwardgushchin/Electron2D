@@ -14,7 +14,7 @@ Last updated: 2026-09-23
 
 Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the scene tree and canvas rendering API. A direct Control parent supplies the area for anchors; a root Control uses its viewport's visible size. A direct non-Control canvas parent supplies a zero-size anchor area in this slice. Detached controls also use a zero-size anchor area. Offsets are local canvas units; anchors are fractions of the parent area. Changes to the parent rectangle or viewport size reflow an attached control synchronously. Pivot, rotation and scale change the canvas transform without changing its layout rectangle. Control itself emits no drawing commands.
 
-The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection and bubbling. Full GUI behavior remains partial: hover notifications, content clipping, keyboard focus navigation, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, container sizing, layout direction, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
+The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Full GUI behavior remains partial: content clipping, stationary-pointer geometry changes, keyboard focus navigation, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, container sizing, layout direction, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
 
 ## Example
 
@@ -53,6 +53,7 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public float OffsetRight { get; set; }` | Right local offset. |
 | `public float OffsetBottom { get; set; }` | Bottom local offset. |
 | `public ControlMouseFilter MouseFilter { get; set; }` | Stop by default; Pass bubbles; Ignore does not receive or block pointer events. |
+| `public CursorShape MouseDefaultCursorShape { get; set; }` | Arrow by default; a hovered control refreshes the native cursor after a change. |
 | `public bool MouseForcePassScrollEvents { get; set; }` | True by default; permits wheel bubbling through Stop. |
 | `public ControlFocusMode FocusMode { get; set; }` | None by default; Click permits pointer or explicit focus. Keyboard navigation and All mode remain absent. |
 
@@ -74,6 +75,8 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public void GrabFocus(bool hideFocus = false)` | Requests focus while attached and visible. |
 | `public bool HasFocus(bool ignoreHiddenFocus = false)` | Queries whether this is the current focused control. |
 | `public void ReleaseFocus()` | Releases focus if held. |
+| `public CursorShape GetCursorShape(Vector2 atPosition = default)` | Queries the typed cursor override with control-local coordinates. |
+| `protected virtual CursorShape OnGetCursorShape(Vector2 atPosition)` | Returns MouseDefaultCursorShape unless overridden. |
 | `protected virtual bool HasPoint(Vector2 point)` | Tests a local point against the half-open rectangle; override for a custom hit shape. |
 | `protected virtual void OnGUIInput(InputEvent inputEvent)` | Receives routed pointer or focused keyboard input. |
 | `protected override void OnNotification(int what)` | Connects/disconnects layout sources and raises Resized after NotificationResized. |
@@ -89,7 +92,17 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public event Action<InputEvent>? GUIInput` | Raised after OnGUIInput with the same borrowed event. |
 | `public event Action? FocusEntered` | Raised after this control gains keyboard focus. |
 | `public event Action? FocusExited` | Raised after focus is released or transferred. |
+| `public event Action? MouseEntered` | Raised when the pointer enters the control or a reachable child. |
+| `public event Action? MouseExited` | Raised when the pointer leaves the control and reachable children. |
 | `public const int NotificationResized = 40` | Delivered before Resized, after the rectangle and transform are committed. |
+| `public const int NotificationMouseEnter = 41` / `NotificationMouseExit = 42` | Delivered before the corresponding hover event. |
+| `public const int NotificationMouseEnterSelf = 60` / `NotificationMouseExitSelf = 61` | Delivered when the direct hover target changes. |
+
+## Nested enums
+
+| Enum | Values |
+| --- | --- |
+| [CursorShape](Control.CursorShape.md) | Seventeen system cursor identities from Arrow = 0 through Help = 16. |
 
 ## Member behavior
 
@@ -119,7 +132,15 @@ Each property reads or sets one local offset through GetOffset and SetOffset. Th
 
 ### `MouseFilter`, `MouseForcePassScrollEvents`
 
-`MouseFilter` defaults to Stop and rejects undefined enum values. It controls hit selection and whether an unhandled pointer event bubbles through direct Control parents. `MouseForcePassScrollEvents` defaults to true and allows wheel input through a Stop control; setting it false makes Stop consume a wheel event. Both values are stored in a packed scene.
+`MouseFilter` defaults to Stop and rejects undefined enum values. It controls hit selection, hover ancestry and whether an unhandled pointer event bubbles through direct Control parents. Changing it refreshes current hover. `MouseForcePassScrollEvents` defaults to true and allows wheel input through a Stop control; setting it false makes Stop consume a wheel event. Both values are stored in a packed scene.
+
+### `MouseDefaultCursorShape`, `GetCursorShape`, `OnGetCursorShape`
+
+The stored property defaults to Arrow, rejects unknown enum values, and is captured by PackedScene. `GetCursorShape` validates finite local coordinates and the override result. The virtual hook returns the stored property by default. While hovering, the scene queries the direct target first, then eligible Control ancestors until a non-Arrow shape or Stop filter is found. A property change refreshes the native cursor on the owner thread.
+
+### `MouseEntered`, `MouseExited`, mouse notifications
+
+Root-viewport pointer motion updates the hover chain even if a Node handled the input. Entry is ancestor first and exit is descendant first; direct-target self notifications are distinct from chain notifications. Each chain notification precedes its event. Hidden or detached controls release their hover chain, and native window exit clears it. Callback failures are collected while later eligible callbacks continue. Clipping, stationary-pointer geometry changes and nested viewport semantics remain incomplete.
 
 ### `FocusMode`, `GrabFocus`, `HasFocus`, `ReleaseFocus`
 
@@ -165,11 +186,11 @@ When reflow changes position or size, the control commits both values, invalidat
 
 ## Verification and limits
 
-[ControlLayoutTests](../../tests/Electron2D.Tests/ControlLayoutTests.cs) check nested anchors, parent and viewport resize propagation, callback order, transform inheritance, packed anchors/offsets, pivot/global position, invalid arguments, owner thread and disposal. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) check root viewport GUI input order, local coordinates, filter/bubbling, wheel pass, focus, pointer release capture, temporary event ownership and callback failure continuation. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) includes a child Sprite pixel check in the native renderer. Native GUI interaction and full reference parity are unverified.
+[ControlLayoutTests](../../tests/Electron2D.Tests/ControlLayoutTests.cs) check nested anchors, parent and viewport resize propagation, callback order, transform inheritance, packed anchors/offsets, pivot/global position, invalid arguments, owner thread and disposal. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) check root viewport GUI input order, local coordinates, filter/bubbling, wheel pass, focus, pointer release capture, temporary event ownership and callback failure continuation. [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs) checks managed hover ordering, filters, notifications and cursor state; [ControlHoverNativeTests](../../tests/Electron2D.Tests/ControlHoverNativeTests.cs) checks native cursor precedence on Linux Wayland. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) includes a child Sprite pixel check in the native renderer. Full GUI interaction and reference parity remain unverified.
 
 ### GUI input behavior
 
-The top hit Control in a root viewport receives a temporary local pointer event. The root GUI picker orders by canvas layer, effective Z and reverse scene traversal; it does not yet match every renderer ordering rule. `Ignore` is skipped; `Pass` continues through direct Control parents until handled or a `Stop` control; `Stop` handles the event automatically. Wheel events pass a `Stop` control when `MouseForcePassScrollEvents` is true. A left-button press retains its target for the corresponding release and held-pointer motion. A left press focuses an eligible control, with hidden visual focus. Explicit `GrabFocus` takes focus without hiding it; hiding, detaching or setting `FocusMode` to None releases it. Keyboard, controller and action events reach the focused control without bubbling. `AcceptEvent` stops later GUI and unhandled stages. Failures are aggregated after other eligible scene callbacks run; positional GUI copies are disposed after synchronous delivery. No hover signals, clipping, multiple-button capture, navigation or nested viewport route is claimed.
+The top hit Control in a root viewport receives a temporary local pointer event. The root GUI picker orders by canvas layer, effective Z and reverse scene traversal; it does not yet match every renderer ordering rule. `Ignore` is skipped; `Pass` continues through direct Control parents until handled or a `Stop` control; `Stop` handles the event automatically. Wheel events pass a `Stop` control when `MouseForcePassScrollEvents` is true. A left-button press retains its target for the corresponding release and held-pointer motion. A left press focuses an eligible control, with hidden visual focus. Explicit `GrabFocus` takes focus without hiding it; hiding, detaching or setting `FocusMode` to None releases it. Keyboard, controller and action events reach the focused control without bubbling. `AcceptEvent` stops later GUI and unhandled stages. Failures are aggregated after other eligible scene callbacks run; positional GUI copies are disposed after synchronous delivery. Hover uses the same root picker. Clipping, multiple-button capture, navigation and nested viewport routes remain incomplete.
 
 Targeted scene-hierarchy pixel checks passed on Linux Wayland compatibility/GPU and dummy/software. The full Wayland rendering runtime suite in this run passed, including the camera, canvas-layer and scene-hierarchy stages.
 

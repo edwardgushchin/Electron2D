@@ -22,9 +22,58 @@ public enum ControlFocusMode
 
 public partial class Control
 {
+    /// <summary>Identifies the system cursor shown over a control.</summary>
+    public enum CursorShape
+    {
+        /// <summary>Arrow pointer.</summary>
+        Arrow = 0,
+        /// <summary>Text selection.</summary>
+        IBeam = 1,
+        /// <summary>Clickable link.</summary>
+        PointingHand = 2,
+        /// <summary>Crosshair.</summary>
+        Cross = 3,
+        /// <summary>Nonblocking wait.</summary>
+        Wait = 4,
+        /// <summary>Blocking wait.</summary>
+        Busy = 5,
+        /// <summary>Drag.</summary>
+        Drag = 6,
+        /// <summary>Drop allowed.</summary>
+        CanDrop = 7,
+        /// <summary>Drop forbidden.</summary>
+        Forbidden = 8,
+        /// <summary>Vertical resize.</summary>
+        VSize = 9,
+        /// <summary>Horizontal resize.</summary>
+        HSize = 10,
+        /// <summary>Northeast-southwest diagonal resize.</summary>
+        BDiagSize = 11,
+        /// <summary>Northwest-southeast diagonal resize.</summary>
+        FDiagSize = 12,
+        /// <summary>Move in any direction.</summary>
+        Move = 13,
+        /// <summary>Vertical split resize.</summary>
+        VSplit = 14,
+        /// <summary>Horizontal split resize.</summary>
+        HSplit = 15,
+        /// <summary>Help.</summary>
+        Help = 16,
+    }
+
+    /// <summary>Pointer entered this control or a reachable child control.</summary>
+    public const int NotificationMouseEnter = 41;
+    /// <summary>Pointer exited this control and all reachable child controls.</summary>
+    public const int NotificationMouseExit = 42;
+    /// <summary>This control became the directly hovered control.</summary>
+    public const int NotificationMouseEnterSelf = 60;
+    /// <summary>This control stopped being the directly hovered control.</summary>
+    public const int NotificationMouseExitSelf = 61;
+
     private ControlMouseFilter _mouseFilter;
     private ControlFocusMode _focusMode;
     private bool _mouseForcePassScrollEvents = true;
+    private CursorShape _mouseDefaultCursorShape;
 
     /// <summary>Receives a temporary control-local input event after <see cref="OnGUIInput"/>.</summary>
     /// <remarks>The event is borrowed for the duration of the callback. Pointer input targets one hit control,
@@ -37,12 +86,44 @@ public partial class Control
     /// <summary>Occurs after this control loses keyboard focus.</summary>
     public event Action? FocusExited;
 
+    /// <summary>Occurs when the pointer enters this control or its reachable child area.</summary>
+    /// <remarks>Raised after <see cref="NotificationMouseEnter"/> on the scene owner thread. Ancestors enter before descendants.</remarks>
+    public event Action? MouseEntered;
+
+    /// <summary>Occurs when the pointer leaves this control and its reachable child area.</summary>
+    /// <remarks>Raised after <see cref="NotificationMouseExit"/> on the scene owner thread. Descendants exit before ancestors.</remarks>
+    public event Action? MouseExited;
+
     /// <summary>Gets or sets how pointer input reaches this control.</summary>
     /// <value><see cref="ControlMouseFilter.Stop"/> by default.</value>
     public ControlMouseFilter MouseFilter
     {
         get { ThrowIfDisposed(); return _mouseFilter; }
-        set { EnsureMutable(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); _mouseFilter = value; }
+        set
+        {
+            EnsureMutable();
+            if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value));
+            if (_mouseFilter == value) return;
+            _mouseFilter = value;
+            Tree?.RefreshGUIHover();
+        }
+    }
+
+    /// <summary>Gets or sets the cursor shape used when this control is hovered.</summary>
+    /// <value>Arrow by default. A change on a hovered control refreshes the native cursor immediately.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The value is not a defined cursor shape.</exception>
+    /// <exception cref="ObjectDisposedException">This control is disposed.</exception>
+    public CursorShape MouseDefaultCursorShape
+    {
+        get { ThrowIfDisposed(); return _mouseDefaultCursorShape; }
+        set
+        {
+            EnsureMutable();
+            if ((uint)value > (uint)CursorShape.Help) throw new ArgumentOutOfRangeException(nameof(value));
+            if (_mouseDefaultCursorShape == value) return;
+            _mouseDefaultCursorShape = value;
+            Tree?.RefreshGUICursor(this);
+        }
     }
 
     /// <summary>Lets wheel input continue to the parent even when <see cref="MouseFilter"/> is Stop.</summary>
@@ -101,6 +182,26 @@ public partial class Control
     /// <returns>True for points inside the half-open rectangle from zero to <see cref="Size"/>.</returns>
     protected virtual bool HasPoint(Vector2 point) => point.X >= 0 && point.Y >= 0 && point.X < Size.X && point.Y < Size.Y;
 
+    /// <summary>Returns the cursor shape for a position in this control's local coordinates.</summary>
+    /// <param name="atPosition">Finite local coordinates; the point need not be inside the rectangle.</param>
+    /// <returns>The virtual override's shape, or <see cref="MouseDefaultCursorShape"/>.</returns>
+    /// <exception cref="ArgumentException">The local position is not finite.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The virtual override returns an undefined shape.</exception>
+    /// <exception cref="ObjectDisposedException">This control is disposed.</exception>
+    public CursorShape GetCursorShape(Vector2 atPosition = default)
+    {
+        ThrowIfDisposed();
+        if (!atPosition.IsFinite()) throw new ArgumentException("Cursor position must be finite.", nameof(atPosition));
+        var shape = OnGetCursorShape(atPosition);
+        if ((uint)shape > (uint)CursorShape.Help) throw new ArgumentOutOfRangeException(nameof(shape), shape, "Unknown cursor shape.");
+        return shape;
+    }
+
+    /// <summary>Chooses a cursor for a control-local position; defaults to <see cref="MouseDefaultCursorShape"/>.</summary>
+    /// <param name="atPosition">Finite coordinates local to this control.</param>
+    /// <returns>The shape selected for the given position.</returns>
+    protected virtual CursorShape OnGetCursorShape(Vector2 atPosition) => _mouseDefaultCursorShape;
+
     /// <summary>Processes a temporary control-local event before <see cref="GUIInput"/> subscribers.</summary>
     /// <param name="inputEvent">Borrowed event valid only during synchronous dispatch.</param>
     protected virtual void OnGUIInput(InputEvent inputEvent) { }
@@ -113,4 +214,6 @@ public partial class Control
     }
     internal void NotifyFocusEntered() => FocusEntered?.Invoke();
     internal void NotifyFocusExited() => FocusExited?.Invoke();
+    internal void NotifyMouseEntered() => MouseEntered?.Invoke();
+    internal void NotifyMouseExited() => MouseExited?.Invoke();
 }

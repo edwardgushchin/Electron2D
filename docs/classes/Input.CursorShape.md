@@ -38,11 +38,11 @@ Standard native cursor identities used by `Input.GetCurrentCursorShape`, `Input.
 
 ## Lifecycle and interactions
 
-The enum is immutable. The active display owns both the current shape and any custom image slots. Selecting an unknown numeric value fails before native mutation. Control hover overrides and retained viewport-default behavior remain a GUI prerequisite.
+The enum is immutable. The active display owns the current native shape and custom image slots. Input retains the viewport default separately so a hovered Control can override it. Selecting an unknown numeric value fails before native mutation.
 
 ## Verification and limitations
 
-The targeted Linux Wayland test selects all 17 values through Input and reads back the native cursor, including a shape set directly through DisplayServer. Other platform cursor themes have not been natively checked.
+The targeted Linux Wayland test selects all 17 values through Input and reads back the native cursor, including a shape set directly through DisplayServer. A separate native scene check covers Control precedence. Other platform cursor themes have not been natively checked.
 
 ## Relevant decisions
 

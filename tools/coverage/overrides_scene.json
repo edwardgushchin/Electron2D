@@ -4,6 +4,7 @@
     {"electron2d": "property:Electron2D.InputEventScreenDrag.Index()", "godot": "InputEventScreenDrag::property:index", "reason": "Signed drag-contact identifier maps to the typed C# property."},
     {"electron2d": "method:Electron2D.Control.OnGUIInput(Electron2D.InputEvent)", "godot": "Control::method:_gui_input(InputEvent:)", "state": "Partial", "reason": "Root viewport input invokes the typed virtual callback after Node input, with pointer hit testing and focused keyboard delivery. Hover, clipping, full draw order, nested viewports and callback/signal order remain to audit."},
     {"electron2d": "method:Electron2D.Control.HasPoint(Electron2D.Vector2)", "godot": "Control::method:_has_point(Vector2:)", "state": "Partial", "reason": "A virtual half-open local rectangle test is used for root viewport pointer targeting; custom shapes work. Clipping and full draw order remain to audit."},
+    {"electron2d": "method:Electron2D.Control.OnGetCursorShape(Electron2D.Vector2)", "godot": "Control::method:_get_cursor_shape(Vector2:)", "state": "Partial", "reason": "Typed virtual cursor lookup receives control-local coordinates. Root viewport hover and native cursor selection are executable; clipping, overlapping canvas ordering and nested viewport behavior remain to audit."},
     {"electron2d": "property:Electron2D.Polygon.Vertices()", "godot": "Polygon2D::property:polygon", "state": "Partial", "reason": "ADR 0004 maps the vertex list to Vertices because C# forbids a Polygon member on Polygon. Copied finite vertices, default contour, inverted fill and packed state execute; full skeletal geometry remains absent."},
     {"electron2d": "method:Electron2D.Line.GetPointCount()", "godot": "Line2D::method:get_point_count()", "state": "Implemented", "reason": "Returns the stored point count, including duplicate points; LineTests covers insertion, removal and clear."},
     {"electron2d": "method:Electron2D.Control.GetGlobalRect()", "godot": "Control::method:get_global_rect()", "state": "Partial", "reason": "Control rectangle query uses the composed canvas transform and current layout size; rotation and layout-direction parity remain to audit."},
@@ -2582,6 +2583,16 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Partial",
+      "reason": "All 17 cursor identities and the typed local-position override are executable. Root viewport hover selects the native cursor on Linux Wayland; clipping, overlapping canvas ordering and nested viewport behavior remain to audit.",
+      "godot": ["Control::enum:CursorShape", "Control::method:get_cursor_shape(Vector2:)", "Control::property:mouse_default_cursor_shape"]
+    },
+    {
+      "state": "Partial",
+      "reason": "Root viewport pointer motion, MouseFilter changes and window exit deliver hover transitions in ancestor order; managed and native Wayland checks execute. Clipping, overlapping canvas ordering, stationary-pointer geometry changes and nested viewports remain to audit.",
+      "godot": ["Control::signal:mouse_entered()", "Control::signal:mouse_exited()"]
+    },
     {
       "state": "Implemented",
       "reason": "Default zero and unrestricted signed int storage match the pinned setter/getter; VerifyInput checks int.MinValue and duplication. Native SDL-generated indexes are a separate adapter concern.",

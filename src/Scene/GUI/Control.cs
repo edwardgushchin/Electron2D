@@ -240,6 +240,7 @@ public partial class Control : CanvasItem
             List<Exception>? errors = null;
             try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
             try { Tree?.ReleaseGUIFocus(this); } catch (Exception error) { CollectException(ref errors, error); }
+            try { Tree?.ReleaseGUIHover(this); } catch (Exception error) { CollectException(ref errors, error); }
             ThrowCollected("Control visibility callbacks failed.", errors);
         }
         else base.OnNotification(what);
@@ -263,7 +264,7 @@ public partial class Control : CanvasItem
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { DisconnectLayoutSource(); Resized = null; GUIInput = null; FocusEntered = null; FocusExited = null; }
+        if (disposing) { DisconnectLayoutSource(); Resized = null; GUIInput = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; }
         base.Dispose(disposing);
     }
 
@@ -313,6 +314,7 @@ public partial class Control : CanvasItem
         new PropertyDescriptor<Control, float>(nameof(OffsetBottom), node => node.OffsetBottom, (node, value) => node.OffsetBottom = value, _ => 0f, stored: true),
         new PropertyDescriptor<Control, ControlMouseFilter>(nameof(MouseFilter), node => node.MouseFilter, (node, value) => node.MouseFilter = value, _ => ControlMouseFilter.Stop, stored: true),
         new PropertyDescriptor<Control, bool>(nameof(MouseForcePassScrollEvents), node => node.MouseForcePassScrollEvents, (node, value) => node.MouseForcePassScrollEvents = value, _ => true, stored: true),
-        new PropertyDescriptor<Control, ControlFocusMode>(nameof(FocusMode), node => node.FocusMode, (node, value) => node.FocusMode = value, _ => ControlFocusMode.None, stored: true)
+        new PropertyDescriptor<Control, ControlFocusMode>(nameof(FocusMode), node => node.FocusMode, (node, value) => node.FocusMode = value, _ => ControlFocusMode.None, stored: true),
+        new PropertyDescriptor<Control, CursorShape>(nameof(MouseDefaultCursorShape), node => node.MouseDefaultCursorShape, (node, value) => node.MouseDefaultCursorShape = value, _ => CursorShape.Arrow, stored: true)
     ];
 }

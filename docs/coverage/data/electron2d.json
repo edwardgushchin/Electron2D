@@ -329,6 +329,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Control.CursorShape",
+    "kind": "type",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "CursorShape",
+    "signature": "public enum Electron2D.Control.CursorShape",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ControlFocusMode",
     "kind": "type",
     "declaringType": "Electron2D.ControlFocusMode",
@@ -2875,6 +2893,58 @@
     "parameters": [],
     "returnType": "System.Int32",
     "value": "31"
+  },
+  {
+    "id": "constant:Electron2D.Control.NotificationMouseEnter()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Control",
+    "name": "NotificationMouseEnter",
+    "signature": "public const System.Int32 NotificationMouseEnter = 41",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "41"
+  },
+  {
+    "id": "constant:Electron2D.Control.NotificationMouseEnterSelf()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Control",
+    "name": "NotificationMouseEnterSelf",
+    "signature": "public const System.Int32 NotificationMouseEnterSelf = 60",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "60"
+  },
+  {
+    "id": "constant:Electron2D.Control.NotificationMouseExit()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Control",
+    "name": "NotificationMouseExit",
+    "signature": "public const System.Int32 NotificationMouseExit = 42",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "42"
+  },
+  {
+    "id": "constant:Electron2D.Control.NotificationMouseExitSelf()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Control",
+    "name": "NotificationMouseExitSelf",
+    "signature": "public const System.Int32 NotificationMouseExitSelf = 61",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "61"
   },
   {
     "id": "constant:Electron2D.Control.NotificationResized()",
@@ -5871,6 +5941,227 @@
     "parameters": [],
     "returnType": "Electron2D.ClockDirection",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.Arrow()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "Arrow",
+    "signature": "public const Electron2D.Control.CursorShape Arrow = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.BDiagSize()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "BDiagSize",
+    "signature": "public const Electron2D.Control.CursorShape BDiagSize = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.Busy()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "Busy",
+    "signature": "public const Electron2D.Control.CursorShape Busy = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.CanDrop()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "CanDrop",
+    "signature": "public const Electron2D.Control.CursorShape CanDrop = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.Cross()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "Cross",
+    "signature": "public const Electron2D.Control.CursorShape Cross = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.Drag()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "Drag",
+    "signature": "public const Electron2D.Control.CursorShape Drag = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.FDiagSize()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "FDiagSize",
+    "signature": "public const Electron2D.Control.CursorShape FDiagSize = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.Forbidden()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "Forbidden",
+    "signature": "public const Electron2D.Control.CursorShape Forbidden = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.HSize()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "HSize",
+    "signature": "public const Electron2D.Control.CursorShape HSize = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.HSplit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "HSplit",
+    "signature": "public const Electron2D.Control.CursorShape HSplit = 15",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "15"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.Help()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "Help",
+    "signature": "public const Electron2D.Control.CursorShape Help = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.IBeam()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "IBeam",
+    "signature": "public const Electron2D.Control.CursorShape IBeam = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.Move()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "Move",
+    "signature": "public const Electron2D.Control.CursorShape Move = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.PointingHand()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "PointingHand",
+    "signature": "public const Electron2D.Control.CursorShape PointingHand = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.VSize()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "VSize",
+    "signature": "public const Electron2D.Control.CursorShape VSize = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.VSplit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "VSplit",
+    "signature": "public const Electron2D.Control.CursorShape VSplit = 14",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "14"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.CursorShape.Wait()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.CursorShape",
+    "name": "Wait",
+    "signature": "public const Electron2D.Control.CursorShape Wait = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": "4"
   },
   {
     "id": "enumValue:Electron2D.ControlFocusMode.Click()",
@@ -14180,6 +14471,32 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Control.MouseEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.Control",
+    "name": "MouseEntered",
+    "signature": "public event System.Action MouseEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Control.MouseExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.Control",
+    "name": "MouseExited",
+    "signature": "public event System.Action MouseExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Control.Resized()",
     "kind": "event",
     "declaringType": "Electron2D.Control",
@@ -19138,6 +19455,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.GetCursorShape(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetCursorShape",
+    "signature": "public Electron2D.Control.CursorShape GetCursorShape(Electron2D.Vector2 atPosition = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": "default"
+      }
+    ],
+    "returnType": "Electron2D.Control.CursorShape",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.GetGlobalRect()",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -19308,6 +19644,25 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.OnGetCursorShape(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnGetCursorShape",
+    "signature": "protected virtual Electron2D.Control.CursorShape OnGetCursorShape(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Control.CursorShape",
     "value": null
   },
   {
@@ -52800,6 +53155,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.MouseDefaultCursorShape()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "MouseDefaultCursorShape",
+    "signature": "public Electron2D.Control.CursorShape MouseDefaultCursorShape { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.CursorShape",
     "value": null
   },
   {

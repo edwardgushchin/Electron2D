@@ -2,6 +2,10 @@ namespace Electron2D;
 
 public sealed partial class Input
 {
+    private int _defaultCursorShape;
+
+    internal CursorShape DefaultCursorShape => (CursorShape)Volatile.Read(ref _defaultCursorShape);
+
     /// <summary>Controls visibility and confinement of the main window's mouse pointer.</summary>
     /// <remarks>The Enum suffix avoids a C# name collision with the MouseMode property.</remarks>
     public enum MouseModeEnum
@@ -73,13 +77,18 @@ public sealed partial class Input
     /// <exception cref="InvalidOperationException">There is no active display.</exception>
     public CursorShape GetCurrentCursorShape() => (CursorShape)RequireDisplay().CursorGetShape();
 
-    /// <summary>Installs a native cursor shape immediately on the active display.</summary>
+    /// <summary>Sets the viewport's default native cursor shape and refreshes its current selection.</summary>
     /// <param name="shape">A standard shape; Arrow by default.</param>
-    /// <remarks>This shape is the current native selection. Retained viewport defaults, Control-specific overrides, and synthetic motion refresh require the later GUI hover slice.</remarks>
+    /// <remarks>A hovered Control can override this default. The active scene's cursor is refreshed without synthesizing a mouse-motion input event.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The shape is invalid.</exception>
     /// <exception cref="InvalidOperationException">There is no active display or the native change fails.</exception>
-    public void SetDefaultCursorShape(CursorShape shape = CursorShape.Arrow) =>
+    public void SetDefaultCursorShape(CursorShape shape = CursorShape.Arrow)
+    {
         RequireDisplay().CursorSetShape((DisplayServer.CursorShape)shape);
+        Volatile.Write(ref _defaultCursorShape, (int)shape);
+        if (Engine.Instance.MainLoop is SceneTree tree)
+            tree.RefreshGUICursor();
+    }
 
     /// <summary>Installs or clears a copied image for one native cursor shape.</summary>
     /// <param name="image">A caller-owned Image or readable Texture, or null to restore the system shape.</param>

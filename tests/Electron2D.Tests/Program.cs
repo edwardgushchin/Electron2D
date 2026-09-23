@@ -27,6 +27,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INPUT_POINTER") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_HOVER") == "1")
+{
+    ControlHoverNativeTests.Run();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_IME_MOVE") == "1")
 {
     DisplayServerImeNativeTests.RunMove();
@@ -128,6 +134,7 @@ SceneHierarchyTests.Run();
 RemoteTransformTests.Run();
 ControlLayoutTests.Run();
 ControlInputTests.Run();
+ControlHoverTests.Run();
 CanvasLifecycleTests.Run();
 CanvasSamplingTests.Run();
 CanvasPixelSnapTests.Run();

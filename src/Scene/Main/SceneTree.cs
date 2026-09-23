@@ -12,7 +12,7 @@ namespace Electron2D;
 /// Electron2D does not create a frame-pump thread. A host can drive the loop through <see cref="Engine.AdvanceFrame"/>,
 /// call <see cref="MainLoop.Process"/> and <see cref="MainLoop.PhysicsProcess"/> directly, or use this class's wrappers.
 /// </remarks>
-public sealed class SceneTree : MainLoop
+public sealed partial class SceneTree : MainLoop
 {
     private const GroupCallFlags SupportedGroupCallFlags =
         GroupCallFlags.Reverse | GroupCallFlags.Deferred | GroupCallFlags.Unique;
@@ -822,6 +822,9 @@ public sealed class SceneTree : MainLoop
             CaptureInputNodes();
             DispatchInputStage(@event, InputStage.Input, ref errors);
 
+            if (Root is Viewport hoverViewport && @event is InputEventMouse hoverMouse)
+                UpdateGUIHover(hoverViewport, hoverMouse.Position, ref errors);
+
             if (!_inputHandled && Root is Viewport viewport)
                 DispatchGUIInput(viewport, @event, ref errors);
 
@@ -830,6 +833,9 @@ public sealed class SceneTree : MainLoop
 
             if (!_inputHandled)
                 DispatchInputStage(@event, InputStage.Unhandled, ref errors);
+
+            if (_guiHoverRefreshPending && _guiHoverKnown && _guiHoverViewport is { } refreshViewport)
+                UpdateGUIHover(refreshViewport, _guiHoverPosition, ref errors);
         }
         finally
         {
