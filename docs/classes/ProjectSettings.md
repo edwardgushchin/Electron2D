@@ -54,6 +54,7 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<int> MaxPhysicsStepsPerFrame { get; }`](#p-electron2d-projectsettings-maxphysicsstepsperframe) | Defines the maximum fixed-step callbacks processed during one frame. |
 | [`public static ProjectSetting<double> PhysicsJitterFix { get; }`](#p-electron2d-projectsettings-physicsjitterfix) | Defines the finite non-negative fixed-step boundary tolerance. |
 | [`public static ProjectSetting<string> RenderingMethod { get; }`](#p-electron2d-projectsettings-renderingmethod) | Selects `gpu` or `compatibility` at renderer startup. |
+| [`public static ProjectSetting<double> RenderingTimeRolloverSeconds { get; }`](#renderingtimerolloverseconds) | Sets the render-clock wrap period, default 3600 seconds. |
 | [`public static ProjectSetting<bool> RenderingFallback { get; }`](#p-electron2d-projectsettings-renderingfallback) | Allows compatibility rendering if GPU initialization fails. |
 | [`public static ProjectSetting<bool> SnapTransformsToPixel { get; }`](#snaptransformstopixel) | Initial transform snapping for a new root Window; false. |
 | [`public static ProjectSetting<bool> SnapVerticesToPixel { get; }`](#snapverticestopixel) | Initial vertex snapping for a new root Window; false. |
@@ -281,6 +282,15 @@ Gets the absolute path reserved for generated project-local engine data.
 Gets a monotonically increasing in-process registry version.
 
 **Value:** A value starting at one and incremented after registry, value, or active-feature changes.
+
+### RenderingTimeRolloverSeconds
+
+`public static ProjectSetting<double> RenderingTimeRolloverSeconds { get; }`
+
+Defines `rendering/limits/time/time_rollover_secs`, default 3600 seconds. Finite positive values are accepted; zero, negative or nonserializable values fail before committing a setting change. The active feature override is read on each submitted frame, so changes apply to an existing renderer. The render clock adds the scaled scheduled process step and takes its remainder by this limit. It starts at zero for each Engine.Run, freezes when rendering is disabled/hidden, and continues while the tree is paused.
+
+Currently this setting drives [canvas animation intervals](CanvasItem.md#drawanimationslice). Automatic shader TIME delivery is not integrated, so the broader shader-facing setting contract remains Partial in coverage. CanvasTimingTests checks the default/validation; CanvasTimingRenderingTests checks live base and feature-override updates on both Linux backends.
+
 
 ## Method Descriptions
 

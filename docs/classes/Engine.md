@@ -445,3 +445,7 @@ The original scheduling checks use deterministic supplied deltas. WindowRuntimeT
 
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
+
+## Canvas render time
+
+Engine.Run captures the scheduled scaled process delta before callbacks and passes it to the renderer after a successful scene frame. Mid-frame TimeScale changes take effect on the next frame. Manual AdvanceFrame does not submit canvas frames. See [render-clock ordering and checks](../components/canvas-rendering.md#animation-intervals-and-rectangles).

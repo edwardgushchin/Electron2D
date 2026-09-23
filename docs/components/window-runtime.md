@@ -39,3 +39,7 @@ Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.m
 Changed Window.Title values request selected-scene configuration-warning refresh before TitleChanged, after committing the native and stored title. Equal assignments do nothing. PathRenderingTests verifies this ordering and committed state after a throwing listener on Wayland and dummy. The base diagnostic API creates no editor UI.
 
 CanvasTransform and GlobalCanvasTransform are runtime, non-stored Viewport descriptors. Root drawing and pointer/input conversion share the [canvas coordinate contract](canvas-rendering.md#viewport-coordinates); CanvasCoordinateTests and CanvasCoordinateRenderingTests cover matrix order, ownership, failures and native integration.
+
+## Canvas render time
+
+[Canvas animation intervals](canvas-rendering.md#animation-intervals-and-rectangles) use captured scaled process steps and a live typed rollover setting; ordered transform state is replayed alongside retained geometry. The clock is per Engine.Run and does not imply automatic shader TIME support.

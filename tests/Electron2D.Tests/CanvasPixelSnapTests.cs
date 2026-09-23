@@ -52,7 +52,7 @@ internal static class CanvasPixelSnapTests
         using var texture = ImageTexture.CreateFromImage(image);
         var vertices = new List<CanvasVertex>();
         var transform = new Transform(new(1.8f, 0.6f), new(-0.4f, 1.6f), new(0.2f, 0.2f));
-        var command = new CanvasCommand(false, Vector2.Zero, new(2, 2), Colors.White, true, 0, false, Transform.Identity, texture, new(0, 0, 1, 1), ClipUV: true);
+        var command = new CanvasCommand(false, Vector2.Zero, new(2, 2), Colors.White, 0, false, Transform.Identity, texture, new(0, 0, 1, 1), ClipUV: true);
         CanvasGeometry.Append(vertices, command, transform, Colors.White, snapVertices: true);
         // Rounded primitive corners are (0,0), (4,1), (3,5), (-1,3), a non-parallelogram.
         Check(vertices.Any(v => v.Position.IsEqualApprox(new(0.75f, 1.25f))) &&
@@ -61,10 +61,12 @@ internal static class CanvasPixelSnapTests
         for (var i = 0; i < vertices.Count; i += 3)
             area += MathF.Abs((vertices[i + 1].Position - vertices[i].Position).Cross(vertices[i + 2].Position - vertices[i].Position)) / 2;
         Check(MathF.Abs(area - 15.5f) < 0.0001f && vertices.All(v => v.UV.X is >= 0.25f and <= 0.75f && v.UV.Y is >= 0.25f and <= 0.75f), "Clipped triangles cover the snapped primitive exactly and preserve source borders.");
+        var fill = new CanvasStroke(); fill.SetRect(new(0, 0, 2, 2), Colors.White, true, -1, true);
+        var outline = new CanvasStroke(); outline.SetRect(new(0, 0, 2, 2), Colors.White, false, 1.2f, true);
         var shapes = new[]
         {
-            command with { Texture = null, Antialiased = true },
-            command with { Texture = null, Filled = false, Width = 1.2f, Antialiased = true },
+            command with { Texture = null, Stroke = fill },
+            command with { Texture = null, Stroke = outline },
             command with { Texture = null, Line = true, Width = -1, Antialiased = true },
             command with { Transpose = true, B = new(-2, 2) },
         };

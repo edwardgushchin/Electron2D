@@ -252,10 +252,10 @@ public sealed partial class Engine : ElectronObject
     {
         if (Volatile.Read(ref _applicationRun) != 0)
             throw new InvalidOperationException("Engine.Run owns frame execution until it returns.");
-        return AdvanceFrameCore(elapsedSeconds);
+        return AdvanceFrameCore(elapsedSeconds, out _);
     }
 
-    private bool AdvanceFrameCore(double elapsedSeconds)
+    private bool AdvanceFrameCore(double elapsedSeconds, out double renderStep)
     {
         if (!double.IsFinite(elapsedSeconds) || elapsedSeconds < 0d)
             throw new ArgumentOutOfRangeException(nameof(elapsedSeconds), elapsedSeconds, "Elapsed time must be finite and non-negative.");
@@ -294,6 +294,7 @@ public sealed partial class Engine : ElectronObject
 
             var scaledPhysicsStep = physicsStep * timeScale;
             var scaledProcessStep = timing.ProcessStep * timeScale;
+            renderStep = scaledProcessStep;
 
             if (!double.IsFinite(scaledPhysicsStep) || !double.IsFinite(scaledProcessStep))
                 throw new InvalidOperationException("The current time scale produces a non-finite callback delta.");

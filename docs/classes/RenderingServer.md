@@ -112,3 +112,7 @@ Root canvas replay starts with `framebufferScale * window.GetFinalTransform() * 
 ## Canvas mask submission
 
 Before ordering/traversing a canvas branch, RenderingServer independently tests CanvasItem.VisibilityLayer against the root Viewport.CanvasCullMask. Nested Y-sort collection prunes rejected intermediaries before flattening. Separate roots and CanvasLayer groups retain their normal ordering. Pending drawing still records, and zero masks still clear/present frames. Only submitted batches participate in shader capability rejection. See [mask semantics and native checks](../components/canvas-rendering.md#canvas-visibility-masks).
+
+## Canvas render time
+
+After FramePreDraw, RenderingServer advances its per-run clock by the captured scaled process step and wraps it by the active [RenderingTimeRolloverSeconds](ProjectSettings.md#renderingtimerolloverseconds). CanvasItem evaluates ordered interval/transform commands against that value each frame. Disabled rendering or an invisible root skips both submission and clock advancement. Tree pause leaves time advancing; TimeScale zero freezes it. Shader TIME binding remains unimplemented. See [canvas timing verification](../components/canvas-rendering.md#animation-intervals-and-rectangles).

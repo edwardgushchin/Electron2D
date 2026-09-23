@@ -1550,10 +1550,10 @@ public sealed class SceneTree : MainLoop
         finally { _nextTransformNotification = null; }
     }
 
-    internal void RenderCanvas(RenderingServer renderer)
+    internal void RenderCanvas(RenderingServer renderer, double step)
     {
         ThrowIfDisposed(); EnsureOwnerThread(); EnsureAcceptingWork(); BeginExecution();
-        try { renderer.Render(this); }
+        try { renderer.Render(this, step); }
         finally { EndExecution(); }
     }
 

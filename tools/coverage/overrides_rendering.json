@@ -1249,6 +1249,21 @@
       "electron2d": "method:Electron2D.CanvasItem.DrawLine(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Color,System.Single,System.Boolean)",
       "state": "Partial",
       "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. Remaining gap: negative-width cores use triangle expansion; exact native hardware subpixel line/end coverage is not established. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands."
+    },
+    {
+      "godot": "CanvasItem::method:draw_animation_slice(float:,float:,float:,float:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawAnimationSlice(System.Double,System.Double,System.Double,System.Double)",
+      "reason": "Audited retained time intervals: positive/negative/zero period, signed modulo, offset, inclusive start/exclusive end, unwrapped bounds, ordered conditional transforms, end reset, per-item/replay isolation, no rerecording, resource skipping and failure rollback. CanvasTimingTests and CanvasTimingRenderingTests cover scaled render steps, pause, live rollover/feature overrides and disabled-frame time, with Wayland GPU/compatibility, HLSL/GLSL and dummy readback. Finite inputs and owner-thread/lifetime guards follow the typed runtime contract; no shader TIME binding is claimed."
+    },
+    {
+      "godot": "CanvasItem::method:draw_end_animation()",
+      "electron2d": "method:Electron2D.CanvasItem.DrawEndAnimation()",
+      "reason": "Audited retained time intervals: positive/negative/zero period, signed modulo, offset, inclusive start/exclusive end, unwrapped bounds, ordered conditional transforms, end reset, per-item/replay isolation, no rerecording, resource skipping and failure rollback. CanvasTimingTests and CanvasTimingRenderingTests cover scaled render steps, pause, live rollover/feature overrides and disabled-frame time, with Wayland GPU/compatibility, HLSL/GLSL and dummy readback. Finite inputs and owner-thread/lifetime guards follow the typed runtime contract; no shader TIME binding is claimed."
+    },
+    {
+      "godot": "ProjectSettings::property:rendering/limits/time/time_rollover_secs",
+      "electron2d": "property:Electron2D.ProjectSettings.RenderingTimeRolloverSeconds()",
+      "reason": "Typed finite positive setting with the reference key and 3600-second default. Render-clock wrapping and live feature overrides execute in RenderingServer and are verified in CanvasTimingTests/CanvasTimingRenderingTests. Partial because automatic shader TIME binding is not integrated; add the shared clock to the material shader interface before claiming its full shader-facing contract."
     }
   ],
   "statusGroups": [
@@ -1835,8 +1850,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Implement retained animation-slice state and frame-clock evaluation in the existing canvas submission path; the renderer exists, so the initial GPU slice is no longer a blocker.",
+      "state": "Implemented",
+      "reason": "Audited retained time intervals: positive/negative/zero period, signed modulo, offset, inclusive start/exclusive end, unwrapped bounds, ordered conditional transforms, end reset, per-item/replay isolation, no rerecording, resource skipping and failure rollback. CanvasTimingTests and CanvasTimingRenderingTests cover scaled render steps, pause, live rollover/feature overrides and disabled-frame time, with Wayland GPU/compatibility, HLSL/GLSL and dummy readback. Finite inputs and owner-thread/lifetime guards follow the typed runtime contract; no shader TIME binding is claimed.",
       "godot": [
         "CanvasItem::method:draw_animation_slice(float:,float:,float:,float:)",
         "CanvasItem::method:draw_end_animation()"
@@ -1941,9 +1956,16 @@
     },
     {
       "state": "Partial",
-      "reason": "Executable retained rectangles exist, but antialiased fills/outlines still use framebuffer feathering instead of the pinned local compensation/closed-polyline path. Audit and implement rectangle-specific positive, thin, wide and degenerate behavior with native pixels; the new stroke family does not establish rectangle parity.",
+      "reason": "Audited normalized rectangles, wide/degenerate expanded fills, joined closed outlines and compensated local AA geometry against CanvasItem and renderer_canvas_cull. CanvasTimingTests checks vertices, scaling, rollback and zero warm allocations; native GPU/compatibility, HLSL/GLSL and dummy pixels pass. Partial only for precise hardware thin-line raster coverage: negative-width outlines use portable one-pixel triangles, with the same explicit limit as other stroke commands.",
       "godot": [
         "CanvasItem::method:draw_rect(Rect2:,Color:,bool:,float:,bool:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Typed finite positive setting with the reference key and 3600-second default. Render-clock wrapping and live feature overrides execute in RenderingServer and are verified in CanvasTimingTests/CanvasTimingRenderingTests. Partial because automatic shader TIME binding is not integrated; add the shared clock to the material shader interface before claiming its full shader-facing contract.",
+      "godot": [
+        "ProjectSettings::property:rendering/limits/time/time_rollover_secs"
       ]
     }
   ],

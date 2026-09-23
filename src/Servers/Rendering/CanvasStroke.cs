@@ -64,6 +64,42 @@ internal sealed class CanvasStroke
         }
     }
 
+    internal void SetRect(Rect rect, Color color, bool filled, float width, bool antialiased)
+    {
+        rect = rect.Abs();
+        if (!rect.IsFinite() || !rect.End.IsFinite()) throw new ArgumentException("Rectangle coordinates overflowed.");
+        if (!filled && width < rect.Size.X && width < rect.Size.Y)
+        {
+            Set([rect.Position, new(rect.End.X, rect.Position.Y), rect.End, new(rect.Position.X, rect.End.Y), rect.Position],
+                [color], width, antialiased, true);
+            return;
+        }
+        _triangles.Clear(); _thin.Clear();
+        if (!filled) rect = rect.Grow(width * 0.5f);
+        if (antialiased) rect = rect.Grow(-Feather * 0.25f);
+        var a = rect.Position; var b = new Vector2(rect.End.X, rect.Position.Y);
+        var c = rect.End; var d = new Vector2(rect.Position.X, rect.End.Y);
+        Quad(a, b, c, d, color, color, color, color);
+        if (!antialiased) return;
+        var size = MathF.Min(rect.Size.X, rect.Size.Y);
+        var border = Feather * (size >= 0 && size < 1 ? size : 1);
+        var x = new Vector2(border, 0); var y = new Vector2(0, border); var clear = color with { A = 0 };
+        Quad(a, a - y, b - y, b, color, clear, clear, color);
+        Quad(d, d + y, c + y, c, color, clear, clear, color);
+        Quad(a, a - x, d - x, d, color, clear, clear, color);
+        Quad(b, b + x, c + x, c, color, clear, clear, color);
+        Quad(a, a - x, a - x - y, a - y, color, clear, clear, clear);
+        Quad(d, d - x, d - x + y, d + y, color, clear, clear, clear);
+        Quad(b, b + x, b + x - y, b - y, color, clear, clear, clear);
+        Quad(c, c + x, c + x + y, c + y, color, clear, clear, clear);
+
+        void Quad(Vector2 p, Vector2 q, Vector2 r, Vector2 t, Color cp, Color cq, Color cr, Color ct)
+        {
+            Triangle(_triangles, new(p, cp), new(q, cq), new(r, cr));
+            Triangle(_triangles, new(p, cp), new(r, cr), new(t, ct));
+        }
+    }
+
     internal void SetEllipse(Vector2 center, float major, float minor, Color color, bool antialiased)
     {
         _triangles.Clear(); _thin.Clear();

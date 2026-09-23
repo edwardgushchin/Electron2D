@@ -555,3 +555,7 @@ Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.m
 A changed Title requests configuration-warning refresh after native/managed title state commits. Equal assignments do nothing; subscriber errors propagate without restoring the previous title. PathRenderingTests verifies selection, repetition, committed native title and failures through Engine.Run.
 
 Inherited [viewport transforms and pointer coordinates](Viewport.md#canvas-transforms-and-pointer-coordinates) participate in root rendering and native input. GetVisibleRect stays in client-sized viewport units. Native desktop position remains a platform capability, including for CanvasItem.GetScreenTransform.
+
+## Canvas render time
+
+The root Window forwards the captured process step to SceneTree for canvas rendering. An invisible root skips rendering and clock advancement. The clock belongs to this renderer and starts at zero on a new Engine.Run. See [canvas timing](../components/canvas-rendering.md#animation-intervals-and-rectangles).

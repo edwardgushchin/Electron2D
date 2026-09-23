@@ -222,7 +222,7 @@ public abstract partial class CanvasItem
 
     private void CommitStroke(CanvasStroke stroke)
     {
-        (_canvasCommands ??= []).Add(new CanvasCommand(false, default, default, Colors.White, true, 0, false, _drawTransform, Stroke: stroke));
+        (_canvasCommands ??= []).Add(new CanvasCommand(false, default, default, Colors.White, 0, false, Transform.Identity, Stroke: stroke));
         _strokeCount++;
     }
 }

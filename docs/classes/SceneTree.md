@@ -775,3 +775,7 @@ EditedSceneRoot and DebugPathsHint are independent transient tooling state, not 
 ## Canvas transform phases
 
 Canvas transform notifications use dedicated owner-thread queues. Physics delivers pending entries before PhysicsFrameStarted. Idle delivers after ProcessFrameStarted and again after node callbacks. Both lanes deliver after timers, tweens and the captured deferred-action batch, before queued deletion. Each pass follows pending-list order, capturing the next entry before invoking a callback. Reentrant additions behind an existing successor can be reached in that pass; an addition from the current tail waits for another pass. Cancellation advances the saved cursor before unlinking a pending entry, so force, exit and disposal cannot strand later items. Callback failures are aggregated after the other pending entries and later frame stages are attempted. Explicit FlushDeferred remains an action/deletion flush, not a transform flush. ForceUpdateTransform selects one item inside or outside a frame under the same execution barrier.
+
+## Canvas render time
+
+RenderCanvas forwards the captured scaled process step inside the existing scene execution barrier. Tree pause does not suppress the renderer clock; TimeScale zero supplies a zero step. Canvas callbacks retain the same mutation, failure and lifetime guards. See [canvas timing](../components/canvas-rendering.md#animation-intervals-and-rectangles).

@@ -5,7 +5,7 @@ namespace Electron2D;
 /// <summary>Renders the active root window's retained two-dimensional canvas commands.</summary>
 /// <remarks>Engine.Run owns startup, frame submission and shutdown on the scene owner thread. Geometry uses
 /// source-alpha blending into an RGBA8 framebuffer. GPU initialization may fall back according to project settings.
-/// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, lines, filled polygons, short primitives and image textures are integrated. Shader materials require the GPU path. Lights, clipping, offscreen public viewports and device recovery
+/// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, strokes, curves, filled polygons, short primitives, image textures and retained animation intervals are integrated. Shader materials require the GPU path. Lights, clipping, offscreen public viewports and device recovery
 /// are not integrated. Owned SDL handles remain internal; DisplayServer can expose borrowed native context identities.</remarks>
 public sealed class RenderingServer : ElectronObject
 {
@@ -118,7 +118,9 @@ public sealed class RenderingServer : ElectronObject
         catch { backend.Dispose(); throw; }
     }
 
-    internal void Render(SceneTree tree)
+    internal double CanvasTime { get; private set; }
+
+    internal void Render(SceneTree tree, double step)
     {
         EnsureOwner();
         if (!_renderLoopEnabled || !_window.Visible) return;
@@ -127,6 +129,9 @@ public sealed class RenderingServer : ElectronObject
         try
         {
             FramePreDraw?.Invoke();
+            if (!double.IsFinite(step) || step < 0 || !double.IsFinite(CanvasTime + step))
+                throw new InvalidOperationException("The render clock step is invalid.");
+            CanvasTime = (CanvasTime + step) % ProjectSettings.Instance.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
             _nodes.Clear(); _order.Clear(); _vertices.Clear(); _batches.Clear();
             Capture(tree.Root);
             foreach (var node in _nodes)
@@ -155,7 +160,7 @@ public sealed class RenderingServer : ElectronObject
                 order = x.Z.CompareTo(y.Z); return order != 0 ? order : x.Order.CompareTo(y.Order);
             });
             foreach (var item in _order)
-                item.Node.AppendCanvas(_vertices, _batches, item.Transform);
+                item.Node.AppendCanvas(_vertices, _batches, item.Transform, CanvasTime);
             foreach (var batch in _batches)
                 if (batch.Material is not null && _backend.Method != "gpu")
                     throw new NotSupportedException("A shader material requires GPU rendering; compatibility fallback cannot draw it.");

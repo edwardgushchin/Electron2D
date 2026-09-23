@@ -54,3 +54,7 @@ Executable checks cover success, invalid values/order, wrong threads, lifecycle 
 - [0019: Typed project settings and directory-backed virtual paths](../decisions/core-data-io.md#adr-0019)
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
+
+## Canvas render time
+
+[Canvas animation intervals](canvas-rendering.md#animation-intervals-and-rectangles) use captured scaled process steps and a live typed rollover setting; ordered transform state is replayed alongside retained geometry. The clock is per Engine.Run and does not imply automatic shader TIME support.

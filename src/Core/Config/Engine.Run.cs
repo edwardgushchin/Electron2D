@@ -31,7 +31,7 @@ public sealed partial class Engine
     /// events before frames, limits cadence with MaxFPS, finalizes and disposes the scene, then releases native resources.
     /// A new window may be run after successful cleanup. Native services opened directly through DisplayServer must
     /// finish before teardown; pending asynchronous dialogs can reject native disposal and the error is reported. Manual Start/AdvanceFrame/Stop cannot interfere with this run.
-    /// This entry point does not render yet. It does not install process-wide console or termination handlers.</remarks>
+    /// Canvas frames are submitted after each successful process step. It does not install process-wide console or termination handlers.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="window"/> is null.</exception>
     /// <exception cref="ObjectDisposedException">The supplied window is disposed.</exception>
     /// <exception cref="InvalidOperationException">The window is not detached, another lifecycle is active, the caller is not the native main thread, or startup fails.</exception>
@@ -69,9 +69,9 @@ public sealed partial class Engine
                 var now = Stopwatch.GetTimestamp();
                 var elapsed = Stopwatch.GetElapsedTime(lastFrame, now).TotalSeconds;
                 lastFrame = now;
-                if (AdvanceFrameCore(elapsed))
+                if (AdvanceFrameCore(elapsed, out var renderStep))
                     break;
-                window.Render(tree);
+                window.Render(tree, renderStep);
                 while (!tree.QuitRequested)
                 {
                     var limit = MaxFPS;

@@ -70,3 +70,7 @@ Implemented and covered by the executable harness. The process singleton is regi
 - [0001: Typed C# without Variant](../decisions/product.md#adr-0001)
 
 DebugPathsColor defines debug/shapes/paths/geometry_color, defaults to finite Color(0.1, 1, 0.7, 0.4), and is registered as a built-in nonbasic setting. SceneTree samples active feature overrides at construction. Path debug drawing consumes this color through existing canvas commands; later setting changes affect later trees. SceneDiagnosticsTests checks nonfinite rejection without mutation; native PathRenderingTests verifies construction-time capture and actual pixels.
+
+## Canvas render time
+
+[Canvas animation intervals](canvas-rendering.md#animation-intervals-and-rectangles) use captured scaled process steps and a live typed rollover setting; ordered transform state is replayed alongside retained geometry. The clock is per Engine.Run and does not imply automatic shader TIME support.

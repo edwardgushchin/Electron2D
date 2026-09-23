@@ -164,6 +164,8 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 | Member | Contract |
 | --- | --- |
 | [`protected override void Dispose(bool disposing)`](#m-electron2d-canvasitem-dispose-system-boolean) | Disposes the scene hierarchy and clears retained canvas commands, pooled polygon/stroke storage and this layer's subscribers in a finally block. Borrowed resources remain caller-owned. |
+| [`public void DrawAnimationSlice(double animationLength, double sliceBegin, double sliceEnd, double offset = 0d)`](#drawanimationslice) | Restricts subsequent commands to a repeating render-time interval. |
+| [`public void DrawEndAnimation()`](#drawendanimation) | Restores unrestricted drawing without resetting transforms. |
 | [`public void DrawPolyline(ReadOnlySpan<Vector2> points, Color color, float width = -1f, bool antialiased = false)`](#drawpolyline) | Joined strip with a uniform color. |
 | [`public void DrawPolylineColors(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width = -1f, bool antialiased = false)`](#drawpolylinecolors) | Joined strip with interpolated vertex colors. |
 | [`public void DrawMultiline(ReadOnlySpan<Vector2> points, Color color, float width = -1f, bool antialiased = false)`](#drawmultiline) | Independent endpoint pairs with a uniform color. |
@@ -178,8 +180,8 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 | [`public void DrawPrimitive(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, Texture? texture = null)`](#drawprimitive) | Point, line, triangle or quad. |
 | [`public void DrawLine(Vector2 from, Vector2 to, Color color, float width = -1f, bool antialiased = false)`](#m-electron2d-canvasitem-drawline-electron2d-vector2-electron2d-vector2-electron2d-color-system-single-system-boolean) | Records a straight line during canvas recording. |
 | [`public void DrawRect(Rect rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)`](#m-electron2d-canvasitem-drawrect-electron2d-rect-electron2d-color-system-boolean-system-single-system-boolean) | Records a filled rectangle or a centered rectangular outline during canvas recording. |
-| [`public void DrawSetTransform(Vector2 position, float rotation = 0f, Vector2? scale = null)`](#m-electron2d-canvasitem-drawsettransform-electron2d-vector2-system-single-system-nullable-electron2d-vector2) | Sets an additional transform for subsequent commands in this canvas recording. |
-| [`public void DrawSetTransformMatrix(Transform transform)`](#m-electron2d-canvasitem-drawsettransformmatrix-electron2d-transform) | Sets the full additional transform for subsequent commands in this canvas recording. |
+| [`public void DrawSetTransform(Vector2 position, float rotation = 0f, Vector2? scale = null)`](#m-electron2d-canvasitem-drawsettransform-electron2d-vector2-system-single-system-nullable-electron2d-vector2) | Records an additional transform for subsequent commands. It executes only when its animation interval is visible; each replay starts with identity. |
+| [`public void DrawSetTransformMatrix(Transform transform)`](#m-electron2d-canvasitem-drawsettransformmatrix-electron2d-transform) | Records the full additional transform for subsequent commands. It executes only when its animation interval is visible; DrawEndAnimation retains the last executed transform. |
 | [`public void DrawTexture(Texture texture, Vector2 position, Color? modulate = null)`](#m-electron2d-canvasitem-drawtexture-electron2d-texture-electron2d-vector2-system-nullable-electron2d-color) | Draws a borrowed texture at its logical size during this item's canvas recording. |
 | [`public void DrawTextureRect(Texture texture, Rect rect, bool tile, Color? modulate = null, bool transpose = false)`](#m-electron2d-canvasitem-drawtexturerect-electron2d-texture-electron2d-rect-system-boolean-system-nullable-electron2d-color-system-boolean) | Stretches or repeats a borrowed texture over a local rectangle during canvas recording. |
 | [`public void DrawTextureRectRegion(Texture texture, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`](#m-electron2d-canvasitem-drawtexturerectregion-electron2d-texture-electron2d-rect-electron2d-rect-system-nullable-electron2d-color-system-boolean-system-boolean) | Stretches a source region of a borrowed texture over a local rectangle during canvas recording. |
@@ -398,6 +400,42 @@ ParentNode by default. Disabled clamps to edges, Enabled repeats, Mirror reflect
 
 ## Method Descriptions
 
+### DrawAnimationSlice
+
+`public void DrawAnimationSlice(double animationLength, double sliceBegin, double sliceEnd, double offset = 0d)`
+
+Records a state command that restricts subsequent drawing. All four arguments are finite double-precision seconds; `offset` defaults to zero. Every submitted frame computes `phase = Mathf.PosMod(renderTime - offset, animationLength)` and draws when `phase >= sliceBegin && phase < sliceEnd`. The begin boundary is inclusive, the end exclusive. Offset can be negative or positive; times before the origin wrap through the period. The bounds are not clamped or wrapped: reversed/equal bounds hide everything, and wider bounds can include the whole period. A zero period gives no visible phase; a negative period uses the divisor's signed phase range.
+
+Each interval replaces the preceding one and is evaluated even if preceding commands are hidden. There is no interval stack. All geometry and transform commands inside a hidden interval are skipped before texture/material access. Recording still validates inputs and resources; only consumption is conditional. Interval state belongs to this item and resets to unrestricted at each replay; it does not propagate to child or sibling items. Retained commands animate without calling OnDraw or QueueRedraw every frame. Explicit redraw replaces the complete command sequence.
+
+The renderer clock starts at zero for each Engine.Run. After FramePreDraw it advances by the captured scaled process step; changing Engine.TimeScale during processing affects subsequent steps. Tree pause does not stop it; TimeScale zero does. Disabled render loops and hidden root windows do not submit or advance this clock. [RenderingTimeRolloverSeconds](ProjectSettings.md#renderingtimerolloverseconds), default 3600, wraps it on each submitted frame and applies active project feature overrides. There is no automatic shader TIME binding yet.
+
+Requires this item's active NotificationDraw, synchronous Draw event or OnDraw scope. Nonfinite arguments throw ArgumentException; wrong thread/outside recording throws InvalidOperationException; disposed access throws ObjectDisposedException. Failed validation preserves previously recorded commands, while an uncaught callback exception clears the whole recording for retry.
+
+### DrawEndAnimation
+
+`public void DrawEndAnimation()`
+
+Restores unrestricted subsequent drawing, equivalent to a length-one interval spanning phase zero through two. It preserves the most recent transform that actually executed during this frame. A transform recorded inside a hidden interval does not become active when the interval ends. This call is optional when no later geometry needs unrestricted visibility. Recording/thread/disposal guards are the same as DrawAnimationSlice.
+
+#### Interval example and verification
+
+Inside an Entity subclass (partial snippet):
+
+```csharp
+protected override void OnDraw()
+{
+    DrawAnimationSlice(1, 0, 0.5);
+    DrawRect(new(0, 0, 24, 24), Colors.Red);
+    DrawAnimationSlice(1, 0.5, 1);
+    DrawCircle(new(12, 12), 12, Colors.Blue);
+    DrawEndAnimation();
+    DrawLine(new(0, 28), new(24, 28), Colors.White, 2);
+}
+```
+
+[CanvasTimingTests](../../tests/Electron2D.Tests/CanvasTimingTests.cs) covers boundaries, offsets, signed/zero periods, state replacement, skipped transforms/resources, redraw/failure reset, owner/disposal guards and warmed allocation. [CanvasTimingRenderingTests](../../tests/Electron2D.Tests/CanvasTimingRenderingTests.cs) checks actual retained phase changes, time scaling, tree pause, disabled rendering, live rollover/feature overrides, state isolation, redraw and rectangle pixels. See [the component audit](../components/canvas-rendering.md#animation-intervals-and-rectangles).
+
 ### Stroke recording contract
 
 All nine methods below return void and require this item's active NotificationDraw, synchronous Draw event or OnDraw scope. Off-owner or outside-scope calls throw InvalidOperationException; a disposed item throws ObjectDisposedException. Invalid point/color counts or nonfinite used geometry, colors and widths throw ArgumentException. Derived local coordinates are also checked for overflow before committing a command. An uncaught callback error discards the partial recording and leaves a redraw pending. A caught invalid call does not overwrite previously recorded commands.
@@ -560,9 +598,11 @@ Records a filled rectangle or a centered rectangular outline during canvas recor
 
 **Parameter `width`:** Outline width in local units; a negative value uses one framebuffer pixel.
 
-**Parameter `antialiased`:** Whether to feather the boundary over one framebuffer pixel.
+**Parameter `antialiased`:** Whether to use compensated local feather geometry; ignored for negative-width outlines.
 
-**Remarks:** Zero-area rectangles and zero-width outlines draw nothing. Outline widths larger than the rectangle collapse its hole. Drawing obeys this node's transform, visibility, Z order and modulation.
+**Remarks:** Negative sizes normalize before drawing. An outline at least as wide as either dimension becomes a fill expanded by half its width, including when the original rectangle has zero area. Other outlines use exactly the closed DrawPolyline path, including width compensation, miter joins, thin-width antialias policy and final vertex snapping. Ordinary zero-width outlines produce no geometry.
+
+A filled antialiased rectangle shrinks its core by 0.3125 local units and adds 1.25-unit side and corner feathers. If the smaller adjusted core dimension lies between zero and one, feather width scales by that dimension. Very small cores may have negative adjusted dimensions; these are preserved, not clamped to zero. Filled width is ignored after finite validation. All geometry is recorded in reusable CanvasStroke storage and transforms/modulates on replay. Local overflow throws ArgumentException before committing the command. [CanvasTimingTests](../../tests/Electron2D.Tests/CanvasTimingTests.cs) and native [CanvasTimingRenderingTests](../../tests/Electron2D.Tests/CanvasTimingRenderingTests.cs) cover normalization, wide/degenerate shapes, feathers, backend pixels and zero warmed allocations. Exact thin-line hardware coverage remains Partial.
 
 **System.ArgumentException:** Geometry, color or width is not finite.
 
@@ -573,7 +613,7 @@ Records a filled rectangle or a centered rectangular outline during canvas recor
 <a id="m-electron2d-canvasitem-drawsettransform-electron2d-vector2-system-single-system-nullable-electron2d-vector2"></a>
 ### `public void DrawSetTransform(Vector2 position, float rotation = 0f, Vector2? scale = null)`
 
-Sets an additional transform for subsequent commands in this canvas recording.
+Records an additional transform for subsequent commands. It executes only when its animation interval is visible; each replay starts with identity.
 
 **Parameter `position`:** Translation in local units.
 
@@ -590,7 +630,7 @@ Sets an additional transform for subsequent commands in this canvas recording.
 <a id="m-electron2d-canvasitem-drawsettransformmatrix-electron2d-transform"></a>
 ### `public void DrawSetTransformMatrix(Transform transform)`
 
-Sets the full additional transform for subsequent commands in this canvas recording.
+Records the full additional transform for subsequent commands. It executes only when its animation interval is visible; DrawEndAnimation retains the last executed transform.
 
 **Parameter `transform`:** The finite local drawing transform.
 

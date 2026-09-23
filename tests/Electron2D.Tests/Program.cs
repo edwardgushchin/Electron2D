@@ -122,6 +122,7 @@ CanvasMaskTests.Run();
 CanvasTransformNotificationTests.Run();
 CanvasPolygonTests.Run();
 CanvasStrokeTests.Run();
+CanvasTimingTests.Run();
 VerifyInstanceIds();
 VerifyLifetime();
 VerifyNotificationsAndProperties();

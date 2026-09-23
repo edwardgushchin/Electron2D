@@ -12,7 +12,6 @@ public abstract partial class CanvasItem
     private List<CanvasCommand>? _canvasCommands;
     private int _redrawPending = 1;
     private bool _drawing;
-    private Transform _drawTransform = Transform.Identity;
     private Color _modulate = Colors.White;
     private Color _selfModulate = Colors.White;
     private Material? _material;
@@ -76,9 +75,10 @@ public abstract partial class CanvasItem
     /// <param name="color">The finite drawing color.</param>
     /// <param name="filled">Whether to fill the rectangle; true by default.</param>
     /// <param name="width">Outline width in local units; a negative value uses one framebuffer pixel.</param>
-    /// <param name="antialiased">Whether to feather the boundary over one framebuffer pixel.</param>
-    /// <remarks>Zero-area rectangles and zero-width outlines draw nothing. Outline widths larger than the rectangle
-    /// collapse its hole. Drawing obeys this node's transform, visibility, Z order and modulation.</remarks>
+    /// <param name="antialiased">Whether to add compensated local feather geometry; ignored for negative-width outlines.</param>
+    /// <remarks>Negative sizes are normalized. Outlines at least as wide as either dimension become an expanded fill.
+    /// Other outlines use joined closed strips; ordinary zero-width outlines draw nothing. Filled antialiasing shrinks
+    /// the core by 0.3125 local units and adds 1.25-unit feathers, scaled down for subpixel cores. Drawing obeys this node's transform, visibility, Z order and modulation.</remarks>
     /// <exception cref="ArgumentException">Geometry, color or width is not finite.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
@@ -87,7 +87,7 @@ public abstract partial class CanvasItem
         EnsureDrawing();
         if (!rect.IsFinite() || !float.IsFinite(width)) throw new ArgumentException("Drawing geometry must be finite.");
         ValidateCanvasColor(color);
-        (_canvasCommands ??= []).Add(new CanvasCommand(false, rect.Position, rect.Size, color, filled, width, antialiased, _drawTransform));
+        var stroke = NextStroke(); stroke.SetRect(rect, color, filled, width, antialiased); CommitStroke(stroke);
     }
 
     /// <summary>Records a straight line during canvas recording.</summary>
@@ -106,7 +106,7 @@ public abstract partial class CanvasItem
         EnsureDrawing();
         if (!from.IsFinite() || !to.IsFinite() || !float.IsFinite(width)) throw new ArgumentException("Drawing geometry must be finite.");
         ValidateCanvasColor(color);
-        (_canvasCommands ??= []).Add(new CanvasCommand(true, from, to, color, false, width, antialiased, _drawTransform));
+        (_canvasCommands ??= []).Add(new CanvasCommand(true, from, to, color, width, antialiased, Transform.Identity));
     }
 
     /// <summary>Draws a borrowed texture at its logical size during this item's canvas recording.</summary>
@@ -175,8 +175,8 @@ public abstract partial class CanvasItem
         var src = source ?? new Rect(Vector2.Zero, tile ? rect.Size.Abs() : size);
         src = new Rect(src.Position / size, src.Size / size);
         if (!src.IsFinite()) throw new ArgumentException("Texture coordinates overflowed.", nameof(source));
-        (_canvasCommands ??= []).Add(new CanvasCommand(false, rect.Position, rect.Size, color, true, 0, false,
-            _drawTransform, texture, src, transpose, clipUV, tile));
+        (_canvasCommands ??= []).Add(new CanvasCommand(false, rect.Position, rect.Size, color, 0, false,
+            Transform.Identity, texture, src, transpose, clipUV, tile));
     }
 
     /// <summary>Sets an additional transform for subsequent commands in this canvas recording.</summary>
@@ -191,6 +191,7 @@ public abstract partial class CanvasItem
 
     /// <summary>Sets the full additional transform for subsequent commands in this canvas recording.</summary>
     /// <param name="transform">The finite local drawing transform.</param>
+    /// <remarks>Recorded as a state command; ignored during frames where its animation interval is hidden.</remarks>
     /// <exception cref="ArgumentException">The transform is not finite.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
@@ -198,8 +199,35 @@ public abstract partial class CanvasItem
     {
         EnsureDrawing();
         if (!transform.IsFinite()) throw new ArgumentException("The drawing transform must be finite.", nameof(transform));
-        _drawTransform = transform;
+        (_canvasCommands ??= []).Add(new CanvasCommand(false, default, default, Colors.White, 0, false, transform, SetTransform: true));
     }
+
+    /// <summary>Restricts subsequent drawing commands to a repeating time interval.</summary>
+    /// <param name="animationLength">Finite period in seconds. Zero hides the interval; a negative period produces a negative phase.</param>
+    /// <param name="sliceBegin">Finite inclusive phase boundary in seconds.</param>
+    /// <param name="sliceEnd">Finite exclusive phase boundary in seconds.</param>
+    /// <param name="offset">Finite phase origin in seconds, zero by default.</param>
+    /// <remarks>The interval is tested every submitted frame without rerecording. It replaces the previous interval,
+    /// including when that interval is hidden. Commands, including drawing transforms, are skipped until another interval
+    /// permits them or DrawEndAnimation restores drawing. Intervals do not wrap their boundaries or affect other items.
+    /// Render time uses scaled process steps, continues while the scene is paused, and wraps at the configured render time limit.</remarks>
+    /// <exception cref="ArgumentException">An argument is not finite.</exception>
+    /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off its owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
+    public void DrawAnimationSlice(double animationLength, double sliceBegin, double sliceEnd, double offset = 0d)
+    {
+        EnsureDrawing();
+        if (!double.IsFinite(animationLength) || !double.IsFinite(sliceBegin) || !double.IsFinite(sliceEnd) || !double.IsFinite(offset))
+            throw new ArgumentException("Animation slice values must be finite.");
+        (_canvasCommands ??= []).Add(new CanvasCommand(false, default, default, Colors.White, 0, false, Transform.Identity,
+            AnimationSlice: new(animationLength, sliceBegin, sliceEnd, offset)));
+    }
+
+    /// <summary>Restores unrestricted drawing for subsequent commands in this recording.</summary>
+    /// <remarks>Does not reset the last executed drawing transform. Interval state resets before each item submission.</remarks>
+    /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off its owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
+    public void DrawEndAnimation() => DrawAnimationSlice(1, 0, 2);
 
     /// <summary>Occurs during recording, after NotificationDraw and before OnDraw.</summary>
     /// <remarks>Handlers run synchronously on the scene owner thread and may issue drawing commands for this item.
@@ -208,7 +236,7 @@ public abstract partial class CanvasItem
 
     /// <summary>Records this node's retained canvas commands before its first visible frame and after QueueRedraw.</summary>
     /// <remarks>Runs on the scene owner thread during rendering. Geometry, texture and drawing-transform calls
-    /// are valid during NotificationDraw, synchronous Draw handlers and this callback. The command list is cleared and the drawing transform reset to identity before entry.</remarks>
+    /// are valid during NotificationDraw, synchronous Draw handlers and this callback. The command list is cleared before entry. Transform and interval state start fresh on each replay.</remarks>
     protected virtual void OnDraw() { }
 
     internal void PrepareCanvas()
@@ -218,7 +246,6 @@ public abstract partial class CanvasItem
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
         _canvasCommands?.Clear();
         _polygonCount = 0; _strokeCount = 0;
-        _drawTransform = Transform.Identity;
         _drawing = true;
         try
         {
@@ -239,7 +266,7 @@ public abstract partial class CanvasItem
     internal Material? CanvasMaterial => _useParentMaterial ? GetParentItem()?.CanvasMaterial : _material;
     private Color InheritedModulate => GetParentItem() is not { } parent ? _modulate : parent.InheritedModulate * _modulate;
 
-    internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform)
+    internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform, double time = 0)
     {
         if (_canvasCommands is null) return;
         var color = InheritedModulate * _selfModulate;
@@ -252,10 +279,15 @@ public abstract partial class CanvasItem
             ? 1 << (int)(viewport?.AnisotropicFilteringLevel ?? Viewport.AnisotropicFiltering.Anisotropy4X) : 1;
         MaterialState? material = null;
         var capturedMaterial = false;
+        var drawingTransform = Transform.Identity;
+        var skipping = false;
         foreach (var command in _canvasCommands)
         {
+            if (command.AnimationSlice is { } slice) { skipping = !slice.Includes(time); continue; }
+            if (skipping) continue;
+            if (command.SetTransform) { drawingTransform = command.Transform; continue; }
             var first = vertices.Count;
-            CanvasGeometry.Append(vertices, command, transform * command.Transform, color, viewport?.SnapVerticesToPixel == true);
+            CanvasGeometry.Append(vertices, command, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true);
             var count = vertices.Count - first;
             if (count == 0) continue;
             if (!capturedMaterial) { material = CanvasMaterial?.GetCanvasState(); capturedMaterial = true; }

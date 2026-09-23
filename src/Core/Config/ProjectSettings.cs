@@ -155,6 +155,12 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<bool> RenderingFallback { get; } =
         new("rendering/rendering_device/fallback_to_opengl3", true);
 
+    /// <summary>Defines the render-clock wrap period in seconds.</summary>
+    /// <remarks>Defaults to 3600. Must be finite and positive. Active feature overrides apply on each submitted frame.
+    /// Currently drives canvas animation intervals; automatic shader TIME binding is not integrated.</remarks>
+    public static ProjectSetting<double> RenderingTimeRolloverSeconds { get; } =
+        new("rendering/limits/time/time_rollover_secs", 3600d, value => double.IsFinite(value) && value > 0);
+
     /// <summary>Defines the initial canvas transform snapping choice for newly constructed windows.</summary>
     /// <remarks>False by default. Active feature overrides apply; existing windows keep their own property value.</remarks>
     public static ProjectSetting<bool> SnapTransformsToPixel { get; } =
@@ -238,6 +244,7 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(PhysicsJitterFix, isBasic: false);
         RegisterInternal(RenderingMethod, isBasic: true);
         RegisterInternal(RenderingFallback, isBasic: false);
+        RegisterInternal(RenderingTimeRolloverSeconds, isBasic: false);
         RegisterInternal(SnapTransformsToPixel, isBasic: false);
         RegisterInternal(SnapVerticesToPixel, isBasic: false);
         RegisterInternal(UseNearestMipmapFilter, isBasic: false);
@@ -1531,6 +1538,7 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, PhysicsJitterFix) ||
         ReferenceEquals(setting, RenderingMethod) ||
         ReferenceEquals(setting, RenderingFallback) ||
+        ReferenceEquals(setting, RenderingTimeRolloverSeconds) ||
         ReferenceEquals(setting, SnapTransformsToPixel) ||
         ReferenceEquals(setting, SnapVerticesToPixel) ||
         ReferenceEquals(setting, UseNearestMipmapFilter) ||

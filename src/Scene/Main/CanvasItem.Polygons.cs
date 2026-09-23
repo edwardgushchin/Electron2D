@@ -66,7 +66,7 @@ public abstract partial class CanvasItem
         var polygon = _polygons[_polygonCount];
         polygon.Set(points, colors, uvs, primitive);
         if (uvMapping is { } mapping) polygon.RemapUV(mapping);
-        (_canvasCommands ??= []).Add(new CanvasCommand(false, default, default, Colors.White, true, 0, false, _drawTransform, texture, Polygon: polygon));
+        (_canvasCommands ??= []).Add(new CanvasCommand(false, default, default, Colors.White, 0, false, Transform.Identity, texture, Polygon: polygon));
         _polygonCount++;
     }
 }

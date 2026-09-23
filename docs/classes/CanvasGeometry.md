@@ -9,14 +9,14 @@ Last updated: 2026-09-23
 
 ## Description
 
-Tessellates retained rectangles, outlines, lines and textured regions into triangles and dispatches retained polygons/strokes to their storage. It owns no persistent state. The caller supplies a reusable output list, the composed local-to-framebuffer transform and inherited modulation. Temporary corners/cuts use stack storage; warmed replay reuses list capacity.
+Tessellates retained lines and textured regions into triangles and dispatches retained polygons/strokes, including rectangles, to their storage. CanvasItem consumes ordered interval/transform state before this helper. It owns no persistent state. The caller supplies a reusable output list, the composed local-to-framebuffer transform and inherited modulation. Temporary corners/cuts use stack storage; warmed replay reuses list capacity.
 
 ## Internal usage
 
 This fragment belongs inside the runtime and requires the surrounding owner state.
 
 ```csharp
-CanvasGeometry.Append(vertices, command, viewportTransform * command.Transform, inheritedColor);
+CanvasGeometry.Append(vertices, command, viewportTransform * drawingTransform, inheritedColor);
 ```
 
 ## Member summary
@@ -31,7 +31,7 @@ CanvasGeometry.Append(vertices, command, viewportTransform * command.Transform, 
 
 `internal static void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false)`
 
-Appends geometry without clearing prior output. Applies color multiplication, flat line caps, centered outlines, local compensated line feathering through CanvasStroke and the existing one-framebuffer-pixel rectangle feathering and texture UV transforms. Texture clipping subdivides half-texel borders to preserve interior interpolation. Zero-area primitives and quads below the 0.000001 cross-product threshold contribute nothing. CanvasStroke shares straight-line geometry with independent segments; pooled curves replay their cached local triangles. Nonfinite transformed coordinates, modulation or UVs throw InvalidOperationException. Missing/disposed texture pixels fail explicitly. On failure the caller must discard the incomplete frame; this helper is not a transactional list append.
+Appends geometry without clearing prior output. Applies color multiplication, local line feathering through CanvasStroke and texture UV transforms. Retained strokes provide rectangle fills/outlines and their local feathers. Texture clipping subdivides half-texel borders to preserve interior interpolation. Texture quads below the 0.000001 cross-product threshold contribute nothing; degenerate retained stroke triangles are left to the backend. CanvasStroke shares straight-line geometry with independent segments; pooled curves replay their cached local triangles. Nonfinite transformed coordinates, modulation or UVs throw InvalidOperationException. Missing/disposed texture pixels fail explicitly. A command without geometry throws InvalidOperationException; interval/transform state must be consumed by CanvasItem. On failure the caller must discard the incomplete frame; this helper is not a transactional list append.
 
 ## Verification and limits
 

@@ -14417,6 +14417,40 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CanvasItem.DrawAnimationSlice(System.Double,System.Double,System.Double,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawAnimationSlice",
+    "signature": "public System.Void DrawAnimationSlice(System.Double animationLength, System.Double sliceBegin, System.Double sliceEnd, System.Double offset = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animationLength",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "sliceBegin",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "sliceEnd",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Double",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CanvasItem.DrawArc(Electron2D.Vector2,System.Single,System.Single,System.Single,System.Int32,Electron2D.Color,System.Single,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
@@ -14702,6 +14736,19 @@
         "default": "false"
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawEndAnimation()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawEndAnimation",
+    "signature": "public System.Void DrawEndAnimation()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -47499,6 +47546,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.RenderingTimeRolloverSeconds()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "RenderingTimeRolloverSeconds",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Double\u003E RenderingTimeRolloverSeconds { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Double\u003E",
     "value": null
   },
   {

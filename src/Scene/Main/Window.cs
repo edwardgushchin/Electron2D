@@ -297,7 +297,7 @@ public partial class Window : Viewport
 
     internal void PumpEvents() => GetDisplay().ProcessEvents();
 
-    internal void Render(SceneTree tree) => tree.RenderCanvas(_renderer ?? throw new InvalidOperationException("Rendering has not started."));
+    internal void Render(SceneTree tree, double step) => tree.RenderCanvas(_renderer ?? throw new InvalidOperationException("Rendering has not started."), step);
 
     private DisplayServer GetDisplay()
     {

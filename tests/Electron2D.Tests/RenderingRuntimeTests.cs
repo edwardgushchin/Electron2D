@@ -104,6 +104,15 @@ internal static partial class RenderingRuntimeTests
                 }
                 return;
             }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_TIMING") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasTiming(backend); VerifyFrameAllocations(backend);
+                    if (backend == "gpu") { VerifyCanvasTiming(backend, "CanvasHLSL"); VerifyCanvasTiming(backend, "CanvasGLSL"); }
+                }
+                return;
+            }
             VerifyImageDependency();
             VerifyResources();
             VerifyParameters("MaterialHlsl");
@@ -121,7 +130,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyCanvasCoordinates(backend); VerifyViewportCoordinateInput(backend);
                 VerifyCamera(backend); VerifyTransformNotifications(backend);
                 VerifyCanvasLayer(backend);
-                VerifyCanvasMasks(backend); VerifyCanvasPolygons(backend); VerifyCanvasStrokes(backend);
+                VerifyCanvasMasks(backend); VerifyCanvasPolygons(backend); VerifyCanvasStrokes(backend); VerifyCanvasTiming(backend);
                 if (backend == "compatibility") VerifyCulledShader();
                 VerifySceneHierarchy(backend);
                 VerifyCanvasOrdering(backend);
@@ -154,6 +163,7 @@ internal static partial class RenderingRuntimeTests
                     VerifyCanvasMasks(backend, "CanvasHLSL"); VerifyCanvasMasks(backend, "CanvasGLSL");
                     VerifyCanvasPolygons(backend, "CanvasHLSL"); VerifyCanvasPolygons(backend, "CanvasGLSL");
                     VerifyCanvasStrokes(backend, "CanvasHLSL"); VerifyCanvasStrokes(backend, "CanvasGLSL");
+                    VerifyCanvasTiming(backend, "CanvasHLSL"); VerifyCanvasTiming(backend, "CanvasGLSL");
                     VerifyMaterialFrame("MaterialHlsl");
                     VerifyMaterialFrame("MaterialGlsl");
                     VerifyTextureFrame("TextureHlsl");
