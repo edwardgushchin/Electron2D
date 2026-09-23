@@ -908,7 +908,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VSlider](classes/VSlider.md) | Slider | Blocked | 2 |
 | [VSplitContainer](classes/VSplitContainer.md) | SplitContainer | Blocked | 0 |
 | [Variant](classes/Variant.md) | — | Excluded | 0 |
-| [Vector2](classes/Vector2.md) | — | Partial | 82 |
+| [Vector2](classes/Vector2.md) | — | Implemented | 82 |
 | [Vector2i](classes/Vector2i.md) | — | Implemented | 53 |
 | [Vector3](classes/Vector3.md) | — | Partial | 94 |
 | [Vector3i](classes/Vector3i.md) | — | Partial | 56 |

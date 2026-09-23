@@ -52,7 +52,7 @@ This Core component owns the engine's backend-independent value mathematics: two
 
 ## Current implementation status
 
-Implemented and verified. `Rect`, `Transform`, and `Entity` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `MathF`. `Vector2I`, `Vector3`, `Vector3I`, `Vector4`, `Vector4I`, and `RectI` provide their complete currently implementable value contracts, including typed conversions within vector and rectangle dimensional pairs. Strict configuration schemas and direct packed-scene storage exist for all six vectors, both rectangles, and transforms. The Transform reference audit covers all 43 declared members, including the zero target default for `LookingAt` and C# integer scalar conversion under ADR 0029.
+Implemented and verified. `Rect`, `Transform`, and `Entity` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `MathF`. `Vector2I`, `Vector3`, `Vector3I`, `Vector4`, `Vector4I`, and `RectI` provide their complete currently implementable value contracts, including typed conversions within vector and rectangle dimensional pairs. Strict configuration schemas and direct packed-scene storage exist for all six vectors, both rectangles, and transforms. The Vector2 reference audit covers all 82 members, including integer scalar conversion, the default length limit and the accepted midpoint-to-even rounding boundary under ADRs 0033/0034. The Transform reference audit covers all 43 declared members, including the zero target default for `LookingAt` and C# integer scalar conversion under ADR 0029.
 
 ## Exclusions and limitations
 

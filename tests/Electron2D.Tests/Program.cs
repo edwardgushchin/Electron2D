@@ -1916,6 +1916,7 @@ static void VerifyVector2Values()
             Vector2.Zero.DirectionTo(Vector2.Zero) == Vector2.Zero &&
             Vector2.Zero.Lerp(new Vector2(4f, 8f), 0.25f) == new Vector2(1f, 2f) &&
             new Vector2(10f, 0f).LimitLength(3f) == new Vector2(3f, 0f) &&
+            new Vector2(2f, 0f).LimitLength() == Vector2.Right &&
             Vector2.Right.MoveToward(new Vector2(4f, 0f), 2f) == new Vector2(3f, 0f),
         "Vector2 distance and interpolation operations must cover zero and nonzero vectors.");
     Require(new Vector2(1f, 5f).Max(new Vector2(3f, 2f)) == new Vector2(3f, 5f) &&
@@ -1951,8 +1952,10 @@ static void VerifyVector2Values()
         "Vector2 reciprocal, finite, zero, and approximate predicates must be stable.");
     Require(new Vector2(1f, 2f) + new Vector2(3f, 4f) == new Vector2(4f, 6f) &&
             +value == value && -Vector2.One == new Vector2(-1f, -1f) &&
-            Vector2.One * 2f == 2f * Vector2.One && Vector2.One * new Vector2(2f, 3f) == new Vector2(2f, 3f) &&
+            Vector2.One * 2f == 2f * Vector2.One && Vector2.One * 2 == new Vector2(2f, 2f) &&
+            Vector2.One * new Vector2(2f, 3f) == new Vector2(2f, 3f) &&
             new Vector2(4f, 6f) / 2f == new Vector2(2f, 3f) &&
+            new Vector2(4f, 6f) / 2 == new Vector2(2f, 3f) &&
             new Vector2(4f, 6f) / new Vector2(2f, 3f) == new Vector2(2f, 2f) &&
             new Vector2(5f, -5f) % 3f == new Vector2(2f, -2f) &&
             new Vector2(5f, 8f) % new Vector2(3f, 5f) == new Vector2(2f, 3f),

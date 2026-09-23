@@ -1075,9 +1075,9 @@ The type depends on canonical scalar [`MathF`](MathF.md) plus formatting and lay
 
 ## Coverage, verification, and limitations
 
-The reference API audit classifies the numeric/geometric surface as implemented. Universal-value truth conversion is permanently excluded by the typed C# architecture. No automatic conversion to an external numerics type is exposed. No 3D vector or spatial API is present.
+The pinned XML, native math and typed C# audit covers all 82 reference members and the type relationship. The two integer scalar operators use C# conversion to the existing float operators; `LimitLength()` retains its default length of one. The accepted midpoint-to-even `Round` behavior and unit-vector tolerance are recorded in ADRs 0033/0034. Universal-value truth conversion is permanently excluded by the typed C# architecture. No automatic conversion to an external numerics type is exposed. No 3D vector or spatial API is present.
 
-The executable harness covers layout, constants, index failures, construction and integer conversion failures, every method and operator family, interpolation, zero/non-finite behavior, ordering, formatting, strict persistence, packed-scene copying, and warmed zero-allocation math. Execution is Linux/.NET 8 only; native ABI and the full five-target matrix remain unverified.
+The executable harness covers layout, constants, index failures, construction and integer conversion failures, every method and operator family, integer scalar conversion, the default limit length, interpolation, zero/non-finite behavior, ordering, formatting, strict persistence, packed-scene copying, and warmed zero-allocation math. Execution is Linux/.NET 8 only; native ABI and the full platform matrix remain unverified.
 
 ## Decisions
 
