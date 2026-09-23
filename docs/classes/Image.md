@@ -6,7 +6,7 @@ Last updated: 2026-09-23
 
 **Inherited By:** none
 
-- **Sources:** [`src/Core/IO/Image.cs`](../../src/Core/IO/Image.cs), [`src/Core/IO/Image.Processing.cs`](../../src/Core/IO/Image.Processing.cs), [`src/Core/IO/Image.Codecs.cs`](../../src/Core/IO/Image.Codecs.cs)
+- **Sources:** [`src/Core/IO/Image.cs`](../../src/Core/IO/Image.cs), [`src/Core/IO/Image.Processing.cs`](../../src/Core/IO/Image.Processing.cs), [`src/Core/IO/Image.Codecs.cs`](../../src/Core/IO/Image.Codecs.cs), [`src/Core/IO/Image.SVG.cs`](../../src/Core/IO/Image.SVG.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public sealed partial class Image : Resource`
 
@@ -100,13 +100,15 @@ byte[] ownedCopy = image.GetData();
 | [`public void NormalMapToXY()`](#normalmaptoxy) | Packs normal X/Y into `La8`. |
 | [`public Image RGBEToSRGB()`](#rgbetosrgb) | Decodes `Rgbe9995` into a new `Rgb8` image. |
 | [`public ImageMetrics ComputeImageMetrics(Image comparedImage, bool useLuma)`](#computeimagemetrics) | Computes absolute-error statistics over the common area. |
-| [`public void Load(string path)`](#load) | Replaces pixels from a PNG, JPEG, WebP, BMP or TGA file. |
+| [`public void Load(string path)`](#load) | Replaces pixels from a PNG, JPEG, WebP, BMP, TGA or SVG file. |
 | [`public static Image LoadFromFile(string path)`](#loadfromfile) | Returns an independent caller-owned image decoded from a file. |
 | [`public void LoadPNGFromBuffer(ReadOnlySpan<byte> buffer)`](#loadpngfrombuffer) | Replaces pixels from PNG bytes. |
 | [`public void LoadJPGFromBuffer(ReadOnlySpan<byte> buffer)`](#loadjpgfrombuffer) | Replaces pixels from JPEG bytes. |
 | [`public void LoadWebPFromBuffer(ReadOnlySpan<byte> buffer)`](#loadwebpfrombuffer) | Replaces pixels from WebP bytes. |
 | [`public void LoadBMPFromBuffer(ReadOnlySpan<byte> buffer)`](#loadbmpfrombuffer) | Replaces pixels from BMP bytes. |
 | [`public void LoadTGAFromBuffer(ReadOnlySpan<byte> buffer)`](#loadtgafrombuffer) | Replaces pixels from TGA bytes. |
+| [`public void LoadSVGFromBuffer(ReadOnlySpan<byte> buffer, float scale = 1f)`](#loadsvgfrombuffer) | Rasterizes UTF-8 SVG bytes at the requested scale. |
+| [`public void LoadSVGFromString(string svg, float scale = 1f)`](#loadsvgfromstring) | Rasterizes an SVG string at the requested scale. |
 | [`public byte[] SavePNGToBuffer()`](#savepngtobuffer) | Encodes a stable base-level snapshot as PNG. |
 | [`public byte[] SaveJPGToBuffer(float quality = 0.75f)`](#savejpgtobuffer) | Encodes the base level as lossy JPEG without alpha. |
 | [`public void SavePNG(string path)`](#savepng) | Atomically replaces a file with encoded PNG bytes. |
@@ -457,7 +459,7 @@ The current native codec profile decodes to copied `Rgba8` base pixels without m
 <a id="load"></a>
 ### `public void Load(string path)`
 
-Replaces pixels from a PNG, JPEG, WebP, BMP or TGA file. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The path accepts operating-system paths and existing `res://`/`user://` directory mappings through `FileAccess`. Extensions are case-insensitive; unknown extensions raise `NotSupportedException`. Normal path and I/O errors propagate.
+Replaces pixels from a PNG, JPEG, WebP, BMP, TGA or SVG file. SVG uses scale 1. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The path accepts operating-system paths and existing `res://`/`user://` directory mappings through `FileAccess`. Extensions are case-insensitive; unknown extensions raise `NotSupportedException`. Normal path and I/O errors propagate.
 
 <a id="loadfromfile"></a>
 ### `public static Image LoadFromFile(string path)`
@@ -488,6 +490,16 @@ Replaces pixels from BMP bytes. Decoding and native cleanup finish before commit
 ### `public void LoadTGAFromBuffer(ReadOnlySpan<byte> buffer)`
 
 Replaces pixels from TGA bytes. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access.
+
+<a id="loadsvgfrombuffer"></a>
+### `public void LoadSVGFromBuffer(ReadOnlySpan<byte> buffer, float scale = 1f)`
+
+Rasterizes uncompressed UTF-8 SVG bytes through the internal SDL_image decoder. Intrinsic dimensions come from pixel or physical `width`/`height`, or `viewBox`; absent dimensions default to a 300×150 viewport. Positive finite `scale` multiplies the dimensions, rounded to integer pixels. Each output axis is limited to 16,384 pixels and the usual image pixel limit applies. XML DTDs, malformed input, unsupported dimension units and oversized results throw `InvalidDataException` before native decoding. The input span is copied; success replaces the image with RGBA8 base pixels and emits `Changed` once. Failed validation or decoding preserves the previous image.
+
+<a id="loadsvgfromstring"></a>
+### `public void LoadSVGFromString(string svg, float scale = 1f)`
+
+Encodes the string as strict UTF-8 and follows the buffer method's rasterization and state contract. Null input throws `ArgumentNullException`; malformed text throws `InvalidDataException`. A disposed image rejects the call.
 
 <a id="savepngtobuffer"></a>
 ### `public byte[] SavePNGToBuffer()`
@@ -539,7 +551,7 @@ Public state reads and writes are safe for concurrent calls on the same image. M
 
 The implemented surface covers all backend-independent CPU operations in the audited reference API, adapted to typed C# properties, exceptions, arrays, and `ImageMetrics`. The following members are intentionally absent, not stubs:
 
-- PNG/JPEG/WebP/BMP/TGA file and buffer loading and PNG/JPEG saving are executable under the codec profile above. SVG/DDS/KTX/EXR, WebP saving, supported-format discovery, source channel layouts and complete color/metadata semantics remain unfinished. SDL_image 3.4.6 changes opaque colors when saving WebP at its lossless setting, so no public lossless encoder is claimed.
+- PNG/JPEG/WebP/BMP/TGA/SVG file and buffer loading and PNG/JPEG saving are executable under the codec profile above. SVG raster dimensions use the documented XML preflight and may differ from SVG renderers with other CSS sizing rules. DDS/KTX/EXR, WebP saving, supported-format discovery, source channel layouts and complete color/metadata semantics remain unfinished. SDL_image 3.4.6 changes opaque colors when saving WebP at its lossless setting, so no public lossless encoder is claimed.
 - `compress` and `compress_from_channels` start with the editor plus primary SDL3 GPU renderer and its selected offline texture-compression toolchain; they belong in the first approved texture import/compression slice.
 - `decompress` starts when a portable CPU decoder or renderer readback path is selected; it belongs in the first compressed-CPU-consumption slice.
 - ImageTexture converts copied pixels for GPU sampling in the first rendering slice; ordinary texture drawing and additional formats remain unfinished.
@@ -548,4 +560,4 @@ The implemented surface covers all backend-independent CPU operations in the aud
 
 See [ADR 0039](../decisions/resources.md#adr-0039).
 
-The native codec checks in `ImageCodecTests` cover five load formats, PNG/JPEG saving, PNG grayscale/16-bit/alpha vectors, BMP/TGA orientation and pitch, callback failure, state preservation, parallel independent decoding, disposal, virtual paths, oversized inputs and atomic-write failures on Linux x64. The rendering checks additionally upload decoded PNG pixels and verify GPU readback through both HLSL and GLSL. These checks do not establish AOT or other-platform acceptance.
+The native codec checks in `ImageCodecTests` cover six load formats, PNG/JPEG saving, SVG size/color/scale and rejection of DTD or oversized input, PNG grayscale/16-bit/alpha vectors, BMP/TGA orientation and pitch, callback failure, state preservation, parallel independent decoding, disposal, virtual paths, oversized inputs and atomic-write failures on Linux x64. The rendering checks additionally upload decoded PNG pixels and verify GPU readback through both HLSL and GLSL. These checks do not establish AOT or other-platform acceptance.

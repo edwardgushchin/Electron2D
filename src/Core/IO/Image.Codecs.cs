@@ -10,7 +10,7 @@ public sealed partial class Image
     private const int MaximumEncodedBytes = 64 * 1024 * 1024;
 
     /// <summary>Replaces this image with decoded pixels from a file.</summary>
-    /// <param name="path">An operating-system, res:// or user:// path to PNG, JPEG, WebP, BMP or TGA data.</param>
+    /// <param name="path">An operating-system, res:// or user:// path to PNG, JPEG, WebP, BMP, TGA or SVG data.</param>
     /// <remarks>Input is bounded to 64 MiB. Decoding produces a copied RGBA8 base image without mipmaps.
     /// A failure preserves the previous image. Changed is emitted after a successful replacement.
     /// Formats requiring further codec integration are rejected explicitly.</remarks>
@@ -79,6 +79,15 @@ public sealed partial class Image
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void LoadTGAFromBuffer(ReadOnlySpan<byte> buffer) => DecodeAndCommit(buffer, "TGA");
 
+    /// <summary>Rasterizes an uncompressed UTF-8 SVG buffer and replaces the image atomically.</summary>
+    /// <param name="buffer">SVG data, copied before validation and decoding, at most 64 MiB.</param>
+    /// <param name="scale">Finite positive multiplier for the SVG's intrinsic dimensions.</param>
+    /// <remarks>Produces an RGBA8 base image without mipmaps. The document must have finite intrinsic dimensions or a viewBox; external XML entities are rejected. Failure preserves the previous image.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">Scale is not finite and positive.</exception>
+    /// <exception cref="InvalidDataException">The document is malformed or exceeds image limits.</exception>
+    /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
+    public void LoadSVGFromBuffer(ReadOnlySpan<byte> buffer, float scale = 1f) => DecodeAndCommit(buffer, "SVG", scale);
+
     /// <summary>Encodes the base image as a PNG byte array.</summary>
     /// <returns>Caller-owned encoded bytes.</returns>
     /// <remarks>Uses a stable snapshot converted to RGBA8; mipmaps are not encoded. Does not mutate this image.</remarks>
@@ -140,16 +149,17 @@ public sealed partial class Image
             ".webp" => "WEBP",
             ".bmp" => "BMP",
             ".tga" => "TGA",
-            _ => throw new NotSupportedException("This image loader accepts PNG, JPEG, WebP, BMP and TGA files.")
+            ".svg" => "SVG",
+            _ => throw new NotSupportedException("This image loader accepts PNG, JPEG, WebP, BMP, TGA and SVG files.")
         };
     }
 
-    private unsafe void DecodeAndCommit(ReadOnlySpan<byte> buffer, string codec)
+    private unsafe void DecodeAndCommit(ReadOnlySpan<byte> buffer, string codec, float scale = 1f)
     {
         ThrowIfDisposed();
         if (buffer.IsEmpty || buffer.Length > MaximumEncodedBytes) throw new InvalidDataException("Encoded images must contain between 1 byte and 64 MiB.");
         var bytes = buffer.ToArray();
-        var size = EncodedSize(bytes, codec);
+        var size = codec == "SVG" ? SVGSize(bytes, scale) : EncodedSize(bytes, codec);
         try { ValidateDimensions(size.X, size.Y); }
         catch (ArgumentOutOfRangeException e) { throw new InvalidDataException("Encoded dimensions exceed the image limits.", e); }
         State decoded;
@@ -168,6 +178,7 @@ public sealed partial class Image
                     "WEBP" => SDL3.Image.LoadWEBPIO(stream),
                     "BMP" => SDL3.Image.LoadBMPIO(stream),
                     "TGA" => SDL3.Image.LoadTGAIO(stream),
+                    "SVG" => SDL3.Image.LoadSizedSVGIO(stream, size.X, size.Y),
                     _ => throw new NotSupportedException(codec)
                 };
                 if (surface == 0) throw new InvalidDataException($"Cannot decode {codec}: {SDL.GetError()}");

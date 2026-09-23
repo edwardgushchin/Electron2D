@@ -1,11 +1,13 @@
 using IOPath = System.IO.Path;
 using System.Buffers.Binary;
+using System.Text;
 using Electron2D;
 
 internal static class ImageCodecTests
 {
     private static readonly byte[] Pixels = [255, 0, 0, 128, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 0, 255, 255, 0, 255, 255, 0, 255, 255, 255];
     private const string WEBP = "UklGRjQAAABXRUJQVlA4TCgAAAAvAkAAEC8gEEjaH3qN+RcQFPk/moCg6Lrlgh9EMgoCATJEjBIR/Y9Y";
+    private const string SVG = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"3px\" height=\"2px\"><rect width=\"3\" height=\"2\" fill=\"#ff0000\"/></svg>";
 
     internal static void Run()
     {
@@ -24,6 +26,15 @@ internal static class ImageCodecTests
         Check(!image.HasMipmaps && loaded == 1, "Load replaces the whole image and emits Changed once.");
         image.LoadWebPFromBuffer(Convert.FromBase64String(WEBP));
         CheckPixels(image, Pixels);
+        image.LoadSVGFromString(SVG);
+        Check(image.Size == new Vector2I(3, 2) && image.PixelFormat == Image.Format.Rgba8 && image.GetPixel(1, 1) == Colors.Red,
+            "SVG string rasterizes at intrinsic size and color.");
+        image.LoadSVGFromBuffer(Encoding.UTF8.GetBytes(SVG), 2);
+        Check(image.Size == new Vector2I(6, 4) && image.GetPixel(3, 2) == Colors.Red,
+            "SVG buffer scale changes raster dimensions and preserves fill.");
+        image.LoadSVGFromString("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 3\"><rect width=\"4\" height=\"3\" fill=\"#00ff00\"/></svg>");
+        Check(image.Size == new Vector2I(4, 3) && image.GetPixel(1, 1) == Colors.Green,
+            "SVG viewBox supplies intrinsic dimensions.");
         foreach (var topDown in new[] { false, true })
         {
             image.LoadBMPFromBuffer(BMP(topDown));
@@ -71,11 +82,18 @@ internal static class ImageCodecTests
         Reject<InvalidDataException>(() => image.LoadWebPFromBuffer(png));
         Reject<InvalidDataException>(() => image.LoadBMPFromBuffer(png));
         Reject<InvalidDataException>(() => image.LoadTGAFromBuffer(png));
+        Reject<InvalidDataException>(() => image.LoadSVGFromBuffer(png));
         var corrupt = (byte[])png.Clone();
         Array.Fill(corrupt, (byte)255, 41, 8);
         Reject<InvalidDataException>(() => image.LoadPNGFromBuffer(corrupt));
         CheckPixels(image, Pixels);
         Check(loaded == count, "Header and decoder failures leave pixels and notifications unchanged.");
+        foreach (var svg in new[] { "<svg width=\"50000\" height=\"2\"/>", "<!DOCTYPE svg [<!ENTITY x SYSTEM 'file:///etc/passwd'>]><svg>&x;</svg>", "<svg width=\"3\" height=\"2\"><rect" })
+            Reject<InvalidDataException>(() => image.LoadSVGFromString(svg));
+        foreach (var scale in new[] { 0f, -1f, float.NaN, float.PositiveInfinity })
+            Reject<ArgumentOutOfRangeException>(() => image.LoadSVGFromString(SVG, scale));
+        CheckPixels(image, Pixels);
+        Check(loaded == count, "SVG preflight failures preserve image state and notifications.");
         Reject<InvalidDataException>(() => image.LoadPNGFromBuffer(new byte[64 * 1024 * 1024 + 1]));
 
         using var empty = new Image();
@@ -89,9 +107,10 @@ internal static class ImageCodecTests
         CheckPixels(callback, Pixels);
         image.Dispose();
         Reject<ObjectDisposedException>(() => image.LoadPNGFromBuffer(png));
+        Reject<ObjectDisposedException>(() => image.LoadSVGFromString(SVG));
         Reject<ObjectDisposedException>(() => image.SavePNGToBuffer());
         Parallel.For(0, 12, _ => { using var copy = new Image(); copy.LoadPNGFromBuffer(png); copy.LoadPNGFromBuffer(copy.SavePNGToBuffer()); CheckPixels(copy, Pixels); });
-        Console.WriteLine("Image codec checks passed (PNG/JPEG/WebP/BMP/TGA; buffers, files, failures, ownership).");
+        Console.WriteLine("Image codec checks passed (PNG/JPEG/WebP/BMP/TGA/SVG; buffers, files, failures, ownership).");
     }
 
     private static void VerifyFiles(Image source, byte[] png, byte[] jpg)
@@ -116,7 +135,7 @@ internal static class ImageCodecTests
                 using var snapshot = texture.GetImage();
                 CheckPixels(snapshot!, Pixels);
             }
-            var inputs = new[] { (".png", png), (".jpg", jpg), (".webp", Convert.FromBase64String(WEBP)), (".bmp", BMP(false)), (".tga", TGA(false)) };
+            var inputs = new[] { (".png", png), (".jpg", jpg), (".webp", Convert.FromBase64String(WEBP)), (".bmp", BMP(false)), (".tga", TGA(false)), (".svg", Encoding.UTF8.GetBytes(SVG)) };
             foreach (var (extension, bytes) in inputs)
             {
                 var path = IOPath.Combine(root, "input" + extension);

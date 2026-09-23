@@ -61,7 +61,7 @@ BitMap's complete declared 2D mask surface is implemented: alpha thresholding, b
 
 The dynamic image-data dictionary is permanently replaced by typed properties plus `GetData`/`SetData`; error-code returns are replaced by exceptions; metric dictionaries are replaced by `ImageMetrics`.
 
-PNG/JPEG/WebP/BMP/TGA loading and PNG/JPEG saving are executable; GPU compression/decompression, importing, resource loading and native-backed asset leases are absent. Texture upload belongs to the in-progress shader-material component. The native codec API currently normalizes to RGBA8, without mipmaps, with a 64 MiB encoded-input/output limit and preflight dimension checks. SVG/DDS/KTX/EXR, WebP saving, format discovery, channel-layout and color/metadata parity remain pending. No lossless WebP encoder is exposed after the pinned native encoder failed exact opaque-color round trips. [ADR 0039](../decisions/resources.md#deferred-coverage-and-exact-implementation-triggers) gives each row a concrete prerequisite and first required vertical slice. Raw DXT/RGTC/BPTC/ETC/ASTC bytes can be held but not decoded or encoded.
+PNG/JPEG/WebP/BMP/TGA/SVG loading and PNG/JPEG saving are executable; GPU compression/decompression, importing, resource loading and native-backed asset leases are absent. Texture upload belongs to the in-progress shader-material component. The native codec API currently normalizes to RGBA8, without mipmaps, with a 64 MiB encoded-input/output limit and preflight dimension checks. DDS/KTX/EXR, WebP saving, format discovery, channel-layout and color/metadata parity remain pending. No lossless WebP encoder is exposed after the pinned native encoder failed exact opaque-color round trips. [ADR 0039](../decisions/resources.md#deferred-coverage-and-exact-implementation-triggers) gives each row a concrete prerequisite and first required vertical slice. Raw DXT/RGTC/BPTC/ETC/ASTC bytes can be held but not decoded or encoded.
 
 ## Verification
 
@@ -69,7 +69,7 @@ PNG/JPEG/WebP/BMP/TGA loading and PNG/JPEG saving are executable; GPU compressio
 
 `BitMapTests` covers the new mask contract, including contour crossings and resource duplication.
 
-The managed checks are Linux/.NET 8 only. Native `ImageCodecTests` separately verifies all five integrated loaders, PNG/JPEG saves, header/decoder failure atomicity, independent concurrent calls, virtual paths and atomic file failures. RenderingTextureTests verifies decoded PNG pixels in the fourteenth GPU frame for each source language. Visual-quality, memory-pressure, AOT and other-target acceptance remain pending.
+The managed checks are Linux/.NET 8 only. Native `ImageCodecTests` separately verifies all six integrated loaders, including SVG string/buffer scaling and XML rejection, PNG/JPEG saves, header/decoder failure atomicity, independent concurrent calls, virtual paths and atomic file failures. RenderingTextureTests verifies decoded PNG pixels in the fourteenth GPU frame for each source language. Visual-quality, memory-pressure, AOT and other-target acceptance remain pending.
 
 ## Decisions
 

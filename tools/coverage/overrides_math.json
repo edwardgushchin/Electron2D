@@ -1291,6 +1291,16 @@
       "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
     },
     {
+      "electron2d": "method:Electron2D.Image.LoadSVGFromBuffer(System.ReadOnlySpan<System.Byte>,System.Single)",
+      "godot": "Image::method:load_svg_from_buffer(PackedByteArray:,float:)",
+      "reason": "Typed span and exceptions; uppercase SVG spelling under ADR 0045. SDL_image rasterizes preflighted XML at a finite positive scale on Linux; CSS sizing and other platforms remain partial under ADR 0039."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.LoadSVGFromString(System.String,System.Single)",
+      "godot": "Image::method:load_svg_from_string(String:,float:)",
+      "reason": "Typed string and exceptions; uppercase SVG spelling under ADR 0045. Strict UTF-8 encoding shares the buffer rasterization path; CSS sizing and other platforms remain partial under ADR 0039."
+    },
+    {
       "electron2d": "method:Electron2D.Image.LoadTGAFromBuffer(System.ReadOnlySpan<System.Byte>)",
       "godot": "Image::method:load_tga_from_buffer(PackedByteArray:)",
       "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
@@ -3101,6 +3111,8 @@
         "Image::method:load_from_file(String:)",
         "Image::method:load_jpg_from_buffer(PackedByteArray:)",
         "Image::method:load_png_from_buffer(PackedByteArray:)",
+        "Image::method:load_svg_from_buffer(PackedByteArray:,float:)",
+        "Image::method:load_svg_from_string(String:,float:)",
         "Image::method:load_tga_from_buffer(PackedByteArray:)",
         "Image::method:load_webp_from_buffer(PackedByteArray:)",
         "Image::method:save_jpg(String:,float:)",
@@ -3108,7 +3120,7 @@
         "Image::method:save_png(String:)",
         "Image::method:save_png_to_buffer()"
       ],
-      "reason": "Executable native PNG/JPEG/WebP/BMP/TGA loading and PNG/JPEG saving with file/buffer paths, RGBA8 copied base pixels, size preflight, atomic replacement and Linux x64 tests in ImageCodecTests; decoded PNG texture output verified on Wayland/Vulkan. Original channel layouts, color/profile metadata, full codec variants, additional Load formats and AOT remain unaudited or unfinished. See docs/classes/Image.md and ADR 0039."
+      "reason": "Executable native PNG/JPEG/WebP/BMP/TGA/SVG loading and PNG/JPEG saving with file/buffer paths, RGBA8 copied base pixels, size preflight, atomic replacement and Linux x64 tests in ImageCodecTests; decoded PNG texture output verified on Wayland/Vulkan. SVG CSS sizing, source channel layouts, color/profile metadata, full codec variants, additional Load formats and AOT remain unaudited or unfinished. See docs/classes/Image.md and ADR 0039."
     },
     {
       "state": "Blocked",

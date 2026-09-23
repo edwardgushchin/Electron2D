@@ -25436,6 +25436,54 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Image.LoadSVGFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "LoadSVGFromBuffer",
+    "signature": "public System.Void LoadSVGFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E buffer, System.Single scale = 1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "buffer",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "scale",
+        "type": "System.Single",
+        "default": "1f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Image.LoadSVGFromString(System.String,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "LoadSVGFromString",
+    "signature": "public System.Void LoadSVGFromString(System.String svg, System.Single scale = 1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "svg",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "scale",
+        "type": "System.Single",
+        "default": "1f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Image.LoadTGAFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
