@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
-**Inherited By:** [CanvasItem](CanvasItem.md), [Timer](Timer.md), [Viewport](Viewport.md)
+**Inherited By:** [CanvasItem](CanvasItem.md), [CanvasLayer](CanvasLayer.md), [Timer](Timer.md), [Viewport](Viewport.md)
 
 - **Source:** [Node.cs](../../src/Scene/Main/Node.cs)
 - **Namespace:** `Electron2D`

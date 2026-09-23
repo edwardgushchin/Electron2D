@@ -13,6 +13,8 @@ Renders the active root Window's retained CanvasItem commands. Engine.Run create
 
 The service supports rectangles, lines and textures using source-alpha blending into an RGBA8 framebuffer. Shader materials require GPU rendering. Startup settings select `gpu` or `compatibility` and whether GPU initialization may fall back. This does not implement live device migration or recovery.
 
+CanvasLayer grouping precedes item Z/Y ordering. Default-canvas and layer roots use their own viewport transform; retained commands survive layer motion, camera following and order changes. Transform snapping prepares canvas translations separately from item translations. See [canvas layers](../components/canvas-rendering.md#canvas-layers).
+
 ## Example
 
 Inside a node's OnReady callback during Engine.Run:
@@ -20,6 +22,25 @@ Inside a node's OnReady callback during Engine.Run:
 ```csharp
 RenderingServer.Instance!.SetDefaultClearColor(new Color(0.1f, 0.1f, 0.15f));
 ```
+
+## Constants
+
+| Declaration | Contract |
+| --- | --- |
+| [`public const int CanvasLayerMin = int.MinValue`](#canvaslayermin) | Smallest layer index. |
+| [`public const int CanvasLayerMax = int.MaxValue`](#canvaslayermax) | Largest layer index. |
+
+### CanvasLayerMin
+
+`public const int CanvasLayerMin = -2147483648`
+
+Smallest accepted CanvasLayer.Layer value. It draws before every larger layer index, independently of per-item Z. This bound is inclusive.
+
+### CanvasLayerMax
+
+`public const int CanvasLayerMax = 2147483647`
+
+Largest accepted CanvasLayer.Layer value. It draws after every smaller layer index, independently of per-item Z. This bound is inclusive; equal layers retain their independent canvas groups.
 
 ## API summary
 

@@ -43,6 +43,7 @@ Source: [CanvasItem.Coordinates.cs](../../src/Scene/Main/CanvasItem.Coordinates.
 
 | Declaration | Contract |
 | --- | --- |
+| `public CanvasLayer? GetCanvasLayerNode()` | [Borrowed associated layer](#getcanvaslayernode) |
 | `public Rect GetViewportRect()` | [Visible viewport rectangle](#getviewportrect) |
 | `public Transform GetCanvasTransform()` | [Canvas-to-viewport transform](#getcanvastransform) |
 | `public Transform GetGlobalTransformWithCanvas()` | [Local-to-viewport transform](#getglobaltransformwithcanvas) |
@@ -63,6 +64,12 @@ if (inputEvent is InputEventMouse mouse)
 }
 ```
 
+### GetCanvasLayerNode
+
+`public CanvasLayer? GetCanvasLayerNode()`
+
+Returns the borrowed layer associated with actual canvas membership, or null while detached/on the default canvas. The nearest enclosing layer is used up to the containing Viewport; neutral nodes and TopLevel preserve that association. Reparenting/tree transitions refresh membership, while manual notifications do not. Attached off-owner access throws InvalidOperationException; disposed access throws ObjectDisposedException.
+
 ### GetViewportRect
 
 `public Rect GetViewportRect()`
@@ -73,7 +80,7 @@ Returns the active containing viewport's GetVisibleRect, in viewport coordinates
 
 `public Transform GetCanvasTransform()`
 
-Returns the active viewport's CanvasTransform. Independent CanvasLayer transforms are not implemented.
+Returns the associated CanvasLayer.GetFinalTransform, or the active viewport's CanvasTransform for the default canvas. Layer following uses the logical matrix documented in [CanvasLayer](CanvasLayer.md#transform-and-source-audit). Neutral nodes and TopLevel end item transform inheritance while preserving layer membership.
 
 ### GetGlobalTransformWithCanvas
 
@@ -117,9 +124,9 @@ Returns inverse `C` times the viewport's current native pointer position. Requir
 
 Applies inverse `G` to GetGlobalMousePosition. A singular logical global transform throws InvalidOperationException. The native window requirement and pointer semantics are inherited.
 
-All coordinate queries require a live item and enforce its attached owner thread. Except the detached fallback of GetGlobalTransformWithCanvas, they require active viewport membership; missing membership/off-owner access throws InvalidOperationException and disposal throws ObjectDisposedException. Queries preserve logical node state and do not emit notifications.
+All coordinate queries require a live item and enforce its attached owner thread. Except GetCanvasLayerNode and the detached fallback of GetGlobalTransformWithCanvas, they require active viewport membership; missing membership/off-owner access throws InvalidOperationException and disposal throws ObjectDisposedException. Queries preserve logical node state and do not emit notifications.
 
-Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs); [Wayland GPU/compatibility and dummy rendering/input checks](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Native readback includes noncommuting viewport transforms, independent canvas roots, retained commands, pixel snapping and HLSL/GLSL materials. Camera tracking is implemented; CanvasLayer, GUI, nested viewports and content scaling remain absent; no physical-input/visual or other-platform acceptance is claimed.
+Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs); [Wayland GPU/compatibility and dummy rendering/input checks](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Native readback includes noncommuting viewport transforms, independent canvas roots, retained commands, pixel snapping and HLSL/GLSL materials. Camera and CanvasLayer are integrated; GUI, nested viewports and content scaling remain absent; no physical-input/visual or other-platform acceptance is claimed.
 
 ## Constructors
 
@@ -282,7 +289,7 @@ Gets or sets the color multiplier applied only to this node's drawing.
 <a id="p-electron2d-canvasitem-showbehindparent"></a>
 ### `public bool ShowBehindParent { get; set; }`
 
-False by default. True draws this canvas subtree before its canvas parent when effective Z is equal. Effective Z takes precedence. An enabled Y-sorting parent orders participating children by Y instead of this flag. Neutral parents and TopLevel items have no canvas parent to draw behind.
+False by default. True draws this canvas subtree before its canvas parent when effective Z is equal. Effective Z takes precedence within each canvas. An enabled Y-sorting parent orders participating children by Y instead of this flag. Neutral parents and TopLevel items have no canvas parent to draw behind.
 
 Changes affect the next submission without QueueRedraw. The value is stored by PackedScene. Mutation off an attached tree's owner thread or during capture throws InvalidOperationException; access after disposal throws ObjectDisposedException.
 
@@ -293,7 +300,7 @@ Gets or sets whether this node ignores its parent's transform.
 
 **Value:** `false` by default.
 
-**Remarks:** The local transform stays unchanged; global coordinates are recomputed against the new canvas boundary. The item becomes a separate canvas root, drawn after the preceding root's entire canvas subtree at the same Z. Roots retain scene order; Z takes precedence. Logical visibility continues to follow direct canvas ancestors. An attached change emits NotificationExitCanvas with the old mode, then NotificationEnterCanvas with the committed new mode. It schedules redraw; recursive rebinding is rejected and callback failures are aggregated after the transition.
+**Remarks:** The local transform stays unchanged; global coordinates are recomputed against the new canvas boundary. The item becomes a separate canvas root, drawn after the preceding root's entire canvas subtree at the same Z. Roots retain scene order; Z takes precedence within each canvas. Layer grouping precedes item Z. Logical visibility continues to follow direct canvas ancestors. An attached change emits NotificationExitCanvas with the old mode, then NotificationEnterCanvas with the committed new mode. It schedules redraw; recursive rebinding is rejected and callback failures are aggregated after the transition.
 
 **System.InvalidOperationException:** Mutation occurs off the owner thread, during packed-scene capture, or recursively during canvas rebinding.
 
@@ -330,7 +337,7 @@ Gets or sets this node's local logical visibility.
 <a id="p-electron2d-canvasitem-ysortenabled"></a>
 ### `public bool YSortEnabled { get; set; }`
 
-False by default. True orders the item itself at Y = 0 and its direct canvas children in ascending Y in this item's local coordinate system. The root's global rotation or scale does not change the sorting coordinates. Nested enabled children join the same group using composed local transforms. A child with sorting disabled keeps its canvas subtree together at that child's Y; any deeper enabled group sorts independently within that subtree. Approximate ties use Mathf.IsEqualApprox and preserve scene order. Effective Z takes precedence over Y.
+False by default. True orders the item itself at Y = 0 and its direct canvas children in ascending Y in this item's local coordinate system. The root's global rotation or scale does not change the sorting coordinates. Nested enabled children join the same group using composed local transforms. A child with sorting disabled keeps its canvas subtree together at that child's Y; any deeper enabled group sorts independently within that subtree. Approximate ties use Mathf.IsEqualApprox and preserve scene order. Effective Z takes precedence over Y within each canvas.
 
 Invisible children do not participate. TopLevel children and children below neutral nodes are separate canvas roots. ShowBehindParent is ignored for items directly ordered by the Y group, but still applies inside unsorted subtrees. Processing and input order remain unchanged.
 

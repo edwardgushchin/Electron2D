@@ -9,11 +9,18 @@ public abstract partial class CanvasItem
     public Rect GetViewportRect() => RequireCanvasViewport().GetVisibleRect();
 
     /// <summary>Returns the transform from this item's canvas to viewport coordinates.</summary>
-    /// <returns>The containing viewport's CanvasTransform.</returns>
-    /// <remarks>Requires tree membership. Independent canvas layers are not implemented yet.</remarks>
+    /// <returns>The associated CanvasLayer.GetFinalTransform, or the containing viewport's CanvasTransform.</returns>
+    /// <remarks>Requires tree membership. Neutral nodes and TopLevel preserve the enclosing canvas layer.</remarks>
     /// <exception cref="InvalidOperationException">The item has no active viewport or is queried off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
-    public Transform GetCanvasTransform() => RequireCanvasViewport().CanvasTransform;
+    public Transform GetCanvasTransform() { var viewport = RequireCanvasViewport(); return _canvasLayer?.GetFinalTransform() ?? viewport.CanvasTransform; }
+
+    /// <summary>Returns the canvas layer associated with this item's actual canvas membership.</summary>
+    /// <returns>A borrowed CanvasLayer, or null for the default canvas and detached items.</returns>
+    /// <remarks>Search stops at the containing viewport. Neutral parents and TopLevel do not remove layer membership.</remarks>
+    /// <exception cref="InvalidOperationException">The attached item is queried off-owner.</exception>
+    /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
+    public CanvasLayer? GetCanvasLayerNode() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _canvasLayer; }
 
     /// <summary>Returns this item's local-to-viewport transform, including its canvas.</summary>
     /// <returns>CanvasTransform times GetGlobalTransform while attached; otherwise the logical global transform.</returns>
@@ -27,7 +34,7 @@ public abstract partial class CanvasItem
     }
 
     /// <summary>Returns the transform from this item's canvas to the containing window's client coordinates.</summary>
-    /// <returns>The viewport final transform times its CanvasTransform.</returns>
+    /// <returns>The viewport final transform times this item's canvas transform.</returns>
     /// <remarks>Does not include this item's own transform, native desktop placement or framebuffer pixel density.</remarks>
     /// <exception cref="InvalidOperationException">The item has no active viewport or is queried off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>

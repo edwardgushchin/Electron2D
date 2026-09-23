@@ -5,10 +5,16 @@ namespace Electron2D;
 /// <summary>Renders the active root window's retained two-dimensional canvas commands.</summary>
 /// <remarks>Engine.Run owns startup, frame submission and shutdown on the scene owner thread. Geometry uses
 /// source-alpha blending into an RGBA8 framebuffer. GPU initialization may fall back according to project settings.
-/// Rectangles, lines and image textures are integrated. Shader materials require the GPU path. Lights, clipping, offscreen public viewports and device recovery
+/// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, lines and image textures are integrated. Shader materials require the GPU path. Lights, clipping, offscreen public viewports and device recovery
 /// are not integrated. Owned SDL handles remain internal; DisplayServer can expose borrowed native context identities.</remarks>
 public sealed class RenderingServer : ElectronObject
 {
+    /// <summary>Specifies the smallest canvas-layer index, drawn before every greater layer index.</summary>
+    public const int CanvasLayerMin = int.MinValue;
+
+    /// <summary>Specifies the largest canvas-layer index, drawn after every smaller layer index.</summary>
+    public const int CanvasLayerMax = int.MaxValue;
+
     private readonly CanvasBackend _backend;
     private readonly Window _window;
     private readonly int _ownerThread = Environment.CurrentManagedThreadId;
@@ -17,6 +23,8 @@ public sealed class RenderingServer : ElectronObject
     private readonly List<CanvasBatch> _batches = [];
     private readonly List<RenderEntry> _order = [];
     private readonly List<YSortEntry> _ySort = [];
+    private long _canvasStacking;
+    private ulong _canvasID;
     private bool _renderLoopEnabled = true;
     private bool _closing;
     private bool _rendering;
@@ -127,15 +135,25 @@ public sealed class RenderingServer : ElectronObject
             var pixels = _backend.GetPixelSize();
             var client = _window.Size;
             if (pixels.X <= 0 || pixels.Y <= 0) return;
-            var viewportTransform = new Transform(0f, new Vector2((float)pixels.X / client.X, (float)pixels.Y / client.Y), 0f, Vector2.Zero)
-                * _window.GetFinalTransform() * _window.CanvasTransform;
+            var framebufferTransform = new Transform(0f, new Vector2((float)pixels.X / client.X, (float)pixels.Y / client.Y), 0f, Vector2.Zero);
             // Drawing callbacks may change parenting, visibility or sibling order.
             _nodes.Clear();
             Capture(tree.Root);
             foreach (var node in _nodes)
                 if (node.GetParentItem() is null)
-                    OrderCanvas(node, viewportTransform);
-            _order.Sort(static (x, y) => { var z = x.Z.CompareTo(y.Z); return z != 0 ? z : x.Order.CompareTo(y.Order); });
+                {
+                    var layer = node.GetCanvasLayerNode();
+                    if (layer is not null && !ReferenceEquals(layer.CanvasViewport, _window)) continue;
+                    _canvasStacking = layer is null ? 0 : ((long)layer.Layer << 32) + (uint)layer.GetIndex();
+                    _canvasID = layer?.InstanceID ?? 0;
+                    OrderCanvas(node, framebufferTransform * _window.GetCanvasRenderTransform(layer));
+                }
+            _order.Sort(static (x, y) =>
+            {
+                var order = x.Stacking.CompareTo(y.Stacking); if (order != 0) return order;
+                order = x.CanvasID.CompareTo(y.CanvasID); if (order != 0) return order;
+                order = x.Z.CompareTo(y.Z); return order != 0 ? order : x.Order.CompareTo(y.Order);
+            });
             foreach (var item in _order)
                 item.Node.AppendCanvas(_vertices, _batches, item.Transform);
             foreach (var batch in _batches)
@@ -170,7 +188,7 @@ public sealed class RenderingServer : ElectronObject
         {
             if (alreadyYSorted)
             {
-                _order.Add(new(item, item.EffectiveZIndex, _order.Count, transform));
+                _order.Add(new(item, _canvasStacking, _canvasID, item.EffectiveZIndex, _order.Count, transform));
                 return;
             }
             var first = _ySort.Count;
@@ -185,7 +203,7 @@ public sealed class RenderingServer : ElectronObject
             return;
         }
         OrderChildren(item, transform, behind: true);
-        _order.Add(new(item, item.EffectiveZIndex, _order.Count, transform));
+        _order.Add(new(item, _canvasStacking, _canvasID, item.EffectiveZIndex, _order.Count, transform));
         OrderChildren(item, transform, behind: false);
     }
 
@@ -242,6 +260,6 @@ public sealed class RenderingServer : ElectronObject
         if (_ownerThread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("Rendering requires the scene owner thread.");
     }
 
-    private readonly record struct RenderEntry(CanvasItem Node, int Z, int Order, Transform Transform);
+    private readonly record struct RenderEntry(CanvasItem Node, long Stacking, ulong CanvasID, int Z, int Order, Transform Transform);
     private readonly record struct YSortEntry(CanvasItem Node, Transform Transform, int Order);
 }

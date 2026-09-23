@@ -83,6 +83,7 @@ public abstract partial class CanvasItem : Node
     private bool _inCanvas;
     private bool _parentVisible;
     private bool _rebindingCanvas;
+    private CanvasLayer? _canvasLayer;
 
     internal override void OnTreeMembershipChanged(bool entering)
     {
@@ -92,7 +93,7 @@ public abstract partial class CanvasItem : Node
             finally { _parentVisible = false; }
             return;
         }
-        _parentVisible = (Parent as CanvasItem)?.IsVisibleInTree ?? GetWindow()?.Visible ?? true;
+        _parentVisible = GetParentVisibility();
         List<Exception>? errors = null;
         try { EnterCanvas(); }
         catch (Exception error) { CollectException(ref errors, error); }
@@ -105,6 +106,10 @@ public abstract partial class CanvasItem : Node
     {
         if (IsDisposed || _inCanvas || !IsInsideTree) return;
         _inCanvas = true;
+        _canvasLayer = GetParentItem()?._canvasLayer;
+        if (_canvasLayer is null)
+            for (var ancestor = Parent; ancestor is not null && ancestor is not Viewport; ancestor = ancestor.Parent)
+                if (ancestor is CanvasLayer layer) { _canvasLayer = layer; break; }
         UpdateTextureSampling(filter: true); UpdateTextureSampling(filter: false);
         InvalidateCanvas();
         DispatchNotification(NotificationEnterCanvas);
@@ -114,7 +119,8 @@ public abstract partial class CanvasItem : Node
     {
         if (!_inCanvas) return;
         _inCanvas = false;
-        DispatchNotification(NotificationExitCanvas);
+        try { DispatchNotification(NotificationExitCanvas); }
+        finally { _canvasLayer = null; }
     }
 
     /// <inheritdoc />
@@ -193,7 +199,7 @@ public abstract partial class CanvasItem : Node
 
     /// <summary>Gets or sets whether this canvas subtree draws before its canvas parent.</summary>
     /// <value>False by default.</value>
-    /// <remarks>Effective Z remains the primary ordering key. A parent sorting its children by Y uses their Y
+    /// <remarks>Effective Z remains the primary ordering key within one canvas. A parent sorting its children by Y uses their Y
     /// positions instead of this flag. Neutral parents and TopLevel items have no canvas parent to draw behind.
     /// Changes affect the next submission without requiring QueueRedraw.</remarks>
     /// <exception cref="InvalidOperationException">Mutation occurs off the owner thread or during scene capture.</exception>
@@ -288,7 +294,8 @@ public abstract partial class CanvasItem : Node
     }
 
     /// <summary>Gets whether this node is active and locally visible through its direct canvas ancestor chain.</summary>
-    /// <value><see langword="true"/> only inside a tree when this node, its direct canvas ancestors and its window are visible.</value>
+    /// <value><see langword="true"/> only inside a tree when this node and its direct canvas visibility chain are visible.
+    /// A direct CanvasLayer parent supplies its own visibility; other non-canvas boundaries use the containing window.</value>
     /// <exception cref="ObjectDisposedException">This node or a queried ancestor is disposing on another thread, or has finished disposing.</exception>
     public bool IsVisibleInTree => IsInsideTree && Visible && _parentVisible;
 
@@ -449,11 +456,18 @@ public abstract partial class CanvasItem : Node
     internal void PropagateVisibilityChanged()
     {
         if (IsDisposed || !IsInsideTree) return;
-        var parentVisible = (Parent as CanvasItem)?.IsVisibleInTree ?? GetWindow()?.Visible ?? true;
+        var parentVisible = GetParentVisibility();
         if (_parentVisible == parentVisible) return;
         _parentVisible = parentVisible;
         if (Visible) ApplyVisibilityChange();
     }
+
+    private bool GetParentVisibility() => Parent switch
+    {
+        CanvasItem item => item.IsVisibleInTree,
+        CanvasLayer layer => layer.Visible,
+        _ => GetWindow()?.Visible ?? true,
+    };
 
     private void ApplyVisibilityChange()
     {

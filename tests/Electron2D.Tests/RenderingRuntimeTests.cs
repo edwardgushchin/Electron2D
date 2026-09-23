@@ -58,6 +58,15 @@ internal static partial class RenderingRuntimeTests
                 }
                 return;
             }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_LAYER") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasLayer(backend); VerifyFrameAllocations(backend, canvasLayers: true);
+                    if (backend == "gpu") { VerifyCanvasLayer(backend, "CanvasHLSL"); VerifyCanvasLayer(backend, "CanvasGLSL"); }
+                }
+                return;
+            }
             VerifyImageDependency();
             VerifyResources();
             VerifyParameters("MaterialHlsl");
@@ -74,6 +83,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyCanvasPixelSnap(backend);
                 VerifyCanvasCoordinates(backend); VerifyViewportCoordinateInput(backend);
                 VerifyCamera(backend);
+                VerifyCanvasLayer(backend);
                 VerifySceneHierarchy(backend);
                 VerifyCanvasOrdering(backend);
                 VerifyCanvasLifecycle(backend);
@@ -100,6 +110,7 @@ internal static partial class RenderingRuntimeTests
                     VerifyCanvasPixelSnap(backend, "CanvasGLSL");
                     VerifyCanvasCoordinates(backend, "CanvasHLSL"); VerifyCanvasCoordinates(backend, "CanvasGLSL");
                     VerifyCamera(backend, "CanvasHLSL"); VerifyCamera(backend, "CanvasGLSL");
+                    VerifyCanvasLayer(backend, "CanvasHLSL"); VerifyCanvasLayer(backend, "CanvasGLSL");
                     VerifyMaterialFrame("MaterialHlsl");
                     VerifyMaterialFrame("MaterialGlsl");
                     VerifyTextureFrame("TextureHlsl");
@@ -253,7 +264,7 @@ internal static partial class RenderingRuntimeTests
         finally { first?.Dispose(); }
     }
 
-    private static void VerifyFrameAllocations(string backend, bool snapPixels = false, bool canvasTransforms = false, bool cameraTracking = false)
+    private static void VerifyFrameAllocations(string backend, bool snapPixels = false, bool canvasTransforms = false, bool cameraTracking = false, bool canvasLayers = false)
     {
         using var image = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8);
         image.Fill(Colors.White);
@@ -275,6 +286,11 @@ internal static partial class RenderingRuntimeTests
         var island = new Entity();
         var nested = new Entity { YSortEnabled = true };
         window.AddChild(sorted); sorted.AddChild(island); island.AddChild(nested);
+        if (canvasLayers)
+        {
+            var layer = new CanvasLayer { FollowViewportEnabled = true, FollowViewportScale = .75f, Offset = new(2, 3) };
+            window.AddChild(layer); sorted.Reparent(layer);
+        }
         for (var i = 0; i < 8; i++)
             (i % 2 == 0 ? sorted : nested).AddChild(new CanvasNode
             {

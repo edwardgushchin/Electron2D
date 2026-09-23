@@ -85,7 +85,7 @@ Polls the native client pointer and applies the inverse GetScreenTransform; a si
 
 Transforms finite viewport coordinates with GetScreenTransform, then truncates to native integer client units. CanvasTransform is not applied. Requires an active native Window and owner thread; capture mutation is rejected. Nonfinite or out-of-Int32 transformed coordinates throw ArgumentException before the native request. Unsupported warping throws NotSupportedException; platform policy can prevent actual movement even when a request is supported. Disposed access throws ObjectDisposedException.
 
-Verification: [managed contracts](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs) and [native pixels, injected input and pointer queries](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Linux Wayland GPU/compatibility and SDL dummy compatibility passed. Native pointer warp success and other platforms have not been verified; unsupported policies are checked explicitly. Camera tracking is integrated; CanvasLayer, content stretch and nested viewport integration remain coverage gaps.
+Verification: [managed contracts](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs) and [native pixels, injected input and pointer queries](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Linux Wayland GPU/compatibility and SDL dummy compatibility passed. Native pointer warp success and other platforms have not been verified; unsupported policies are checked explicitly. Camera and CanvasLayer are integrated; content stretch and nested viewport integration remain coverage gaps.
 
 ## Pixel snapping properties
 
@@ -105,6 +105,8 @@ var window = new Window { SnapTransformsToPixel = true };
 Rounds the local and accumulated parent translations using `floor(value + 0.5)` before rendering composition. Y sorting uses snapped local translations and retains the flattened group transform. Neutral nodes and TopLevel break the canvas chain. Logical Position/Transform and global queries remain unchanged. Attached Sprite bounds and opacity queries round their local drawing offset too; detached queries do not.
 
 Changes apply to the next submission but do not request redraw or emit ItemRectChanged. Sprite commands retain their previously recorded local offset until QueueRedraw or another invalidation. To update a retained Sprite offset after a live policy change, request its redraw. Both positive and negative exact halves round toward positive infinity.
+
+Canvas translations use a separate viewport preparation step: `ceil(position - 0.5)` for even dimensions and `ceil(position)` for odd dimensions. Following layers round their parent canvas in follow-scale units before center-based scaling. Logical matrices are unchanged; [CanvasLayer](CanvasLayer.md#transform-and-source-audit) describes the composition and zero-scale behavior.
 
 ### SnapVerticesToPixel
 

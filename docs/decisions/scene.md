@@ -71,6 +71,7 @@ Last updated: 2026-09-23
 | `Control : CanvasItem` | `Control : CanvasItem` | UI rectangle, layout, anchors/offsets, focus and GUI behavior, including its own position/rotation/scale/pivot model. It is a sibling of Entity. |
 | `BaseButton : Control` | `BaseButton : Control` | Shared button behavior; future UI implementation. |
 | `Button : BaseButton` | `Button : BaseButton` | Concrete button behavior; future UI implementation. |
+| `CanvasLayer : Node` | `CanvasLayer : Node` | Independent canvas placement, visibility and drawing groups; preserves the neutral scene-tree base. |
 | `Timer : Node` | `Timer : Node` | Countdown behavior with tree lifecycle and processing. |
 | `Viewport : Node` | `Viewport : Node` | Rendering/input context and viewport ownership. |
 | `Window : Viewport` | `Window : Viewport` | Window behavior under the viewport contract. |
@@ -83,6 +84,7 @@ The target hierarchy is:
 ElectronObject
 └── Node
     ├── Timer
+    ├── CanvasLayer
     ├── Viewport
     │   └── Window
     └── CanvasItem
@@ -105,7 +107,7 @@ Outside these renames, the entire in-scope engine API must correspond to Godot u
 
 ### Implementation and verification boundary
 
-The runtime implements `Sprite : Entity : CanvasItem : Node : ElectronObject`, `Path : Entity`, `PathFollow : Entity`, `Camera : Entity`, `Timer : Node` and `Window : Viewport : Node`. Node, CanvasItem and Entity are production types. CollisionShape, Control, BaseButton and Button remain absent. Camera editor overlays, inherited physics interpolation and independent viewport integration remain gaps. Class pages and compiled coverage describe the actual implemented surface and its remaining gaps.
+The runtime implements `Sprite : Entity : CanvasItem : Node : ElectronObject`, `Path : Entity`, `PathFollow : Entity`, `Camera : Entity`, `CanvasLayer : Node`, `Timer : Node` and `Window : Viewport : Node`. Node, CanvasItem and Entity are production types. CollisionShape, Control, BaseButton and Button remain absent. Camera editor overlays, inherited physics interpolation and independent viewport integration remain gaps. Class pages and compiled coverage describe the actual implemented surface and its remaining gaps.
 
 The hierarchy migration updates consumers, XML/class/component/domain documents, inventory and bidirectional coverage together. SceneHierarchyTests and native mixed-tree pixel checks preserve executable lifecycle, rendering, input, packing and failure cleanup through neutral and canvas bases. Control's absence remains an implementation dependency, not permission to move UI layout into Entity or collapse its branch.
 

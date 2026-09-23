@@ -157,7 +157,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CanvasGroup](classes/CanvasGroup.md) | Node2D | Blocked | 3 |
 | [CanvasItem](classes/CanvasItem.md) | Node | Partial | 114 |
 | [CanvasItemMaterial](classes/CanvasItemMaterial.md) | Material | Blocked | 16 |
-| [CanvasLayer](classes/CanvasLayer.md) | Node | Blocked | 14 |
+| [CanvasLayer](classes/CanvasLayer.md) | Node | Partial | 14 |
 | [CanvasModulate](classes/CanvasModulate.md) | Node2D | Blocked | 1 |
 | [CanvasTexture](classes/CanvasTexture.md) | Texture2D | Blocked | 8 |
 | [CapsuleMesh](classes/CapsuleMesh.md) | PrimitiveMesh | Blocked | 4 |
