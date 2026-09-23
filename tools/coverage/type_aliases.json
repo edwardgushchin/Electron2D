@@ -1,6 +1,7 @@
 {
   "classes": {
     "CanvasItem": "CanvasItem",
+    "Geometry2D": "Geometry",
     "Node2D": "Entity",
     "Object": "ElectronObject",
     "Rect2": "Rect",

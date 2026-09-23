@@ -1,6 +1,46 @@
 {
   "mappings": [
     {
+      "godot": "class:Geometry2D",
+      "electron2d": "T:Electron2D.Geometry",
+      "reason": "The stateless geometry singleton is projected as a static C# service; the class remains Partial until the other geometry methods and polygon operations are implemented."
+    },
+    {
+      "godot": "Geometry2D::method:bresenham_line(Vector2i:,Vector2i:)",
+      "electron2d": "method:Electron2D.Geometry.BresenhamLine(Electron2D.Vector2I,Electron2D.Vector2I)",
+      "reason": "Vector2I[] represents the ordered typed grid points; array length above Int32.MaxValue is rejected before allocation."
+    },
+    {
+      "godot": "Geometry2D::method:get_closest_point_to_segment(Vector2:,Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.Geometry.GetClosestPointToSegment(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Capped projection on the finite segment with the pinned degenerate threshold."
+    },
+    {
+      "godot": "Geometry2D::method:get_closest_point_to_segment_uncapped(Vector2:,Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.Geometry.GetClosestPointToSegmentUncapped(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Uncapped projection on the infinite line with the pinned degenerate threshold."
+    },
+    {
+      "godot": "Geometry2D::method:get_closest_points_between_segments(Vector2:,Vector2:,Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.Geometry.GetClosestPointsBetweenSegments(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "A two-element Vector2[] preserves the ordered closest pair and degenerate segment handling."
+    },
+    {
+      "godot": "Geometry2D::method:is_point_in_circle(Vector2:,Vector2:,float:)",
+      "electron2d": "method:Electron2D.Geometry.IsPointInCircle(Electron2D.Vector2,Electron2D.Vector2,System.Single)",
+      "reason": "Squared-distance inclusion preserves the circumference and signed-radius behavior."
+    },
+    {
+      "godot": "Geometry2D::method:line_intersects_line(Vector2:,Vector2:,Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.Geometry.LineIntersectsLine(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Vector2? represents the reference Vector2-or-null result without Variant; directions define infinite lines."
+    },
+    {
+      "godot": "Geometry2D::method:segment_intersects_segment(Vector2:,Vector2:,Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.Geometry.SegmentIntersectsSegment(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Vector2? represents the reference Vector2-or-null result without Variant; collinear segments have no unique intersection."
+    },
+    {
       "electron2d": "field:Electron2D.Transform.Origin()",
       "godot": "Transform2D::property:origin",
       "reason": "The mutable third-column field exposes the same origin property; zero-initialized C# values follow ADR 0029."
@@ -2289,6 +2329,26 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "class:Geometry2D"
+      ],
+      "state": "Partial",
+      "reason": "The C# static projection implements seven pure raster, nearest-point and intersection methods. Polygon boolean/offset, polygon tests, triangulation, atlas packing and other reference methods remain absent; see docs/classes/Geometry.md."
+    },
+    {
+      "godot": [
+        "Geometry2D::method:bresenham_line(Vector2i:,Vector2i:)",
+        "Geometry2D::method:get_closest_point_to_segment(Vector2:,Vector2:,Vector2:)",
+        "Geometry2D::method:get_closest_point_to_segment_uncapped(Vector2:,Vector2:,Vector2:)",
+        "Geometry2D::method:get_closest_points_between_segments(Vector2:,Vector2:,Vector2:,Vector2:)",
+        "Geometry2D::method:is_point_in_circle(Vector2:,Vector2:,float:)",
+        "Geometry2D::method:line_intersects_line(Vector2:,Vector2:,Vector2:,Vector2:)",
+        "Geometry2D::method:segment_intersects_segment(Vector2:,Vector2:,Vector2:,Vector2:)"
+      ],
+      "state": "Implemented",
+      "reason": "Seven stateless query methods follow the pinned formulas and typed result adaptation; GeometryTests covers boundary, degenerate, crossing and null cases on Linux/.NET 8. Native and exhaustive numeric parity remain unverified."
+    },
     {
       "godot": [
         "class:Color",

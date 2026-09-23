@@ -106,6 +106,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW") == "1")
 }
 
 SceneDiagnosticsTests.Run();
+GeometryTests.Run();
 PathTests.Run();
 CurveTests.Run();
 CurveTextureTests.Run();

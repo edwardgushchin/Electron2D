@@ -726,6 +726,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Geometry",
+    "kind": "type",
+    "declaringType": "Electron2D.Geometry",
+    "name": "Geometry",
+    "signature": "public static class Electron2D.Geometry",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Gradient",
     "kind": "type",
     "declaringType": "Electron2D.Gradient",
@@ -23015,6 +23028,219 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.BresenhamLine(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "BresenhamLine",
+    "signature": "public static Electron2D.Vector2I[] BresenhamLine(Electron2D.Vector2I from, Electron2D.Vector2I to)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "Electron2D.Vector2I",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2I[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.GetClosestPointToSegment(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "GetClosestPointToSegment",
+    "signature": "public static Electron2D.Vector2 GetClosestPointToSegment(Electron2D.Vector2 point, Electron2D.Vector2 s1, Electron2D.Vector2 s2)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "s1",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "s2",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.GetClosestPointToSegmentUncapped(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "GetClosestPointToSegmentUncapped",
+    "signature": "public static Electron2D.Vector2 GetClosestPointToSegmentUncapped(Electron2D.Vector2 point, Electron2D.Vector2 s1, Electron2D.Vector2 s2)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "s1",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "s2",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.GetClosestPointsBetweenSegments(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "GetClosestPointsBetweenSegments",
+    "signature": "public static Electron2D.Vector2[] GetClosestPointsBetweenSegments(Electron2D.Vector2 p1, Electron2D.Vector2 q1, Electron2D.Vector2 p2, Electron2D.Vector2 q2)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "p1",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "q1",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "p2",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "q2",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.IsPointInCircle(Electron2D.Vector2,Electron2D.Vector2,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "IsPointInCircle",
+    "signature": "public static System.Boolean IsPointInCircle(Electron2D.Vector2 point, Electron2D.Vector2 circlePosition, System.Single circleRadius)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "circlePosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "circleRadius",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.LineIntersectsLine(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "LineIntersectsLine",
+    "signature": "public static System.Nullable\u003CElectron2D.Vector2\u003E LineIntersectsLine(Electron2D.Vector2 fromA, Electron2D.Vector2 dirA, Electron2D.Vector2 fromB, Electron2D.Vector2 dirB)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromA",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "dirA",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "fromB",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "dirB",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Nullable\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.SegmentIntersectsSegment(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "SegmentIntersectsSegment",
+    "signature": "public static System.Nullable\u003CElectron2D.Vector2\u003E SegmentIntersectsSegment(Electron2D.Vector2 fromA, Electron2D.Vector2 toA, Electron2D.Vector2 fromB, Electron2D.Vector2 toB)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromA",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "toA",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "fromB",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "toB",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Nullable\u003CElectron2D.Vector2\u003E",
     "value": null
   },
   {

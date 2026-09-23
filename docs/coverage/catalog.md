@@ -343,7 +343,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [GPUParticlesCollisionSDF3D](classes/GPUParticlesCollisionSDF3D.md) | GPUParticlesCollision3D | Excluded | 15 |
 | [GPUParticlesCollisionSphere3D](classes/GPUParticlesCollisionSphere3D.md) | GPUParticlesCollision3D | Excluded | 1 |
 | [Generic6DOFJoint3D](classes/Generic6DOFJoint3D.md) | Joint3D | Excluded | 128 |
-| [Geometry2D](classes/Geometry2D.md) | Object | Unimplemented | 39 |
+| [Geometry2D](classes/Geometry2D.md) | Object | Partial | 39 |
 | [Geometry3D](classes/Geometry3D.md) | Object | Excluded | 15 |
 | [GeometryInstance3D](classes/GeometryInstance3D.md) | VisualInstance3D | Excluded | 37 |
 | [GodotInstance](classes/GodotInstance.md) | Object | Blocked | 7 |

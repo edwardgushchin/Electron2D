@@ -4,12 +4,13 @@ Last updated: 2026-09-23
 
 ## Scope
 
-This Core component owns the engine's backend-independent value mathematics: two-, three-, and four-component floating-point/integer vectors, floating-point and integer 2D axis-aligned rectangles, the 2D affine transform, and rectangle side identities. It contains no renderer, physics, input, asset, scene ownership, native handles, or global state.
+This Core component owns the engine's backend-independent value mathematics and pure 2D geometry queries: two-, three-, and four-component floating-point/integer vectors, floating-point and integer 2D axis-aligned rectangles, the 2D affine transform, and rectangle side identities. It contains no renderer, physics, input, asset, scene ownership, native handles, or global state.
 
 ## Owned types
 
 | Type | Role | Source |
 | --- | --- | --- |
+| [`Geometry`](../classes/Geometry.md) | Stateless grid-line, nearest-point and intersection queries | [`Geometry.cs`](../../src/Core/Math/Geometry.cs) |
 | [`Vector2`](../classes/Vector2.md) | Canonical two-component floating-point spatial and numeric value | [`Vector2.cs`](../../src/Core/Math/Vector2.cs) |
 | [`Vector2I`](../classes/Vector2I.md) | Canonical two-component integer grid and numeric value | [`Vector2I.cs`](../../src/Core/Math/Vector2I.cs) |
 | [`Vector3`](../classes/Vector3.md) | Three-component floating-point numeric value | [`Vector3.cs`](../../src/Core/Math/Vector3.cs) |
@@ -29,6 +30,7 @@ This Core component owns the engine's backend-independent value mathematics: two
 4. Transform operations use X/Y basis columns plus Origin; callers choose general affine or orthonormal inverse behavior explicitly.
 5. `Transform` composes `Entity` local/global state and transforms `Rect` corners into axis-aligned bounds.
 6. Typed persistence accepts only finite floating-point vectors, rectangles, and transforms; integer vectors and rectangles retain all `int` values. Packed scenes copy every value directly.
+7. `Geometry` performs pure point/segment queries and allocates only for array results.
 
 ## Dependencies
 
@@ -49,10 +51,13 @@ This Core component owns the engine's backend-independent value mathematics: two
 - Floating-point and integer rectangle containment is half-open on right/bottom, and rectangle sizes never normalize implicitly. Integer rectangle arithmetic wraps except for the documented `Abs()` minimum-value failure.
 - Transform multiplication applies the right operand first; general inversion rejects an exactly singular basis, while reverse point/rectangle operations have an orthonormal-basis precondition.
 - `Side` values remain left `0`, top `1`, right `2`, bottom `3`.
+- `Geometry` does not mutate caller values. Raster lines include both endpoints; nearest-pair and raster results are fresh arrays; missing intersections are nullable values.
 
 ## Current implementation status
 
 Implemented and verified. `Rect`, `Transform`, and `Entity` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `MathF`. `Vector2I`, `Vector3`, `Vector3I`, `Vector4`, `Vector4I`, and `RectI` provide their complete currently implementable value contracts, including typed conversions within vector and rectangle dimensional pairs. Strict configuration schemas and direct packed-scene storage exist for all six vectors, both rectangles, and transforms. The Vector2 reference audit covers all 82 members, including integer scalar conversion, the default length limit and the accepted midpoint-to-even rounding boundary under ADRs 0033/0034. The Transform reference audit covers all 43 declared members, including the zero target default for `LookingAt` and C# integer scalar conversion under ADR 0029.
+
+`Geometry` now implements seven pure raster/nearest/intersection methods. Its class coverage remains partial; polygon operations, triangulation, atlas packing and the other reference methods are not implemented by this slice.
 
 ## Exclusions and limitations
 
@@ -65,6 +70,8 @@ Implemented and verified. `Rect`, `Transform`, and `Entity` use the engine-owned
 ## Verification
 
 The executable harness covers every method/operator family, layouts and constants, index failures, interpolation, the strict internal tolerance migration boundaries, NaN/infinity/signed-zero behavior, integer wrap/overflow/zero division, widened integer norms and their checked limits, conversion boundaries, axis ties, floating-point and integer rectangle boundaries, affine order/inversion/decomposition, Entity integration, strict malformed persistence, packed-scene value copying, invariant formatting, and warmed allocation behavior.
+
+`GeometryTests.Run` covers the seven implemented pure queries on raster orientation/endpoints, integer limits, degenerate and crossing segments, circle boundaries, and nullable intersections.
 
 Execution is verified on Linux/.NET 8 only. Native ABI and the Windows/macOS/Linux (X11/Wayland)/Android/iOS/Web build and host matrix remain unverified.
 
