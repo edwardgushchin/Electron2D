@@ -204,7 +204,7 @@ public sealed partial class Engine : ElectronObject
     /// The calling thread becomes the runtime owner. An uninitialized loop is initialized; an already running loop,
     /// including a newly constructed <see cref="SceneTree"/>, is attached without a second initialization. The loop
     /// is not disposed by the engine. During its initialization, <see cref="MainLoop"/> already returns
-    /// <paramref name="mainLoop"/>. Active project pseudolocalization settings are sampled before loop attachment;
+    /// <paramref name="mainLoop"/>. Active project locale and pseudolocalization settings are sampled before loop attachment;
     /// a caller-constructed SceneTree has already completed its initial node-ready callbacks at that point.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="mainLoop"/> is <see langword="null"/>.</exception>
@@ -223,7 +223,7 @@ public sealed partial class Engine : ElectronObject
 
         try
         {
-            TranslationServer.LoadProjectPseudolocalization();
+            TranslationServer.LoadProjectLocalization();
             mainLoop.StartForEngine();
             ResetRunState();
             Volatile.Write(ref _runtimeState, RuntimeRunning);

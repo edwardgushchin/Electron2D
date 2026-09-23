@@ -12,7 +12,7 @@ This Localization component stores and resolves domain/context translations for 
 
 ## Current implementation status
 
-Direct registration and contextual, mutable resource catalogs execute through the same lookup path. A registered domain can override culture and enablement and pseudolocalize singular results. Nine typed project settings supply startup pseudolocalization enablement and main-domain transforms; `TranslationServer.ReloadPseudolocalization` reapplies the eight transforms during a run without toggling enablement. Resource duplication copies independent message containers. Optimized catalogs generate hash-keyed, optionally Brotli-compressed values, skip contextual entries, keep only the first plural form, hide source keys, and duplicate their lookup maps. No catalog asset loader or automatic locale selection exists.
+Direct registration and contextual, mutable resource catalogs execute through the same lookup path. A registered domain can override culture and enablement and pseudolocalize singular results. Two typed project settings select the startup test culture and fallback locale; nine further settings supply pseudolocalization enablement and main-domain transforms. `TranslationServer.ReloadPseudolocalization` reapplies the eight transforms during a run without toggling enablement. Resource duplication copies independent message containers. Optimized catalogs generate hash-keyed, optionally Brotli-compressed values, skip contextual entries, keep only the first plural form, hide source keys, and duplicate their lookup maps. No catalog asset loader or operating-system locale discovery exists.
 
 ## Dependencies
 
@@ -20,7 +20,7 @@ The component depends on typed Core project settings, .NET globalization, collec
 
 ## Lookup
 
-Singular keys consist of culture, domain, context, and source message. Plural keys additionally contain source singular and plural forms. Resolution tries the exact culture, then each parent, then invariant culture.
+Singular keys consist of culture, domain, context, and source message. Plural keys additionally contain source singular and plural forms. Resolution tries the selected culture, each parent and invariant culture, then positive-score resource locales, then the configured fallback. Direct registrations precede resources at each exact culture. A later resource wins an equal score.
 
 Direct plural registrations take `Func<long, string>`. Resource catalogs store plural-form lists and select an index through `Func<long, int>`; English has its source fallback, while other locales with multiple forms require a selector.
 
@@ -34,4 +34,4 @@ The component does not load catalog files, format parameters, infer plural rules
 
 ## Verification
 
-Tests cover parent-culture lookup, source fallback, domain selection, direct and resource plural selectors, contextual edits, optimized compressed lookup and key hiding, independent duplication, removal, disposal, per-object disabling, domain locale override, singular pseudolocalization, typed project-setting persistence, startup sampling and transform reload. SDL dummy `WindowRuntimeTests` verifies startup sampling before scene ready. A warmed 1,024-call direct optimized lookup check measured 0 managed allocated bytes on Linux/.NET 8. Native or external allocations, the complete server lookup route, total catalog memory use, and exact Unicode and locale-score parity remain unmeasured or unaudited.
+Tests cover parent-culture lookup, source fallback, scored regional selection, project fallback, domain selection, direct and resource plural selectors, contextual edits, optimized compressed lookup and key hiding, independent duplication, removal, disposal, per-object disabling, domain locale override, singular pseudolocalization, typed project-setting persistence, startup sampling and transform reload. SDL dummy `WindowRuntimeTests` verifies startup sampling before scene ready. A warmed 1,024-call direct optimized lookup check measured 0 managed allocated bytes on Linux/.NET 8. Native or external allocations, the complete server lookup route, total catalog memory use, and reference locale-alias/default-script parity remain unmeasured or unaudited.

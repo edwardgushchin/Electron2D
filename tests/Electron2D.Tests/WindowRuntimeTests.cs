@@ -12,6 +12,8 @@ internal static class WindowRuntimeTests
         var settings = ProjectSettings.Instance;
         var oldPseudolocalizationSetting = settings.Get(ProjectSettings.PseudolocalizationEnabled);
         var oldPseudolocalizationEnabled = TranslationServer.PseudolocalizationEnabled;
+        var oldTestLocale = settings.Get(ProjectSettings.LocaleTest);
+        var oldFallbackLocale = settings.Get(ProjectSettings.LocaleFallback);
         Reject<ArgumentOutOfRangeException>(() => engine.MaxFPS = -1);
         engine.MaxFPS = 20;
         try
@@ -62,12 +64,16 @@ internal static class WindowRuntimeTests
 
             var order = new List<string>();
             settings.Set(ProjectSettings.PseudolocalizationEnabled, true);
+            settings.Set(ProjectSettings.LocaleTest, "fr-CA");
+            settings.Set(ProjectSettings.LocaleFallback, "en");
             var window = NewWindow();
             var probe = new Probe
             {
                 ReadyAction = node =>
                 {
                     Check(TranslationServer.PseudolocalizationEnabled, "Native Run samples project pseudolocalization before scene ready.");
+                    Check(TranslationServer.Culture.Name == "fr-CA" && TranslationServer.FallbackCulture?.Name == "en",
+                        "Native Run samples project locale selection before scene ready.");
                     Check(ReferenceEquals(engine.MainLoop, node.Tree) && window.Tree!.Root == window && node.GetWindow() == window && node.GetViewport() == window,
                         "Scene children discover their actual root Window/Viewport before ready.");
                     Check(window.GetWindowID() == 0 && DisplayServer.Instance is not null,
@@ -118,6 +124,8 @@ internal static class WindowRuntimeTests
                   order.IndexOf("physics") < order.LastIndexOf("process"), "Run enforces monotonic frame limiting and returns the requested code.");
             AssertReleased(window, probe);
             settings.Set(ProjectSettings.PseudolocalizationEnabled, oldPseudolocalizationSetting);
+            settings.Set(ProjectSettings.LocaleTest, oldTestLocale);
+            settings.Set(ProjectSettings.LocaleFallback, oldFallbackLocale);
 
             window = NewWindow();
             probe = new Probe { ReadyAction = _ => PushClose() };
@@ -227,6 +235,8 @@ internal static class WindowRuntimeTests
         finally
         {
             settings.Set(ProjectSettings.PseudolocalizationEnabled, oldPseudolocalizationSetting);
+            settings.Set(ProjectSettings.LocaleTest, oldTestLocale);
+            settings.Set(ProjectSettings.LocaleFallback, oldFallbackLocale);
             TranslationServer.PseudolocalizationEnabled = oldPseudolocalizationEnabled;
             engine.MaxFPS = oldLimit;
         }

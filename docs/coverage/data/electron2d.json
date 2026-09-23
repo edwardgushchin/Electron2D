@@ -42846,6 +42846,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TranslationServer.CompareLocales(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "CompareLocales",
+    "signature": "public static System.Int32 CompareLocales(System.String localeA, System.String localeB)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "localeA",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "localeB",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TranslationServer.FindTranslations(System.String,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.TranslationServer",
@@ -42899,6 +42923,19 @@
       }
     ],
     "returnType": "Electron2D.TranslationDomain",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.GetToolLocale()",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetToolLocale",
+    "signature": "public static System.String GetToolLocale()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -59373,6 +59410,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSettings",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.LocaleFallback()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "LocaleFallback",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E LocaleFallback { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.LocaleTest()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "LocaleTest",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E LocaleTest { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
     "value": null
   },
   {

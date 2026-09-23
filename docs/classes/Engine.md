@@ -212,7 +212,7 @@ Gets immutable version information for the loaded Electron2D assembly.
 <a id="m-electron2d-engine-run-electron2d-window"></a>
 ### `public int Run(Window window)`
 
-Consumes a validated detached root Window after reserving the idle engine. Samples active project pseudolocalization settings before opening the native window and activating the scene. Opens the native window and renderer, creates and publishes SceneTree before ready, pumps events before frames and renders after scene processing. Cleanup disposes the scene, renderer and native window in that order. Returns SceneTree.Quit's code, zero for default close. Rejected null/disposed/attached roots and a busy engine retain caller ownership. Once reserved, failed native startup and callback failures still dispose transferred scene state. Cleanup failures are aggregated. The engine stays reserved until cleanup completes. Runs on the native main thread; no console handlers are installed. Rendering failures propagate through the same cleanup path as scene failures. Native services opened directly through DisplayServer must finish before teardown; pending asynchronous dialogs can reject disposal and leave DisplayServer.Instance alive for completion/release. Start, AdvanceFrame, Stop and manual tree finalization/disposal cannot interfere with the active Run. Reuse requires a new Window.
+Consumes a validated detached root Window after reserving the idle engine. Samples active project locale, fallback and pseudolocalization settings before opening the native window and activating the scene. Opens the native window and renderer, creates and publishes SceneTree before ready, pumps events before frames and renders after scene processing. Cleanup disposes the scene, renderer and native window in that order. Returns SceneTree.Quit's code, zero for default close. Rejected null/disposed/attached roots and a busy engine retain caller ownership. Once reserved, failed native startup and callback failures still dispose transferred scene state. Cleanup failures are aggregated. The engine stays reserved until cleanup completes. Runs on the native main thread; no console handlers are installed. Rendering failures propagate through the same cleanup path as scene failures. Native services opened directly through DisplayServer must finish before teardown; pending asynchronous dialogs can reject disposal and leave DisplayServer.Instance alive for completion/release. Start, AdvanceFrame, Stop and manual tree finalization/disposal cannot interfere with the active Run. Reuse requires a new Window.
 
 <a id="m-electron2d-engine-start-electron2d-mainloop"></a>
 ### `public void Start(MainLoop mainLoop)`
@@ -233,7 +233,7 @@ Attaches and, when necessary, initializes one application loop.
 **Remarks:** The calling thread becomes the runtime owner. An uninitialized loop is initialized; an already running loop,
 including a newly constructed [`SceneTree`](SceneTree.md), is attached without a second initialization. The loop
 is not disposed by the engine. During its initialization, [`Engine.MainLoop`](Engine.md#p-electron2d-engine-mainloop) already returns
-`mainLoop`. Active project pseudolocalization settings are sampled before attachment; a caller-constructed SceneTree
+`mainLoop`. Active project locale, fallback and pseudolocalization settings are sampled before attachment; a caller-constructed SceneTree
 has already completed its initial node-ready callbacks at that point.
 
 <a id="m-electron2d-engine-advanceframe-system-double"></a>

@@ -174,20 +174,30 @@ public sealed class TranslationDomain : ElectronObject
     /// <param name="exact">Whether a normalized exact match is required.</param>
     public bool HasTranslationForLocale(string locale, bool exact) => FindTranslations(locale, exact).Length != 0;
 
-    /// <summary>Gets the closest matching catalog, or null when none matches.</summary>
+    /// <summary>Gets the highest-scoring matching catalog, or null when none matches.</summary>
     /// <param name="locale">The requested locale.</param>
     public Translation? GetTranslationObject(string locale)
     {
         var normalized = NormalizeLocale(locale);
         var translations = GetTranslations();
+        Translation? best = null;
+        var bestScore = 0;
         for (var i = translations.Length - 1; i >= 0; i--)
-            if (MatchesLocale(normalized, translations[i], exact: true)) return translations[i];
-        for (var i = translations.Length - 1; i >= 0; i--)
-            if (MatchesLocale(normalized, translations[i], exact: false)) return translations[i];
-        return null;
+        {
+            try
+            {
+                var score = TranslationServer.CompareLocales(normalized, translations[i].Locale);
+                if (score <= bestScore) continue;
+                best = translations[i];
+                bestScore = score;
+                if (score == 10) break;
+            }
+            catch (ObjectDisposedException) when (translations[i].IsDisposed) { }
+        }
+        return best;
     }
 
-    /// <summary>Resolves a singular message using this domain's catalogs and effective culture.</summary>
+    /// <summary>Resolves a singular message using this domain's catalogs, effective culture and project fallback.</summary>
     /// <param name="message">The source message.</param>
     /// <param name="context">A case-sensitive context.</param>
     public string Translate(string message, string context = "")
@@ -204,10 +214,16 @@ public sealed class TranslationDomain : ElectronObject
             var translated = FindMessage(locale, message, context);
             if (translated.Length != 0) return ApplyPseudo(translated);
         }
+        if (TranslationServer.FallbackCulture is { } fallback)
+            foreach (var locale in CultureChain(fallback))
+            {
+                var translated = FindMessage(locale, message, context);
+                if (translated.Length != 0) return ApplyPseudo(translated);
+            }
         return ApplyPseudo(message);
     }
 
-    /// <summary>Resolves a plural message using this domain's catalogs and effective culture.</summary>
+    /// <summary>Resolves a plural message using this domain's catalogs, effective culture and project fallback.</summary>
     /// <param name="singular">The source singular form.</param>
     /// <param name="plural">The source plural form.</param>
     /// <param name="count">The quantity.</param>
@@ -227,6 +243,12 @@ public sealed class TranslationDomain : ElectronObject
                 var translated = FindPluralMessage(locale, singular, plural, count, context);
                 if (translated.Length != 0) return translated;
             }
+            if (TranslationServer.FallbackCulture is { } fallback)
+                foreach (var locale in CultureChain(fallback))
+                {
+                    var translated = FindPluralMessage(locale, singular, plural, count, context);
+                    if (translated.Length != 0) return translated;
+                }
         }
         return count == 1 ? singular : plural;
     }
@@ -257,38 +279,52 @@ public sealed class TranslationDomain : ElectronObject
         }
     }
 
-    internal string FindMessage(string locale, string message, string context)
+    internal string FindMessage(string locale, string message, string context, bool exact = false)
     {
         var translations = GetTranslations();
+        string? best = null;
+        var bestScore = 0;
         for (var i = translations.Length - 1; i >= 0; i--)
         {
             var translation = translations[i];
             try
             {
-                if (translation.Locale != locale) continue;
+                var candidate = translation.Locale;
+                var score = exact ? (candidate == locale ? 10 : 0) : TranslationServer.CompareLocales(locale, candidate);
+                if (score <= bestScore) continue;
                 var value = translation.GetMessage(message, context);
-                if (value.Length != 0) return value;
+                if (value.Length == 0) continue;
+                best = value;
+                bestScore = score;
+                if (score == 10) break;
             }
             catch (ObjectDisposedException) when (translation.IsDisposed) { }
         }
-        return string.Empty;
+        return best ?? string.Empty;
     }
 
-    internal string FindPluralMessage(string locale, string singular, string plural, long count, string context)
+    internal string FindPluralMessage(string locale, string singular, string plural, long count, string context, bool exact = false)
     {
         var translations = GetTranslations();
+        string? best = null;
+        var bestScore = 0;
         for (var i = translations.Length - 1; i >= 0; i--)
         {
             var translation = translations[i];
             try
             {
-                if (translation.Locale != locale) continue;
+                var candidate = translation.Locale;
+                var score = exact ? (candidate == locale ? 10 : 0) : TranslationServer.CompareLocales(locale, candidate);
+                if (score <= bestScore) continue;
                 var value = translation.GetPluralMessage(singular, plural, count, context);
-                if (value.Length != 0) return value;
+                if (value.Length == 0) continue;
+                best = value;
+                bestScore = score;
+                if (score == 10) break;
             }
             catch (ObjectDisposedException) when (translation.IsDisposed) { }
         }
-        return string.Empty;
+        return best ?? string.Empty;
     }
 
     internal string ApplyPseudo(string message) => PseudolocalizationEnabled ? Pseudolocalize(message) : message;
@@ -337,8 +373,7 @@ public sealed class TranslationDomain : ElectronObject
         {
             var candidate = translation.Locale;
             if (candidate == normalized) return true;
-            return !exact && CultureInfo.GetCultureInfo(candidate).TwoLetterISOLanguageName ==
-                CultureInfo.GetCultureInfo(normalized).TwoLetterISOLanguageName;
+            return !exact && TranslationServer.CompareLocales(normalized, candidate) > 0;
         }
         catch (ObjectDisposedException) when (translation.IsDisposed) { return false; }
     }

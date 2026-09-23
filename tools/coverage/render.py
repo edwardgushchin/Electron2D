@@ -338,7 +338,7 @@ def special_reason(item, member):
             "memory": "an accepted runtime memory-settings contract after measured need (ADR 0014)",
         }
         if root == "internationalization":
-            return "Unimplemented", "Trigger: next typed localization-settings slice in the existing TranslationServer domain (ADR 0007)."
+            return "Unimplemented", "Trigger: text shaping, locale asset remaps, or scene translation-change integration for the specific setting (ADR 0007)."
         if root == "physics" and name.startswith("physics/common/"):
             return "Unimplemented", "Trigger: next core timing-settings slice in ProjectSettings (ADRs 0016 and 0019)."
         if root in settings:

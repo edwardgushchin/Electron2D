@@ -29,7 +29,7 @@ available when a matching typed setting is later registered. The registry never 
 
 Six non-unregisterable built-in `ProjectSetting<InputActionSettings>` definitions store GUI focus actions under `input/ui_*`. Other actions may be registered with the same value type and `input/<action>` key. After `Load`, call [`InputMap.LoadFromProjectSettings`](InputMap.md#m-electron2d-inputmap-loadfromprojectsettings) during project setup to replace the live map. A settings change alone does not reload it.
 
-Nine built-in pseudolocalization settings configure the main translation domain. `Engine.Run` samples them before creating its scene; `Engine.Start` samples them before attaching the supplied loop. The enablement setting is only sampled at startup, while [`TranslationServer.ReloadPseudolocalization`](TranslationServer.md#reloadpseudolocalization) reloads the eight transform options. Use `TranslationServer.PseudolocalizationEnabled` to change enablement at runtime.
+Two built-in locale settings select an optional test locale and a fallback catalog locale. Nine further built-in settings configure the main translation domain's pseudolocalization. `Engine.Run` samples them before creating its scene; `Engine.Start` samples them before attaching the supplied loop. The locale and pseudolocalization enablement settings are sampled at startup, while [`TranslationServer.ReloadPseudolocalization`](TranslationServer.md#reloadpseudolocalization) reloads the eight transform options. Assign `TranslationServer.Culture` or `TranslationServer.PseudolocalizationEnabled` for an immediate runtime change.
 
 ## Examples
 
@@ -65,6 +65,8 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<bool> UseNearestMipmapFilter { get; }`](#usenearestmipmapfilter) | Selects canvas mip interpolation at GPU startup; false by default. |
 | [`public static ProjectSetting<int> AnisotropicFilteringLevel { get; }`](#anisotropicfilteringlevel) | Initializes new viewports; exponent 0..4, default 2. |
 | [`public static ProjectSetting<Color> DefaultClearColor { get; }`](#p-electron2d-projectsettings-defaultclearcolor) | Defines the initial root-framebuffer clear color. |
+| [`public static ProjectSetting<string> LocaleTest { get; }`](#localetest) | Optional startup locale override; empty by default. |
+| [`public static ProjectSetting<string> LocaleFallback { get; }`](#localefallback) | Fallback catalog locale; `en` by default. |
 | [`public static ProjectSetting<bool> PseudolocalizationEnabled { get; }`](#pseudolocalizationenabled) | Startup enablement; false by default. |
 | [`public static ProjectSetting<bool> PseudolocalizationReplaceWithAccents { get; }`](#pseudolocalizationreplacewithaccents) | Accent substitution; true by default. |
 | [`public static ProjectSetting<bool> PseudolocalizationDoubleVowels { get; }`](#pseudolocalizationdoublevowels) | Vowel doubling; false by default. |
@@ -252,6 +254,16 @@ Defines `rendering/textures/default_filters/anisotropic_filtering_level`, defaul
 ### `public static ProjectSetting<Color> DefaultClearColor { get; }`
 
 Defines `rendering/environment/defaults/default_clear_color`, default `(0.3, 0.3, 0.3, 1)`. Every channel must be finite; invalid writes fail before mutation. The renderer reads the active feature override during startup. Use RenderingServer.SetDefaultClearColor to change the active renderer's color; it does not change this stored setting. Normalized framebuffer output clamps channels to `[0, 1]`.
+
+<a id="localetest"></a>
+### `public static ProjectSetting<string> LocaleTest { get; }`
+
+Defines `internationalization/locale/test`, default empty. A nonempty supported .NET culture name overrides the managed UI culture at the next Engine startup. Underscore separators are accepted. Unsupported names fail validation before storage; changing this setting does not alter a running lookup culture.
+
+<a id="localefallback"></a>
+### `public static ProjectSetting<string> LocaleFallback { get; }`
+
+Defines `internationalization/locale/fallback`, default `en`. Engine startup samples the active feature override for resource-catalog and direct-entry fallback after primary locale lookup. Empty disables fallback. Supported .NET culture names and underscore separators are accepted; unsupported names fail validation. Changing the setting takes effect on the next Engine startup.
 
 <a id="pseudolocalizationenabled"></a>
 ### `public static ProjectSetting<bool> PseudolocalizationEnabled { get; }`
@@ -1193,6 +1205,6 @@ Isolated instances dispose their owned document and clear subscribers/state. The
 
 ## Verification and known limitations
 
-The executable harness covers malformed definitions/features/paths, exact registration identity, built-ins, mutable snapshot isolation, validators and rollback, initial/revert behavior, metadata/property discovery and post-commit callback failure, override precedence/current/custom features, changed groups/version/no-op writes, event coalescing/re-entry/failure, OS/virtual path round trips/traversal, root discovery, save/load/override/late registration, failed I/O preservation, re-entrant validator rejection, concurrency, reconfiguration, disposal, Engine feature lookup/event flushing, and warmed zero-allocation Engine frames. `LocalizationProjectSettingsTests` checks pseudolocalization defaults, persistence, validation, startup sampling and live transform reload.
+The executable harness covers malformed definitions/features/paths, exact registration identity, built-ins, mutable snapshot isolation, validators and rollback, initial/revert behavior, metadata/property discovery and post-commit callback failure, override precedence/current/custom features, changed groups/version/no-op writes, event coalescing/re-entry/failure, OS/virtual path round trips/traversal, root discovery, save/load/override/late registration, failed I/O preservation, re-entrant validator rejection, concurrency, reconfiguration, disposal, Engine feature lookup/event flushing, and warmed zero-allocation Engine frames. `LocalizationProjectSettingsTests` checks locale and pseudolocalization defaults, persistence, validation, startup sampling, fallback selection and live transform reload.
 
 Tests do not prove crash durability on every filesystem, symbolic-link confinement, editor presentation, packed exports, or unavailable domain settings.

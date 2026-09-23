@@ -23,6 +23,8 @@ internal static class LocalizationProjectSettingsTests
                 saved.Set(ProjectSettings.PseudolocalizationFakeBIDI, true);
                 saved.Set(ProjectSettings.PseudolocalizationExpansionRatio, 0.5f);
                 saved.Set(ProjectSettings.PseudolocalizationPrefix, "<");
+                saved.Set(ProjectSettings.LocaleTest, "fr-CA");
+                saved.Set(ProjectSettings.LocaleFallback, "de");
                 saved.Save();
             }
             using var loaded = new ProjectSettings(project, user);
@@ -30,10 +32,14 @@ internal static class LocalizationProjectSettingsTests
             Check(loaded.Get(ProjectSettings.PseudolocalizationEnabled) &&
                 loaded.Get(ProjectSettings.PseudolocalizationFakeBIDI) &&
                 loaded.Get(ProjectSettings.PseudolocalizationExpansionRatio) == 0.5f &&
-                loaded.Get(ProjectSettings.PseudolocalizationPrefix) == "<", "Typed pseudolocalization settings survive a project-file round trip.");
+                loaded.Get(ProjectSettings.PseudolocalizationPrefix) == "<" &&
+                loaded.Get(ProjectSettings.LocaleTest) == "fr-CA" &&
+                loaded.Get(ProjectSettings.LocaleFallback) == "de", "Typed localization settings survive a project-file round trip.");
             Reject<ArgumentOutOfRangeException>(() => loaded.Set(ProjectSettings.PseudolocalizationExpansionRatio, -0.1f));
+            Reject<ArgumentOutOfRangeException>(() => loaded.Set(ProjectSettings.LocaleTest, "bad locale!"));
             Reject<ArgumentException>(() => loaded.Set(ProjectSettings.PseudolocalizationExpansionRatio, float.NaN));
             Reject<InvalidOperationException>(() => loaded.Unregister(ProjectSettings.PseudolocalizationEnabled));
+            Reject<InvalidOperationException>(() => loaded.Unregister(ProjectSettings.LocaleFallback));
         }
         finally { Directory.Delete(root, recursive: true); }
 
@@ -116,7 +122,80 @@ internal static class LocalizationProjectSettingsTests
             main.PseudolocalizationSkipPlaceholdersEnabled = oldSkipPlaceholders;
             TranslationServer.PseudolocalizationEnabled = oldEnabled;
         }
-        Console.WriteLine("Typed pseudolocalization project settings and runtime reload passed.");
+        CheckLocaleSelection();
+        Console.WriteLine("Typed localization project settings, locale selection and runtime reload passed.");
+    }
+
+    private static void CheckLocaleSelection()
+    {
+        var settings = ProjectSettings.Instance;
+        var oldTest = settings.Get(ProjectSettings.LocaleTest);
+        var oldFallbackSetting = settings.Get(ProjectSettings.LocaleFallback);
+        var oldCulture = TranslationServer.Culture;
+        var oldFallbackCulture = TranslationServer.FallbackCulture;
+        using var regional = new Translation { Locale = "fr-FR" };
+        using var english = new Translation { Locale = "en" };
+        regional.AddMessage("Color", "Couleur");
+        english.AddMessage("Only English", "English value");
+        english.AddPluralMessage("pear", ["one pear", "many pears"]);
+        var main = TranslationServer.GetOrAddDomain("");
+        try
+        {
+            Check(TranslationServer.CompareLocales("fr-CA", "fr-CA") == 10 &&
+                TranslationServer.CompareLocales("fr-CA", "fr") == 5 &&
+                TranslationServer.CompareLocales("fr-CA", "fr-FR") == 4 &&
+                TranslationServer.CompareLocales("fr", "de") == 0 &&
+                TranslationServer.CompareLocales("sr-Latn-RS", "sr-Cyrl-RS") == 5,
+                "Locale score distinguishes exact, language, region, script and unrelated languages.");
+            main.AddTranslation(regional);
+            main.AddTranslation(english);
+            settings.Set(ProjectSettings.LocaleTest, "fr-CA");
+            settings.Set(ProjectSettings.LocaleFallback, "en");
+            using (var tree = new SceneTree(new Node()))
+            {
+                Engine.Instance.Start(tree);
+                try
+                {
+                    Check(TranslationServer.Culture.Name == "fr-CA" && TranslationServer.FallbackCulture?.Name == "en" &&
+                        TranslationServer.GetToolLocale() == "fr-FR" &&
+                        ReferenceEquals(TranslationServer.GetTranslationObject("fr-CA"), regional),
+                        "Startup uses the test locale, fallback and scored catalog selection.");
+                    Check(TranslationServer.Translate("", "Color") == "Couleur" &&
+                        TranslationServer.Translate("", "Only English") == "English value" &&
+                        TranslationServer.TranslatePlural("", "pear", "pears", 2) == "many pears",
+                        "Close regional catalogs and fallback catalogs resolve singular and plural messages.");
+                    using var standalone = new TranslationDomain { LocaleOverride = "de-DE" };
+                    standalone.AddTranslation(english);
+                    Check(standalone.Translate("Only English") == "English value" &&
+                        standalone.TranslatePlural("pear", "pears", 2) == "many pears",
+                        "Standalone domains use the same fallback for singular and plural lookup.");
+                    settings.Set(ProjectSettings.LocaleTest, "de-DE");
+                    Check(TranslationServer.Culture.Name == "fr-CA", "Changing a startup locale setting does not switch the current run.");
+                }
+                finally { Engine.Instance.Stop(); }
+            }
+            settings.Set(ProjectSettings.LocaleFallback, string.Empty);
+            using (var tree = new SceneTree(new Node()))
+            {
+                Engine.Instance.Start(tree);
+                try
+                {
+                    Check(TranslationServer.Culture.Name == "de-DE" && TranslationServer.FallbackCulture is null &&
+                        TranslationServer.Translate("", "Only English") == "Only English",
+                        "The next run applies the changed test locale and disabled fallback.");
+                }
+                finally { Engine.Instance.Stop(); }
+            }
+        }
+        finally
+        {
+            main.RemoveTranslation(regional);
+            main.RemoveTranslation(english);
+            settings.Set(ProjectSettings.LocaleTest, oldTest);
+            settings.Set(ProjectSettings.LocaleFallback, oldFallbackSetting);
+            TranslationServer.Culture = oldCulture;
+            TranslationServer.FallbackCulture = oldFallbackCulture;
+        }
     }
 
     private static void Check(bool condition, string message)

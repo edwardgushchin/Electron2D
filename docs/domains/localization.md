@@ -4,7 +4,7 @@ Last updated: 2026-09-24
 
 ## Responsibility
 
-Localization owns process-wide direct and resource-backed translation catalogs, UI culture selection, domain/context lookup, parent-culture fallback, and caller-supplied plural selection for the Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web runtime targets.
+Localization owns process-wide direct and resource-backed translation catalogs, UI culture selection, domain/context lookup, scored resource-locale and configured fallback selection, and caller-supplied plural selection for the Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web runtime targets.
 
 Its production source lives under `src/Core/String/`, matching its low-level engine module while the living architecture retains Localization as a separate logical domain. The public namespace remains `Electron2D`.
 
@@ -18,7 +18,7 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 
 ## Public surface
 
-`TranslationServer` exposes the culture, direct singular/plural registration, named domain registry, main-domain resource queries, lookup, pseudolocalization, typed project-option reload and catalog clearing. `TranslationDomain` manages borrowed catalogs, locale override, enablement and singular pseudolocalization options. `Translation` stores contextual messages and plural forms. `OptimizedTranslation` generates and resolves compressed singular values without retaining source keys. Both support Resource duplication. `ElectronObject` supplies per-instance translation enablement and lookup entry points from Core. The service's global enabled flag is internal.
+`TranslationServer` exposes the culture, locale comparison, tool-locale selection, direct singular/plural registration, named domain registry, main-domain resource queries, lookup, pseudolocalization, typed project-option reload and catalog clearing. `TranslationDomain` manages borrowed catalogs, locale override, enablement and singular pseudolocalization options. `Translation` stores contextual messages and plural forms. `OptimizedTranslation` generates and resolves compressed singular values without retaining source keys. Both support Resource duplication. `ElectronObject` supplies per-instance translation enablement and lookup entry points from Core. The service's global enabled flag is internal.
 
 ## Dependency direction
 
@@ -30,7 +30,7 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 ## Invariants
 
 - Catalog access and culture changes are lock-protected.
-- Exact culture is checked before parent cultures and invariant culture.
+- Selected culture, its parents and invariant culture precede nearby resource locales; the configured fallback locale is tried afterward.
 - Domains, contexts, and messages are ordinal and case-sensitive.
 - Missing singular translations return the source message.
 - Missing plural translations use singular only when count equals one; registered selectors own language-specific plural rules. Resource catalogs without a selector use English rules only for English locales and fail explicitly for other locales with multiple forms.
@@ -40,13 +40,13 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 
 - No `.po`, `.mo`, `.resx`, JSON, or binary catalog loader.
 - Optimized translation payloads use an internal Brotli representation; reference Smaz file compatibility and editor-only generation gating remain absent.
-- No operating-system locale discovery, number formatting, interpolation, or full Unicode bidirectional-text implementation. Pseudolocalization includes only test direction-control marks; exact Unicode and locale-score parity remain partial.
+- No operating-system locale discovery, number formatting, interpolation, or full Unicode bidirectional-text implementation. Pseudolocalization includes only test direction-control marks; locale alias/default-script tables and exact Unicode parity remain partial.
 - No built-in CLDR plural-rule database or textual plural-rule evaluator; non-English resource catalogs with multiple forms require a typed selector.
 - No native locale-discovery or six-target localization verification exists yet.
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs`, `TranslationDomainTests.cs`, and `LocalizationProjectSettingsTests.cs` verify parent-culture fallback, source fallback, direct and resource plural selection, contextual and optimized catalogs, duplication, disposal, domain lifecycle and locale override, singular pseudolocalization, per-object translation disabling, typed setting persistence, managed Engine startup sampling, and live transform reload. `WindowRuntimeTests` verifies Run sampling before scene ready with the SDL dummy driver; other native platforms remain unverified for this setting.
+`tests/Electron2D.Tests/Program.cs`, `TranslationDomainTests.cs`, and `LocalizationProjectSettingsTests.cs` verify scored resource-locale and configured fallback selection, source fallback, direct and resource plural selection, contextual and optimized catalogs, duplication, disposal, domain lifecycle and locale override, singular pseudolocalization, per-object translation disabling, typed setting persistence, managed Engine startup sampling, and live transform reload. `WindowRuntimeTests` verifies Run sampling before scene ready with the SDL dummy driver; other native platforms remain unverified for this setting.
 
 ## Decisions
 

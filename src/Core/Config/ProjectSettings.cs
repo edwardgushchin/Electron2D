@@ -1,4 +1,5 @@
 using IOPath = System.IO.Path;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace Electron2D;
@@ -193,6 +194,16 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<Color> DebugPathsColor { get; } =
         new("debug/shapes/paths/geometry_color", new Color(0.1f, 1f, 0.7f, 0.4f), value => value.IsFinite());
 
+    /// <summary>Defines an optional locale used instead of the process UI culture when an application loop starts.</summary>
+    /// <value>The permanent typed project setting, empty by default.</value>
+    public static ProjectSetting<string> LocaleTest { get; } =
+        new("internationalization/locale/test", string.Empty, IsValidProjectLocale);
+
+    /// <summary>Defines the catalog locale consulted after the selected locale has no translation.</summary>
+    /// <value>The permanent typed project setting, <c>en</c> by default. Empty disables the fallback.</value>
+    public static ProjectSetting<string> LocaleFallback { get; } =
+        new("internationalization/locale/fallback", "en", IsValidProjectLocale);
+
     /// <summary>Enables pseudolocalization when an application loop starts.</summary>
     /// <value>The permanent typed project setting, false by default.</value>
     public static ProjectSetting<bool> PseudolocalizationEnabled { get; } =
@@ -327,6 +338,8 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(AnisotropicFilteringLevel, isBasic: false);
         RegisterInternal(DefaultClearColor, isBasic: true);
         RegisterInternal(DebugPathsColor, isBasic: false);
+        RegisterInternal(LocaleTest, isBasic: false);
+        RegisterInternal(LocaleFallback, isBasic: false);
         RegisterInternal(PseudolocalizationEnabled, isBasic: false);
         RegisterInternal(PseudolocalizationReplaceWithAccents, isBasic: false);
         RegisterInternal(PseudolocalizationDoubleVowels, isBasic: false);
@@ -1660,6 +1673,15 @@ public sealed class ProjectSettings : ElectronObject
         return names;
     }
 
+    private static bool IsValidProjectLocale(string locale)
+    {
+        if (locale is null) return false;
+        locale = locale.Trim();
+        if (locale.Length == 0) return true;
+        try { _ = CultureInfo.GetCultureInfo(locale.Replace('_', '-')); return true; }
+        catch (CultureNotFoundException) { return false; }
+    }
+
     private static bool IsBuiltIn<T>(ProjectSetting<T> setting)
         where T : notnull =>
         ReferenceEquals(setting, ApplicationName) ||
@@ -1676,6 +1698,8 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, AnisotropicFilteringLevel) ||
         ReferenceEquals(setting, DefaultClearColor) ||
         ReferenceEquals(setting, DebugPathsColor) ||
+        ReferenceEquals(setting, LocaleTest) ||
+        ReferenceEquals(setting, LocaleFallback) ||
         ReferenceEquals(setting, PseudolocalizationEnabled) ||
         ReferenceEquals(setting, PseudolocalizationReplaceWithAccents) ||
         ReferenceEquals(setting, PseudolocalizationDoubleVowels) ||

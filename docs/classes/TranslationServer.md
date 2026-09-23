@@ -16,10 +16,9 @@ Last updated: 2026-09-24
 
 Stores and resolves process-wide in-memory translations for the selected UI culture.
 
-`TranslationServer` is the process-wide in-memory translation registry. It owns named [`TranslationDomain`](TranslationDomain.md) instances and resolves direct entries and borrowed [`Translation`](Translation.md) resources by ordinal domain/context keys for the selected UI culture and its parent cultures. The empty name selects the main domain.
+`TranslationServer` is the process-wide in-memory translation registry. It owns named [`TranslationDomain`](TranslationDomain.md) instances and resolves direct entries and borrowed [`Translation`](Translation.md) resources by ordinal domain/context keys for the selected UI culture and a configured fallback. The empty name selects the main domain.
 
-Lookups use exact, case-sensitive domain, context, and source-message keys, then walk from the selected culture
-through its parents to the invariant culture. Within one locale, direct registrations precede resource catalogs, and the most recently registered resource is queried first. This typed service does not load catalog files or implement CLDR plural rules.
+Lookups use exact, case-sensitive domain, context, and source-message keys. Exact entries are checked from the selected culture through its parents and invariant culture; nearby resource locales are scored next. The configured fallback is searched after that. Within each exact locale, direct registrations precede resource catalogs; the most recently registered resource wins an equal score. This typed service does not load catalog files or implement CLDR plural rules.
 
 ## Examples
 
@@ -45,8 +44,8 @@ string text = TranslationServer.Translate("ui", "menu.play");
 | [`public static void AddTranslation(Translation translation, string domain = "")`](#add-resource-translation) | Registers a borrowed live resource catalog. |
 | [`public static void AddPluralTranslation(CultureInfo culture, string domain, string singular, string plural, Func<long, string> selector, string context = null)`](#m-electron2d-translationserver-addpluraltranslation-system-globalization-cultureinfo-system-string-system-string-system-string-system-func-system-int64-system-string-system-string) | Adds or replaces one plural translation selector. |
 | [`public static void RemoveTranslation(Translation translation, string domain = "")`](#remove-resource-translation) | Removes a resource registration without disposing it. |
-| [`public static string Translate(string domain, string message, string context = null)`](#m-electron2d-translationserver-translate-system-string-system-string-system-string) | Resolves a singular message for the current culture and its parent cultures. |
-| [`public static string TranslatePlural(string domain, string singular, string plural, long count, string context = null)`](#m-electron2d-translationserver-translateplural-system-string-system-string-system-string-system-int64-system-string) | Resolves a plural message for the current culture and its parent cultures. |
+| [`public static string Translate(string domain, string message, string context = null)`](#m-electron2d-translationserver-translate-system-string-system-string-system-string) | Resolves a singular message with locale scoring and project fallback. |
+| [`public static string TranslatePlural(string domain, string singular, string plural, long count, string context = null)`](#m-electron2d-translationserver-translateplural-system-string-system-string-system-string-system-int64-system-string) | Resolves a plural message with locale scoring and project fallback. |
 | [`public static void Clear()`](#m-electron2d-translationserver-clear) | Removes all singular and plural translation registrations. |
 | `public static TranslationDomain GetOrAddDomain(string name)` | Returns or creates a registered domain by exact name. |
 | `public static bool HasDomain(string name)` | Tests a named domain; the main domain always exists logically. |
@@ -57,6 +56,8 @@ string text = TranslationServer.Translate("ui", "menu.play");
 | `public static bool HasTranslation(Translation translation)` | Tests main-domain registration by identity. |
 | `public static bool HasTranslationForLocale(string locale, bool exact)` | Tests main-domain locale availability. |
 | `public static string[] GetLoadedLocales()` | Gets distinct live main-domain locale names. |
+| [`public static int CompareLocales(string localeA, string localeB)`](#comparelocales) | Scores a supported locale pair from zero to ten. |
+| [`public static string GetToolLocale()`](#gettoollocale) | Selects the closest main-domain catalog locale or project fallback. |
 | `public static string Pseudolocalize(string message)` | Applies main-domain pseudolocalization options. |
 | [`public static void ReloadPseudolocalization()`](#reloadpseudolocalization) | Reloads the eight transform options from active typed project settings. |
 
@@ -67,13 +68,23 @@ string text = TranslationServer.Translate("ui", "menu.play");
 
 Gets or sets the culture used for subsequent translation lookups.
 
-**Value:** The process-wide lookup culture, initialized from `Globalization.CultureInfo.CurrentUICulture`.
+**Value:** The process-wide lookup culture, initialized from `Globalization.CultureInfo.CurrentUICulture`. Each Engine start samples the active [`ProjectSettings.LocaleTest`](ProjectSettings.md#localetest) override; an empty setting samples the current managed UI culture. Assigning this property changes subsequent lookups immediately.
 
 **Exceptions**
 
 - `ArgumentNullException`: The assigned value is `null`.
 
 ## Method Descriptions
+
+<a id="comparelocales"></a>
+### `public static int CompareLocales(string localeA, string localeB)`
+
+Returns ten for identical or normalized-equal locales, zero for different languages, or a score starting at five and adjusted for script, region and variant matches. Underscores are accepted in supported .NET locale names. `null` throws `ArgumentNullException`; a nonidentical unsupported name throws `CultureNotFoundException`. This managed parser does not yet include the full reference alias and default-script tables.
+
+<a id="gettoollocale"></a>
+### `public static string GetToolLocale()`
+
+Returns the highest-scoring live main-domain catalog locale for `Culture`; an exact match returns the current culture name. Later registrations win equal non-exact scores. Without a matching catalog, returns the startup fallback locale or an empty string when fallback is disabled. Editor-specific locale selection is not implemented.
 
 <a id="m-electron2d-translationserver-addtranslation-system-globalization-cultureinfo-system-string-system-string-system-string-system-string"></a>
 ### `public static void AddTranslation(CultureInfo culture, string domain, string message, string translation, string context = null)`
@@ -177,7 +188,7 @@ Removes all direct singular/plural registrations and resource registrations with
 
 `GetOrAddDomain` returns the same live domain for an exact case-sensitive name; callers may register resources and set locale override, enablement and pseudolocalization options on it. `HasDomain("")` is true even before the main domain is materialized. `RemoveDomain` rejects the empty name, removes direct entries for a custom name and leaves the detached domain alive with its borrowed catalogs. Disposing a registered domain removes it and its direct entries. Null names throw `ArgumentNullException`.
 
-`GetTranslations`, `FindTranslations`, `GetTranslationObject`, `HasTranslation`, `HasTranslationForLocale`, and `GetLoadedLocales` are convenience operations on the main domain. Arrays are independent snapshots of borrowed resources. `FindTranslations` accepts normalized exact locale or same-language matches, according to `exact`. A concurrently disposed catalog is omitted from locale queries.
+`GetTranslations`, `FindTranslations`, `GetTranslationObject`, `HasTranslation`, `HasTranslationForLocale`, and `GetLoadedLocales` are convenience operations on the main domain. Arrays are independent snapshots of borrowed resources. `FindTranslations` accepts normalized exact locale or positive-score language matches, according to `exact`. `GetTranslationObject` chooses the highest score. A concurrently disposed catalog is omitted from locale queries.
 
 `PseudolocalizationEnabled` and `Pseudolocalize` use the main domain's options. `Pseudolocalize` applies those options even if the switch is false. Singular lookup transforms both translated text and missing-message fallback when the switch is true. Plural lookup does not transform its result. See [`TranslationDomain`](TranslationDomain.md) for the options and limits.
 
@@ -190,7 +201,7 @@ Reads the eight active transform settings from [`ProjectSettings.Instance`](Proj
 
 Singular keys contain culture name, domain, normalized context, and source message. Plural keys also contain both source forms. A null context is normalized to the empty string. All string matching uses the tuple/string default ordinal, case-sensitive equality.
 
-The culture chain includes the exact culture, each parent, and invariant culture. Direct registrations overwrite an identical key. Resources are queried in reverse registration order within their domain and locale. Direct entries have priority; `RemoveTranslation` removes one resource registration.
+The primary culture chain includes the exact culture, each parent, and invariant culture. Direct registrations overwrite an identical key and take priority at each exact tier. Resource catalogs are queried in reverse registration order. If exact tiers miss, their closest supported locale match is considered before the same search under the configured fallback culture. An empty fallback setting disables that second search. `RemoveTranslation` removes one resource registration.
 
 ## Invariants and errors
 
@@ -209,6 +220,6 @@ One process-wide lock protects direct catalogs, the domain registry, and `Cultur
 
 ## Verification and limitations
 
-Tests verify parent-culture fallback, missing-message fallback, domain selection, caller-defined plural behavior, resource edits, duplication, removal, disposal, per-object disabling, domain lifecycle and pseudolocalization. `LocalizationProjectSettingsTests` checks typed startup settings and runtime transform reload.
+Tests verify parent-culture fallback, missing-message fallback, domain selection, caller-defined plural behavior, resource edits, duplication, removal, disposal, per-object disabling, domain lifecycle and pseudolocalization. `LocalizationProjectSettingsTests` checks typed startup settings, managed locale scoring, regional catalog selection, project fallback for singular/plural lookup, and runtime transform reload. `WindowRuntimeTests` checks startup sampling with SDL dummy.
 
-No catalog file loader, CLDR plural rules, message formatting, full Unicode bidirectional text support, or per-thread culture override is implemented. Exact locale-score and Unicode pseudolocalization parity remain partial.
+No catalog file loader, CLDR plural rules, message formatting, full Unicode bidirectional text support, or per-thread culture override is implemented. The managed score does not include the pinned locale alias/default-script tables; exact locale-score and Unicode pseudolocalization parity remain partial.
