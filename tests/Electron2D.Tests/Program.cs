@@ -4356,6 +4356,29 @@ static void VerifyInput()
             using var duplicatedKey = (InputEventKey)describedKey.Duplicate();
             Require(duplicatedKey.Keycode == Key.Enter && duplicatedKey.Device == InputEvent.DeviceIdKeyboard,
                 "Input-event duplication must preserve concrete stored state and exact runtime type.");
+            var windowProperty = describedKey.GetPropertyList()
+                .OfType<PropertyDescriptor<InputEventFromWindow, long>>()
+                .Single(property => property.Name == nameof(InputEventFromWindow.WindowID));
+            Require(describedKey.WindowID == DisplayServer.MainWindowId && !describedKey.PropertyCanRevert(windowProperty),
+                "Window events default to the primary window ID in the inherited typed descriptor.");
+            var observedWindowID = 0L;
+            describedKey.Changed += _ => observedWindowID = describedKey.WindowID;
+            windowProperty.SetValue(describedKey, long.MaxValue);
+            using var copiedWindowKey = (InputEventKey)describedKey.Duplicate();
+            Require(observedWindowID == long.MaxValue && copiedWindowKey.WindowID == long.MaxValue &&
+                describedKey.PropertyCanRevert(windowProperty),
+                "Window IDs retain their signed 64-bit range across mutation, change delivery and duplication.");
+            describedKey.WindowID = long.MinValue;
+            Require(describedKey.WindowID == long.MinValue && observedWindowID == long.MinValue,
+                "Negative window IDs are retained without validation or narrowing.");
+            describedKey.RevertProperty(windowProperty);
+            Require(describedKey.WindowID == DisplayServer.MainWindowId && !describedKey.PropertyCanRevert(windowProperty),
+                "Reverting the inherited window descriptor restores the primary ID.");
+            var describedTouch = (InputEventScreenTouch)propertyCases[6].Event;
+            describedTouch.WindowID = long.MaxValue;
+            using var copiedWindowTouch = (InputEventScreenTouch)describedTouch.Duplicate();
+            Require(copiedWindowTouch.WindowID == long.MaxValue,
+                "The direct touch subclass retains the same inherited window identity on duplication.");
             Require(describedKey.IsActionType() && !propertyCases[3].Event.IsActionType(),
                 "Only the sealed key, button, axis, and direct-action event families may be action bindings.");
         }

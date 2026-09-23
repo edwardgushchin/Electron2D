@@ -1,6 +1,6 @@
 # InputEventFromWindow
 
-Last updated: 2026-09-22
+Last updated: 2026-09-24
 
 **Inherits:** [InputEvent](InputEvent.md)
 
@@ -16,11 +16,11 @@ Last updated: 2026-09-22
 
 Provides the abstract base for input events received from a window.
 
-- Responsibility: adds a host-defined `long WindowID`; zero means primary/unspecified.
+- Responsibility: adds a signed 64-bit `WindowID`; zero means primary/unspecified. The current SDL host assigns zero to events from its single public window.
 - Complete declared API: `WindowID { get; set; }`; protected overrides `CopyEventStateTo` and `GetPropertyDescriptors`. `WindowID` is a stored typed descriptor.
 - Lifecycle/errors: mutable Resource state; disposed access throws; copying preserves the identifier.
 - Threading/dependencies: caller-coordinated, backend-neutral; a real window registry begins with the SDL window-host trigger in ADR 0038.
-- Verification: duplication and concrete positional-event tests exercise preservation. Inherited API is documented by [`InputEvent`](InputEvent.md).
+- Verification: `VerifyInputEvents` checks both signed extremes, descriptor storage/revert, committed-value change delivery and duplication. Native SDL input tests exercise the main-window adapter. Inherited API is documented by [`InputEvent`](InputEvent.md).
 
 ## Examples
 
@@ -64,7 +64,7 @@ Initializes a new InputEventFromWindow instance.
 
 Gets or sets the receiving window identifier.
 
-**Value:** A host-defined identifier; zero denotes the primary or unspecified window.
+**Value:** A signed 64-bit identifier; zero denotes the primary or unspecified window. Assignment stores the value without narrowing or looking up a window; duplication retains it.
 
 **Exceptions**
 

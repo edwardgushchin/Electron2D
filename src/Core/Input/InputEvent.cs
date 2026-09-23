@@ -342,6 +342,7 @@ public abstract class InputEvent : Resource
 internal readonly record struct InputActionMatch(bool Pressed, float Strength, float RawStrength);
 
 /// <summary>Provides the abstract base for input events received from a window.</summary>
+/// <remarks>The active native host assigns <see cref="DisplayServer.MainWindowId"/> to events from its primary window.</remarks>
 public abstract class InputEventFromWindow : InputEvent
 {
     private static readonly IReadOnlyList<PropertyDescriptor> WindowProperties =
@@ -353,7 +354,8 @@ public abstract class InputEventFromWindow : InputEvent
     private long _windowId;
 
     /// <summary>Gets or sets the receiving window identifier.</summary>
-    /// <value>A host-defined identifier; zero denotes the primary or unspecified window.</value>
+    /// <value>A signed 64-bit identifier; zero denotes the primary or unspecified window.</value>
+    /// <remarks>Assignments are stored without narrowing or window lookup. Copies retain the same identifier.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public long WindowID

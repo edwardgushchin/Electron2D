@@ -2610,6 +2610,7 @@
     }
   ],
   "statusGroups": [
+    {"state": "Implemented", "reason": "The pinned XML declares an abstract InputEvent child with one integer window identifier defaulting to zero. Its C# long mapping stores and duplicates signed 64-bit values without narrowing; VerifyInputEvents checks boundaries, typed descriptor/revert and committed change delivery. The current SDL main-window adapter assigns public ID zero; multiwindow ownership and descendant behavior remain separate coverage work.", "godot": ["class:InputEventFromWindow", "InputEventFromWindow::property:window_id"]},
     {"state": "Implemented", "reason": "NodeAutoTranslateMode preserves all three numeric values; NodeLocalizationTests checks inherited, overriding and disabled resolution.", "godot": ["Node::enum:AutoTranslateMode", "Node::enum_value:AutoTranslateMode.AUTO_TRANSLATE_MODE_INHERIT", "Node::enum_value:AutoTranslateMode.AUTO_TRANSLATE_MODE_ALWAYS", "Node::enum_value:AutoTranslateMode.AUTO_TRANSLATE_MODE_DISABLED"]},
     {"state": "Implemented", "reason": "NodeLocalizationTests checks nearest-ancestor resolution, explicit disabled/always overrides, root policy, and per-object message enablement independence.", "godot": ["Node::method:can_auto_translate()"]},
     {"state": "Implemented", "reason": "NodeLocalizationTests checks explicit and inherited domain changes, active notification delivery, and PackedScene preservation of live inherited domains.", "godot": ["Node::method:set_translation_domain_inherited()"]},

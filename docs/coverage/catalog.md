@@ -384,7 +384,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Input](classes/Input.md) | Object | Partial | 98 |
 | [InputEvent](classes/InputEvent.md) | Resource | Partial | 17 |
 | [InputEventAction](classes/InputEventAction.md) | InputEvent | Partial | 4 |
-| [InputEventFromWindow](classes/InputEventFromWindow.md) | InputEvent | Partial | 1 |
+| [InputEventFromWindow](classes/InputEventFromWindow.md) | InputEvent | Implemented | 1 |
 | [InputEventGesture](classes/InputEventGesture.md) | InputEventWithModifiers | Partial | 2 |
 | [InputEventJoypadButton](classes/InputEventJoypadButton.md) | InputEvent | Partial | 3 |
 | [InputEventJoypadMotion](classes/InputEventJoypadMotion.md) | InputEvent | Partial | 2 |
