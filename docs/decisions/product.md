@@ -9,7 +9,7 @@ Decisions in this log: [0001](#adr-0001), [0002](#adr-0002), [0004](#adr-0004), 
 <a id="adr-0001"></a>
 ## ADR 0001: Use typed C# without Variant
 
-Last updated: 2026-09-20
+Last updated: 2026-09-23
 
 - Status: Accepted
 - Scope: Entire engine API
@@ -21,6 +21,8 @@ Godot uses `Variant` as a universal value container for scripting, dynamic prope
 ### Decision
 
 Electron2D will not implement `Variant`. Public APIs use concrete types, generics, overloads, typed collections, properties, methods, delegates, and events. The engine will not recreate Variant through pervasive `object`, `dynamic`, or untyped metadata dictionaries.
+
+This rule does not prohibit a dedicated JSON document model. JSON syntax trees are values within the JSON utility only; they are not a general engine value type, property store, signal payload, or settings container. [ADR 0048](core-data-io.md#adr-0048) defines that utility. [ADR 0018](core-data-io.md#adr-0018) and [ADR 0019](core-data-io.md#adr-0019) keep configuration and project settings typed.
 
 ### Consequences
 

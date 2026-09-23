@@ -12,7 +12,7 @@ Its production sources are grouped by upstream module under `src/Core/`: `Config
 
 ## Current state
 
-The domain currently contains fourteen active components:
+The domain currently contains fifteen active components:
 
 | Component | Responsibility | State |
 | --- | --- | --- |
@@ -20,6 +20,7 @@ The domain currently contains fourteen active components:
 | [Typed event connections](../components/event-connections.md) | Disposable typed subscriptions with one-shot and deferred delivery | Implemented and verified |
 | [Typed editor properties](../components/editor-properties.md) | Variant-free property discovery, typed access, validation, and revert behavior | Implemented and verified |
 | [Configuration files](../components/config-files.md) | Strongly typed sectioned values, transactional parsing, atomic persistence, and authenticated encryption | Implemented and verified |
+| [JSON documents](../components/json.md) | Document-scoped JSON parsing, diagnostics, formatting, and typed native conversion | Executable managed path; exact reference parity Partial |
 | [File and directory access](../components/file-access.md) | Blocking file/directory I/O, scoped navigation, virtual paths, metadata, links, hashes, temporary ownership, compression, and encryption | Implemented and verified; documented codec/platform gaps |
 | [XML parsing](../components/xml-parsing.md) | Permissive UTF-8 token reading, byte offsets, attributes and section navigation | Executable managed path; exact malformed-input parity partial |
 | [Project settings](../components/project-settings.md) | Typed global/default values, feature overrides, dirty events, project persistence, and virtual paths | Implemented and verified |
@@ -31,7 +32,7 @@ The domain currently contains fourteen active components:
 | [Color values](../components/color-values.md) | Floating-point RGBA math, HSV/OKHSL conversion, packing/parsing, and the standard named catalog | Implemented and verified |
 | [Geometry values](../components/geometry-values.md) | Engine-owned vectors, rectangles, affine transforms, side identities, and pure 2D geometry queries | Values and Geometry class implemented |
 
-Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`XMLParser`](../classes/XMLParser.md), [`FileAccessMode`](../classes/FileAccessMode.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Mathf`](../classes/Mathf.md), [`RandomNumberGenerator`](../classes/RandomNumberGenerator.md), [`RegEx`](../classes/RegEx.md), [`RegExMatch`](../classes/RegExMatch.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Geometry`](../classes/Geometry.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), [`Transform`](../classes/Transform.md), and [`Side`](../classes/Side.md).
+Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`JSON`](../classes/JSON.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`XMLParser`](../classes/XMLParser.md), [`FileAccessMode`](../classes/FileAccessMode.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Mathf`](../classes/Mathf.md), [`RandomNumberGenerator`](../classes/RandomNumberGenerator.md), [`RegEx`](../classes/RegEx.md), [`RegExMatch`](../classes/RegExMatch.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Geometry`](../classes/Geometry.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), [`Transform`](../classes/Transform.md), and [`Side`](../classes/Side.md).
 
 ## Public surface
 
@@ -41,6 +42,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `PropertyDescriptor<TOwner, TValue>`: typed access, validation, and revert behavior.
 - `ConfigKey<T>`: immutable typed identity for one sectioned configuration entry.
 - `ConfigFile`: concurrent in-memory configuration, transactional parse/merge, deterministic text encoding, atomic file replacement, and raw-key/password authenticated encryption.
+- `JSON`: document-scoped JSON tree parsing, formatting, diagnostics, source retention and explicitly typed model conversion.
 - `FileAccess`: seekable raw and transformed file ownership, typed binary/text I/O, directory-backed virtual paths, metadata/hashes, native attributes, temporary files, compression, and authenticated encryption.
 - `DirAccess`: scoped current-directory state, streaming/sorted enumeration, file/directory mutation, links, temporary-directory ownership, drive/capacity/type/case/identity queries, and static absolute helpers.
 - `FileAccessMode`, `FileCompressionMode`, and `UnixPermissionFlags`: exact typed mode, codec, and Unix mode-bit identities.
@@ -65,6 +67,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 ## Dependency direction
 
 - Core depends on the .NET Base Class Library and internally compiled Clipper2 for polygon clipping and offsets; it calls the static Localization-domain `TranslationServer` from `ElectronObject.Tr`/`TrN`.
+- JSON documents use `System.Text.Json` and the existing typed configuration converters; this does not make JSON nodes valid configuration values.
 - Configuration files use `System.Text.Json`, operating-system file APIs, PBKDF2-HMAC-SHA-256, and AES-256-GCM; they do not depend on an asset loader or platform host.
 - File access uses `ProjectSettings` path resolution/root snapshots, .NET file/directory/drive/compression/hash/cryptography primitives, native filesystem identity/case/capacity and volume metadata, native Linux/macOS xattrs, and Windows alternate data streams. It shares the internal atomic replacement helper with `ConfigFile` and does not depend on a pack/resource loader.
 - Project settings build on `ConfigFile`, typed properties, runtime platform/architecture detection, and ordinary directory paths. Engine reads its fixed-step settings from the process registry and flushes its coalesced event.
@@ -94,6 +97,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - Dynamic Godot facilities are not recreated with `dynamic` or broad `object` containers.
 - Main-loop lifecycle and frames are one-shot/non-reentrant owner-thread operations; effective/original deltas are finite, non-negative, and frame-scoped; no hidden game thread exists; Engine.Run measures monotonic time on the calling thread.
 - Engine is process-wide and non-disposable; it schedules only from host-supplied elapsed time, bounds catch-up, carries original time independently of scaling, permanently registers Input/InputMap, and never takes disposal ownership of the active loop or user-registered singletons.
+- JSON documents expose mutable syntax trees only within the JSON API; caller edits need their own synchronization and native conversion rejects untyped or engine-object members.
 - Configuration keys reject universal-value and engine-object types. Parsing is transactional, mutation is lock-serialized, and saves replace through flushed same-directory temporary files. Encrypted files are authenticated before parsing.
 - Project settings require exact typed definition identities, validate a complete candidate before load replacement, preserve unknown persisted entries, and lexically confine directory-backed virtual paths.
 - File access enforces exact modes, complete scalar reads, strict UTF-8, authenticated-before-exposure encrypted reads, and lock-serialized instance calls. It is blocking/allocating and excluded from real-time hot paths.
@@ -126,11 +130,14 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 
 Built-in rendering settings now include canvas mip interpolation and viewport anisotropy defaults; their consumption and native evidence are documented in [project settings](../components/project-settings.md) and [canvas rendering](../components/canvas-rendering.md).
 
+[`JsonTests`](../../tests/Electron2D.Tests/JsonTests.cs) verifies document parsing, formatting, diagnostics, typed conversion, duplicate ownership and disposal; exact reference parity remains Partial.
+
 The same harness verifies project-setting registration, value snapshots, validators, metadata, overrides, changes/events, persistence, virtual paths, transaction rollback, concurrency, disposal, and Engine integration.
 
 ## Decisions
 
 - [0001: Typed C# without Variant](../decisions/product.md#adr-0001)
+- [0048: Dedicated JSON documents](../decisions/core-data-io.md#adr-0048)
 - [0002: C# events for signals](../decisions/product.md#adr-0002)
 - [0003: ElectronObject lifetime](../decisions/core-object-runtime.md#adr-0003)
 - [0004: 2D scene-oriented API in one Electron2D-owned assembly](../decisions/product.md#adr-0004)

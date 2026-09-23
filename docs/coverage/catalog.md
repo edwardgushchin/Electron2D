@@ -405,7 +405,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ItemList](classes/ItemList.md) | Control | Blocked | 114 |
 | [IterateIK3D](classes/IterateIK3D.md) | ChainIK3D | Excluded | 19 |
 | [JNISingleton](classes/JNISingleton.md) | Object | Blocked | 1 |
-| [JSON](classes/JSON.md) | Resource | Unimplemented | 9 |
+| [JSON](classes/JSON.md) | Resource | Partial | 9 |
 | [JSONRPC](classes/JSONRPC.md) | Object | Blocked | 13 |
 | [JacobianIK3D](classes/JacobianIK3D.md) | IterateIK3D | Excluded | 0 |
 | [JavaClass](classes/JavaClass.md) | RefCounted | Blocked | 4 |

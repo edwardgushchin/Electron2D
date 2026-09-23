@@ -4,7 +4,7 @@ Last updated: 2026-09-22
 
 This bounded log owns the complete architectural records for core configuration, data, and i/o. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
-Decisions in this log: [0018](#adr-0018), [0019](#adr-0019), [0020](#adr-0020), [0022](#adr-0022).
+Decisions in this log: [0018](#adr-0018), [0019](#adr-0019), [0020](#adr-0020), [0022](#adr-0022), [0048](#adr-0048).
 
 <a id="adr-0018"></a>
 ## ADR 0018: Typed configuration files
@@ -71,7 +71,7 @@ All public operations are safe for concurrent callers through locked state trans
 
 ### Rejected alternatives
 
-- `Dictionary<string, object>`, `dynamic`, or a public JSON DOM: each recreates the rejected universal-value boundary.
+- `Dictionary<string, object>`, `dynamic`, or a public JSON DOM **as the configuration value store**: each recreates the rejected universal-value boundary in `ConfigFile`. This does not exclude a separate JSON document API (ADR 0048).
 - A new public `Variant`-like discriminated union: it would duplicate serialization and expand every time a value type is added.
 - One overload per primitive: it excludes stable typed models and creates repetitive API/code.
 - Reflection-driven storage of live engine objects: it creates hidden ownership, cycles, and unstable files.
@@ -129,7 +129,7 @@ Script global classes, pack mounting, editor-only metadata/UI, and settings for 
 
 ### Rejected alternatives
 
-- `Dictionary<string, object>`, `dynamic`, JSON DOM, or string-based generic conversion: these recreate the rejected universal-value boundary.
+- `Dictionary<string, object>`, `dynamic`, JSON DOM **as the project-setting value store**, or string-based generic conversion: these recreate the rejected universal-value boundary in `ProjectSettings`. A separate JSON document API remains allowed (ADR 0048).
 - One static property per possible setting: it cannot support game-defined settings and would add inert absent-domain configuration.
 - Reflection discovery of arbitrary fields/properties: it hides registration, validation, persistence ownership, and trimming behavior.
 - Immediate event delivery from every setter: it permits event storms and does not match end-of-frame change observation.
@@ -283,3 +283,36 @@ The executable harness verifies ordinary and virtual scope behavior, listing sta
 - [0019: Typed project settings and directory-backed virtual paths](core-data-io.md#adr-0019)
 - [0020: Typed file access and transformed-file containers](core-data-io.md#adr-0020)
 - [0021: Runtime and editor target platforms](product.md#adr-0021)
+
+<a id="adr-0048"></a>
+## ADR 0048: Dedicated JSON documents with typed native conversion
+
+Last updated: 2026-09-23
+
+### Status
+
+Accepted.
+
+### Context
+
+ADR 0001 excludes a universal engine value container. ADRs 0018 and 0019 separately exclude JSON trees as `ConfigFile` and `ProjectSettings` value stores. Neither decision excludes a document-specific JSON API. The reference JSON resource exposes parsing, diagnostics, source retention, formatting, data, and native-value conversion; its `Variant` and optional engine-object reconstruction do not fit Electron2D's typed boundary.
+
+### Decision
+
+`JSON : Resource` owns one `System.Text.Json.Nodes.JsonNode` tree. `Parse` accepts JSON documents, reports success as `bool`, and retains diagnostics and optional source text. `ParseString` returns a JSON tree or null. `Stringify` accepts a JSON tree with optional key ordering, indentation and floating-point precision. `FromNative<T>` and `ToNative<T>` convert explicitly selected C# types using the established typed value schemas; untyped `object` roots and engine objects are rejected. The tree is confined to this document API and is never a universal engine property or settings value. Data assignment and resource duplication copy the tree; a returned tree is live, mutable, and caller-synchronized.
+
+The managed parser's syntax and error messages are the executable contract. Exact acceptance of malformed/nonstandard text, Unicode recovery, numeric formatting, error locations, and native engine-object conversion from the reference remain coverage gaps. A valid JSON null and a parse failure both yield null from `ParseString`; use `Parse` when diagnostics matter. JSON work is allocating and stays outside real-time callbacks.
+
+### Consequences and boundaries
+
+- `ConfigFile` and `ProjectSettings` continue to use compile-time typed keys and never store JSON DOM nodes.
+- Generic conversion never constructs an engine object from a document or interprets a serialized runtime type name.
+- The resource requires no new dependency or assembly: it uses the .NET JSON library already present in the runtime.
+- Exact reference parity is Partial until the differences above are resolved or separately accepted.
+
+### Related decisions
+
+- [0001: Typed C# without Variant](product.md#adr-0001)
+- [0018: Typed configuration files](core-data-io.md#adr-0018)
+- [0019: Typed project settings](core-data-io.md#adr-0019)
+- [0014: Managed Resource lifetime](resources.md#adr-0014)

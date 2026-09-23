@@ -1582,6 +1582,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.JSON",
+    "kind": "type",
+    "declaringType": "Electron2D.JSON",
+    "name": "JSON",
+    "signature": "public sealed class Electron2D.JSON",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.JoyAxis",
     "kind": "type",
     "declaringType": "Electron2D.JoyAxis",
@@ -4688,6 +4703,19 @@
     "name": ".ctor",
     "signature": "protected InputEventWithModifiers()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.JSON..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.JSON",
+    "name": ".ctor",
+    "signature": "public JSON()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -30641,6 +30669,231 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSON.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSON",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSON.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.JSON",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSON.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSON",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSON.FromNative\u00601(T)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSON",
+    "name": "FromNative",
+    "signature": "public static System.Text.Json.Nodes.JsonNode FromNative\u003CT\u003E(T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Text.Json.Nodes.JsonNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSON.GetErrorLine()",
+    "kind": "method",
+    "declaringType": "Electron2D.JSON",
+    "name": "GetErrorLine",
+    "signature": "public System.Int32 GetErrorLine()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSON.GetErrorMessage()",
+    "kind": "method",
+    "declaringType": "Electron2D.JSON",
+    "name": "GetErrorMessage",
+    "signature": "public System.String GetErrorMessage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSON.GetParsedText()",
+    "kind": "method",
+    "declaringType": "Electron2D.JSON",
+    "name": "GetParsedText",
+    "signature": "public System.String GetParsedText()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSON.Parse(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSON",
+    "name": "Parse",
+    "signature": "public System.Boolean Parse(System.String jsonText, System.Boolean keepText = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jsonText",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "keepText",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSON.ParseString(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSON",
+    "name": "ParseString",
+    "signature": "public static System.Text.Json.Nodes.JsonNode ParseString(System.String jsonText)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jsonText",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Text.Json.Nodes.JsonNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSON.Stringify(System.Text.Json.Nodes.JsonNode,System.String,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSON",
+    "name": "Stringify",
+    "signature": "public static System.String Stringify(System.Text.Json.Nodes.JsonNode data, System.String indent = \u0022\u0022, System.Boolean sortKeys = true, System.Boolean fullPrecision = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Text.Json.Nodes.JsonNode",
+        "default": null
+      },
+      {
+        "name": "indent",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "sortKeys",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "fullPrecision",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSON.ToNative\u00601(System.Text.Json.Nodes.JsonNode)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSON",
+    "name": "ToNative",
+    "signature": "public static T ToNative\u003CT\u003E(System.Text.Json.Nodes.JsonNode json)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "json",
+        "type": "System.Text.Json.Nodes.JsonNode",
+        "default": null
+      }
+    ],
+    "returnType": "T",
     "value": null
   },
   {
@@ -56890,6 +57143,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.InputMap",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.JSON.Data()",
+    "kind": "property",
+    "declaringType": "Electron2D.JSON",
+    "name": "Data",
+    "signature": "public System.Text.Json.Nodes.JsonNode Data { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Text.Json.Nodes.JsonNode",
     "value": null
   },
   {

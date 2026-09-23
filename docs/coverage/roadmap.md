@@ -4,8 +4,8 @@ Last updated: 2026-09-23
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1680 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 1041 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [JSON](classes/JSON.md), [Marker2D](classes/Marker2D.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [ParallaxBackground](classes/ParallaxBackground.md), [ParallaxLayer](classes/ParallaxLayer.md) class slices.
+1. Review 1690 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+2. Complete 1031 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [Marker2D](classes/Marker2D.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [ParallaxBackground](classes/ParallaxBackground.md), [ParallaxLayer](classes/ParallaxLayer.md) class slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -52,6 +52,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [InputEventKey](classes/InputEventKey.md) | 0 | 14 |
 | [Line2D](classes/Line2D.md) | 0 | 14 |
 | [NoiseTexture2D](classes/NoiseTexture2D.md) | 0 | 12 |
+| [JSON](classes/JSON.md) | 0 | 9 |
 | [Translation](classes/Translation.md) | 0 | 9 |
 | [TranslationDomain](classes/TranslationDomain.md) | 0 | 9 |
 | [InputEventScreenDrag](classes/InputEventScreenDrag.md) | 0 | 8 |

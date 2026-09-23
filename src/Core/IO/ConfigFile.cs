@@ -69,7 +69,7 @@ public sealed class ConfigFile : ElectronObject
     private const int PasswordIterations = 600_000;
 
     private static readonly UTF8Encoding StrictUtf8 = new(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
-    private static readonly JsonSerializerOptions ValueJsonOptions = new()
+    internal static readonly JsonSerializerOptions ValueJsonOptions = new()
     {
         IncludeFields = true,
         PropertyNameCaseInsensitive = false,
