@@ -216,6 +216,7 @@ public abstract partial class CanvasItem
         if (_drawing) throw new InvalidOperationException("Canvas recording cannot be re-entered.");
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
         _canvasCommands?.Clear();
+        _polygonCount = 0;
         _drawTransform = Transform.Identity;
         _drawing = true;
         try

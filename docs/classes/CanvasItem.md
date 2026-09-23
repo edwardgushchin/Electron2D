@@ -163,7 +163,10 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 
 | Member | Contract |
 | --- | --- |
-| [`protected override void Dispose(bool disposing)`](#m-electron2d-canvasitem-dispose-system-boolean) | Disposes the scene hierarchy and clears retained canvas commands and this layer's subscribers in a finally block. Borrowed resources remain caller-owned. |
+| [`protected override void Dispose(bool disposing)`](#m-electron2d-canvasitem-dispose-system-boolean) | Disposes the scene hierarchy and clears retained canvas commands, pooled polygon storage and this layer's subscribers in a finally block. Borrowed resources remain caller-owned. |
+| [`public void DrawColoredPolygon(ReadOnlySpan<Vector2> points, Color color, ReadOnlySpan<Vector2> uvs = default, Texture? texture = null)`](#drawcoloredpolygon) | Filled contour with uniform color. |
+| [`public void DrawPolygon(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs = default, Texture? texture = null)`](#drawpolygon) | Triangulated contour with interpolated colors and UVs. |
+| [`public void DrawPrimitive(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, Texture? texture = null)`](#drawprimitive) | Point, line, triangle or quad. |
 | [`public void DrawLine(Vector2 from, Vector2 to, Color color, float width = -1f, bool antialiased = false)`](#m-electron2d-canvasitem-drawline-electron2d-vector2-electron2d-vector2-electron2d-color-system-single-system-boolean) | Records a straight line during canvas recording. |
 | [`public void DrawRect(Rect rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)`](#m-electron2d-canvasitem-drawrect-electron2d-rect-electron2d-color-system-boolean-system-single-system-boolean) | Records a filled rectangle or a centered rectangular outline during canvas recording. |
 | [`public void DrawSetTransform(Vector2 position, float rotation = 0f, Vector2? scale = null)`](#m-electron2d-canvasitem-drawsettransform-electron2d-vector2-system-single-system-nullable-electron2d-vector2) | Sets an additional transform for subsequent commands in this canvas recording. |
@@ -386,10 +389,51 @@ ParentNode by default. Disabled clamps to edges, Enabled repeats, Mirror reflect
 
 ## Method Descriptions
 
+### DrawColoredPolygon
+
+Source: [CanvasItem.Polygons.cs](../../src/Scene/Main/CanvasItem.Polygons.cs).
+
+`public void DrawColoredPolygon(ReadOnlySpan<Vector2> points, Color color, ReadOnlySpan<Vector2> uvs = default, Texture? texture = null)`
+
+Records a convex or concave contour in local coordinates with a uniform finite color. Requires at least three finite points in either winding order; the single contour has no holes. Copies all used values and triangulates once at recording. Shared endpoints and collinear vertices are permitted when triangulation can complete, including degenerate triangles which cover no pixels. Self-intersections are unsupported; triangulation failure throws ArgumentException before recording a command. The triangulator is bounded ear clipping with a relaxed final attempt for collinear/duplicate vertices; it is not a contour repair operation.
+
+UVs are normalized texture coordinates, either absent (zero at each vertex) or one per point. A null texture uses white sampling. Texture data is borrowed, so live pixel updates affect retained commands. Polygon input changes, atlas region changes and texture identity changes require QueueRedraw. The command does not subscribe to resources or own/dispose them. It follows the same material, filter/repeat, ordering, modulation, transform and pixel-snap paths as other canvas geometry; no antialias fringe is added.
+
+### DrawPolygon
+
+`public void DrawPolygon(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs = default, Texture? texture = null)`
+
+Uses the same contour and UV contract as DrawColoredPolygon. Colors may be empty for white, one uniform finite color, or exactly one finite color per point. Colors and UVs interpolate across triangulated faces and multiply sampled texture colors. Nonuniform vertex attributes depend on the selected triangulation; this is not bilinear quad interpolation.
+
+For AtlasTexture, supplied UVs map through its immediate stored Region divided by the immediate source's logical size. Fractional region coordinates are preserved. A zero Region.Size collapses corresponding UV axes instead of expanding them; Margin and FilterClip are ignored. Nested atlas regions are not recursively composed for this operation: only the immediate view remaps, and the ultimate full source is sampled. Without UVs, zero coordinates sample the full source. The source identity and mapping are captured atomically under the atlas graph gate, and later atlas disposal/replacement does not erase the recorded source. An empty atlas uses white sampling. Invalid/nonfinite atlas mapping throws before recording.
+
+Both polygon methods require this item's active NotificationDraw, synchronous Draw event or OnDraw scope. Off-owner or outside-scope calls throw InvalidOperationException; disposed item/texture access throws ObjectDisposedException. Nonfinite points/colors/UVs or wrong counts throw ArgumentException. A custom atlas source's size callback can record commands or dispose the item; validation resumes after the callback and cannot overwrite its commands. Uncaught recording errors clear the whole partial recording and retain its redraw request. Native texture-format/filter restrictions are the existing [sampling capability contract](../components/canvas-rendering.md#texture-sampling).
+
+### DrawPrimitive
+
+`public void DrawPrimitive(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, Texture? texture = null)`
+
+Copies one to four local points: one point, a two-point line, a triangle, or a quad split along vertices 0–2. Zero points and more than four throw ArgumentException. No polygon triangulation is performed. Missing colors repeat the first supplied color, or white if empty; missing UVs are zero. Extra attributes are ignored. Used values must be finite. Texture borrowing, errors, scope, transforms and modulation follow DrawPolygon. Atlas primitives sample the full underlying image with unchanged UVs.
+
+Points cover one framebuffer pixel; lines use a one-pixel flat-cap strip, even under nonuniform item or drawing scale. Coincident line endpoints draw nothing. These short primitives have no antialias fringe. Both backends consume triangle geometry; exact subpixel point/line coverage is subject to their rasterizer precision, including software coordinate truncation. Vertex snapping snaps transformed primitive endpoints before constructing the one-pixel footprint.
+
+Example inside an Entity subclass (uses only the public API):
+
+```csharp
+protected override void OnDraw()
+{
+    DrawColoredPolygon([new(0, 0), new(32, 0), new(16, 12), new(0, 32)], Colors.Cyan);
+    DrawPrimitive([new(40, 0), new(64, 0), new(40, 24)], [Colors.Red, Colors.Green, Colors.Blue], []);
+}
+```
+
+[CanvasPolygonTests](../../tests/Electron2D.Tests/CanvasPolygonTests.cs) checks winding/area, duplicate and collinear points, snapshots, attributes, atlas mapping, callback reentry/disposal, owner/scope guards, recording rollback, reflected transforms, overflow and zero warmed allocation across 1,000 redraw/replay iterations. [CanvasPolygonRenderingTests](../../tests/Electron2D.Tests/CanvasPolygonRenderingTests.cs) checks five readback frames per backend/language. See the [component source audit](../components/canvas-rendering.md#polygon-commands).
+
+
 <a id="m-electron2d-canvasitem-dispose-system-boolean"></a>
 ### `protected override void Dispose(bool disposing)`
 
-Disposes the scene hierarchy and clears retained canvas commands and this layer's subscribers in a finally block. Borrowed resources remain caller-owned.
+Disposes the scene hierarchy and clears retained canvas commands, pooled polygon storage and this layer's subscribers in a finally block. Borrowed resources remain caller-owned.
 
 <a id="m-electron2d-canvasitem-drawline-electron2d-vector2-electron2d-vector2-electron2d-color-system-single-system-boolean"></a>
 ### `public void DrawLine(Vector2 from, Vector2 to, Color color, float width = -1f, bool antialiased = false)`

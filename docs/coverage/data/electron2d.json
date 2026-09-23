@@ -14417,6 +14417,40 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CanvasItem.DrawColoredPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,Electron2D.Color,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawColoredPolygon",
+    "signature": "public System.Void DrawColoredPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E points, Electron2D.Color color, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E uvs = default, Electron2D.Texture texture = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "points",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "uvs",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": "default"
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CanvasItem.DrawLine(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Color,System.Single,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
@@ -14450,6 +14484,74 @@
         "name": "antialiased",
         "type": "System.Boolean",
         "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Color\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawPolygon",
+    "signature": "public System.Void DrawPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E points, System.ReadOnlySpan\u003CElectron2D.Color\u003E colors, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E uvs = default, Electron2D.Texture texture = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "points",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "colors",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Color\u003E",
+        "default": null
+      },
+      {
+        "name": "uvs",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": "default"
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawPrimitive(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Color\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawPrimitive",
+    "signature": "public System.Void DrawPrimitive(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E points, System.ReadOnlySpan\u003CElectron2D.Color\u003E colors, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E uvs, Electron2D.Texture texture = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "points",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "colors",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Color\u003E",
+        "default": null
+      },
+      {
+        "name": "uvs",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": "null"
       }
     ],
     "returnType": "System.Void",
@@ -17601,7 +17703,7 @@
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "CursorSetCustomImage",
-    "signature": "public System.Void CursorSetCustomImage(Electron2D.Resource image, Electron2D.DisplayServer.CursorShape shape = Arrow, Electron2D.Vector2 hotspot = null)",
+    "signature": "public System.Void CursorSetCustomImage(Electron2D.Resource image, Electron2D.DisplayServer.CursorShape shape = Arrow, Electron2D.Vector2 hotspot = default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -17619,7 +17721,7 @@
       {
         "name": "hotspot",
         "type": "Electron2D.Vector2",
-        "default": "null"
+        "default": "default"
       }
     ],
     "returnType": "System.Void",
@@ -23843,7 +23945,7 @@
     "kind": "method",
     "declaringType": "Electron2D.InputEvent",
     "name": "XformedBy",
-    "signature": "public virtual Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = null)",
+    "signature": "public virtual Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -23856,7 +23958,7 @@
       {
         "name": "localOffset",
         "type": "Electron2D.Vector2",
-        "default": "null"
+        "default": "default"
       }
     ],
     "returnType": "Electron2D.InputEvent",
@@ -24445,7 +24547,7 @@
     "kind": "method",
     "declaringType": "Electron2D.InputEventMagnifyGesture",
     "name": "XformedBy",
-    "signature": "public override Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = null)",
+    "signature": "public override Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -24458,7 +24560,7 @@
       {
         "name": "localOffset",
         "type": "Electron2D.Vector2",
-        "default": "null"
+        "default": "default"
       }
     ],
     "returnType": "Electron2D.InputEvent",
@@ -24583,7 +24685,7 @@
     "kind": "method",
     "declaringType": "Electron2D.InputEventMouseButton",
     "name": "XformedBy",
-    "signature": "public override Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = null)",
+    "signature": "public override Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -24596,7 +24698,7 @@
       {
         "name": "localOffset",
         "type": "Electron2D.Vector2",
-        "default": "null"
+        "default": "default"
       }
     ],
     "returnType": "Electron2D.InputEvent",
@@ -24684,7 +24786,7 @@
     "kind": "method",
     "declaringType": "Electron2D.InputEventMouseMotion",
     "name": "XformedBy",
-    "signature": "public override Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = null)",
+    "signature": "public override Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -24697,7 +24799,7 @@
       {
         "name": "localOffset",
         "type": "Electron2D.Vector2",
-        "default": "null"
+        "default": "default"
       }
     ],
     "returnType": "Electron2D.InputEvent",
@@ -24766,7 +24868,7 @@
     "kind": "method",
     "declaringType": "Electron2D.InputEventPanGesture",
     "name": "XformedBy",
-    "signature": "public override Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = null)",
+    "signature": "public override Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -24779,7 +24881,7 @@
       {
         "name": "localOffset",
         "type": "Electron2D.Vector2",
-        "default": "null"
+        "default": "default"
       }
     ],
     "returnType": "Electron2D.InputEvent",
@@ -24867,7 +24969,7 @@
     "kind": "method",
     "declaringType": "Electron2D.InputEventScreenDrag",
     "name": "XformedBy",
-    "signature": "public override Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = null)",
+    "signature": "public override Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -24880,7 +24982,7 @@
       {
         "name": "localOffset",
         "type": "Electron2D.Vector2",
-        "default": "null"
+        "default": "default"
       }
     ],
     "returnType": "Electron2D.InputEvent",
@@ -24949,7 +25051,7 @@
     "kind": "method",
     "declaringType": "Electron2D.InputEventScreenTouch",
     "name": "XformedBy",
-    "signature": "public override Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = null)",
+    "signature": "public override Electron2D.InputEvent XformedBy(Electron2D.Transform transform, Electron2D.Vector2 localOffset = default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -24962,7 +25064,7 @@
       {
         "name": "localOffset",
         "type": "Electron2D.Vector2",
-        "default": "null"
+        "default": "default"
       }
     ],
     "returnType": "Electron2D.InputEvent",
@@ -29669,7 +29771,7 @@
     "kind": "method",
     "declaringType": "Electron2D.PathCurve",
     "name": "AddPoint",
-    "signature": "public System.Void AddPoint(Electron2D.Vector2 position, Electron2D.Vector2 inHandle = null, Electron2D.Vector2 outHandle = null, System.Int32 index = -1)",
+    "signature": "public System.Void AddPoint(Electron2D.Vector2 position, Electron2D.Vector2 inHandle = default, Electron2D.Vector2 outHandle = default, System.Int32 index = -1)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -29682,12 +29784,12 @@
       {
         "name": "inHandle",
         "type": "Electron2D.Vector2",
-        "default": "null"
+        "default": "default"
       },
       {
         "name": "outHandle",
         "type": "Electron2D.Vector2",
-        "default": "null"
+        "default": "default"
       },
       {
         "name": "index",

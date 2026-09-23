@@ -1171,6 +1171,24 @@
       "godot": "RenderingServer::constant:CANVAS_LAYER_MAX",
       "state": "Implemented",
       "reason": "CanvasLayerTests and native CanvasLayerRenderingTests audit pinned canvas_layer.cpp, canvas_item.cpp and renderer_viewport.cpp: defaults, full/signed/singular matrix components, grouping before Z, sibling order, direct visibility boundaries, callback recovery, layer membership, input and distinct logical/render follow transforms. Typed finite checks, canonical matrix packing and detached ownership follow ADRs 0003/0004/0008/0023/0028. Wayland compatibility/GPU HLSL/GLSL and dummy pass. See docs/classes/CanvasLayer.md."
+    },
+    {
+      "godot": "CanvasItem::method:draw_polygon(PackedVector2Array:,PackedColorArray:,PackedVector2Array:,Texture2D:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawPolygon(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Color>,System.ReadOnlySpan<Electron2D.Vector2>,Electron2D.Texture)",
+      "state": "Implemented",
+      "reason": "ReadOnlySpan inputs are copied into reusable retained commands. Audited pinned CanvasItem, renderer_canvas_cull and triangulate sources: counts/defaults, either winding, concavity, degenerates, per-vertex attributes and immediate atlas UV mapping. Typed exceptions and finite checks follow ADR 0004. CanvasPolygonTests and five-frame CanvasPolygonRenderingTests verify inputs, rollback, reentry/disposal, snapshots, transformed/modulated vertices, live textures, native Wayland GPU/compatibility HLSL/GLSL and dummy/software. Warmed redraw/triangulation/replay allocates zero managed bytes. See docs/components/canvas-rendering.md#polygon-commands. Other native platforms unverified."
+    },
+    {
+      "godot": "CanvasItem::method:draw_colored_polygon(PackedVector2Array:,Color:,PackedVector2Array:,Texture2D:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawColoredPolygon(System.ReadOnlySpan<Electron2D.Vector2>,Electron2D.Color,System.ReadOnlySpan<Electron2D.Vector2>,Electron2D.Texture)",
+      "state": "Implemented",
+      "reason": "ReadOnlySpan inputs are copied into reusable retained commands. Audited pinned CanvasItem, renderer_canvas_cull and triangulate sources: counts/defaults, either winding, concavity, degenerates, per-vertex attributes and immediate atlas UV mapping. Typed exceptions and finite checks follow ADR 0004. CanvasPolygonTests and five-frame CanvasPolygonRenderingTests verify inputs, rollback, reentry/disposal, snapshots, transformed/modulated vertices, live textures, native Wayland GPU/compatibility HLSL/GLSL and dummy/software. Warmed redraw/triangulation/replay allocates zero managed bytes. See docs/components/canvas-rendering.md#polygon-commands. Other native platforms unverified."
+    },
+    {
+      "godot": "CanvasItem::method:draw_primitive(PackedVector2Array:,PackedColorArray:,PackedVector2Array:,Texture2D:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawPrimitive(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Color>,System.ReadOnlySpan<Electron2D.Vector2>,Electron2D.Texture)",
+      "state": "Partial",
+      "reason": "ReadOnlySpan inputs are copied into reusable retained commands. Audited pinned CanvasItem, renderer_canvas_cull and triangulate sources: counts/defaults, either winding, concavity, degenerates, per-vertex attributes and immediate atlas UV mapping. Typed exceptions and finite checks follow ADR 0004. CanvasPolygonTests and five-frame CanvasPolygonRenderingTests verify inputs, rollback, reentry/disposal, snapshots, transformed/modulated vertices, live textures, native Wayland GPU/compatibility HLSL/GLSL and dummy/software. Warmed redraw/triangulation/replay allocates zero managed bytes. See docs/components/canvas-rendering.md#polygon-commands. Other native platforms unverified. Points/lines execute via one-pixel triangle footprints, including texture/color interpolation and scaling; exact subpixel coverage against native hardware point/line raster rules remains unaudited. Triangle/quad layout and partial-attribute defaults are checked."
     }
   ],
   "statusGroups": [
@@ -1738,6 +1756,126 @@
       "godot": [
         "CanvasLayer::method:get_canvas()",
         "CanvasItem::method:get_canvas()"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "Retained triangle/material/texture rendering is available. Implement the complete stroked/curved canvas command family, including joins, widths, antialiasing and backend pixels; no missing rendering backend blocks these methods.",
+      "godot": [
+        "CanvasItem::method:draw_arc(Vector2:,float:,float:,float:,int:,Color:,float:,bool:)",
+        "CanvasItem::method:draw_circle(Vector2:,float:,Color:,bool:,float:,bool:)",
+        "CanvasItem::method:draw_dashed_line(Vector2:,Vector2:,Color:,float:,float:,bool:,bool:)",
+        "CanvasItem::method:draw_ellipse(Vector2:,float:,float:,Color:,bool:,float:,bool:)",
+        "CanvasItem::method:draw_ellipse_arc(Vector2:,float:,float:,float:,float:,int:,Color:,float:,bool:)",
+        "CanvasItem::method:draw_multiline(PackedVector2Array:,Color:,float:,bool:)",
+        "CanvasItem::method:draw_multiline_colors(PackedVector2Array:,PackedColorArray:,float:,bool:)",
+        "CanvasItem::method:draw_polyline(PackedVector2Array:,Color:,float:,bool:)",
+        "CanvasItem::method:draw_polyline_colors(PackedVector2Array:,PackedColorArray:,float:,bool:)"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "Implement retained animation-slice state and frame-clock evaluation in the existing canvas submission path; the renderer exists, so the initial GPU slice is no longer a blocker.",
+      "godot": [
+        "CanvasItem::method:draw_animation_slice(float:,float:,float:,float:)",
+        "CanvasItem::method:draw_end_animation()"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "First Font/TextServer shaping and glyph-atlas integration must implement these canvas consumers together, with layout, font metrics, outlines, direction and native text rendering; ordinary polygon drawing does not supply a font resource.",
+      "godot": [
+        "CanvasItem::method:draw_char(Font:,Vector2:,String:,int:,Color:,float:)",
+        "CanvasItem::method:draw_char_outline(Font:,Vector2:,String:,int:,int:,Color:,float:)",
+        "CanvasItem::method:draw_multiline_string(Font:,Vector2:,String:,int:HorizontalAlignment,float:,int:,int:,Color:,int:TextServer.LineBreakFlag,int:TextServer.JustificationFlag,int:TextServer.Direction,int:TextServer.Orientation,float:)",
+        "CanvasItem::method:draw_multiline_string_outline(Font:,Vector2:,String:,int:HorizontalAlignment,float:,int:,int:,int:,Color:,int:TextServer.LineBreakFlag,int:TextServer.JustificationFlag,int:TextServer.Direction,int:TextServer.Orientation,float:)",
+        "CanvasItem::method:draw_string(Font:,Vector2:,String:,int:HorizontalAlignment,float:,int:,Color:,int:TextServer.JustificationFlag,int:TextServer.Direction,int:TextServer.Orientation,float:)",
+        "CanvasItem::method:draw_string_outline(Font:,Vector2:,String:,int:HorizontalAlignment,float:,int:,int:,Color:,int:TextServer.JustificationFlag,int:TextServer.Direction,int:TextServer.Orientation,float:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "First StyleBox resource/rendering slice must implement this canvas consumer together with actual stylebox geometry, margins and native output.",
+      "godot": [
+        "CanvasItem::method:draw_style_box(StyleBox:,Rect2:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "First typed Mesh/MultiMesh resource, upload and lifetime integration must implement these retained canvas consumers together; raw polygon commands do not establish mesh identities or instancing.",
+      "godot": [
+        "CanvasItem::method:draw_mesh(Mesh:,Texture2D:,Transform2D:,Color:)",
+        "CanvasItem::method:draw_multimesh(MultiMesh:,Texture2D:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "First glyph-distance-field/LCD sampling and blend integration must implement these texture commands together, including shader/backend capability checks and pixel output; ordinary sampled triangles are insufficient.",
+      "godot": [
+        "CanvasItem::method:draw_lcd_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:)",
+        "CanvasItem::method:draw_msdf_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:,float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "First per-item shader parameter interface must implement typed parameter setters/getters together with SPIR-V reflection, retained instance values, material overrides and verified GPU binding; shared material uniforms are already available but are not instance parameters.",
+      "godot": [
+        "CanvasItem::method:get_instance_shader_parameter(StringName:)",
+        "CanvasItem::method:set_instance_shader_parameter(StringName:,Variant:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "First backend-neutral canvas resource-identity/lifetime slice must implement typed low-level server consumers and ownership together; the retained renderer has no public canvas-item handle.",
+      "godot": [
+        "CanvasItem::method:get_canvas_item()"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "First alpha-mask canvas composition slice must implement ClipChildren modes together with intermediate render surfaces, mask capture/composition, ordering and both backend capability/pixel checks; a stored mode without composition is not implementation.",
+      "godot": [
+        "CanvasItem::enum:ClipChildrenMode",
+        "CanvasItem::enum_value:ClipChildrenMode.CLIP_CHILDREN_AND_DRAW",
+        "CanvasItem::enum_value:ClipChildrenMode.CLIP_CHILDREN_DISABLED",
+        "CanvasItem::enum_value:ClipChildrenMode.CLIP_CHILDREN_MAX",
+        "CanvasItem::enum_value:ClipChildrenMode.CLIP_CHILDREN_ONLY",
+        "CanvasItem::property:clip_children"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "First Light resource and 2D lighting backend slice must connect LightMask to light selection and actual rendering, with stored state and pixel checks.",
+      "godot": [
+        "CanvasItem::property:light_mask"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "First World scene/physics ownership integration must implement world access and transition notification together; no world identity or physics/render registration is currently provided.",
+      "godot": [
+        "CanvasItem::constant:NOTIFICATION_WORLD_2D_CHANGED",
+        "CanvasItem::method:get_world_2d()"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "First Font/TextServer or DPITexture oversampling integration must implement scale inheritance, invalidation, resource reference accounting and raster output together; ordinary texture scaling is not oversampling.",
+      "godot": [
+        "CanvasItem::enum:OversamplingWithScale",
+        "CanvasItem::enum_value:OversamplingWithScale.OVERSAMPLING_WITH_SCALE_DISABLED",
+        "CanvasItem::enum_value:OversamplingWithScale.OVERSAMPLING_WITH_SCALE_ENABLED",
+        "CanvasItem::enum_value:OversamplingWithScale.OVERSAMPLING_WITH_SCALE_MAX",
+        "CanvasItem::enum_value:OversamplingWithScale.OVERSAMPLING_WITH_SCALE_PARENT_NODE",
+        "CanvasItem::property:oversampling_with_scale"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ReadOnlySpan inputs are copied into reusable retained commands. Audited pinned CanvasItem, renderer_canvas_cull and triangulate sources: counts/defaults, either winding, concavity, degenerates, per-vertex attributes and immediate atlas UV mapping. Typed exceptions and finite checks follow ADR 0004. CanvasPolygonTests and five-frame CanvasPolygonRenderingTests verify inputs, rollback, reentry/disposal, snapshots, transformed/modulated vertices, live textures, native Wayland GPU/compatibility HLSL/GLSL and dummy/software. Warmed redraw/triangulation/replay allocates zero managed bytes. See docs/components/canvas-rendering.md#polygon-commands. Other native platforms unverified.",
+      "godot": [
+        "CanvasItem::method:draw_polygon(PackedVector2Array:,PackedColorArray:,PackedVector2Array:,Texture2D:)",
+        "CanvasItem::method:draw_colored_polygon(PackedVector2Array:,Color:,PackedVector2Array:,Texture2D:)"
       ]
     }
   ],

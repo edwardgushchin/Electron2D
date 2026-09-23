@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>A rectangular view of a borrowed texture, with optional drawing margins.</summary>
 /// <remarks>Views can be nested without copying GPU pixels. Drawing uses the region; material bindings use the
-/// full underlying texture. The atlas is never owned or disposed by this resource. Coordinate rectangles must
+/// full underlying texture. Canvas polygons remap the immediate region; short primitives use full-image UVs. The atlas is never owned or disposed by this resource. Coordinate rectangles must
 /// be finite; integer image queries also require representable pixel coordinates. Atlas graph access is serialized;
 /// custom source callbacks must not wait for another thread to access an atlas during a query or draw.</remarks>
 public sealed class AtlasTexture : Texture
@@ -251,6 +251,24 @@ public sealed class AtlasTexture : Texture
                 while (source is AtlasTexture atlas) { atlas.ThrowIfDisposed(); source = atlas._atlas; }
                 return source;
             }
+        }
+    }
+
+    internal Texture? ResolvePolygonTexture(bool remap, out Rect? uvMapping)
+    {
+        lock (GraphGate)
+        {
+            ThrowIfDisposed();
+            var atlas = _atlas; var region = _region; var source = RenderingTexture;
+            uvMapping = null;
+            if (remap && atlas is not null)
+            {
+                var size = atlas.GetSize();
+                var mapping = new Rect(region.Position / size, region.Size / size);
+                if (!mapping.IsFinite()) throw new ArgumentException("Atlas texture coordinates overflowed.");
+                uvMapping = mapping;
+            }
+            return source;
         }
     }
 

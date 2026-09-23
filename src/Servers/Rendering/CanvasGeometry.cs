@@ -7,12 +7,13 @@ internal readonly record struct CanvasVertex(Vector2 Position, Color Color, Vect
 
 internal readonly record struct CanvasCommand(bool Line, Vector2 A, Vector2 B, Color Color, bool Filled,
     float Width, bool Antialiased, Transform Transform, Texture? Texture = null, Rect Source = default,
-    bool Transpose = false, bool ClipUV = false, bool Tile = false);
+    bool Transpose = false, bool ClipUV = false, bool Tile = false, CanvasPolygon? Polygon = null);
 
 internal static class CanvasGeometry
 {
     internal static void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false)
     {
+        if (command.Polygon is { } polygon) { polygon.Append(output, transform, modulation, snapVertices); return; }
         var first = output.Count;
         var color = command.Color * modulation;
         if (!color.IsFinite()) throw new InvalidOperationException("Canvas modulation overflowed finite colors.");

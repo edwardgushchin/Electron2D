@@ -41,6 +41,10 @@ def check_texture_pages(pages, upstream):
 def main():
     upstream = json.loads((DATA / "godot-4.7.2.json").read_text())
     engine = json.loads((DATA / "electron2d.json").read_text())
+    polygon = next(item for item in engine if item.get("name") == "DrawPolygon")
+    defaults = {p["name"]: p["default"] for p in polygon["parameters"]}
+    assert defaults["uvs"] == "default" and defaults["texture"] == "null", "Struct defaults are not nullable reference defaults"
+    assert "uvs = default" in polygon["signature"] and "texture = null" in polygon["signature"]
     vector = next(item for item in upstream["types"] if item["name"] == "Vector2")
     constructors = [item for item in engine if item["declaringType"] == "Electron2D.Vector2"]
     copies = [item for item in vector["members"] if item["kind"] == "constructor" and

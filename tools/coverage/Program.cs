@@ -43,7 +43,7 @@ foreach (var type in typeof(ElectronObject).Assembly.GetTypes()
     void Add(string kind, MemberInfo member, ParameterInfo[] parameters, string? returnType, string? value)
     {
         var parameterInfo = parameters.Select(parameter => new ApiParameter(
-            parameter.Name ?? "", TypeName(parameter.ParameterType), parameter.IsOptional ? Value(parameter.DefaultValue) : null)).ToArray();
+            parameter.Name ?? "", TypeName(parameter.ParameterType), parameter.IsOptional ? ParameterDefault(parameter) : null)).ToArray();
         var signature = Declaration(member, parameters, returnType);
         var methodName = member is MethodInfo method && method.IsGenericMethodDefinition
             ? $"{member.Name}`{method.GetGenericArguments().Length}"
@@ -131,7 +131,7 @@ static string Declaration(MemberInfo member, ParameterInfo[] parameters, string?
     };
     var arguments = string.Join(", ", parameters.Select(parameter =>
         $"{(parameter.IsOut ? "out " : parameter.ParameterType.IsByRef ? "ref " : "")}{TypeName(parameter.ParameterType.IsByRef ? parameter.ParameterType.GetElementType()! : parameter.ParameterType)} {parameter.Name}" +
-        (parameter.IsOptional ? $" = {Value(parameter.DefaultValue)}" : "")));
+        (parameter.IsOptional ? $" = {ParameterDefault(parameter)}" : "")));
     var prefix = $"{VisibilityMember(member)}{modifier} ";
     return member switch
     {
@@ -155,6 +155,10 @@ static string Accessors(PropertyInfo property)
         (property.SetMethod is null || !VisibleMethod(property.SetMethod) ? "" :
             (VisibilityMember(property.SetMethod) == visibility ? "" : VisibilityMember(property.SetMethod) + " ") + "set;");
 }
+
+static string ParameterDefault(ParameterInfo parameter) =>
+    parameter.DefaultValue is null && parameter.ParameterType.IsValueType && Nullable.GetUnderlyingType(parameter.ParameterType) is null
+        ? "default" : Value(parameter.DefaultValue);
 
 static string Value(object? value) => value switch
 {

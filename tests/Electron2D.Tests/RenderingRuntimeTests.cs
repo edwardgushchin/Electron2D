@@ -86,6 +86,15 @@ internal static partial class RenderingRuntimeTests
                 }
                 return;
             }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POLYGONS") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasPolygons(backend);
+                    if (backend == "gpu") { VerifyCanvasPolygons(backend, "CanvasHLSL"); VerifyCanvasPolygons(backend, "CanvasGLSL"); }
+                }
+                return;
+            }
             VerifyImageDependency();
             VerifyResources();
             VerifyParameters("MaterialHlsl");
@@ -103,7 +112,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyCanvasCoordinates(backend); VerifyViewportCoordinateInput(backend);
                 VerifyCamera(backend); VerifyTransformNotifications(backend);
                 VerifyCanvasLayer(backend);
-                VerifyCanvasMasks(backend);
+                VerifyCanvasMasks(backend); VerifyCanvasPolygons(backend);
                 if (backend == "compatibility") VerifyCulledShader();
                 VerifySceneHierarchy(backend);
                 VerifyCanvasOrdering(backend);
@@ -134,6 +143,7 @@ internal static partial class RenderingRuntimeTests
                     VerifyTransformNotifications(backend, "CanvasHLSL"); VerifyTransformNotifications(backend, "CanvasGLSL");
                     VerifyCanvasLayer(backend, "CanvasHLSL"); VerifyCanvasLayer(backend, "CanvasGLSL");
                     VerifyCanvasMasks(backend, "CanvasHLSL"); VerifyCanvasMasks(backend, "CanvasGLSL");
+                    VerifyCanvasPolygons(backend, "CanvasHLSL"); VerifyCanvasPolygons(backend, "CanvasGLSL");
                     VerifyMaterialFrame("MaterialHlsl");
                     VerifyMaterialFrame("MaterialGlsl");
                     VerifyTextureFrame("TextureHlsl");

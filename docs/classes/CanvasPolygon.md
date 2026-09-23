@@ -1,0 +1,33 @@
+# CanvasPolygon
+
+Last updated: 2026-09-23
+
+- Declaration: `internal sealed class CanvasPolygon`
+- Source: [CanvasPolygon.cs](../../src/Servers/Rendering/CanvasPolygon.cs)
+- Component: [Canvas rendering](../components/canvas-rendering.md#polygon-commands)
+
+## Description
+
+Internal retained vertex/index storage owned by CanvasItem. It is not a public resource or an independently disposable object. CanvasItem keeps one reusable instance per recorded polygon/primitive position, resets its cursor before recording and clears the pool on disposal. Borrowed textures stay in CanvasCommand, not this object. All access runs on the recording/render owner thread.
+
+## Internal API
+
+| Member | Contract |
+| --- | --- |
+| `CanvasVertex[] Vertices`, `int VertexCount` | Copied local vertices, finite colors and normalized UVs; trailing capacity is unused. |
+| `int[] Indices`, `int IndexCount` | Filled triangle indices, with reusable capacity. |
+| `void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, bool primitive)` | Copies validated attributes; triangulates a contour or creates fixed triangle/quad indices. |
+| `void RemapUV(Rect mapping)` | Applies normalized atlas origin/scale to stored UVs, rejecting nonfinite output. |
+| `void Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap)` | Appends transformed/modulated triangles, or one-pixel point/line geometry. |
+
+## Runtime behavior
+
+Set is called only after CanvasItem validates counts, values, resource lifetime and drawing scope. Triangulate uses a reusable index array, normalizes winding, visits consecutive ears and relaxes the convexity/edge test after a stalled pass to permit degenerate final ears. A second stalled pass throws ArgumentException. Self-intersections and holes have no supported contract. Double intermediates keep finite float coordinates from overflowing the determinant calculation. Ear selection has cubic worst-case complexity; large constantly redrawn contours need separate performance work.
+
+RemapUV runs before the command is committed. Append rejects transformed positions or modulated colors that overflow. Point/line endpoints transform before expansion so their width stays one framebuffer pixel; coincident two-point lines produce nothing. Filled geometry retains its stored triangulation while positions and colors transform every submission. Vertex snapping does not modify the recorded local values.
+
+Recording failure may leave scratch contents changed, but no command references that uncommitted pool slot. Existing recorded commands have distinct pool entries. An uncaught drawing callback failure clears all commands; retry starts at slot zero. Growth can allocate, while fixed-capacity redraw, triangulation and replay do not.
+
+## Verification
+
+[CanvasPolygonTests](../../tests/Electron2D.Tests/CanvasPolygonTests.cs) covers area/winding, attributes, invalid contours, pooling, failure/retry, custom callback reentry, lifetime, transforms and allocation. [CanvasPolygonRenderingTests](../../tests/Electron2D.Tests/CanvasPolygonRenderingTests.cs) covers native sampling and pixels. Public use is documented through [CanvasItem](CanvasItem.md#drawpolygon); this internal helper has no user-facing example or public compatibility row.

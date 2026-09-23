@@ -5,7 +5,7 @@ namespace Electron2D;
 /// <summary>Renders the active root window's retained two-dimensional canvas commands.</summary>
 /// <remarks>Engine.Run owns startup, frame submission and shutdown on the scene owner thread. Geometry uses
 /// source-alpha blending into an RGBA8 framebuffer. GPU initialization may fall back according to project settings.
-/// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, lines and image textures are integrated. Shader materials require the GPU path. Lights, clipping, offscreen public viewports and device recovery
+/// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, lines, filled polygons, short primitives and image textures are integrated. Shader materials require the GPU path. Lights, clipping, offscreen public viewports and device recovery
 /// are not integrated. Owned SDL handles remain internal; DisplayServer can expose borrowed native context identities.</remarks>
 public sealed class RenderingServer : ElectronObject
 {

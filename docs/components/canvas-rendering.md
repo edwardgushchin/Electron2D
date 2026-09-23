@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 ## Scope and owned types
 
-The component owns [RenderingServer](../classes/RenderingServer.md) and its internal GPU and compatibility backends. [CanvasItem](../classes/CanvasItem.md) records rectangle, line and texture commands; [Sprite](../classes/Sprite.md) supplies the ready-to-use texture/frame/region node; [AnimatedSprite](../classes/AnimatedSprite.md) supplies timed playback and consumes [SpriteFrames](../classes/SpriteFrames.md) and [SpriteFrames.LoopMode](../classes/SpriteFrames.LoopMode.md) from Resources; [Texture](../classes/Texture.md) and [shader materials](shader-materials.md) provide borrowed resources. Engine.Run owns the root Window and the renderer lifetime. This is an executable part of the rendering vertical slice, with broader API coverage still incomplete.
+The component owns [RenderingServer](../classes/RenderingServer.md) and its internal GPU and compatibility backends. [CanvasItem](../classes/CanvasItem.md) records rectangle, line, polygon, short primitive and texture commands; [Sprite](../classes/Sprite.md) supplies the ready-to-use texture/frame/region node; [AnimatedSprite](../classes/AnimatedSprite.md) supplies timed playback and consumes [SpriteFrames](../classes/SpriteFrames.md) and [SpriteFrames.LoopMode](../classes/SpriteFrames.LoopMode.md) from Resources; [Texture](../classes/Texture.md) and [shader materials](shader-materials.md) provide borrowed resources. Engine.Run owns the root Window and the renderer lifetime. This is an executable part of the rendering vertical slice, with broader API coverage still incomplete.
 
 ## Runtime flow
 
@@ -75,7 +75,7 @@ TopLevel items and items below neutral Node parents are independent canvas roots
 
 Nodes borrow materials and textures; native texture caches belong to the backend. Updates reuse compatible allocations; replacement recreates them. Unused cached resources are released, and shutdown releases all backend state. A disposed or unreadable texture fails when its retained drawing is consumed. A custom Texture may override drawing with ordinary CanvasItem geometry instead of providing an image.
 
-Current framebuffer and blending precision is RGBA8. GPU samples byte and supported floating-point images, including stored mips. Compatibility support depends on the native driver; the tested drivers reject float textures explicitly. The component has no lights, clipping hierarchy, polygon/mesh API, public offscreen targets, GUI drawing, independent window renderers or device-loss recovery. Other targets remain unverified under [ADR 0021](../decisions/product.md#adr-0021).
+Current framebuffer and blending precision is RGBA8. GPU samples byte and supported floating-point images, including stored mips. Compatibility support depends on the native driver; the tested drivers reject float textures explicitly. The component has no lights, clipping hierarchy, mesh API, public offscreen targets, GUI drawing, independent window renderers or device-loss recovery. Other targets remain unverified under [ADR 0021](../decisions/product.md#adr-0021).
 
 ## Sampling verification
 
@@ -190,3 +190,23 @@ The full Wayland renderer regression passed after this change. The self-containe
 ## Transform notification integration
 
 [Canvas transform delivery](scene-hierarchy.md#transform-invalidation-and-delivery) coalesces global notifications at scene safe phases and supports ForceUpdateTransform. Ordinary item transforms are already current for submission; Camera publishes its view when its queued notification or selected frame callback runs. Native checks distinguish deferred movement after the scene flush from a forced update before drawing on both backends and HLSL/GLSL. No redraw is needed for these changes.
+
+## Polygon commands
+
+CanvasItem.DrawPolygon and DrawColoredPolygon record filled convex/concave contours; DrawPrimitive records one through four vertices. The retained [CanvasPolygon](../classes/CanvasPolygon.md) storage owns vertex attributes, triangle indices and triangulation scratch space. CanvasItem reuses these buffers by command position across redraws and releases them on disposal. Unchanged replay never triangulates. Warmed redraw plus triangulation and replay also allocates zero managed bytes for unchanged capacities. Ear clipping has cubic worst-case time; no performance guarantee for large, constantly changing contours is claimed.
+
+The same material/texture/sampling batches carry polygon vertices on GPU and compatibility, including HLSL/GLSL and live source pixel replacement. Input arrays are copied; transforms/modulation remain live. Attribute validation and triangulation failure do not insert a partial command. Failed user drawing clears the whole recording for retry. Atlas mapping captures the immediate region and ultimate texture identity before recording, using the graph gate. Custom size callbacks finish before choosing a pool slot, preserving reentrant drawing and disposal guards. See the [public method contracts](../classes/CanvasItem.md#drawpolygon).
+
+### Polygon source audit
+
+The pinned [CanvasItem drawing methods](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/canvas_item.cpp), [canvas command validation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_canvas_cull.cpp) and [triangulation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/math/triangulate.cpp) establish counts, default/per-vertex attributes, atlas handling, winding normalization and relaxed ear selection. Electron2D uses typed ReadOnlySpan inputs and exceptions under ADR 0004. Determinants and area use double intermediates to avoid overflow on finite float inputs. The comparison source's license is available in [coverage](../coverage/GODOT-LICENSE.txt).
+
+Polygon atlas UV remapping differs from Texture.DrawRectRegion: margins, clipping, recursive view mapping and zero-size expansion are not applied. Primitive atlas UVs do not remap at all. All input origins use the same existing texture and material checks. One-pixel points/lines are emitted as triangles, with backend-specific subpixel coverage; exact native hardware point/line raster rules are not yet a verified match, so DrawPrimitive remains Partial in compatibility coverage.
+
+The remaining drawing family is classified individually in coverage: polylines, dashed lines, arcs/circles/ellipses and animation-slice timing need actual command implementations; fonts/styleboxes/meshes depend on their absent resource integrations. Clipping requires alpha-mask composition and intermediate render surfaces on both backends, not just a stored flag. No new public contour utility, Polygon node, mesh or clipping API is implied by these commands.
+
+### Polygon verification
+
+CanvasPolygonTests verifies copied attributes, both windings, concave area, duplicate/collinear vertices, failed triangulation, invalid values/counts, atlas snapshots, callback reentry/disposal, owner/scope guards, rollback/retry, transforms/overflow and zero warmed managed allocation over 1,000 redraw/replay iterations. CanvasPolygonRenderingTests verifies five frames covering concavity, color interpolation, normalized UVs and clamp, atlas metadata/redraw, live pixel updates, one-pixel point/line footprints, triangles/quads and modulation. Targeted checks pass on Linux Wayland compatibility/GPU with HLSL/GLSL and dummy/software. Other platforms and owner visual acceptance remain unverified.
+
+The final self-contained Linux x64 test publish passes the complete renderer suite on Wayland and the targeted polygon sequence on dummy/software, launched from its publish directory with `LD_LIBRARY_PATH` unset and `PATH=/usr/bin:/bin`. Commands: `dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o /tmp/electron2d-polygon-publish`, then `env -u LD_LIBRARY_PATH PATH=/usr/bin:/bin ELECTRON2D_TEST_RENDER=1 SDL_VIDEODRIVER=wayland ./Electron2D.Tests`; the software command additionally sets `ELECTRON2D_TEST_POLYGONS=1` and uses `SDL_VIDEODRIVER=dummy`. Repeated nonfatal GTK locale warnings remain an existing host condition. This verifies package delivery for the tested operations, not other platforms or hardware point/line raster parity.
