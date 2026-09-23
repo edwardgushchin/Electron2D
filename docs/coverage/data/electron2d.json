@@ -185,6 +185,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Curve",
+    "kind": "type",
+    "declaringType": "Electron2D.Curve",
+    "name": "Curve",
+    "signature": "public sealed class Electron2D.Curve",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Curve.TangentMode",
+    "kind": "type",
+    "declaringType": "Electron2D.Curve.TangentMode",
+    "name": "TangentMode",
+    "signature": "public enum Electron2D.Curve.TangentMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.DeepDuplicateMode",
     "kind": "type",
     "declaringType": "Electron2D.DeepDuplicateMode",
@@ -1204,6 +1237,21 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PathCurve",
+    "kind": "type",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "PathCurve",
+    "signature": "public sealed class Electron2D.PathCurve",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -3125,6 +3173,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Curve..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Curve",
+    "name": ".ctor",
+    "signature": "public Curve()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.ElectronObject..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.ElectronObject",
@@ -3442,6 +3503,19 @@
     "declaringType": "Electron2D.PackedScene",
     "name": ".ctor",
     "signature": "public PackedScene()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PathCurve..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PathCurve",
+    "name": ".ctor",
+    "signature": "public PathCurve()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -4475,6 +4549,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ClockDirection",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Curve.TangentMode.Count()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Curve.TangentMode",
+    "name": "Count",
+    "signature": "public const Electron2D.Curve.TangentMode Count = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Curve.TangentMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Curve.TangentMode.Free()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Curve.TangentMode",
+    "name": "Free",
+    "signature": "public const Electron2D.Curve.TangentMode Free = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Curve.TangentMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Curve.TangentMode.Linear()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Curve.TangentMode",
+    "name": "Linear",
+    "signature": "public const Electron2D.Curve.TangentMode Linear = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Curve.TangentMode",
     "value": "1"
   },
   {
@@ -11693,6 +11806,32 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Curve.DomainChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Curve",
+    "name": "DomainChanged",
+    "signature": "public event System.Action DomainChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Curve.RangeChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Curve",
+    "name": "RangeChanged",
+    "signature": "public event System.Action RangeChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.DisplayServer.CloseRequested()",
     "kind": "event",
     "declaringType": "Electron2D.DisplayServer",
@@ -14650,6 +14789,503 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.AddPoint(Electron2D.Vector2,System.Single,System.Single,Electron2D.Curve.TangentMode,Electron2D.Curve.TangentMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "AddPoint",
+    "signature": "public System.Int32 AddPoint(Electron2D.Vector2 position, System.Single leftTangent = 0f, System.Single rightTangent = 0f, Electron2D.Curve.TangentMode leftMode = Free, Electron2D.Curve.TangentMode rightMode = Free)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "leftTangent",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "rightTangent",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "leftMode",
+        "type": "Electron2D.Curve.TangentMode",
+        "default": "Free"
+      },
+      {
+        "name": "rightMode",
+        "type": "Electron2D.Curve.TangentMode",
+        "default": "Free"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.Bake()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "Bake",
+    "signature": "public System.Void Bake()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.CleanDupes()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "CleanDupes",
+    "signature": "public System.Void CleanDupes()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.ClearPoints()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "ClearPoints",
+    "signature": "public System.Void ClearPoints()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.GetDomainRange()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "GetDomainRange",
+    "signature": "public System.Single GetDomainRange()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.GetPointLeftMode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "GetPointLeftMode",
+    "signature": "public Electron2D.Curve.TangentMode GetPointLeftMode(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Curve.TangentMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.GetPointLeftTangent(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "GetPointLeftTangent",
+    "signature": "public System.Single GetPointLeftTangent(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.GetPointPosition(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "GetPointPosition",
+    "signature": "public Electron2D.Vector2 GetPointPosition(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.GetPointRightMode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "GetPointRightMode",
+    "signature": "public Electron2D.Curve.TangentMode GetPointRightMode(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Curve.TangentMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.GetPointRightTangent(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "GetPointRightTangent",
+    "signature": "public System.Single GetPointRightTangent(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.GetValueRange()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "GetValueRange",
+    "signature": "public System.Single GetValueRange()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.RemovePoint(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "RemovePoint",
+    "signature": "public System.Void RemovePoint(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.Sample(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "Sample",
+    "signature": "public System.Single Sample(System.Single offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.SampleBaked(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "SampleBaked",
+    "signature": "public System.Single SampleBaked(System.Single offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.SetPointLeftMode(System.Int32,Electron2D.Curve.TangentMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "SetPointLeftMode",
+    "signature": "public System.Void SetPointLeftMode(System.Int32 index, Electron2D.Curve.TangentMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.Curve.TangentMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.SetPointLeftTangent(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "SetPointLeftTangent",
+    "signature": "public System.Void SetPointLeftTangent(System.Int32 index, System.Single tangent)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "tangent",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.SetPointOffset(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "SetPointOffset",
+    "signature": "public System.Int32 SetPointOffset(System.Int32 index, System.Single offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.SetPointRightMode(System.Int32,Electron2D.Curve.TangentMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "SetPointRightMode",
+    "signature": "public System.Void SetPointRightMode(System.Int32 index, Electron2D.Curve.TangentMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.Curve.TangentMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.SetPointRightTangent(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "SetPointRightTangent",
+    "signature": "public System.Void SetPointRightTangent(System.Int32 index, System.Single tangent)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "tangent",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve.SetPointValue(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve",
+    "name": "SetPointValue",
+    "signature": "public System.Void SetPointValue(System.Int32 index, System.Single y)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "y",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -26862,6 +27498,501 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.AddPoint(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "AddPoint",
+    "signature": "public System.Void AddPoint(Electron2D.Vector2 position, Electron2D.Vector2 inHandle = null, Electron2D.Vector2 outHandle = null, System.Int32 index = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "inHandle",
+        "type": "Electron2D.Vector2",
+        "default": "null"
+      },
+      {
+        "name": "outHandle",
+        "type": "Electron2D.Vector2",
+        "default": "null"
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.ClearPoints()",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "ClearPoints",
+    "signature": "public System.Void ClearPoints()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.GetBakedLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "GetBakedLength",
+    "signature": "public System.Single GetBakedLength()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.GetBakedPoints()",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "GetBakedPoints",
+    "signature": "public Electron2D.Vector2[] GetBakedPoints()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.GetClosestOffset(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "GetClosestOffset",
+    "signature": "public System.Single GetClosestOffset(Electron2D.Vector2 toPoint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "toPoint",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.GetClosestPoint(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "GetClosestPoint",
+    "signature": "public Electron2D.Vector2 GetClosestPoint(Electron2D.Vector2 toPoint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "toPoint",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.GetPointIn(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "GetPointIn",
+    "signature": "public Electron2D.Vector2 GetPointIn(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.GetPointOut(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "GetPointOut",
+    "signature": "public Electron2D.Vector2 GetPointOut(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.GetPointPosition(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "GetPointPosition",
+    "signature": "public Electron2D.Vector2 GetPointPosition(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.RemovePoint(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "RemovePoint",
+    "signature": "public System.Void RemovePoint(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.Sample(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "Sample",
+    "signature": "public Electron2D.Vector2 Sample(System.Int32 index, System.Single t)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "t",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.SampleBaked(System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "SampleBaked",
+    "signature": "public Electron2D.Vector2 SampleBaked(System.Single offset = 0f, System.Boolean cubic = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "cubic",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.SampleBakedWithRotation(System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "SampleBakedWithRotation",
+    "signature": "public Electron2D.Transform SampleBakedWithRotation(System.Single offset = 0f, System.Boolean cubic = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "cubic",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.Samplef(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "Samplef",
+    "signature": "public Electron2D.Vector2 Samplef(System.Single offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.SetPointIn(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "SetPointIn",
+    "signature": "public System.Void SetPointIn(System.Int32 index, Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.SetPointOut(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "SetPointOut",
+    "signature": "public System.Void SetPointOut(System.Int32 index, Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.SetPointPosition(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "SetPointPosition",
+    "signature": "public System.Void SetPointPosition(System.Int32 index, Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.Tessellate(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "Tessellate",
+    "signature": "public Electron2D.Vector2[] Tessellate(System.Int32 maxStages = 5, System.Single toleranceDegrees = 4f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "maxStages",
+        "type": "System.Int32",
+        "default": "5"
+      },
+      {
+        "name": "toleranceDegrees",
+        "type": "System.Single",
+        "default": "4f"
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathCurve.TessellateEvenLength(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "TessellateEvenLength",
+    "signature": "public Electron2D.Vector2[] TessellateEvenLength(System.Int32 maxStages = 5, System.Single toleranceLength = 20f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "maxStages",
+        "type": "System.Int32",
+        "default": "5"
+      },
+      {
+        "name": "toleranceLength",
+        "type": "System.Single",
+        "default": "20f"
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
     "value": null
   },
   {
@@ -40423,6 +41554,84 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Curve.BakeResolution()",
+    "kind": "property",
+    "declaringType": "Electron2D.Curve",
+    "name": "BakeResolution",
+    "signature": "public System.Int32 BakeResolution { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Curve.MaxDomain()",
+    "kind": "property",
+    "declaringType": "Electron2D.Curve",
+    "name": "MaxDomain",
+    "signature": "public System.Single MaxDomain { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Curve.MaxValue()",
+    "kind": "property",
+    "declaringType": "Electron2D.Curve",
+    "name": "MaxValue",
+    "signature": "public System.Single MaxValue { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Curve.MinDomain()",
+    "kind": "property",
+    "declaringType": "Electron2D.Curve",
+    "name": "MinDomain",
+    "signature": "public System.Single MinDomain { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Curve.MinValue()",
+    "kind": "property",
+    "declaringType": "Electron2D.Curve",
+    "name": "MinValue",
+    "signature": "public System.Single MinValue { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Curve.PointCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.Curve",
+    "name": "PointCount",
+    "signature": "public System.Int32 PointCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.DirAccess.IncludeHidden()",
     "kind": "property",
     "declaringType": "Electron2D.DirAccess",
@@ -42370,6 +43579,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PathCurve.BakeInterval()",
+    "kind": "property",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "BakeInterval",
+    "signature": "public System.Single BakeInterval { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PathCurve.PointCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.PathCurve",
+    "name": "PointCount",
+    "signature": "public System.Int32 PointCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

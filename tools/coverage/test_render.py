@@ -53,6 +53,9 @@ def main():
 
     pages, summary = render()
     check_texture_pages(pages, upstream)
+    for name in ("Path2D", "PathFollow2D", "CurveTexture", "CurveXYZTexture"):
+        rows = [line for line in pages[CLASS_PAGES / f"{name}.md"].splitlines() if line.startswith("| [`")]
+        assert rows and all(" | Unimplemented | " in line for line in rows), f"Independent curve consumer classified as blocked: {name}"
     rendering_rows = pages[CLASS_PAGES / "RenderingServer.md"].splitlines()
     for kind, name in [('method', 'camera_create('), ('method', 'light_set_color('),
                        ('method', 'texture_3d_create('), ('method', 'voxel_gi_create('),

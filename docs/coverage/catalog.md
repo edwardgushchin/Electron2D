@@ -208,11 +208,11 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CryptoKey](classes/CryptoKey.md) | Resource | Blocked | 5 |
 | [Cubemap](classes/Cubemap.md) | ImageTextureLayered | Excluded | 1 |
 | [CubemapArray](classes/CubemapArray.md) | ImageTextureLayered | Blocked | 1 |
-| [Curve](classes/Curve.md) | Resource | Unimplemented | 37 |
-| [Curve2D](classes/Curve2D.md) | Resource | Unimplemented | 24 |
+| [Curve](classes/Curve.md) | Resource | Implemented | 37 |
+| [Curve2D](classes/Curve2D.md) | Resource | Implemented | 24 |
 | [Curve3D](classes/Curve3D.md) | Resource | Excluded | 32 |
-| [CurveTexture](classes/CurveTexture.md) | Texture2D | Blocked | 7 |
-| [CurveXYZTexture](classes/CurveXYZTexture.md) | Texture2D | Blocked | 5 |
+| [CurveTexture](classes/CurveTexture.md) | Texture2D | Unimplemented | 7 |
+| [CurveXYZTexture](classes/CurveXYZTexture.md) | Texture2D | Unimplemented | 5 |
 | [CylinderMesh](classes/CylinderMesh.md) | PrimitiveMesh | Blocked | 7 |
 | [CylinderShape3D](classes/CylinderShape3D.md) | Shape3D | Excluded | 2 |
 | [DPITexture](classes/DPITexture.md) | Texture2D | Blocked | 11 |
@@ -599,9 +599,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ParallaxBackground](classes/ParallaxBackground.md) | CanvasLayer | Blocked | 7 |
 | [ParallaxLayer](classes/ParallaxLayer.md) | Node2D | Blocked | 4 |
 | [ParticleProcessMaterial](classes/ParticleProcessMaterial.md) | Material | Blocked | 166 |
-| [Path2D](classes/Path2D.md) | Node2D | Blocked | 1 |
+| [Path2D](classes/Path2D.md) | Node2D | Unimplemented | 1 |
 | [Path3D](classes/Path3D.md) | Node3D | Excluded | 4 |
-| [PathFollow2D](classes/PathFollow2D.md) | Node2D | Blocked | 7 |
+| [PathFollow2D](classes/PathFollow2D.md) | Node2D | Unimplemented | 7 |
 | [PathFollow3D](classes/PathFollow3D.md) | Node3D | Excluded | 16 |
 | [Performance](classes/Performance.md) | Object | Blocked | 74 |
 | [PhysicalBone2D](classes/PhysicalBone2D.md) | RigidBody2D | Blocked | 7 |

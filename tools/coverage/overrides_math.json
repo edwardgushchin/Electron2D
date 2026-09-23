@@ -1089,6 +1089,311 @@
       "electron2d": "method:Electron2D.Image.SavePNGToBuffer()",
       "godot": "Image::method:save_png_to_buffer()",
       "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
+    },
+    {
+      "godot": "Curve::enum:TangentMode",
+      "electron2d": "T:Electron2D.Curve.TangentMode",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::enum_value:TangentMode.TANGENT_FREE",
+      "electron2d": "enumValue:Electron2D.Curve.TangentMode.Free()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::enum_value:TangentMode.TANGENT_LINEAR",
+      "electron2d": "enumValue:Electron2D.Curve.TangentMode.Linear()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::enum_value:TangentMode.TANGENT_MODE_COUNT",
+      "electron2d": "enumValue:Electron2D.Curve.TangentMode.Count()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:add_point(Vector2:,float:,float:,int:Curve.TangentMode,int:Curve.TangentMode)",
+      "electron2d": "method:Electron2D.Curve.AddPoint(Electron2D.Vector2,System.Single,System.Single,Electron2D.Curve.TangentMode,Electron2D.Curve.TangentMode)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:bake()",
+      "electron2d": "method:Electron2D.Curve.Bake()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:clean_dupes()",
+      "electron2d": "method:Electron2D.Curve.CleanDupes()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:clear_points()",
+      "electron2d": "method:Electron2D.Curve.ClearPoints()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:get_domain_range()",
+      "electron2d": "method:Electron2D.Curve.GetDomainRange()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:get_point_left_mode(int:)",
+      "electron2d": "method:Electron2D.Curve.GetPointLeftMode(System.Int32)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:get_point_left_tangent(int:)",
+      "electron2d": "method:Electron2D.Curve.GetPointLeftTangent(System.Int32)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:get_point_position(int:)",
+      "electron2d": "method:Electron2D.Curve.GetPointPosition(System.Int32)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:get_point_right_mode(int:)",
+      "electron2d": "method:Electron2D.Curve.GetPointRightMode(System.Int32)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:get_point_right_tangent(int:)",
+      "electron2d": "method:Electron2D.Curve.GetPointRightTangent(System.Int32)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:get_value_range()",
+      "electron2d": "method:Electron2D.Curve.GetValueRange()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:remove_point(int:)",
+      "electron2d": "method:Electron2D.Curve.RemovePoint(System.Int32)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:sample(float:)",
+      "electron2d": "method:Electron2D.Curve.Sample(System.Single)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:sample_baked(float:)",
+      "electron2d": "method:Electron2D.Curve.SampleBaked(System.Single)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:set_point_left_mode(int:,int:Curve.TangentMode)",
+      "electron2d": "method:Electron2D.Curve.SetPointLeftMode(System.Int32,Electron2D.Curve.TangentMode)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:set_point_left_tangent(int:,float:)",
+      "electron2d": "method:Electron2D.Curve.SetPointLeftTangent(System.Int32,System.Single)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:set_point_offset(int:,float:)",
+      "electron2d": "method:Electron2D.Curve.SetPointOffset(System.Int32,System.Single)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:set_point_right_mode(int:,int:Curve.TangentMode)",
+      "electron2d": "method:Electron2D.Curve.SetPointRightMode(System.Int32,Electron2D.Curve.TangentMode)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:set_point_right_tangent(int:,float:)",
+      "electron2d": "method:Electron2D.Curve.SetPointRightTangent(System.Int32,System.Single)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::method:set_point_value(int:,float:)",
+      "electron2d": "method:Electron2D.Curve.SetPointValue(System.Int32,System.Single)",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::property:bake_resolution",
+      "electron2d": "property:Electron2D.Curve.BakeResolution()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::property:max_domain",
+      "electron2d": "property:Electron2D.Curve.MaxDomain()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::property:max_value",
+      "electron2d": "property:Electron2D.Curve.MaxValue()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::property:min_domain",
+      "electron2d": "property:Electron2D.Curve.MinDomain()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::property:min_value",
+      "electron2d": "property:Electron2D.Curve.MinValue()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::property:point_count",
+      "electron2d": "property:Electron2D.Curve.PointCount()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::property:point_{index}/left_mode",
+      "electron2d": "method:Electron2D.Curve.GetPropertyDescriptors()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::property:point_{index}/left_tangent",
+      "electron2d": "method:Electron2D.Curve.GetPropertyDescriptors()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::property:point_{index}/position",
+      "electron2d": "method:Electron2D.Curve.GetPropertyDescriptors()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::property:point_{index}/right_mode",
+      "electron2d": "method:Electron2D.Curve.GetPropertyDescriptors()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::property:point_{index}/right_tangent",
+      "electron2d": "method:Electron2D.Curve.GetPropertyDescriptors()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::signal:domain_changed()",
+      "electron2d": "event:Electron2D.Curve.DomainChanged()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve::signal:range_changed()",
+      "electron2d": "event:Electron2D.Curve.RangeChanged()",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md."
+    },
+    {
+      "godot": "Curve2D::method:add_point(Vector2:,Vector2:,Vector2:,int:)",
+      "electron2d": "method:Electron2D.PathCurve.AddPoint(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,System.Int32)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:clear_points()",
+      "electron2d": "method:Electron2D.PathCurve.ClearPoints()",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:get_baked_length()",
+      "electron2d": "method:Electron2D.PathCurve.GetBakedLength()",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:get_baked_points()",
+      "electron2d": "method:Electron2D.PathCurve.GetBakedPoints()",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:get_closest_offset(Vector2:)",
+      "electron2d": "method:Electron2D.PathCurve.GetClosestOffset(Electron2D.Vector2)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:get_closest_point(Vector2:)",
+      "electron2d": "method:Electron2D.PathCurve.GetClosestPoint(Electron2D.Vector2)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:get_point_in(int:)",
+      "electron2d": "method:Electron2D.PathCurve.GetPointIn(System.Int32)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:get_point_out(int:)",
+      "electron2d": "method:Electron2D.PathCurve.GetPointOut(System.Int32)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:get_point_position(int:)",
+      "electron2d": "method:Electron2D.PathCurve.GetPointPosition(System.Int32)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:remove_point(int:)",
+      "electron2d": "method:Electron2D.PathCurve.RemovePoint(System.Int32)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:sample(int:,float:)",
+      "electron2d": "method:Electron2D.PathCurve.Sample(System.Int32,System.Single)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:sample_baked(float:,bool:)",
+      "electron2d": "method:Electron2D.PathCurve.SampleBaked(System.Single,System.Boolean)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:sample_baked_with_rotation(float:,bool:)",
+      "electron2d": "method:Electron2D.PathCurve.SampleBakedWithRotation(System.Single,System.Boolean)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:samplef(float:)",
+      "electron2d": "method:Electron2D.PathCurve.Samplef(System.Single)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:set_point_in(int:,Vector2:)",
+      "electron2d": "method:Electron2D.PathCurve.SetPointIn(System.Int32,Electron2D.Vector2)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:set_point_out(int:,Vector2:)",
+      "electron2d": "method:Electron2D.PathCurve.SetPointOut(System.Int32,Electron2D.Vector2)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:set_point_position(int:,Vector2:)",
+      "electron2d": "method:Electron2D.PathCurve.SetPointPosition(System.Int32,Electron2D.Vector2)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:tessellate(int:,float:)",
+      "electron2d": "method:Electron2D.PathCurve.Tessellate(System.Int32,System.Single)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::method:tessellate_even_length(int:,float:)",
+      "electron2d": "method:Electron2D.PathCurve.TessellateEvenLength(System.Int32,System.Single)",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::property:bake_interval",
+      "electron2d": "property:Electron2D.PathCurve.BakeInterval()",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::property:point_count",
+      "electron2d": "property:Electron2D.PathCurve.PointCount()",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::property:point_{index}/in",
+      "electron2d": "method:Electron2D.PathCurve.GetPropertyDescriptors()",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::property:point_{index}/out",
+      "electron2d": "method:Electron2D.PathCurve.GetPropertyDescriptors()",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+    },
+    {
+      "godot": "Curve2D::property:point_{index}/position",
+      "electron2d": "method:Electron2D.PathCurve.GetPropertyDescriptors()",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
     }
   ],
   "extras": [
@@ -1526,6 +1831,56 @@
       "electron2d": "property:Electron2D.ImageMetrics.RootMeanSquared()",
       "reason": "Typed value replacing the Dictionary result of Image.compute_image_metrics.",
       "adr": "resources.md#adr-0039"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Curve..ctor()",
+      "reason": "Explicit C# construction of the existing curve resource with the audited reference defaults.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.Curve.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Existing Resource typed copying hook preserves exact point/handle/limit state without setter reclamping; copies own containers and lazily rebuilt caches.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.Curve.CreateDuplicateInstance()",
+      "reason": "Existing Resource exact-type duplication factory; constructs an empty curve target.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.Curve.Dispose(System.Boolean)",
+      "reason": "Managed lifetime hook releases owned point/cache containers and event subscriptions under the accepted Resource lifetime policy.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.Curve.OnResetState()",
+      "reason": "Existing Resource reset hook clears transient sample caches while preserving stored curve state.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PathCurve..ctor()",
+      "reason": "Explicit C# construction of the existing curve resource with the audited reference defaults.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.PathCurve.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Existing Resource typed copying hook preserves exact point/handle/limit state without setter reclamping; copies own containers and lazily rebuilt caches.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.PathCurve.CreateDuplicateInstance()",
+      "reason": "Existing Resource exact-type duplication factory; constructs an empty curve target.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.PathCurve.Dispose(System.Boolean)",
+      "reason": "Managed lifetime hook releases owned point/cache containers and event subscriptions under the accepted Resource lifetime policy.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.PathCurve.OnResetState()",
+      "reason": "Existing Resource reset hook clears transient sample caches while preserving stored curve state.",
+      "adr": "ADRs 0003/0004/0013/0014"
     }
   ],
   "statusGroups": [
@@ -1747,6 +2102,81 @@
         "Image::method:save_webp_to_buffer(bool:,float:)"
       ],
       "reason": "The authorized SDL_image 3.4.6 encoder at quality 100 changes opaque colors in a lossless round trip. Native encoder correction with exact color/alpha verification is required before the public lossless/lossy WebP save contract can be exposed (ADR 0039); no additional package was selected."
+    },
+    {
+      "state": "Implemented",
+      "reason": "Scalar curve API audited against pinned source and XML: sorted/clamped insertion, Free/Linear slopes, domain/value constraints, exact/cached samples, resolution-one behavior, typed indexed descriptors and synchronous notification timing. CurveTests verifies analytic values, edits, duplicate cleanup, tangent refresh, finite-domain cache arithmetic, copying, PackedScene ownership, callback/disposal failures, concurrency and warm allocation. ADRs 0013/0034 record typed exceptions, canonical epsilon and proven cleanup/tangent/overflow corrections; no Variant storage or native dependency. See docs/classes/Curve.md.",
+      "godot": [
+        "class:Curve",
+        "Curve::enum:TangentMode",
+        "Curve::enum_value:TangentMode.TANGENT_FREE",
+        "Curve::enum_value:TangentMode.TANGENT_LINEAR",
+        "Curve::enum_value:TangentMode.TANGENT_MODE_COUNT",
+        "Curve::method:add_point(Vector2:,float:,float:,int:Curve.TangentMode,int:Curve.TangentMode)",
+        "Curve::method:bake()",
+        "Curve::method:clean_dupes()",
+        "Curve::method:clear_points()",
+        "Curve::method:get_domain_range()",
+        "Curve::method:get_point_left_mode(int:)",
+        "Curve::method:get_point_left_tangent(int:)",
+        "Curve::method:get_point_position(int:)",
+        "Curve::method:get_point_right_mode(int:)",
+        "Curve::method:get_point_right_tangent(int:)",
+        "Curve::method:get_value_range()",
+        "Curve::method:remove_point(int:)",
+        "Curve::method:sample(float:)",
+        "Curve::method:sample_baked(float:)",
+        "Curve::method:set_point_left_mode(int:,int:Curve.TangentMode)",
+        "Curve::method:set_point_left_tangent(int:,float:)",
+        "Curve::method:set_point_offset(int:,float:)",
+        "Curve::method:set_point_right_mode(int:,int:Curve.TangentMode)",
+        "Curve::method:set_point_right_tangent(int:,float:)",
+        "Curve::method:set_point_value(int:,float:)",
+        "Curve::property:bake_resolution",
+        "Curve::property:max_domain",
+        "Curve::property:max_value",
+        "Curve::property:min_domain",
+        "Curve::property:min_value",
+        "Curve::property:point_count",
+        "Curve::property:point_{index}/left_mode",
+        "Curve::property:point_{index}/left_tangent",
+        "Curve::property:point_{index}/position",
+        "Curve::property:point_{index}/right_mode",
+        "Curve::property:point_{index}/right_tangent",
+        "Curve::signal:domain_changed()",
+        "Curve::signal:range_changed()"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md.",
+      "godot": [
+        "class:Curve2D",
+        "Curve2D::method:add_point(Vector2:,Vector2:,Vector2:,int:)",
+        "Curve2D::method:clear_points()",
+        "Curve2D::method:get_baked_length()",
+        "Curve2D::method:get_baked_points()",
+        "Curve2D::method:get_closest_offset(Vector2:)",
+        "Curve2D::method:get_closest_point(Vector2:)",
+        "Curve2D::method:get_point_in(int:)",
+        "Curve2D::method:get_point_out(int:)",
+        "Curve2D::method:get_point_position(int:)",
+        "Curve2D::method:remove_point(int:)",
+        "Curve2D::method:sample(int:,float:)",
+        "Curve2D::method:sample_baked(float:,bool:)",
+        "Curve2D::method:sample_baked_with_rotation(float:,bool:)",
+        "Curve2D::method:samplef(float:)",
+        "Curve2D::method:set_point_in(int:,Vector2:)",
+        "Curve2D::method:set_point_out(int:,Vector2:)",
+        "Curve2D::method:set_point_position(int:,Vector2:)",
+        "Curve2D::method:tessellate(int:,float:)",
+        "Curve2D::method:tessellate_even_length(int:,float:)",
+        "Curve2D::property:bake_interval",
+        "Curve2D::property:point_count",
+        "Curve2D::property:point_{index}/in",
+        "Curve2D::property:point_{index}/out",
+        "Curve2D::property:point_{index}/position"
+      ]
     }
   ]
 }

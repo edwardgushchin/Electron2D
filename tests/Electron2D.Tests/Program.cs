@@ -103,6 +103,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW") == "1")
     return;
 }
 
+CurveTests.Run();
 AnimatedSpriteTests.Run();
 RenderingRuntimeTests.VerifyAtlasResources();
 SceneHierarchyTests.Run();

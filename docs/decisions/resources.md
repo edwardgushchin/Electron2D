@@ -1,6 +1,6 @@
 # Electron2D resources decisions
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 This bounded log owns the complete architectural records for resources. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0013](#adr-0013), [0014](#adr-0014), [0039](#adr-0039).
 <a id="adr-0013"></a>
 ## ADR 0013: Managed typed Resource contract
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ### Status
 
@@ -35,7 +35,17 @@ Duplication is opt-in for every derived type through two protected hooks: constr
 
 Invalid scene IDs throw without mutation. Automatic replacement by a random ID is rejected because silently discarding caller input is unsuitable for the typed C# boundary; `GenerateSceneUniqueID` remains explicit.
 
-Renderer RID, packed-scene owner/setup automation, loader/saver cache modes, editor path-ID mapping, and automatic serialization discovery are deferred to their missing domains. No methods are added for them yet.
+Renderer RID, loader/saver cache modes, editor path-ID mapping, and automatic file-serialization discovery remain deferred to their missing domains. Packed-scene local duplication, root ownership, association and setup automation are implemented under ADR 0023.
+
+### Concrete curve resources
+
+`Curve` is the scalar y(x) resource; `PathCurve` is the spatial resource corresponding to Godot `Curve2D`. Their inherited managed Resource contract remains unchanged. The spatial name distinguishes its role without a redundant 2D suffix; it does not merge scalar and spatial APIs. Both types preserve their applicable point, handle/tangent, sample, bake, tessellation, event and property contracts. Dynamic indexed properties project to typed descriptors and explicit point methods; private packed Variant storage is not exposed. Exact-state copy hooks avoid setter reclamping and own independent point containers.
+
+Following [ADR 0034](core-math.md#adr-0034), this first implementation corrects demonstrated defects instead of reproducing them: CleanDupes uses positive horizontal separation (the pinned signed comparison removes distinct ascending points); structural removal refreshes surviving Linear tangents; slopes use widened dy/dx instead of normalizing first, avoiding squared-length overflow for valid large coordinates; scalar bake coordinates divide before multiplying to avoid intermediate overflow inside a valid finite domain; nonconstant closed spatial segments are subdivided even when endpoint/midpoint chords vanish; closest-point projection treats zero-length segments as points; degenerate spatial poses use identity orientation. Existing source-specific notification timing, insertion tie order, resolution-one behavior and tessellation depth semantics are retained and tested. Canonical Mathf.Epsilon applies under ADR 0034.
+
+Finite input checks and typed exceptions replace error logging/default returns at invalid query boundaries. Scalar limits must retain a positive finite span; explicit slopes are finite but derived duplicate-offset slopes may be IEEE nonfinite. Scalar interpolation otherwise retains float arithmetic, including overshoot/overflow. Path derived nonfinite geometry or length fails before cache publication. Public tessellation depth is bounded to 0..20, cache depth to ten, preserving ordinary defaults while making recursive resource work finite. Per-resource state operations are serialized, notifications run outside the state lock after commitment, and warm cached sampling/closest queries allocate no managed storage; array exports, edits and baking may allocate. Resource copying still requires caller coordination.
+
+CPU curve resources do not require a native backend or editor. Scene paths/followers are a next executable Entity slice; CurveTexture/CurveXYZTexture require their own curve-change-to-texture update and typed floating-channel GPU sampling integration. Those consumers are implementation gaps, not aliases or compatibility stubs; Curve3D remains excluded by strict 2D scope. Verification is recorded in the [curve component](../components/curves.md).
 
 ### Consequences
 
@@ -44,9 +54,9 @@ Renderer RID, packed-scene owner/setup automation, loader/saver cache modes, edi
 - Base resource behavior is independently testable before concrete assets exist.
 - The weak path cache does not extend object lifetime and remains safe when disposal is omitted.
 - Future serialization must define stored-property discovery and call existing hooks rather than changing current copy semantics accidentally.
-- Future packed scenes must own automatic local duplication, local-scene association, and setup timing.
+- Packed scenes own automatic local duplication, local-scene association, setup timing and deterministic local-resource cleanup under ADR 0023.
 
-ADR 0023 subsequently implemented that final consequence. Its new `Resource.GetLocalScene()` surface and Scene dependency are current behavior; the original deferral above remains the historical decision boundary of this ADR.
+`Resource.GetLocalScene()` and the narrow Resources↔Scene dependency are current behavior under ADR 0023.
 
 ### Rejected alternatives
 

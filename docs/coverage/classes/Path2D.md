@@ -10,5 +10,5 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class Path2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Path2D.xml) | — | Blocked | Navigation2D: trigger is the first 2D navigation slice. |
-| [`property Curve2D curve`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Path2D.xml) | — | Blocked | Navigation2D: trigger is the first 2D navigation slice. |
+| [`class Path2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Path2D.xml) | — | Unimplemented | Accepted 2D capability; trigger: first scene path/follower slice using the implemented PathCurve and Entity; include progress, rotation, looping, change subscriptions and packing (ADRs 0008 and 0013); navigation is not a prerequisite. |
+| [`property Curve2D curve`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Path2D.xml) | — | Unimplemented | Accepted 2D capability; trigger: first scene path/follower slice using the implemented PathCurve and Entity; include progress, rotation, looping, change subscriptions and packing (ADRs 0008 and 0013); navigation is not a prerequisite. |

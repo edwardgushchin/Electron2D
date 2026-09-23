@@ -143,6 +143,10 @@ def reason_for_type(item, lookup):
         ({"Image"}, "next managed image-buffer slice (ADR 0039)"),
         ({"Curve", "Curve2D", "FastNoiseLite", "Noise"},
          "first procedural 2D curve or noise resource slice after typed resource storage (ADR 0013)"),
+        ({"Path2D", "PathFollow2D"},
+         "first scene path/follower slice using the implemented PathCurve and Entity; include progress, rotation, looping, change subscriptions and packing (ADRs 0008 and 0013); navigation is not a prerequisite"),
+        ({"CurveTexture", "CurveXYZTexture"},
+         "first curve-texture slice using implemented Curve and Texture; integrate curve-change rebaking, float channel formats and verified backend sampling (ADRs 0013 and 0028); GUI is not a prerequisite"),
     )
     for names, trigger in accepted_slices:
         if name in names:
@@ -261,6 +265,8 @@ def special_reason(item, member):
         return "Blocked", "Trigger: first typed networking and multiplayer slice."
     if any(token in name for token in ("accessibility", "theme_", "tooltip", "gui_")):
         return "Blocked", "Trigger: first typed 2D GUI and accessibility slice after rendering."
+    if item["name"] in {"CurveTexture", "CurveXYZTexture"}:
+        return None  # All members share the concrete curve-texture trigger, including texture-mode values.
     if any(token in name for token in ("draw_", "canvas_", "texture_", "shader_", "render_")):
         return "Blocked", "Trigger: first SDL3 GPU 2D rendering slice (ADR 0028)."
     return None

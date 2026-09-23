@@ -5,7 +5,7 @@ Last updated: 2026-09-22
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
 1. Review 1677 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 1258 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [BitMap](classes/BitMap.md), [Curve](classes/Curve.md), [Curve2D](classes/Curve2D.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
+2. Complete 1219 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [BitMap](classes/BitMap.md), [CurveTexture](classes/CurveTexture.md), [CurveXYZTexture](classes/CurveXYZTexture.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [Path2D](classes/Path2D.md), [PathFollow2D](classes/PathFollow2D.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
 3. Implement the remaining domains in dependency order: SDL3 GPU 2D rendering with the accepted SDL_Renderer fallback; GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable fallback slice must audit each of the five blocked GL/EGL/GLX `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -78,13 +78,13 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Exact trigger | Classes |
 | --- | ---: |
 | Rendering2D: trigger is the first SDL3 GPU 2D rendering slice (ADR 0028). | 148 |
-| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 145 |
+| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 143 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 79 |
 | Audio: trigger is the first audio mixing and playback slice. | 56 |
 | Networking: trigger is the first networking and multiplayer slice. | 41 |
 | Physics2D: trigger is the first Box2D.NET-backed 2D physics slice (ADR 0012). | 41 |
 | Animation: trigger is the first scene animation slice. | 26 |
-| Navigation2D: trigger is the first 2D navigation slice. | 15 |
+| Navigation2D: trigger is the first 2D navigation slice. | 13 |
 | Trigger: a concrete backend-neutral 2D compositing contract in the SDL3 GPU renderer; exclude direct RD members under ADR 0028. | 12 |
 | Assets: trigger is the first concrete loader and native-backed asset slice (ADR 0013/0023). | 11 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 11 |
