@@ -22,27 +22,99 @@ public sealed class InputMap : ElectronObject
 
     private InputMap()
     {
-        AddBuiltInKeyAction("ui_focus_next", Key.Tab);
-        AddBuiltInKeyAction("ui_focus_prev", Key.Tab, shift: true);
-        AddBuiltInKeyAction("ui_left", Key.Left);
-        AddBuiltInKeyAction("ui_up", Key.Up);
-        AddBuiltInKeyAction("ui_right", Key.Right);
-        AddBuiltInKeyAction("ui_down", Key.Down);
-    }
-
-    private void AddBuiltInKeyAction(string name, Key key, bool shift = false)
-    {
-        var definition = new ActionDefinition(DefaultDeadzone);
-        var binding = new InputEventKey { Keycode = key, ShiftPressed = shift };
-        definition.Events.Add(binding);
-        _actions.Add(name, definition);
-        _actionOrder.Add(name);
-        AttachBindingUnderLock(name, binding);
+        foreach (var (name, definition) in BuildProjectActions(ProjectSettings.Instance))
+        {
+            _actions.Add(name, definition);
+            _actionOrder.Add(name);
+            foreach (var binding in definition.Events)
+                AttachBindingUnderLock(name, binding);
+        }
     }
 
     /// <summary>Gets the process-wide action map.</summary>
     /// <value>The same non-disposable instance for the lifetime of the process.</value>
     public static InputMap Instance => SharedInstance;
+
+    /// <summary>Occurs after a project action map has replaced the live bindings.</summary>
+    /// <remarks>Raised synchronously outside the map lock. A throwing listener observes the committed map.</remarks>
+    public event Action? ProjectSettingsLoaded;
+
+    /// <summary>Replaces all actions with the typed <c>input/*</c> records in the process-wide project settings.</summary>
+    /// <remarks>Validation finishes before the live map changes. Loaded bindings are borrowed by the map like manually
+    /// added bindings; references obtained from <see cref="ActionGetEvents"/> remain usable after a later reload.
+    /// This operation allocates and belongs in project setup, outside input dispatch. A loaded listener exception
+    /// propagates after the new map has committed.</remarks>
+    /// <exception cref="InvalidDataException">An input setting has the wrong type, schema version, or binding data.</exception>
+    /// <exception cref="ObjectDisposedException">The project settings registry is disposed.</exception>
+    public void LoadFromProjectSettings() => LoadFromProjectSettings(ProjectSettings.Instance);
+
+    internal void LoadFromProjectSettings(ProjectSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+        var candidates = BuildProjectActions(settings);
+
+        string[] previousActions;
+        lock (_gate)
+        {
+            previousActions = _actionOrder.ToArray();
+            foreach (var action in _actionOrder)
+                foreach (var binding in _actions[action].Events)
+                    DetachBindingUnderLock(action, binding);
+
+            _actions.Clear();
+            _actionOrder.Clear();
+            foreach (var (name, definition) in candidates)
+            {
+                _actions.Add(name, definition);
+                _actionOrder.Add(name);
+                foreach (var binding in definition.Events)
+                    AttachBindingUnderLock(name, binding);
+            }
+        }
+
+        foreach (var action in previousActions.Concat(candidates.Select(static item => item.Name)).Distinct(StringComparer.Ordinal))
+            Input.Instance.OnActionMapChanged(action, removed: false);
+        ProjectSettingsLoaded?.Invoke();
+    }
+
+    private static List<(string Name, ActionDefinition Definition)> BuildProjectActions(ProjectSettings settings)
+    {
+        var records = settings.GetRegisteredSettingsInGroup<InputActionSettings>("input/");
+        var candidates = new List<(string Name, ActionDefinition Definition)>(records.Length);
+        try
+        {
+            foreach (var (fullName, data) in records)
+            {
+                var name = fullName["input/".Length..];
+                try { InputEvent.ValidateActionName(name, nameof(settings)); }
+                catch (ArgumentException error)
+                {
+                    throw new InvalidDataException($"Project input action '{fullName}' has an invalid name.", error);
+                }
+                data.Validate();
+                var definition = new ActionDefinition(data.Deadzone);
+                candidates.Add((name, definition));
+                foreach (var binding in data.Bindings)
+                {
+                    if (binding is null)
+                        throw new InvalidDataException($"Input action '{name}' contains a null binding.");
+                    var @event = binding.CreateEvent();
+                    if (FindEventIndex(definition, @event, exactMatch: true) >= 0)
+                        @event.Dispose();
+                    else
+                        definition.Events.Add(@event);
+                }
+            }
+            return candidates;
+        }
+        catch
+        {
+            foreach (var (_, definition) in candidates)
+                foreach (var @event in definition.Events)
+                    @event.Dispose();
+            throw;
+        }
+    }
 
     /// <summary>Gets whether an action exists.</summary>
     /// <param name="action">The nonblank, case-sensitive action name.</param>

@@ -193,6 +193,36 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<Color> DebugPathsColor { get; } =
         new("debug/shapes/paths/geometry_color", new Color(0.1f, 1f, 0.7f, 0.4f), value => value.IsFinite());
 
+    /// <summary>Defines the default Tab binding for moving GUI focus forward.</summary>
+    /// <value>The permanent typed <c>input/ui_focus_next</c> setting.</value>
+    public static ProjectSetting<InputActionSettings> InputUIFocusNext { get; } =
+        CreateDefaultKeyAction("ui_focus_next", Key.Tab);
+
+    /// <summary>Defines the default Shift+Tab binding for moving GUI focus backward.</summary>
+    /// <value>The permanent typed <c>input/ui_focus_prev</c> setting.</value>
+    public static ProjectSetting<InputActionSettings> InputUIFocusPrev { get; } =
+        CreateDefaultKeyAction("ui_focus_prev", Key.Tab, KeyModifierMask.Shift);
+
+    /// <summary>Defines the default left-arrow GUI action.</summary>
+    /// <value>The permanent typed <c>input/ui_left</c> setting.</value>
+    public static ProjectSetting<InputActionSettings> InputUILeft { get; } =
+        CreateDefaultKeyAction("ui_left", Key.Left);
+
+    /// <summary>Defines the default up-arrow GUI action.</summary>
+    /// <value>The permanent typed <c>input/ui_up</c> setting.</value>
+    public static ProjectSetting<InputActionSettings> InputUIUp { get; } =
+        CreateDefaultKeyAction("ui_up", Key.Up);
+
+    /// <summary>Defines the default right-arrow GUI action.</summary>
+    /// <value>The permanent typed <c>input/ui_right</c> setting.</value>
+    public static ProjectSetting<InputActionSettings> InputUIRight { get; } =
+        CreateDefaultKeyAction("ui_right", Key.Right);
+
+    /// <summary>Defines the default down-arrow GUI action.</summary>
+    /// <value>The permanent typed <c>input/ui_down</c> setting.</value>
+    public static ProjectSetting<InputActionSettings> InputUIDown { get; } =
+        CreateDefaultKeyAction("ui_down", Key.Down);
+
     private static readonly ProjectSettings SharedInstance = CreateSharedInstance();
 
     private readonly object _gate = new();
@@ -252,6 +282,12 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(AnisotropicFilteringLevel, isBasic: false);
         RegisterInternal(DefaultClearColor, isBasic: true);
         RegisterInternal(DebugPathsColor, isBasic: false);
+        RegisterInternal(InputUIFocusNext, isBasic: false);
+        RegisterInternal(InputUIFocusPrev, isBasic: false);
+        RegisterInternal(InputUILeft, isBasic: false);
+        RegisterInternal(InputUIUp, isBasic: false);
+        RegisterInternal(InputUIRight, isBasic: false);
+        RegisterInternal(InputUIDown, isBasic: false);
     }
 
     /// <summary>Gets the process-wide project settings registry.</summary>
@@ -459,6 +495,27 @@ public sealed class ProjectSettings : ElectronObject
                 .ThenBy(entry => entry.Name, StringComparer.Ordinal)
                 .Select(entry => entry.Name)
                 .ToArray());
+        }
+    }
+
+    internal (string Name, T Value)[] GetRegisteredSettingsInGroup<T>(string prefix)
+        where T : notnull
+    {
+        ThrowIfDisposed();
+        lock (_gate)
+        {
+            ThrowIfDisposed();
+            return _settings.Values
+                .Where(entry => entry.Name.StartsWith(prefix, StringComparison.Ordinal))
+                .OrderBy(entry => entry.Order)
+                .ThenBy(entry => entry.Name, StringComparer.Ordinal)
+                .Select(entry =>
+                {
+                    if (entry is not SettingEntry<T> typed)
+                        throw new InvalidDataException($"Project setting '{entry.Name}' has the wrong value type for '{prefix}'.");
+                    return (entry.Name, GetWithOverride((ProjectSetting<T>)typed.Definition));
+                })
+                .ToArray();
         }
     }
 
@@ -1254,6 +1311,13 @@ public sealed class ProjectSettings : ElectronObject
         return new ConfigKey<T>(fullName[..separator], fullName[(separator + 1)..]);
     }
 
+    private static ProjectSetting<InputActionSettings> CreateDefaultKeyAction(
+        string name, Key key, KeyModifierMask modifiers = 0) =>
+        new($"input/{name}", new InputActionSettings
+        {
+            Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = key, Modifiers = modifiers }],
+        });
+
     private void EnsureNotLoading()
     {
         if (_loading)
@@ -1545,7 +1609,13 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, UseNearestMipmapFilter) ||
         ReferenceEquals(setting, AnisotropicFilteringLevel) ||
         ReferenceEquals(setting, DefaultClearColor) ||
-        ReferenceEquals(setting, DebugPathsColor);
+        ReferenceEquals(setting, DebugPathsColor) ||
+        ReferenceEquals(setting, InputUIFocusNext) ||
+        ReferenceEquals(setting, InputUIFocusPrev) ||
+        ReferenceEquals(setting, InputUILeft) ||
+        ReferenceEquals(setting, InputUIUp) ||
+        ReferenceEquals(setting, InputUIRight) ||
+        ReferenceEquals(setting, InputUIDown);
 
     private static string ResolveWithinRoot(string root, string relativePath)
     {

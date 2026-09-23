@@ -1,6 +1,6 @@
 # InputMap
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -18,7 +18,7 @@ Owns the process-wide mapping from named game actions to typed input-event bindi
 
 `InputMap` is the non-disposable process-wide registry of ordinal action names, finite deadzones, and ordered typed event bindings. Binding `Resource` references remain caller-owned and live; they must not be disposed or mutated concurrently with matching. Disposing a registered binding outside matching removes that reference from every affected action.
 
-The registry starts with `ui_focus_next` (Tab), `ui_focus_prev` (Shift+Tab), and `ui_left`, `ui_up`, `ui_right`, `ui_down` (arrow keys). Their bindings are ordinary live action events and can be changed or erased through the public API. The root viewport consumes these actions for GUI focus navigation when a focused control leaves the event unhandled.
+The registry starts from six typed `input/ui_*` definitions in [`ProjectSettings`](ProjectSettings.md): `ui_focus_next` (Tab), `ui_focus_prev` (Shift+Tab), and `ui_left`, `ui_up`, `ui_right`, `ui_down` (arrow keys). Their bindings are ordinary live action events and can be changed or erased through the public API. The root viewport consumes these actions for GUI focus navigation when a focused control leaves the event unhandled. `LoadFromProjectSettings` explicitly replaces the complete map from registered typed action definitions, after the project file has been loaded when required. It validates the candidate first, clears affected pressed contributions, and raises `ProjectSettingsLoaded` after commit.
 
 Collection operations are lock-serialized and return snapshots. Binding resources remain caller-owned and mutable;
 callers must not mutate or dispose a binding concurrently with matching. Action names use ordinal comparison.
@@ -29,6 +29,8 @@ The following focused snippet uses the current public API. Names not declared in
 
 ```csharp
 InputMap map = InputMap.Instance;
+// Load registered project actions during setup, after loading the project settings file.
+map.LoadFromProjectSettings();
 map.AddAction("jump");
 map.ActionAddEvent("jump", new InputEventKey { Keycode = Key.Space });
 ```
@@ -44,6 +46,7 @@ map.ActionAddEvent("jump", new InputEventKey { Keycode = Key.Space });
 | Member | Description |
 | --- | --- |
 | [`public bool HasAction(string action)`](#m-electron2d-inputmap-hasaction-system-string) | Gets whether an action exists. |
+| [`public void LoadFromProjectSettings()`](#m-electron2d-inputmap-loadfromprojectsettings) | Replaces all actions from registered typed project settings. |
 | [`public IReadOnlyList<string> GetActions()`](#m-electron2d-inputmap-getactions) | Gets action names in registration order. |
 | [`public void AddAction(string action, float deadzone = 0.2f)`](#m-electron2d-inputmap-addaction-system-string-system-single) | Adds an empty action. |
 | [`public void EraseAction(string action)`](#m-electron2d-inputmap-eraseaction-system-string) | Removes an action and all of its bindings. |
@@ -57,6 +60,12 @@ map.ActionAddEvent("jump", new InputEventKey { Keycode = Key.Space });
 | [`public bool EventIsAction(InputEvent event, string action, bool exactMatch = false)`](#m-electron2d-inputmap-eventisaction-electron2d-inputevent-system-string-system-boolean) | Tests whether an event belongs to an action. |
 | [`public string GetActionDescription(string action)`](#m-electron2d-inputmap-getactiondescription-system-string) | Gets a human-readable disjunction of an action's concrete bindings. |
 | [`protected override void ValidateDisposal()`](#m-electron2d-inputmap-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
+
+## Events
+
+| Member | Description |
+| --- | --- |
+| [`public event Action? ProjectSettingsLoaded`](#e-electron2d-inputmap-projectsettingsloaded) | Raised after a successful map replacement. |
 
 ## Constants
 
@@ -73,6 +82,16 @@ Gets the process-wide action map.
 **Value:** The same non-disposable instance for the lifetime of the process.
 
 ## Method Descriptions
+
+<a id="m-electron2d-inputmap-loadfromprojectsettings"></a>
+### `public void LoadFromProjectSettings()`
+
+Reads registered `ProjectSetting<InputActionSettings>` definitions named `input/<action>` from `ProjectSettings.Instance`, applying active feature overrides. The six built-in UI actions are always registered; other actions require explicit typed registration. The version-one schema stores a finite deadzone and up to 32 ordered bindings per action. Duplicate exact bindings collapse. The replacement is prepared before the map changes, then installed under the map lock. Every old or new action contribution is invalidated before the loaded event; a subscriber exception propagates after commit. This setup operation allocates. Loaded events are borrowed live references; previously obtained event references stay usable but are detached after a later reload.
+
+**Exceptions**
+
+- `InvalidDataException`: Wrong setting type, unsupported schema version, invalid action name or binding.
+- `ObjectDisposedException`: The project settings registry has been disposed.
 
 <a id="m-electron2d-inputmap-hasaction-system-string"></a>
 ### `public bool HasAction(string action)`
@@ -307,6 +326,13 @@ Overrides must therefore be side-effect-free and tolerate repeated execution.
 
 The process-wide action map cannot be disposed.
 
+## Event Descriptions
+
+<a id="e-electron2d-inputmap-projectsettingsloaded"></a>
+### `public event Action? ProjectSettingsLoaded`
+
+Raised synchronously outside the map lock after successful replacement and pressed-state invalidation. It is not raised on validation failure. A throwing subscriber sees committed state.
+
 ## Constant Descriptions
 
 ## Inherited API
@@ -315,6 +341,6 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 ## Lifecycle, errors, threading, and interactions
 
-Configuration operations are serialized by one lock and return snapshots. Duplicate exact bindings are ignored; missing actions and invalid values throw before mutation. A successful map mutation or internal binding-change notification clears every affected action's cached runtime contributions through `Input` before fallible public `Resource.Changed` handlers run. Copying stored state into a registered binding follows the same ordering. Binding disposal removes it and clears contributions before public disposal handlers run. No action-setting persistence exists yet; its exact trigger is ADR 0038's versioned action-schema row.
+Configuration operations are serialized by one lock and return snapshots. Duplicate exact bindings are ignored; missing actions and invalid values throw before mutation. A successful map mutation or internal binding-change notification clears every affected action's cached runtime contributions through `Input` before fallible public `Resource.Changed` handlers run. Copying stored state into a registered binding follows the same ordering. Binding disposal removes it and clears contributions before public disposal handlers run. Typed action definitions persist through `ProjectSettings`; loading them into the live map is explicit.
 
-Tests cover ordering, validation, deadzones, the 32-source ceiling, duplicates, exact modifiers, matching, failure-safe action-state invalidation, singleton lifetime, and concurrent-safe snapshots. Native controller mapping databases are a distinct SDL gamepad trigger and are not represented here.
+Tests cover ordering, validation, deadzones, the 32-source ceiling, duplicates, exact modifiers, matching, failure-safe action-state invalidation, singleton lifetime, concurrent-safe snapshots, project-file round-trip, atomic reload/rollback, and warmed successful matching allocation. Native controller mapping databases are a distinct SDL gamepad trigger and are not represented here.

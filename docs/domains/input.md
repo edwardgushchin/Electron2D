@@ -1,6 +1,6 @@
 # Input domain
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Responsibility
 
@@ -12,12 +12,12 @@ Input owns typed input-event values, the process-wide action map, raw and mapped
 | --- | --- | --- |
 | [Input runtime](../components/input-runtime.md) | Typed events, action bindings/state, raw device state, frame transitions, and SceneTree propagation | Implemented and verified; hardware-host gaps have exact triggers |
 
-Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/InputMap.md), the [`InputEvent`](../classes/InputEvent.md) hierarchy, and the seven input enums listed in the inventory.
+Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/InputMap.md), [`InputActionSettings`](../classes/InputActionSettings.md), [`InputBindingSettings`](../classes/InputBindingSettings.md), [`InputBindingKind`](../classes/InputBindingKind.md), the [`InputEvent`](../classes/InputEvent.md) hierarchy, and the seven input enums listed in the inventory.
 
 ## Public surface
 
 - `Input`: raw key/mouse/controller queries, named action queries and injection, axes/vectors, event parsing, pointer accumulation and flush, mouse/touch emulation policy, native mouse mode/cursor controls and warp, and release-all.
-- `InputMap`: action registration, default `ui_*` focus navigation bindings, deadzones, binding management, matching, and descriptions.
+- `InputMap`: action registration, default `ui_*` focus navigation bindings, typed project-action loading and its loaded event, deadzones, binding management, matching, and descriptions.
 - `InputEvent` hierarchy: typed stored property discovery, action matching, text, duplication, accumulation, coordinate transforms, device/window/modifier data, and concrete keyboard, pointer, touch, gesture, controller, and direct-action payloads.
 - Touch and drag events store signed contact indexes; the native display source generates indexes for physical contacts.
 - Input enums: complete key identifiers/modifier masks, key location, mouse buttons/mask, and standardized/raw controller axes/buttons.
@@ -25,7 +25,7 @@ Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/Inp
 
 ## Dependency direction
 
-Input depends on Core object/resource lifecycle and math. `Engine` registers the two process singletons and `MainLoop` owns transition-window completion. Scene consumes Input events for node delivery. Pointer controls query `DisplayServer.Instance` and use its owner-thread native operations; Input stores the default cursor policy while DisplayServer owns the current native cursor. Input has no direct SDL, renderer, audio, physics, networking, or editor dependency.
+Input depends on Core object/resource lifecycle, math and typed ProjectSettings snapshots. `Engine` registers the two process singletons and `MainLoop` owns transition-window completion. Scene consumes Input events for node delivery. Pointer controls query `DisplayServer.Instance` and use its owner-thread native operations; Input stores the default cursor policy while DisplayServer owns the current native cursor. Input has no direct SDL, renderer, audio, physics, networking, or editor dependency.
 
 ## Domain-wide invariants
 
@@ -40,7 +40,7 @@ Input depends on Core object/resource lifecycle and math. `Engine` registers the
 
 ## Current limitations
 
-The Display domain implements native cursor/window operations and direct SDL event pumping, including mouse-motion accumulation, explicit input flush, mouse/touch emulation, and deduplication of SDL-generated pointer counterparts. Input exposes mouse modes, 17 cursor shapes, custom image slots and warp via that domain. The cursor-default call retains a separate default and root-viewport Control hover overrides it; synthetic motion refresh remains absent. Wayland rejects pointer warp; supported backend movement is unverified. Root viewport Control pointer routing, hover, keyboard focus and Tab/arrow navigation are implemented; clipping, stationary-pointer geometry changes, touch targeting, exact directional ranking, scroll clipping, exact drawing order and nested viewport routing remain absent. Controller lifecycle/effects, sensors, MIDI, shortcuts and project-setting action persistence also remain absent. [ADR 0038](../decisions/input.md#adr-0038) names the exact implementation trigger and actionability rule for every gap.
+The Display domain implements native cursor/window operations and direct SDL event pumping, including mouse-motion accumulation, explicit input flush, mouse/touch emulation, and deduplication of SDL-generated pointer counterparts. Input exposes mouse modes, 17 cursor shapes, custom image slots and warp via that domain. The cursor-default call retains a separate default and root-viewport Control hover overrides it; synthetic motion refresh remains absent. Wayland rejects pointer warp; supported backend movement is unverified. Root viewport Control pointer routing, hover, keyboard focus and Tab/arrow navigation are implemented; clipping, stationary-pointer geometry changes, touch targeting, exact directional ranking, scroll clipping, exact drawing order and nested viewport routing remain absent. Controller lifecycle/effects, sensors, MIDI and shortcuts also remain absent. Typed project action definitions load explicitly; project file loading does not automatically replace the live map. [ADR 0038](../decisions/input.md#adr-0038) names the exact implementation trigger and actionability rule for every gap.
 
 The SDL keyboard adapter supplies distinct logical, physical, and current-layout label keys. Its label is derived from the unmodified scancode and can preserve non-Latin key identity. Left/right control, shift, alt, and GUI scancodes set the corresponding `KeyLocation`; all other scancodes are `Unspecified`. Native key events currently leave `Unicode` at zero; text input is delivered separately. SDL key events contain no produced text scalar, and a text-input event can represent multiple scalars or an IME commit without identifying a key press. A native per-key Unicode source with verified IME/composition semantics is required in the first native keyboard/text adapter slice. Caller-created typed key events may carry a Unicode scalar.
 

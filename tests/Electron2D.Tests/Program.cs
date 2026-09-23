@@ -182,6 +182,7 @@ VerifyProjectSettings();
 VerifyResources();
 VerifyPackedScenes();
 VerifyInput();
+InputActionSettingsTests.Run();
 VerifyInputEmulation();
 VerifyEngine();
 VerifyMainLoop();

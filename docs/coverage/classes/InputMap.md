@@ -1,6 +1,6 @@
 # InputMap API coverage
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 Godot source: [doc/classes/InputMap.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/InputMap.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -24,5 +24,5 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`method get_action_description(StringName action) -> String`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/InputMap.xml) | [`public System.String GetActionDescription(System.String action)`](../../classes/InputMap.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`method get_actions() -> StringName[]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/InputMap.xml) | [`public System.Collections.Generic.IReadOnlyList<System.String> GetActions()`](../../classes/InputMap.md) | Partial | Typed read-only action-name collection; ADR 0038. |
 | [`method has_action(StringName action) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/InputMap.xml) | [`public System.Boolean HasAction(System.String action)`](../../classes/InputMap.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
-| [`method load_from_project_settings() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/InputMap.xml) | — | Unimplemented | No mapped C# declaration; trigger: next complete InputMap API slice. |
-| [`signal project_settings_loaded() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/InputMap.xml) | — | Unimplemented | No mapped C# declaration; trigger: next complete InputMap API slice. |
+| [`method load_from_project_settings() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/InputMap.xml) | [`public System.Void LoadFromProjectSettings()`](../../classes/InputMap.md) | Partial | The typed version-one project schema replaces untyped action dictionaries and atomically swaps the live map. Managed round-trip, rollback and callback ordering are verified; full source event-family and platform parity remain unaudited (ADR 0038). |
+| [`signal project_settings_loaded() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/InputMap.xml) | [`public event System.Action ProjectSettingsLoaded`](../../classes/InputMap.md) | Implemented | InputActionSettingsTests verifies synchronous delivery after committed replacement and pressed-state invalidation, no delivery on validation failure, and a throwing subscriber observing committed state (ADR 0038). |

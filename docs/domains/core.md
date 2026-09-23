@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Responsibility
 
@@ -47,7 +47,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `DirAccess`: scoped current-directory state, streaming/sorted enumeration, file/directory mutation, links, temporary-directory ownership, drive/capacity/type/case/identity queries, and static absolute helpers.
 - `FileAccessMode`, `FileCompressionMode`, and `UnixPermissionFlags`: exact typed mode, codec, and Unix mode-bit identities.
 - `ProjectSetting<T>`: immutable typed setting identity, default snapshot, and optional validator.
-- `ProjectSettings`: process and isolated registries, feature overrides, metadata, dirty/event state, project persistence/discovery, and directory-backed virtual paths.
+- `ProjectSettings`: process and isolated registries, feature overrides, metadata, dirty/event state, project persistence/discovery, directory-backed virtual paths, and typed input-action defaults consumed by explicit InputMap reload.
 - `MainLoop`: explicit initialization, variable/fixed frame callbacks, host-stop results, finalization, system notification IDs, typed permission results, internal original-delta context, and Input transition/dispatch integration.
 - `Engine`: singleton runtime configuration, bounded host-driven scheduling, scaled/original delta delivery, callback metrics, architecture/version data, and typed named-singleton lookup including permanent Input/InputMap services.
 - `EngineVersionInfo`: immutable typed assembly version metadata.

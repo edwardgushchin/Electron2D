@@ -319,7 +319,7 @@ def special_reason(item, member):
             "rendering": "first SDL3 GPU 2D renderer and typed rendering-settings slice (ADR 0028)",
             "layer_names": "first typed 2D rendering/physics layer registry after those domains exist (ADRs 0012 and 0028)",
             "debug": "first host diagnostics and typed debug-settings slice (ADRs 0015 and 0016)",
-            "input": "first persistent InputMap action schema and host input integration (ADR 0038)",
+            "input": "typed built-in action definition and its concrete runtime, GUI or editor consumer (ADR 0038)",
             "physics": "first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012)",
             "display": "first SDL display/window host and typed display-settings slice (ADR 0021)",
             "application": "first application host and typed application-settings slice (ADRs 0015 and 0019)",
@@ -506,7 +506,7 @@ def render():
         inherited = f"[{godot_type['inherits']}]({coverage_target(godot_type['inherits'])})" if godot_type["inherits"] else "—"
         page_name = TEXTURE_NAMES.get(name, name)
         page = CLASS_PAGES / f"{page_name}.md"
-        updated = "2026-09-24" if name in {"OptimizedTranslation", "Translation"} or (name.startswith("Packed") and name.endswith("Array")) else "2026-09-23"
+        updated = "2026-09-24" if name in {"InputMap", "ProjectSettings", "OptimizedTranslation", "Translation"} or (name.startswith("Packed") and name.endswith("Array")) else "2026-09-23"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

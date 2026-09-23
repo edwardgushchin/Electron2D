@@ -1,6 +1,6 @@
 # Project settings component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Scope
 
@@ -13,11 +13,11 @@ This Core component provides the process-wide typed settings registry, isolated 
 | [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md) | Immutable typed name/default/validator identity |
 | [`ProjectSettings`](../classes/ProjectSettings.md) | Registry, metadata, override, persistence, event, and virtual-path owner |
 
-Both types are implemented in [`src/Core/Config/ProjectSettings.cs`](../../src/Core/Config/ProjectSettings.cs).
+The input action records are defined by the [Input runtime](input-runtime.md); this component registers six typed defaults and provides the internal typed group snapshot used by explicit `InputMap` reload. Both types are implemented in [`src/Core/Config/ProjectSettings.cs`](../../src/Core/Config/ProjectSettings.cs).
 
 ## Runtime flow
 
-1. The component creates built-in application, timing and rendering definitions and registers them in each registry.
+1. The component creates built-in application, timing, rendering and six GUI-focus input definitions and registers them in each registry.
 2. Domains register additional `ProjectSetting<T>` definitions. A definition immediately claims and validates compatible values that may already exist in the loaded document.
 3. Typed writes snapshot through the configuration serializer, validate, commit under the registry lock, mark the base name unsaved, increment `Version`, and queue one change notification.
 4. Typed reads choose base/default or the first active feature override, then return a scalar cache or independent mutable snapshot.
