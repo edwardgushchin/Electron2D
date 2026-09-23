@@ -227,6 +227,29 @@ public static class TranslationServer
     /// <returns>The transformed text.</returns>
     public static string Pseudolocalize(string message) => GetOrAddDomain(string.Empty).Pseudolocalize(message);
 
+    /// <summary>Reloads the main domain's pseudolocalization transforms from active project settings.</summary>
+    /// <remarks>The runtime enablement switch is unchanged; the project switch is sampled when an Engine run starts.
+    /// This managed reload does not reload asset remaps or notify an active scene of a translation change.</remarks>
+    public static void ReloadPseudolocalization()
+    {
+        var settings = ProjectSettings.Instance;
+        var domain = GetOrAddDomain(string.Empty);
+        domain.PseudolocalizationAccentsEnabled = settings.GetWithOverride(ProjectSettings.PseudolocalizationReplaceWithAccents);
+        domain.PseudolocalizationDoubleVowelsEnabled = settings.GetWithOverride(ProjectSettings.PseudolocalizationDoubleVowels);
+        domain.PseudolocalizationFakeBIDIEnabled = settings.GetWithOverride(ProjectSettings.PseudolocalizationFakeBIDI);
+        domain.PseudolocalizationOverrideEnabled = settings.GetWithOverride(ProjectSettings.PseudolocalizationOverride);
+        domain.PseudolocalizationExpansionRatio = settings.GetWithOverride(ProjectSettings.PseudolocalizationExpansionRatio);
+        domain.PseudolocalizationPrefix = settings.GetWithOverride(ProjectSettings.PseudolocalizationPrefix);
+        domain.PseudolocalizationSuffix = settings.GetWithOverride(ProjectSettings.PseudolocalizationSuffix);
+        domain.PseudolocalizationSkipPlaceholdersEnabled = settings.GetWithOverride(ProjectSettings.PseudolocalizationSkipPlaceholders);
+    }
+
+    internal static void LoadProjectPseudolocalization()
+    {
+        ReloadPseudolocalization();
+        PseudolocalizationEnabled = ProjectSettings.Instance.GetWithOverride(ProjectSettings.PseudolocalizationEnabled);
+    }
+
     /// <summary>Resolves a singular message for the current culture and its parent cultures.</summary>
     /// <param name="domain">The case-sensitive translation domain.</param>
     /// <param name="message">The source message.</param>

@@ -73,7 +73,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - Project settings build on `ConfigFile`, typed properties, runtime platform/architecture detection, and ordinary directory paths. Engine reads its fixed-step settings from the process registry and flushes its coalesced event.
 - `EventConnection` accepts a scheduler delegate rather than depending on Scene; callers may supply `SceneTree.Defer`.
 - `MainLoop` does not depend on Scene or SDL; it has a narrow in-assembly dependency on Input for transition completion/event forwarding. `Engine` depends on both as the runtime coordinator, `SceneTree` derives from MainLoop, and the current SDL `DisplayServer` supplies native events to Input while a consumer supplies time to Engine.
-- `TranslationServer` has no dependency back on Core, so this direction does not form a cycle.
+- `TranslationServer` reads typed Core project settings at startup and explicit reload; Core calls its static API without taking a construction-time dependency on a translation instance.
 - Core does not depend on SDL3-CS.
 - Scalar math depends only on .NET numeric primitives and has no mutable state, native backend, or higher-domain dependency.
 - Random generation uses .NET numeric and wall/monotonic clock primitives and inherited object lifetime; encryption and temporary-name code explicitly uses the separate .NET cryptographic generator.

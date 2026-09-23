@@ -193,6 +193,51 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<Color> DebugPathsColor { get; } =
         new("debug/shapes/paths/geometry_color", new Color(0.1f, 1f, 0.7f, 0.4f), value => value.IsFinite());
 
+    /// <summary>Enables pseudolocalization when an application loop starts.</summary>
+    /// <value>The permanent typed project setting, false by default.</value>
+    public static ProjectSetting<bool> PseudolocalizationEnabled { get; } =
+        new("internationalization/pseudolocalization/use_pseudolocalization", false);
+
+    /// <summary>Replaces Latin letters with accented variants during pseudolocalization.</summary>
+    /// <value>The permanent typed project setting, true by default.</value>
+    public static ProjectSetting<bool> PseudolocalizationReplaceWithAccents { get; } =
+        new("internationalization/pseudolocalization/replace_with_accents", true);
+
+    /// <summary>Doubles unprotected vowels during pseudolocalization.</summary>
+    /// <value>The permanent typed project setting, false by default.</value>
+    public static ProjectSetting<bool> PseudolocalizationDoubleVowels { get; } =
+        new("internationalization/pseudolocalization/double_vowels", false);
+
+    /// <summary>Adds right-to-left direction controls during pseudolocalization.</summary>
+    /// <value>The permanent typed project setting, false by default.</value>
+    public static ProjectSetting<bool> PseudolocalizationFakeBIDI { get; } =
+        new("internationalization/pseudolocalization/fake_bidi", false);
+
+    /// <summary>Replaces unprotected characters with asterisks during pseudolocalization.</summary>
+    /// <value>The permanent typed project setting, false by default.</value>
+    public static ProjectSetting<bool> PseudolocalizationOverride { get; } =
+        new("internationalization/pseudolocalization/override", false);
+
+    /// <summary>Defines the finite, non-negative text expansion ratio.</summary>
+    /// <value>The permanent typed project setting, zero by default.</value>
+    public static ProjectSetting<float> PseudolocalizationExpansionRatio { get; } =
+        new("internationalization/pseudolocalization/expansion_ratio", 0f, value => float.IsFinite(value) && value >= 0f);
+
+    /// <summary>Defines the prefix of pseudolocalized text.</summary>
+    /// <value>The permanent typed project setting, <c>[</c> by default.</value>
+    public static ProjectSetting<string> PseudolocalizationPrefix { get; } =
+        new("internationalization/pseudolocalization/prefix", "[");
+
+    /// <summary>Defines the suffix of pseudolocalized text.</summary>
+    /// <value>The permanent typed project setting, <c>]</c> by default.</value>
+    public static ProjectSetting<string> PseudolocalizationSuffix { get; } =
+        new("internationalization/pseudolocalization/suffix", "]");
+
+    /// <summary>Preserves formatting placeholders during pseudolocalization.</summary>
+    /// <value>The permanent typed project setting, true by default.</value>
+    public static ProjectSetting<bool> PseudolocalizationSkipPlaceholders { get; } =
+        new("internationalization/pseudolocalization/skip_placeholders", true);
+
     /// <summary>Defines the default Tab binding for moving GUI focus forward.</summary>
     /// <value>The permanent typed <c>input/ui_focus_next</c> setting.</value>
     public static ProjectSetting<InputActionSettings> InputUIFocusNext { get; } =
@@ -282,6 +327,15 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(AnisotropicFilteringLevel, isBasic: false);
         RegisterInternal(DefaultClearColor, isBasic: true);
         RegisterInternal(DebugPathsColor, isBasic: false);
+        RegisterInternal(PseudolocalizationEnabled, isBasic: false);
+        RegisterInternal(PseudolocalizationReplaceWithAccents, isBasic: false);
+        RegisterInternal(PseudolocalizationDoubleVowels, isBasic: false);
+        RegisterInternal(PseudolocalizationFakeBIDI, isBasic: false);
+        RegisterInternal(PseudolocalizationOverride, isBasic: false);
+        RegisterInternal(PseudolocalizationExpansionRatio, isBasic: false);
+        RegisterInternal(PseudolocalizationPrefix, isBasic: false);
+        RegisterInternal(PseudolocalizationSuffix, isBasic: false);
+        RegisterInternal(PseudolocalizationSkipPlaceholders, isBasic: false);
         RegisterInternal(InputUIFocusNext, isBasic: false);
         RegisterInternal(InputUIFocusPrev, isBasic: false);
         RegisterInternal(InputUILeft, isBasic: false);
@@ -1622,6 +1676,15 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, AnisotropicFilteringLevel) ||
         ReferenceEquals(setting, DefaultClearColor) ||
         ReferenceEquals(setting, DebugPathsColor) ||
+        ReferenceEquals(setting, PseudolocalizationEnabled) ||
+        ReferenceEquals(setting, PseudolocalizationReplaceWithAccents) ||
+        ReferenceEquals(setting, PseudolocalizationDoubleVowels) ||
+        ReferenceEquals(setting, PseudolocalizationFakeBIDI) ||
+        ReferenceEquals(setting, PseudolocalizationOverride) ||
+        ReferenceEquals(setting, PseudolocalizationExpansionRatio) ||
+        ReferenceEquals(setting, PseudolocalizationPrefix) ||
+        ReferenceEquals(setting, PseudolocalizationSuffix) ||
+        ReferenceEquals(setting, PseudolocalizationSkipPlaceholders) ||
         ReferenceEquals(setting, InputUIFocusNext) ||
         ReferenceEquals(setting, InputUIFocusPrev) ||
         ReferenceEquals(setting, InputUILeft) ||

@@ -31,7 +31,8 @@ public sealed partial class Engine
     /// events before frames, limits cadence with MaxFPS, finalizes and disposes the scene, then releases native resources.
     /// A new window may be run after successful cleanup. Native services opened directly through DisplayServer must
     /// finish before teardown; pending asynchronous dialogs can reject native disposal and the error is reported. Manual Start/AdvanceFrame/Stop cannot interfere with this run.
-    /// Canvas frames are submitted after each successful process step. It does not install process-wide console or termination handlers.</remarks>
+    /// Canvas frames are submitted after each successful process step. Project pseudolocalization settings are sampled
+    /// before native window and scene activation. It does not install process-wide console or termination handlers.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="window"/> is null.</exception>
     /// <exception cref="ObjectDisposedException">The supplied window is disposed.</exception>
     /// <exception cref="InvalidOperationException">The window is not detached, another lifecycle is active, the caller is not the native main thread, or startup fails.</exception>
@@ -54,6 +55,7 @@ public sealed partial class Engine
         List<Exception> failures = [];
         try
         {
+            TranslationServer.LoadProjectPseudolocalization();
             window.OpenNative();
             tree = new SceneTree(window, attachToEngine: true);
             Volatile.Write(ref _mainLoop, tree);

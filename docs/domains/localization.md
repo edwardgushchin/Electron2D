@@ -18,11 +18,11 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 
 ## Public surface
 
-`TranslationServer` exposes the culture, direct singular/plural registration, named domain registry, main-domain resource queries, lookup, pseudolocalization and catalog clearing. `TranslationDomain` manages borrowed catalogs, locale override, enablement and singular pseudolocalization options. `Translation` stores contextual messages and plural forms. `OptimizedTranslation` generates and resolves compressed singular values without retaining source keys. Both support Resource duplication. `ElectronObject` supplies per-instance translation enablement and lookup entry points from Core. The service's global enabled flag is internal.
+`TranslationServer` exposes the culture, direct singular/plural registration, named domain registry, main-domain resource queries, lookup, pseudolocalization, typed project-option reload and catalog clearing. `TranslationDomain` manages borrowed catalogs, locale override, enablement and singular pseudolocalization options. `Translation` stores contextual messages and plural forms. `OptimizedTranslation` generates and resolves compressed singular values without retaining source keys. Both support Resource duplication. `ElectronObject` supplies per-instance translation enablement and lookup entry points from Core. The service's global enabled flag is internal.
 
 ## Dependency direction
 
-- Localization depends on the Core Resource contract and the .NET Base Class Library.
+- Localization depends on the Core Resource and typed ProjectSettings contracts and the .NET Base Class Library.
 - Core references Localization through the static `TranslationServer` API.
 - Localization does not depend on Scene, SDL3-CS, rendering, or assets.
 - Future asset loading may populate catalogs but must not move resolution into the asset domain.
@@ -46,7 +46,7 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` and `TranslationDomainTests.cs` verify parent-culture fallback, source fallback, direct and resource plural selection, contextual and optimized catalogs, duplication, disposal, domain lifecycle and locale override, singular pseudolocalization, and per-object translation disabling.
+`tests/Electron2D.Tests/Program.cs`, `TranslationDomainTests.cs`, and `LocalizationProjectSettingsTests.cs` verify parent-culture fallback, source fallback, direct and resource plural selection, contextual and optimized catalogs, duplication, disposal, domain lifecycle and locale override, singular pseudolocalization, per-object translation disabling, typed setting persistence, managed Engine startup sampling, and live transform reload. `WindowRuntimeTests` verifies Run sampling before scene ready with the SDL dummy driver; other native platforms remain unverified for this setting.
 
 ## Decisions
 

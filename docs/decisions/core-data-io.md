@@ -1,6 +1,6 @@
 # Electron2D core configuration, data, and i/o decisions
 
-Last updated: 2026-09-22
+Last updated: 2026-09-24
 
 This bounded log owns the complete architectural records for core configuration, data, and i/o. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -108,7 +108,7 @@ The reference project-settings singleton combines a universal-value registry, de
 
 `ProjectSetting<T>` is the immutable public setting identity: full name, JSON-snapshotted default, and optional typed validator. `ProjectSettings` accepts only exact registered definitions for value access. Internally heterogeneous definitions are type-erased behind private generic entries; no untyped value crosses the public boundary.
 
-`ProjectSettings.Instance` is the non-disposable runtime registry and an Engine built-in singleton. Public constructors provide isolated disposable registries. Every registry starts with implemented application/timing, rendering and six GUI-focus input definitions; other domains add definitions only with executable consumers. Engine timing properties use active feature overrides from the process registry, so the settings layer is the single source rather than a duplicate bag. The typed `input/<action>` schema and atomic `InputMap` reload are owned by ADR 0038; ProjectSettings supplies exact-definition registration and a private typed group snapshot without exposing an untyped value store.
+`ProjectSettings.Instance` is the non-disposable runtime registry and an Engine built-in singleton. Public constructors provide isolated disposable registries. Every registry starts with implemented application/timing, rendering, six GUI-focus input, and nine pseudolocalization definitions; other domains add definitions only with executable consumers. Engine timing properties use active feature overrides from the process registry, so the settings layer is the single source rather than a duplicate bag. The typed `input/<action>` schema and atomic `InputMap` reload are owned by ADR 0038; ProjectSettings supplies exact-definition registration and a private typed group snapshot without exposing an untyped value store. The startup sampling and transformation reload of localization settings are owned by ADR 0007.
 
 Values persist through `ConfigFile`. Unknown entries survive loading. Registration validates preloaded data. The current per-registry initial value is implicit: changing it preserves the observable current value, reset removes explicit base storage, and save omits a registered base value equal to its initial value. Main load replaces the document only after complete parsing and validation; custom load merges transactionally and preserves unsaved names that existed before the merge. Re-entrant mutation from a validator is rejected during load; validators must otherwise be pure and thread-safe. Saves reorder known entries using setting order, atomically replace the destination, and clear internal unsaved tracking only on success. The public changed-setting list is instead the current coalesced notification batch and is consumed only after event delivery. Standard C# exceptions replace numeric error codes.
 

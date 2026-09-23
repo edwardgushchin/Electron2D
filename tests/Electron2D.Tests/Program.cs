@@ -163,6 +163,7 @@ VerifyNotificationsAndProperties();
 VerifyEventConnections();
 VerifyTranslations();
 TranslationDomainTests.Run();
+LocalizationProjectSettingsTests.Run();
 VerifyMathF();
 VerifyColors();
 SpriteTests.Run();

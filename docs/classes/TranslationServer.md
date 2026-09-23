@@ -1,6 +1,6 @@
 # TranslationServer
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** —
 
@@ -58,6 +58,7 @@ string text = TranslationServer.Translate("ui", "menu.play");
 | `public static bool HasTranslationForLocale(string locale, bool exact)` | Tests main-domain locale availability. |
 | `public static string[] GetLoadedLocales()` | Gets distinct live main-domain locale names. |
 | `public static string Pseudolocalize(string message)` | Applies main-domain pseudolocalization options. |
+| [`public static void ReloadPseudolocalization()`](#reloadpseudolocalization) | Reloads the eight transform options from active typed project settings. |
 
 ## Property Descriptions
 
@@ -180,6 +181,11 @@ Removes all direct singular/plural registrations and resource registrations with
 
 `PseudolocalizationEnabled` and `Pseudolocalize` use the main domain's options. `Pseudolocalize` applies those options even if the switch is false. Singular lookup transforms both translated text and missing-message fallback when the switch is true. Plural lookup does not transform its result. See [`TranslationDomain`](TranslationDomain.md) for the options and limits.
 
+<a id="reloadpseudolocalization"></a>
+### `public static void ReloadPseudolocalization()`
+
+Reads the eight active transform settings from [`ProjectSettings.Instance`](ProjectSettings.md#p-electron2d-projectsettings-instance) and updates the main domain. It leaves the runtime `PseudolocalizationEnabled` switch unchanged. `Engine.Run` loads the project switch and these options before native scene activation; `Engine.Start` loads them before attaching a caller-supplied loop, whose scene may already have delivered ready callbacks. This managed reload does not reload asset remaps or send a translation-changed notification to an active scene.
+
 ## State and key rules
 
 Singular keys contain culture name, domain, normalized context, and source message. Plural keys also contain both source forms. A null context is normalized to the empty string. All string matching uses the tuple/string default ordinal, case-sensitive equality.
@@ -203,6 +209,6 @@ One process-wide lock protects direct catalogs, the domain registry, and `Cultur
 
 ## Verification and limitations
 
-Tests verify parent-culture fallback, missing-message fallback, domain selection, caller-defined plural behavior, resource edits, duplication, removal, disposal, per-object disabling, domain lifecycle and pseudolocalization.
+Tests verify parent-culture fallback, missing-message fallback, domain selection, caller-defined plural behavior, resource edits, duplication, removal, disposal, per-object disabling, domain lifecycle and pseudolocalization. `LocalizationProjectSettingsTests` checks typed startup settings and runtime transform reload.
 
 No catalog file loader, CLDR plural rules, message formatting, full Unicode bidirectional text support, or per-thread culture override is implemented. Exact locale-score and Unicode pseudolocalization parity remain partial.

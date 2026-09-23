@@ -29,6 +29,8 @@ available when a matching typed setting is later registered. The registry never 
 
 Six non-unregisterable built-in `ProjectSetting<InputActionSettings>` definitions store GUI focus actions under `input/ui_*`. Other actions may be registered with the same value type and `input/<action>` key. After `Load`, call [`InputMap.LoadFromProjectSettings`](InputMap.md#m-electron2d-inputmap-loadfromprojectsettings) during project setup to replace the live map. A settings change alone does not reload it.
 
+Nine built-in pseudolocalization settings configure the main translation domain. `Engine.Run` samples them before creating its scene; `Engine.Start` samples them before attaching the supplied loop. The enablement setting is only sampled at startup, while [`TranslationServer.ReloadPseudolocalization`](TranslationServer.md#reloadpseudolocalization) reloads the eight transform options. Use `TranslationServer.PseudolocalizationEnabled` to change enablement at runtime.
+
 ## Examples
 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
@@ -63,6 +65,15 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<bool> UseNearestMipmapFilter { get; }`](#usenearestmipmapfilter) | Selects canvas mip interpolation at GPU startup; false by default. |
 | [`public static ProjectSetting<int> AnisotropicFilteringLevel { get; }`](#anisotropicfilteringlevel) | Initializes new viewports; exponent 0..4, default 2. |
 | [`public static ProjectSetting<Color> DefaultClearColor { get; }`](#p-electron2d-projectsettings-defaultclearcolor) | Defines the initial root-framebuffer clear color. |
+| [`public static ProjectSetting<bool> PseudolocalizationEnabled { get; }`](#pseudolocalizationenabled) | Startup enablement; false by default. |
+| [`public static ProjectSetting<bool> PseudolocalizationReplaceWithAccents { get; }`](#pseudolocalizationreplacewithaccents) | Accent substitution; true by default. |
+| [`public static ProjectSetting<bool> PseudolocalizationDoubleVowels { get; }`](#pseudolocalizationdoublevowels) | Vowel doubling; false by default. |
+| [`public static ProjectSetting<bool> PseudolocalizationFakeBIDI { get; }`](#pseudolocalizationfakebidi) | Direction controls; false by default. |
+| [`public static ProjectSetting<bool> PseudolocalizationOverride { get; }`](#pseudolocalizationoverride) | Character masking; false by default. |
+| [`public static ProjectSetting<float> PseudolocalizationExpansionRatio { get; }`](#pseudolocalizationexpansionratio) | Non-negative finite expansion; zero by default. |
+| [`public static ProjectSetting<string> PseudolocalizationPrefix { get; }`](#pseudolocalizationprefix) | Text prefix; `[` by default. |
+| [`public static ProjectSetting<string> PseudolocalizationSuffix { get; }`](#pseudolocalizationsuffix) | Text suffix; `]` by default. |
+| [`public static ProjectSetting<bool> PseudolocalizationSkipPlaceholders { get; }`](#pseudolocalizationskipplaceholders) | Placeholder preservation; true by default. |
 | [`public static ProjectSetting<InputActionSettings> InputUIFocusNext { get; }`](#inputuifocusnext) | Defines Tab focus navigation. |
 | [`public static ProjectSetting<InputActionSettings> InputUIFocusPrev { get; }`](#inputuifocusprev) | Defines Shift+Tab focus navigation. |
 | [`public static ProjectSetting<InputActionSettings> InputUILeft { get; }`](#inputuileft) | Defines left-arrow, D-pad left and left-stick-left focus navigation. |
@@ -241,6 +252,51 @@ Defines `rendering/textures/default_filters/anisotropic_filtering_level`, defaul
 ### `public static ProjectSetting<Color> DefaultClearColor { get; }`
 
 Defines `rendering/environment/defaults/default_clear_color`, default `(0.3, 0.3, 0.3, 1)`. Every channel must be finite; invalid writes fail before mutation. The renderer reads the active feature override during startup. Use RenderingServer.SetDefaultClearColor to change the active renderer's color; it does not change this stored setting. Normalized framebuffer output clamps channels to `[0, 1]`.
+
+<a id="pseudolocalizationenabled"></a>
+### `public static ProjectSetting<bool> PseudolocalizationEnabled { get; }`
+
+Defines `internationalization/pseudolocalization/use_pseudolocalization`, default false. An Engine run samples the active override at startup. A later setting change does not toggle the active domain; assign `TranslationServer.PseudolocalizationEnabled` for an immediate change.
+
+<a id="pseudolocalizationreplacewithaccents"></a>
+### `public static ProjectSetting<bool> PseudolocalizationReplaceWithAccents { get; }`
+
+Defines `internationalization/pseudolocalization/replace_with_accents`, default true.
+
+<a id="pseudolocalizationdoublevowels"></a>
+### `public static ProjectSetting<bool> PseudolocalizationDoubleVowels { get; }`
+
+Defines `internationalization/pseudolocalization/double_vowels`, default false.
+
+<a id="pseudolocalizationfakebidi"></a>
+### `public static ProjectSetting<bool> PseudolocalizationFakeBIDI { get; }`
+
+Defines `internationalization/pseudolocalization/fake_bidi`, default false.
+
+<a id="pseudolocalizationoverride"></a>
+### `public static ProjectSetting<bool> PseudolocalizationOverride { get; }`
+
+Defines `internationalization/pseudolocalization/override`, default false.
+
+<a id="pseudolocalizationexpansionratio"></a>
+### `public static ProjectSetting<float> PseudolocalizationExpansionRatio { get; }`
+
+Defines `internationalization/pseudolocalization/expansion_ratio`, default zero. Values must be finite and non-negative. A negative value fails with `ArgumentOutOfRangeException`; non-finite values fail during JSON serialization before storage.
+
+<a id="pseudolocalizationprefix"></a>
+### `public static ProjectSetting<string> PseudolocalizationPrefix { get; }`
+
+Defines `internationalization/pseudolocalization/prefix`, default `[`. Null values are rejected by the typed setting boundary.
+
+<a id="pseudolocalizationsuffix"></a>
+### `public static ProjectSetting<string> PseudolocalizationSuffix { get; }`
+
+Defines `internationalization/pseudolocalization/suffix`, default `]`. Null values are rejected by the typed setting boundary.
+
+<a id="pseudolocalizationskipplaceholders"></a>
+### `public static ProjectSetting<bool> PseudolocalizationSkipPlaceholders { get; }`
+
+Defines `internationalization/pseudolocalization/skip_placeholders`, default true. These eight transform settings are read on startup or by `TranslationServer.ReloadPseudolocalization`; setting them alone does not change a running domain.
 
 <a id="inputuifocusnext"></a>
 ### `public static ProjectSetting<InputActionSettings> InputUIFocusNext { get; }`
@@ -1137,6 +1193,6 @@ Isolated instances dispose their owned document and clear subscribers/state. The
 
 ## Verification and known limitations
 
-The executable harness covers malformed definitions/features/paths, exact registration identity, built-ins, mutable snapshot isolation, validators and rollback, initial/revert behavior, metadata/property discovery and post-commit callback failure, override precedence/current/custom features, changed groups/version/no-op writes, event coalescing/re-entry/failure, OS/virtual path round trips/traversal, root discovery, save/load/override/late registration, failed I/O preservation, re-entrant validator rejection, concurrency, reconfiguration, disposal, Engine feature lookup/event flushing, and warmed zero-allocation Engine frames.
+The executable harness covers malformed definitions/features/paths, exact registration identity, built-ins, mutable snapshot isolation, validators and rollback, initial/revert behavior, metadata/property discovery and post-commit callback failure, override precedence/current/custom features, changed groups/version/no-op writes, event coalescing/re-entry/failure, OS/virtual path round trips/traversal, root discovery, save/load/override/late registration, failed I/O preservation, re-entrant validator rejection, concurrency, reconfiguration, disposal, Engine feature lookup/event flushing, and warmed zero-allocation Engine frames. `LocalizationProjectSettingsTests` checks pseudolocalization defaults, persistence, validation, startup sampling and live transform reload.
 
 Tests do not prove crash durability on every filesystem, symbolic-link confinement, editor presentation, packed exports, or unavailable domain settings.

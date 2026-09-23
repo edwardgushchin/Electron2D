@@ -13,11 +13,11 @@ This Core component provides the process-wide typed settings registry, isolated 
 | [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md) | Immutable typed name/default/validator identity |
 | [`ProjectSettings`](../classes/ProjectSettings.md) | Registry, metadata, override, persistence, event, and virtual-path owner |
 
-The input action records are defined by the [Input runtime](input-runtime.md); this component registers six typed defaults and provides the internal typed group snapshot used by explicit `InputMap` reload. Both types are implemented in [`src/Core/Config/ProjectSettings.cs`](../../src/Core/Config/ProjectSettings.cs).
+The input action records are defined by the [Input runtime](input-runtime.md); this component registers six typed defaults and provides the internal typed group snapshot used by explicit `InputMap` reload. Nine built-in pseudolocalization settings have executable consumers in [Localization](localization.md). Both types are implemented in [`src/Core/Config/ProjectSettings.cs`](../../src/Core/Config/ProjectSettings.cs).
 
 ## Runtime flow
 
-1. The component creates built-in application, timing, rendering and six GUI-focus input definitions and registers them in each registry.
+1. The component creates built-in application, timing, rendering, six GUI-focus input and nine pseudolocalization definitions and registers them in each registry.
 2. Domains register additional `ProjectSetting<T>` definitions. A definition immediately claims and validates compatible values that may already exist in the loaded document.
 3. Typed writes snapshot through the configuration serializer, validate, commit under the registry lock, mark the base name unsaved, increment `Version`, and queue one change notification.
 4. Typed reads choose base/default or the first active feature override, then return a scalar cache or independent mutable snapshot.
@@ -48,7 +48,7 @@ The root renderer samples `RenderingMethod`, `RenderingFallback` and `DefaultCle
 
 ## Current implementation status
 
-Implemented and covered by the executable harness. The process singleton is registered in Engine; Engine timing properties read active project-setting overrides and write their typed base definitions. Built-in features include build configuration, managed runtime, current OS when recognized, and process architecture. Custom features are runtime-managed.
+Implemented and covered by the executable harness. The process singleton is registered in Engine; Engine timing properties read active project-setting overrides and write their typed base definitions. The nine pseudolocalization settings are sampled at Engine startup and their eight transform options can be reapplied by TranslationServer during a run; the enabled switch remains a runtime choice until the next startup. Built-in features include build configuration, managed runtime, current OS when recognized, and process architecture. Custom features are runtime-managed.
 
 ## Exclusions and deferred integration
 
@@ -60,7 +60,7 @@ Implemented and covered by the executable harness. The process singleton is regi
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` verifies registration, values, snapshots, validation, metadata, feature selection, changes/events, persistence/ordering, virtual paths, root-pair consumption by directory operations, failures, concurrency, disposal, and Engine integration. `CanvasSamplingTests` checks the new sampling keys and viewport construction; native sampling checks belong to [canvas rendering](canvas-rendering.md). Tests use temporary directory-backed projects and do not exercise resource packs, editor UI, SDL, or crash-time filesystem behavior.
+`tests/Electron2D.Tests/Program.cs` verifies registration, values, snapshots, validation, metadata, feature selection, changes/events, persistence/ordering, virtual paths, root-pair consumption by directory operations, failures, concurrency, disposal, and Engine integration. `LocalizationProjectSettingsTests` verifies typed pseudolocalization defaults, project-file round trip, startup sampling, and reload; `WindowRuntimeTests` checks native startup sampling with the SDL dummy driver. `CanvasSamplingTests` checks the sampling keys and viewport construction; native sampling checks belong to [canvas rendering](canvas-rendering.md). Temporary directory-backed projects are used; resource packs, editor UI and crash-time filesystem behavior remain untested.
 
 ## Decisions
 

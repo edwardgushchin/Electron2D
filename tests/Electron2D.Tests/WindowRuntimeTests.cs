@@ -9,6 +9,9 @@ internal static class WindowRuntimeTests
     {
         var engine = Engine.Instance;
         var oldLimit = engine.MaxFPS;
+        var settings = ProjectSettings.Instance;
+        var oldPseudolocalizationSetting = settings.Get(ProjectSettings.PseudolocalizationEnabled);
+        var oldPseudolocalizationEnabled = TranslationServer.PseudolocalizationEnabled;
         Reject<ArgumentOutOfRangeException>(() => engine.MaxFPS = -1);
         engine.MaxFPS = 20;
         try
@@ -58,11 +61,13 @@ internal static class WindowRuntimeTests
             }
 
             var order = new List<string>();
+            settings.Set(ProjectSettings.PseudolocalizationEnabled, true);
             var window = NewWindow();
             var probe = new Probe
             {
                 ReadyAction = node =>
                 {
+                    Check(TranslationServer.PseudolocalizationEnabled, "Native Run samples project pseudolocalization before scene ready.");
                     Check(ReferenceEquals(engine.MainLoop, node.Tree) && window.Tree!.Root == window && node.GetWindow() == window && node.GetViewport() == window,
                         "Scene children discover their actual root Window/Viewport before ready.");
                     Check(window.GetWindowID() == 0 && DisplayServer.Instance is not null,
@@ -112,6 +117,7 @@ internal static class WindowRuntimeTests
             Check(engine.Run(window) == 17 && clock.ElapsedMilliseconds >= 40 && probe.Frames == 2 &&
                   order.IndexOf("physics") < order.LastIndexOf("process"), "Run enforces monotonic frame limiting and returns the requested code.");
             AssertReleased(window, probe);
+            settings.Set(ProjectSettings.PseudolocalizationEnabled, oldPseudolocalizationSetting);
 
             window = NewWindow();
             probe = new Probe { ReadyAction = _ => PushClose() };
@@ -218,7 +224,12 @@ internal static class WindowRuntimeTests
             Check(engine.Run(window) == 31 && window.IsDisposed, "Cross-thread quit during ready works and startup observes it before frames.");
             Console.WriteLine("Window runtime checks passed.");
         }
-        finally { engine.MaxFPS = oldLimit; }
+        finally
+        {
+            settings.Set(ProjectSettings.PseudolocalizationEnabled, oldPseudolocalizationSetting);
+            TranslationServer.PseudolocalizationEnabled = oldPseudolocalizationEnabled;
+            engine.MaxFPS = oldLimit;
+        }
     }
 
     private static Window NewWindow() => new() { Title = "Window runtime checks", Size = new Vector2I(160, 100) };
