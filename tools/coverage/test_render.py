@@ -82,11 +82,18 @@ def main():
     for name in packed_types:
         content = pages[CLASS_PAGES / f"{name}.md"]
         rows = [line for line in content.splitlines() if line.startswith("| [`")]
-        assert rows and " | Blocked | " in rows[0], name
-        assert all(" | Excluded | " not in line for line in rows), name
+        assert rows and " | Excluded | " in rows[0], name
+        assert " | Excluded | " in next(line for line in rows if line.startswith("| [`method append(")), name
         assert "dynamic/untyped" not in content and "ADR 0001/0002" not in content, name
     packed = pages[CLASS_PAGES / "PackedColorArray.md"]
     assert "Color[]" in packed and "ReadOnlySpan<Color>" in packed
+    assert " | Blocked | " in next(line for line in packed.splitlines()
+                                  if line.startswith("| [`method to_byte_array("))
+    byte_array = pages[CLASS_PAGES / "PackedByteArray.md"]
+    assert " | Blocked | " in next(line for line in byte_array.splitlines()
+                                  if line.startswith("| [`method compress("))
+    assert " | Excluded | " in next(line for line in byte_array.splitlines()
+                                   if line.startswith("| [`method decode_var("))
     for name in ("RenderingDevice", "FramebufferCacheRD", "BoxMesh", "RefCounted",
                  "GDScriptLanguageProtocol", "EditorNode3DGizmo"):
         assert " | Excluded | " in class_rows[name]

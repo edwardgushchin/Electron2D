@@ -109,7 +109,7 @@ def reason_for_type(item, lookup):
         parent = lookup[parent]["inherits"]
     lineage = " ".join(ancestors)
     if name.startswith("Packed") and name.endswith("Array"):
-        return "Blocked", "Typed packed collection; ADR 0001 does not exclude it. Trigger: decide its C# collection projection and audit each member's ownership, mutation, copying and conversions before claiming a replacement or permanent exclusion."
+        return "Excluded", "Typed packed container and its ordinary collection methods use standard C# arrays, spans and lists instead of an Electron2D-owned duplicate (ADR 0001). Call-site behavior is audited separately."
     if name in {"Variant", "Callable", "Signal", "ClassDB", "Array", "Dictionary", "String", "bool", "float", "int"}:
         return "Excluded", "Engine-owned dynamic/untyped primitive or collection is replaced by C# types and typed contracts (ADR 0001/0002); no engine-owned duplicate."
     if name == "RefCounted":
@@ -292,6 +292,11 @@ def reason_for_type(item, lookup):
 
 def special_reason(item, member):
     if item["name"].startswith("Packed") and item["name"].endswith("Array"):
+        collection_methods = {"append", "append_array", "bsearch", "clear", "count", "duplicate", "erase", "fill", "find", "get", "has", "insert", "is_empty", "push_back", "remove_at", "resize", "reverse", "rfind", "set", "size", "slice", "sort"}
+        if item["name"] == "PackedByteArray" and member["name"] in {"decode_var", "decode_var_size", "encode_var", "has_encoded_var"}:
+            return "Excluded", "Variant-dependent byte conversion is excluded by ADR 0001."
+        if member["kind"] == "method" and member["name"] not in collection_methods:
+            return "Blocked", "Trigger: first typed binary-buffer utility slice under ADR 0020; audit byte layout, encoding, compression format and ownership for this operation before mapping or exclusion."
         return None
     name = member["name"].lower()
     signature = member["signature"]
@@ -512,7 +517,7 @@ def render():
                  f"Electron2D type: {', '.join(engine_link(engine_by_id[f'T:{owner}']) for owner in owners) if owners else '—'}.", "",
                  "Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.", ""])
         if name == "PackedColorArray":
-            lines.extend(["Implemented call sites project color sequences to `Color[]` or `ReadOnlySpan<Color>`; see [Gradient](Gradient.md) and [CanvasItem](CanvasItem.md). Those mappings do not establish the packed array's independent collection, copying, and byte-conversion contracts. The type and its members await a collection-wide decision and audit.", ""])
+            lines.extend(["The separate packed container is excluded under [ADR 0001](../../decisions/product.md#adr-0001). Implemented call sites project color sequences to `Color[]` or `ReadOnlySpan<Color>`; see [Gradient](Gradient.md) and [CanvasItem](CanvasItem.md). Their copying and ownership contracts are audited on those APIs. Binary conversion remains a separate row below.", ""])
         if name == "DisplayServer":
             lines.extend(["Current release verification requires Linux/Wayland only under [ADR 0021](../../decisions/product.md#adr-0021). The earlier self-contained host example, before Window/Engine.Run migration, started on Wayland with packaged SDL and advanced its scene; user-assisted physical arrow-key input and Escape exit passed. See the [class verification](../../classes/DisplayServer.md#verification). Other target platforms remain in the product matrix without blocking this stage.", ""])
         lines.extend(["| Godot API | Electron2D API | State | Reason / implementation trigger |",
@@ -528,7 +533,8 @@ def render():
         member_states = Counter()
         for member in godot_type["members"]:
             seen_upstream.add(member["id"])
-            special = None if class_state == "Excluded" and not owners else special_reason(godot_type, member)
+            special = (special_reason(godot_type, member) if owners or class_state != "Excluded"
+                       or name.startswith("Packed") and name.endswith("Array") else None)
             if class_state == "Blocked" and special and special[0] == "Blocked" and "operation-specific retained-canvas" in special[1]:
                 special = (class_state, class_reason)
             candidates = []

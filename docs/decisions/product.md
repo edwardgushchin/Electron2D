@@ -1,6 +1,6 @@
 # Electron2D product architecture decisions
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 This bounded document owns the current product architecture decisions. Use [the decision index](index.md) to route other work; read only the affected documents and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0001](#adr-0001), [0002](#adr-0002), [0004](#adr-0004), 
 <a id="adr-0001"></a>
 ## ADR 0001: Use typed C# without Variant
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 - Status: Accepted
 - Scope: Entire engine API
@@ -21,6 +21,8 @@ Godot uses `Variant` as a universal value container for scripting, dynamic prope
 ### Decision
 
 Electron2D will not implement `Variant`. Public APIs use concrete types, generics, overloads, typed collections, properties, methods, delegates, and events. The engine will not recreate Variant through pervasive `object`, `dynamic`, or untyped metadata dictionaries.
+
+Godot's typed `Packed*Array` container classes have no Electron2D-owned equivalents. Applicable public parameters and properties use C# typed arrays, spans, or other standard typed collections with ownership and copying specified at each API boundary. This excludes the duplicate container classes and their ordinary collection methods, not an in-scope feature merely because its reference signature uses a packed array. Specialized byte encoding, decoding, and compression operations require their own typed API mapping or explicit exclusion after a semantic audit.
 
 This rule does not prohibit a dedicated JSON document model. JSON syntax trees are values within the JSON utility only; they are not a general engine value type, property store, signal payload, or settings container. [ADR 0048](core-data-io.md#adr-0048) defines that utility. [ADR 0018](core-data-io.md#adr-0018) and [ADR 0019](core-data-io.md#adr-0019) keep configuration and project settings typed.
 
