@@ -21,7 +21,7 @@ Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/Inp
 - `InputEvent` hierarchy: typed stored property discovery, action matching, text, duplication, accumulation, coordinate transforms, device/window/modifier data, and concrete keyboard, pointer, touch, gesture, controller, and direct-action payloads.
 - Touch and drag events store signed contact indexes; the native display source generates indexes for physical contacts.
 - Input enums: complete key identifiers/modifier masks, key location, mouse buttons/mask, and standardized/raw controller axes/buttons.
-- `Node`/`SceneTree` integration: explicit opt-in callbacks, root viewport Control targeting, hover, focus and handled propagation.
+- `Node`/`SceneTree` integration: explicit opt-in callbacks, root viewport Control targeting, hover, focus ownership/notification and handled propagation.
 
 ## Dependency direction
 

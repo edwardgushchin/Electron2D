@@ -18,4 +18,4 @@ Controls whether an attached, visible Control can become the single keyboard inp
 
 Keyboard/gamepad focus navigation and the corresponding All mode remain unimplemented.
 
-For example, set `button.FocusMode = ControlFocusMode.Click` before adding a derived control to an active viewport; it can then receive focused keyboard input. The class remains partially implemented against the accepted GUI contract. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) check current focus delivery and loss.
+For example, set `button.FocusMode = ControlFocusMode.Click` before adding a derived control to an active viewport; it can then receive focused keyboard input. A focus transition sends Control notifications before the corresponding events, and the root Viewport exposes its current focus owner. The class remains partially implemented against the accepted GUI contract. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) check current focus delivery and loss.

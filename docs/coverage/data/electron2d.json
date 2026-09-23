@@ -2895,6 +2895,32 @@
     "value": "31"
   },
   {
+    "id": "constant:Electron2D.Control.NotificationFocusEnter()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Control",
+    "name": "NotificationFocusEnter",
+    "signature": "public const System.Int32 NotificationFocusEnter = 43",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "43"
+  },
+  {
+    "id": "constant:Electron2D.Control.NotificationFocusExit()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Control",
+    "name": "NotificationFocusExit",
+    "signature": "public const System.Int32 NotificationFocusExit = 44",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "44"
+  },
+  {
     "id": "constant:Electron2D.Control.NotificationMouseEnter()",
     "kind": "constant",
     "declaringType": "Electron2D.Control",
@@ -15118,6 +15144,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.Tweener\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Viewport.GUIFocusChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GUIFocusChanged",
+    "signature": "public event System.Action\u003CElectron2D.Control\u003E GUIFocusChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Control\u003E",
     "value": null
   },
   {
@@ -45745,6 +45784,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Viewport.GetGUIFocusOwner()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GetGUIFocusOwner",
+    "signature": "public Electron2D.Control GetGUIFocusOwner()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.GetMousePosition()",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
@@ -45830,6 +45882,19 @@
         "default": "false"
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Viewport.ReleaseGUIFocus()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "ReleaseGUIFocus",
+    "signature": "public System.Void ReleaseGUIFocus()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },

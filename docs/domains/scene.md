@@ -28,7 +28,7 @@ Production types include [`Polygon`](../classes/Polygon.md), [`Line`](../classes
 - `CanvasItem : Node`: abstract retained drawing, visibility, materials, modulation, Z, shared transform queries, texture sampling policies and local geometry notifications through ItemRectChanged.
 - `Entity : CanvasItem`: spatial position, rotation, scale, skew and helpers; Sprite, AnimatedSprite, Path, PathFollow and RemoteTransform derive directly from it.
 - `RemoteTransform`: borrowed target-path binding and selected local/global spatial transfer through the scene transform-notification lanes.
-- `Control : CanvasItem`: rectangular anchor/offset layout, pivot transform, resize propagation, root viewport mouse routing, hover cursor selection and keyboard focus; themes, containers and complete GUI behavior remain gaps.
+- `Control : CanvasItem`: rectangular anchor/offset layout, pivot transform, resize propagation, root viewport mouse routing, hover cursor selection, keyboard focus notifications and events; themes, containers and complete GUI behavior remain gaps. Root `Viewport` exposes focus owner, release and change notification.
 - `Sprite`: borrowed texture drawing, sheet frames, atlas regions, local bounds/opacity, change notifications and typed PackedScene state.
 - `Line`: spatial polyline drawing with point edits, width/color/texture resources, cap and joint modes, and typed scene state.
 - `Polygon`: spatial filled and inverted contours with color and texture coordinates, indexed subcontours, and copied packed state; skeletal deformation remains absent.

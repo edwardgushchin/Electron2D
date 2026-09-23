@@ -29,6 +29,8 @@ if (inputEvent.IsActionPressed("confirm"))
 
 This stops later scene input stages. It does not change Input polling state. `PushInput` retains caller ownership and accepts client coordinates by default, or viewport coordinates with `inLocalCoordinates: true`. Positional conversion creates a temporary event owned by dispatch.
 
+The root viewport owns keyboard focus for its controls. `GetGUIFocusOwner()` returns the current borrowed control; `ReleaseGUIFocus()` clears it. A new owner raises `GUIFocusChanged` before that control's focus notification and event.
+
 ## Canvas transforms and pointer coordinates
 
 Source: [Viewport.Transforms.cs](../../src/Scene/Main/Viewport.Transforms.cs).
@@ -163,9 +165,11 @@ All three properties are stored by PackedScene. Undefined/negative/Max enum writ
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Adds stored sampling/pixel-snapping properties and runtime canvas transforms to neutral node descriptors. |
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown. |
 | [`public Camera? GetCamera()`](#getcamera) | Returns the borrowed active camera, or null. |
+| [`public Control? GetGUIFocusOwner()`](#getguifocusowner) | Returns the root viewport's borrowed focused control, or null. |
 | [`public abstract Rect GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
 | [`public bool IsInputHandled()`](#isinputhandled) | Reports whether the current scene input event has been handled. |
 | [`public void PushInput(InputEvent inputEvent, bool inLocalCoordinates = false)`](#pushinput) | Delivers a borrowed input event directly to this viewport's scene. |
+| [`public void ReleaseGUIFocus()`](#releaseguifocus) | Releases this viewport's focused control, if any. |
 | [`public void SetInputAsHandled()`](#setinputashandled) | Marks the scene input event currently being dispatched as handled. |
 
 ## Events
@@ -173,6 +177,7 @@ All three properties are stored by PackedScene. Undefined/negative/Max enum writ
 | Member | Contract |
 | --- | --- |
 | [`public event Action? SizeChanged`](#sizechanged) | Occurs after the client size changes, before subsequent frame callbacks. |
+| [`public event Action<Control>? GUIFocusChanged`](#guifocuschanged) | Occurs when a new control gains keyboard focus; not raised on release. |
 
 ### GetPropertyDescriptors
 
@@ -195,6 +200,11 @@ Returns the client rectangle in viewport coordinates.
 **Returns:** A zero-origin rectangle in client units, independent of desktop and node position.
 
 **ObjectDisposedException:** The viewport is disposed.
+
+<a id="getguifocusowner"></a>
+### `public Control? GetGUIFocusOwner()`
+
+Returns the borrowed keyboard focus owner in the root viewport, or null while unfocused or detached. Attached access requires the scene owner thread; disposed access throws ObjectDisposedException. The result is a live Control reference, not a snapshot.
 
 <a id="isinputhandled"></a>
 ### `public bool IsInputHandled()`
@@ -228,6 +238,11 @@ Does not update global Input state or emulate pointer devices. Dispatch uses the
 
 **AggregateException:** Scene callbacks fail after dispatch.
 
+<a id="releaseguifocus"></a>
+### `public void ReleaseGUIFocus()`
+
+Clears the root viewport's focused control and sends NotificationFocusExit, then FocusExited, to that control. It does nothing while detached or already unfocused. It does not raise GUIFocusChanged. Attached access requires the scene owner thread; disposed access throws ObjectDisposedException. A callback failure propagates as AggregateException after the state is cleared.
+
 <a id="setinputashandled"></a>
 ### `public void SetInputAsHandled()`
 
@@ -247,6 +262,11 @@ Returns the borrowed active Camera for the default canvas, or null when none is 
 
 ## Event Descriptions
 
+<a id="guifocuschanged"></a>
+### `public event Action<Control>? GUIFocusChanged`
+
+Raised synchronously on the scene owner thread after the old control exits focus and before the new control receives NotificationFocusEnter and FocusEntered. The argument is the borrowed new owner. Explicit release and repeated focus on the same owner do not raise it. A throwing subscriber does not prevent the new control's focus notification and event; the failure is aggregated after the transition.
+
 <a id="sizechanged"></a>
 ### `public event Action? SizeChanged`
 
@@ -256,7 +276,7 @@ Subscribers run synchronously on the scene owner thread. Desktop movement does n
 
 ## Lifecycle, verification and limits
 
-See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. Physical-input/visual acceptance and other platforms remain unverified. Root rendering, Control rectangle layout and root viewport pointer/focus routing are implemented; content scaling, offscreen targets, complete interactive GUI and nested windows remain absent. Native Wayland rejects Position and may constrain geometry; focus requests obey compositor policy.
+See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) covers managed root GUI focus ownership, transition order, release, callback failures and owner-thread rejection. Physical-input/visual acceptance and other platforms remain unverified. Root rendering, Control rectangle layout and root viewport pointer/focus routing are implemented; content scaling, offscreen targets, complete interactive GUI and nested windows remain absent. Native Wayland rejects Position and may constrain geometry; native window focus requests obey compositor policy.
 
 Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028).
 

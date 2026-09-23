@@ -93,10 +93,113 @@ internal static class ControlInputTests
         using var copy = (Control)packed.Instantiate();
         Check(!copy.MouseForcePassScrollEvents && ((Control)copy.GetChild(0)).FocusMode == ControlFocusMode.Click,
             "Packed controls retain GUI input and focus policy.");
+        FocusContract();
         Console.WriteLine("Control GUI input routing checks passed.");
     }
 
+    private static void FocusContract()
+    {
+        using var detached = new TestViewport();
+        Check(detached.GetGUIFocusOwner() is null, "Detached viewport has no focus owner.");
+        detached.ReleaseGUIFocus();
+
+        var neutralRoot = new Node();
+        var neutralControl = new Control { FocusMode = ControlFocusMode.Click };
+        neutralRoot.AddChild(neutralControl);
+        using (var neutralTree = new SceneTree(neutralRoot))
+        {
+            neutralControl.GrabFocus();
+            Check(!neutralControl.HasFocus(), "A Control without a viewport cannot hold invisible GUI focus.");
+        }
+
+        var root = new TestViewport();
+        var order = new List<string>();
+        var first = new FocusProbe("first", order) { Name = "first", FocusMode = ControlFocusMode.Click };
+        var second = new FocusProbe("second", order) { Name = "second", FocusMode = ControlFocusMode.Click };
+        root.AddChild(first);
+        root.AddChild(second);
+        using var tree = new SceneTree(root);
+        root.GUIFocusChanged += control => order.Add("viewport:" + control.Name);
+        first.FocusEntered += () => order.Add("first:entered");
+        first.FocusExited += () => order.Add("first:exited");
+        second.FocusEntered += () => order.Add("second:entered");
+        second.FocusExited += () => order.Add("second:exited");
+
+        first.GrabFocus();
+        Check(ReferenceEquals(root.GetGUIFocusOwner(), first) &&
+            order.SequenceEqual(["viewport:first", "first:enter-notification", "first:entered"]),
+            "Focus gain notifies the viewport before the control.");
+        order.Clear();
+        first.GrabFocus(hideFocus: true);
+        Check(order.Count == 0 && first.HasFocus() && !first.HasFocus(ignoreHiddenFocus: true),
+            "Changing focus visibility does not repeat notifications.");
+
+        second.GrabFocus();
+        Check(ReferenceEquals(root.GetGUIFocusOwner(), second) &&
+            order.SequenceEqual(["first:exit-notification", "first:exited", "viewport:second", "second:enter-notification", "second:entered"]),
+            "Focus transfer exits the old owner before entering the new one.");
+        order.Clear();
+        root.ReleaseGUIFocus();
+        Check(root.GetGUIFocusOwner() is null &&
+            order.SequenceEqual(["second:exit-notification", "second:exited"]),
+            "Explicit viewport release clears focus without a viewport change event.");
+        order.Clear();
+        root.ReleaseGUIFocus();
+        Check(order.Count == 0, "Releasing empty focus does nothing.");
+
+        first.GrabFocus();
+        order.Clear();
+        first.FailExitNotification = true;
+        first.FocusExited += () => throw new ApplicationException("exit");
+        root.GUIFocusChanged += _ => throw new ApplicationException("viewport");
+        second.FocusEntered += () => throw new ApplicationException("enter");
+        var failure = Catch<AggregateException>(() => second.GrabFocus());
+        Check(failure.InnerExceptions.Count == 4 && ReferenceEquals(root.GetGUIFocusOwner(), second) &&
+            order.SequenceEqual(["first:exit-notification", "first:exited", "viewport:second", "second:enter-notification", "second:entered"]),
+            "Callback failures leave committed focus and deliver later stages.");
+        Reject<InvalidOperationException>(() => Task.Run(root.GetGUIFocusOwner).GetAwaiter().GetResult());
+        root.ReleaseGUIFocus();
+
+        var reentrantRoot = new TestViewport();
+        var reentrantOrder = new List<string>();
+        var reentrant = new FocusProbe("reentrant", reentrantOrder) { FocusMode = ControlFocusMode.Click };
+        reentrantRoot.AddChild(reentrant);
+        using var reentrantTree = new SceneTree(reentrantRoot);
+        reentrant.FocusEntered += () => reentrantOrder.Add("entered");
+        reentrant.FocusExited += () => reentrantOrder.Add("exited");
+        var releaseFromViewport = true;
+        reentrantRoot.GUIFocusChanged += _ =>
+        {
+            reentrantOrder.Add("viewport");
+            if (releaseFromViewport) reentrantRoot.ReleaseGUIFocus();
+        };
+        reentrant.GrabFocus();
+        Check(reentrantRoot.GetGUIFocusOwner() is null &&
+            reentrantOrder.SequenceEqual(["viewport", "reentrant:exit-notification", "exited"]),
+            "Reentrant viewport release prevents a stale focus-enter notification.");
+        releaseFromViewport = false;
+        reentrantOrder.Clear();
+        reentrant.EnterNotificationAction = reentrantRoot.ReleaseGUIFocus;
+        reentrant.GrabFocus();
+        Check(reentrantRoot.GetGUIFocusOwner() is null &&
+            reentrantOrder.SequenceEqual(["viewport", "reentrant:enter-notification", "reentrant:exit-notification", "exited"]),
+            "Reentrant notification release prevents a stale focus-enter event.");
+    }
+
     private sealed class TestViewport : Viewport { public override Rect GetVisibleRect() => new(0, 0, 100, 100); }
+    private sealed class FocusProbe(string name, List<string> order) : Control
+    {
+        internal bool FailExitNotification;
+        internal Action? EnterNotificationAction;
+        protected override void OnNotification(int what)
+        {
+            if (what == NotificationFocusEnter) order.Add(name + ":enter-notification");
+            if (what == NotificationFocusExit) order.Add(name + ":exit-notification");
+            base.OnNotification(what);
+            if (what == NotificationFocusEnter) EnterNotificationAction?.Invoke();
+            if (what == NotificationFocusExit && FailExitNotification) throw new ApplicationException("exit notification");
+        }
+    }
     private sealed class Probe : Control
     {
         internal Action<InputEvent>? InputAction;
@@ -119,4 +222,5 @@ internal static class ControlInputTests
     }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
+    private static T Catch<T>(Action action) where T : Exception { try { action(); } catch (T error) { return error; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
 }

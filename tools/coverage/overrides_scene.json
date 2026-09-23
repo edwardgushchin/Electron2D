@@ -2,9 +2,11 @@
   "mappings": [
     {"electron2d": "property:Electron2D.InputEventScreenTouch.Index()", "godot": "InputEventScreenTouch::property:index", "reason": "Signed touch-contact identifier maps to the typed C# property."},
     {"electron2d": "property:Electron2D.InputEventScreenDrag.Index()", "godot": "InputEventScreenDrag::property:index", "reason": "Signed drag-contact identifier maps to the typed C# property."},
-    {"electron2d": "method:Electron2D.Control.OnGUIInput(Electron2D.InputEvent)", "godot": "Control::method:_gui_input(InputEvent:)", "state": "Partial", "reason": "Root viewport input invokes the typed virtual callback after Node input, with pointer hit testing and focused keyboard delivery. Hover, clipping, full draw order, nested viewports and callback/signal order remain to audit."},
+    {"electron2d": "method:Electron2D.Control.OnGUIInput(Electron2D.InputEvent)", "godot": "Control::method:_gui_input(InputEvent:)", "state": "Partial", "reason": "Root viewport input invokes the typed virtual callback after Node input, with pointer hit testing, hover updates and focused keyboard delivery. Clipping, full draw order and nested viewports remain to audit."},
     {"electron2d": "method:Electron2D.Control.HasPoint(Electron2D.Vector2)", "godot": "Control::method:_has_point(Vector2:)", "state": "Partial", "reason": "A virtual half-open local rectangle test is used for root viewport pointer targeting; custom shapes work. Clipping and full draw order remain to audit."},
     {"electron2d": "method:Electron2D.Control.OnGetCursorShape(Electron2D.Vector2)", "godot": "Control::method:_get_cursor_shape(Vector2:)", "state": "Partial", "reason": "Typed virtual cursor lookup receives control-local coordinates. Root viewport hover and native cursor selection are executable; clipping, overlapping canvas ordering and nested viewport behavior remain to audit."},
+    {"electron2d": "method:Electron2D.Viewport.GetGUIFocusOwner()", "godot": "Viewport::method:gui_get_focus_owner()", "reason": "Uppercase GUI naming projects the root viewport focus-owner query."},
+    {"electron2d": "method:Electron2D.Viewport.ReleaseGUIFocus()", "godot": "Viewport::method:gui_release_focus()", "reason": "Uppercase GUI naming projects the root viewport focus-release request."},
     {"electron2d": "property:Electron2D.Polygon.Vertices()", "godot": "Polygon2D::property:polygon", "state": "Partial", "reason": "ADR 0004 maps the vertex list to Vertices because C# forbids a Polygon member on Polygon. Copied finite vertices, default contour, inverted fill and packed state execute; full skeletal geometry remains absent."},
     {"electron2d": "method:Electron2D.Line.GetPointCount()", "godot": "Line2D::method:get_point_count()", "state": "Implemented", "reason": "Returns the stored point count, including duplicate points; LineTests covers insertion, removal and clear."},
     {"electron2d": "method:Electron2D.Control.GetGlobalRect()", "godot": "Control::method:get_global_rect()", "state": "Partial", "reason": "Control rectangle query uses the composed canvas transform and current layout size; rotation and layout-direction parity remain to audit."},
@@ -2605,13 +2607,23 @@
     },
     {
       "state": "Partial",
-      "reason": "Root viewport pointer routing executes Stop, Pass, Ignore and default wheel pass with ControlInputTests. Hover notifications, content clipping, exact renderer order, touch and nested viewport semantics remain absent.",
+      "reason": "Root viewport pointer routing executes Stop, Pass, Ignore, default wheel pass and hover notifications with ControlInputTests and ControlHoverTests. Content clipping, exact renderer order, touch and nested viewport semantics remain absent.",
       "godot": ["Control::enum:MouseFilter", "Control::property:mouse_filter", "Control::property:mouse_force_pass_scroll_events", "Control::signal:gui_input(InputEvent:)"]
     },
     {
       "state": "Partial",
-      "reason": "Click and explicit focus, hidden pointer focus, keyboard target delivery, hide/detach release and focus events run in the root viewport. All-mode keyboard/gamepad navigation, accessibility focus and focus notifications remain absent.",
+      "reason": "Click and explicit focus, hidden pointer focus, keyboard target delivery, hide/detach release, focus notifications and focus events run in the root viewport. All-mode keyboard/gamepad navigation, accessibility focus and nested viewport routing remain absent.",
       "godot": ["Control::enum:FocusMode", "Control::property:focus_mode", "Control::method:grab_focus(bool:)", "Control::method:has_focus(bool:)", "Control::method:release_focus()", "Control::signal:focus_entered()", "Control::signal:focus_exited()"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Exact focus notification IDs 43 and 44 dispatch before the corresponding control events; ControlInputTests verifies transition order and callback-failure continuation.",
+      "godot": ["Control::constant:NOTIFICATION_FOCUS_ENTER", "Control::constant:NOTIFICATION_FOCUS_EXIT"]
+    },
+    {
+      "state": "Partial",
+      "reason": "Root viewport focus ownership, explicit release and focus-change event execute in ControlInputTests. Embedded viewport ownership, navigation and full GUI semantics remain absent.",
+      "godot": ["Viewport::method:gui_get_focus_owner()", "Viewport::method:gui_release_focus()", "Viewport::signal:gui_focus_changed(Control:)"]
     },
     {
       "state": "Partial",
@@ -2830,18 +2842,15 @@
         "Viewport::method:gui_cancel_drag()",
         "Viewport::method:gui_get_drag_data()",
         "Viewport::method:gui_get_drag_description()",
-        "Viewport::method:gui_get_focus_owner()",
         "Viewport::method:gui_get_hovered_control()",
         "Viewport::method:gui_is_drag_successful()",
         "Viewport::method:gui_is_dragging()",
-        "Viewport::method:gui_release_focus()",
         "Viewport::method:gui_set_drag_description(String:)",
         "Viewport::method:push_text_input(String:)",
         "Viewport::property:gui_disable_input",
         "Viewport::property:gui_drag_threshold",
         "Viewport::property:gui_embed_subwindows",
-        "Viewport::property:gui_snap_controls_to_pixels",
-        "Viewport::signal:gui_focus_changed(Control:)"
+        "Viewport::property:gui_snap_controls_to_pixels"
       ]
     },
     {

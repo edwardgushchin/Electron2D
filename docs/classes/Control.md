@@ -79,7 +79,7 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `protected virtual CursorShape OnGetCursorShape(Vector2 atPosition)` | Returns MouseDefaultCursorShape unless overridden. |
 | `protected virtual bool HasPoint(Vector2 point)` | Tests a local point against the half-open rectangle; override for a custom hit shape. |
 | `protected virtual void OnGUIInput(InputEvent inputEvent)` | Receives routed pointer or focused keyboard input. |
-| `protected override void OnNotification(int what)` | Connects/disconnects layout sources and raises Resized after NotificationResized. |
+| `protected override void OnNotification(int what)` | Connects/disconnects layout sources, raises Resized after NotificationResized, and receives focus notifications. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Supplies stored layout, transform and GUI input policy. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Creates exact Control instances for PackedScene. |
 | `protected override void Dispose(bool disposing)` | Disconnects parent/viewport events and clears Resized. |
@@ -90,12 +90,13 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | --- | --- |
 | `public event Action? Resized` | Raised synchronously on the owner thread after a size change while attached. |
 | `public event Action<InputEvent>? GUIInput` | Raised after OnGUIInput with the same borrowed event. |
-| `public event Action? FocusEntered` | Raised after this control gains keyboard focus. |
-| `public event Action? FocusExited` | Raised after focus is released or transferred. |
+| `public event Action? FocusEntered` | Raised after NotificationFocusEnter when this control gains keyboard focus. |
+| `public event Action? FocusExited` | Raised after NotificationFocusExit when focus is released or transferred. |
 | `public event Action? MouseEntered` | Raised when the pointer enters the control or a reachable child. |
 | `public event Action? MouseExited` | Raised when the pointer leaves the control and reachable children. |
 | `public const int NotificationResized = 40` | Delivered before Resized, after the rectangle and transform are committed. |
 | `public const int NotificationMouseEnter = 41` / `NotificationMouseExit = 42` | Delivered before the corresponding hover event. |
+| `public const int NotificationFocusEnter = 43` / `NotificationFocusExit = 44` | Delivered before the corresponding focus event. |
 | `public const int NotificationMouseEnterSelf = 60` / `NotificationMouseExitSelf = 61` | Delivered when the direct hover target changes. |
 
 ## Nested enums
@@ -144,7 +145,7 @@ Root-viewport pointer motion updates the hover chain even if a Node handled the 
 
 ### `FocusMode`, `GrabFocus`, `HasFocus`, `ReleaseFocus`
 
-`FocusMode` defaults to None, rejects unsupported enum values, and releases active focus when set back to None. Click permits focus by left pointer press or explicit `GrabFocus`; `hideFocus` records hidden visual focus, reported as absent by `HasFocus(ignoreHiddenFocus: true)`. `GrabFocus` requires an attached control and has no effect while hidden or in None mode. `ReleaseFocus` does nothing when this control is not focused. Hiding or detaching the control releases focus. A focus change commits before `FocusExited` and `FocusEntered`; subscriber failures propagate after the state change.
+`FocusMode` defaults to None, rejects unsupported enum values, and releases active focus when set back to None. Click permits focus by left pointer press or explicit `GrabFocus`; `hideFocus` records hidden visual focus, reported as absent by `HasFocus(ignoreHiddenFocus: true)`. `GrabFocus` requires an attached control and has no effect while hidden, in None mode or outside a root Viewport. `ReleaseFocus` does nothing when this control is not focused. Hiding or detaching the control releases focus. A focus transfer commits before the previous control's NotificationFocusExit and FocusExited; the root Viewport then raises GUIFocusChanged, followed by the new control's NotificationFocusEnter and FocusEntered. Explicit release sends only the exit notification and event. Changing `hideFocus` on the current owner redraws it without another notification. Focus changes request redraw. Callback failures are collected while later focus callbacks continue, then propagate as AggregateException; focus state remains committed. Reentrant release suppresses a pending enter notification or event after focus is cleared.
 
 ### `HasPoint`, `OnGUIInput`, `GUIInput`, `AcceptEvent`
 
@@ -172,7 +173,7 @@ Moves to a new direct parent. With the default option, it validates the destinat
 
 ### `OnNotification(int what)`, `GetPropertyDescriptors()`, `CreateSceneInstanceFactory()`, `Dispose(bool disposing)`
 
-OnNotification subscribes to the direct canvas parent's geometry or root viewport size at canvas entry, disconnects at exit, releases focus when hidden or detached, and emits Resized after NotificationResized. GetPropertyDescriptors stores rectangle, transform, anchors, offsets, mouse filter, wheel policy and focus mode for PackedScene. The factory creates exact Control instances. Disposal removes borrowed event subscriptions and clears the control events.
+OnNotification subscribes to the direct canvas parent's geometry or root viewport size at canvas entry, disconnects at exit, releases focus when hidden or detached, and emits Resized after NotificationResized. The focus notifications 43/44 pass through this protected hook before the corresponding event. GetPropertyDescriptors stores rectangle, transform, anchors, offsets, mouse filter, wheel policy and focus mode for PackedScene. The factory creates exact Control instances. Disposal removes borrowed event subscriptions and clears the control events.
 
 ### `Resized`, `NotificationResized`
 
@@ -186,7 +187,7 @@ When reflow changes position or size, the control commits both values, invalidat
 
 ## Verification and limits
 
-[ControlLayoutTests](../../tests/Electron2D.Tests/ControlLayoutTests.cs) check nested anchors, parent and viewport resize propagation, callback order, transform inheritance, packed anchors/offsets, pivot/global position, invalid arguments, owner thread and disposal. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) check root viewport GUI input order, local coordinates, filter/bubbling, wheel pass, focus, pointer release capture, temporary event ownership and callback failure continuation. [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs) checks managed hover ordering, filters, notifications and cursor state; [ControlHoverNativeTests](../../tests/Electron2D.Tests/ControlHoverNativeTests.cs) checks native cursor precedence on Linux Wayland. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) includes a child Sprite pixel check in the native renderer. Full GUI interaction and reference parity remain unverified.
+[ControlLayoutTests](../../tests/Electron2D.Tests/ControlLayoutTests.cs) check nested anchors, parent and viewport resize propagation, callback order, transform inheritance, packed anchors/offsets, pivot/global position, invalid arguments, owner thread and disposal. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) check root viewport GUI input order, local coordinates, filter/bubbling, wheel pass, focus notification and event order, explicit viewport release, failure continuation, pointer release capture and temporary event ownership. [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs) checks managed hover ordering, filters, notifications and cursor state; [ControlHoverNativeTests](../../tests/Electron2D.Tests/ControlHoverNativeTests.cs) checks native cursor precedence on Linux Wayland. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) includes a child Sprite pixel check in the native renderer. Full GUI interaction and reference parity remain unverified.
 
 ### GUI input behavior
 

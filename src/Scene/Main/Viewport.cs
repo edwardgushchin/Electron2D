@@ -16,6 +16,30 @@ public abstract partial class Viewport : Node
     /// <remarks>Subscribers run synchronously on the scene owner thread. Desktop movement does not notify.</remarks>
     public event Action? SizeChanged;
 
+    /// <summary>Occurs when this root viewport gives keyboard focus to a control.</summary>
+    /// <remarks>Delivered after the previous control loses focus and before the new control's focus notification.
+    /// Releasing focus does not raise this event.</remarks>
+    public event Action<Control>? GUIFocusChanged;
+
+    /// <summary>Returns the control with keyboard focus in this root viewport, or null.</summary>
+    /// <returns>The borrowed focused control, or null when no control is focused or the viewport is detached.</returns>
+    /// <exception cref="InvalidOperationException">The attached scene is accessed off its owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
+    public Control? GetGUIFocusOwner()
+    {
+        ThrowIfDisposed();
+        return Tree?.GetGUIFocusOwner(this);
+    }
+
+    /// <summary>Releases keyboard focus from this root viewport's control, if any.</summary>
+    /// <exception cref="InvalidOperationException">The attached scene is accessed off its owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
+    public void ReleaseGUIFocus()
+    {
+        ThrowIfDisposed();
+        Tree?.ReleaseGUIFocus(this);
+    }
+
     /// <summary>Marks the scene input event currently being dispatched as handled.</summary>
     /// <remarks>Stops later scene input callbacks without changing the global polling state.</remarks>
     /// <exception cref="InvalidOperationException">The viewport is detached, no input is being dispatched, or the caller is not the owner.</exception>
@@ -46,6 +70,7 @@ public abstract partial class Viewport : Node
     }
 
     internal void NotifySizeChanged() => SizeChanged?.Invoke();
+    internal void NotifyGUIFocusChanged(Control control) => GUIFocusChanged?.Invoke(control);
 
     private SceneTree GetInputTree()
     {
@@ -57,7 +82,10 @@ public abstract partial class Viewport : Node
     protected override void Dispose(bool disposing)
     {
         if (disposing)
+        {
             SizeChanged = null;
+            GUIFocusChanged = null;
+        }
         base.Dispose(disposing);
     }
 }

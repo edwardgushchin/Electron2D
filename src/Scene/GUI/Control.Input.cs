@@ -65,6 +65,10 @@ public partial class Control
     public const int NotificationMouseEnter = 41;
     /// <summary>Pointer exited this control and all reachable child controls.</summary>
     public const int NotificationMouseExit = 42;
+    /// <summary>This control gained keyboard focus, before <see cref="FocusEntered"/>.</summary>
+    public const int NotificationFocusEnter = 43;
+    /// <summary>This control lost keyboard focus, before <see cref="FocusExited"/>.</summary>
+    public const int NotificationFocusExit = 44;
     /// <summary>This control became the directly hovered control.</summary>
     public const int NotificationMouseEnterSelf = 60;
     /// <summary>This control stopped being the directly hovered control.</summary>
@@ -80,10 +84,10 @@ public partial class Control
     /// then may bubble to parent controls; keyboard input targets only the focused control.</remarks>
     public event Action<InputEvent>? GUIInput;
 
-    /// <summary>Occurs after this control becomes the keyboard input target.</summary>
+    /// <summary>Occurs after <see cref="NotificationFocusEnter"/> when this control becomes the keyboard input target.</summary>
     public event Action? FocusEntered;
 
-    /// <summary>Occurs after this control loses keyboard focus.</summary>
+    /// <summary>Occurs after <see cref="NotificationFocusExit"/> when this control loses keyboard focus.</summary>
     public event Action? FocusExited;
 
     /// <summary>Occurs when the pointer enters this control or its reachable child area.</summary>
@@ -156,7 +160,7 @@ public partial class Control
         (Tree ?? throw new InvalidOperationException("A control must belong to a scene tree to accept input.")).SetInputAsHandled();
     }
 
-    /// <summary>Requests keyboard focus for this visible, attached control.</summary>
+    /// <summary>Requests keyboard focus for this visible control in a root viewport.</summary>
     /// <param name="hideFocus">Whether <see cref="HasFocus"/> should ignore this focus when requested.</param>
     public void GrabFocus(bool hideFocus = false)
     {
@@ -212,8 +216,25 @@ public partial class Control
         OnGUIInput(inputEvent);
         GUIInput?.Invoke(inputEvent);
     }
-    internal void NotifyFocusEntered() => FocusEntered?.Invoke();
-    internal void NotifyFocusExited() => FocusExited?.Invoke();
+    internal void NotifyFocusEntered() => NotifyFocusChange(NotificationFocusEnter);
+    internal void NotifyFocusExited() => NotifyFocusChange(NotificationFocusExit);
     internal void NotifyMouseEntered() => MouseEntered?.Invoke();
     internal void NotifyMouseExited() => MouseExited?.Invoke();
+
+    private void NotifyFocusChange(int notification)
+    {
+        List<Exception>? errors = null;
+        try { DispatchNotification(notification); } catch (Exception error) { CollectException(ref errors, error); }
+        try
+        {
+            if (notification == NotificationFocusEnter)
+            {
+                if (Tree?.HasGUIFocus(this, ignoreHiddenFocus: false) == true) FocusEntered?.Invoke();
+            }
+            else FocusExited?.Invoke();
+        }
+        catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed) QueueRedraw(); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Control focus callbacks failed.", errors);
+    }
 }

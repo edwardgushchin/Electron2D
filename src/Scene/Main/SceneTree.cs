@@ -547,19 +547,41 @@ public sealed partial class SceneTree : MainLoop
         return ReferenceEquals(_guiFocus, control) && (!ignoreHiddenFocus || !_guiFocusHidden);
     }
 
+    internal Control? GetGUIFocusOwner(Viewport viewport)
+    {
+        EnsureOwnerThread();
+        return ReferenceEquals(Root, viewport) ? _guiFocus : null;
+    }
+
+    internal void ReleaseGUIFocus(Viewport viewport)
+    {
+        EnsureOwnerThread();
+        if (ReferenceEquals(Root, viewport) && _guiFocus is { } focused)
+            ReleaseGUIFocus(focused);
+    }
+
     internal void SetGUIFocus(Control control, bool hideFocus)
     {
         EnsureOwnerThread();
-        if (!ReferenceEquals(control.Tree, this) || !control.IsVisibleInTree || control.FocusMode == ControlFocusMode.None)
+        if (Root is not Viewport viewport || !ReferenceEquals(control.GetViewport(), viewport) ||
+            !ReferenceEquals(control.Tree, this) || !control.IsVisibleInTree || control.FocusMode == ControlFocusMode.None)
             return;
-        if (ReferenceEquals(_guiFocus, control)) { _guiFocusHidden = hideFocus; return; }
+        if (ReferenceEquals(_guiFocus, control))
+        {
+            if (_guiFocusHidden != hideFocus) { _guiFocusHidden = hideFocus; control.QueueRedraw(); }
+            return;
+        }
         var previous = _guiFocus;
         _guiFocus = control;
         _guiFocusHidden = hideFocus;
         List<Exception>? errors = null;
         try { previous?.NotifyFocusExited(); } catch (Exception error) { CollectException(ref errors, error); }
         if (ReferenceEquals(_guiFocus, control))
-            try { control.NotifyFocusEntered(); } catch (Exception error) { CollectException(ref errors, error); }
+        {
+            try { viewport.NotifyGUIFocusChanged(control); } catch (Exception error) { CollectException(ref errors, error); }
+            if (ReferenceEquals(_guiFocus, control))
+                try { control.NotifyFocusEntered(); } catch (Exception error) { CollectException(ref errors, error); }
+        }
         ThrowCollected("GUI focus callbacks failed.", errors);
     }
 
