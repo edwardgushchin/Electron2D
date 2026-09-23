@@ -47,6 +47,12 @@ internal static class ControlFocusNavigationTests
         using var right = new InputEventKey { Pressed = true, Keycode = Key.Right };
         root.PushInput(right, inLocalCoordinates: true);
         Check(second.HasFocus(), "Right arrow follows spatial focus.");
+        using var dpadLeft = new InputEventJoypadButton { Pressed = true, ButtonIndex = JoyButton.DpadLeft, Device = 5 };
+        root.PushInput(dpadLeft, inLocalCoordinates: true);
+        Check(first.HasFocus(), "D-pad left moves GUI focus from a nonzero controller device.");
+        using var dpadRight = new InputEventJoypadButton { Pressed = true, ButtonIndex = JoyButton.DpadRight, Device = 5 };
+        root.PushInput(dpadRight, inLocalCoordinates: true);
+        Check(second.HasFocus(), "D-pad right moves GUI focus through the default action.");
         second.ReleaseFocus();
         root.PushInput(tab, inLocalCoordinates: true);
         Check(second.HasFocus(), "Tab finds a focus target when the viewport has no owner.");
@@ -68,6 +74,27 @@ internal static class ControlFocusNavigationTests
         Check(copy.FocusMode == ControlFocusMode.All && copy.FocusNext == "../next" && copy.FocusNeighborBottom == "../below",
             "Focus policy and paths survive typed scene capture.");
         detached.Dispose();
+
+        second.Visible = true;
+        second.FocusNeighborRight = "../first";
+        first.GrabFocus();
+        Engine.Instance.Start(tree);
+        try
+        {
+            using var stick = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = 1f, Device = 9 };
+            Input.Instance.ParseInputEvent(stick);
+            Check(second.HasFocus(), "Left-stick right moves GUI focus through the active input loop.");
+            using var heldStick = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = 1f, Device = 9 };
+            Input.Instance.ParseInputEvent(heldStick);
+            Check(second.HasFocus(), "Holding the stick does not repeat a directional focus transition.");
+            using var neutralStick = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, Device = 9 };
+            Input.Instance.ParseInputEvent(neutralStick);
+            using var repeatedStick = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = 1f, Device = 9 };
+            Input.Instance.ParseInputEvent(repeatedStick);
+            Check(first.HasFocus(), "Releasing and pressing the stick permits another focus transition.");
+            Input.Instance.ParseInputEvent(neutralStick);
+        }
+        finally { Engine.Instance.Stop(); }
         Console.WriteLine("Control focus navigation checks passed.");
     }
 

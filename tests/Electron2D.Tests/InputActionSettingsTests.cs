@@ -39,6 +39,22 @@ internal static class InputActionSettingsTests
             loaded.Load();
             Reject<InvalidOperationException>(() => loaded.Unregister(ProjectSettings.InputUIFocusNext));
             Check(loaded.Get(actionSetting).Bindings.Length == 6, "Typed input bindings survive a project-file round trip.");
+            var directions = new[]
+            {
+                (ProjectSettings.InputUILeft, "ui_left", Key.Left, JoyButton.DpadLeft, JoyAxis.LeftX, -1f),
+                (ProjectSettings.InputUIUp, "ui_up", Key.Up, JoyButton.DpadUp, JoyAxis.LeftY, -1f),
+                (ProjectSettings.InputUIRight, "ui_right", Key.Right, JoyButton.DpadRight, JoyAxis.LeftX, 1f),
+                (ProjectSettings.InputUIDown, "ui_down", Key.Down, JoyButton.DpadDown, JoyAxis.LeftY, 1f),
+            };
+            foreach (var (setting, _, keycode, joyButton, joyAxis, axisValue) in directions)
+            {
+                var bindings = loaded.Get(setting).Bindings;
+                Check(bindings.Length == 3 &&
+                    bindings[0] is { Kind: InputBindingKind.Key, Keycode: var key } && key == keycode &&
+                    bindings[1] is { Kind: InputBindingKind.JoypadButton, JoyButtonIndex: var button, Device: InputMap.AllDevices } && button == joyButton &&
+                    bindings[2] is { Kind: InputBindingKind.JoypadMotion, JoyAxis: var axis, AxisValue: var value, Device: InputMap.AllDevices } && axis == joyAxis && value == axisValue,
+                    "Every directional default survives project-file loading with ordered key, D-pad, and left-stick bindings.");
+            }
 
             map.AddAction("temporary_action");
             var loadedEvents = 0;
@@ -55,6 +71,16 @@ internal static class InputActionSettingsTests
                 Check(loadedEvents == 1 && map.ActionGetDeadzone("jump") == 0.3f &&
                     map.ActionGetEvents("jump").Count == 5 && map.HasAction("ui_focus_next"),
                     "Loading replaces transient actions, restores built-ins and deduplicates ordered bindings.");
+
+                foreach (var (_, name, keycode, joyButton, joyAxis, axisValue) in directions)
+                {
+                    using var arrow = new InputEventKey { Keycode = keycode, Pressed = true };
+                    using var dpad = new InputEventJoypadButton { ButtonIndex = joyButton, Device = 5, Pressed = true };
+                    using var stick = new InputEventJoypadMotion { Axis = joyAxis, AxisValue = axisValue, Device = 9 };
+                    Check(map.ActionGetEvents(name).Count == 3 && map.EventIsAction(arrow, name, exactMatch: true) &&
+                        map.EventIsAction(dpad, name, exactMatch: true) && map.EventIsAction(stick, name, exactMatch: true),
+                        "Every directional action matches all three default event kinds, including nonzero controller devices.");
+                }
 
                 using var key = new InputEventKey { Keycode = Key.Space, ShiftPressed = true, Pressed = true };
                 using var plainKey = new InputEventKey { Keycode = Key.Space, Pressed = true };

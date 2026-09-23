@@ -4,7 +4,7 @@ public sealed partial class SceneTree
 {
     private void NavigateGUIFocus(Viewport viewport, InputEvent inputEvent)
     {
-        if (!inputEvent.IsPressed()) return;
+        if (inputEvent is not InputEventJoypadMotion && !inputEvent.IsPressed()) return;
         var from = _guiFocus;
         if (from is null)
             for (var index = 0; index < viewport.ChildCount; index++)

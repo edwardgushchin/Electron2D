@@ -203,25 +203,25 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<InputActionSettings> InputUIFocusPrev { get; } =
         CreateDefaultKeyAction("ui_focus_prev", Key.Tab, KeyModifierMask.Shift);
 
-    /// <summary>Defines the default left-arrow GUI action.</summary>
+    /// <summary>Defines left-arrow, D-pad left, and left-stick-left GUI navigation.</summary>
     /// <value>The permanent typed <c>input/ui_left</c> setting.</value>
     public static ProjectSetting<InputActionSettings> InputUILeft { get; } =
-        CreateDefaultKeyAction("ui_left", Key.Left);
+        CreateDefaultDirectionalAction("ui_left", Key.Left, JoyButton.DpadLeft, JoyAxis.LeftX, -1f);
 
-    /// <summary>Defines the default up-arrow GUI action.</summary>
+    /// <summary>Defines up-arrow, D-pad up, and left-stick-up GUI navigation.</summary>
     /// <value>The permanent typed <c>input/ui_up</c> setting.</value>
     public static ProjectSetting<InputActionSettings> InputUIUp { get; } =
-        CreateDefaultKeyAction("ui_up", Key.Up);
+        CreateDefaultDirectionalAction("ui_up", Key.Up, JoyButton.DpadUp, JoyAxis.LeftY, -1f);
 
-    /// <summary>Defines the default right-arrow GUI action.</summary>
+    /// <summary>Defines right-arrow, D-pad right, and left-stick-right GUI navigation.</summary>
     /// <value>The permanent typed <c>input/ui_right</c> setting.</value>
     public static ProjectSetting<InputActionSettings> InputUIRight { get; } =
-        CreateDefaultKeyAction("ui_right", Key.Right);
+        CreateDefaultDirectionalAction("ui_right", Key.Right, JoyButton.DpadRight, JoyAxis.LeftX, 1f);
 
-    /// <summary>Defines the default down-arrow GUI action.</summary>
+    /// <summary>Defines down-arrow, D-pad down, and left-stick-down GUI navigation.</summary>
     /// <value>The permanent typed <c>input/ui_down</c> setting.</value>
     public static ProjectSetting<InputActionSettings> InputUIDown { get; } =
-        CreateDefaultKeyAction("ui_down", Key.Down);
+        CreateDefaultDirectionalAction("ui_down", Key.Down, JoyButton.DpadDown, JoyAxis.LeftY, 1f);
 
     private static readonly ProjectSettings SharedInstance = CreateSharedInstance();
 
@@ -1316,6 +1316,18 @@ public sealed class ProjectSettings : ElectronObject
         new($"input/{name}", new InputActionSettings
         {
             Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = key, Modifiers = modifiers }],
+        });
+
+    private static ProjectSetting<InputActionSettings> CreateDefaultDirectionalAction(
+        string name, Key key, JoyButton button, JoyAxis axis, float axisValue) =>
+        new($"input/{name}", new InputActionSettings
+        {
+            Bindings =
+            [
+                new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = key },
+                new InputBindingSettings { Kind = InputBindingKind.JoypadButton, JoyButtonIndex = button, Device = InputMap.AllDevices },
+                new InputBindingSettings { Kind = InputBindingKind.JoypadMotion, JoyAxis = axis, AxisValue = axisValue, Device = InputMap.AllDevices },
+            ],
         });
 
     private void EnsureNotLoading()

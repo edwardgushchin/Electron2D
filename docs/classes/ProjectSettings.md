@@ -65,10 +65,10 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<Color> DefaultClearColor { get; }`](#p-electron2d-projectsettings-defaultclearcolor) | Defines the initial root-framebuffer clear color. |
 | [`public static ProjectSetting<InputActionSettings> InputUIFocusNext { get; }`](#inputuifocusnext) | Defines Tab focus navigation. |
 | [`public static ProjectSetting<InputActionSettings> InputUIFocusPrev { get; }`](#inputuifocusprev) | Defines Shift+Tab focus navigation. |
-| [`public static ProjectSetting<InputActionSettings> InputUILeft { get; }`](#inputuileft) | Defines left-arrow focus navigation. |
-| [`public static ProjectSetting<InputActionSettings> InputUIUp { get; }`](#inputuiup) | Defines up-arrow focus navigation. |
-| [`public static ProjectSetting<InputActionSettings> InputUIRight { get; }`](#inputuiright) | Defines right-arrow focus navigation. |
-| [`public static ProjectSetting<InputActionSettings> InputUIDown { get; }`](#inputuidown) | Defines down-arrow focus navigation. |
+| [`public static ProjectSetting<InputActionSettings> InputUILeft { get; }`](#inputuileft) | Defines left-arrow, D-pad left and left-stick-left focus navigation. |
+| [`public static ProjectSetting<InputActionSettings> InputUIUp { get; }`](#inputuiup) | Defines up-arrow, D-pad up and left-stick-up focus navigation. |
+| [`public static ProjectSetting<InputActionSettings> InputUIRight { get; }`](#inputuiright) | Defines right-arrow, D-pad right and left-stick-right focus navigation. |
+| [`public static ProjectSetting<InputActionSettings> InputUIDown { get; }`](#inputuidown) | Defines down-arrow, D-pad down and left-stick-down focus navigation. |
 | [`public static ProjectSettings Instance { get; }`](#p-electron2d-projectsettings-instance) | Gets the process-wide project settings registry. |
 | [`public string ProjectRoot { get; }`](#p-electron2d-projectsettings-projectroot) | Gets the current absolute project resource directory. |
 | [`public string UserDataRoot { get; }`](#p-electron2d-projectsettings-userdataroot) | Gets the current absolute user-data directory. |
@@ -255,22 +255,22 @@ Defines `input/ui_focus_prev`, default Shift+Tab.
 <a id="inputuileft"></a>
 ### `public static ProjectSetting<InputActionSettings> InputUILeft { get; }`
 
-Defines `input/ui_left`, default left arrow.
+Defines `input/ui_left`, default left arrow, D-pad left and left-stick X negative.
 
 <a id="inputuiup"></a>
 ### `public static ProjectSetting<InputActionSettings> InputUIUp { get; }`
 
-Defines `input/ui_up`, default up arrow.
+Defines `input/ui_up`, default up arrow, D-pad up and left-stick Y negative.
 
 <a id="inputuiright"></a>
 ### `public static ProjectSetting<InputActionSettings> InputUIRight { get; }`
 
-Defines `input/ui_right`, default right arrow.
+Defines `input/ui_right`, default right arrow, D-pad right and left-stick X positive.
 
 <a id="inputuidown"></a>
 ### `public static ProjectSetting<InputActionSettings> InputUIDown { get; }`
 
-Defines `input/ui_down`, default down arrow. Each of these definitions is registered in every registry; an active feature override participates in the next explicit map load. Their `InputActionSettings` values are snapshotted through project-setting serialization.
+Defines `input/ui_down`, default down arrow, D-pad down and left-stick Y positive. Each directional definition has three ordered bindings; the controller bindings match all devices. These definitions are registered in every registry; an active feature override participates in the next explicit map load. Their `InputActionSettings` values are snapshotted through project-setting serialization.
 
 <a id="p-electron2d-projectsettings-instance"></a>
 ### `public static ProjectSettings Instance { get; }`
