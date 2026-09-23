@@ -1,6 +1,6 @@
 # CanvasBackend
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Declaration: `internal abstract class CanvasBackend : IDisposable`
 - Source: [CanvasBackend.cs](../../src/Servers/Rendering/CanvasBackend.cs)
@@ -16,7 +16,7 @@ The shared internal contract for [GpuCanvasBackend](GpuCanvasBackend.md) and [Co
 This fragment belongs inside the runtime and requires the surrounding owner state.
 
 ```csharp
-backend.Draw(vertices, batches, clearColor, present: true);
+backend.Draw(vertices, batches, clearColor, present: true, renderTime);
 ```
 
 ## Member summary
@@ -26,7 +26,7 @@ backend.Draw(vertices, batches, clearColor, present: true);
 | `internal abstract string Method { get; }` | [Method](#method) |
 | `internal abstract string Driver { get; }` | [Driver](#driver) |
 | `internal abstract Vector2I GetPixelSize()` | [Pixel size](#pixel-size) |
-| `internal abstract void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present)` | [Draw](#draw) |
+| `internal abstract void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present, double time)` | [Draw](#draw) |
 | `internal abstract Image Readback()` | [Readback](#readback) |
 | `internal virtual nint GetNativeHandle(DisplayServer.HandleType type)` | [Native identity](#native-identity) |
 | `public abstract void Dispose()` | [Disposal](#disposal) |
@@ -55,9 +55,9 @@ Queries current framebuffer dimensions in physical pixels; native failure throws
 
 ### Draw
 
-`internal abstract void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present)`
+`internal abstract void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present, double time)`
 
-Prepares resources, clears its owned RGBA8 target and submits ordered triangles. present controls copying/presenting to the window. Zero-size output skips work. Unsupported features reject explicitly; exceptions propagate to Engine.Run cleanup.
+Prepares resources, clears its owned RGBA8 target and submits ordered triangles. present controls copying/presenting to the window. time is the current scaled, wrapped renderer clock in seconds; GPU forwards its float32 value to optional shader TIME, while compatibility has no programmable shader support. Zero-size output skips work. Unsupported features reject explicitly; exceptions propagate to Engine.Run cleanup.
 
 ### Readback
 

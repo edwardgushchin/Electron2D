@@ -164,7 +164,7 @@ public sealed class RenderingServer : ElectronObject
             foreach (var batch in _batches)
                 if (batch.Material is not null && _backend.Method != "gpu")
                     throw new NotSupportedException("A shader material requires GPU rendering; compatibility fallback cannot draw it.");
-            _backend.Draw(CollectionsMarshal.AsSpan(_vertices), CollectionsMarshal.AsSpan(_batches), _clearColor, present: true);
+            _backend.Draw(CollectionsMarshal.AsSpan(_vertices), CollectionsMarshal.AsSpan(_batches), _clearColor, present: true, CanvasTime);
             FramePostDraw?.Invoke();
         }
         finally { _nodes.Clear(); _order.Clear(); _ySort.Clear(); _rendering = false; }

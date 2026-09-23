@@ -1253,17 +1253,18 @@
     {
       "godot": "CanvasItem::method:draw_animation_slice(float:,float:,float:,float:)",
       "electron2d": "method:Electron2D.CanvasItem.DrawAnimationSlice(System.Double,System.Double,System.Double,System.Double)",
-      "reason": "Audited retained time intervals: positive/negative/zero period, signed modulo, offset, inclusive start/exclusive end, unwrapped bounds, ordered conditional transforms, end reset, per-item/replay isolation, no rerecording, resource skipping and failure rollback. CanvasTimingTests and CanvasTimingRenderingTests cover scaled render steps, pause, live rollover/feature overrides and disabled-frame time, with Wayland GPU/compatibility, HLSL/GLSL and dummy readback. Finite inputs and owner-thread/lifetime guards follow the typed runtime contract; no shader TIME binding is claimed."
+      "reason": "Audited retained time intervals: positive/negative/zero period, signed modulo, offset, inclusive start/exclusive end, unwrapped bounds, ordered conditional transforms, end reset, per-item/replay isolation, no rerecording, resource skipping and failure rollback. CanvasTimingTests and CanvasTimingRenderingTests cover scaled render steps, pause, live rollover/feature overrides and disabled-frame time, with Wayland GPU/compatibility, HLSL/GLSL and dummy readback. Finite inputs and owner-thread/lifetime guards follow the typed runtime contract. The same render clock also drives the optional fragment TIME built-in."
     },
     {
       "godot": "CanvasItem::method:draw_end_animation()",
       "electron2d": "method:Electron2D.CanvasItem.DrawEndAnimation()",
-      "reason": "Audited retained time intervals: positive/negative/zero period, signed modulo, offset, inclusive start/exclusive end, unwrapped bounds, ordered conditional transforms, end reset, per-item/replay isolation, no rerecording, resource skipping and failure rollback. CanvasTimingTests and CanvasTimingRenderingTests cover scaled render steps, pause, live rollover/feature overrides and disabled-frame time, with Wayland GPU/compatibility, HLSL/GLSL and dummy readback. Finite inputs and owner-thread/lifetime guards follow the typed runtime contract; no shader TIME binding is claimed."
+      "reason": "Audited retained time intervals: positive/negative/zero period, signed modulo, offset, inclusive start/exclusive end, unwrapped bounds, ordered conditional transforms, end reset, per-item/replay isolation, no rerecording, resource skipping and failure rollback. CanvasTimingTests and CanvasTimingRenderingTests cover scaled render steps, pause, live rollover/feature overrides and disabled-frame time, with Wayland GPU/compatibility, HLSL/GLSL and dummy readback. Finite inputs and owner-thread/lifetime guards follow the typed runtime contract. The same render clock also drives the optional fragment TIME built-in."
     },
     {
       "godot": "ProjectSettings::property:rendering/limits/time/time_rollover_secs",
       "electron2d": "property:Electron2D.ProjectSettings.RenderingTimeRolloverSeconds()",
-      "reason": "Typed finite positive setting with the reference key and 3600-second default. Render-clock wrapping and live feature overrides execute in RenderingServer and are verified in CanvasTimingTests/CanvasTimingRenderingTests. Partial because automatic shader TIME binding is not integrated; add the shared clock to the material shader interface before claiming its full shader-facing contract."
+      "reason": "Audited finite positive typed setting, reference key and 3600-second default; scaled render-clock wrapping and live base/feature changes drive retained intervals and float32 GPU fragment TIME. CanvasTimingTests/CanvasTimingRenderingTests and ShaderTimeRenderingTests verify pause/TimeScale, reload, shared/independent materials, actual HLSL/GLSL pixels, guards, cleanup and zero warm allocation. Reserved TIME is validated for source and external SPIR-V, excluded from material APIs and uploaded at reflected offsets. Current native gate: Linux Wayland/Vulkan; compatibility rejects shader materials, other target backends remain unverified. See docs/components/shader-materials.md#render-time.",
+      "state": "Implemented"
     }
   ],
   "statusGroups": [
@@ -1851,7 +1852,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Audited retained time intervals: positive/negative/zero period, signed modulo, offset, inclusive start/exclusive end, unwrapped bounds, ordered conditional transforms, end reset, per-item/replay isolation, no rerecording, resource skipping and failure rollback. CanvasTimingTests and CanvasTimingRenderingTests cover scaled render steps, pause, live rollover/feature overrides and disabled-frame time, with Wayland GPU/compatibility, HLSL/GLSL and dummy readback. Finite inputs and owner-thread/lifetime guards follow the typed runtime contract; no shader TIME binding is claimed.",
+      "reason": "Audited retained time intervals: positive/negative/zero period, signed modulo, offset, inclusive start/exclusive end, unwrapped bounds, ordered conditional transforms, end reset, per-item/replay isolation, no rerecording, resource skipping and failure rollback. CanvasTimingTests and CanvasTimingRenderingTests cover scaled render steps, pause, live rollover/feature overrides and disabled-frame time, with Wayland GPU/compatibility, HLSL/GLSL and dummy readback. Finite inputs and owner-thread/lifetime guards follow the typed runtime contract. The same render clock also drives the optional fragment TIME built-in.",
       "godot": [
         "CanvasItem::method:draw_animation_slice(float:,float:,float:,float:)",
         "CanvasItem::method:draw_end_animation()"
@@ -1962,8 +1963,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Typed finite positive setting with the reference key and 3600-second default. Render-clock wrapping and live feature overrides execute in RenderingServer and are verified in CanvasTimingTests/CanvasTimingRenderingTests. Partial because automatic shader TIME binding is not integrated; add the shared clock to the material shader interface before claiming its full shader-facing contract.",
+      "state": "Implemented",
+      "reason": "Audited finite positive typed setting, reference key and 3600-second default; scaled render-clock wrapping and live base/feature changes drive retained intervals and float32 GPU fragment TIME. CanvasTimingTests/CanvasTimingRenderingTests and ShaderTimeRenderingTests verify pause/TimeScale, reload, shared/independent materials, actual HLSL/GLSL pixels, guards, cleanup and zero warm allocation. Reserved TIME is validated for source and external SPIR-V, excluded from material APIs and uploaded at reflected offsets. Current native gate: Linux Wayland/Vulkan; compatibility rejects shader materials, other target backends remain unverified. See docs/components/shader-materials.md#render-time.",
       "godot": [
         "ProjectSettings::property:rendering/limits/time/time_rollover_secs"
       ]

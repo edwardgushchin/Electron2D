@@ -29,7 +29,7 @@ using CanvasBackend backend = new CompatibilityCanvasBackend(nativeWindow);
 | `internal override string Method { get; }` | [Method](#method) |
 | `internal override string Driver { get; }` | [Driver](#driver) |
 | `internal override Vector2I GetPixelSize()` | [Pixel size](#pixel-size) |
-| `internal override void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present)` | [Draw](#draw) |
+| `internal override void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present, double time)` | [Draw](#draw) |
 | `internal override Image Readback()` | [Readback](#readback) |
 | `internal override nint GetNativeHandle(DisplayServer.HandleType type)` | [Native identity](#native-identity) |
 | `public override void Dispose()` | [Disposal](#disposal) |
@@ -62,7 +62,7 @@ Queries physical render output dimensions.
 
 ### Draw
 
-`internal override void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present)`
+`internal override void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present, double time)`
 
 Validates shader absence, prepares base-level texture copies and prunes unused resources. Converts vertices into reusable SDL storage, applies clamp/repeat and nearest filtering, and submits triangles. The software driver gets separate textured triangles to avoid its incorrect quad shortcut. Restores the window target in finally. present controls final window copy/presentation.
 

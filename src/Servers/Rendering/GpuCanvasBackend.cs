@@ -99,7 +99,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         return new RenderHandle(SDL.CreateGPUGraphicsPipeline(Device, in info), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _device);
     }
 
-    internal override void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present)
+    internal override void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present, double time)
     {
         var size = GetPixelSize();
         if (size.X <= 0 || size.Y <= 0) return;
@@ -108,6 +108,8 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         _usedTextures.Clear(); _usedMaterials.Clear();
         foreach (var batch in batches)
         {
+            if (batch.Material?.Program.TimeUniform is not null && !float.IsFinite((float)time))
+                throw new InvalidOperationException("The render clock exceeds the finite float32 range required by shader TIME.");
             var code = batch.ShaderCode ?? _defaultFragment;
             _usedPrograms.Add(code);
             if (!_pipelines.ContainsKey(code)) _pipelines.Add(code, CreatePipeline(code));
@@ -161,7 +163,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
                     foreach (var batch in batches)
                     {
                         SDL.BindGPUGraphicsPipeline(pass, _pipelines[batch.ShaderCode ?? _defaultFragment].DangerousGetHandle());
-                        batch.Material?.PushUniforms(command);
+                        batch.Material?.PushUniforms(command, (float)time);
                         if (batch.Material is { Textures.Length: > 0 } textured)
                         {
                             var samplers = _textureBindings[textured];

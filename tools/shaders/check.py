@@ -74,7 +74,8 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
         assert output.read_bytes() == (root / f'tests/Electron2D.Tests/Shaders/{artifact}.spv').read_bytes()
     assert (root / 'tests/Electron2D.Tests/Shaders/CanvasHLSL.spv').read_bytes() == (root / 'src/Servers/Rendering/Shaders/Canvas.frag.spv').read_bytes()
     for language, stem, artifact in [('hlsl', 'Material', 'MaterialHlsl'), ('glsl', 'Material', 'MaterialGlsl'), ('glsl', 'MaterialReordered', 'MaterialReordered'),
-                                     ('hlsl', 'Texture', 'TextureHlsl'), ('glsl', 'Texture', 'TextureGlsl'), ('glsl', 'TextureReordered', 'TextureReordered')]:
+                                     ('hlsl', 'Texture', 'TextureHlsl'), ('glsl', 'Texture', 'TextureGlsl'), ('glsl', 'TextureReordered', 'TextureReordered'),
+                                     ('hlsl', 'Time', 'TimeHLSL'), ('glsl', 'Time', 'TimeGLSL'), ('glsl', 'TimeReordered', 'TimeReordered'), ('glsl', 'TimeOnly', 'TimeOnly')]:
         source = root / f'tests/Electron2D.Tests/Shaders/{stem}.frag.{language}'
         invoke(source, output)
         assert output.read_bytes() == (root / f'tests/Electron2D.Tests/Shaders/{artifact}.spv').read_bytes()
@@ -113,6 +114,38 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
     unused = directory / 'unused.glsl'
     unused.write_text(glsl.replace('void main()', 'layout(set = 2, binding = 7) uniform sampler2D unusedMap;\nvoid main()'))
     invoke(unused, output)
+    for language in ('hlsl', 'glsl'):
+        clock = (root / f'tests/Electron2D.Tests/Shaders/Time.frag.{language}').read_text()
+        for label, source in [
+            ('time-integer', clock.replace('float TIME;', 'int TIME;')),
+            ('time-vector', clock.replace('float TIME;', ('float2' if language == 'hlsl' else 'vec2') + ' TIME;').replace('TIME * 4', 'TIME.x * 4')),
+            ('time-array', clock.replace('float TIME;', 'float TIME[1];').replace('TIME * 4', 'TIME[0] * 4')),
+        ]:
+            invalid = directory / f'{label}.{language}'
+            invalid.write_text(source)
+            previous = output.read_bytes()
+            assert 'TIME' in invoke(invalid, output, success=False)
+            assert output.read_bytes() == previous
+    clock = (root / 'tests/Electron2D.Tests/Shaders/Time.frag.glsl').read_text()
+    for label, source, diagnostic in [
+        ('time-texture', glsl.replace('colorMap', 'TIME'), 'TIME'),
+        ('time-duplicate', clock.replace('void main()', 'layout(set = 3, binding = 1, std140) uniform More { float TIME; } other;\nvoid main()').replace('TIME * 4', '(TIME + other.TIME) * 4'), 'unique'),
+    ]:
+        invalid = directory / f'{label}.glsl'
+        invalid.write_text(source)
+        assert diagnostic in invoke(invalid, output, success=False)
+        assert output.read_bytes() == previous
+    # External producers enter the exact same TIME validation path as source languages.
+    invalid.write_text(clock.replace('float TIME;', 'int TIME;'))
+    compiler = (args.tool.resolve().parent / 'toolchain' if args.tool else root / 'tools/shaders/bin/Release/net8.0/toolchain') / 'bin/glslangValidator'
+    subprocess.run([str(compiler), '-V', '--target-env', 'vulkan1.0', '-S', 'frag', '-e', 'main', '-o', str(external), str(invalid)], check=True, capture_output=True)
+    assert 'TIME' in invoke(external, output, success=False)
+    assert output.read_bytes() == previous
+    vertex = directory / 'vertex-time.hlsl'
+    vertex.write_text((root / 'src/Servers/Rendering/Shaders/Canvas.vert.hlsl').read_text()
+                      .replace('float2 size;', 'float2 size; float TIME;').replace('o.color = color;', 'o.color = color * TIME;'))
+    assert 'TIME' in invoke(vertex, output, stage='vertex', success=False)
+    assert output.read_bytes() == previous
     if args.tool:
         sandbox = directory / 'package'
         shutil.copytree(args.tool.resolve().parent, sandbox)
@@ -128,4 +161,4 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
                                  capture_output=True, text=True)
             assert run.returncode == 1 and diagnostic in run.stderr, run.stderr
             assert output.read_bytes() == previous, 'A broken toolchain replaced the last usable artifact'
-print('Shader import checks passed: HLSL 2021/SM6.0, GLSL 450/Vulkan1.0, SPIR-V, diagnostics, atomic replacement, embedded programs, material buffers, texture/sampler bindings and unused resources.')
+print('Shader import checks passed: HLSL 2021/SM6.0, GLSL 450/Vulkan1.0, SPIR-V, diagnostics, atomic replacement, embedded programs, material buffers, texture/sampler bindings, reserved TIME and unused resources.')

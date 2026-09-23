@@ -1,6 +1,6 @@
 # ShaderProgram
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Declaration: `internal sealed class ShaderProgram`
 - Source: [ShaderProgram.cs](../../src/Servers/Rendering/ShaderProgram.cs)
@@ -23,11 +23,12 @@ ShaderProgram program = ShaderCompiler.ValidateFragmentInterface(bytecode);
 
 | Declaration | Contract |
 | --- | --- |
-| `ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null)` | [Construction](#construction) |
+| `ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null)` | [Construction](#construction) |
 | `internal static readonly ShaderProgram Default` | [Default program](#default-program) |
 | `internal readonly byte[] Code` | [Code](#code) |
 | `internal readonly int[] BufferSizes` | [Buffer sizes](#buffer-sizes) |
 | `internal readonly Dictionary<string, ShaderUniform> Uniforms` | [Uniforms](#uniforms) |
+| `internal readonly ShaderUniform? TimeUniform` | [Time uniform](#time-uniform) |
 | `internal readonly ShaderTexture[] Textures` | [Textures](#textures) |
 | `internal readonly IReadOnlyList<PropertyDescriptor> Descriptors` | [Descriptors](#descriptors) |
 | `internal readonly IReadOnlyList<PropertyDescriptor> MaterialDescriptors` | [Material descriptors](#material-descriptors) |
@@ -37,7 +38,7 @@ ShaderProgram program = ShaderCompiler.ValidateFragmentInterface(bytecode);
 
 ### Construction
 
-`ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null)`
+`ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null)`
 
 Adopts the owned payload/layout, uses an empty texture list when omitted, and constructs read-only descriptor lists. Native resources are absent.
 
@@ -63,7 +64,13 @@ Padded byte count for each contiguous uniform binding.
 
 `internal readonly Dictionary<string, ShaderUniform> Uniforms`
 
-Ordinal, case-sensitive name-to-layout lookup.
+Ordinal, case-sensitive material name-to-layout lookup, excluding reserved TIME.
+
+### Time uniform
+
+`internal readonly ShaderUniform? TimeUniform`
+
+Optional validated float32 TIME location, separate from material parameters and descriptors. The reflected buffer allocation includes this field. Null means no clock upload is needed.
 
 ### Textures
 
@@ -75,7 +82,7 @@ Validated binding-ordered texture descriptors, including optional reserved TEXTU
 
 `internal readonly IReadOnlyList<PropertyDescriptor> Descriptors`
 
-Unprefixed typed inspection descriptors, omitting reserved TEXTURE.
+Unprefixed typed inspection descriptors, omitting reserved TEXTURE and TIME.
 
 ### Material descriptors
 

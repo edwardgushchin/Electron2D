@@ -157,7 +157,8 @@ public sealed class ProjectSettings : ElectronObject
 
     /// <summary>Defines the render-clock wrap period in seconds.</summary>
     /// <remarks>Defaults to 3600. Must be finite and positive. Active feature overrides apply on each submitted frame.
-    /// Currently drives canvas animation intervals; automatic shader TIME binding is not integrated.</remarks>
+    /// Drives canvas animation intervals and the optional float32 TIME built-in in GPU fragment shaders.
+    /// Shader TIME loses precision as values grow; a clock outside finite float32 range fails before drawing that shader.</remarks>
     public static ProjectSetting<double> RenderingTimeRolloverSeconds { get; } =
         new("rendering/limits/time/time_rollover_secs", 3600d, value => double.IsFinite(value) && value > 0);
 

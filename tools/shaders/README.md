@@ -70,6 +70,16 @@ header range is not a claim that every module or instruction version is valid or
 supported. The packaged importer verifies the narrower Vulkan 1.0 baseline;
 runtime reflection is not a replacement for instruction-level validation.
 
+## Render time input
+
+Canvas fragment programs may declare a scalar `float TIME` in a normal uniform
+buffer (HLSL `register(b0, space3)` or GLSL `layout(set = 3, binding = 0, std140)`).
+Bindings remain contiguous; TIME can share a buffer with material parameters.
+The renderer fills it with scaled, wrapped render seconds. It is excluded from
+material parameter setters/descriptors. Wrong types, arrays, texture resources
+named TIME and vertex TIME fail the common interface check, including for
+externally supplied SPIR-V. See [the complete contract and examples](../../docs/components/shader-materials.md#render-time).
+
 ## Project builds
 
 Import the `.targets` file next to the published executable in an SDK C# project:

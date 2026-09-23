@@ -1,6 +1,6 @@
 # ShaderMaterial
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Declaration: `public sealed class ShaderMaterial : Material`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -10,6 +10,8 @@ Last updated: 2026-09-22
 ## Description
 
 Pairs a borrowed Shader with independently owned parameter values and borrowed texture overrides. Multiple materials may share one Shader and hold different values; nodes sharing one material see the same updates. Null Shader selects ordinary canvas color drawing. Any assigned Shader requires GPU rendering. Material disposal clears its own state and never disposes the borrowed Shader or textures.
+
+Reserved TIME is not a user parameter: getters, setters, property discovery, duplication and value migration exclude it. The renderer fills its reflected float32 location immediately before each buffer upload without emitting Changed.
 
 State operations are serialized per material. Native uniform upload uses the same gate. Notifications run after mutation outside the gate. Successful scalar/vector or span updates reuse initialized storage. Initial values are zero; no source defaults are extracted. Shader replacement migrates matching names, element types and array lengths to new offsets/bindings on the next parameter access or draw. Incompatible or newly introduced members start at zero; assigning null discards values.
 

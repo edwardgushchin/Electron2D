@@ -289,7 +289,7 @@ Gets a monotonically increasing in-process registry version.
 
 Defines `rendering/limits/time/time_rollover_secs`, default 3600 seconds. Finite positive values are accepted; zero, negative or nonserializable values fail before committing a setting change. The active feature override is read on each submitted frame, so changes apply to an existing renderer. The render clock adds the scaled scheduled process step and takes its remainder by this limit. It starts at zero for each Engine.Run, freezes when rendering is disabled/hidden, and continues while the tree is paused.
 
-Currently this setting drives [canvas animation intervals](CanvasItem.md#drawanimationslice). Automatic shader TIME delivery is not integrated, so the broader shader-facing setting contract remains Partial in coverage. CanvasTimingTests checks the default/validation; CanvasTimingRenderingTests checks live base and feature-override updates on both Linux backends.
+This setting drives [canvas animation intervals](CanvasItem.md#drawanimationslice) and the optional GPU fragment [TIME built-in](../components/shader-materials.md#render-time). The clock is double precision; shader upload converts it to float32, with the usual loss of precision at large values. A TIME-using shader rejects an out-of-range clock before drawing. CanvasTimingTests checks default/validation; CanvasTimingRenderingTests checks the clock on both Linux backends; ShaderTimeRenderingTests checks actual HLSL/GLSL output, live rollover, pause, time scale and cleanup on Wayland/Vulkan.
 
 
 ## Method Descriptions

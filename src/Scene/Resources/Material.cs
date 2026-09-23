@@ -14,7 +14,8 @@ public abstract class Material : Resource
 
 /// <summary>Applies a programmable fragment shader to a node's canvas commands.</summary>
 /// <remarks>A null shader uses normal color drawing. An assigned shader requires the GPU backend, including
-/// an identity shader. Shader resources are borrowed; resource duplication follows the requested graph policy.</remarks>
+/// an identity shader. Shader resources are borrowed; resource duplication follows the requested graph policy.
+/// Reserved TIME is filled by the renderer and excluded from parameter access, stored properties and value migration.</remarks>
 public sealed class ShaderMaterial : Material
 {
     private readonly object _gate = new();
@@ -259,10 +260,14 @@ internal sealed class MaterialState
                     ?? throw new InvalidOperationException($"Texture parameter '{Program.Textures[i].Name}' has no texture or Shader default.");
     }
 
-    internal void PushUniforms(nint command)
+    internal void PushUniforms(nint command, float time)
     {
         lock (_gate)
+        {
+            if (Program.TimeUniform is { } clock)
+                MemoryMarshal.Write(Buffers[clock.Buffer].AsSpan(clock.Offset, sizeof(float)), in time);
             for (var i = 0; i < Buffers.Length; i++)
                 SDL.PushGPUFragmentUniformData(command, (uint)i, Buffers[i].AsSpan(), (uint)Buffers[i].Length);
+        }
     }
 }

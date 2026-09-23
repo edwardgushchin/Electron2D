@@ -73,3 +73,5 @@ Concrete Shader/ShaderMaterial resources use the internal rendering reflection a
 Resource, Image, and packed-scene checks live in `tests/Electron2D.Tests/Program.cs`. They exercise base duplication, image formats and processing, and per-instance local graph association/setup/ownership without requiring a codec, asset loader/saver, editor, or renderer. RenderingTextureTests separately verifies texture resources, native sampling, and SDL_image package loading/PNG decoding; that backend probe does not establish a public codec API.
 
 [CurveTests](../../tests/Electron2D.Tests/CurveTests.cs) verifies CPU curve samples, geometric edge cases, event timing, cache/copy isolation, scene ownership, failure recovery, concurrent state access and allocation-free warm queries without native dependencies.
+
+Shader reflection separates the reserved float32 TIME input from material values and stored descriptors. Reload and duplication preserve user parameters while the renderer fills current time per draw. The shared HLSL/GLSL/SPIR-V validation and native checks are recorded in [shader render time](../components/shader-materials.md#render-time).

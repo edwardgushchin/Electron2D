@@ -1,6 +1,6 @@
 # Shader
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Declaration: `public sealed class Shader : Resource`
 - Source: [Shader.cs](../../src/Scene/Resources/Shader.cs)
@@ -38,7 +38,7 @@ material.SetShaderParameter("tint", Colors.White);
 | `Texture? GetDefaultTextureParameter(string name, int index = 0)` | Gets the borrowed default texture. |
 | [Mode](Shader.Mode.md) | Canvas shader domain. |
 
-The fragment interface optionally accepts float4 color at location 0 and float2 UV at location 1. `TEXTURE` at set 2, binding 0 receives the current command texture or white for untextured geometry. It is reserved and omitted from uniform descriptors/default-parameter APIs. See the [shared shader interface](../components/shader-materials.md#current-shader-interface).
+The fragment interface optionally accepts float4 color at location 0 and float2 UV at location 1. `TEXTURE` at set 2, binding 0 receives the current command texture or white for untextured geometry. It is reserved and omitted from uniform descriptors/default-parameter APIs. An optional scalar float32 TIME member in any valid fragment uniform buffer receives the renderer clock. Its offset and binding are reflected, not fixed. TIME is omitted from material descriptors and parameter APIs; lowercase time remains an ordinary parameter. See the [shared shader interface](../components/shader-materials.md#current-shader-interface).
 
 ## Method descriptions
 
@@ -64,7 +64,7 @@ Returns copied bytes and never exposes the backing module. The snapshot may safe
 
 ### GetShaderUniformList
 
-Returns a read-only list with exact uniform names. Descriptors use `ShaderMaterial` as owner, scalar/vector element types, `T[]` for fixed arrays, or `Texture?` for texture bindings. Float4 descriptors use `Vector4`; typed parameter calls also accept `Color`. Getter/setter delegates use the material's current matching parameter, so an incompatible shader replacement is rejected on access. The list itself remains a snapshot after reload. There are no grouping hints in the current import format.
+Returns a read-only list with exact uniform names. Descriptors use `ShaderMaterial` as owner, scalar/vector element types, `T[]` for fixed arrays, or `Texture?` for texture bindings. Float4 descriptors use `Vector4`; typed parameter calls also accept `Color`. Getter/setter delegates use the material's current matching parameter, so an incompatible shader replacement is rejected on access. The list itself remains a snapshot after reload. Reserved TEXTURE and TIME are omitted. There are no grouping hints in the current import format.
 
 ### SetDefaultTextureParameter
 

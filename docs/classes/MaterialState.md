@@ -1,6 +1,6 @@
 # MaterialState
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Declaration: `internal sealed class MaterialState`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -17,7 +17,7 @@ This fragment belongs inside the runtime and requires the surrounding owner stat
 
 ```csharp
 var state = material.GetCanvasState();
-state?.PushUniforms(commandBuffer);
+state?.PushUniforms(commandBuffer, (float)renderTime);
 ```
 
 ## Member summary
@@ -30,7 +30,7 @@ state?.PushUniforms(commandBuffer);
 | `internal readonly Texture?[] Textures` | [Textures](#textures) |
 | `internal readonly Shader? Shader` | [Shader](#shader) |
 | `internal void CopyTextures(Span<Texture?> target)` | [Texture capture](#texture-capture) |
-| `internal void PushUniforms(nint command)` | [Uniform upload](#uniform-upload) |
+| `internal void PushUniforms(nint command, float time)` | [Uniform upload](#uniform-upload) |
 
 ## Member descriptions
 
@@ -38,7 +38,7 @@ state?.PushUniforms(commandBuffer);
 
 `internal MaterialState(object gate, ShaderProgram program, MaterialState? previous, Shader? shader = null)`
 
-Allocates zeroed buffers and texture slots. Migrates prior uniforms by name plus element type/array length, copying to new offsets/strides; migrates texture overrides by name. The caller holds the old state gate while copying it.
+Allocates zeroed buffers and texture slots. Reserved TIME starts at zero and is never copied as a user parameter. Migrates prior uniforms by name plus element type/array length, copying to new offsets/strides; migrates texture overrides by name. The caller holds the old state gate while copying it.
 
 ### Program
 
@@ -72,9 +72,9 @@ Requires room for all slots, writes current overrides/defaults under the gate an
 
 ### Uniform upload
 
-`internal void PushUniforms(nint command)`
+`internal void PushUniforms(nint command, float time)`
 
-While holding the same gate used by setters, pushes each complete padded buffer to the command buffer fragment binding. The backend supplies a valid live command. This method does not allocate new value storage.
+While holding the same gate used by setters, writes the supplied finite float32 render time to Program.TimeUniform when present, then pushes each complete padded buffer to the command buffer fragment binding. The backend supplies a valid live command. This method does not allocate new value storage.
 
 ## Verification and limits
 

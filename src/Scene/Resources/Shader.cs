@@ -6,6 +6,8 @@ namespace Electron2D;
 /// This interface accepts optional float4 color at location zero,
 /// float2 UV at location one, framebuffer position, and one float4 color output. TEXTURE at set two, binding zero
 /// samples the current canvas command, or opaque white for untextured geometry; it is not a material parameter.
+/// An optional non-array float32 uniform named TIME receives render seconds, scaled by Engine.TimeScale and wrapped
+/// by ProjectSettings.RenderingTimeRolloverSeconds. It continues during scene pause and is not a material parameter.
 /// Material uniforms use validated std140 buffers at descriptor
 /// set three and sampled 2D textures at set two. Matrices, nested uniform structs and user vertex programs remain pending.</remarks>
 public sealed class Shader : Resource
@@ -67,7 +69,7 @@ public sealed class Shader : Resource
     /// <summary>Returns typed material property descriptors for this program's reflected uniforms.</summary>
     /// <returns>An immutable list with case-sensitive member names. Float4 values use Vector4 descriptors;
     /// material access also accepts Color. Fixed arrays use array-valued descriptors; sampled images use Texture descriptors.
-    /// The built-in command TEXTURE is omitted.</returns>
+    /// The built-in command TEXTURE and render TIME are omitted.</returns>
     /// <remarks>Descriptors access ShaderMaterial values through its typed parameter methods. Buffer padding and
     /// resource handles remain internal. The returned list describes this program version and does not change after reload.</remarks>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>

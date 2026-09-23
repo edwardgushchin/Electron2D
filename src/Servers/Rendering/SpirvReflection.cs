@@ -57,6 +57,8 @@ internal static unsafe partial class SpirvReflection
                 var field = GetType(compiler, GetMemberType(type, member));
                 var width = GetVectorSize(field);
                 var dimensions = GetArrayDimensions(field);
+                if (name == "TIME" && (!fragment || GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 1 || GetColumns(field) != 1 || dimensions != 0))
+                    throw new NotSupportedException("The built-in TIME requires a non-array float32 scalar in a fragment uniform buffer.");
                 if (GetBitWidth(field) != 32 || GetColumns(field) != 1 || dimensions > 1)
                     throw new NotSupportedException($"Uniform '{name}' requires a supported 32-bit scalar/vector or a fixed one-dimensional array; matrices and nested structs are not integrated yet.");
                 var valueType = (GetBaseType(field), width) switch
@@ -122,6 +124,7 @@ internal static unsafe partial class SpirvReflection
         {
             var slot = TextureBinding(resource);
             var name = Marshal.PtrToStringUTF8(resource.Name);
+            if (name == "TIME") throw new NotSupportedException("The built-in TIME is a float32 uniform, not a texture parameter.");
             if (name == "TEXTURE" && slot != 0) throw new NotSupportedException("The built-in TEXTURE requires binding zero in descriptor set 2.");
             if (string.IsNullOrWhiteSpace(name) || uniforms.ContainsKey(name) || textures.Any(t => t is not null && t.Name == name) || textures[slot] is not null)
                 throw new NotSupportedException("Texture names and bindings must be unique and must not collide with material uniforms.");
@@ -147,7 +150,8 @@ internal static unsafe partial class SpirvReflection
                 if (GetDecoration(compiler, pair.Image, Binding) != GetDecoration(compiler, pair.Sampler, Binding))
                     throw new NotSupportedException("An image must be sampled with a sampler at the same binding.");
         }
-        return new ShaderProgram(code, sizes, uniforms, textures);
+        uniforms.Remove("TIME", out var timeUniform);
+        return new ShaderProgram(code, sizes, uniforms, textures, timeUniform);
     }
 
     [StructLayout(LayoutKind.Sequential)]

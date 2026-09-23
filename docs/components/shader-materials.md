@@ -31,6 +31,32 @@ Imported fixtures use SPIR-V 1.0 and baseline `Shader` capability. Import valida
 - Floating-point material values must be finite. Setters validate the complete input before writing. Uniforms initially contain zero; source-level default values are not extracted.
 - Storage resources, push constants, nested structures and matrices fail explicitly until their executable integration is present. Boolean and other numeric mappings remain unimplemented. These restrictions are implementation gaps, not a claim that either language is fully supported.
 
+## Render time
+
+A fragment shader may declare one case-sensitive uniform member `float TIME` in any supported descriptor-set-3 buffer. HLSL and GLSL use the same rule; externally compiled SPIR-V must preserve the member name and meet the same interface checks. Binding/offset, padding, contiguous slots and std140 layout are reflected normally. TIME requires a non-array float32 scalar; textures, vectors, integers, arrays, duplicate member names and vertex TIME are rejected. Public custom vertex shaders remain outside the current stage interface. Lowercase `time` is an ordinary material parameter.
+
+TIME is engine input, omitted from Shader.GetShaderUniformList and material property discovery. Material getters/setters and shader default-texture methods reject it. Material duplication and reload migrate user values only; each current program carries its own TIME layout, including when the member moves between buffers. A TIME-only buffer remains allocated/uploaded even though there are no material descriptors. Before each draw, MaterialState writes the current value under the same gate as parameter updates, then pushes the complete padded buffers. No resource Changed event, QueueRedraw or steady-state allocation is required. Nodes and distinct/shared materials in a frame receive the same clock.
+
+RenderingServer's per-run clock advances after FramePreDraw using the process delta captured before callbacks. It honors TimeScale, continues while the tree is paused, and wraps by the active RenderingTimeRolloverSeconds setting (default 3600). Base/feature overrides apply on the next submitted frame. Disabled rendering/hidden root skips advancement. The engine uses double precision and converts to float32 at upload; large values lose precision, and a TIME-using shader rejects a clock outside finite float32 range before drawing. A fresh renderer starts at zero. Compatibility rejects shader materials explicitly.
+
+Minimal fragment buffer declarations (partial snippets; the program must actually read TIME):
+
+```hlsl
+cbuffer Frame : register(b0, space3) { float TIME; };
+```
+
+```glsl
+layout(set = 3, binding = 0, std140) uniform Frame { float TIME; };
+```
+
+The [official canvas built-in reference](https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/canvas_item_shader.html#global-built-ins) defines scaled, pause-independent, wrapping seconds. The pinned [canvas renderer](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_rd/renderer_canvas_render_rd.cpp) maps TIME to frame data; [clock accumulation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_rd/renderer_compositor_rd.cpp) and the [prior clock audit](canvas-rendering.md#animation-intervals-and-rectangles) establish ordering. Explicit uniform declarations are the HLSL/GLSL projection; no new public C# declaration is introduced.
+
+[ShaderTimeRenderingTests](../../tests/Electron2D.Tests/ShaderTimeRenderingTests.cs) checks exclusion from parameter/storage APIs, invalid external bytecode and replacement rollback, copy/migration, both imported languages, actual pixels across shared/distinct materials, TIME-only programs, live base/feature rollover, pause/scale, layout reload and restart/overflow cleanup. Each GPU language runs forty frames with one geometry recording per item and zero managed allocation over the final twenty measured rendering intervals. Fallback rejection is verified separately. [Importer checks](../../tools/shaders/check.py) compile valid fixtures reproducibly, reject wrong TIME types/names/layouts from source and external SPIR-V, retain diagnostics, and preserve previous output on failure.
+
+Delivery checks passed: `dotnet publish tools/shaders/ShaderImport.csproj -c Release -r linux-x64 --self-contained true -o /tmp/electron2d-shader-time-import`, then `env -u LD_LIBRARY_PATH PATH=/usr/bin:/bin python3 -B tools/shaders/check.py --tool /tmp/electron2d-shader-time-import/Electron2D.ShaderImport`. The existing pinned compiler binaries were reused after matching their toolchain lock; the check verifies packaged versions/licenses and deterministic shader artifacts. No new toolchain dependency was added.
+
+`dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o /tmp/electron2d-shader-time-publish` passed. From that directory, `env -u LD_LIBRARY_PATH PATH=/usr/bin:/bin ELECTRON2D_TEST_RENDER=1 ELECTRON2D_TEST_SHADER_TIME=1 SDL_VIDEODRIVER=wayland ./Electron2D.Tests` passed HLSL/GLSL pixels, overflow/restart cleanup, allocation and fallback rejection; the same command with `SDL_VIDEODRIVER=dummy` passed interface checks and software rejection. The complete renderer suite also passed through `ELECTRON2D_TEST_RENDER=1 SDL_VIDEODRIVER=wayland dotnet run --no-build --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release`. GTK locale warnings remain a nonfatal existing host condition. Other native platforms and owner visual acceptance are unverified.
+
 ## Texture bindings and pixel ownership
 
 - At most sixteen fragment texture bindings in descriptor set 2, with unique contiguous slots starting at zero. Names are nonblank, case-sensitive and unique across textures and uniform members.

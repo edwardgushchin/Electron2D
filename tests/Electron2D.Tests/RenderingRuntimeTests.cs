@@ -13,6 +13,17 @@ internal static partial class RenderingRuntimeTests
         {
             Engine.Instance.MaxFPS = 60;
             settings.Set(ProjectSettings.RenderingFallback, false);
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_TIME") == "1")
+            {
+                VerifyShaderTimeContract("TimeHLSL"); VerifyShaderTimeContract("TimeGLSL");
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    VerifyShaderTimeFrame(backend, "TimeHLSL"); VerifyShaderTimeFrame(backend, "TimeGLSL");
+                    if (backend == "gpu") VerifyShaderTimeOverflow();
+                }
+                return;
+            }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PATHS") == "1")
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
@@ -115,6 +126,7 @@ internal static partial class RenderingRuntimeTests
             }
             VerifyImageDependency();
             VerifyResources();
+            VerifyShaderTimeContract("TimeHLSL"); VerifyShaderTimeContract("TimeGLSL");
             VerifyParameters("MaterialHlsl");
             VerifyParameters("MaterialGlsl");
             VerifyTextureResources();
@@ -125,6 +137,8 @@ internal static partial class RenderingRuntimeTests
             {
                 settings.Set(ProjectSettings.RenderingMethod, backend);
                 var software = VerifyCanvasSampling(backend);
+                VerifyShaderTimeFrame(backend, "TimeHLSL"); VerifyShaderTimeFrame(backend, "TimeGLSL");
+                if (backend == "gpu") VerifyShaderTimeOverflow();
                 VerifySamplingCapabilities(backend, software);
                 VerifyCanvasPixelSnap(backend);
                 VerifyCanvasCoordinates(backend); VerifyViewportCoordinateInput(backend);
