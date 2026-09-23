@@ -23055,6 +23055,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Geometry.ConvexHull(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "ConvexHull",
+    "signature": "public static Electron2D.Vector2[] ConvexHull(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E points)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "points",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Geometry.GetClosestPointToSegment(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.Geometry",
@@ -23176,6 +23195,49 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Geometry.IsPointInPolygon(Electron2D.Vector2,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "IsPointInPolygon",
+    "signature": "public static System.Boolean IsPointInPolygon(Electron2D.Vector2 point, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygon)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "polygon",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.IsPolygonClockwise(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "IsPolygonClockwise",
+    "signature": "public static System.Boolean IsPolygonClockwise(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygon)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "polygon",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Geometry.LineIntersectsLine(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.Geometry",
@@ -23207,6 +23269,74 @@
       }
     ],
     "returnType": "System.Nullable\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.PointIsInsideTriangle(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "PointIsInsideTriangle",
+    "signature": "public static System.Boolean PointIsInsideTriangle(Electron2D.Vector2 point, Electron2D.Vector2 a, Electron2D.Vector2 b, Electron2D.Vector2 c)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "a",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "b",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "c",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.SegmentIntersectsCircle(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "SegmentIntersectsCircle",
+    "signature": "public static System.Single SegmentIntersectsCircle(Electron2D.Vector2 segmentFrom, Electron2D.Vector2 segmentTo, Electron2D.Vector2 circlePosition, System.Single circleRadius)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "segmentFrom",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "segmentTo",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "circlePosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "circleRadius",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
     "value": null
   },
   {

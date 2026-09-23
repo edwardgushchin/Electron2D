@@ -37,6 +37,35 @@ internal static class GeometryTests
         Check(Geometry.SegmentIntersectsSegment(new(0, 0), new(2, 0), new(1, 0), new(3, 0)) is null &&
             Geometry.SegmentIntersectsSegment(new(0, 0), new(0, 0), new(0, -1), new(0, 1)) is null,
             "Collinear and degenerate segments have no unique intersection");
+
+        Vector2[] square = [new(0, 0), new(4, 0), new(4, 4), new(0, 4)];
+        Check(Geometry.IsPointInPolygon(new(2, 2), square) &&
+            Geometry.IsPointInPolygon(new(0, 2), square) && Geometry.IsPointInPolygon(new(4, 4), square) &&
+            !Geometry.IsPointInPolygon(new(5, 2), square) &&
+            !Geometry.IsPointInPolygon(new(0, 0), square.AsSpan(0, 2)),
+            "Polygon interior, edge, vertex, exterior and insufficient vertices");
+        Vector2[] concave = [new(0, 0), new(4, 0), new(4, 4), new(2, 2), new(0, 4)];
+        Check(!Geometry.IsPointInPolygon(new(2, 3), concave) && Geometry.IsPointInPolygon(new(2, 2), concave),
+            "Concave indentation and boundary");
+        Check(!Geometry.IsPolygonClockwise(square) && Geometry.IsPolygonClockwise(square.Reverse().ToArray()) &&
+            !Geometry.IsPolygonClockwise(square.AsSpan(0, 2)), "Cartesian winding and small polygon");
+        Check(Geometry.PointIsInsideTriangle(new(1, 1), new(0, 0), new(3, 0), new(0, 3)) &&
+            !Geometry.PointIsInsideTriangle(new(3, 3), new(0, 0), new(3, 0), new(0, 3)),
+            "Triangle interior and exterior");
+
+        Vector2[] hullInput = [new(1, 1), new(0, 0), new(1, 0), new(0, 1), new(0.5f, 0.5f)];
+        Check(Geometry.ConvexHull(hullInput).SequenceEqual(
+            [new(0, 0), new(1, 0), new(1, 1), new(0, 1), new(0, 0)]) && hullInput[0] == new Vector2(1, 1),
+            "Convex hull ordering, closure, interior removal and input ownership");
+        Check(Geometry.ConvexHull([]).Length == 0 && Geometry.ConvexHull([new(2, 3)]).SequenceEqual([new(2, 3)]) &&
+            Geometry.ConvexHull([new(0, 0), new(1, 0), new(2, 0)]).SequenceEqual([new(0, 0), new(2, 0), new(0, 0)]),
+            "Convex hull empty, single and collinear inputs");
+        Check(Geometry.SegmentIntersectsCircle(new(-2, 0), new(2, 0), a, 1f) == 0.25f &&
+            Geometry.SegmentIntersectsCircle(new(0, 0), new(2, 0), a, 1f) == 0.5f &&
+            Geometry.SegmentIntersectsCircle(new(-1, 1), new(1, 1), a, 1f) == 0.5f &&
+            Geometry.SegmentIntersectsCircle(new(-1, 2), new(1, 2), a, 1f) == -1f &&
+            Geometry.SegmentIntersectsCircle(a, a, a, 1f) == -1f,
+            "Circle entry, exit, tangent, miss and degenerate segment");
         Console.WriteLine("Geometry primitive geometry checks passed.");
     }
 

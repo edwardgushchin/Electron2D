@@ -159,4 +159,108 @@ public static class Geometry
         var fraction = d.X + (c.X - d.X) * d.Y / (d.Y - c.Y);
         return fraction < 0f || fraction > 1f ? null : fromA + direction * fraction;
     }
+
+    /// <summary>Tests whether a point is inside a polygon or on its boundary.</summary>
+    /// <param name="point">The query point.</param>
+    /// <param name="polygon">The polygon vertices in perimeter order.</param>
+    /// <returns><see langword="true"/> for interior and boundary points; <see langword="false"/> for fewer than three vertices.</returns>
+    /// <remarks>Uses an odd-even crossing rule, so self-intersecting polygons follow that fill rule. Coordinates should be finite.</remarks>
+    public static bool IsPointInPolygon(Vector2 point, ReadOnlySpan<Vector2> polygon)
+    {
+        if (polygon.Length < 3) return false;
+        var inside = false;
+        for (var i = 0; i < polygon.Length; i++)
+        {
+            var a = polygon[i];
+            var b = polygon[(i + 1) % polygon.Length];
+            if (GetClosestPointToSegment(point, a, b).IsEqualApprox(point)) return true;
+            if ((a.Y > point.Y) == (b.Y > point.Y)) continue;
+            var crossingX = (double)a.X + ((double)point.Y - a.Y) * ((double)b.X - a.X) / ((double)b.Y - a.Y);
+            if (point.X < crossingX) inside = !inside;
+        }
+        return inside;
+    }
+
+    /// <summary>Tests whether polygon vertices run clockwise in Cartesian coordinates.</summary>
+    /// <param name="polygon">The perimeter vertices.</param>
+    /// <returns><see langword="true"/> for clockwise winding with positive Y up; <see langword="false"/> for fewer than three vertices or zero signed area.</returns>
+    /// <remarks>Screen coordinates normally have positive Y down; there, a true result appears counterclockwise.</remarks>
+    public static bool IsPolygonClockwise(ReadOnlySpan<Vector2> polygon)
+    {
+        if (polygon.Length < 3) return false;
+        float sum = 0f;
+        for (var i = 0; i < polygon.Length; i++)
+        {
+            var current = polygon[i];
+            var next = polygon[(i + 1) % polygon.Length];
+            sum += (next.X - current.X) * (next.Y + current.Y);
+        }
+        return sum > 0f;
+    }
+
+    /// <summary>Tests whether a point lies inside a triangle.</summary>
+    /// <param name="point">The query point.</param>
+    /// <param name="a">The first vertex.</param>
+    /// <param name="b">The second vertex.</param>
+    /// <param name="c">The third vertex.</param>
+    /// <returns><see langword="true"/> when the three oriented edge tests agree.</returns>
+    /// <remarks>Boundary and degenerate-triangle behavior follows strict signed-crossing tests; use <see cref="IsPointInPolygon"/> for inclusive polygon boundaries.</remarks>
+    public static bool PointIsInsideTriangle(Vector2 point, Vector2 a, Vector2 b, Vector2 c)
+    {
+        var an = a - point;
+        var bn = b - point;
+        var cn = c - point;
+        var orientation = an.Cross(bn) > 0f;
+        return (bn.Cross(cn) > 0f) == orientation && (cn.Cross(an) > 0f) == orientation;
+    }
+
+    /// <summary>Returns the boundary of the convex hull of a point set.</summary>
+    /// <param name="points">The input points; the input is not reordered.</param>
+    /// <returns>Hull vertices in counterclockwise Cartesian order, with the first vertex repeated at the end when at least two points are supplied.</returns>
+    /// <remarks>Collinear interior points are discarded. Results for nonfinite points are unspecified. The returned array is caller-owned.</remarks>
+    public static Vector2[] ConvexHull(ReadOnlySpan<Vector2> points)
+    {
+        if (points.IsEmpty) return [];
+        var sorted = points.ToArray();
+        Array.Sort(sorted, static (left, right) => left.X == right.X ? left.Y.CompareTo(right.Y) : left.X.CompareTo(right.X));
+        var hull = new Vector2[checked(sorted.Length * 2)];
+        var count = 0;
+        for (var i = 0; i < sorted.Length; i++)
+        {
+            while (count >= 2 && (hull[count - 1] - hull[count - 2]).Cross(sorted[i] - hull[count - 2]) <= 0f) count--;
+            hull[count++] = sorted[i];
+        }
+        for (int i = sorted.Length - 2, start = count + 1; i >= 0; i--)
+        {
+            while (count >= start && (hull[count - 1] - hull[count - 2]).Cross(sorted[i] - hull[count - 2]) <= 0f) count--;
+            hull[count++] = sorted[i];
+        }
+        Array.Resize(ref hull, count);
+        return hull;
+    }
+
+    /// <summary>Returns the first boundary crossing of a segment and a circle.</summary>
+    /// <param name="segmentFrom">The segment start.</param>
+    /// <param name="segmentTo">The segment end.</param>
+    /// <param name="circlePosition">The circle center.</param>
+    /// <param name="circleRadius">The radius; its sign does not affect this squared-radius calculation.</param>
+    /// <returns>A fraction in the closed interval zero to one, or -1 when there is no crossing on the segment.</returns>
+    /// <remarks>If the segment starts inside the circle, the exit crossing is returned. A zero-length segment has no crossing.</remarks>
+    public static float SegmentIntersectsCircle(Vector2 segmentFrom, Vector2 segmentTo, Vector2 circlePosition, float circleRadius)
+    {
+        var direction = segmentTo - segmentFrom;
+        var offset = segmentFrom - circlePosition;
+        var a = direction.Dot(direction);
+        if (a == 0f) return -1f;
+        var b = 2f * offset.Dot(direction);
+        var c = offset.Dot(offset) - circleRadius * circleRadius;
+        var discriminant = b * b - 4f * a * c;
+        if (discriminant < 0f) return -1f;
+        var root = System.MathF.Sqrt(discriminant);
+        var first = (-b - root) / (2f * a);
+        var second = (-b + root) / (2f * a);
+        if (first >= 0f && first <= 1f) return first;
+        if (second >= 0f && second <= 1f) return second;
+        return -1f;
+    }
 }

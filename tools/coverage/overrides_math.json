@@ -11,6 +11,11 @@
       "reason": "Vector2I[] represents the ordered typed grid points; array length above Int32.MaxValue is rejected before allocation."
     },
     {
+      "godot": "Geometry2D::method:convex_hull(PackedVector2Array:)",
+      "electron2d": "method:Electron2D.Geometry.ConvexHull(System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "A read-only input span and caller-owned Vector2[] preserve the sorted closed hull without mutating input."
+    },
+    {
       "godot": "Geometry2D::method:get_closest_point_to_segment(Vector2:,Vector2:,Vector2:)",
       "electron2d": "method:Electron2D.Geometry.GetClosestPointToSegment(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
       "reason": "Capped projection on the finite segment with the pinned degenerate threshold."
@@ -31,9 +36,29 @@
       "reason": "Squared-distance inclusion preserves the circumference and signed-radius behavior."
     },
     {
+      "godot": "Geometry2D::method:is_point_in_polygon(Vector2:,PackedVector2Array:)",
+      "electron2d": "method:Electron2D.Geometry.IsPointInPolygon(Electron2D.Vector2,System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "Odd-even polygon membership includes edge and vertex points, using a read-only span for the input vertices."
+    },
+    {
+      "godot": "Geometry2D::method:is_polygon_clockwise(PackedVector2Array:)",
+      "electron2d": "method:Electron2D.Geometry.IsPolygonClockwise(System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "The signed-edge sum follows Cartesian winding, adapted to a read-only span."
+    },
+    {
       "godot": "Geometry2D::method:line_intersects_line(Vector2:,Vector2:,Vector2:,Vector2:)",
       "electron2d": "method:Electron2D.Geometry.LineIntersectsLine(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
       "reason": "Vector2? represents the reference Vector2-or-null result without Variant; directions define infinite lines."
+    },
+    {
+      "godot": "Geometry2D::method:point_is_inside_triangle(Vector2:,Vector2:,Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.Geometry.PointIsInsideTriangle(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Signed edge tests follow the pinned reference predicate for the four typed Vector2 arguments."
+    },
+    {
+      "godot": "Geometry2D::method:segment_intersects_circle(Vector2:,Vector2:,Vector2:,float:)",
+      "electron2d": "method:Electron2D.Geometry.SegmentIntersectsCircle(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,System.Single)",
+      "reason": "The quadratic root fraction and -1 miss sentinel preserve the circle boundary-crossing contract."
     },
     {
       "godot": "Geometry2D::method:segment_intersects_segment(Vector2:,Vector2:,Vector2:,Vector2:)",
@@ -2334,20 +2359,25 @@
         "class:Geometry2D"
       ],
       "state": "Partial",
-      "reason": "The C# static projection implements seven pure raster, nearest-point and intersection methods. Polygon boolean/offset, polygon tests, triangulation, atlas packing and other reference methods remain absent; see docs/classes/Geometry.md."
+      "reason": "The C# static projection implements twelve pure raster, nearest-point, polygon and intersection methods. Polygon boolean/offset, triangulation, atlas packing and other reference methods remain absent; see docs/classes/Geometry.md."
     },
     {
       "godot": [
         "Geometry2D::method:bresenham_line(Vector2i:,Vector2i:)",
+        "Geometry2D::method:convex_hull(PackedVector2Array:)",
         "Geometry2D::method:get_closest_point_to_segment(Vector2:,Vector2:,Vector2:)",
         "Geometry2D::method:get_closest_point_to_segment_uncapped(Vector2:,Vector2:,Vector2:)",
         "Geometry2D::method:get_closest_points_between_segments(Vector2:,Vector2:,Vector2:,Vector2:)",
         "Geometry2D::method:is_point_in_circle(Vector2:,Vector2:,float:)",
+        "Geometry2D::method:is_point_in_polygon(Vector2:,PackedVector2Array:)",
+        "Geometry2D::method:is_polygon_clockwise(PackedVector2Array:)",
         "Geometry2D::method:line_intersects_line(Vector2:,Vector2:,Vector2:,Vector2:)",
+        "Geometry2D::method:point_is_inside_triangle(Vector2:,Vector2:,Vector2:,Vector2:)",
+        "Geometry2D::method:segment_intersects_circle(Vector2:,Vector2:,Vector2:,float:)",
         "Geometry2D::method:segment_intersects_segment(Vector2:,Vector2:,Vector2:,Vector2:)"
       ],
       "state": "Implemented",
-      "reason": "Seven stateless query methods follow the pinned formulas and typed result adaptation; GeometryTests covers boundary, degenerate, crossing and null cases on Linux/.NET 8. Native and exhaustive numeric parity remain unverified."
+      "reason": "Twelve stateless query methods follow the pinned formulas and typed result adaptation; GeometryTests covers boundary, degenerate, winding, hull, crossing and null cases on Linux/.NET 8. Native and exhaustive numeric parity remain unverified."
     },
     {
       "godot": [
