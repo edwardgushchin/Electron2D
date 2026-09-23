@@ -1,6 +1,6 @@
 # Vector4
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** —
 
@@ -298,7 +298,7 @@ Returns the normalized direction from this point to another point.
 
 - `to`: The destination point.
 
-**Returns:** The normalized difference, or [`Vector4.Zero`](Vector4.md#p-electron2d-vector4-zero) when both points are equal.
+**Returns:** The normalized difference, or [`Vector4.Zero`](Vector4.md#p-electron2d-vector4-zero) when the difference is zero or non-finite.
 
 <a id="m-electron2d-vector4-distancesquaredto-electron2d-vector4"></a>
 ### `public float DistanceSquaredTo(Vector4 to)`
@@ -450,7 +450,7 @@ Returns the axis containing the least component.
 
 Returns this vector scaled to unit length.
 
-**Returns:** A normalized vector, or [`Vector4.Zero`](Vector4.md#p-electron2d-vector4-zero) when the squared length is exactly zero.
+**Returns:** A normalized vector, or [`Vector4.Zero`](Vector4.md#p-electron2d-vector4-zero) when the input is zero or non-finite.
 
 <a id="m-electron2d-vector4-posmod-system-single"></a>
 ### `public Vector4 PosMod(float mod)`
@@ -841,7 +841,7 @@ Compares vectors lexicographically by X, Y, Z, then W.
 ## Numeric invariants and error behavior
 
 - Arithmetic retains IEEE 754 behavior. Zero scalar/component division produces infinity or NaN; zero remainder or positive modulus produces NaN; reciprocal preserves signed zero through signed infinity.
-- Exact zero normalization and equal-point direction return `Zero`. Non-finite normalization follows ordinary managed floating-point propagation. `IsNormalized` uses tolerance `0.001`; approximate component predicates use the internal tolerance (`1e-6f`) with exact equality first.
+- Zero or non-finite normalization and direction return `Zero`. `IsNormalized` uses tolerance `0.001`; approximate component predicates use the internal tolerance (`1e-6f`) with exact equality first.
 - Maximum-axis ties choose the first maximum; minimum-axis ties choose the last minimum. NaN is skipped by ordered comparisons, and an initial NaN therefore keeps X.
 - Relational operators compare X, then Y, then Z, then W directly. If the first differing component is NaN, all four relational results are false; no artificial total ordering is introduced.
 - `Round` is midpoint-to-even. `Snapped` uses `floor(value / step + 0.5) * step`; zero steps preserve components. `Sign` throws `ArithmeticException` for NaN.

@@ -1,6 +1,6 @@
 # Vector3
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 - **Source:** [`src/Core/Math/Vector3.cs`](../../src/Core/Math/Vector3.cs)
 - **Declaration:** `public struct Vector3`
@@ -336,7 +336,7 @@ Deconstructs the vector into its three components.
 Returns the normalized direction from this point to another point.
 
 - `to`: The destination point.
-- Returns: The normalized difference, or P:Electron2D.Vector3.Zero when both points are equal.
+- Returns: The normalized difference, or P:Electron2D.Vector3.Zero when the difference is zero or non-finite.
 
 <a id="member-29"></a>
 ### `public System.Single DistanceSquaredTo(Electron2D.Vector3 to)`
@@ -519,7 +519,7 @@ Moves toward another vector by a signed distance without passing it.
 
 Returns this vector scaled to unit length.
 
-- Returns: A normalized vector, or P:Electron2D.Vector3.Zero when the squared length is exactly zero.
+- Returns: A normalized vector, or P:Electron2D.Vector3.Zero when the input is zero or non-finite.
 
 <a id="member-53"></a>
 ### `public static Electron2D.Vector3 OctahedronDecode(Electron2D.Vector2 uv)`

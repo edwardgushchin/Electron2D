@@ -1926,6 +1926,10 @@ static void VerifyVector2Values()
             Vector2.Zero.Normalized() == Vector2.Zero && value.Dot(Vector2.Right) == 3f &&
             Vector2.Right.Cross(Vector2.Down) == 1f && value.Aspect() == 0.75f,
         "Vector2 length, normalization, dot, cross, and aspect operations must be stable.");
+    Require(new Vector2(float.NaN, 1f).Normalized() == Vector2.Zero &&
+            new Vector2(1f, float.PositiveInfinity).Normalized() == Vector2.Zero &&
+            Vector2.Zero.DirectionTo(new Vector2(float.NaN, 1f)) == Vector2.Zero,
+        "Vector2 normalization and direction must reject non-finite components.");
     Require(NearlyEqual(Vector2.Right.Angle(), 0f) && NearlyEqual(Vector2.Right.AngleTo(Vector2.Down), System.MathF.PI / 2f) &&
             NearlyEqual(Vector2.Zero.AngleToPoint(Vector2.Down), System.MathF.PI / 2f) &&
             Vector2.FromAngle(System.MathF.PI / 2f).IsEqualApprox(Vector2.Down) &&
@@ -2137,6 +2141,10 @@ static void VerifyVector3Values()
             Vector3.Back.OctahedronEncode().IsEqualApprox(new Vector2(.5f, .5f)) &&
             Vector3.OctahedronDecode(new Vector2(.5f, .5f)).IsEqualApprox(Vector3.Back),
         "Three-component vector arithmetic, geometry and packing retain all axes.");
+    Require(new Vector3(float.NaN, 1f, 2f).Normalized() == Vector3.Zero &&
+            new Vector3(1f, float.NegativeInfinity, 2f).Normalized() == Vector3.Zero &&
+            Vector3.Zero.DirectionTo(new Vector3(1f, 2f, float.PositiveInfinity)) == Vector3.Zero,
+        "Vector3 normalization and direction must reject non-finite components.");
     Require(Vector3.One.MinAxisIndex() == Vector3.Axis.Z && Vector3.One.MaxAxisIndex() == Vector3.Axis.X &&
             new Vector3I(1, 2, 3) * new Vector3I(2, 3, 4) == new Vector3I(2, 6, 12) &&
             -new Vector3I(1, 2, 3) == new Vector3I(-1, -2, -3) &&
@@ -2179,6 +2187,10 @@ static void VerifyVector4Values()
             Vector4.Zero.DirectionTo(Vector4.Zero) == Vector4.Zero && Vector4.Zero.DirectionTo(Vector4.One).IsNormalized() &&
             Vector4.Zero.DistanceSquaredTo(value) == 30f && NearlyEqual(Vector4.Zero.DistanceTo(value), System.MathF.Sqrt(30f)),
         "Vector4 length, normalization, dot, direction, and distance operations must be stable.");
+    Require(new Vector4(float.NaN, 1f, 2f, 3f).Normalized() == Vector4.Zero &&
+            new Vector4(1f, 2f, float.PositiveInfinity, 3f).Normalized() == Vector4.Zero &&
+            Vector4.Zero.DirectionTo(new Vector4(1f, 2f, 3f, float.NegativeInfinity)) == Vector4.Zero,
+        "Vector4 normalization and direction must reject non-finite components.");
     Require(new Vector4(-1.2f, 2.2f, -3.2f, 4.2f).Abs() == new Vector4(1.2f, 2.2f, 3.2f, 4.2f) &&
             new Vector4(1.2f, -2.2f, 3.2f, -4.2f).Ceil() == new Vector4(2f, -2f, 4f, -4f) &&
             new Vector4(1.8f, -2.2f, 3.8f, -4.2f).Floor() == new Vector4(1f, -3f, 3f, -5f) &&
@@ -2214,6 +2226,7 @@ static void VerifyVector4Values()
         "Vector4 cubic interpolation methods must preserve symmetric fixtures.");
     Require(value + Vector4.One == new Vector4(2f, 3f, 4f, 5f) && +value == value && value - Vector4.One == new Vector4(0f, 1f, 2f, 3f) &&
             -value == new Vector4(-1f, -2f, -3f, -4f) && value * 2f == 2f * value &&
+            value * 2 == new Vector4(2f, 4f, 6f, 8f) && value / 2 == new Vector4(0.5f, 1f, 1.5f, 2f) &&
             value * Vector4.One == value && value / 2f == new Vector4(0.5f, 1f, 1.5f, 2f) &&
             value / value == Vector4.One && new Vector4(5f, -5f, 8f, -8f) % 3f == new Vector4(2f, -2f, 2f, -2f) &&
             new Vector4(5f, 8f, 9f, 10f) % new Vector4(3f, 5f, 4f, 6f) == new Vector4(2f, 3f, 1f, 4f),

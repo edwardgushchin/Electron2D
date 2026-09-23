@@ -1909,6 +1909,16 @@
       "electron2d": "operator:Electron2D.Vector2.op_Division(Electron2D.Vector2,System.Single)",
       "godot": "Vector2::operator:operator /(int:)",
       "reason": "C# implicitly converts int to float for the existing scalar operator; no redundant overload (ADR 0033)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4.op_Multiply(Electron2D.Vector4,System.Single)",
+      "godot": "Vector4::operator:operator *(int:)",
+      "reason": "C# implicitly converts int to float for the existing scalar operator; no redundant overload (ADR 0033)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Vector4.op_Division(Electron2D.Vector4,System.Single)",
+      "godot": "Vector4::operator:operator /(int:)",
+      "reason": "C# implicitly converts int to float for the existing scalar operator; no redundant overload (ADR 0033)."
     }
   ],
   "extras": [
@@ -3220,6 +3230,24 @@
       ],
       "state": "Implemented",
       "reason": "The complete declared RNG surface is executable: pinned PCG32 vectors, state replay, range boundaries, weighted errors/selection, normal sampling and managed lifetime are checked by RandomNumberGeneratorTests. Time-dependent seeds and C# unsigned/typed-array representation are accepted adaptations; other platforms remain unverified under ADR 0021."
+    },
+    {
+      "godot": [
+        "Vector3::method:normalized()",
+        "Vector3::method:direction_to(Vector3:)",
+        "Vector4::method:normalized()",
+        "Vector4::method:direction_to(Vector4:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector normalization returns zero for zero and non-finite inputs; DirectionTo normalizes the difference. VerifyVector3Values and VerifyVector4Values cover finite, zero, NaN and infinity paths on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector4::operator:operator *(int:)",
+        "Vector4::operator:operator /(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "C# converts int to float for the existing scalar operators; VerifyVector4Values covers both integer expressions. This is the accepted typed adaptation under ADR 0033."
     },
     {
       "godot": [

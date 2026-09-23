@@ -1,6 +1,6 @@
 # Geometry values component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Scope
 
@@ -43,6 +43,7 @@ This Core component owns the engine's backend-independent value mathematics and 
 - `Vector2` and `Vector2I` are sequential X/Y values of 8 bytes; `Vector3` and `Vector3I` are sequential X/Y/Z values of 12 bytes; `Vector4` and `Vector4I` are sequential X/Y/Z/W values of 16 bytes.
 - `Rect` is 16 bytes containing `Vector2 Position` then `Vector2 Size`; `RectI` is 16 bytes containing `Vector2I Position` then `Vector2I Size`; `Transform` is 24 bytes containing `Vector2 X`, `Y`, then `Origin`.
 - Floating-point ordinary math retains IEEE values; finite persistence validates only at its serialization boundary.
+- Floating-point vector normalization and normalized direction return zero for non-finite components or differences.
 - Floating-point component approximation uses the strict internal tolerance (`1e-6f`) and accepts exact equality first; unit-vector checks retain their separate `0.001` tolerance.
 - Integer ordinary component arithmetic wraps explicitly; division and invalid absolute values retain managed exceptions. Integer-vector squared norms widen before multiplication, return `long`, and throw when the exact result exceeds `long.MaxValue`; ordinary lengths/distances remain finite across all 32-bit coordinates.
 - Float-to-integer vector conversion truncates toward zero and rejects non-finite or out-of-range components. Integer-to-float conversion can lose low-order precision above 2^24.

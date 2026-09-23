@@ -1,6 +1,6 @@
 # Vector2
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** —
 
@@ -428,7 +428,7 @@ Returns the normalized direction from this point to another point.
 
 - `to`: The destination point.
 
-**Returns:** The normalized difference, or [`Vector2.Zero`](Vector2.md#p-electron2d-vector2-zero) when both points are equal.
+**Returns:** The normalized difference, or [`Vector2.Zero`](Vector2.md#p-electron2d-vector2-zero) when the difference is zero or non-finite.
 
 <a id="m-electron2d-vector2-distancesquaredto-electron2d-vector2"></a>
 ### `public float DistanceSquaredTo(Vector2 to)`
@@ -634,9 +634,9 @@ Moves toward another vector by a fixed distance without passing it.
 
 Returns this vector scaled to unit length.
 
-**Returns:** A normalized vector, or [`Vector2.Zero`](Vector2.md#p-electron2d-vector2-zero) when the squared length is exactly zero.
+**Returns:** A normalized vector, or [`Vector2.Zero`](Vector2.md#p-electron2d-vector2-zero) when the input is zero or non-finite.
 
-**Remarks:** Near-zero and non-finite inputs can lose precision or produce non-finite components.
+**Remarks:** Near-zero finite inputs can lose precision.
 
 <a id="m-electron2d-vector2-orthogonal"></a>
 ### `public Vector2 Orthogonal()`
@@ -1059,7 +1059,7 @@ Compares vectors lexicographically by X and then Y.
 ## Numeric invariants and error behavior
 
 - Ordinary arithmetic, division, remainder, reciprocal, projection, and interpolation retain IEEE 754 NaN and infinity propagation.
-- `Normalized()` and `DirectionTo()` return `Zero` for an exactly zero squared length. `IsNormalized()` uses the engine's `0.001` unit-length tolerance; approximate component comparisons use the internal tolerance (`1e-6f`) with exact equality first.
+- `Normalized()` and `DirectionTo()` return `Zero` for a zero or non-finite input/difference. `IsNormalized()` uses the engine's `0.001` unit-length tolerance; approximate component comparisons use the internal tolerance (`1e-6f`) with exact equality first.
 - Angles are radians; positive angles rotate positive X toward positive Y and therefore appear clockwise in screen coordinates.
 - `Reflect` follows the line-reflection convention `2 * Dot(normal) * normal - value`; `Bounce` negates it. `Reflect`, `Bounce`, and `Slide` require a normalized normal and do not validate it.
 - `Project(Zero)` produces NaN components. `PosMod` with a nonzero divisor uses the divisor's sign; zero divisors produce IEEE NaN.

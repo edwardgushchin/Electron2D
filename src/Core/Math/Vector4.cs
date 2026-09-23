@@ -195,7 +195,7 @@ public struct Vector4 : IEquatable<Vector4>
 
     /// <summary>Returns the normalized direction from this point to another point.</summary>
     /// <param name="to">The destination point.</param>
-    /// <returns>The normalized difference, or <see cref="Zero"/> when both points are equal.</returns>
+    /// <returns>The normalized difference, or <see cref="Zero"/> when the difference is zero or non-finite.</returns>
     public readonly Vector4 DirectionTo(Vector4 to) => (to - this).Normalized();
 
     /// <summary>Returns the squared Euclidean distance to another point.</summary>
@@ -302,9 +302,10 @@ public struct Vector4 : IEquatable<Vector4>
     }
 
     /// <summary>Returns this vector scaled to unit length.</summary>
-    /// <returns>A normalized vector, or <see cref="Zero"/> when the squared length is exactly zero.</returns>
+    /// <returns>A normalized vector, or <see cref="Zero"/> when the input is zero or non-finite.</returns>
     public readonly Vector4 Normalized()
     {
+        if (!IsFinite()) return Zero;
         var squaredLength = LengthSquared();
         return squaredLength == 0f ? Zero : this / Mathf.Sqrt(squaredLength);
     }

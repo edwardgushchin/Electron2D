@@ -506,7 +506,7 @@ def render():
         inherited = f"[{godot_type['inherits']}]({coverage_target(godot_type['inherits'])})" if godot_type["inherits"] else "—"
         page_name = TEXTURE_NAMES.get(name, name)
         page = CLASS_PAGES / f"{page_name}.md"
-        updated = "2026-09-24" if name in {"InputMap", "ProjectSettings", "OptimizedTranslation", "Translation"} or (name.startswith("Packed") and name.endswith("Array")) else "2026-09-23"
+        updated = "2026-09-24" if name in {"InputMap", "ProjectSettings", "OptimizedTranslation", "Translation", "Vector2", "Vector3", "Vector4"} or (name.startswith("Packed") and name.endswith("Array")) else "2026-09-23"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:
