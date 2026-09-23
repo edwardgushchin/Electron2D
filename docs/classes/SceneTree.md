@@ -1,12 +1,12 @@
 # SceneTree
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [MainLoop](MainLoop.md)
 
 **Inherited By:** —
 
-- **Source:** [`src/Scene/Main/SceneTree.cs`](../../src/Scene/Main/SceneTree.cs), [`src/Scene/Main/SceneTree.GUIHover.cs`](../../src/Scene/Main/SceneTree.GUIHover.cs)
+- **Source:** [`src/Scene/Main/SceneTree.cs`](../../src/Scene/Main/SceneTree.cs), [`src/Scene/Main/SceneTree.SceneChange.cs`](../../src/Scene/Main/SceneTree.SceneChange.cs), [`src/Scene/Main/SceneTree.GUIHover.cs`](../../src/Scene/Main/SceneTree.GUIHover.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public sealed class SceneTree : MainLoop`
 
@@ -18,7 +18,7 @@ AnimatedSprite uses the existing internal idle lane and tree pause/process polic
 
 Owns one active node hierarchy and coordinates its lifecycle, input, frames, groups, timers, tweens, and deferred work.
 
-`SceneTree` is the concrete [`MainLoop`](MainLoop.md) that owns one active root [`Node`](Node.md) hierarchy. It establishes lifecycle and owner-thread boundaries, accepts direct frame calls or scheduling through [`Engine`](Engine.md), propagates typed input and system notifications, manages pause state, reusable Node [`Timer`](Timer.md) scheduling, lightweight tree timers, [`Tween`](Tween.md) sequences, typed group operations, deferred actions, and queued deletion, and finalizes the complete hierarchy.
+`SceneTree` is the concrete [`MainLoop`](MainLoop.md) that owns one active root [`Node`](Node.md) hierarchy. An optional `CurrentScene` selects one direct child; in-memory scene changes keep the root alive, remove the old scene immediately, and enter the new scene at a deferred safe point. It establishes lifecycle and owner-thread boundaries, accepts direct frame calls or scheduling through [`Engine`](Engine.md), propagates typed input and system notifications, manages pause state, reusable Node [`Timer`](Timer.md) scheduling, lightweight tree timers, [`Tween`](Tween.md) sequences, typed group operations, deferred actions, and queued deletion, and finalizes the complete hierarchy.
 
 The creating thread becomes the owner thread for scene mutation, frame execution, flushing, and disposal.
 Electron2D does not create a frame-pump thread. A host can drive the loop through [`Engine.AdvanceFrame(Double)`](Engine.md#m-electron2d-engine-advanceframe-system-double),
@@ -31,6 +31,7 @@ The following focused snippet uses the current public API. Names not declared in
 ```csharp
 using var root = new Node { Name = "Root" };
 using var tree = new SceneTree(root);
+tree.ChangeSceneToNode(new Entity { Name = "Level" });
 tree.ProcessFrame(1.0 / 60.0);
 ```
 
@@ -48,6 +49,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public Node? EditedSceneRoot { get; set; }`](#diagnostics-editedsceneroot) | Gets or selects the root of the scene whose configuration warnings are being inspected. |
 | [`public bool AutoAcceptQuit { get; set; }`](#p-electron2d-scenetree-autoacceptquit) | True by default. |
 | [`public Node Root { get; }`](#p-electron2d-scenetree-root) | Gets the root node owned by this tree. |
+| [`public Node? CurrentScene { get; set; }`](#p-electron2d-scenetree-currentscene) | Gets or selects an existing direct scene child of the root. |
 | [`public int NodeCount { get; }`](#p-electron2d-scenetree-nodecount) | Gets the number of nodes currently inside this tree. |
 | [`public bool Paused { get; set; }`](#p-electron2d-scenetree-paused) | Gets or sets whether pause-aware processing and timers are paused. |
 
@@ -57,6 +59,9 @@ tree.ProcessFrame(1.0 / 60.0);
 | --- | --- |
 | [`public void Quit(int exitCode = 0)`](#m-electron2d-scenetree-quit-system-int32) | Atomically requests exit from any thread, without immediate disposal or process termination. |
 | [`public void Defer(Action action)`](#m-electron2d-scenetree-defer-system-action) | Thread-safely queues an action for a future deferred flush while the tree remains live. |
+| [`public void ChangeSceneToNode(Node node)`](#m-electron2d-scenetree-changescenetonode-electron2d-node) | Replaces the selected scene with a detached node at a deferred safe point. |
+| [`public void ChangeSceneToPacked(PackedScene packedScene)`](#m-electron2d-scenetree-changescenetopacked-electron2d-packedscene) | Instantiates and schedules a packed scene. |
+| [`public void UnloadCurrentScene()`](#m-electron2d-scenetree-unloadcurrentscene) | Disposes the selected scene immediately. |
 | [`public void SetDeferred<T>(Action<T> setter, T value)`](#m-electron2d-scenetree-setdeferred-1-system-action-0-0) | Thread-safely queues a typed setter invocation for a future deferred flush. |
 | [`public SceneTreeTimer CreateTimer(double timeSeconds, bool processAlways = true, bool processInPhysics = false)`](#m-electron2d-scenetree-createtimer-system-double-system-boolean-system-boolean) | Creates a one-shot timer owned and processed by this tree. |
 | [`public Tween CreateTween()`](#m-electron2d-scenetree-createtween) | Creates a valid tween processed by this tree. |
@@ -93,6 +98,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public event Action<SceneTree> ProcessFrameStarted`](#e-electron2d-scenetree-processframestarted) | Occurs before the idle transform-delivery phase and eligible node process callbacks. |
 | [`public event Action<SceneTree> PhysicsFrameStarted`](#e-electron2d-scenetree-physicsframestarted) | Occurs after pending transform delivery and before eligible node physics-process callbacks. |
 | [`public event Action<SceneTree> TreeChanged`](#e-electron2d-scenetree-treechanged) | Occurs after the active hierarchy is structurally changed or an active node is renamed. |
+| [`public event Action<SceneTree>? SceneChanged`](#e-electron2d-scenetree-scenechanged) | Occurs after a pending scene enters successfully. |
 
 ## Constructor Descriptions
 
@@ -121,6 +127,11 @@ and the supplied hierarchy remains owned by the caller. A reference captured fro
 a terminal disposed tree.
 
 ## Property Descriptions
+
+<a id="p-electron2d-scenetree-currentscene"></a>
+### `public Node? CurrentScene { get; set; }`
+
+The selected direct child of the stable `Root`, or null initially. Assigning an existing direct child changes only the selection; it does not add, remove or dispose nodes. Detachment clears the selection before `NodeRemoved`. Selection and inspection require the owner thread and a live tree; assigning a detached, foreign or non-direct node throws `ArgumentException`.
 
 <a id="diagnostics-debugpathshint"></a>
 ### `public bool DebugPathsHint { get; set; }`
@@ -196,6 +207,21 @@ reparented, and removed or disposed candidates are skipped. Notification failure
 are collected after traversal completes.
 
 ## Method Descriptions
+
+<a id="m-electron2d-scenetree-changescenetonode-electron2d-node"></a>
+### `public void ChangeSceneToNode(Node node)`
+
+Accepts ownership of a live detached scene on the owner thread. The selected old scene exits immediately, remains alive until the next deferred safe point, then is disposed before the new scene enters. During that gap `CurrentScene` is null. Repeated requests before the safe point supersede and later dispose earlier pending nodes. A child with a conflicting name or an attached, queued, or already owned node is rejected before replacing the current scene. An exit callback error can be reported after a change has been accepted; the deferred change still runs.
+
+<a id="m-electron2d-scenetree-changescenetopacked-electron2d-packedscene"></a>
+### `public void ChangeSceneToPacked(PackedScene packedScene)`
+
+Instantiates the in-memory template first, then applies `ChangeSceneToNode` to its detached root. An empty or failing template preserves the current scene. If the replacement is rejected before ownership transfers, the temporary instance is disposed. Scene files are not loaded here.
+
+<a id="m-electron2d-scenetree-unloadcurrentscene"></a>
+### `public void UnloadCurrentScene()`
+
+Immediately disposes the selected scene and leaves other root children intact. A pending replacement remains scheduled. Disposal callback errors propagate after the node's teardown continues.
 
 <a id="m-electron2d-scenetree-quit-system-int32"></a>
 ### `public void Quit(int exitCode = 0)`
@@ -632,6 +658,11 @@ active tweens, clears event subscribers, and attempts every teardown stage befor
 
 ## Event Descriptions
 
+<a id="e-electron2d-scenetree-scenechanged"></a>
+### `public event Action<SceneTree>? SceneChanged`
+
+Receives this tree after a pending scene has entered and completed ready delivery. The handler can read `CurrentScene`. Failed attachment emits no event; event handler failures propagate from the deferred flush without undoing an attached scene.
+
 <a id="diagnostics-nodeconfigurationwarningchanged"></a>
 ### `public event Action<SceneTree, Node>? NodeConfigurationWarningChanged`
 
@@ -745,7 +776,7 @@ The class depends on [`MainLoop`](MainLoop.md), typed [`InputEvent`](InputEvent.
 
 `tests/Electron2D.Tests/Program.cs` covers constructor validation, inherited-loop initialization/driving/finalization, Engine attachment/zero-delta scheduling/finalization, three-stage input ordering/handled state/re-entry/failure continuation/allocation, system-notification propagation, escaped-reference terminal state, timer/tween cleanup, and enter/ready rollback; stale lifecycle snapshots; lifecycle and tree-event order; exception-safe teardown and queued deletion; cross-tree deletion transfer; lifecycle execution barriers; pause re-entry/traversal/execution barriers; exiting/pre-delete/cleanup ownership guards; 256 concurrent QueueFree/flush iterations; a 64-iteration concurrent enqueue/disposal stress check; frame counters/events; public/internal process ordering, failure continuation, pause eligibility, and scaled/original deltas; group operations and invalid flags; both timer facilities; complete typed tween sequencing/lifetime/failure cases; generic queued object deletion; captured deferred batches; cancellation; recursive node disposal; and zero steady-state managed allocation across warmed idle, active-Timer, active-Tween, and non-positional/Node-root input paths. Positional viewport projections allocate temporary events.
 
-`SceneTree` itself has no automatic frame pump or elapsed-time source. Core [`Engine`](Engine.md) provides host-driven fixed-step accumulation, scaled/original delta delivery, time scaling, and interpolation state, and Engine.Run supplies the window clock/pump and frame wait. There is still no current-scene switching, multithreaded renderer synchronization, complete GUI input routing, physics simulation, loaded-scene performance benchmark, or exception logger. Root viewport GUI dispatch and hover are covered by [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) and [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs); clipping, stationary-pointer geometry changes, keyboard navigation, exact renderer order and nested viewports remain. Allocation checks cover warmed empty and small active-Timer/Tween/input hierarchies, not large-scene performance; concurrency checks are local stress tests rather than formal proofs or platform-wide performance evidence. Input hardware gaps use ADR 0038's exact triggers.
+`SceneTree` itself has no automatic frame pump or elapsed-time source. Core [`Engine`](Engine.md) provides host-driven fixed-step accumulation, scaled/original delta delivery, time scaling, and interpolation state, and Engine.Run supplies the window clock/pump and frame wait. [SceneChangeTests](../../tests/Electron2D.Tests/SceneChangeTests.cs) cover in-memory scene replacement, ownership, deferred entry, callback failures and cleanup. Scene file loading/reloading, multithreaded renderer synchronization, complete GUI input routing, physics simulation, loaded-scene performance benchmark, and exception logging remain absent. Root viewport GUI dispatch and hover are covered by [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) and [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs); clipping, stationary-pointer geometry changes, keyboard navigation, exact renderer order and nested viewports remain. Allocation checks cover warmed empty and small active-Timer/Tween/input hierarchies, not large-scene performance; concurrency checks are local stress tests rather than formal proofs or platform-wide performance evidence. Input hardware gaps use ADR 0038's exact triggers.
 
 ## Related decision
 

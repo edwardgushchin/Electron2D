@@ -20,6 +20,7 @@ public sealed partial class SceneTree : MainLoop
     private static readonly IReadOnlyList<PropertyDescriptor> SceneTreeProperties = Array.AsReadOnly<PropertyDescriptor>(
     [
         new PropertyDescriptor<SceneTree, Node>(nameof(Root), tree => tree.Root),
+        new PropertyDescriptor<SceneTree, Node?>(nameof(CurrentScene), tree => tree.CurrentScene, (tree, value) => tree.CurrentScene = value, _ => null),
         new PropertyDescriptor<SceneTree, Node?>(nameof(EditedSceneRoot), tree => tree.EditedSceneRoot, (tree, value) => tree.EditedSceneRoot = value, _ => null),
         new PropertyDescriptor<SceneTree, bool>(nameof(DebugPathsHint), tree => tree.DebugPathsHint, (tree, value) => tree.DebugPathsHint = value, _ => false),
         new PropertyDescriptor<SceneTree, bool>(nameof(AutoAcceptQuit), tree => tree.AutoAcceptQuit, (tree, value) => tree.AutoAcceptQuit = value, _ => true),
@@ -784,7 +785,7 @@ public sealed partial class SceneTree : MainLoop
     }
 
     /// <inheritdoc />
-    /// <remarks>Appends this class's typed ownership, frame, queue, count, and pause descriptors.</remarks>
+    /// <remarks>Appends this class's typed ownership, current scene, frame, queue, count, and pause descriptors.</remarks>
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
         base.GetPropertyDescriptors().Concat(SceneTreeProperties);
 
@@ -904,7 +905,7 @@ public sealed partial class SceneTree : MainLoop
     }
 
     /// <inheritdoc />
-    /// <remarks>Rejects finalization during construction, a frame, input dispatch, a flush, lifecycle delivery, or pause delivery.</remarks>
+    /// <remarks>Rejects finalization during construction, a frame, input dispatch, a flush, lifecycle, pause, or scene-change delivery.</remarks>
     /// <exception cref="InvalidOperationException">Construction is incomplete or execution is active.</exception>
     protected override void ValidateFinalization()
     {
@@ -913,14 +914,14 @@ public sealed partial class SceneTree : MainLoop
         if (!_constructionComplete)
             throw new InvalidOperationException("A SceneTree cannot be finalized before construction completes.");
 
-        if (_activeExecution != 0 || _lifecycleExecutionDepth != 0 || _isChangingPause)
+        if (_activeExecution != 0 || _lifecycleExecutionDepth != 0 || _isChangingPause || _sceneChangePreparing)
             throw new InvalidOperationException("A SceneTree cannot be finalized from one of its frame, input, flush, lifecycle, or pause callbacks.");
 
         base.ValidateFinalization();
     }
 
     /// <inheritdoc />
-    /// <remarks>Requires the owner thread and rejects disposal re-entered from a frame, input, flush, lifecycle, or pause callback.</remarks>
+    /// <remarks>Requires the owner thread and rejects disposal re-entered from a frame, input, flush, lifecycle, pause, or scene-change callback.</remarks>
     /// <exception cref="InvalidOperationException">The caller is not the owner thread or execution is active.</exception>
     protected override void ValidateDisposal()
     {
@@ -928,7 +929,7 @@ public sealed partial class SceneTree : MainLoop
             throw new InvalidOperationException("Request Quit while Engine.Run owns the scene lifecycle.");
         EnsureOwnerThread();
 
-        if (_activeExecution != 0 || _lifecycleExecutionDepth != 0 || _isChangingPause)
+        if (_activeExecution != 0 || _lifecycleExecutionDepth != 0 || _isChangingPause || _sceneChangePreparing)
             throw new InvalidOperationException("A SceneTree cannot be disposed from one of its frame, input, flush, lifecycle, or pause callbacks.");
 
         base.ValidateDisposal();
@@ -936,7 +937,7 @@ public sealed partial class SceneTree : MainLoop
 
     /// <inheritdoc />
     /// <remarks>
-    /// Atomically closes the work queues, exits and recursively disposes the root, disposes active timers, invalidates
+    /// Atomically closes the work queues, exits and recursively disposes the root and any pending scene, disposes active timers, invalidates
     /// active tweens, clears event subscribers, and attempts every teardown stage before reporting collected failures.
     /// </remarks>
     protected override void OnFinalize()
@@ -975,6 +976,8 @@ public sealed partial class SceneTree : MainLoop
         {
             CollectException(ref errors, error);
         }
+
+        DisposePendingScenes(ref errors);
 
         foreach (var timer in _timers.ToArray())
         {
@@ -1109,6 +1112,7 @@ public sealed partial class SceneTree : MainLoop
     internal void NotifyNodeRemoved(Node node)
     {
         if (ReferenceEquals(_editedSceneRoot, node)) _editedSceneRoot = null;
+        if (ReferenceEquals(_currentScene, node)) _currentScene = null;
         NodeRemoved?.Invoke(this, node);
     }
 
@@ -1731,6 +1735,8 @@ public sealed partial class SceneTree : MainLoop
         ProcessFrameStarted = null;
         PhysicsFrameStarted = null;
         TreeChanged = null;
+        SceneChanged = null;
+        _currentScene = null;
     }
 
     private Node[] GetNodesInGroupCore(string group) =>

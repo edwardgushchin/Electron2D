@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0006](#adr-0006), [0008](#adr-0008), [0011](#adr-0011), 
 <a id="adr-0006"></a>
 ## ADR 0006: Own hierarchy, deferred work, and queued deletion in SceneTree
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 - Status: Accepted; frame scheduling refined by [0008](scene.md#adr-0008), lifecycle and queue safety refined by [0011](scene.md#adr-0011)
 - Scope: `Node` hierarchy and `SceneTree` scheduling
@@ -21,6 +21,7 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 ### Decision
 
 - `Node` owns ordered child relationships and lifecycle callbacks; `SceneTree` owns one active root hierarchy.
+- `SceneTree.Root` stays stable for the tree lifetime. `CurrentScene` selects one optional direct child of that root; assigning it does not reparent nodes. `ChangeSceneToNode` accepts a detached scene, removes the selected old scene immediately, and installs the new scene at the next deferred safe point. `ChangeSceneToPacked` instantiates before replacement. The tree owns accepted pending scenes, disposes superseded and old scenes before entry, and releases pending scenes during finalization. `SceneChanged` follows successful entry. `UnloadCurrentScene` disposes only the selected child. File-based change and reload await a scene loader.
 - SceneTree-managed enter runs parent-first, ready runs child-first once per node lifetime, and exit runs child-first. Manual notification dispatch remains possible but does not mutate lifecycle state.
 - Attached hierarchy mutation, flushing, and disposal run on the thread that created the tree; invalid disposal is rejected before object state begins changing.
 - `SceneTree.Defer(Action)` and `SetDeferred<T>` accept typed work without string method lookup.
@@ -124,7 +125,7 @@ Path/PathFollow preserve runtime sampling and policy timing through the existing
 <a id="adr-0011"></a>
 ## ADR 0011: Exception-safe SceneTree lifecycle, typed groups, and frame timers
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 - Status: Accepted; timer scheduling extended by [0036](scene.md#adr-0036), the original tween absence superseded by [0037](scene.md#adr-0037), and input execution barriers extended by [0038](input.md#adr-0038)
 - Scope: `SceneTree`, `SceneTreeTimer`, `GroupCallFlags`, and their `Node` lifecycle integration
@@ -158,7 +159,7 @@ Electron2D must keep typed C# calls, deterministic ownership, its managed runtim
 - Cross-thread scheduling has a precise linearization point at the queue lock. The lock is intentionally small and never held while user code runs.
 - Typed group operations require explicit delegates and therefore remain compile-time checked.
 - Timers use delivered frame delta. ADR 0016 later added Engine time scaling, and ADR 0036 added reusable Node timers with original-delta time-scale bypass; lightweight `SceneTreeTimer` still has no independent bypass.
-- Historical implementation note: scene switching, application quit, tweening, multiplayer, accessibility, editor signals, and platform notifications were absent when this ADR was adopted. ADR 0037 later implemented typed tweening; the application quit lifecycle is now implemented by `SceneTree.Quit`, `AutoAcceptQuit`, and `Engine.Run`; the other listed domains remain absent.
+- Historical implementation note: scene switching, application quit, tweening, multiplayer, accessibility, editor signals, and platform notifications were absent when this ADR was adopted. ADR 0006 now provides in-memory scene switching; ADR 0037 added typed tweening; the application quit lifecycle is implemented by `SceneTree.Quit`, `AutoAcceptQuit`, and `Engine.Run`. File-based scene loading and the other listed domains remain absent.
 - Historical implementation note: ADR 0037 extended activation rollback and finalization to invalidate SceneTree-owned tweens while retaining this ADR's failure-continuing cleanup rule.
 
 ### Rejected alternatives

@@ -134,6 +134,7 @@ AnimatedSpriteTests.Run();
 AnimatedTextureTests.Run();
 RenderingRuntimeTests.VerifyAtlasResources();
 SceneHierarchyTests.Run();
+SceneChangeTests.Run();
 NodeTreeDiagnosticsTests.Run();
 RemoteTransformTests.Run();
 ControlLayoutTests.Run();

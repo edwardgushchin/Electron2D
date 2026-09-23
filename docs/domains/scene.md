@@ -1,6 +1,6 @@
 # Scene domain
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Responsibility
 
@@ -37,7 +37,7 @@ Production types include [`Polygon`](../classes/Polygon.md), [`Line`](../classes
 - `Path` / `PathFollow`: borrowed PathCurve containment, attached direct-parent sampling, loop/clamp and ratio controls, offsets, rotation, deferred worker resource changes and packed state.
 - `AnimatedSprite`: named SpriteFrames playback through the internal idle lane, reverse/custom speed, loop and progress events, retained texture/atlas drawing and packed state. Its [timing contract](../classes/AnimatedSprite.md#timing-contract-and-source-audit) includes exact-boundary and ping-pong details.
 - `NodeProcessMode`: inherited, pausable, paused-only, always, and disabled process policies.
-- `SceneTree`: concrete main loop and active hierarchy owner with failure-safe lifecycle/finalization, typed input/system-notification propagation, pause state, caller-driven process/physics frames, frame/tree events and counters, typed group work, timers, deferred actions, and deletion flushing.
+- `SceneTree`: concrete main loop and active hierarchy owner with failure-safe lifecycle/finalization, in-memory current-scene replacement, typed input/system-notification propagation, pause state, caller-driven process/physics frames, frame/tree events and counters, typed group work, timers, deferred actions, and deletion flushing.
 - `Timer`: reusable hierarchy-owned countdown with selected frame lane, one-shot/repeat, autostart, local/tree pause, optional time-scale bypass, and typed timeout event.
 - `TimerProcessCallback`: stable physics/process lane selection for `Timer`.
 - `SceneTreeTimer`: lightweight one-shot delay advanced by one selected frame lane and automatically disposed after timeout.
@@ -85,7 +85,7 @@ Production types include [`Polygon`](../classes/Polygon.md), [`Line`](../classes
 - A caller may supply deltas directly through inherited `Process`/`PhysicsProcess` or wrappers. Core `Engine` can instead apply time scaling and fixed-step accumulation from host-supplied elapsed time. Engine.Run(Window) owns the implemented SDL pump, monotonic clock and frame-wait policy; no background scene thread is created.
 - Canvas membership emits entry/exit notifications; local and inherited visibility delivery includes Hidden, and showing schedules redraw. Manual tree notifications do not mutate membership.
 - Visibility and canvas-root, behind-parent, nested local Y and effective Z ordering govern retained commands. Rendering order does not change process/input scheduling.
-- Root-window drawing and its input/client Viewport are integrated. Root viewport Control hit testing, mouse bubbling and focused keyboard delivery run; complete GUI routing remains absent. There is no independent offscreen viewport, collision/rigid-body physics, automatic scene switching, scene file loader/saver, RPC/multiplayer, accessibility backend, or scripting. Tweening is runtime-only and has no editor/serialization surface.
+- Root-window drawing and its input/client Viewport are integrated. Root viewport Control hit testing, mouse bubbling and focused keyboard delivery run; complete GUI routing remains absent. In-memory scene switching exists, but scene file loading/reloading does not. There is no independent offscreen viewport, collision/rigid-body physics, RPC/multiplayer, accessibility backend, or scripting. Tweening is runtime-only and has no editor/serialization surface.
 - Packed scenes are in-memory only. Nested/inherited scene authoring, placeholders, editable instances, persistent event endpoint storage, node-reference remapping, UID/import integration, and every editor edit mode remain absent.
 - Paths are typed as `string`, not a separate `NodePath`; groups are strings; wildcard search covers names with `*` and `?`.
 - A detached node may remember `QueueFree`, but deletion occurs only after attachment to a tree and a flush/frame boundary.
