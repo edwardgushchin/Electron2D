@@ -8,7 +8,7 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 
 | Type | Base | Responsibility |
 | --- | --- | --- |
-| [Node](../classes/Node.md) | ElectronObject | Hierarchy, lifecycle, paths/groups, process/input callbacks, ownership and deletion. |
+| [Node](../classes/Node.md) | ElectronObject | Hierarchy, lifecycle, paths/groups, tree diagnostics and notification propagation, process/input callbacks, ownership and deletion. |
 | [CanvasItem](../classes/CanvasItem.md) | Node | Abstract drawing base, visibility, Z/Y order, behind-parent drawing, modulation/materials and transform queries/notifications. |
 | [Entity](../classes/Entity.md) | CanvasItem | Concrete position, rotation, scale, skew and spatial helpers. |
 | [Control](../classes/Control.md) | CanvasItem | Rectangular layout, pivot transform, resize, root viewport pointer/focus/hover and action navigation, plus cursor policy; remaining GUI behavior is incomplete. |
@@ -20,7 +20,7 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 
 ## Runtime flow
 
-Node owns ordered children of any Node subtype. SceneTree activates the tree parent-first, delivers ready child-first and exits child-first. Paths, groups, Owner metadata, process/input settings, typed child events and factories use Node. Engine supplies scaled/original deltas; Timer and Tween reuse these scheduling lanes. Frame/input/lifecycle mutation guards and failure-continuing cleanup remain in the neutral layer.
+Node owns ordered children of any Node subtype. SceneTree activates the tree parent-first, delivers ready child-first and exits child-first. Paths, groups, Owner metadata, process/input settings, typed child events and factories use Node. Node also reports depth-first tree order, prints subtree paths or Unicode branches, and propagates manual notifications parent-first. Propagation prevents direct child-list changes while visiting a node and collects callback failures after attempting other descendants. Engine supplies scaled/original deltas; Timer and Tween reuse these scheduling lanes. Frame/input/lifecycle mutation guards and failure-continuing cleanup remain in the neutral layer.
 
 CanvasItem adds retained drawing and canvas state. A direct canvas parent contributes transform, modulation and material; a neutral Node breaks those chains. Global transform, Z accumulation and canvas sampler inheritance stop at TopLevel. CanvasItem filters/repeat resolve through direct canvas parents, then Viewport defaults; neutral nodes break canvas inheritance. Toggling TopLevel preserves local state and recomputes global coordinates. Visibility follows direct canvas parents, including TopLevel, and the containing window. Window owns native visibility independently; its changes notify canvas roots, including roots below neutral nodes.
 

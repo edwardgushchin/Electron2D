@@ -5,7 +5,7 @@ Last updated: 2026-09-23
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
 1. Review 1702 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 1016 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [OptimizedTranslation](classes/OptimizedTranslation.md) class slices.
+2. Complete 1009 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [OptimizedTranslation](classes/OptimizedTranslation.md) class slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -16,7 +16,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | --- | ---: | ---: |
 | [RenderingServer](classes/RenderingServer.md) | 565 | 7 |
 | [Control](classes/Control.md) | 125 | 54 |
-| [Node](classes/Node.md) | 97 | 66 |
+| [Node](classes/Node.md) | 90 | 66 |
 | [Window](classes/Window.md) | 44 | 34 |
 | [Object](classes/Object.md) | 34 | 22 |
 | [Input](classes/Input.md) | 31 | 29 |

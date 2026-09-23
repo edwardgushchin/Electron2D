@@ -1,4 +1,5 @@
 using System.IO.Enumeration;
+using System.Text;
 using System.Threading;
 
 namespace Electron2D;
@@ -140,6 +141,7 @@ public class Node : ElectronObject
     private int _queuedForDeletion;
 
     private int _sceneCaptureDepth;
+    private int _notificationPropagationDepth;
 
     private int _sceneInstantiationDepth;
 
@@ -588,7 +590,7 @@ public class Node : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="child"/> is this node.</exception>
     /// <exception cref="InvalidOperationException">
     /// The operation would create a cycle, the child already has a parent or tree, a sibling name conflicts, or mutation
-    /// occurs off the owner thread.
+    /// occurs off the owner thread, or child order is blocked during notification propagation.
     /// </exception>
     /// <exception cref="ObjectDisposedException">
     /// This node is disposing on another thread or has finished disposing, or disposal of <paramref name="child"/> has started.
@@ -602,7 +604,7 @@ public class Node : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="sibling"/> is the destination parent.</exception>
     /// <exception cref="InvalidOperationException">
     /// This node has no parent, insertion would create a cycle, the sibling is already attached, a name conflicts, or
-    /// mutation occurs off the owner thread.
+    /// mutation occurs off the owner thread, or child order is blocked during notification propagation.
     /// </exception>
     /// <exception cref="ObjectDisposedException">
     /// This node or its parent is disposing on another thread or has finished disposing, or disposal of
@@ -624,7 +626,7 @@ public class Node : ElectronObject
     /// <returns><see langword="true"/> when the node was a direct child and was detached; otherwise <see langword="false"/>.</returns>
     /// <remarks>An active subtree exits its tree child-first before the parent reference is cleared.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="child"/> is <see langword="null"/>.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread, this parent is exiting, or the child is in tree lifecycle delivery.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread, this parent is exiting or propagating a notification, or the child is in tree lifecycle delivery.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="AggregateException">One or more lifecycle, notification, or event callbacks fail after removal begins.</exception>
     public bool RemoveChild(Node child)
@@ -640,12 +642,13 @@ public class Node : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="child"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="child"/> is not a direct child.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> does not resolve to an existing child position.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread or its child order is blocked during notification propagation.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="AggregateException">One or more child-order or tree-change callbacks fail after the order changes.</exception>
     public void MoveChild(Node child, int index)
     {
         EnsureMutable();
+        EnsureChildOrderMutable();
         ArgumentNullException.ThrowIfNull(child);
 
         var oldIndex = _children.IndexOf(child);
@@ -984,6 +987,103 @@ public class Node : ElectronObject
         return current;
     }
 
+    /// <summary>Reports whether a relative or absolute node path resolves from this node.</summary>
+    /// <param name="path">A nonblank node path.</param>
+    /// <returns>True when the target node exists; false when traversal cannot continue.</returns>
+    /// <exception cref="ArgumentException">The path is blank.</exception>
+    /// <exception cref="ArgumentNullException">The path is null.</exception>
+    /// <exception cref="InvalidOperationException">An attached query runs off-owner.</exception>
+    /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
+    public bool HasNode(string path)
+    {
+        Tree?.EnsureOwnerThread();
+        return GetNodeOrNull(path) is not null;
+    }
+
+    /// <summary>Tests whether this node follows another node in the same active tree's depth-first order.</summary>
+    /// <param name="node">The other live node.</param>
+    /// <returns>True when this node is later; descendants follow their ancestors.</returns>
+    /// <exception cref="ArgumentNullException">The other node is null.</exception>
+    /// <exception cref="InvalidOperationException">Either node is detached, belongs to another tree, or access is off-owner.</exception>
+    /// <exception cref="ObjectDisposedException">Either node is disposed.</exception>
+    public bool IsGreaterThan(Node node)
+    {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(node);
+        ObjectDisposedException.ThrowIf(node.IsDisposed, node);
+        var tree = Tree ?? throw new InvalidOperationException("Tree order requires active nodes.");
+        tree.EnsureOwnerThread();
+        if (!ReferenceEquals(node.Tree, tree)) throw new InvalidOperationException("Nodes must belong to the same tree.");
+        if (ReferenceEquals(this, node)) return false;
+
+        var left = GetAncestry();
+        var right = node.GetAncestry();
+        var index = 0;
+        while (index < left.Count && index < right.Count && ReferenceEquals(left[index], right[index])) index++;
+        if (index == left.Count) return false;
+        if (index == right.Count) return true;
+        return left[index].GetIndex() > right[index].GetIndex();
+    }
+
+    /// <summary>Returns this node and its descendants as relative paths in depth-first order.</summary>
+    /// <returns>One path per line, starting with a dot for this node, with a trailing newline.</returns>
+    /// <remarks>Available for detached and attached hierarchies. Attached queries require the owner thread.</remarks>
+    /// <exception cref="InvalidOperationException">An attached query runs off-owner.</exception>
+    /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
+    public string GetTreeString()
+    {
+        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
+        var result = new StringBuilder();
+        AppendTreeString(result, ".");
+        return result.ToString();
+    }
+
+    /// <summary>Returns this node and its descendants as an indented Unicode tree.</summary>
+    /// <returns>A tree starting with this node's name and ending in a newline.</returns>
+    /// <remarks>Available for detached and attached hierarchies. Attached queries require the owner thread.</remarks>
+    /// <exception cref="InvalidOperationException">An attached query runs off-owner.</exception>
+    /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
+    public string GetTreeStringPretty()
+    {
+        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
+        var result = new StringBuilder();
+        AppendTreeStringPretty(result, "", true);
+        return result.ToString();
+    }
+
+    /// <summary>Writes the relative tree string to standard output.</summary>
+    /// <remarks>The tree string already ends in a newline; printing adds another, matching the reference diagnostic.</remarks>
+    public void PrintTree() => Console.WriteLine(GetTreeString());
+
+    /// <summary>Writes the indented tree string to standard output.</summary>
+    /// <remarks>The tree string already ends in a newline; printing adds another.</remarks>
+    public void PrintTreePretty() => Console.WriteLine(GetTreeStringPretty());
+
+    /// <summary>Delivers a notification to this node and then every descendant in parent-first order.</summary>
+    /// <param name="what">The notification identifier.</param>
+    /// <remarks>Direct child insertion, removal and reordering are rejected while this node is being traversed.
+    /// Remaining descendants receive the notification after a callback failure; errors are combined afterward.</remarks>
+    /// <exception cref="InvalidOperationException">An attached call runs off-owner.</exception>
+    /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
+    /// <exception cref="AggregateException">One or more callbacks fail after traversal continues.</exception>
+    public void PropagateNotification(int what)
+    {
+        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
+        List<Exception>? errors = null;
+        _notificationPropagationDepth++;
+        try
+        {
+            try { DispatchNotification(what); }
+            catch (Exception error) { CollectException(ref errors, error); }
+            foreach (var child in _children.ToArray())
+                if (!child.IsDisposed && ReferenceEquals(child.Parent, this))
+                    try { child.PropagateNotification(what); }
+                    catch (Exception error) { CollectException(ref errors, error); }
+        }
+        finally { _notificationPropagationDepth--; }
+        ThrowCollected("One or more propagated notification callbacks failed.", errors);
+    }
+
     /// <summary>Adds this node to a case-sensitive group.</summary>
     /// <param name="group">The nonblank group name.</param>
     /// <param name="persistent">Whether packed scenes containing this node should retain the membership.</param>
@@ -1275,10 +1375,13 @@ public class Node : ElectronObject
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(SceneNodeProperties);
 
     /// <inheritdoc />
-    /// <remarks>Rejects disposal during tree lifecycle delivery or of an active tree root, and requires the owner thread for an attached node.</remarks>
-    /// <exception cref="InvalidOperationException">This node is in lifecycle delivery, its parent is exiting, it is an active tree root, or disposal is attempted off the owner thread.</exception>
+    /// <remarks>Rejects disposal during tree lifecycle or notification delivery, or of an active tree root, and requires the owner thread for an attached node.</remarks>
+    /// <exception cref="InvalidOperationException">This node is in lifecycle or notification delivery, its parent is exiting or propagating a notification, it is an active tree root, or disposal is attempted off the owner thread.</exception>
     protected override void ValidateDisposal()
     {
+        if (_notificationPropagationDepth != 0 || (Parent?._notificationPropagationDepth ?? 0) != 0)
+            throw new InvalidOperationException("A node cannot be disposed during notification propagation through its parent.");
+
         if (Volatile.Read(ref _sceneInstantiationDepth) != 0)
             throw new InvalidOperationException("A node cannot be disposed while packed-scene instantiation is active.");
 
@@ -1917,6 +2020,7 @@ public class Node : ElectronObject
     private void InsertChild(Node child, int index)
     {
         EnsureMutable();
+        EnsureChildOrderMutable();
         ValidateChildForInsertion(child, allowExistingParent: false);
 
         if ((uint)index > (uint)_children.Count)
@@ -2016,6 +2120,7 @@ public class Node : ElectronObject
 
     private bool RemoveChildCore(Node child)
     {
+        EnsureChildOrderMutable();
         if (!ReferenceEquals(child.Parent, this))
             return false;
 
@@ -2107,6 +2212,27 @@ public class Node : ElectronObject
             if (recursive)
                 child.FindChildrenCore(pattern, recursive: true, result);
         }
+    }
+
+    private void AppendTreeString(StringBuilder result, string path)
+    {
+        result.Append(path).Append('\n');
+        foreach (var child in _children)
+            child.AppendTreeString(result, path == "." ? child.Name : path + "/" + child.Name);
+    }
+
+    private void AppendTreeStringPretty(StringBuilder result, string prefix, bool last)
+    {
+        result.Append(prefix).Append(last ? " ┖╴" : " ┠╴").Append(Name).Append('\n');
+        var childPrefix = prefix + (last ? "   " : " ┃ ");
+        for (var index = 0; index < _children.Count; index++)
+            _children[index].AppendTreeStringPretty(result, childPrefix, index == _children.Count - 1);
+    }
+
+    private void EnsureChildOrderMutable()
+    {
+        if (_notificationPropagationDepth != 0)
+            throw new InvalidOperationException("Children cannot be changed during notification propagation.");
     }
 
     private List<Node> GetAncestry()

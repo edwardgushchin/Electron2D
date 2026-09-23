@@ -34866,6 +34866,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.GetTreeString()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "GetTreeString",
+    "signature": "public System.String GetTreeString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.GetTreeStringPretty()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "GetTreeStringPretty",
+    "signature": "public System.String GetTreeStringPretty()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.GetViewport()",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -34892,11 +34918,49 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.HasNode(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "HasNode",
+    "signature": "public System.Boolean HasNode(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.IsAncestorOf(Electron2D.Node)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
     "name": "IsAncestorOf",
     "signature": "public System.Boolean IsAncestorOf(Electron2D.Node node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.IsGreaterThan(Electron2D.Node)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "IsGreaterThan",
+    "signature": "public System.Boolean IsGreaterThan(Electron2D.Node node)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -35100,6 +35164,51 @@
       {
         "name": "event",
         "type": "Electron2D.InputEventKey",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.PrintTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "PrintTree",
+    "signature": "public System.Void PrintTree()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.PrintTreePretty()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "PrintTreePretty",
+    "signature": "public System.Void PrintTreePretty()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.PropagateNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "PropagateNotification",
+    "signature": "public System.Void PropagateNotification(System.Int32 what)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
         "default": null
       }
     ],

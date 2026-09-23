@@ -78,6 +78,8 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public Node GetChild(int index)`](#m-electron2d-node-getchild-system-int32) | Gets a direct child by index. |
 | [`public IReadOnlyList<string> GetGroups()`](#m-electron2d-node-getgroups) | Returns this node's group memberships. |
 | [`public int GetIndex()`](#m-electron2d-node-getindex) | Gets this node's index in its parent's ordered child list. |
+| [`public string GetTreeString()`](#m-electron2d-node-gettreestring) | Lists this node and descendants as relative paths in tree order. |
+| [`public string GetTreeStringPretty()`](#m-electron2d-node-gettreestringpretty) | Formats this subtree with Unicode branches. |
 | [`public Node GetNode(string path)`](#m-electron2d-node-getnode-system-string) | Resolves a required relative or absolute node path. |
 | [`public Node GetNodeOrNull(string path)`](#m-electron2d-node-getnodeornull-system-string) | Attempts to resolve a relative or absolute node path. |
 | [`public TNode GetNode<TNode>(string path)`](#m-electron2d-node-getnode-1-system-string) | Resolves a required relative or absolute path to a requested node type. |
@@ -86,7 +88,9 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-node-getpropertydescriptors) | Extends base typed descriptors with neutral name, process and input state for inspection and packed scenes. |
 | [`public Viewport GetViewport()`](#m-electron2d-node-getviewport) | Finds this node's nearest viewport, including itself. |
 | [`public Window GetWindow()`](#m-electron2d-node-getwindow) | Finds this node's containing window, including itself. |
+| [`public bool HasNode(string path)`](#m-electron2d-node-hasnode-system-string) | Tests whether a node path resolves. |
 | [`public bool IsAncestorOf(Node node)`](#m-electron2d-node-isancestorof-electron2d-scenenode) | Determines whether this node is a strict ancestor of another node. |
+| [`public bool IsGreaterThan(Node node)`](#m-electron2d-node-isgreaterthan-electron2d-node) | Compares two active nodes in depth-first tree order. |
 | [`public bool IsInGroup(string group)`](#m-electron2d-node-isingroup-system-string) | Determines whether this node belongs to a case-sensitive group. |
 | [`public void MoveChild(Node child, int index)`](#m-electron2d-node-movechild-electron2d-node-system-int32) | Moves a direct child to another sibling index. |
 | [`protected virtual void OnEnterTree()`](#m-electron2d-node-onentertree) | Called synchronously when this node enters an active scene tree. |
@@ -98,6 +102,9 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`protected virtual void OnReady()`](#m-electron2d-node-onready) | Called synchronously when this node receives SceneTree-managed ready delivery. |
 | [`protected virtual void OnUnhandledInput(InputEvent event)`](#m-electron2d-node-onunhandledinput-electron2d-inputevent) | Receives an event that remains unhandled after earlier scene-input stages. |
 | [`protected virtual void OnUnhandledKeyInput(InputEventKey event)`](#m-electron2d-node-onunhandledkeyinput-electron2d-inputeventkey) | Receives a keyboard event that remains unhandled after the first input stage. |
+| [`public void PrintTree()`](#m-electron2d-node-printtree) | Prints relative subtree paths. |
+| [`public void PrintTreePretty()`](#m-electron2d-node-printtreepretty) | Prints the indented subtree. |
+| [`public void PropagateNotification(int what)`](#m-electron2d-node-propagatenotification-system-int32) | Delivers a notification to this node and its descendants. |
 | [`public void QueueFree()`](#m-electron2d-node-queuefree) | Atomically requests this node's deferred disposal at a future scene-tree safe point. |
 | [`public bool RemoveChild(Node child)`](#m-electron2d-node-removechild-electron2d-scenenode) | Removes a direct child without disposing it. |
 | [`public bool RemoveFromGroup(string group)`](#m-electron2d-node-removefromgroup-system-string) | Removes this node from a case-sensitive group. |
@@ -381,6 +388,41 @@ Gets or sets whether this node receives unhandled keyboard events before general
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
 ## Method Descriptions
+
+<a id="m-electron2d-node-hasnode-system-string"></a>
+### `public bool HasNode(string path)`
+
+Returns whether `path` resolves through the existing relative or absolute node-path rules. Detached hierarchies are supported. Rejects blank paths and off-owner attached queries.
+
+<a id="m-electron2d-node-isgreaterthan-electron2d-node"></a>
+### `public bool IsGreaterThan(Node node)`
+
+Returns whether this node follows `node` in depth-first order. A descendant follows its ancestor; a node does not follow itself. Both nodes must be live in the same active tree, and the query must run on its owner thread. Sibling reordering immediately changes the result.
+
+<a id="m-electron2d-node-gettreestring"></a>
+### `public string GetTreeString()`
+
+Returns this subtree in depth-first order as relative paths, starting with `.` and ending every line with `\n`. A detached subtree is supported; attached queries require the owner thread.
+
+<a id="m-electron2d-node-gettreestringpretty"></a>
+### `public string GetTreeStringPretty()`
+
+Returns this subtree with Unicode branch characters, names, depth-first order and a final newline. A detached subtree is supported; attached queries require the owner thread.
+
+<a id="m-electron2d-node-printtree"></a>
+### `public void PrintTree()`
+
+Writes `GetTreeString()` followed by an additional line break to standard output.
+
+<a id="m-electron2d-node-printtreepretty"></a>
+### `public void PrintTreePretty()`
+
+Writes `GetTreeStringPretty()` followed by an additional line break to standard output.
+
+<a id="m-electron2d-node-propagatenotification-system-int32"></a>
+### `public void PropagateNotification(int what)`
+
+Delivers the notification to this node first, then each current descendant in depth-first order. The traversed node's direct children cannot be inserted, removed, reordered or disposed while it is visited. Callback failures are collected after other descendants have been attempted. Attached delivery requires the owner thread. Manual notification does not change scene lifecycle state.
 
 <a id="diagnostics-updateconfigurationwarnings"></a>
 ### `public void UpdateConfigurationWarnings()`

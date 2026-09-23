@@ -24,7 +24,7 @@ Production types include [`Polygon`](../classes/Polygon.md), [`Line`](../classes
 
 ## Public surface
 
-- `Node`: neutral ordered hierarchy, lifecycle, paths/groups, processing/input, packed ownership and deletion.
+- `Node`: neutral ordered hierarchy, lifecycle, paths/groups, depth-first diagnostics and notification propagation, processing/input, packed ownership and deletion.
 - `CanvasItem : Node`: abstract retained drawing, visibility, materials, modulation, Z, shared transform queries, texture sampling policies and local geometry notifications through ItemRectChanged.
 - `Entity : CanvasItem`: spatial position, rotation, scale, skew and helpers; Sprite, AnimatedSprite, Parallax, ParallaxLayer, Path, PathFollow and RemoteTransform derive directly from it.
 - `RemoteTransform`: borrowed target-path binding and selected local/global spatial transfer through the scene transform-notification lanes.
